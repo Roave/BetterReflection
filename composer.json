@@ -1,6 +1,7 @@
 {
     "require": {
-        "nikic/php-parser": "^1.3"
+        "nikic/php-parser": "^1.3",
+        "fabpot/php-cs-fixer": "^1.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.6"

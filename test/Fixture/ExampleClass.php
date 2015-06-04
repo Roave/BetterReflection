@@ -3,14 +3,20 @@
 namespace AsgrimTest\Fixture {
     class ExampleClass
     {
-        public function someMethod() {}
+        public function someMethod()
+        {
+        }
     }
 }
 
 namespace AsgrimTest\FixtureOther {
-    class AnotherClass {}
+    class AnotherClass
+    {
+    }
 }
 
 namespace {
-    class ClassWithExplicitGlobalNamespace{}
+    class ClassWithExplicitGlobalNamespace
+    {
+    }
 }

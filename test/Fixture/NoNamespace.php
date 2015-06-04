@@ -1,3 +1,5 @@
 <?php
 
-class ClassWithNoNamespace{}
+class ClassWithNoNamespace
+{
+}

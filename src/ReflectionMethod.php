@@ -10,7 +10,9 @@ class ReflectionMethod
 
     private $declaringClass;
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     public static function createFromNode(MethodNode $node, ReflectionClass $declaringClass)
     {
