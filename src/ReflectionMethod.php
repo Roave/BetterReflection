@@ -13,6 +13,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     const IS_PUBLIC = (1 << 4);
     const IS_STATIC = (1 << 5);
 
+    /**
+     * @var int
+     */
     private $flags;
 
     /**
@@ -41,46 +44,92 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return $method;
     }
 
+    /**
+     * Check to see if a flag is set on this method
+     *
+     * @param int $flag
+     * @return bool
+     */
     private function flagsHas($flag)
     {
         return (bool)($this->flags & $flag);
     }
 
+    /**
+     * Is the method abstract
+     *
+     * @return bool
+     */
     public function isAbstract()
     {
         return $this->flagsHas(self::IS_ABSTRACT);
     }
 
+    /**
+     * Is the method final
+     *
+     * @return bool
+     */
     public function isFinal()
     {
         return $this->flagsHas(self::IS_FINAL);
     }
 
+    /**
+     * Is the method private visibility
+     *
+     * @return bool
+     */
     public function isPrivate()
     {
         return $this->flagsHas(self::IS_PRIVATE);
     }
 
+    /**
+     * Is the method protected visibility
+     *
+     * @return bool
+     */
     public function isProtected()
     {
         return $this->flagsHas(self::IS_PROTECTED);
     }
 
+    /**
+     * Is the method public visibility
+     *
+     * @return bool
+     */
     public function isPublic()
     {
         return $this->flagsHas(self::IS_PUBLIC);
     }
 
+    /**
+     * Is the method static
+     *
+     * @return bool
+     */
     public function isStatic()
     {
         return $this->flagsHas(self::IS_STATIC);
     }
 
+    /**
+     * Is the method a constructor
+     *
+     * @return bool
+     */
     public function isConstructor()
     {
         return $this->name == '__construct';
     }
 
+    /**
+     * Is the method a destructor
+     *
+     * @return bool
+     */
     public function isDestructor()
     {
         return $this->name == '__destruct';

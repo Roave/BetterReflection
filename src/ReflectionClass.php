@@ -28,6 +28,13 @@ class ReflectionClass
         $this->methods = [];
     }
 
+    /**
+     * Create from a Class Node
+     *
+     * @param ClassNode $node
+     * @param NamespaceNode $namespace optional - if omitted, we assume it is global namespaced class
+     * @return ReflectionClass
+     */
     public static function createFromNode(ClassNode $node, NamespaceNode $namespace = null)
     {
         $class = new self();
@@ -47,11 +54,21 @@ class ReflectionClass
         return $class;
     }
 
+    /**
+     * Get the "short" name of the class (e.g. for A\B\Foo, this will return "Foo")
+     *
+     * @return string
+     */
     public function getShortName()
     {
         return $this->name;
     }
 
+    /**
+     * Get the "full" name of the class (e.g. for A\B\Foo, this will return "A\B\Foo")
+     *
+     * @return string
+     */
     public function getName()
     {
         if (!$this->inNamespace()) {
@@ -61,6 +78,11 @@ class ReflectionClass
         return $this->getNamespaceName() . '\\' . $this->getShortName();
     }
 
+    /**
+     * Get the "namespace" name of the class (e.g. for A\B\Foo, this will return "A\B")
+     *
+     * @return string
+     */
     public function getNamespaceName()
     {
         if (!$this->inNamespace()) {
@@ -71,6 +93,8 @@ class ReflectionClass
     }
 
     /**
+     * Decide if this class is part of a namespace. Returns false if global namespace;
+     *
      * @return bool
      */
     public function inNamespace()
@@ -79,6 +103,8 @@ class ReflectionClass
     }
 
     /**
+     * Fetch an array of all methods for this class
+     *
      * @return ReflectionMethod[]
      */
     public function getMethods()
@@ -87,6 +113,8 @@ class ReflectionClass
     }
 
     /**
+     * Get a single method with the name $methodName
+     *
      * @param string $methodName
      * @return ReflectionMethod
      */
