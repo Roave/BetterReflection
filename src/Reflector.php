@@ -7,7 +7,7 @@ use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
-class Investigator
+class Reflector
 {
     private $classLoader;
 
@@ -20,7 +20,7 @@ class Investigator
      * @param string $className
      * @return ReflectionClass
      */
-    public function investigate($className)
+    public function reflect($className)
     {
         $file = $this->classLoader->findFile($className);
 

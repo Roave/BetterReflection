@@ -2,24 +2,24 @@
 
 namespace AsgrimTest;
 
-use Asgrim\Investigator;
+use Asgrim\Reflector;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Investigator
+     * @var Reflector
      */
-    private $investigator;
+    private $reflector;
 
     public function setUp()
     {
         global $loader;
-        $this->investigator = new Investigator($loader);
+        $this->reflector = new Reflector($loader);
     }
 
     public function testClassNameMethods()
     {
-        $classInfo = $this->investigator->investigate('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
 
         $this->assertTrue($classInfo->inNamespace());
         $this->assertSame('AsgrimTest\Fixture\ExampleClass', $classInfo->getName());
@@ -29,7 +29,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMethods()
     {
-        $classInfo = $this->investigator->investigate('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
         $this->assertCount(1, $classInfo->getMethods());
     }
 }
