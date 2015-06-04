@@ -53,6 +53,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 
+    public function testReflectingAClassDoesNotLoadTheClass()
+    {
+        $class = 'AsgrimTest\Fixture\ExampleClass';
+
+        $this->assertFalse(class_exists($class, false));
+
+        $this->reflector->reflect($class);
+
+        $this->assertFalse(class_exists($class, false));
+    }
+
     public function testGetMethods()
     {
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
