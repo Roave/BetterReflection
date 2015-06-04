@@ -23,6 +23,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private $declaringClass;
 
+    protected function __construct()
+    {
+        parent::__construct();
+
+        $this->flags = 0;
+    }
+
     /**
      * @param MethodNode $node
      * @param ReflectionClass $declaringClass
