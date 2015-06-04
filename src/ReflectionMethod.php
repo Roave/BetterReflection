@@ -75,4 +75,14 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     {
         return $this->flagsHas(self::IS_STATIC);
     }
+
+    public function isConstructor()
+    {
+        return $this->name == '__construct';
+    }
+
+    public function isDestructor()
+    {
+        return $this->name == '__destruct';
+    }
 }

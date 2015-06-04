@@ -4,6 +4,10 @@ namespace AsgrimTest\Fixture;
 
 abstract class MethodsTest
 {
+    public function __construct()
+    {
+    }
+
     public function publicMethod()
     {
     }
@@ -27,6 +31,10 @@ abstract class MethodsTest
     }
 
     function noVisibility()
+    {
+    }
+
+    public function __destruct()
     {
     }
 }

@@ -45,4 +45,15 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($shouldBeAbstract, $method->isAbstract());
         $this->assertSame($shouldBeStatic, $method->isStatic());
     }
+
+    public function testIsConstructorDestructor()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('__construct');
+        $this->assertTrue($method->isConstructor());
+
+        $method = $classInfo->getMethod('__destruct');
+        $this->assertTrue($method->isDestructor());
+    }
 }
