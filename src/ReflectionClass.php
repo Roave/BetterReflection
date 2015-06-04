@@ -1,4 +1,5 @@
 <?php
+
 namespace Asgrim;
 
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -83,5 +84,20 @@ class ReflectionClass
     public function getMethods()
     {
         return $this->methods;
+    }
+
+    /**
+     * @param string $methodName
+     * @return ReflectionMethod
+     */
+    public function getMethod($methodName)
+    {
+        foreach ($this->getMethods() as $method) {
+            if ($method->getName() == $methodName) {
+                return $method;
+            }
+        }
+
+        throw new \OutOfBoundsException('Could not find method: ' . $methodName);
     }
 }
