@@ -17,7 +17,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new Reflector($loader);
     }
 
-    public function testClassNameMethods()
+    public function testClassNameMethodsWithNamespace()
     {
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
 
@@ -25,6 +25,32 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('AsgrimTest\Fixture\ExampleClass', $classInfo->getName());
         $this->assertSame('AsgrimTest\Fixture', $classInfo->getNamespaceName());
         $this->assertSame('ExampleClass', $classInfo->getShortName());
+    }
+
+    public function testClassNameMethodsWithoutNamespace()
+    {
+        $classInfo = $this->reflector->reflectClassFromFile(
+            'ClassWithNoNamespace',
+            __DIR__ . '/Fixture/NoNamespace.php'
+        );
+
+        $this->assertFalse($classInfo->inNamespace());
+        $this->assertSame('ClassWithNoNamespace', $classInfo->getName());
+        $this->assertSame('', $classInfo->getNamespaceName());
+        $this->assertSame('ClassWithNoNamespace', $classInfo->getShortName());
+    }
+
+    public function testClassNameMethodsWithExplicitGlobalNamespace()
+    {
+        $classInfo = $this->reflector->reflectClassFromFile(
+            'ClassWithExplicitGlobalNamespace',
+            __DIR__ . '/Fixture/ExampleClass.php'
+        );
+
+        $this->assertFalse($classInfo->inNamespace());
+        $this->assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getName());
+        $this->assertSame('', $classInfo->getNamespaceName());
+        $this->assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 
     public function testGetMethods()

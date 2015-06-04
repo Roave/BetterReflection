@@ -74,7 +74,7 @@ class ReflectionClass
      */
     public function inNamespace()
     {
-        return !(is_null($this->declaringNamespace));
+        return !(is_null($this->declaringNamespace)) && !is_null($this->declaringNamespace->name);
     }
 
     /**

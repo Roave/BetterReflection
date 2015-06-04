@@ -7,6 +7,10 @@ namespace AsgrimTest\Fixture {
     }
 }
 
-//namespace AsgrimTest\FixtureOther {
-//    class AnotherClass {}
-//}
+namespace AsgrimTest\FixtureOther {
+    class AnotherClass {}
+}
+
+namespace {
+    class ClassWithExplicitGlobalNamespace{}
+}

@@ -16,6 +16,8 @@ class Reflector
     }
 
     /**
+     * Use the Class Loader to resolve a class to a file and load it
+     *
      * @param string $className
      * @return ReflectionClass
      */
@@ -25,13 +27,29 @@ class Reflector
             $className = substr($className, 1);
         }
 
-        $file = $this->classLoader->findFile($className);
+        $filename = $this->classLoader->findFile($className);
 
-        if (class_exists($file, false)) {
+        if (class_exists($filename, false)) {
             throw new \LogicException(sprintf('Class "%s" is already loaded', $className));
         }
 
-        $fileContent = file_get_contents($file);
+        if (!$filename) {
+            throw new \UnexpectedValueException(sprintf('Could not locate file to load "%s"', $className));
+        }
+
+        return $this->reflectClassFromFile($className, $filename);
+    }
+
+    /**
+     * Load a file and attempt to read the specified class from the specified file
+     *
+     * @param string $className
+     * @param string $filename
+     * @return ReflectionClass
+     */
+    public function reflectClassFromFile($className, $filename)
+    {
+        $fileContent = file_get_contents($filename);
 
         $parser = new Parser(new Lexer);
         $ast = $parser->parse($fileContent);
