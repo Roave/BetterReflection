@@ -4,6 +4,8 @@ namespace Asgrim;
 use Composer\Autoload\ClassLoader;
 use PhpParser\Parser;
 use PhpParser\Lexer;
+use PhpParser\Node;
+use PhpParser\Node\Stmt;
 
 class Investigator
 {
@@ -14,6 +16,10 @@ class Investigator
         $this->classLoader = $classLoader;
     }
 
+    /**
+     * @param string $className
+     * @return ReflectionClass
+     */
     public function investigate($className)
     {
         $file = $this->classLoader->findFile($className);
@@ -27,6 +33,7 @@ class Investigator
         $parser = new Parser(new Lexer);
         $ast = $parser->parse($fileContent);
 
-        return new ClassInfo();
+        $class = ReflectionClass::createFromNode($ast[0]->stmts[0], $ast[0]);
+        return $class;
     }
 }
