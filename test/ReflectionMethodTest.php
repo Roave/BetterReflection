@@ -3,6 +3,7 @@
 namespace AsgrimTest;
 
 use Asgrim\Reflector;
+use Asgrim\ReflectionParameter;
 
 class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,5 +56,19 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
         $method = $classInfo->getMethod('__destruct');
         $this->assertTrue($method->isDestructor());
+    }
+
+    public function testGetParameters()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithParameters');
+        $params = $method->getParameters();
+
+        $this->assertCount(2, $params);
+        $this->assertContainsOnlyInstancesOf(ReflectionParameter::class, $params);
+
+        $this->assertSame('parameter1', $params[0]->getName());
+        $this->assertSame('parameter2', $params[1]->getName());
     }
 }

@@ -23,11 +23,17 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private $declaringClass;
 
+    /**
+     * @var ReflectionParameter[]
+     */
+    private $parameters;
+
     protected function __construct()
     {
         parent::__construct();
 
         $this->flags = 0;
+        $this->parameters = [];
     }
 
     /**
@@ -47,6 +53,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         $method->flags |= $node->isProtected() ? self::IS_PROTECTED : 0;
         $method->flags |= $node->isPublic() ? self::IS_PUBLIC : 0;
         $method->flags |= $node->isStatic() ? self::IS_STATIC : 0;
+
+        foreach ($node->params as $paramNode) {
+            $method->parameters[] = ReflectionParameter::createFromNode($paramNode, $method);
+        }
 
         return $method;
     }
@@ -140,5 +150,25 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function isDestructor()
     {
         return $this->name == '__destruct';
+    }
+
+    /**
+     * Get an array list of the parameters for this method signature, as an array of ReflectionParameter instances
+     *
+     * @return ReflectionParameter[]
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Get the class that declares this method
+     *
+     * @return ReflectionClass
+     */
+    public function getDeclaringClass()
+    {
+        return $this->declaringClass;
     }
 }

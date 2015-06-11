@@ -37,4 +37,8 @@ abstract class MethodsTest
     public function __destruct()
     {
     }
+
+    public function methodWithParameters($parameter1, $parameter2)
+    {
+    }
 }
