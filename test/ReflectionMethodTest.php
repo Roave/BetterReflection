@@ -82,4 +82,15 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $method2 = $classInfo->getMethod('methodWithOptionalParameters');
         $this->assertSame(2, $method2->getNumberOfParameters(), 'Failed asserting methodWithOptionalParameters has 2 params');
     }
+
+    public function testGetNumberOfOptionalParameters()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+
+        $method1 = $classInfo->getMethod('methodWithParameters');
+        $this->assertSame(2, $method1->getNumberOfRequiredParameters(), 'Failed asserting methodWithParameters has 2 required params');
+
+        $method2 = $classInfo->getMethod('methodWithOptionalParameters');
+        $this->assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
+    }
 }

@@ -173,6 +173,18 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Get the number of required parameters for this method
+     *
+     * @return int
+     */
+    public function getNumberOfRequiredParameters()
+    {
+        return count(array_filter($this->parameters, function (ReflectionParameter $p) {
+            return !$p->isOptional();
+        }));
+    }
+
+    /**
      * Get the class that declares this method
      *
      * @return ReflectionClass

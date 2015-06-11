@@ -3,6 +3,7 @@
 namespace Asgrim;
 
 use PhpParser\Node\Param as ParamNode;
+use PhpParser\Node;
 
 class ReflectionParameter
 {
@@ -15,6 +16,26 @@ class ReflectionParameter
      * @var ReflectionFunctionAbstract
      */
     private $function;
+
+    /**
+     * @var bool
+     */
+    private $isOptional;
+
+    /**
+     * @var mixed
+     */
+    private $defaultValue;
+
+    /**
+     * @var bool
+     */
+    private $isVariadic;
+
+    /**
+     * @var bool
+     */
+    private $isByReference;
 
     private function __construct()
     {
@@ -30,6 +51,31 @@ class ReflectionParameter
         $param = new self();
         $param->name = $node->name;
         $param->function = $function;
+        $param->isOptional = !is_null($node->default);
+        $param->isVariadic = $node->variadic;
+        $param->isByReference = $node->byRef;
+
+        if ($param->isOptional) {
+            switch (get_class($node->default)) {
+                case Node\Scalar\String_::class:
+                case Node\Scalar\DNumber::class:
+                case Node\Scalar\LNumber::class:
+                    $param->defaultValue = $node->default->value;
+                    break;
+                case Node\Expr\Array_::class:
+                    $param->defaultValue = []; // @todo compile expression
+                    break;
+                case Node\Expr\ConstFetch::class:
+                    if ($node->default->name->parts[0] == 'null') {
+                        $param->defaultValue = null;
+                    } else {
+                        throw new \LogicException('Other ConstFetch types are not implemented yet');
+                    }
+                    break;
+                default:
+                    throw new \LogicException('Unable to determine default value for parameter');
+            }
+        }
 
         return $param;
     }
@@ -68,5 +114,40 @@ class ReflectionParameter
         }
 
         return null;
+    }
+
+    /**
+     * Is the parameter optional?
+     *
+     * @return bool
+     */
+    public function isOptional()
+    {
+        return $this->isOptional;
+    }
+
+    /**
+     * Get the default value of the parameter
+     *
+     * @return mixed
+     * @throws \LogicException
+     */
+    public function getDefaultValue()
+    {
+        if (!$this->isOptional()) {
+            throw new \LogicException('This is not an optional parameter, so cannot have a default value');
+        }
+
+        return $this->defaultValue;
+    }
+
+    /**
+     * Does this method allow null for a parameter?
+     *
+     * @return bool
+     */
+    public function allowsNull()
+    {
+        return $this->isOptional() && $this->getDefaultValue() === null;
     }
 }
