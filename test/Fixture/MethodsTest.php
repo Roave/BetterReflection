@@ -41,4 +41,8 @@ abstract class MethodsTest
     public function methodWithParameters($parameter1, $parameter2)
     {
     }
+
+    public function methodWithOptionalParameters($parameter1, $parameter2 = null)
+    {
+    }
 }

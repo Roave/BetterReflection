@@ -163,6 +163,16 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Get the number of parameters for this class
+     *
+     * @return int
+     */
+    public function getNumberOfParameters()
+    {
+        return count($this->parameters);
+    }
+
+    /**
      * Get the class that declares this method
      *
      * @return ReflectionClass
