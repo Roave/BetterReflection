@@ -69,4 +69,20 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
         $this->assertCount(1, $classInfo->getMethods());
     }
+
+    public function testGetConstants()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $this->assertSame([
+            'MY_CONST_1' => 123,
+            'MY_CONST_2' => 234,
+        ], $classInfo->getConstants());
+    }
+
+    public function testGetConstant()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $this->assertSame(123, $classInfo->getConstant('MY_CONST_1'));
+        $this->assertSame(234, $classInfo->getConstant('MY_CONST_2'));
+    }
 }

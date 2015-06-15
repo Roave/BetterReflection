@@ -4,8 +4,8 @@
 
 | Method | Supported |
 |--------|-----------|
-| getConstant | todo |
-| getConstants | todo |
+| getConstant | :heavy_check_mark: Yes |
+| getConstants | :heavy_check_mark: Yes |
 | getConstructor | todo |
 | getDefaultProperties | todo |
 | getDocComment | todo |

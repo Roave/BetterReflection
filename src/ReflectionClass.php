@@ -4,6 +4,7 @@ namespace Asgrim;
 
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\ClassConst as ConstNode;
 
 class ReflectionClass
 {
@@ -22,10 +23,16 @@ class ReflectionClass
      */
     private $methods;
 
+    /**
+     * @var mixed[]
+     */
+    private $constants;
+
     private function __construct()
     {
         $this->declaringNamespace = null;
         $this->methods = [];
+        $this->constants = [];
     }
 
     /**
@@ -49,6 +56,14 @@ class ReflectionClass
 
         foreach ($methodNodes as $methodNode) {
             $class->methods[] = ReflectionMethod::createFromNode($methodNode, $class);
+        }
+
+        foreach ($node->stmts as $stmt) {
+            if ($stmt instanceof ConstNode) {
+                $constName = $stmt->consts[0]->name;
+                $constValue = Reflector::compileNodeExpression($stmt->consts[0]->value);
+                $class->constants[$constName] = $constValue;
+            }
         }
 
         return $class;
@@ -127,5 +142,32 @@ class ReflectionClass
         }
 
         throw new \OutOfBoundsException('Could not find method: ' . $methodName);
+    }
+
+    /**
+     * Get an array of the defined constants in this class
+     *
+     * @return mixed[]
+     */
+    public function getConstants()
+    {
+        return $this->constants;
+    }
+
+    /**
+     * Get the value of the specified class constant.
+     *
+     * Returns null if not specified.
+     *
+     * @param $name
+     * @return mixed|null
+     */
+    public function getConstant($name)
+    {
+        if (!isset($this->constants[$name])) {
+            return null;
+        }
+
+        return $this->constants[$name];
     }
 }
