@@ -20,8 +20,8 @@
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | :heavy_check_mark: Yes |
 | getParentClass | todo |
-| getProperties | todo |
-| getProperty | todo |
+| getProperties | :heavy_check_mark: Yes |
+| getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
 | getStaticProperties | todo |
@@ -135,7 +135,7 @@
 | getDeclaringClass | todo |
 | getDocComment | todo |
 | getModifiers | todo |
-| getName | todo |
+| getName | :heavy_check_mark: Yes |
 | getValue | todo |
 | isDefault | todo |
 | isPrivate | todo |

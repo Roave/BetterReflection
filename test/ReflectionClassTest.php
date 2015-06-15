@@ -2,6 +2,7 @@
 
 namespace AsgrimTest;
 
+use Asgrim\ReflectionProperty;
 use Asgrim\ReflectionMethod;
 use Asgrim\Reflector;
 
@@ -94,5 +95,25 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ReflectionMethod::class, $constructor);
         $this->assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetProperties()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+
+        $properties = $classInfo->getProperties();
+
+        $this->assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
+        $this->assertCount(3, $properties);
+    }
+
+    public function testGetProperty()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+
+        $property = $classInfo->getProperty('publicProperty');
+
+        $this->assertInstanceOf(ReflectionProperty::class, $property);
+        $this->assertSame('publicProperty', $property->getName());
     }
 }

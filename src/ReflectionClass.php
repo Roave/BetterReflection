@@ -5,6 +5,7 @@ namespace Asgrim;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
+use PhpParser\Node\Stmt\Property as PropertyNode;
 
 class ReflectionClass
 {
@@ -28,11 +29,17 @@ class ReflectionClass
      */
     private $constants;
 
+    /**
+     * @var ReflectionProperty[]
+     */
+    private $properties;
+
     private function __construct()
     {
         $this->declaringNamespace = null;
         $this->methods = [];
         $this->constants = [];
+        $this->properties = [];
     }
 
     /**
@@ -63,6 +70,11 @@ class ReflectionClass
                 $constName = $stmt->consts[0]->name;
                 $constValue = Reflector::compileNodeExpression($stmt->consts[0]->value);
                 $class->constants[$constName] = $constValue;
+            }
+
+            if ($stmt instanceof PropertyNode) {
+                $prop = ReflectionProperty::createFromNode($stmt);
+                $class->properties[$prop->getName()] = $prop;
             }
         }
 
@@ -159,7 +171,7 @@ class ReflectionClass
      *
      * Returns null if not specified.
      *
-     * @param $name
+     * @param string $name
      * @return mixed|null
      */
     public function getConstant($name)
@@ -179,5 +191,32 @@ class ReflectionClass
     public function getConstructor()
     {
         return $this->getMethod('__construct');
+    }
+
+    /**
+     * Get the properties for this class
+     *
+     * @return ReflectionProperty[]
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * Get the property called $name.
+     *
+     * Returns null if property does not exist.
+     *
+     * @param string $name
+     * @return ReflectionProperty|null
+     */
+    public function getProperty($name)
+    {
+        if (!isset($this->properties[$name])) {
+            return null;
+        }
+
+        return $this->properties[$name];
     }
 }
