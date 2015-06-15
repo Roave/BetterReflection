@@ -63,9 +63,9 @@
 | getFileName | todo |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | todo |
-| getNumberOfParameters | todo |
-| getNumberOfRequiredParameters | todo |
-| getParameters | todo |
+| getNumberOfParameters | :heavy_check_mark: Yes |
+| getNumberOfRequiredParameters | :heavy_check_mark: Yes |
+| getParameters | :heavy_check_mark: Yes |
 | getShortName | todo |
 | getStartLine | todo |
 | getStaticVariables | todo |

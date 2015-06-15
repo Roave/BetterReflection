@@ -23,17 +23,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private $declaringClass;
 
-    /**
-     * @var ReflectionParameter[]
-     */
-    private $parameters;
-
     protected function __construct()
     {
         parent::__construct();
 
         $this->flags = 0;
-        $this->parameters = [];
     }
 
     /**
@@ -43,8 +37,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public static function createFromNode(MethodNode $node, ReflectionClass $declaringClass)
     {
-        $method = new self();
-        $method->name = $node->name;
+        $method = new self($node);
+        $method->populateFunctionAbstract($node);
+
         $method->declaringClass = $declaringClass;
 
         $method->flags |= $node->isAbstract() ? self::IS_ABSTRACT : 0;
@@ -53,10 +48,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         $method->flags |= $node->isProtected() ? self::IS_PROTECTED : 0;
         $method->flags |= $node->isPublic() ? self::IS_PUBLIC : 0;
         $method->flags |= $node->isStatic() ? self::IS_STATIC : 0;
-
-        foreach ($node->params as $paramNode) {
-            $method->parameters[] = ReflectionParameter::createFromNode($paramNode, $method);
-        }
 
         return $method;
     }
@@ -139,7 +130,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isConstructor()
     {
-        return $this->name == '__construct';
+        return $this->getName() == '__construct';
     }
 
     /**
@@ -149,39 +140,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isDestructor()
     {
-        return $this->name == '__destruct';
-    }
-
-    /**
-     * Get an array list of the parameters for this method signature, as an array of ReflectionParameter instances
-     *
-     * @return ReflectionParameter[]
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * Get the number of parameters for this class
-     *
-     * @return int
-     */
-    public function getNumberOfParameters()
-    {
-        return count($this->parameters);
-    }
-
-    /**
-     * Get the number of required parameters for this method
-     *
-     * @return int
-     */
-    public function getNumberOfRequiredParameters()
-    {
-        return count(array_filter($this->parameters, function (ReflectionParameter $p) {
-            return !$p->isOptional();
-        }));
+        return $this->getName() == '__destruct';
     }
 
     /**
