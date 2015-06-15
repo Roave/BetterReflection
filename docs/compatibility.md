@@ -33,7 +33,7 @@
 | hasMethod | todo |
 | hasProperty | todo |
 | implementsInterface | :x: No |
-| inNamespace | todo |
+| inNamespace | :heavy_check_mark: Yes |
 | isAbstract | todo |
 | isCloneable | todo |
 | isFinal | todo |
@@ -52,8 +52,97 @@
 
 ## ReflectionFunctionAbstract
 
+| getClosureScopeClass | todo |
+| getClosureThis | todo |
+| getDocComment | todo |
+| getEndLine | todo |
+| getExtension | todo |
+| getExtensionName | todo |
+| getFileName | todo |
+| getName | :heavy_check_mark: Yes |
+| getNamespaceName | todo |
+| getNumberOfParameters | todo |
+| getNumberOfRequiredParameters | todo |
+| getParameters | todo |
+| getShortName | todo |
+| getStartLine | todo |
+| getStaticVariables | todo |
+| inNamespace | todo |
+| isClosure | todo |
+| isDeprecated | todo |
+| isGenerator | todo |
+| isInternal | todo |
+| isUserDefined | todo |
+| isVariadic | todo |
+| returnsReference | todo |
+
 ## ReflectionMethod
+
+| getClosure | todo |
+| getDeclaringClass | :heavy_check_mark: Yes |
+| getModifiers | todo |
+| getPrototype | todo |
+| invoke | todo |
+| invokeArgs | todo |
+| isAbstract | :heavy_check_mark: Yes |
+| isConstructor | :heavy_check_mark: Yes |
+| isDestructor | :heavy_check_mark: Yes |
+| isFinal | :heavy_check_mark: Yes |
+| isPrivate | :heavy_check_mark: Yes |
+| isProtected | :heavy_check_mark: Yes |
+| isPublic | :heavy_check_mark: Yes |
+| isStatic | :heavy_check_mark: Yes |
+| setAccessible | todo |
 
 ## ReflectionParameter
 
+| allowsNull | :heavy_check_mark: Yes |
+| canBePassedByValue | todo |
+| getClass | todo |
+| getDeclaringClass | :heavy_check_mark: Yes |
+| getDeclaringFunction | :heavy_check_mark: Yes |
+| getDefaultValue | :heavy_check_mark: Yes (*some assumptions are made) |
+| getDefaultValueConstantName | todo |
+| getName | :heavy_check_mark: Yes |
+| getPosition | todo |
+| isArray | todo |
+| isCallable | todo |
+| isDefaultValueAvailable | todo |
+| isDefaultValueConstant | todo |
+| isOptional | :heavy_check_mark: Yes |
+| isPassedByReference | todo |
+| isVariadic | todo |
+
 ## ReflectionFunction
+
+| getClosure | todo |
+| invoke | todo |
+| invokeArgs | todo |
+| isDisabled | todo |
+
+## ReflectionProperty
+
+| getDeclaringClass | todo |
+| getDocComment | todo |
+| getModifiers | todo |
+| getName | todo |
+| getValue | todo |
+| isDefault | todo |
+| isPrivate | todo |
+| isProtected | todo |
+| isPublic | todo |
+| isStatic | todo |
+| setAccessible | todo |
+| setValue | todo |
+
+## ReflectionExtension
+
+:x: Will not be implemented
+
+## ReflectionZendExtension
+
+:x: Will not be implemented
+
+## ReflectionObject
+
+:x: Will not be implemented
