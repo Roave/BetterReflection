@@ -170,4 +170,14 @@ class ReflectionClass
 
         return $this->constants[$name];
     }
+
+    /**
+     * Get the constructor method for this class
+     *
+     * @return ReflectionMethod
+     */
+    public function getConstructor()
+    {
+        return $this->getMethod('__construct');
+    }
 }

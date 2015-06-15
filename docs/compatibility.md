@@ -6,7 +6,7 @@
 |--------|-----------|
 | getConstant | :heavy_check_mark: Yes |
 | getConstants | :heavy_check_mark: Yes |
-| getConstructor | todo |
+| getConstructor | :heavy_check_mark: Yes |
 | getDefaultProperties | todo |
 | getDocComment | todo |
 | getEndLine | todo |

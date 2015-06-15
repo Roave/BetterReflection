@@ -2,6 +2,7 @@
 
 namespace AsgrimTest;
 
+use Asgrim\ReflectionMethod;
 use Asgrim\Reflector;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
@@ -67,7 +68,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetMethods()
     {
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
-        $this->assertCount(1, $classInfo->getMethods());
+        $this->assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
     public function testGetConstants()
@@ -84,5 +85,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
         $this->assertSame(123, $classInfo->getConstant('MY_CONST_1'));
         $this->assertSame(234, $classInfo->getConstant('MY_CONST_2'));
+    }
+
+    public function testGetConstructor()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $constructor = $classInfo->getConstructor();
+
+        $this->assertInstanceOf(ReflectionMethod::class, $constructor);
+        $this->assertTrue($constructor->isConstructor());
     }
 }
