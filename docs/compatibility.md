@@ -52,6 +52,8 @@
 
 ## ReflectionFunctionAbstract
 
+| Method | Supported |
+|--------|-----------|
 | getClosureScopeClass | todo |
 | getClosureThis | todo |
 | getDocComment | todo |
@@ -78,6 +80,8 @@
 
 ## ReflectionMethod
 
+| Method | Supported |
+|--------|-----------|
 | getClosure | todo |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | todo |
@@ -96,6 +100,8 @@
 
 ## ReflectionParameter
 
+| Method | Supported |
+|--------|-----------|
 | allowsNull | :heavy_check_mark: Yes |
 | canBePassedByValue | todo |
 | getClass | todo |
@@ -115,6 +121,8 @@
 
 ## ReflectionFunction
 
+| Method | Supported |
+|--------|-----------|
 | getClosure | todo |
 | invoke | todo |
 | invokeArgs | todo |
@@ -122,6 +130,8 @@
 
 ## ReflectionProperty
 
+| Method | Supported |
+|--------|-----------|
 | getDeclaringClass | todo |
 | getDocComment | todo |
 | getModifiers | todo |
