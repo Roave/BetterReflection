@@ -56,25 +56,7 @@ class ReflectionParameter
         $param->isByReference = $node->byRef;
 
         if ($param->isOptional) {
-            switch (get_class($node->default)) {
-                case Node\Scalar\String_::class:
-                case Node\Scalar\DNumber::class:
-                case Node\Scalar\LNumber::class:
-                    $param->defaultValue = $node->default->value;
-                    break;
-                case Node\Expr\Array_::class:
-                    $param->defaultValue = []; // @todo compile expression
-                    break;
-                case Node\Expr\ConstFetch::class:
-                    if ($node->default->name->parts[0] == 'null') {
-                        $param->defaultValue = null;
-                    } else {
-                        throw new \LogicException('Other ConstFetch types are not implemented yet');
-                    }
-                    break;
-                default:
-                    throw new \LogicException('Unable to determine default value for parameter');
-            }
+            $param->defaultValue = Reflector::compileNodeExpression($node->default);
         }
 
         return $param;

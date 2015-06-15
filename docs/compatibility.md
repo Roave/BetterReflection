@@ -8,7 +8,7 @@
 | getConstants | todo |
 | getConstructor | todo |
 | getDefaultProperties | todo |
-| getDocComment | :x: No |
+| getDocComment | todo |
 | getEndLine | todo |
 | getExtension | :x: No |
 | getFileName | todo |
