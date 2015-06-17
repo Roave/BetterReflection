@@ -12,6 +12,8 @@ namespace AsgrimTest\Fixture {
 
         public $publicProperty;
 
+        public static $publicStaticProperty;
+
         public function __construct()
         {
         }

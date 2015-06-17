@@ -7,10 +7,24 @@ use PhpParser\Node\Stmt\Property as PropertyNode;
 
 class ReflectionProperty
 {
+    const IS_PUBLIC = 1;
+    const IS_PROTECTED = 2;
+    const IS_PRIVATE = 3;
+
     /**
      * @var string
      */
     private $name;
+
+    /**
+     * @var int
+     */
+    private $visibility;
+
+    /**
+     * @var bool
+     */
+    private $isStatic;
 
     private function __construct()
     {
@@ -25,6 +39,16 @@ class ReflectionProperty
         $prop = new self();
         $prop->name = $node->props[0]->name;
 
+        if ($node->isPrivate()) {
+            $prop->visibility = self::IS_PRIVATE;
+        } else if ($node->isProtected()) {
+            $prop->visibility = self::IS_PROTECTED;
+        } else {
+            $prop->visibility = self::IS_PUBLIC;
+        }
+
+        $prop->isStatic = $node->isStatic();
+
         return $prop;
     }
 
@@ -36,5 +60,45 @@ class ReflectionProperty
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Is the property private?
+     *
+     * @return bool
+     */
+    public function isPrivate()
+    {
+        return $this->visibility == self::IS_PRIVATE;
+    }
+
+    /**
+     * Is the property protected?
+     *
+     * @return bool
+     */
+    public function isProtected()
+    {
+        return $this->visibility == self::IS_PROTECTED;
+    }
+
+    /**
+     * Is the property public?
+     *
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->visibility == self::IS_PUBLIC;
+    }
+
+    /**
+     * Is the property static?
+     *
+     * @return bool
+     */
+    public function isStatic()
+    {
+        return $this->isStatic;
     }
 }

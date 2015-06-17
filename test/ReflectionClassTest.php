@@ -104,7 +104,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $properties = $classInfo->getProperties();
 
         $this->assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
-        $this->assertCount(3, $properties);
+        $this->assertCount(4, $properties);
     }
 
     public function testGetProperty()
