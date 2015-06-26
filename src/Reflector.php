@@ -103,6 +103,20 @@ class Reflector
         return $classes;
     }
 
+    /**
+     * @param $filename
+     * @return ReflectionClass[]
+     */
+    public function getClassesFromFile($filename)
+    {
+        $fileContent = file_get_contents($filename);
+        $parser = new Parser(new Lexer);
+        $ast = $parser->parse($fileContent);
+
+        return $this->reflectClassesFromTree($ast);
+    }
+
+
     public static function compileNodeExpression(Node $node)
     {
         $type = get_class($node);
@@ -125,4 +139,6 @@ class Reflector
                 throw new \LogicException('Unable to compile expression');
         }
     }
+
+
 }
