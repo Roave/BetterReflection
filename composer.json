@@ -1,4 +1,6 @@
 {
+    "name": "asgrim/better-reflection",
+    "description": "Better reflection - now with added package name",
     "require": {
         "php": ">= 5.6",
         "nikic/php-parser": "^1.3",
