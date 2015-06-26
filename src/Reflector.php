@@ -1,4 +1,5 @@
 <?php
+
 namespace Asgrim;
 
 use Composer\Autoload\ClassLoader;
@@ -49,12 +50,7 @@ class Reflector
      */
     public function reflectClassFromFile($className, $filename)
     {
-        $fileContent = file_get_contents($filename);
-
-        $parser = new Parser(new Lexer);
-        $ast = $parser->parse($fileContent);
-
-        $classes = $this->reflectClassesFromTree($ast, $filename);
+        $classes = $this->getClassesFromFile($filename);
 
         foreach ($classes as $class) {
             if ($class->getName() == $className) {
@@ -104,6 +100,20 @@ class Reflector
         }
         return $classes;
     }
+
+    /**
+     * @param $filename
+     * @return ReflectionClass[]
+     */
+    public function getClassesFromFile($filename)
+    {
+        $fileContent = file_get_contents($filename);
+        $parser = new Parser(new Lexer);
+        $ast = $parser->parse($fileContent);
+
+        return $this->reflectClassesFromTree($ast, $filename);
+    }
+
 
     public static function compileNodeExpression(Node $node)
     {
