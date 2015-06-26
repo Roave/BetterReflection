@@ -34,6 +34,11 @@ class ReflectionClass
      */
     private $properties;
 
+    /**
+     * @var string
+     */
+    private $filename;
+
     private function __construct()
     {
         $this->declaringNamespace = null;
@@ -47,12 +52,14 @@ class ReflectionClass
      *
      * @param ClassNode $node
      * @param NamespaceNode $namespace optional - if omitted, we assume it is global namespaced class
+     * @param string $filename If set, this is the filename the class was declared in
      * @return ReflectionClass
      */
-    public static function createFromNode(ClassNode $node, NamespaceNode $namespace = null)
+    public static function createFromNode(ClassNode $node, NamespaceNode $namespace = null, $filename = null)
     {
         $class = new self();
 
+        $class->filename = $filename;
         $class->name = $node->name;
 
         if (null !== $namespace) {
@@ -218,5 +225,13 @@ class ReflectionClass
         }
 
         return $this->properties[$name];
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 }

@@ -54,7 +54,7 @@ class Reflector
         $parser = new Parser(new Lexer);
         $ast = $parser->parse($fileContent);
 
-        $classes = $this->reflectClassesFromTree($ast);
+        $classes = $this->reflectClassesFromTree($ast, $filename);
 
         foreach ($classes as $class) {
             if ($class->getName() == $className) {
@@ -67,14 +67,15 @@ class Reflector
 
     /**
      * @param Node\Stmt\Namespace_ $namespace
+     * @param string
      * @return ReflectionClass[]
      */
-    private function reflectClassesFromNamespace(Node\Stmt\Namespace_ $namespace)
+    private function reflectClassesFromNamespace(Node\Stmt\Namespace_ $namespace, $filename)
     {
         $classes = [];
         foreach ($namespace->stmts as $node) {
             if (get_class($node) == Node\Stmt\Class_::class) {
-                $classes[] = ReflectionClass::createFromNode($node, $namespace);
+                $classes[] = ReflectionClass::createFromNode($node, $namespace, $filename);
             }
         }
         return $classes;
@@ -82,9 +83,10 @@ class Reflector
 
     /**
      * @param Node[] $ast
+     * @param string $filename
      * @return ReflectionClass[]
      */
-    private function reflectClassesFromTree(array $ast)
+    private function reflectClassesFromTree(array $ast, $filename)
     {
         $classes = [];
         foreach ($ast as $node) {
@@ -92,11 +94,11 @@ class Reflector
                 case Node\Stmt\Namespace_::class:
                     $classes = array_merge(
                         $classes,
-                        $this->reflectClassesFromNamespace($node)
+                        $this->reflectClassesFromNamespace($node, $filename)
                     );
                     break;
                 case Node\Stmt\Class_::class:
-                    $classes[] = ReflectionClass::createFromNode($node);
+                    $classes[] = ReflectionClass::createFromNode($node, null, $filename);
                     break;
             }
         }
