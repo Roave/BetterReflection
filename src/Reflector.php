@@ -49,12 +49,7 @@ class Reflector
      */
     public function reflectClassFromFile($className, $filename)
     {
-        $fileContent = file_get_contents($filename);
-
-        $parser = new Parser(new Lexer);
-        $ast = $parser->parse($fileContent);
-
-        $classes = $this->reflectClassesFromTree($ast);
+       $classes = $this->getClassesFromFile($filename);
 
         foreach ($classes as $class) {
             if ($class->getName() == $className) {
