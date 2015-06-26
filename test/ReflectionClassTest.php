@@ -2,6 +2,7 @@
 
 namespace AsgrimTest;
 
+use Asgrim\ReflectionClass;
 use Asgrim\ReflectionProperty;
 use Asgrim\ReflectionMethod;
 use Asgrim\Reflector;
@@ -124,5 +125,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $detectedFilename = $classInfo->getFilename();
 
         $this->assertSame('ExampleClass.php', basename($detectedFilename));
+    }
+
+    public function testGetClassesFromFile()
+    {
+        $filename = 'test/Fixture/ExampleClass.php';
+        $classes = $this->reflector->getClassesFromFile($filename);
+
+        $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
+        $this->assertCount(3, $classes);
     }
 }
