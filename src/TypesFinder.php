@@ -2,12 +2,12 @@
 
 namespace Asgrim;
 
-use PhpParser\Node;
+use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\DocBlock;
 
 class TypesFinder
 {
-    public static function find(Node $node)
+    public static function findTypeForProperty(PropertyNode $node)
     {
         /* @var \PhpParser\Comment\Doc $comment */
         if (!$node->hasAttribute('comments')) {

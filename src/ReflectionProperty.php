@@ -54,7 +54,7 @@ class ReflectionProperty
 
         $prop->isStatic = $node->isStatic();
 
-        $prop->types = TypesFinder::find($node);
+        $prop->types = TypesFinder::findTypeForProperty($node);
 
         return $prop;
     }
