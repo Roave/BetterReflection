@@ -135,4 +135,27 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
         $this->assertCount(3, $classes);
     }
+
+    public function typesDataProvider()
+    {
+        return [
+            ['privateProperty', ['int', 'float', '\stdClass']],
+            ['protectedProperty', ['bool']],
+            ['publicProperty', ['string']],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param string[] $expectedTypes
+     * @dataProvider typesDataProvider
+     */
+    public function testGetTypes($propertyName, $expectedTypes)
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+
+        $property = $classInfo->getProperty($propertyName);
+
+        $this->assertSame($expectedTypes, $property->getTypes());
+    }
 }

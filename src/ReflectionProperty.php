@@ -26,6 +26,11 @@ class ReflectionProperty
      */
     private $isStatic;
 
+    /**
+     * @var string[]
+     */
+    private $types;
+
     private function __construct()
     {
     }
@@ -48,6 +53,8 @@ class ReflectionProperty
         }
 
         $prop->isStatic = $node->isStatic();
+
+        $prop->types = TypesFinder::find($node);
 
         return $prop;
     }
@@ -100,5 +107,15 @@ class ReflectionProperty
     public function isStatic()
     {
         return $this->isStatic;
+    }
+
+    /**
+     * Get the types of this property
+     *
+     * @return string[]
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 }
