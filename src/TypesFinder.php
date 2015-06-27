@@ -3,6 +3,7 @@
 namespace Asgrim;
 
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\DocBlock;
 
 class TypesFinder
@@ -19,5 +20,20 @@ class TypesFinder
         /* @var \phpDocumentor\Reflection\DocBlock\Tag\VarTag $varTag */
         $varTag = $docBlock->getTagsByName('var')[0];
         return $varTag->getTypes();
+    }
+
+    public static function findTypeForParameter(ReflectionFunctionAbstract $function, ParamNode $node)
+    {
+        $docBlock = new DocBlock($function->getDocComment());
+
+        $paramTags = $docBlock->getTagsByName('param');
+
+        foreach ($paramTags as $paramTag) {
+            /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tag\ParamTag */
+            if ($paramTag->getVariableName() == '$' . $node->name) {
+                return $paramTag->getTypes();
+            }
+        }
+        return [];
     }
 }

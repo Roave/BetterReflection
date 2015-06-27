@@ -37,6 +37,11 @@ class ReflectionParameter
      */
     private $isByReference;
 
+    /**
+     * @var string[]
+     */
+    private $types;
+
     private function __construct()
     {
     }
@@ -58,6 +63,8 @@ class ReflectionParameter
         if ($param->isOptional) {
             $param->defaultValue = Reflector::compileNodeExpression($node->default);
         }
+
+        $param->types = TypesFinder::findTypeForParameter($function, $node);
 
         return $param;
     }
@@ -131,5 +138,13 @@ class ReflectionParameter
     public function allowsNull()
     {
         return $this->isOptional() && $this->getDefaultValue() === null;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 }

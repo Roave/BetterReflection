@@ -38,6 +38,10 @@ abstract class MethodsTest
     {
     }
 
+    /**
+     * @param string $parameter1
+     * @param int|float $parameter2
+     */
     public function methodWithParameters($parameter1, $parameter2)
     {
     }

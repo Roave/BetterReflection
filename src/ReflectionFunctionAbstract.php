@@ -16,6 +16,11 @@ abstract class ReflectionFunctionAbstract
      */
     private $name;
 
+    /**
+     * @var string
+     */
+    private $docBlock;
+
     protected function __construct()
     {
         $this->parameters = [];
@@ -24,6 +29,12 @@ abstract class ReflectionFunctionAbstract
     protected function populateFunctionAbstract(MethodNode $node)
     {
         $this->name = $node->name;
+
+        if ($node->hasAttribute('comments')) {
+            /* @var \PhpParser\Comment\Doc $comment */
+            $comment = $node->getAttribute('comments')[0];
+            $this->docBlock = $comment->getReformattedText();
+        }
 
         foreach ($node->params as $paramNode) {
             $this->parameters[] = ReflectionParameter::createFromNode($paramNode, $this);
@@ -70,5 +81,29 @@ abstract class ReflectionFunctionAbstract
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * Get a single parameter by name. Returns null if parameter not found for the function
+     *
+     * @param string $parameterName
+     * @return ReflectionParameter|null
+     */
+    public function getParameter($parameterName)
+    {
+        foreach ($this->parameters as $parameter) {
+            if ($parameter->getName() == $parameterName) {
+                return $parameter;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocComment()
+    {
+        return $this->docBlock;
     }
 }
