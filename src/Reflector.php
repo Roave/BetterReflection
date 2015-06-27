@@ -179,6 +179,10 @@ class Reflector
             case Node\Expr\ConstFetch::class:
                 if ($node->name->parts[0] == 'null') {
                     return null;
+                } else if ($node->name->parts[0] == 'false') {
+                    return false;
+                } else if ($node->name->parts[0] == 'true') {
+                    return true;
                 } else {
                     throw new \LogicException('Other ConstFetch types are not implemented yet');
                 }

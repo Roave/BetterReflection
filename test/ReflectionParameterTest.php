@@ -25,6 +25,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
             ['null', null],
             ['1.1', 1.1],
             ['[]', []],
+            ['false', false],
+            ['true', true],
         ];
     }
 
