@@ -9,6 +9,9 @@ use PhpParser\Node;
 
 class Reflector
 {
+    /**
+     * @var ClassLoader
+     */
     private $classLoader;
 
     public function __construct(ClassLoader $classLoader)
@@ -42,16 +45,14 @@ class Reflector
     }
 
     /**
-     * Load a file and attempt to read the specified class from the specified file
+     * Given an array of ReflectionClasses, try to find the class named in $className
      *
+     * @param ReflectionClass[] $classes
      * @param string $className
-     * @param string $filename
      * @return ReflectionClass
      */
-    public function reflectClassFromFile($className, $filename)
+    private function findClassInArray($classes, $className)
     {
-        $classes = $this->getClassesFromFile($filename);
-
         foreach ($classes as $class) {
             if ($class->getName() == $className) {
                 return $class;
@@ -62,6 +63,34 @@ class Reflector
     }
 
     /**
+     * Load an arbitrary string and attempt to read the specified class from it
+     *
+     * @param string $className
+     * @param string $string
+     * @return ReflectionClass
+     */
+    public function reflectClassFromString($className, $string)
+    {
+        $classes = $this->getClassesFromString($string);
+        return $this->findClassInArray($classes, $className);
+    }
+
+    /**
+     * Load a file and attempt to read the specified class from the specified file
+     *
+     * @param string $className
+     * @param string $filename
+     * @return ReflectionClass
+     */
+    public function reflectClassFromFile($className, $filename)
+    {
+        $classes = $this->getClassesFromFile($filename);
+        return $this->findClassInArray($classes, $className);
+    }
+
+    /**
+     * Process and reflect all the classes found inside a namespace node
+     *
      * @param Node\Stmt\Namespace_ $namespace
      * @param string
      * @return ReflectionClass[]
@@ -78,6 +107,8 @@ class Reflector
     }
 
     /**
+     * Reflect classes from an AST. If a namespace is found, also load all the classes found in the namespace
+     *
      * @param Node[] $ast
      * @param string $filename
      * @return ReflectionClass[]
@@ -102,19 +133,38 @@ class Reflector
     }
 
     /**
+     * Get an array of classes found in an arbitrary string
+     *
+     * @param string $string
+     * @param string|null $filename
+     * @return ReflectionClass[]
+     */
+    public function getClassesFromString($string, $filename = null)
+    {
+        $parser = new Parser(new Lexer);
+        $ast = $parser->parse($string);
+
+        return $this->reflectClassesFromTree($ast, $filename);
+    }
+
+    /**
+     * Get a list of the classes found in specified file file
+     *
      * @param $filename
      * @return ReflectionClass[]
      */
     public function getClassesFromFile($filename)
     {
         $fileContent = file_get_contents($filename);
-        $parser = new Parser(new Lexer);
-        $ast = $parser->parse($fileContent);
-
-        return $this->reflectClassesFromTree($ast, $filename);
+        return $this->getClassesFromString($fileContent, $filename);
     }
 
-
+    /**
+     * Compile an expression from a node into a value
+     *
+     * @param Node $node
+     * @return mixed
+     */
     public static function compileNodeExpression(Node $node)
     {
         $type = get_class($node);
