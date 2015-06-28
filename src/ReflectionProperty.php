@@ -81,7 +81,7 @@ class ReflectionProperty implements \Reflector
 
         $prop->isStatic = $node->isStatic();
 
-        $prop->types = TypesFinder::findTypeForProperty($node);
+        $prop->types = TypesFinder::findTypeForProperty($node, $prop);
 
         return $prop;
     }

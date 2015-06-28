@@ -7,6 +7,8 @@ use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\ContextFactory;
+use phpDocumentor\Reflection\Types\Context;
 
 class TypesFinder
 {
@@ -14,20 +16,27 @@ class TypesFinder
      * Given a property, attempt to find the type of the property
      *
      * @param PropertyNode $node
+     * @param ReflectionProperty $reflectionProperty
      * @return Type[]
      */
-    public static function findTypeForProperty(PropertyNode $node)
+    public static function findTypeForProperty(PropertyNode $node, ReflectionProperty $reflectionProperty)
     {
+        $contextFactory = new ContextFactory();
+        $context = $contextFactory->createFromReflector($reflectionProperty);
+
         /* @var \PhpParser\Comment\Doc $comment */
         if (!$node->hasAttribute('comments')) {
             return [];
         }
         $comment = $node->getAttribute('comments')[0];
-        $docBlock = new DocBlock($comment->getReformattedText());
+        $docBlock = new DocBlock(
+            $comment->getReformattedText(),
+            new DocBlock\Context($reflectionProperty->getDeclaringClass()->getNamespaceName())
+        );
 
         /* @var \phpDocumentor\Reflection\DocBlock\Tag\VarTag $varTag */
         $varTag = $docBlock->getTagsByName('var')[0];
-        return self::resolveTypes($varTag->getTypes());
+        return self::resolveTypes($varTag->getTypes(), $context);
     }
 
     /**
@@ -54,15 +63,16 @@ class TypesFinder
 
     /**
      * @param string[] $stringTypes
-     * @return Type[]
+     * @param Context $context
+     * @return \phpDocumentor\Reflection\Type[]
      */
-    private static function resolveTypes($stringTypes)
+    private static function resolveTypes($stringTypes, Context $context = null)
     {
         $resolvedTypes = [];
         $resolver = new TypeResolver();
 
         foreach ($stringTypes as $stringType) {
-            $resolvedTypes[] = $resolver->resolve($stringType);
+            $resolvedTypes[] = $resolver->resolve($stringType, $context);
         }
 
         return $resolvedTypes;
