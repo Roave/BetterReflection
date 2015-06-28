@@ -56,7 +56,7 @@
 |--------|-----------|
 | getClosureScopeClass | todo |
 | getClosureThis | todo |
-| getDocComment | todo |
+| getDocComment | :heavy_check_mark: Yes |
 | getEndLine | todo |
 | getExtension | todo |
 | getExtensionName | todo |
@@ -136,14 +136,14 @@
 | getDocComment | todo |
 | getModifiers | todo |
 | getName | :heavy_check_mark: Yes |
-| getValue | todo |
+| getValue | :x: No |
 | isDefault | todo |
-| isPrivate | todo |
-| isProtected | todo |
-| isPublic | todo |
-| isStatic | todo |
-| setAccessible | todo |
-| setValue | todo |
+| isPrivate | :heavy_check_mark: Yes |
+| isProtected | :heavy_check_mark: Yes |
+| isPublic | :heavy_check_mark: Yes |
+| isStatic | :heavy_check_mark: Yes |
+| setAccessible | :x: No |
+| setValue | :x: No |
 
 ## ReflectionExtension
 
