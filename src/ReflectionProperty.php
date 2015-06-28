@@ -69,6 +69,7 @@ class ReflectionProperty implements \Reflector
     {
         $prop = new self();
         $prop->name = $node->props[0]->name;
+        $prop->declaringClass = $declaringClass;
 
         if ($node->isPrivate()) {
             $prop->visibility = self::IS_PRIVATE;
@@ -81,7 +82,6 @@ class ReflectionProperty implements \Reflector
         $prop->isStatic = $node->isStatic();
 
         $prop->types = TypesFinder::findTypeForProperty($node);
-        $prop->declaringClass = $declaringClass;
 
         return $prop;
     }
