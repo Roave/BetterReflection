@@ -36,8 +36,8 @@ abstract class ReflectionFunctionAbstract
             $this->docBlock = $comment->getReformattedText();
         }
 
-        foreach ($node->params as $paramNode) {
-            $this->parameters[] = ReflectionParameter::createFromNode($paramNode, $this);
+        foreach ($node->params as $paramIndex => $paramNode) {
+            $this->parameters[] = ReflectionParameter::createFromNode($paramNode, $this, $paramIndex);
         }
     }
 

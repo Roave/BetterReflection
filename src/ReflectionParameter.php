@@ -43,6 +43,11 @@ class ReflectionParameter
      */
     private $types;
 
+    /**
+     * @var int
+     */
+    private $parameterIndex;
+
     private function __construct()
     {
     }
@@ -50,9 +55,10 @@ class ReflectionParameter
     /**
      * @param ParamNode $node
      * @param ReflectionFunctionAbstract $function
+     * @param int $parameterIndex
      * @return ReflectionParameter
      */
-    public static function createFromNode(ParamNode $node, ReflectionFunctionAbstract $function)
+    public static function createFromNode(ParamNode $node, ReflectionFunctionAbstract $function, $parameterIndex)
     {
         $param = new self();
         $param->name = $node->name;
@@ -60,6 +66,7 @@ class ReflectionParameter
         $param->isOptional = !is_null($node->default);
         $param->isVariadic = $node->variadic;
         $param->isByReference = $node->byRef;
+        $param->parameterIndex = $parameterIndex;
 
         if ($param->isOptional) {
             $param->defaultValue = Reflector::compileNodeExpression($node->default);
