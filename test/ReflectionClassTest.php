@@ -140,7 +140,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['privateProperty', ['int', 'float', '\stdClass']],
-            ['protectedProperty', ['bool']],
+            ['protectedProperty', ['bool', 'bool[]', 'bool[][]']],
             ['publicProperty', ['string']],
         ];
     }

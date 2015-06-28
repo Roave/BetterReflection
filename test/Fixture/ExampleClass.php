@@ -12,7 +12,7 @@ namespace AsgrimTest\Fixture {
         private $privateProperty;
 
         /**
-         * @var bool
+         * @var bool|bool[]|bool[][]
          */
         protected $protectedProperty;
 

@@ -4,6 +4,7 @@ namespace Asgrim;
 
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
+use phpDocumentor\Reflection\Type;
 
 class ReflectionParameter
 {
@@ -38,7 +39,7 @@ class ReflectionParameter
     private $isByReference;
 
     /**
-     * @var string[]
+     * @var Type[]
      */
     private $types;
 
@@ -144,6 +145,19 @@ class ReflectionParameter
      * @return string[]
      */
     public function getTypes()
+    {
+        $stringTypes = [];
+
+        foreach ($this->types as $type) {
+            $stringTypes[] = (string)$type;
+        }
+        return $stringTypes;
+    }
+
+    /**
+     * @return Type[]
+     */
+    public function getTypeObjects()
     {
         return $this->types;
     }

@@ -4,6 +4,7 @@ namespace Asgrim;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use phpDocumentor\Reflection\Type;
 
 class ReflectionProperty
 {
@@ -27,7 +28,7 @@ class ReflectionProperty
     private $isStatic;
 
     /**
-     * @var string[]
+     * @var Type[]
      */
     private $types;
 
@@ -110,11 +111,22 @@ class ReflectionProperty
     }
 
     /**
-     * Get the types of this property
-     *
      * @return string[]
      */
     public function getTypes()
+    {
+        $stringTypes = [];
+
+        foreach ($this->types as $type) {
+            $stringTypes[] = (string)$type;
+        }
+        return $stringTypes;
+    }
+
+    /**
+     * @return Type[]
+     */
+    public function getTypeObjects()
     {
         return $this->types;
     }
