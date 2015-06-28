@@ -6,7 +6,7 @@ use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
 
-class ReflectionParameter
+class ReflectionParameter implements \Reflector
 {
     /**
      * @var string
@@ -50,6 +50,27 @@ class ReflectionParameter
 
     private function __construct()
     {
+    }
+
+    public static function export()
+    {
+        throw new \Exception('Unable to export statically');
+    }
+
+    /**
+     * Return string representation of this parameter
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf(
+            'Parameter #%d [ %s $%s%s ]',
+            $this->parameterIndex,
+            $this->isOptional() ? '<optional>' : '<required>',
+            $this->getName(),
+            $this->isOptional() ? (' = ' . $this->getDefaultValueAsString()) : ''
+        );
     }
 
     /**
@@ -136,6 +157,30 @@ class ReflectionParameter
         }
 
         return $this->defaultValue;
+    }
+
+    public function getDefaultValueAsString()
+    {
+        $defaultValue = $this->getDefaultValue();
+        $type = gettype($defaultValue);
+        switch($type) {
+            case 'boolean':
+                return $defaultValue ? 'true' : 'false';
+            case 'integer':
+            case 'float':
+            case 'double':
+                return (string)$defaultValue;
+            case 'array':
+                return '[]'; // @todo do this less terribly
+            case 'NULL':
+                return 'null';
+            case 'object':
+            case 'resource':
+            case 'unknown type':
+                throw new \RuntimeException(
+                    'Default value as an instance of an ' . $type . ' does not make any sense'
+                );
+        }
     }
 
     /**

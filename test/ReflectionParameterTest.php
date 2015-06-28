@@ -39,7 +39,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $classInfo = $this->reflector->reflectClassFromString('Foo', $content);
         $methodInfo = $classInfo->getMethod('myMethod');
-        $paramInfo = $methodInfo->getParameters()[0];
+        $paramInfo = $methodInfo->getParameter('var');
         $actualValue = $paramInfo->getDefaultValue();
 
         $this->assertSame($expectedValue, $actualValue);
@@ -56,5 +56,17 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $param2 = $method->getParameter('parameter2');
         $this->assertSame(['int', 'float'], $param2->getTypes());
+    }
+
+    public function testStringCast()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+        $method = $classInfo->getMethod('methodWithOptionalParameters');
+
+        $requiredParam = $method->getParameter('parameter');
+        $this->assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
+
+        $optionalParam = $method->getParameter('optionalParameter');
+        $this->assertSame('Parameter #1 [ <optional> $optionalParameter = null ]', (string)$optionalParam);
     }
 }
