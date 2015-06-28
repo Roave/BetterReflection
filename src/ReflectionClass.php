@@ -230,7 +230,7 @@ class ReflectionClass
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFileName()
     {
         return $this->filename;
     }

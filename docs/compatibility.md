@@ -11,7 +11,7 @@
 | getDocComment | todo |
 | getEndLine | todo |
 | getExtension | :x: No |
-| getFileName | todo |
+| getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | todo |
 | getInterfaces | todo |
 | getMethod | :heavy_check_mark: Yes |
@@ -60,7 +60,7 @@
 | getEndLine | todo |
 | getExtension | todo |
 | getExtensionName | todo |
-| getFileName | todo |
+| getFileName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | todo |
 | getNumberOfParameters | :heavy_check_mark: Yes |

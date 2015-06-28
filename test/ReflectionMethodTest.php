@@ -93,4 +93,14 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $method2 = $classInfo->getMethod('methodWithOptionalParameters');
         $this->assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
     }
+
+    public function testGetFileName()
+    {
+        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+        $method = $classInfo->getMethod('methodWithParameters');
+
+        $detectedFilename = $method->getFileName();
+
+        $this->assertSame('MethodsTest.php', basename($detectedFilename));
+    }
 }

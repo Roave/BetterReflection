@@ -118,11 +118,11 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('publicProperty', $property->getName());
     }
 
-    public function testGetFilename()
+    public function testGetFileName()
     {
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
 
-        $detectedFilename = $classInfo->getFilename();
+        $detectedFilename = $classInfo->getFileName();
 
         $this->assertSame('ExampleClass.php', basename($detectedFilename));
     }

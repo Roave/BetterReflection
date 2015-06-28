@@ -21,14 +21,26 @@ abstract class ReflectionFunctionAbstract
      */
     private $docBlock;
 
+    /**
+     * @var string
+     */
+    private $filename;
+
     protected function __construct()
     {
         $this->parameters = [];
     }
 
-    protected function populateFunctionAbstract(MethodNode $node)
+    /**
+     * Populate the common elements of the function abstract
+     *
+     * @param MethodNode $node
+     * @param string $filename
+     */
+    protected function populateFunctionAbstract(MethodNode $node, $filename)
     {
         $this->name = $node->name;
+        $this->filename = $filename;
 
         if ($node->hasAttribute('comments')) {
             /* @var \PhpParser\Comment\Doc $comment */
@@ -105,5 +117,13 @@ abstract class ReflectionFunctionAbstract
     public function getDocComment()
     {
         return $this->docBlock;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->filename;
     }
 }
