@@ -6,7 +6,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
 
-class ReflectionProperty
+class ReflectionProperty implements \Reflector
 {
     const IS_PUBLIC = 1;
     const IS_PROTECTED = 2;
@@ -41,6 +41,25 @@ class ReflectionProperty
     {
     }
 
+    public static function export()
+    {
+        throw new \Exception('Unable to export statically');
+    }
+
+    /**
+     * Return string representation of this little old property
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf(
+            'Property [ <default> %s $%s ]',
+            $this->getVisibilityAsString(),
+            $this->getName()
+        );
+    }
+
     /**
      * @param PropertyNode $node
      * @param ReflectionClass $declaringClass
@@ -65,6 +84,22 @@ class ReflectionProperty
         $prop->declaringClass = $declaringClass;
 
         return $prop;
+    }
+
+    /**
+     * @return string
+     */
+    private function getVisibilityAsString()
+    {
+        switch($this->visibility)
+        {
+            case self::IS_PROTECTED:
+                return 'protected';
+            case self::IS_PRIVATE:
+                return 'private';
+            default:
+                return 'public';
+        }
     }
 
     /**
