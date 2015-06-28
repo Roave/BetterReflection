@@ -80,7 +80,7 @@ class ReflectionClass
             }
 
             if ($stmt instanceof PropertyNode) {
-                $prop = ReflectionProperty::createFromNode($stmt);
+                $prop = ReflectionProperty::createFromNode($stmt, $class);
                 $class->properties[$prop->getName()] = $prop;
             }
         }

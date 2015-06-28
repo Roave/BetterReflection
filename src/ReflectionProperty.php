@@ -32,15 +32,21 @@ class ReflectionProperty
      */
     private $types;
 
+    /**
+     * @var ReflectionClass
+     */
+    private $declaringClass;
+
     private function __construct()
     {
     }
 
     /**
      * @param PropertyNode $node
+     * @param ReflectionClass $declaringClass
      * @return ReflectionProperty
      */
-    public static function createFromNode(PropertyNode $node)
+    public static function createFromNode(PropertyNode $node, ReflectionClass $declaringClass)
     {
         $prop = new self();
         $prop->name = $node->props[0]->name;
@@ -56,6 +62,7 @@ class ReflectionProperty
         $prop->isStatic = $node->isStatic();
 
         $prop->types = TypesFinder::findTypeForProperty($node);
+        $prop->declaringClass = $declaringClass;
 
         return $prop;
     }
@@ -129,5 +136,13 @@ class ReflectionProperty
     public function getTypeObjects()
     {
         return $this->types;
+    }
+
+    /**
+     * @return ReflectionClass
+     */
+    public function getDeclaringClass()
+    {
+        return $this->declaringClass;
     }
 }

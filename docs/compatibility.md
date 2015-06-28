@@ -132,7 +132,7 @@
 
 | Method | Supported |
 |--------|-----------|
-| getDeclaringClass | todo |
+| getDeclaringClass | :heavy_check_mark: Yes |
 | getDocComment | todo |
 | getModifiers | todo |
 | getName | :heavy_check_mark: Yes |
