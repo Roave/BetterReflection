@@ -196,7 +196,7 @@ class ReflectionParameter implements \Reflector
     /**
      * @return string[]
      */
-    public function getTypes()
+    public function getTypeStrings()
     {
         $stringTypes = [];
 
@@ -209,7 +209,7 @@ class ReflectionParameter implements \Reflector
     /**
      * @return Type[]
      */
-    public function getTypeObjects()
+    public function getTypes()
     {
         return $this->types;
     }

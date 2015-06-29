@@ -150,12 +150,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedTypes
      * @dataProvider typesDataProvider
      */
-    public function testGetTypes($propertyName, $expectedTypes)
+    public function testGetTypeStrings($propertyName, $expectedTypes)
     {
         $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
 
         $property = $classInfo->getProperty($propertyName);
 
-        $this->assertSame($expectedTypes, $property->getTypes());
+        $this->assertSame($expectedTypes, $property->getTypeStrings());
     }
 }
