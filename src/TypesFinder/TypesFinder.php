@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\TypesFinder;
 
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt\Property as PropertyNode;
@@ -10,6 +10,8 @@ use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Context;
+use BetterReflection\Reflection\ReflectionProperty;
+use BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 class TypesFinder
 {

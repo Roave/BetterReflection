@@ -1,11 +1,13 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
+use BetterReflection\NodeCompiler\NodeCompiler;
+use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionParameter implements \Reflector
 {
@@ -134,7 +136,7 @@ class ReflectionParameter implements \Reflector
 
     private function parseDefaultValueNode(Node $defaultValueNode)
     {
-        $this->defaultValue = Reflector::compileNodeExpression($defaultValueNode);
+        $this->defaultValue = NodeCompiler::compile($defaultValueNode);
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
             $this->isDefaultValueConstant = true;

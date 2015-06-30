@@ -1,7 +1,8 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
+use BetterReflection\NodeCompiler\NodeCompiler;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
@@ -75,7 +76,7 @@ class ReflectionClass
         foreach ($node->stmts as $stmt) {
             if ($stmt instanceof ConstNode) {
                 $constName = $stmt->consts[0]->name;
-                $constValue = Reflector::compileNodeExpression($stmt->consts[0]->value);
+                $constValue = NodeCompiler::compile($stmt->consts[0]->value);
                 $class->constants[$constName] = $constValue;
             }
 

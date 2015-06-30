@@ -2,9 +2,9 @@
 
 namespace BetterReflectionTest;
 
-use BetterReflection\ReflectionClass;
-use BetterReflection\ReflectionProperty;
-use BetterReflection\ReflectionMethod;
+use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\Reflection\ReflectionProperty;
+use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase

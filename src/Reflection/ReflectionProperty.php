@@ -1,10 +1,11 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
+use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionProperty implements \Reflector
 {

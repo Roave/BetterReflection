@@ -3,7 +3,7 @@
 namespace BetterReflectionTest;
 
 use BetterReflection\Reflector;
-use BetterReflection\ReflectionParameter;
+use BetterReflection\Reflection\ReflectionParameter;
 
 class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 {

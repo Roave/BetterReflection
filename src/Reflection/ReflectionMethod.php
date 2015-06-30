@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 
