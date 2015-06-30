@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave;
+namespace BetterReflection;
 
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;

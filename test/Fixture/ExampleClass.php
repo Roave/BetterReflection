@@ -1,6 +1,6 @@
 <?php
 
-namespace RoaveTest\Fixture {
+namespace BetterReflectionTest\Fixture {
     class ExampleClass
     {
         const MY_CONST_1 = 123;
@@ -33,7 +33,7 @@ namespace RoaveTest\Fixture {
     }
 }
 
-namespace RoaveTest\FixtureOther {
+namespace BetterReflectionTest\FixtureOther {
     class AnotherClass
     {
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace RoaveTest\Fixture;
+namespace BetterReflectionTest\Fixture;
 
 abstract class MethodsTest
 {

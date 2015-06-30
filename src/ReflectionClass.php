@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave;
+namespace BetterReflection;
 
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;

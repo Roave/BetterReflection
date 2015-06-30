@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave;
+namespace BetterReflection;
 
 use Composer\Autoload\ClassLoader;
 use PhpParser\Parser;

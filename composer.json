@@ -13,8 +13,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Roave\\": "src",
-            "RoaveTest\\": "test"
+            "BetterReflection\\": "src",
+            "BetterReflectionTest\\": "test"
         }
     },
     "minimum-stability": "dev",
