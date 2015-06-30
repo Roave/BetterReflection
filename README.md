@@ -50,8 +50,6 @@ Example usage to fetch a list of classes from a file
 ```php
 <?php
 
-$filenameSourceLocator = new FilenameSourceLocator('path/to/file.php');
-
-$reflector = new Reflector($filenameSourceLocator);
-$classes = $reflector->getClasses($filenameSourceLocator->locate('*'));
+$reflector = new Reflector(new FilenameSourceLocator('path/to/file.php'));
+$classes = $reflector->getClassesFromFile();
 ```
