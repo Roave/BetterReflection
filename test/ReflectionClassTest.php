@@ -1,11 +1,11 @@
 <?php
 
-namespace AsgrimTest;
+namespace BetterReflectionTest;
 
-use Asgrim\ReflectionClass;
-use Asgrim\ReflectionProperty;
-use Asgrim\ReflectionMethod;
-use Asgrim\Reflector;
+use BetterReflection\ReflectionClass;
+use BetterReflection\ReflectionProperty;
+use BetterReflection\ReflectionMethod;
+use BetterReflection\Reflector;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,11 +22,11 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testClassNameMethodsWithNamespace()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $this->assertTrue($classInfo->inNamespace());
-        $this->assertSame('AsgrimTest\Fixture\ExampleClass', $classInfo->getName());
-        $this->assertSame('AsgrimTest\Fixture', $classInfo->getNamespaceName());
+        $this->assertSame('BetterReflectionTest\Fixture\ExampleClass', $classInfo->getName());
+        $this->assertSame('BetterReflectionTest\Fixture', $classInfo->getNamespaceName());
         $this->assertSame('ExampleClass', $classInfo->getShortName());
     }
 
@@ -58,7 +58,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectingAClassDoesNotLoadTheClass()
     {
-        $class = 'AsgrimTest\Fixture\ExampleClass';
+        $class = 'BetterReflectionTest\Fixture\ExampleClass';
 
         $this->assertFalse(class_exists($class, false));
 
@@ -69,13 +69,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMethods()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
     public function testGetConstants()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertSame([
             'MY_CONST_1' => 123,
             'MY_CONST_2' => 234,
@@ -84,14 +84,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConstant()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertSame(123, $classInfo->getConstant('MY_CONST_1'));
         $this->assertSame(234, $classInfo->getConstant('MY_CONST_2'));
     }
 
     public function testGetConstructor()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $constructor = $classInfo->getConstructor();
 
         $this->assertInstanceOf(ReflectionMethod::class, $constructor);
@@ -100,7 +100,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProperties()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $properties = $classInfo->getProperties();
 
@@ -110,7 +110,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProperty()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $property = $classInfo->getProperty('publicProperty');
 
@@ -120,7 +120,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileName()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $detectedFilename = $classInfo->getFileName();
 
@@ -152,7 +152,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTypeStrings($propertyName, $expectedTypes)
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $property = $classInfo->getProperty($propertyName);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AsgrimTest\Fixture;
+namespace BetterReflectionTest\Fixture;
 
 abstract class MethodsTest
 {

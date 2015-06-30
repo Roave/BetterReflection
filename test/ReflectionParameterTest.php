@@ -1,8 +1,8 @@
 <?php
 
-namespace AsgrimTest;
+namespace BetterReflectionTest;
 
-use Asgrim\Reflector;
+use BetterReflection\Reflector;
 
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,7 +47,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeStrings()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
@@ -60,7 +60,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testStringCast()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
         $method = $classInfo->getMethod('methodWithOptionalParameters');
 
         $requiredParam = $method->getParameter('parameter');
