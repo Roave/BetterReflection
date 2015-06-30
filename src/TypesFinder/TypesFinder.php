@@ -22,8 +22,10 @@ class TypesFinder
      * @param ReflectionProperty $reflectionProperty
      * @return Type[]
      */
-    public static function findTypeForProperty(PropertyNode $node, ReflectionProperty $reflectionProperty)
-    {
+    public static function findTypeForProperty(
+        PropertyNode $node,
+        ReflectionProperty $reflectionProperty
+    ) {
         $contextFactory = new ContextFactory();
         $context = $contextFactory->createFromReflector($reflectionProperty);
 
@@ -34,7 +36,9 @@ class TypesFinder
         $comment = $node->getAttribute('comments')[0];
         $docBlock = new DocBlock(
             $comment->getReformattedText(),
-            new DocBlock\Context($reflectionProperty->getDeclaringClass()->getNamespaceName())
+            new DocBlock\Context(
+                $reflectionProperty->getDeclaringClass()->getNamespaceName()
+            )
         );
 
         /* @var \phpDocumentor\Reflection\DocBlock\Tag\VarTag $varTag */
@@ -49,8 +53,10 @@ class TypesFinder
      * @param ParamNode $node
      * @return Type[]
      */
-    public static function findTypeForParameter(ReflectionFunctionAbstract $function, ParamNode $node)
-    {
+    public static function findTypeForParameter(
+        ReflectionFunctionAbstract $function,
+        ParamNode $node
+    ) {
         $docBlock = new DocBlock($function->getDocComment());
 
         $paramTags = $docBlock->getTagsByName('param');

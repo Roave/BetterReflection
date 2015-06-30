@@ -2,6 +2,13 @@
 
 namespace BetterReflection\SourceLocator;
 
+/**
+ * This source locator simply parses the string given in the constructor as
+ * valid PHP.
+ *
+ * Note that this source locator does NOT specify a filename, because we did
+ * not load it from a file, so it will be null if you use this locator.
+ */
 class StringSourceLocator implements SourceLocator
 {
     /**
@@ -14,7 +21,9 @@ class StringSourceLocator implements SourceLocator
         $this->source = (string)$source;
 
         if (empty($this->source)) {
-            throw new \InvalidArgumentException('Source code string was empty');
+            throw new \InvalidArgumentException(
+                'Source code string was empty'
+            );
         }
     }
 

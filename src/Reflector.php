@@ -22,6 +22,13 @@ class Reflector
         $this->sourceLocator = $sourceLocator;
     }
 
+    /**
+     * Uses the SourceLocator given in the constructor to locate the $className
+     * specified and returns the ReflectionClass
+     *
+     * @param $className
+     * @return ReflectionClass
+     */
     public function reflect($className)
     {
         if ('\\' == $className[0]) {
@@ -29,21 +36,27 @@ class Reflector
         }
 
         if (class_exists($className, false)) {
-            throw new \LogicException(sprintf('Class "%s" is already loaded', $className));
+            throw new \LogicException(sprintf(
+                'Class "%s" is already loaded',
+                $className
+            ));
         }
 
         $locatedSource = $this->sourceLocator->locate($className);
         $class = $this->reflectClassFromString($className, $locatedSource);
 
         if (class_exists($className, false)) {
-            throw new \LogicException(sprintf('Class "%s" was loaded during thing', $className));
+            throw new \LogicException(sprintf(
+                'Class "%s" was loaded whilst reflecting',
+                $className
+            ));
         }
 
         return $class;
     }
 
     /**
-     * Given an array of ReflectionClasses, try to find the class named in $className
+     * Given an array of ReflectionClasses, try to find the class $className
      *
      * @param ReflectionClass[] $classes
      * @param string $className
@@ -57,7 +70,10 @@ class Reflector
             }
         }
 
-        throw new \UnexpectedValueException(sprintf('Class "%s" could not be found to load', $className));
+        throw new \UnexpectedValueException(sprintf(
+            'Class "%s" could not be found to load',
+            $className
+        ));
     }
 
     /**
@@ -67,8 +83,10 @@ class Reflector
      * @param LocatedSource $locatedSource
      * @return ReflectionClass
      */
-    private function reflectClassFromString($className, LocatedSource $locatedSource)
-    {
+    private function reflectClassFromString(
+        $className,
+        LocatedSource $locatedSource
+    ) {
         $classes = $this->getClasses($locatedSource);
         return $this->findClassInArray($classes, $className);
     }
@@ -80,19 +98,26 @@ class Reflector
      * @param string|null $filename
      * @return ReflectionClass[]
      */
-    private function reflectClassesFromNamespace(Node\Stmt\Namespace_ $namespace, $filename)
-    {
+    private function reflectClassesFromNamespace(
+        Node\Stmt\Namespace_ $namespace,
+        $filename
+    ) {
         $classes = [];
         foreach ($namespace->stmts as $node) {
             if ($node instanceof Node\Stmt\Class_) {
-                $classes[] = ReflectionClass::createFromNode($node, $namespace, $filename);
+                $classes[] = ReflectionClass::createFromNode(
+                    $node,
+                    $namespace,
+                    $filename
+                );
             }
         }
         return $classes;
     }
 
     /**
-     * Reflect classes from an AST. If a namespace is found, also load all the classes found in the namespace
+     * Reflect classes from an AST. If a namespace is found, also load all the
+     * classes found in the namespace
      *
      * @param Node[] $ast
      * @param string|null $filename
@@ -110,7 +135,11 @@ class Reflector
                     );
                     break;
                 case Node\Stmt\Class_::class:
-                    $classes[] = ReflectionClass::createFromNode($node, null, $filename);
+                    $classes[] = ReflectionClass::createFromNode(
+                        $node,
+                        null,
+                        $filename
+                    );
                     break;
             }
         }
@@ -128,13 +157,17 @@ class Reflector
         $parser = new Parser(new Lexer);
         $ast = $parser->parse($locatedSource->getSource());
 
-        return $this->reflectClassesFromTree($ast, $locatedSource->getFileName());
+        return $this->reflectClassesFromTree(
+            $ast,
+            $locatedSource->getFileName()
+        );
     }
 
     /**
      * Return an array of ReflectionClass objects from the file.
      *
-     * This requires a FilenameSourceLocator to be used, otherwise an exception will be thrown.
+     * This requires a FilenameSourceLocator to be used, otherwise a
+     * LogicException will be thrown.
      *
      * @throws \LogicException
      * @return Reflection\ReflectionClass[]
@@ -142,7 +175,10 @@ class Reflector
     public function getClassesFromFile()
     {
         if (!$this->sourceLocator instanceof FilenameSourceLocator) {
-            throw new \LogicException('To fetch all classes from file, you must use a FilenameSourceLocator');
+            throw new \LogicException(
+                'To fetch all classes from file, you must use a'
+                . ' FilenameSourceLocator'
+            );
         }
 
         return $this->getClasses($this->sourceLocator->locate('*'));

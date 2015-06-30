@@ -4,6 +4,13 @@ namespace BetterReflection\SourceLocator;
 
 use Composer\Autoload\ClassLoader;
 
+/**
+ * This source locator uses Composer's built-in ClassLoader to locate files.
+ *
+ * Note that we use ClassLoader->findFile directory, rather than
+ * ClassLoader->loadClass because this library has a strict requirement that we
+ * do NOT actually load the classes
+ */
 class ComposerSourceLocator implements SourceLocator
 {
     /**
@@ -25,7 +32,9 @@ class ComposerSourceLocator implements SourceLocator
         $filename = $this->classLoader->findFile($className);
 
         if (!$filename) {
-            throw new \UnexpectedValueException(sprintf('Could not locate file to load "%s"', $className));
+            throw new \UnexpectedValueException(sprintf(
+                'Could not locate file to load "%s"', $className
+            ));
         }
 
         return new LocatedSource(

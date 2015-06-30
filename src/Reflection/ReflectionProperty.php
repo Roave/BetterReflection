@@ -66,8 +66,10 @@ class ReflectionProperty implements \Reflector
      * @param ReflectionClass $declaringClass
      * @return ReflectionProperty
      */
-    public static function createFromNode(PropertyNode $node, ReflectionClass $declaringClass)
-    {
+    public static function createFromNode(
+        PropertyNode $node,
+        ReflectionClass $declaringClass
+    ) {
         $prop = new self();
         $prop->name = $node->props[0]->name;
         $prop->declaringClass = $declaringClass;

@@ -20,11 +20,15 @@ class LocatedSource
     public function __construct($source, $filename)
     {
         if (!is_string($source) || empty($source)) {
-            throw new \InvalidArgumentException('Source code must be a non-empty string');
+            throw new \InvalidArgumentException(
+                'Source code must be a non-empty string'
+            );
         }
 
         if (!is_string($filename) && !is_null($filename)) {
-            throw new \InvalidArgumentException('Filename must be a string or null');
+            throw new \InvalidArgumentException(
+                'Filename must be a string or null'
+            );
         }
 
         $this->source = $source;

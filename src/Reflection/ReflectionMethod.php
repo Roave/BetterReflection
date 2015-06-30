@@ -35,8 +35,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param ReflectionClass $declaringClass
      * @return ReflectionMethod
      */
-    public static function createFromNode(MethodNode $node, ReflectionClass $declaringClass)
-    {
+    public static function createFromNode(
+        MethodNode $node,
+        ReflectionClass $declaringClass
+    ) {
         $method = new self($node);
         $method->populateFunctionAbstract($node, $declaringClass->getFileName());
 
