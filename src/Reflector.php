@@ -2,13 +2,13 @@
 
 namespace BetterReflection;
 
-use BetterReflection\SourceLocator\FilenameSourceLocator;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SourceLocator;
+use BetterReflection\Reflection\ReflectionClass;
 use PhpParser\Parser;
 use PhpParser\Lexer;
 use PhpParser\Node;
-use BetterReflection\Reflection\ReflectionClass;
 
 class Reflector
 {
@@ -166,7 +166,7 @@ class Reflector
     /**
      * Return an array of ReflectionClass objects from the file.
      *
-     * This requires a FilenameSourceLocator to be used, otherwise a
+     * This requires a SingleFileSourceLocator to be used, otherwise a
      * LogicException will be thrown.
      *
      * @throws \LogicException
@@ -174,10 +174,10 @@ class Reflector
      */
     public function getClassesFromFile()
     {
-        if (!$this->sourceLocator instanceof FilenameSourceLocator) {
+        if (!$this->sourceLocator instanceof SingleFileSourceLocator) {
             throw new \LogicException(
                 'To fetch all classes from file, you must use a'
-                . ' FilenameSourceLocator'
+                . ' SingleFileSourceLocator'
             );
         }
 

@@ -10,7 +10,7 @@ namespace BetterReflection\SourceLocator;
  * also the class required if you want to use Reflector->getClassesFromFile
  * (which loads all classes from specified file)
  */
-class FilenameSourceLocator implements SourceLocator
+class SingleFileSourceLocator implements SourceLocator
 {
     /**
      * @var string

@@ -7,8 +7,7 @@ use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
-use BetterReflection\SourceLocator\FilenameSourceLocator;
-use BetterReflection\SourceLocator\NullLocator;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +30,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testClassNameMethodsWithoutNamespace()
     {
-        $reflector = new Reflector(new FilenameSourceLocator(__DIR__ . '/Fixture/NoNamespace.php'));
+        $reflector = new Reflector(new SingleFileSourceLocator(__DIR__ . '/Fixture/NoNamespace.php'));
         $classInfo = $reflector->reflect('ClassWithNoNamespace');
 
         $this->assertFalse($classInfo->inNamespace());
@@ -42,7 +41,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testClassNameMethodsWithExplicitGlobalNamespace()
     {
-        $reflector = new Reflector(new FilenameSourceLocator(__DIR__ . '/Fixture/ExampleClass.php'));
+        $reflector = new Reflector(new SingleFileSourceLocator(__DIR__ . '/Fixture/ExampleClass.php'));
         $classInfo = $reflector->reflect('ClassWithExplicitGlobalNamespace');
 
         $this->assertFalse($classInfo->inNamespace());
@@ -133,9 +132,9 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetClassesFromFile()
     {
         $filename = 'test/Fixture/ExampleClass.php';
-        $filenameSourceLocator = new FilenameSourceLocator($filename);
+        $singleFileSourceLocator = new SingleFileSourceLocator($filename);
 
-        $reflector = new Reflector($filenameSourceLocator);
+        $reflector = new Reflector($singleFileSourceLocator);
         $classes = $reflector->getClassesFromFile();
 
         $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);

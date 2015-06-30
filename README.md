@@ -24,7 +24,7 @@ Example usage for loading a class from a specific file:
 ```php
 <?php
 
-$reflector = new Reflector(new FilenameSourceLocator('path/to/MyApp/MyClass.php'));
+$reflector = new Reflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php'));
 $reflectionClass = $reflector->reflect('MyApp\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
@@ -50,6 +50,6 @@ Example usage to fetch a list of classes from a file
 ```php
 <?php
 
-$reflector = new Reflector(new FilenameSourceLocator('path/to/file.php'));
+$reflector = new Reflector(new SingleFileSourceLocator('path/to/file.php'));
 $classes = $reflector->getClassesFromFile();
 ```
