@@ -14,9 +14,7 @@ class NodeCompiler
      */
     public static function compile(Node $node)
     {
-        $type = get_class($node);
-
-        switch ($type) {
+        switch (get_class($node)) {
             case Node\Scalar\String_::class:
             case Node\Scalar\DNumber::class:
             case Node\Scalar\LNumber::class:
