@@ -27,7 +27,7 @@ class ComposerSourceLocator implements SourceLocator
      * @param string $className
      * @return LocatedSource
      */
-    public function locate($className)
+    public function __invoke($className)
     {
         $filename = $this->classLoader->findFile($className);
 

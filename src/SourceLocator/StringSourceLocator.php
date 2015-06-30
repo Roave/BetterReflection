@@ -31,7 +31,7 @@ class StringSourceLocator implements SourceLocator
      * @param string $className
      * @return LocatedSource
      */
-    public function locate($className)
+    public function __invoke($className)
     {
         return new LocatedSource($this->source, null);
     }

@@ -30,7 +30,7 @@ class SingleFileSourceLocator implements SourceLocator
      * @param string $className
      * @return LocatedSource
      */
-    public function locate($className)
+    public function __invoke($className)
     {
         return new LocatedSource(
             file_get_contents($this->filename),

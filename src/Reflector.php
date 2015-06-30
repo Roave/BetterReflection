@@ -42,7 +42,7 @@ class Reflector
             ));
         }
 
-        $locatedSource = $this->sourceLocator->locate($className);
+        $locatedSource = $this->sourceLocator->__invoke($className);
         $class = $this->reflectClassFromLocatedSource($className, $locatedSource);
 
         if (class_exists($className, false)) {
@@ -181,6 +181,6 @@ class Reflector
             );
         }
 
-        return $this->getClasses($this->sourceLocator->locate('*'));
+        return $this->getClasses($this->sourceLocator->__invoke('*'));
     }
 }
