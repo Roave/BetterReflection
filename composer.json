@@ -1,6 +1,6 @@
 {
     "name": "roave/better-reflection",
-    "description": "Better Reflection - now with added package name",
+    "description": "Better Reflection - an improved code reflection API",
     "require": {
         "php": ">= 5.6",
         "nikic/php-parser": "^1.3",
