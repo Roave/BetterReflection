@@ -4,6 +4,8 @@ namespace BetterReflectionTest;
 
 use BetterReflection\Reflector;
 use phpDocumentor\Reflection\Types;
+use BetterReflection\SourceLocator\ComposerSourceLocator;
+use BetterReflection\SourceLocator\StringSourceLocator;
 
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +17,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         global $loader;
-        $this->reflector = new Reflector($loader);
+        $this->reflector = new Reflector(new ComposerSourceLocator($loader));
     }
 
     public function defaultParameterProvider()
@@ -32,13 +34,16 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $defaultExpression
+     * @param mixed $expectedValue
      * @dataProvider defaultParameterProvider
      */
     public function testDefaultParametersTypes($defaultExpression, $expectedValue)
     {
         $content = "<?php class Foo { public function myMethod(\$var = $defaultExpression) {} }";
 
-        $classInfo = $this->reflector->reflectClassFromString('Foo', $content);
+        $reflector = new Reflector(new StringSourceLocator($content));
+        $classInfo = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
         $actualValue = $paramInfo->getDefaultValue();
@@ -48,7 +53,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeStrings()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
@@ -61,7 +66,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testStringCast()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithOptionalParameters');
 
         $requiredParam = $method->getParameter('parameter');
@@ -73,7 +78,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPositions()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
@@ -106,7 +111,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTypeHint($parameterToTest, $expectedType, $expectedFqsen = null, $expectedFqsenName = null)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
@@ -124,7 +129,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsCallable()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
@@ -137,7 +142,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsArray()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
@@ -150,7 +155,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsVariadic()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithVariadic');
 
@@ -163,7 +168,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsPassedByReference()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithReference');
 
@@ -178,7 +183,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultValueAndIsOptional()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithNonOptionalDefaultValue');
 
         $firstParam = $method->getParameter('firstParameter');
@@ -192,7 +197,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testAllowsNull()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodToCheckAllowsNull');
 
         $firstParam = $method->getParameter('allowsNull');
@@ -207,7 +212,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithConstAsDefault');
 
         $intDefault = $method->getParameter('intDefault');

@@ -4,6 +4,7 @@ namespace BetterReflectionTest;
 
 use BetterReflection\Reflector;
 use BetterReflection\Reflection\ReflectionParameter;
+use BetterReflection\SourceLocator\ComposerSourceLocator;
 
 class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         global $loader;
-        $this->reflector = new Reflector($loader);
+        $this->reflector = new Reflector(new ComposerSourceLocator($loader));
     }
 
     public function visibilityProvider()
@@ -32,11 +33,18 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $method
+     * @param bool $shouldBePublic
+     * @param bool $shouldBePrivate
+     * @param bool $shouldBeProtected
+     * @param bool $shouldBeFinal
+     * @param bool $shouldBeAbstract
+     * @param bool $shouldBeStatic
      * @dataProvider visibilityProvider
      */
     public function testVisibilityOfMethods($method, $shouldBePublic, $shouldBePrivate, $shouldBeProtected, $shouldBeFinal, $shouldBeAbstract, $shouldBeStatic)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod($method);
 
         $this->assertSame($shouldBePublic, $method->isPublic());
@@ -49,7 +57,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testIsConstructorDestructor()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('__construct');
         $this->assertTrue($method->isConstructor());
@@ -60,7 +68,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetParameters()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
         $params = $method->getParameters();
@@ -74,7 +82,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNumberOfParameters()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method1 = $classInfo->getMethod('methodWithParameters');
         $this->assertSame(2, $method1->getNumberOfParameters(), 'Failed asserting methodWithParameters has 2 params');
@@ -85,7 +93,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNumberOfOptionalParameters()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method1 = $classInfo->getMethod('methodWithParameters');
         $this->assertSame(2, $method1->getNumberOfRequiredParameters(), 'Failed asserting methodWithParameters has 2 required params');
@@ -96,11 +104,11 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileName()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithParameters');
 
         $detectedFilename = $method->getFileName();
 
-        $this->assertSame('MethodsTest.php', basename($detectedFilename));
+        $this->assertSame('Methods.php', basename($detectedFilename));
     }
 }
