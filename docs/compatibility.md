@@ -97,6 +97,7 @@
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
 | setAccessible | todo |
+| _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionParameter
 
@@ -123,10 +124,11 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | todo |
-| invoke | todo |
-| invokeArgs | todo |
+| getClosure | :x: No |
+| invoke | :x: No |
+| invokeArgs | :x: No |
 | isDisabled | todo |
+| _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionProperty
 
