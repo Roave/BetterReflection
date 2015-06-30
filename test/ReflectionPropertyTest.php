@@ -1,8 +1,8 @@
 <?php
 
-namespace AsgrimTest;
+namespace RoaveTest;
 
-use Asgrim\Reflector;
+use Roave\Reflector;
 
 class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +19,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testVisibilityMethods()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\RoaveTest\Fixture\ExampleClass');
 
         $privateProp = $classInfo->getProperty('privateProperty');
         $this->assertTrue($privateProp->isPrivate());
@@ -33,7 +33,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsStatic()
     {
-        $classInfo = $this->reflector->reflect('\AsgrimTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect('\RoaveTest\Fixture\ExampleClass');
 
         $publicProp = $classInfo->getProperty('publicProperty');
         $this->assertFalse($publicProp->isStatic());

@@ -1,6 +1,6 @@
 <?php
 
-namespace Asgrim;
+namespace Roave;
 
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;

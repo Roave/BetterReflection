@@ -1,6 +1,6 @@
 <?php
 
-namespace AsgrimTest\Fixture;
+namespace RoaveTest\Fixture;
 
 abstract class MethodsTest
 {

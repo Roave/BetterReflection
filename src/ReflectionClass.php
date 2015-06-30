@@ -1,6 +1,6 @@
 <?php
 
-namespace Asgrim;
+namespace Roave;
 
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;

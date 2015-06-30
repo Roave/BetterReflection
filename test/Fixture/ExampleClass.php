@@ -1,6 +1,6 @@
 <?php
 
-namespace AsgrimTest\Fixture {
+namespace RoaveTest\Fixture {
     class ExampleClass
     {
         const MY_CONST_1 = 123;
@@ -33,7 +33,7 @@ namespace AsgrimTest\Fixture {
     }
 }
 
-namespace AsgrimTest\FixtureOther {
+namespace RoaveTest\FixtureOther {
     class AnotherClass
     {
     }
