@@ -43,7 +43,7 @@ class Reflector
         }
 
         $locatedSource = $this->sourceLocator->locate($className);
-        $class = $this->reflectClassFromString($className, $locatedSource);
+        $class = $this->reflectClassFromLocatedSource($className, $locatedSource);
 
         if (class_exists($className, false)) {
             throw new \LogicException(sprintf(
@@ -77,13 +77,13 @@ class Reflector
     }
 
     /**
-     * Load an arbitrary string and attempt to read the specified class from it
+     * Read all the classes from a LocatedSource and find the specified class
      *
      * @param string $className
      * @param LocatedSource $locatedSource
      * @return ReflectionClass
      */
-    private function reflectClassFromString(
+    private function reflectClassFromLocatedSource(
         $className,
         LocatedSource $locatedSource
     ) {
@@ -147,7 +147,7 @@ class Reflector
     }
 
     /**
-     * Get an array of classes found in an arbitrary string
+     * Get an array of classes found in a LocatedSource
      *
      * @param LocatedSource $locatedSource
      * @return ReflectionClass[]
