@@ -69,4 +69,17 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $optionalParam = $method->getParameter('optionalParameter');
         $this->assertSame('Parameter #1 [ <optional> $optionalParameter = null ]', (string)$optionalParam);
     }
+
+    public function testGetPositions()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithParameters');
+
+        $param1 = $method->getParameter('parameter1');
+        $this->assertSame(0, $param1->getPosition());
+
+        $param2 = $method->getParameter('parameter2');
+        $this->assertSame(1, $param2->getPosition());
+    }
 }

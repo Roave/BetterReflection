@@ -213,4 +213,14 @@ class ReflectionParameter implements \Reflector
     {
         return $this->types;
     }
+
+    /**
+     * Find the position of the parameter, left to right, starting at zero
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->parameterIndex;
+    }
 }

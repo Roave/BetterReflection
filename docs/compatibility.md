@@ -111,7 +111,7 @@
 | getDefaultValue | :heavy_check_mark: Yes (*some assumptions are made) |
 | getDefaultValueConstantName | todo |
 | getName | :heavy_check_mark: Yes |
-| getPosition | todo |
+| getPosition | :heavy_check_mark: Yes |
 | isArray | todo |
 | isCallable | todo |
 | isDefaultValueAvailable | todo |
