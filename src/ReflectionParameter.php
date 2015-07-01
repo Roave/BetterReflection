@@ -2,6 +2,7 @@
 
 namespace BetterReflection;
 
+use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
@@ -238,5 +239,25 @@ class ReflectionParameter implements \Reflector
     public function getTypeHint()
     {
         return $this->typeHint;
+    }
+
+    /**
+     * Is this parameter an array?
+     *
+     * @return bool
+     */
+    public function isArray()
+    {
+        return ($this->getTypeHint() instanceof Types\Array_);
+    }
+
+    /**
+     * Is this parameter a callable?
+     *
+     * @return bool
+     */
+    public function isCallable()
+    {
+        return ($this->getTypeHint() instanceof Types\Callable_);
     }
 }

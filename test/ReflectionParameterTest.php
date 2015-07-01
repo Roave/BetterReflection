@@ -121,4 +121,30 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
             $this->assertSame($expectedFqsenName, $type->getFqsen()->getName());
         }
     }
+
+    public function testIsCallable()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
+
+        $nonCallableParam = $method->getParameter('stdClassParameter');
+        $this->assertFalse($nonCallableParam->isCallable());
+
+        $callableParam = $method->getParameter('callableParameter');
+        $this->assertTrue($callableParam->isCallable());
+    }
+
+    public function testIsArray()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
+
+        $nonArrayParam = $method->getParameter('stdClassParameter');
+        $this->assertFalse($nonArrayParam->isArray());
+
+        $arrayParam = $method->getParameter('arrayParameter');
+        $this->assertTrue($arrayParam->isArray());
+    }
 }
