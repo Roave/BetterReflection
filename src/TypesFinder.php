@@ -2,6 +2,7 @@
 
 namespace BetterReflection;
 
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\DocBlock;
@@ -59,6 +60,32 @@ class TypesFinder
             }
         }
         return [];
+    }
+
+    /**
+     * Given an AST type, attempt to find a resolved type
+     *
+     * @todo resolve with context
+     * @param $astType
+     * @return \phpDocumentor\Reflection\Type|null
+     */
+    public static function findTypeForAstType($astType)
+    {
+        if (is_string($astType)) {
+            $typeString = $astType;
+        }
+
+        if ($astType instanceof FullyQualified) {
+            $typeString = implode('\\', $astType->parts);
+        }
+
+        if (!isset($typeString)) {
+            return null;
+        }
+
+        $types = self::resolveTypes([$typeString]);
+
+        return reset($types);
     }
 
     /**

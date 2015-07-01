@@ -49,4 +49,13 @@ abstract class MethodsTest
     public function methodWithOptionalParameters($parameter, $optionalParameter = null)
     {
     }
+
+    public function methodWithExplicitTypedParameters(
+        \stdClass $stdClassParameter,
+        ClassForHinting $namespaceClassParameter,
+        \BetterReflectionTest\Fixture\ClassForHinting $fullyQualifiedClassParameter,
+        array $arrayParameter,
+        callable $callableParameter
+    ) {
+    }
 }

@@ -3,6 +3,7 @@
 namespace BetterReflectionTest;
 
 use BetterReflection\Reflector;
+use phpDocumentor\Reflection\Types;
 
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
@@ -81,5 +82,43 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $param2 = $method->getParameter('parameter2');
         $this->assertSame(1, $param2->getPosition());
+    }
+
+    public function typeHintProvider()
+    {
+        return [
+            ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
+            ['fullyQualifiedClassParameter', Types\Object_::class, '\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
+            ['arrayParameter', Types\Array_::class],
+            ['callableParameter', Types\Callable_::class],
+
+            // @todo Currently failing as we cannot resolve this properly yet
+            //['namespaceClassParameter', Types\Object__::class, 'ClassForHinting'],
+        ];
+    }
+
+    /**
+     * @dataProvider typeHintProvider
+     * @param string $parameterToTest
+     * @param string $expectedType
+     * @param string|null $expectedFqsen
+     * @param string|null $expectedFqsenName
+     */
+    public function testGetTypeHint($parameterToTest, $expectedType, $expectedFqsen = null, $expectedFqsenName = null)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
+
+        $type = $method->getParameter($parameterToTest)->getTypeHint();
+        $this->assertInstanceOf($expectedType, $type);
+
+        if (null !== $expectedFqsen) {
+            $this->assertSame($expectedFqsen, (string)$type->getFqsen());
+        }
+
+        if (null !== $expectedFqsenName) {
+            $this->assertSame($expectedFqsenName, $type->getFqsen()->getName());
+        }
     }
 }

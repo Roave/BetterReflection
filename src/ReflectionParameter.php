@@ -44,6 +44,11 @@ class ReflectionParameter implements \Reflector
     private $types;
 
     /**
+     * @var Type
+     */
+    private $typeHint;
+
+    /**
      * @var int
      */
     private $parameterIndex;
@@ -88,6 +93,7 @@ class ReflectionParameter implements \Reflector
         $param->isVariadic = $node->variadic;
         $param->isByReference = $node->byRef;
         $param->parameterIndex = $parameterIndex;
+        $param->typeHint = TypesFinder::findTypeForAstType($node->type);
 
         if ($param->isOptional) {
             $param->defaultValue = Reflector::compileNodeExpression($node->default);
@@ -222,5 +228,15 @@ class ReflectionParameter implements \Reflector
     public function getPosition()
     {
         return $this->parameterIndex;
+    }
+
+    /**
+     * Get the type hint declared for the parameter
+     *
+     * @return Type
+     */
+    public function getTypeHint()
+    {
+        return $this->typeHint;
     }
 }
