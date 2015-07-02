@@ -66,4 +66,8 @@ abstract class MethodsTest
     public function methodWithReference($nonRefParameter, &$refParameter)
     {
     }
+
+    public function methodWithNonOptionalDefaultValue($firstParameter = 'someValue', $secondParameter)
+    {
+    }
 }

@@ -25,6 +25,11 @@ class ReflectionParameter implements \Reflector
     private $isOptional;
 
     /**
+     * @var bool
+     */
+    private $hasDefaultValue;
+
+    /**
      * @var mixed
      */
     private $defaultValue;
@@ -75,7 +80,9 @@ class ReflectionParameter implements \Reflector
             $this->parameterIndex,
             $this->isOptional() ? '<optional>' : '<required>',
             $this->getName(),
-            $this->isOptional() ? (' = ' . $this->getDefaultValueAsString()) : ''
+            $this->isDefaultValueAvailable()
+                ? (' = ' . $this->getDefaultValueAsString())
+                : ''
         );
     }
 
@@ -90,13 +97,14 @@ class ReflectionParameter implements \Reflector
         $param = new self();
         $param->name = $node->name;
         $param->function = $function;
-        $param->isOptional = !is_null($node->default);
+        $param->isOptional = (bool)$node->isOptional;
+        $param->hasDefaultValue = !is_null($node->default);
         $param->isVariadic = (bool)$node->variadic;
         $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;
         $param->typeHint = TypesFinder::findTypeForAstType($node->type);
 
-        if ($param->isOptional) {
+        if ($param->hasDefaultValue) {
             $param->defaultValue = Reflector::compileNodeExpression($node->default);
         }
 
@@ -144,11 +152,33 @@ class ReflectionParameter implements \Reflector
     /**
      * Is the parameter optional?
      *
+     * Note this is distinct from "isDefaultValueAvailable" because you can have
+     * a default value, but the parameter not be optional. In the example, the
+     * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
+     *
+     * @example someMethod($foo = 'foo', $bar)
+     *
      * @return bool
      */
     public function isOptional()
     {
         return $this->isOptional;
+    }
+
+    /**
+     * Does the parameter have a default, regardless of whether it is optional
+     *
+     * Note this is distinct from "isOptional" because you can have
+     * a default value, but the parameter not be optional. In the example, the
+     * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
+     *
+     * @example someMethod($foo = 'foo', $bar)
+     *
+     * @return bool
+     */
+    public function isDefaultValueAvailable()
+    {
+        return $this->hasDefaultValue;
     }
 
     /**
@@ -159,8 +189,8 @@ class ReflectionParameter implements \Reflector
      */
     public function getDefaultValue()
     {
-        if (!$this->isOptional()) {
-            throw new \LogicException('This is not an optional parameter, so cannot have a default value');
+        if (!$this->isDefaultValueAvailable()) {
+            throw new \LogicException('This parameter does not have a default value available');
         }
 
         return $this->defaultValue;

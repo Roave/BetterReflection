@@ -173,4 +173,18 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $refParam = $method->getParameter('refParameter');
         $this->assertTrue($refParam->isPassedByReference());
     }
+
+    public function testGetDefaultValueAndIsOptional()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $method = $classInfo->getMethod('methodWithNonOptionalDefaultValue');
+
+        $firstParam = $method->getParameter('firstParameter');
+        $this->assertFalse($firstParam->isOptional());
+        $this->assertTrue($firstParam->isDefaultValueAvailable());
+
+        $secondParam = $method->getParameter('secondParameter');
+        $this->assertFalse($secondParam->isOptional());
+        $this->assertFalse($secondParam->isDefaultValueAvailable());
+    }
 }
