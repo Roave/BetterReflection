@@ -150,8 +150,9 @@ class Generic
                     );
                     break;
                 case Node\Stmt\Class_::class:
-                    if ($symbol->getType() == Symbol::SYMBOL_CLASS) {
-                        $reflections[] = $this->reflectNode($node, null, $filename);
+                    $reflection = $this->reflectNode($node, null, $filename);
+                    if ($symbol->isMatchingReflector($reflection)) {
+                        $reflections[] = $reflection;
                     }
                     break;
             }

@@ -6,15 +6,13 @@ use PhpParser\Node;
 
 class Symbol
 {
-    const SYMBOL_CLASS = 'class';
-    const SYMBOL_FUNCTION = 'function';
+    const SYMBOL_CLASS = ReflectionClass::class;
 
     /**
      * @var string[]
      */
     private $validSymbols = [
         self::SYMBOL_CLASS,
-        self::SYMBOL_FUNCTION,
     ];
 
     /**
@@ -78,6 +76,6 @@ class Symbol
 
     public function isMatchingReflector(Reflection $reflector)
     {
-        return $this->getType() == $reflector->getReflectionType();
+        return $this->getType() == get_class($reflector);
     }
 }

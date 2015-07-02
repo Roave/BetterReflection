@@ -95,11 +95,6 @@ class ReflectionClass implements Reflection
         return $class;
     }
 
-    public function getReflectionType()
-    {
-        return Symbol::SYMBOL_CLASS;
-    }
-
     /**
      * Get the "short" name of the class (e.g. for A\B\Foo, this will return
      * "Foo")
