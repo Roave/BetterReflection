@@ -12,7 +12,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getDefaultProperties | todo |
 | getDocComment | todo |
 | getEndLine | todo |
-| getExtension | :x: No - extensions are not supported |
+| getExtension | :x: No - extensions are not supported (#15) |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | todo |
 | getInterfaces | todo |
@@ -27,7 +27,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
 | getStaticProperties | todo |
-| getStaticPropertyValue | :x: No - would require an instance |
+| getStaticPropertyValue | :x: No - would require an instance (#14) |
 | getTraitAliases | todo |
 | getTraitNames | todo |
 | getTraits | todo |
@@ -50,7 +50,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |
-| setStaticPropertyValue | :x: No - would require an instance |
+| setStaticPropertyValue | :x: No - would require an instance (#14) |
 
 ## ReflectionFunctionAbstract
 
@@ -84,12 +84,12 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | todo |
+| getClosure | :x: No - would require loading of the method itself (#14) |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | todo |
 | getPrototype | todo |
-| invoke | todo |
-| invokeArgs | todo |
+| invoke | :x: No - would require loading of the method itself (#14) |
+| invokeArgs | :x: No - would require loading of the method itself (#14) |
 | isAbstract | :heavy_check_mark: Yes |
 | isConstructor | :heavy_check_mark: Yes |
 | isDestructor | :heavy_check_mark: Yes |
@@ -98,7 +98,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | todo |
+| setAccessible | :x: No - would require loading of the method itself (#14) |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionParameter
@@ -126,9 +126,9 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No - would require actual compilation of the AST |
-| invoke | :x: No - would require loading of the function itself |
-| invokeArgs | :x: No - would require loading of the function itself |
+| getClosure | :x: No - would require actual compilation of the AST (#14) |
+| invoke | :x: No - would require loading of the function itself (#14) |
+| invokeArgs | :x: No - would require loading of the function itself (#14) |
 | isDisabled | todo |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
@@ -140,14 +140,14 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getDocComment | todo |
 | getModifiers | todo |
 | getName | :heavy_check_mark: Yes |
-| getValue | :x: No - would require an instance of an object |
+| getValue | :x: No - would require an instance of an object (#14) |
 | isDefault | todo |
 | isPrivate | :heavy_check_mark: Yes |
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No - would require an instance of an object |
-| setValue | :x: No - would require an instance of an object |
+| setAccessible | :x: No - would require an instance of an object (#14) |
+| setValue | :x: No - would require an instance of an object (#14) |
 
 ## ReflectionExtension
 
