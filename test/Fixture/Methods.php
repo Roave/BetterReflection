@@ -4,7 +4,7 @@ namespace BetterReflectionTest\Fixture;
 
 define('SOME_DEFINED_VALUE', 1);
 
-abstract class MethodsTest
+abstract class Methods
 {
     const SOME_CONST = 1;
 

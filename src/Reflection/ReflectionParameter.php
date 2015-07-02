@@ -1,11 +1,13 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
+use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionParameter implements \Reflector
 {
@@ -111,13 +113,15 @@ class ReflectionParameter implements \Reflector
      * @param int $parameterIndex
      * @return ReflectionParameter
      */
-    public static function createFromNode(ParamNode $node, ReflectionFunctionAbstract $function, $parameterIndex)
-    {
+    public static function createFromNode(
+        ParamNode $node,
+        ReflectionFunctionAbstract $function, $parameterIndex
+    ) {
         $param = new self();
         $param->name = $node->name;
         $param->function = $function;
         $param->isOptional = (bool)$node->isOptional;
-        $param->hasDefaultValue = !is_null($node->default);
+        $param->hasDefaultValue = (null !== $node->default);
         $param->isVariadic = (bool)$node->variadic;
         $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;
@@ -134,7 +138,7 @@ class ReflectionParameter implements \Reflector
 
     private function parseDefaultValueNode(Node $defaultValueNode)
     {
-        $this->defaultValue = Reflector::compileNodeExpression($defaultValueNode);
+        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode);
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
             $this->isDefaultValueConstant = true;
@@ -171,7 +175,8 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the class from the method that this parameter belongs to, if it exists.
+     * Get the class from the method that this parameter belongs to, if it
+     * exists.
      *
      * This will return null if the declaring function is not a method.
      *
@@ -233,6 +238,11 @@ class ReflectionParameter implements \Reflector
         return $this->defaultValue;
     }
 
+    /**
+     * Get the default value represented as a string
+     *
+     * @return string
+     */
     public function getDefaultValueAsString()
     {
         $defaultValue = $this->getDefaultValue();
@@ -251,9 +261,11 @@ class ReflectionParameter implements \Reflector
             case 'object':
             case 'resource':
             case 'unknown type':
-                throw new \RuntimeException(
-                    'Default value as an instance of an ' . $type . ' does not make any sense'
-                );
+            default:
+                throw new Exception\InvalidDefaultValueType(sprintf(
+                    'Default value as an instance of an %s does not make any sense',
+                    $type
+                ));
         }
     }
 

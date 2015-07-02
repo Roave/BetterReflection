@@ -2,19 +2,20 @@
 
 namespace BetterReflectionTest;
 
-use BetterReflection\Reflector;
+use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\SourceLocator\ComposerSourceLocator;
 
 class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Reflector
+     * @var ClassReflector
      */
     private $reflector;
 
     public function setUp()
     {
         global $loader;
-        $this->reflector = new Reflector($loader);
+        $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
     public function testVisibilityMethods()

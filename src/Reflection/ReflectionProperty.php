@@ -1,10 +1,11 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
+use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionProperty implements \Reflector
 {
@@ -65,8 +66,10 @@ class ReflectionProperty implements \Reflector
      * @param ReflectionClass $declaringClass
      * @return ReflectionProperty
      */
-    public static function createFromNode(PropertyNode $node, ReflectionClass $declaringClass)
-    {
+    public static function createFromNode(
+        PropertyNode $node,
+        ReflectionClass $declaringClass
+    ) {
         $prop = new self();
         $prop->name = $node->props[0]->name;
         $prop->declaringClass = $declaringClass;

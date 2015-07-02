@@ -1,13 +1,14 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflection;
 
+use BetterReflection\NodeCompiler\CompileNodeToValue;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 
-class ReflectionClass
+class ReflectionClass implements Reflection
 {
     /**
      * @var string
@@ -55,8 +56,11 @@ class ReflectionClass
      * @param string $filename If set, this is the filename the class was declared in
      * @return ReflectionClass
      */
-    public static function createFromNode(ClassNode $node, NamespaceNode $namespace = null, $filename = null)
-    {
+    public static function createFromNode(
+        ClassNode $node,
+        NamespaceNode $namespace = null,
+        $filename = null
+    ) {
         $class = new self();
 
         $class->filename = $filename;
@@ -69,13 +73,16 @@ class ReflectionClass
         $methodNodes = $node->getMethods();
 
         foreach ($methodNodes as $methodNode) {
-            $class->methods[] = ReflectionMethod::createFromNode($methodNode, $class);
+            $class->methods[] = ReflectionMethod::createFromNode(
+                $methodNode,
+                $class
+            );
         }
 
         foreach ($node->stmts as $stmt) {
             if ($stmt instanceof ConstNode) {
                 $constName = $stmt->consts[0]->name;
-                $constValue = Reflector::compileNodeExpression($stmt->consts[0]->value);
+                $constValue = (new CompileNodeToValue())->__invoke($stmt->consts[0]->value);
                 $class->constants[$constName] = $constValue;
             }
 
@@ -89,7 +96,8 @@ class ReflectionClass
     }
 
     /**
-     * Get the "short" name of the class (e.g. for A\B\Foo, this will return "Foo")
+     * Get the "short" name of the class (e.g. for A\B\Foo, this will return
+     * "Foo")
      *
      * @return string
      */
@@ -99,7 +107,8 @@ class ReflectionClass
     }
 
     /**
-     * Get the "full" name of the class (e.g. for A\B\Foo, this will return "A\B\Foo")
+     * Get the "full" name of the class (e.g. for A\B\Foo, this will return
+     * "A\B\Foo")
      *
      * @return string
      */
@@ -113,7 +122,8 @@ class ReflectionClass
     }
 
     /**
-     * Get the "namespace" name of the class (e.g. for A\B\Foo, this will return "A\B")
+     * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
+     * return "A\B")
      *
      * @return string
      */
@@ -127,13 +137,15 @@ class ReflectionClass
     }
 
     /**
-     * Decide if this class is part of a namespace. Returns false if global namespace;
+     * Decide if this class is part of a namespace. Returns false if the class
+     * is in the global namespace or does not have a specified namespace
      *
      * @return bool
      */
     public function inNamespace()
     {
-        return !(is_null($this->declaringNamespace)) && !is_null($this->declaringNamespace->name);
+        return null !== $this->declaringNamespace
+            && null !== $this->declaringNamespace->name;
     }
 
     /**
@@ -160,7 +172,9 @@ class ReflectionClass
             }
         }
 
-        throw new \OutOfBoundsException('Could not find method: ' . $methodName);
+        throw new \OutOfBoundsException(
+            'Could not find method: ' . $methodName
+        );
     }
 
     /**
