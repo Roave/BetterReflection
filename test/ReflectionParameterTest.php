@@ -187,4 +187,19 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($secondParam->isOptional());
         $this->assertFalse($secondParam->isDefaultValueAvailable());
     }
+
+    public function testAllowsNull()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $method = $classInfo->getMethod('methodToCheckAllowsNull');
+
+        $firstParam = $method->getParameter('allowsNull');
+        $this->assertTrue($firstParam->allowsNull());
+
+        $secondParam = $method->getParameter('hintDisallowNull');
+        $this->assertFalse($secondParam->allowsNull());
+
+        $thirdParam = $method->getParameter('hintAllowNull');
+        $this->assertTrue($thirdParam->allowsNull());
+    }
 }

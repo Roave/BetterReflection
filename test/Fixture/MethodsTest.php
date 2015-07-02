@@ -70,4 +70,8 @@ abstract class MethodsTest
     public function methodWithNonOptionalDefaultValue($firstParameter = 'someValue', $secondParameter)
     {
     }
+
+    public function methodToCheckAllowsNull($allowsNull, \stdClass $hintDisallowNull, \stdClass $hintAllowNull = null)
+    {
+    }
 }

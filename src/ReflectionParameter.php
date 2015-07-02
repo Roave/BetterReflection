@@ -227,7 +227,15 @@ class ReflectionParameter implements \Reflector
      */
     public function allowsNull()
     {
-        return $this->isOptional() && $this->getDefaultValue() === null;
+        if (null == $this->getTypeHint()) {
+            return true;
+        }
+
+        if (!$this->isDefaultValueAvailable()) {
+            return false;
+        }
+
+        return $this->getDefaultValue() == null;
     }
 
     /**
