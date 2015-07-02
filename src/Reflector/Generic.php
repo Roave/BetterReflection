@@ -40,10 +40,10 @@ class Generic
             ));
         }
 
-        $locatedSource = $this->sourceLocator->__invoke($symbol);
-        $reflection = $this->reflectFromLocatedSource($symbol, $locatedSource);
-
-        return $reflection;
+        return $this->reflectFromLocatedSource(
+            $symbol,
+            $this->sourceLocator->__invoke($symbol)
+        );
     }
 
     /**
@@ -56,7 +56,7 @@ class Generic
     private function findInArray($reflections, Symbol $symbol)
     {
         foreach ($reflections as $reflection) {
-            if ($reflection->getName() == $symbol->getName()) {
+            if ($reflection->getName() === $symbol->getName()) {
                 return $reflection;
             }
         }
@@ -85,6 +85,8 @@ class Generic
 
     /**
      * @param Node $node
+     * @param Node\Stmt\Namespace_|null $namespace
+     * @param string|null $filename
      * @return Reflection|null
      */
     private function reflectNode(Node $node, Node\Stmt\Namespace_ $namespace = null, $filename = null)
@@ -138,19 +140,16 @@ class Generic
     {
         $reflections = [];
         foreach ($ast as $node) {
-            switch (get_class($node)) {
-                case Node\Stmt\Namespace_::class:
-                    $reflections = array_merge(
-                        $reflections,
-                        $this->reflectFromNamespace($node, $symbol, $filename)
-                    );
-                    break;
-                case Node\Stmt\Class_::class:
-                    $reflection = $this->reflectNode($node, null, $filename);
-                    if ($symbol->isMatchingReflector($reflection)) {
-                        $reflections[] = $reflection;
-                    }
-                    break;
+            if ($node instanceof Node\Stmt\Namespace_::class) {
+                $reflections = array_merge(
+                    $reflections,
+                    $this->reflectFromNamespace($node, $symbol, $filename)
+                );
+            } else if ($node instanceof Node\Stmt\Class_::class) {
+                $reflection = $this->reflectNode($node, null, $filename);
+                if ($symbol->isMatchingReflector($reflection)) {
+                    $reflections[] = $reflection;
+                }
             }
         }
         return $reflections;
@@ -165,11 +164,8 @@ class Generic
      */
     private function getReflections(LocatedSource $locatedSource, Symbol $symbol)
     {
-        $parser = new Parser(new Lexer);
-        $ast = $parser->parse($locatedSource->getSource());
-
         return $this->reflectFromTree(
-            $ast,
+            (new Parser(new Lexer))->parse($locatedSource->getSource()),
             $locatedSource->getFileName(),
             $symbol
         );

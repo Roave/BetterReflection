@@ -26,8 +26,9 @@ class ClassReflector implements Reflector
      */
     public function reflect($className)
     {
-        $symbol = new Symbol($className, Symbol::SYMBOL_CLASS);
-        return $this->reflector->reflect($symbol);
+        return $this->reflector->reflect(
+            new Symbol($className, Symbol::SYMBOL_CLASS)
+        );
     }
 
     /**
