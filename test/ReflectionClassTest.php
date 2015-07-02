@@ -136,7 +136,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $singleFileSourceLocator = new SingleFileSourceLocator($filename);
 
         $reflector = new ClassReflector($singleFileSourceLocator);
-        $classes = $reflector->getAllSymbols(Symbol::SYMBOL_CLASS);
+        $classes = $reflector->getAllClasses();
 
         $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
         $this->assertCount(3, $classes);

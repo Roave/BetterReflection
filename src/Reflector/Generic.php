@@ -2,7 +2,8 @@
 
 namespace BetterReflection\Reflector;
 
-use BetterReflection\Reflection\Symbol;
+use BetterReflection\Identifier\Identifier;
+use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\Reflection\ReflectionClass;
@@ -24,63 +25,63 @@ class Generic
     }
 
     /**
-     * Uses the SourceLocator given in the constructor to locate the $symbolName
+     * Uses the SourceLocator given in the constructor to locate the $identifier
      * specified and returns the \Reflector
      *
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return Reflection
      */
-    public function reflect(Symbol $symbol)
+    public function reflect(Identifier $identifier)
     {
-        if ($symbol->isLoaded()) {
+        if ($identifier->isLoaded()) {
             throw new \LogicException(sprintf(
                 '%s "%s" is already loaded',
-                $symbol->getDisplayType(),
-                $symbol->getName()
+                $identifier->getType()->getDisplayName(),
+                $identifier->getName()
             ));
         }
 
         return $this->reflectFromLocatedSource(
-            $symbol,
-            $this->sourceLocator->__invoke($symbol)
+            $identifier,
+            $this->sourceLocator->__invoke($identifier)
         );
     }
 
     /**
-     * Given an array of Reflections, try to find the symbol
+     * Given an array of Reflections, try to find the identifier
      *
      * @param Reflection[] $reflections
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return Reflection
      */
-    private function findInArray($reflections, Symbol $symbol)
+    private function findInArray($reflections, Identifier $identifier)
     {
         foreach ($reflections as $reflection) {
-            if ($reflection->getName() === $symbol->getName()) {
+            if ($reflection->getName() === $identifier->getName()) {
                 return $reflection;
             }
         }
 
         throw new \UnexpectedValueException(sprintf(
             '%s "%s" could not be found to load',
-            $symbol->getDisplayType(),
-            $symbol->getName()
+            $identifier->getType()->getDisplayName(),
+            $identifier->getName()
         ));
     }
 
     /**
-     * Read all the symbols from a LocatedSource and find the specified symbol
+     * Read all the identifiers from a LocatedSource and find the specified identifier
      *
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @param LocatedSource $locatedSource
      * @return Reflection
      */
     private function reflectFromLocatedSource(
-        Symbol $symbol,
+        Identifier $identifier,
         LocatedSource $locatedSource
     ) {
-        $reflections = $this->getReflections($locatedSource, $symbol);
-        return $this->findInArray($reflections, $symbol);
+        $reflections = $this->getReflections($locatedSource, $identifier);
+        return $this->findInArray($reflections, $identifier);
     }
 
     /**
@@ -103,23 +104,23 @@ class Generic
     }
 
     /**
-     * Process and reflect all the matching symbols found inside a namespace node
+     * Process and reflect all the matching identifiers found inside a namespace node
      *
      * @param Node\Stmt\Namespace_ $namespace
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @param string|null $filename
      * @return Reflection[]
      */
     private function reflectFromNamespace(
         Node\Stmt\Namespace_ $namespace,
-        Symbol $symbol,
+        Identifier $identifier,
         $filename
     ) {
         $reflections = [];
         foreach ($namespace->stmts as $node) {
             $reflection = $this->reflectNode($node, $namespace, $filename);
 
-            if (null !== $reflection && $symbol->isMatchingReflector($reflection)) {
+            if (null !== $reflection && $identifier->getType()->isMatchingReflector($reflection)) {
                 $reflections[] = $reflection;
             }
 
@@ -128,26 +129,26 @@ class Generic
     }
 
     /**
-     * Reflect symbols from an AST. If a namespace is found, also load all the
-     * matching symbols found in the namespace
+     * Reflect identifiers from an AST. If a namespace is found, also load all the
+     * matching identifiers found in the namespace
      *
      * @param Node[] $ast
      * @param string|null $filename
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return Reflection[]
      */
-    private function reflectFromTree(array $ast, $filename, Symbol $symbol)
+    private function reflectFromTree(array $ast, $filename, Identifier $identifier)
     {
         $reflections = [];
         foreach ($ast as $node) {
             if ($node instanceof Node\Stmt\Namespace_) {
                 $reflections = array_merge(
                     $reflections,
-                    $this->reflectFromNamespace($node, $symbol, $filename)
+                    $this->reflectFromNamespace($node, $identifier, $filename)
                 );
             } else if ($node instanceof Node\Stmt\Class_) {
                 $reflection = $this->reflectNode($node, null, $filename);
-                if ($symbol->isMatchingReflector($reflection)) {
+                if ($identifier->getType()->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
                 }
             }
@@ -159,31 +160,31 @@ class Generic
      * Get an array of reflections found in a LocatedSource
      *
      * @param LocatedSource $locatedSource
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return Reflection[]
      */
-    private function getReflections(LocatedSource $locatedSource, Symbol $symbol)
+    private function getReflections(LocatedSource $locatedSource, Identifier $identifier)
     {
         return $this->reflectFromTree(
             (new Parser(new Lexer))->parse($locatedSource->getSource()),
             $locatedSource->getFileName(),
-            $symbol
+            $identifier
         );
     }
 
     /**
-     * Get all symbols of a matching symbol type from a file
+     * Get all identifiers of a matching identifier type from a file
      *
-     * @param string $symbolType
+     * @param IdentifierType $identifierType
      * @return Reflection[]
      */
-    public function getAllSymbols($symbolType)
+    public function getAllByIdentifierType(IdentifierType $identifierType)
     {
-        $symbol = new Symbol('*', $symbolType);
+        $identifier = new Identifier('*', $identifierType);
 
         return $this->getReflections(
-            $this->sourceLocator->__invoke($symbol),
-            $symbol
+            $this->sourceLocator->__invoke($identifier),
+            $identifier
         );
     }
 }

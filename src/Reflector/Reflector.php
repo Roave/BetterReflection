@@ -10,18 +10,10 @@ use BetterReflection\Reflection\Reflection;
 interface Reflector
 {
     /**
-     * Create a reflection from the named symbol
+     * Create a reflection from the named identifier
      *
-     * @param string $symbolName
+     * @param string $identifierName
      * @return Reflection
      */
-    public function reflect($symbolName);
-
-    /**
-     * Get all symbols specified in the available scope (usually depends on
-     * the SourceLocator used)
-     *
-     * @return Reflection[]
-     */
-    public function getAllSymbols();
+    public function reflect($identifierName);
 }

@@ -2,8 +2,9 @@
 
 namespace BetterReflection\SourceLocator;
 
+use BetterReflection\Identifier\IdentifierType;
 use Composer\Autoload\ClassLoader;
-use BetterReflection\Reflection\Symbol;
+use BetterReflection\Identifier\Identifier;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.
@@ -25,20 +26,20 @@ class ComposerSourceLocator implements SourceLocator
     }
 
     /**
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return LocatedSource
      */
-    public function __invoke(Symbol $symbol)
+    public function __invoke(Identifier $identifier)
     {
-        if ($symbol->getType() !== Symbol::SYMBOL_CLASS) {
+        if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
             throw new \LogicException(__CLASS__ . ' can only be used to locate classes');
         }
 
-        $filename = $this->classLoader->findFile($symbol->getName());
+        $filename = $this->classLoader->findFile($identifier->getName());
 
         if (!$filename) {
             throw new \UnexpectedValueException(sprintf(
-                'Could not locate file to load "%s"', $symbol->getName()
+                'Could not locate file to load "%s"', $identifier->getName()
             ));
         }
 

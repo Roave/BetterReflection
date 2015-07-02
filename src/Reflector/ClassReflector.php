@@ -2,7 +2,8 @@
 
 namespace BetterReflection\Reflector;
 
-use BetterReflection\Reflection\Symbol;
+use BetterReflection\Identifier\Identifier;
+use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Generic as GenericReflector;
 use BetterReflection\SourceLocator\SourceLocator;
 
@@ -27,7 +28,7 @@ class ClassReflector implements Reflector
     public function reflect($className)
     {
         return $this->reflector->reflect(
-            new Symbol($className, Symbol::SYMBOL_CLASS)
+            new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
     }
 
@@ -36,8 +37,10 @@ class ClassReflector implements Reflector
      *
      * @return \BetterReflection\Reflection\ReflectionClass[]
      */
-    public function getAllSymbols()
+    public function getAllClasses()
     {
-        return $this->reflector->getAllSymbols(Symbol::SYMBOL_CLASS);
+        return $this->reflector->getAllByIdentifierType(
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        );
     }
 }

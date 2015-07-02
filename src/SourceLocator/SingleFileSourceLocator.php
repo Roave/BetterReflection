@@ -2,7 +2,7 @@
 
 namespace BetterReflection\SourceLocator;
 
-use BetterReflection\Reflection\Symbol;
+use BetterReflection\Identifier\Identifier;
 
 /**
  * This source locator loads an entire file, specified in the constructor
@@ -29,10 +29,10 @@ class SingleFileSourceLocator implements SourceLocator
     }
 
     /**
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return LocatedSource
      */
-    public function __invoke(Symbol $symbol)
+    public function __invoke(Identifier $identifier)
     {
         return new LocatedSource(
             file_get_contents($this->filename),

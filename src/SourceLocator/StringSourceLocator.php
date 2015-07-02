@@ -2,7 +2,7 @@
 
 namespace BetterReflection\SourceLocator;
 
-use BetterReflection\Reflection\Symbol;
+use BetterReflection\Identifier\Identifier;
 
 /**
  * This source locator simply parses the string given in the constructor as
@@ -30,10 +30,10 @@ class StringSourceLocator implements SourceLocator
     }
 
     /**
-     * @param Symbol $symbol
+     * @param Identifier $identifier
      * @return LocatedSource
      */
-    public function __invoke(Symbol $symbol)
+    public function __invoke(Identifier $identifier)
     {
         return new LocatedSource($this->source, null);
     }
