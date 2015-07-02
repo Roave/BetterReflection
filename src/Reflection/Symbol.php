@@ -27,9 +27,7 @@ class Symbol
 
     public function __construct($name, $type = self::SYMBOL_CLASS)
     {
-        if ('\\' == $name[0]) {
-            $name = substr($name, 1);
-        }
+        $name = ltrim($name, '\\');
         $this->name = (string)$name;
 
         if (!in_array($type, $this->validSymbols)) {
