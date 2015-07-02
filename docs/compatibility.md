@@ -1,5 +1,7 @@
 # Compatibility with native reflection API
 
+The progress of compatibility can also be tracked in issue [#7](https://github.com/Roave/BetterReflection/issues/7).
+
 ## ReflectionClass
 
 | Method | Supported |
