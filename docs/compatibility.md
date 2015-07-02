@@ -109,13 +109,13 @@
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getDeclaringFunction | :heavy_check_mark: Yes |
 | getDefaultValue | :heavy_check_mark: Yes (*some assumptions are made) |
-| getDefaultValueConstantName | todo |
+| getDefaultValueConstantName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getPosition | :heavy_check_mark: Yes |
 | isArray | :heavy_check_mark: Yes |
 | isCallable | :heavy_check_mark: Yes |
 | isDefaultValueAvailable | :heavy_check_mark: Yes |
-| isDefaultValueConstant | todo |
+| isDefaultValueConstant | :heavy_check_mark: Yes |
 | isOptional | :heavy_check_mark: Yes |
 | isPassedByReference | :heavy_check_mark: Yes |
 | isVariadic | :heavy_check_mark: Yes |

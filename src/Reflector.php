@@ -184,11 +184,17 @@ class Reflector
                 } else if ($node->name->parts[0] == 'true') {
                     return true;
                 } else {
-                    throw new \LogicException('Other ConstFetch types are not implemented yet');
+                    // @todo this should evaluate the VALUE, not the name
+                    return $node->name->parts[0];
                 }
                 break;
+            case Node\Expr\ClassConstFetch::class:
+                // @todo this should evaluate the VALUE, not the name
+                $className = implode('\\', $node->class->parts);
+                $constName = $node->name;
+                return $className . '::' . $constName;
             default:
-                throw new \LogicException('Unable to compile expression');
+                throw new \LogicException('Unable to compile expression: ' . $type);
         }
     }
 }

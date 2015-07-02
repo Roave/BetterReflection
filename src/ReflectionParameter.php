@@ -9,6 +9,10 @@ use phpDocumentor\Reflection\Type;
 
 class ReflectionParameter implements \Reflector
 {
+    const CONST_TYPE_NOT_A_CONST = 0;
+    const CONST_TYPE_CLASS = 1;
+    const CONST_TYPE_DEFINED = 2;
+
     /**
      * @var string
      */
@@ -59,8 +63,26 @@ class ReflectionParameter implements \Reflector
      */
     private $parameterIndex;
 
+    /**
+     * @var bool
+     */
+    private $isDefaultValueConstant;
+
+    /**
+     * @var string
+     */
+    private $defaultValueConstantName;
+
+    /**
+     * @var int
+     */
+    private $defaultValueConstantType;
+
     private function __construct()
     {
+        $this->isDefaultValueConstant = false;
+        $this->defaultValueConstantName = null;
+        $this->defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
     }
 
     public static function export()
@@ -106,6 +128,19 @@ class ReflectionParameter implements \Reflector
 
         if ($param->hasDefaultValue) {
             $param->defaultValue = Reflector::compileNodeExpression($node->default);
+
+            if ($node->default instanceof Node\Expr\ClassConstFetch) {
+                $param->isDefaultValueConstant = true;
+                $param->defaultValueConstantName = $node->default->name;
+                $param->defaultValueConstantType = self::CONST_TYPE_CLASS;
+            }
+
+            if ($node->default instanceof Node\Expr\ConstFetch
+                && !in_array($node->default->name->parts[0], ['true', 'false', 'null'])) {
+                $param->isDefaultValueConstant = true;
+                $param->defaultValueConstantName = $node->default->name->parts[0];
+                $param->defaultValueConstantType = self::CONST_TYPE_DEFINED;
+            }
         }
 
         $param->types = TypesFinder::findTypeForParameter($function, $node);
@@ -325,5 +360,26 @@ class ReflectionParameter implements \Reflector
     public function canBePassedByValue()
     {
         return !$this->isPassedByReference();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefaultValueConstant()
+    {
+        return $this->isDefaultValueConstant;
+    }
+
+    /**
+     * @throws \LogicException
+     * @return string
+     */
+    public function getDefaultValueConstantName()
+    {
+        if (!$this->isDefaultValueConstant()) {
+            throw new \LogicException('This parameter is not a constant default value, so cannot have a constant name');
+        }
+
+        return $this->defaultValueConstantName;
     }
 }

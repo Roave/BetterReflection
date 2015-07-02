@@ -204,4 +204,21 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $thirdParam = $method->getParameter('hintAllowNull');
         $this->assertTrue($thirdParam->allowsNull());
     }
+
+    public function testIsDefaultValueConstantAndGetDefaultValueConstantName()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+        $method = $classInfo->getMethod('methodWithConstAsDefault');
+
+        $intDefault = $method->getParameter('intDefault');
+        $this->assertFalse($intDefault->isDefaultValueConstant());
+
+        $constDefault = $method->getParameter('constDefault');
+        $this->assertTrue($constDefault->isDefaultValueConstant());
+        $this->assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
+
+        $definedDefault = $method->getParameter('definedDefault');
+        $this->assertTrue($definedDefault->isDefaultValueConstant());
+        $this->assertSame('SOME_DEFINED_VALUE', $definedDefault->getDefaultValueConstantName());
+    }
 }
