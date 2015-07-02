@@ -147,4 +147,17 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $arrayParam = $method->getParameter('arrayParameter');
         $this->assertTrue($arrayParam->isArray());
     }
+
+    public function testIsVariadic()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithVariadic');
+
+        $nonVariadicParam = $method->getParameter('nonVariadicParameter');
+        $this->assertFalse($nonVariadicParam->isVariadic());
+
+        $variadicParam = $method->getParameter('variadicParameter');
+        $this->assertTrue($variadicParam->isVariadic());
+    }
 }

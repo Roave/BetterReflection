@@ -91,9 +91,9 @@ class ReflectionParameter implements \Reflector
         $param->name = $node->name;
         $param->function = $function;
         $param->isOptional = !is_null($node->default);
-        $param->isVariadic = $node->variadic;
-        $param->isByReference = $node->byRef;
-        $param->parameterIndex = $parameterIndex;
+        $param->isVariadic = (bool)$node->variadic;
+        $param->isByReference = (bool)$node->byRef;
+        $param->parameterIndex = (int)$parameterIndex;
         $param->typeHint = TypesFinder::findTypeForAstType($node->type);
 
         if ($param->isOptional) {
@@ -259,5 +259,15 @@ class ReflectionParameter implements \Reflector
     public function isCallable()
     {
         return ($this->getTypeHint() instanceof Types\Callable_);
+    }
+
+    /**
+     * Is this parameter a variadic (denoted by ...$param)
+     *
+     * @return bool
+     */
+    public function isVariadic()
+    {
+        return $this->isVariadic;
     }
 }

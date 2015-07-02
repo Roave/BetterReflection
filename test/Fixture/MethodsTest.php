@@ -58,4 +58,8 @@ abstract class MethodsTest
         callable $callableParameter
     ) {
     }
+
+    public function methodWithVariadic($nonVariadicParameter, ...$variadicParameter)
+    {
+    }
 }
