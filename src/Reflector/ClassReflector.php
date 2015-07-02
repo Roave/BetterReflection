@@ -19,7 +19,9 @@ class ClassReflector implements Reflector
     }
 
     /**
-     * @param $className
+     * Create a ReflectionClass for the specified $className
+     *
+     * @param string $className
      * @return \BetterReflection\Reflection\ReflectionClass
      */
     public function reflect($className)
@@ -29,6 +31,8 @@ class ClassReflector implements Reflector
     }
 
     /**
+     * Get all the classes available in the scope specified by the SourceLocator
+     *
      * @return \BetterReflection\Reflection\ReflectionClass[]
      */
     public function getAllSymbols()
