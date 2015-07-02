@@ -114,11 +114,11 @@
 | getPosition | :heavy_check_mark: Yes |
 | isArray | :heavy_check_mark: Yes |
 | isCallable | :heavy_check_mark: Yes |
-| isDefaultValueAvailable | todo |
+| isDefaultValueAvailable | :heavy_check_mark: Yes |
 | isDefaultValueConstant | todo |
 | isOptional | :heavy_check_mark: Yes |
-| isPassedByReference | todo |
-| isVariadic | todo |
+| isPassedByReference | :heavy_check_mark: Yes |
+| isVariadic | :heavy_check_mark: Yes |
 
 ## ReflectionFunction
 
