@@ -10,7 +10,7 @@
 | getDefaultProperties | todo |
 | getDocComment | todo |
 | getEndLine | todo |
-| getExtension | :x: No |
+| getExtension | :x: No - extensions are not supported |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | todo |
 | getInterfaces | todo |
@@ -25,14 +25,14 @@
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
 | getStaticProperties | todo |
-| getStaticPropertyValue | :x: No |
+| getStaticPropertyValue | :x: No - would require an instance |
 | getTraitAliases | todo |
 | getTraitNames | todo |
 | getTraits | todo |
 | hasConstant | todo |
 | hasMethod | todo |
 | hasProperty | todo |
-| implementsInterface | :x: No |
+| implementsInterface | todo |
 | inNamespace | :heavy_check_mark: Yes |
 | isAbstract | todo |
 | isCloneable | todo |
@@ -42,13 +42,13 @@
 | isInterface | todo |
 | isInternal | todo |
 | isIterateable | todo |
-| isSubclassOf | :x: No |
+| isSubclassOf | todo |
 | isTrait | todo |
 | isUserDefined | todo |
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |
-| setStaticPropertyValue | :x: No |
+| setStaticPropertyValue | :x: No - would require an instance |
 
 ## ReflectionFunctionAbstract
 
@@ -124,9 +124,9 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No |
-| invoke | :x: No |
-| invokeArgs | :x: No |
+| getClosure | :x: No - would require actual compilation of the AST |
+| invoke | :x: No - would require loading of the function itself |
+| invokeArgs | :x: No - would require loading of the function itself |
 | isDisabled | todo |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
@@ -138,14 +138,14 @@
 | getDocComment | todo |
 | getModifiers | todo |
 | getName | :heavy_check_mark: Yes |
-| getValue | :x: No |
+| getValue | :x: No - would require an instance of an object |
 | isDefault | todo |
 | isPrivate | :heavy_check_mark: Yes |
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No |
-| setValue | :x: No |
+| setAccessible | :x: No - would require an instance of an object |
+| setValue | :x: No - would require an instance of an object |
 
 ## ReflectionExtension
 
