@@ -54,7 +54,7 @@ class ReflectionParameter implements \Reflector
     private $types;
 
     /**
-     * @var Type
+     * @var Type|null
      */
     private $typeHint;
 
