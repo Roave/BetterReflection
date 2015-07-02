@@ -1,5 +1,7 @@
 # Compatibility with native reflection API
 
+The progress of compatibility can also be tracked in issue [#7](https://github.com/Roave/BetterReflection/issues/7).
+
 ## ReflectionClass
 
 | Method | Supported |
@@ -10,7 +12,7 @@
 | getDefaultProperties | todo |
 | getDocComment | todo |
 | getEndLine | todo |
-| getExtension | :x: No |
+| getExtension | :x: No - extensions are not supported (#15) |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | todo |
 | getInterfaces | todo |
@@ -25,14 +27,14 @@
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
 | getStaticProperties | todo |
-| getStaticPropertyValue | :x: No |
+| getStaticPropertyValue | :x: No - would require an instance (#14) |
 | getTraitAliases | todo |
 | getTraitNames | todo |
 | getTraits | todo |
 | hasConstant | todo |
 | hasMethod | todo |
 | hasProperty | todo |
-| implementsInterface | :x: No |
+| implementsInterface | todo |
 | inNamespace | :heavy_check_mark: Yes |
 | isAbstract | todo |
 | isCloneable | todo |
@@ -42,13 +44,13 @@
 | isInterface | todo |
 | isInternal | todo |
 | isIterateable | todo |
-| isSubclassOf | :x: No |
+| isSubclassOf | todo |
 | isTrait | todo |
 | isUserDefined | todo |
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |
-| setStaticPropertyValue | :x: No |
+| setStaticPropertyValue | :x: No - would require an instance (#14) |
 
 ## ReflectionFunctionAbstract
 
@@ -82,12 +84,12 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | todo |
+| getClosure | :x: No - would require loading of the method itself (#14) |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | todo |
 | getPrototype | todo |
-| invoke | todo |
-| invokeArgs | todo |
+| invoke | :x: No - would require loading of the method itself (#14) |
+| invokeArgs | :x: No - would require loading of the method itself (#14) |
 | isAbstract | :heavy_check_mark: Yes |
 | isConstructor | :heavy_check_mark: Yes |
 | isDestructor | :heavy_check_mark: Yes |
@@ -96,7 +98,7 @@
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | todo |
+| setAccessible | :x: No - would require loading of the method itself (#14) |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionParameter
@@ -124,9 +126,9 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No |
-| invoke | :x: No |
-| invokeArgs | :x: No |
+| getClosure | :x: No - would require actual compilation of the AST (#14) |
+| invoke | :x: No - would require loading of the function itself (#14) |
+| invokeArgs | :x: No - would require loading of the function itself (#14) |
 | isDisabled | todo |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
@@ -138,14 +140,14 @@
 | getDocComment | todo |
 | getModifiers | todo |
 | getName | :heavy_check_mark: Yes |
-| getValue | :x: No |
+| getValue | :x: No - would require an instance of an object (#14) |
 | isDefault | todo |
 | isPrivate | :heavy_check_mark: Yes |
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No |
-| setValue | :x: No |
+| setAccessible | :x: No - would require an instance of an object (#14) |
+| setValue | :x: No - would require an instance of an object (#14) |
 
 ## ReflectionExtension
 
