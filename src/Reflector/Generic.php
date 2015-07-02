@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection;
+namespace BetterReflection\Reflector;
 
 use BetterReflection\Reflection\Symbol;
 use BetterReflection\SourceLocator\LocatedSource;
@@ -11,7 +11,7 @@ use PhpParser\Parser;
 use PhpParser\Lexer;
 use PhpParser\Node;
 
-class Reflector
+class Generic
 {
     /**
      * @var SourceLocator
@@ -27,13 +27,14 @@ class Reflector
      * Uses the SourceLocator given in the constructor to locate the $symbolName
      * specified and returns the \Reflector
      *
-     * @param string $name
-     * @param string $type
+     * @param Symbol $symbol
      * @return Reflection
      */
-    public function reflect($name, $type = Symbol::SYMBOL_CLASS)
+    public function reflect($symbol)
     {
-        $symbol = new Symbol($name, $type);
+        if (!($symbol instanceof Symbol)) {
+            throw new \InvalidArgumentException('$symbol parameter must be a Symbol');
+        }
 
         if ($symbol->isLoaded()) {
             throw new \LogicException(sprintf(

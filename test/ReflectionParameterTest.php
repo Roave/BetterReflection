@@ -2,7 +2,7 @@
 
 namespace BetterReflectionTest;
 
-use BetterReflection\Reflector;
+use BetterReflection\Reflector\ClassReflector;
 use phpDocumentor\Reflection\Types;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
@@ -10,14 +10,14 @@ use BetterReflection\SourceLocator\StringSourceLocator;
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Reflector
+     * @var ClassReflector
      */
     private $reflector;
 
     public function setUp()
     {
         global $loader;
-        $this->reflector = new Reflector(new ComposerSourceLocator($loader));
+        $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
     public function defaultParameterProvider()
@@ -42,7 +42,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         $content = "<?php class Foo { public function myMethod(\$var = $defaultExpression) {} }";
 
-        $reflector = new Reflector(new StringSourceLocator($content));
+        $reflector = new ClassReflector(new StringSourceLocator($content));
         $classInfo = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
