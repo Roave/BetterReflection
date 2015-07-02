@@ -66,23 +66,20 @@ class ReflectionParameter implements \Reflector
     /**
      * @var bool
      */
-    private $isDefaultValueConstant;
+    private $isDefaultValueConstant = false;
 
     /**
      * @var string
      */
-    private $defaultValueConstantName;
+    private $defaultValueConstantName = null;
 
     /**
      * @var int
      */
-    private $defaultValueConstantType;
+    private $defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
 
     private function __construct()
     {
-        $this->isDefaultValueConstant = false;
-        $this->defaultValueConstantName = null;
-        $this->defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
     }
 
     public static function export()
