@@ -17,6 +17,9 @@
             "BetterReflectionTest\\": "test"
         }
     },
+    "suggest": {
+        "composer/composer": "Required to use the ComposerSourceLocator thing"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
