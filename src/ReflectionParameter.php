@@ -318,4 +318,12 @@ class ReflectionParameter implements \Reflector
     {
         return $this->isByReference;
     }
+
+    /**
+     * @return bool
+     */
+    public function canBePassedByValue()
+    {
+        return !$this->isPassedByReference();
+    }
 }

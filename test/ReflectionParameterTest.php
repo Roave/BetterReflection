@@ -169,9 +169,11 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $nonRefParam = $method->getParameter('nonRefParameter');
         $this->assertFalse($nonRefParam->isPassedByReference());
+        $this->assertTrue($nonRefParam->canBePassedByValue());
 
         $refParam = $method->getParameter('refParameter');
         $this->assertTrue($refParam->isPassedByReference());
+        $this->assertFalse($refParam->canBePassedByValue());
     }
 
     public function testGetDefaultValueAndIsOptional()
