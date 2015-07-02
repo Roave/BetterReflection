@@ -25,7 +25,7 @@ class LocatedSource
             );
         }
 
-        if (!is_string($filename) && !is_null($filename)) {
+        if (!is_string($filename) && null !== $filename) {
             throw new \InvalidArgumentException(
                 'Filename must be a string or null'
             );

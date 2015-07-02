@@ -121,7 +121,7 @@ class ReflectionParameter implements \Reflector
         $param->name = $node->name;
         $param->function = $function;
         $param->isOptional = (bool)$node->isOptional;
-        $param->hasDefaultValue = !is_null($node->default);
+        $param->hasDefaultValue = (null !== $node->default);
         $param->isVariadic = (bool)$node->variadic;
         $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;

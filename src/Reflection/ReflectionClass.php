@@ -144,8 +144,8 @@ class ReflectionClass implements Reflection
      */
     public function inNamespace()
     {
-        return !(is_null($this->declaringNamespace))
-            && !is_null($this->declaringNamespace->name);
+        return null !== $this->declaringNamespace
+            && null !== $this->declaringNamespace->name;
     }
 
     /**
