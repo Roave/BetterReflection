@@ -52,7 +52,7 @@ abstract class ReflectionFunctionAbstract
         // we must do it in reverse...
         $overallOptionalFlag = true;
         for ($i = count($node->params) - 1; $i >= 0; $i--) {
-            $hasDefault = !is_null($node->params[$i]->default);
+            $hasDefault = ($node->params[$i]->default !== null);
 
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional
