@@ -262,11 +262,8 @@ class ReflectionParameter implements \Reflector
             case 'resource':
             case 'unknown type':
             default:
-                $typeExceptionMessage = 'Default value as an instance of an %s'
-                    . ' does not make any sense';
-
-                throw new \RuntimeException(sprintf(
-                    $typeExceptionMessage,
+                throw new Exception\InvalidDefaultValueType(sprintf(
+                    'Default value as an instance of an %s does not make any sense',
                     $type
                 ));
         }
