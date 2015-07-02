@@ -270,4 +270,14 @@ class ReflectionParameter implements \Reflector
     {
         return $this->isVariadic;
     }
+
+    /**
+     * Is this parameter passed by reference (denoted by &$param)
+     *
+     * @return bool
+     */
+    public function isPassedByReference()
+    {
+        return $this->isByReference;
+    }
 }

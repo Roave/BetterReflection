@@ -62,4 +62,8 @@ abstract class MethodsTest
     public function methodWithVariadic($nonVariadicParameter, ...$variadicParameter)
     {
     }
+
+    public function methodWithReference($nonRefParameter, &$refParameter)
+    {
+    }
 }

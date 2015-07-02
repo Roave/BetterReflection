@@ -160,4 +160,17 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $variadicParam = $method->getParameter('variadicParameter');
         $this->assertTrue($variadicParam->isVariadic());
     }
+
+    public function testIsPassedByReference()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodsTest');
+
+        $method = $classInfo->getMethod('methodWithReference');
+
+        $nonRefParam = $method->getParameter('nonRefParameter');
+        $this->assertFalse($nonRefParam->isPassedByReference());
+
+        $refParam = $method->getParameter('refParameter');
+        $this->assertTrue($refParam->isPassedByReference());
+    }
 }
