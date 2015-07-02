@@ -48,6 +48,23 @@ abstract class ReflectionFunctionAbstract
             $this->docBlock = $comment->getReformattedText();
         }
 
+        // We must determine if params are optional or not ahead of time, but
+        // we must do it in reverse...
+        $overallOptionalFlag = true;
+        $lastParamIndex = (count($node->params) - 1);
+        for ($i = $lastParamIndex; $i >= 0; $i--) {
+            $hasDefault = ($node->params[$i]->default !== null);
+
+            // When we find the first parameter that does not have a default,
+            // flip the flag as all params for this are no longer optional
+            // EVEN if they have a default value
+            if (!$hasDefault) {
+                $overallOptionalFlag = false;
+            }
+
+            $node->params[$i]->isOptional = $overallOptionalFlag;
+        }
+
         foreach ($node->params as $paramIndex => $paramNode) {
             $this->parameters[] = ReflectionParameter::createFromNode($paramNode, $this, $paramIndex);
         }

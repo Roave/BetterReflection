@@ -104,21 +104,21 @@
 | Method | Supported |
 |--------|-----------|
 | allowsNull | :heavy_check_mark: Yes |
-| canBePassedByValue | todo |
-| getClass | todo |
+| canBePassedByValue | :heavy_check_mark: Yes |
+| getClass | :x: No - could currently cause recursion |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getDeclaringFunction | :heavy_check_mark: Yes |
 | getDefaultValue | :heavy_check_mark: Yes (*some assumptions are made) |
-| getDefaultValueConstantName | todo |
+| getDefaultValueConstantName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
-| getPosition | todo |
-| isArray | todo |
-| isCallable | todo |
-| isDefaultValueAvailable | todo |
-| isDefaultValueConstant | todo |
+| getPosition | :heavy_check_mark: Yes |
+| isArray | :heavy_check_mark: Yes |
+| isCallable | :heavy_check_mark: Yes |
+| isDefaultValueAvailable | :heavy_check_mark: Yes |
+| isDefaultValueConstant | :heavy_check_mark: Yes |
 | isOptional | :heavy_check_mark: Yes |
-| isPassedByReference | todo |
-| isVariadic | todo |
+| isPassedByReference | :heavy_check_mark: Yes |
+| isVariadic | :heavy_check_mark: Yes |
 
 ## ReflectionFunction
 

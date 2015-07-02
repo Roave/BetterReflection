@@ -2,12 +2,17 @@
 
 namespace BetterReflection;
 
+use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
 
 class ReflectionParameter implements \Reflector
 {
+    const CONST_TYPE_NOT_A_CONST = 0;
+    const CONST_TYPE_CLASS = 1;
+    const CONST_TYPE_DEFINED = 2;
+
     /**
      * @var string
      */
@@ -22,6 +27,11 @@ class ReflectionParameter implements \Reflector
      * @var bool
      */
     private $isOptional;
+
+    /**
+     * @var bool
+     */
+    private $hasDefaultValue;
 
     /**
      * @var mixed
@@ -44,9 +54,29 @@ class ReflectionParameter implements \Reflector
     private $types;
 
     /**
+     * @var Type|null
+     */
+    private $typeHint;
+
+    /**
      * @var int
      */
     private $parameterIndex;
+
+    /**
+     * @var bool
+     */
+    private $isDefaultValueConstant = false;
+
+    /**
+     * @var string
+     */
+    private $defaultValueConstantName = null;
+
+    /**
+     * @var int
+     */
+    private $defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
 
     private function __construct()
     {
@@ -69,7 +99,9 @@ class ReflectionParameter implements \Reflector
             $this->parameterIndex,
             $this->isOptional() ? '<optional>' : '<required>',
             $this->getName(),
-            $this->isOptional() ? (' = ' . $this->getDefaultValueAsString()) : ''
+            $this->isDefaultValueAvailable()
+                ? (' = ' . $this->getDefaultValueAsString())
+                : ''
         );
     }
 
@@ -84,18 +116,38 @@ class ReflectionParameter implements \Reflector
         $param = new self();
         $param->name = $node->name;
         $param->function = $function;
-        $param->isOptional = !is_null($node->default);
-        $param->isVariadic = $node->variadic;
-        $param->isByReference = $node->byRef;
-        $param->parameterIndex = $parameterIndex;
+        $param->isOptional = (bool)$node->isOptional;
+        $param->hasDefaultValue = !is_null($node->default);
+        $param->isVariadic = (bool)$node->variadic;
+        $param->isByReference = (bool)$node->byRef;
+        $param->parameterIndex = (int)$parameterIndex;
+        $param->typeHint = TypesFinder::findTypeForAstType($node->type);
 
-        if ($param->isOptional) {
-            $param->defaultValue = Reflector::compileNodeExpression($node->default);
+        if ($param->hasDefaultValue) {
+            $param->parseDefaultValueNode($node->default);
         }
 
         $param->types = TypesFinder::findTypeForParameter($function, $node);
 
         return $param;
+    }
+
+    private function parseDefaultValueNode(Node $defaultValueNode)
+    {
+        $this->defaultValue = Reflector::compileNodeExpression($defaultValueNode);
+
+        if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
+            $this->isDefaultValueConstant = true;
+            $this->defaultValueConstantName = $defaultValueNode->name;
+            $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
+        }
+
+        if ($defaultValueNode instanceof Node\Expr\ConstFetch
+            && !in_array($defaultValueNode->name->parts[0], ['true', 'false', 'null'])) {
+            $this->isDefaultValueConstant = true;
+            $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
+            $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
+        }
     }
 
     /**
@@ -137,11 +189,33 @@ class ReflectionParameter implements \Reflector
     /**
      * Is the parameter optional?
      *
+     * Note this is distinct from "isDefaultValueAvailable" because you can have
+     * a default value, but the parameter not be optional. In the example, the
+     * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
+     *
+     * @example someMethod($foo = 'foo', $bar)
+     *
      * @return bool
      */
     public function isOptional()
     {
         return $this->isOptional;
+    }
+
+    /**
+     * Does the parameter have a default, regardless of whether it is optional
+     *
+     * Note this is distinct from "isOptional" because you can have
+     * a default value, but the parameter not be optional. In the example, the
+     * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
+     *
+     * @example someMethod($foo = 'foo', $bar)
+     *
+     * @return bool
+     */
+    public function isDefaultValueAvailable()
+    {
+        return $this->hasDefaultValue;
     }
 
     /**
@@ -152,8 +226,8 @@ class ReflectionParameter implements \Reflector
      */
     public function getDefaultValue()
     {
-        if (!$this->isOptional()) {
-            throw new \LogicException('This is not an optional parameter, so cannot have a default value');
+        if (!$this->isDefaultValueAvailable()) {
+            throw new \LogicException('This parameter does not have a default value available');
         }
 
         return $this->defaultValue;
@@ -190,7 +264,15 @@ class ReflectionParameter implements \Reflector
      */
     public function allowsNull()
     {
-        return $this->isOptional() && $this->getDefaultValue() === null;
+        if (null == $this->getTypeHint()) {
+            return true;
+        }
+
+        if (!$this->isDefaultValueAvailable()) {
+            return false;
+        }
+
+        return $this->getDefaultValue() == null;
     }
 
     /**
@@ -207,10 +289,108 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Get the types defined in the docblocks. This returns an array because
+     * the parameter may have multiple (compound) types specified (for example
+     * when you type hint pipe-separated "string|null", in which case this
+     * would return an array of Type objects, one for string, one for null.
+     *
+     * @see getTypeHint()
      * @return Type[]
      */
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Find the position of the parameter, left to right, starting at zero
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->parameterIndex;
+    }
+
+    /**
+     * Get the type hint declared for the parameter. This is the real type hint
+     * for the parameter, e.g. `method(closure $someFunc)` defined by the
+     * method itself, and is separate from the docblock type hints
+     *
+     * @see getTypes()
+     * @return Type
+     */
+    public function getTypeHint()
+    {
+        return $this->typeHint;
+    }
+
+    /**
+     * Is this parameter an array?
+     *
+     * @return bool
+     */
+    public function isArray()
+    {
+        return ($this->getTypeHint() instanceof Types\Array_);
+    }
+
+    /**
+     * Is this parameter a callable?
+     *
+     * @return bool
+     */
+    public function isCallable()
+    {
+        return ($this->getTypeHint() instanceof Types\Callable_);
+    }
+
+    /**
+     * Is this parameter a variadic (denoted by ...$param)
+     *
+     * @return bool
+     */
+    public function isVariadic()
+    {
+        return $this->isVariadic;
+    }
+
+    /**
+     * Is this parameter passed by reference (denoted by &$param)
+     *
+     * @return bool
+     */
+    public function isPassedByReference()
+    {
+        return $this->isByReference;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBePassedByValue()
+    {
+        return !$this->isPassedByReference();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefaultValueConstant()
+    {
+        return $this->isDefaultValueConstant;
+    }
+
+    /**
+     * @throws \LogicException
+     * @return string
+     */
+    public function getDefaultValueConstantName()
+    {
+        if (!$this->isDefaultValueConstant()) {
+            throw new \LogicException('This parameter is not a constant default value, so cannot have a constant name');
+        }
+
+        return $this->defaultValueConstantName;
     }
 }

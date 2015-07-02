@@ -2,8 +2,12 @@
 
 namespace BetterReflectionTest\Fixture;
 
+define('SOME_DEFINED_VALUE', 1);
+
 abstract class MethodsTest
 {
+    const SOME_CONST = 1;
+
     public function __construct()
     {
     }
@@ -47,6 +51,35 @@ abstract class MethodsTest
     }
 
     public function methodWithOptionalParameters($parameter, $optionalParameter = null)
+    {
+    }
+
+    public function methodWithExplicitTypedParameters(
+        \stdClass $stdClassParameter,
+        ClassForHinting $namespaceClassParameter,
+        \BetterReflectionTest\Fixture\ClassForHinting $fullyQualifiedClassParameter,
+        array $arrayParameter,
+        callable $callableParameter
+    ) {
+    }
+
+    public function methodWithVariadic($nonVariadicParameter, ...$variadicParameter)
+    {
+    }
+
+    public function methodWithReference($nonRefParameter, &$refParameter)
+    {
+    }
+
+    public function methodWithNonOptionalDefaultValue($firstParameter = 'someValue', $secondParameter)
+    {
+    }
+
+    public function methodToCheckAllowsNull($allowsNull, \stdClass $hintDisallowNull, \stdClass $hintAllowNull = null)
+    {
+    }
+
+    public function methodWithConstAsDefault($intDefault = 1, $constDefault = self::SOME_CONST, $definedDefault = SOME_DEFINED_VALUE)
     {
     }
 }
