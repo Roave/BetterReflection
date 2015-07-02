@@ -140,12 +140,12 @@ class Generic
     {
         $reflections = [];
         foreach ($ast as $node) {
-            if ($node instanceof Node\Stmt\Namespace_::class) {
+            if ($node instanceof Node\Stmt\Namespace_) {
                 $reflections = array_merge(
                     $reflections,
                     $this->reflectFromNamespace($node, $symbol, $filename)
                 );
-            } else if ($node instanceof Node\Stmt\Class_::class) {
+            } else if ($node instanceof Node\Stmt\Class_) {
                 $reflection = $this->reflectNode($node, null, $filename);
                 if ($symbol->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
