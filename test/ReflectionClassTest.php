@@ -5,6 +5,7 @@ namespace BetterReflectionTest;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
+use BetterReflection\Reflection\Symbol;
 use BetterReflection\Reflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
@@ -135,7 +136,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $singleFileSourceLocator = new SingleFileSourceLocator($filename);
 
         $reflector = new Reflector($singleFileSourceLocator);
-        $classes = $reflector->getClassesFromFile();
+        $classes = $reflector->getAllSymbols(Symbol::SYMBOL_CLASS);
 
         $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
         $this->assertCount(3, $classes);

@@ -30,7 +30,7 @@ class Reflector
      *
      * @param string $name
      * @param string $type
-     * @return ReflectionClass
+     * @return BetterReflector
      */
     public function reflect($name, $type = Symbol::SYMBOL_CLASS)
     {
@@ -45,9 +45,9 @@ class Reflector
         }
 
         $locatedSource = $this->sourceLocator->__invoke($symbol);
-        $class = $this->reflectFromLocatedSource($symbol, $locatedSource);
+        $reflection = $this->reflectFromLocatedSource($symbol, $locatedSource);
 
-        return $class;
+        return $reflection;
     }
 
     /**
@@ -55,7 +55,7 @@ class Reflector
      *
      * @param BetterReflector[] $reflections
      * @param Symbol $symbol
-     * @return ReflectionClass
+     * @return BetterReflector
      */
     private function findInArray($reflections, Symbol $symbol)
     {
@@ -105,12 +105,12 @@ class Reflector
     }
 
     /**
-     * Process and reflect all the classes found inside a namespace node
+     * Process and reflect all the matching symbols found inside a namespace node
      *
      * @param Node\Stmt\Namespace_ $namespace
      * @param Symbol $symbol
      * @param string|null $filename
-     * @return Reflection\ReflectionClass[]
+     * @return BetterReflector[]
      */
     private function reflectFromNamespace(
         Node\Stmt\Namespace_ $namespace,
@@ -130,13 +130,13 @@ class Reflector
     }
 
     /**
-     * Reflect classes from an AST. If a namespace is found, also load all the
-     * classes found in the namespace
+     * Reflect symbols from an AST. If a namespace is found, also load all the
+     * matching symbols found in the namespace
      *
      * @param Node[] $ast
      * @param string|null $filename
      * @param Symbol $symbol
-     * @return Reflection\ReflectionClass[]
+     * @return BetterReflector[]
      */
     private function reflectFromTree(array $ast, $filename, Symbol $symbol)
     {
@@ -160,11 +160,11 @@ class Reflector
     }
 
     /**
-     * Get an array of classes found in a LocatedSource
+     * Get an array of reflections found in a LocatedSource
      *
      * @param LocatedSource $locatedSource
      * @param Symbol $symbol
-     * @return BetterReflection[]
+     * @return BetterReflector[]
      */
     private function getReflections(LocatedSource $locatedSource, Symbol $symbol)
     {
@@ -179,25 +179,18 @@ class Reflector
     }
 
     /**
-     * Return an array of ReflectionClass objects from the file.
+     * Get all symbols of a matching symbol type from a file
      *
-     * This requires a SingleFileSourceLocator to be used, otherwise a
-     * LogicException will be thrown.
-     *
-     * @throws \LogicException
-     * @return Reflection\BetterReflection[]
+     * @param string $symbolType
+     * @return Reflection\BetterReflector[]
      */
-    public function getClassesFromFile()
+    public function getAllSymbols($symbolType)
     {
-        if (!$this->sourceLocator instanceof SingleFileSourceLocator) {
-            throw new \LogicException(
-                'To fetch all classes from file, you must use a'
-                . ' SingleFileSourceLocator'
-            );
-        }
+        $symbol = new Symbol('*', $symbolType);
 
-        $symbol = new Symbol('*', Symbol::SYMBOL_CLASS);
-
-        return $this->getReflections($this->sourceLocator->__invoke($symbol), $symbol);
+        return $this->getReflections(
+            $this->sourceLocator->__invoke($symbol),
+            $symbol
+        );
     }
 }
