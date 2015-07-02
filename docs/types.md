@@ -22,8 +22,9 @@ $class = $reflector->reflect('MyClass');
 $method = $class->getMethod('myMethod');
 $parameter = $method->getParameter('myParameter');
 
-echo $parameter->getTypeHint(); // Will fetch a Type object for the language hint
-var_dump($parameter->getTypes()); // Will fetch an array of Type objects for the docblock hint
+var_dump($parameter->getTypeHint()); // Will fetch a Type object for the language hint
+var_dump($parameter->getDocBlockTypes()); // Will fetch an array of Type objects for the typehint in the DocBlock
+var_dump($parameter->getDocBlockTypeStrings()); // Will fetch an array of strings describing the DocBlock type hints
 ```
 
 ## `getTypeHint`
@@ -32,11 +33,11 @@ The `getTypeHint()` method retrieves the language type hint, which there will
 only ever be one of (in current versions of PHP). This method will therefore
 return a single instance of a `Type` object (see below).
 
-## `getTypes`
+## `getDocBlockTypes`
 
-The `getTypes()` method will return an array of type hints that are extracted
-from the docblock. These are read by the phpDocumentor component, and so this
-will be an array of `Type` objects (see below).
+The `getDocBlockTypes()` method will return an array of type hints that are
+extracted from the DocBlock. These are read by a phpDocumentor component, and
+so this returns an array of `Type` objects (see below).
 
 ## The `Type` object
 

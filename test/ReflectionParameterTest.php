@@ -51,17 +51,17 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedValue, $actualValue);
     }
 
-    public function testGetTypeStrings()
+    public function testGetDocBlockTypeStrings()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
         $param1 = $method->getParameter('parameter1');
-        $this->assertSame(['string'], $param1->getTypeStrings());
+        $this->assertSame(['string'], $param1->getDocBlockTypeStrings());
 
         $param2 = $method->getParameter('parameter2');
-        $this->assertSame(['int', 'float'], $param2->getTypeStrings());
+        $this->assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
     }
 
     public function testStringCast()

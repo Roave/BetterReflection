@@ -53,7 +53,7 @@ class ReflectionParameter implements \Reflector
     /**
      * @var Type[]
      */
-    private $types;
+    private $docBlockTypes;
 
     /**
      * @var Type|null
@@ -131,7 +131,7 @@ class ReflectionParameter implements \Reflector
             $param->parseDefaultValueNode($node->default);
         }
 
-        $param->types = TypesFinder::findTypeForParameter($function, $node);
+        $param->docBlockTypes = TypesFinder::findTypeForParameter($function, $node);
 
         return $param;
     }
@@ -288,20 +288,22 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Get the DocBlock type hints as an array of strings
+     *
      * @return string[]
      */
-    public function getTypeStrings()
+    public function getDocBlockTypeStrings()
     {
         $stringTypes = [];
 
-        foreach ($this->types as $type) {
+        foreach ($this->docBlockTypes as $type) {
             $stringTypes[] = (string)$type;
         }
         return $stringTypes;
     }
 
     /**
-     * Get the types defined in the docblocks. This returns an array because
+     * Get the types defined in the DocBlocks. This returns an array because
      * the parameter may have multiple (compound) types specified (for example
      * when you type hint pipe-separated "string|null", in which case this
      * would return an array of Type objects, one for string, one for null.
@@ -309,9 +311,9 @@ class ReflectionParameter implements \Reflector
      * @see getTypeHint()
      * @return Type[]
      */
-    public function getTypes()
+    public function getDocBlockTypes()
     {
-        return $this->types;
+        return $this->docBlockTypes;
     }
 
     /**
@@ -329,7 +331,7 @@ class ReflectionParameter implements \Reflector
      * for the parameter, e.g. `method(closure $someFunc)` defined by the
      * method itself, and is separate from the docblock type hints
      *
-     * @see getTypes()
+     * @see getDocBlockTypes()
      * @return Type
      */
     public function getTypeHint()

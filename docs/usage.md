@@ -23,8 +23,8 @@ within the `Reflector`s. The library comes bundled with the following
     be used directly. Note that any references to filenames when using this
     locator will be `null` because no files are loaded.
 
-A `SourceLocator` consists only of one method - `__invoke` which must be given
-an `Identifier` (which describes a class/function/etc.). The `SourceLocator`
+A `SourceLocator` is a callable, which when invoked must be given an
+`Identifier` (which describes a class/function/etc.). The `SourceLocator`
 should be written so that it returns a `LocatedSource` object, which describes
 source code and the filename in which the source code was loaded.
 

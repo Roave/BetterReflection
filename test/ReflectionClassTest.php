@@ -156,13 +156,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedTypes
      * @dataProvider typesDataProvider
      */
-    public function testGetTypeStrings($propertyName, $expectedTypes)
+    public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $property = $classInfo->getProperty($propertyName);
 
-        $this->assertSame($expectedTypes, $property->getTypeStrings());
+        $this->assertSame($expectedTypes, $property->getDocBlockTypeStrings());
     }
 }
