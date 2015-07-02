@@ -287,6 +287,12 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Get the types defined in the docblocks. This returns an array because
+     * the parameter may have multiple (compound) types specified (for example
+     * when you type hint pipe-separated "string|null", in which case this
+     * would return an array of Type objects, one for string, one for null.
+     *
+     * @see getTypeHint()
      * @return Type[]
      */
     public function getTypes()
@@ -305,8 +311,11 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the type hint declared for the parameter
+     * Get the type hint declared for the parameter. This is the real type hint
+     * for the parameter, e.g. `method(closure $someFunc)` defined by the
+     * method itself, and is separate from the docblock type hints
      *
+     * @see getTypes()
      * @return Type
      */
     public function getTypeHint()
