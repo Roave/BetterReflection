@@ -6,7 +6,7 @@ use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
-use BetterReflection\NodeCompiler\NodeCompiler;
+use BetterReflection\NodeCompiler\CompileNodeToValue;
 use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionParameter implements \Reflector
@@ -138,7 +138,7 @@ class ReflectionParameter implements \Reflector
 
     private function parseDefaultValueNode(Node $defaultValueNode)
     {
-        $this->defaultValue = NodeCompiler::compile($defaultValueNode);
+        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode);
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
             $this->isDefaultValueConstant = true;

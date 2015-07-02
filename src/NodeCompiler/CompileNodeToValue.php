@@ -4,7 +4,7 @@ namespace BetterReflection\NodeCompiler;
 
 use PhpParser\Node;
 
-class NodeCompiler
+class CompileNodeToValue
 {
     /**
      * Compile an expression from a node into a value
@@ -12,7 +12,7 @@ class NodeCompiler
      * @param Node $node
      * @return mixed
      */
-    public static function compile(Node $node)
+    public function __invoke(Node $node)
     {
         switch (get_class($node)) {
             case Node\Scalar\String_::class:
