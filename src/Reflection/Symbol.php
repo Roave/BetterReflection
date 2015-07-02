@@ -76,7 +76,7 @@ class Symbol
         return false;
     }
 
-    public function isMatchingReflector(BetterReflector $reflector)
+    public function isMatchingReflector(Reflection $reflector)
     {
         return $this->getType() == $reflector->getReflectionType();
     }

@@ -8,7 +8,7 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 
-class ReflectionClass implements BetterReflector
+class ReflectionClass implements Reflection
 {
     /**
      * @var string

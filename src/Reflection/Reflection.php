@@ -2,7 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
-interface BetterReflector
+interface Reflection
 {
     public function getName();
 

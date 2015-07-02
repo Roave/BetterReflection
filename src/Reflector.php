@@ -3,11 +3,10 @@
 namespace BetterReflection;
 
 use BetterReflection\Reflection\Symbol;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\BetterReflector;
+use BetterReflection\Reflection\Reflection;
 use PhpParser\Parser;
 use PhpParser\Lexer;
 use PhpParser\Node;
@@ -30,7 +29,7 @@ class Reflector
      *
      * @param string $name
      * @param string $type
-     * @return BetterReflector
+     * @return Reflection
      */
     public function reflect($name, $type = Symbol::SYMBOL_CLASS)
     {
@@ -51,11 +50,11 @@ class Reflector
     }
 
     /**
-     * Given an array of BetterReflector, try to find the symbol
+     * Given an array of Reflections, try to find the symbol
      *
-     * @param BetterReflector[] $reflections
+     * @param Reflection[] $reflections
      * @param Symbol $symbol
-     * @return BetterReflector
+     * @return Reflection
      */
     private function findInArray($reflections, Symbol $symbol)
     {
@@ -77,7 +76,7 @@ class Reflector
      *
      * @param Symbol $symbol
      * @param LocatedSource $locatedSource
-     * @return BetterReflector
+     * @return Reflection
      */
     private function reflectFromLocatedSource(
         Symbol $symbol,
@@ -89,7 +88,7 @@ class Reflector
 
     /**
      * @param Node $node
-     * @return BetterReflector|null
+     * @return Reflection|null
      */
     private function reflectNode(Node $node, Node\Stmt\Namespace_ $namespace = null, $filename = null)
     {
@@ -110,7 +109,7 @@ class Reflector
      * @param Node\Stmt\Namespace_ $namespace
      * @param Symbol $symbol
      * @param string|null $filename
-     * @return BetterReflector[]
+     * @return Reflection[]
      */
     private function reflectFromNamespace(
         Node\Stmt\Namespace_ $namespace,
@@ -136,7 +135,7 @@ class Reflector
      * @param Node[] $ast
      * @param string|null $filename
      * @param Symbol $symbol
-     * @return BetterReflector[]
+     * @return Reflection[]
      */
     private function reflectFromTree(array $ast, $filename, Symbol $symbol)
     {
@@ -164,7 +163,7 @@ class Reflector
      *
      * @param LocatedSource $locatedSource
      * @param Symbol $symbol
-     * @return BetterReflector[]
+     * @return Reflection[]
      */
     private function getReflections(LocatedSource $locatedSource, Symbol $symbol)
     {
@@ -182,7 +181,7 @@ class Reflector
      * Get all symbols of a matching symbol type from a file
      *
      * @param string $symbolType
-     * @return Reflection\BetterReflector[]
+     * @return Reflection[]
      */
     public function getAllSymbols($symbolType)
     {
