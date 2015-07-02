@@ -30,7 +30,7 @@ class Symbol
         $name = ltrim($name, '\\');
         $this->name = (string)$name;
 
-        if (!in_array($type, $this->validSymbols)) {
+        if (!in_array($type, $this->validSymbols, true)) {
             throw new \InvalidArgumentException(sprintf(
                 '%s is not a valid symbol type',
                 $type
@@ -74,6 +74,6 @@ class Symbol
 
     public function isMatchingReflector(Reflection $reflector)
     {
-        return $this->getType() == get_class($reflector);
+        return $this->type === get_class($reflector);
     }
 }
