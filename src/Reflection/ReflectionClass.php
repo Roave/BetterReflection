@@ -8,7 +8,7 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 
-class ReflectionClass
+class ReflectionClass implements BetterReflector
 {
     /**
      * @var string
@@ -93,6 +93,11 @@ class ReflectionClass
         }
 
         return $class;
+    }
+
+    public function getReflectionType()
+    {
+        return Symbol::SYMBOL_CLASS;
     }
 
     /**

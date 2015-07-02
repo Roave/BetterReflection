@@ -2,10 +2,12 @@
 
 namespace BetterReflection;
 
+use BetterReflection\Reflection\Symbol;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\Reflection\BetterReflector;
 use PhpParser\Parser;
 use PhpParser\Lexer;
 use PhpParser\Node;
@@ -23,96 +25,108 @@ class Reflector
     }
 
     /**
-     * Uses the SourceLocator given in the constructor to locate the $className
-     * specified and returns the ReflectionClass
+     * Uses the SourceLocator given in the constructor to locate the $symbolName
+     * specified and returns the \Reflector
      *
-     * @param $className
+     * @param string $name
+     * @param string $type
      * @return ReflectionClass
      */
-    public function reflect($className)
+    public function reflect($name, $type = Symbol::SYMBOL_CLASS)
     {
-        if ('\\' == $className[0]) {
-            $className = substr($className, 1);
-        }
+        $symbol = new Symbol($name, $type);
 
-        if (class_exists($className, false)) {
+        if ($symbol->isLoaded()) {
             throw new \LogicException(sprintf(
-                'Class "%s" is already loaded',
-                $className
+                '%s "%s" is already loaded',
+                $symbol->getDisplayType(),
+                $symbol->getName()
             ));
         }
 
-        $locatedSource = $this->sourceLocator->__invoke($className);
-        $class = $this->reflectClassFromLocatedSource($className, $locatedSource);
-
-        if (class_exists($className, false)) {
-            throw new \LogicException(sprintf(
-                'Class "%s" was loaded whilst reflecting',
-                $className
-            ));
-        }
+        $locatedSource = $this->sourceLocator->__invoke($symbol);
+        $class = $this->reflectFromLocatedSource($symbol, $locatedSource);
 
         return $class;
     }
 
     /**
-     * Given an array of ReflectionClasses, try to find the class $className
+     * Given an array of BetterReflector, try to find the symbol
      *
-     * @param ReflectionClass[] $classes
-     * @param string $className
+     * @param BetterReflector[] $reflections
+     * @param Symbol $symbol
      * @return ReflectionClass
      */
-    private function findClassInArray($classes, $className)
+    private function findInArray($reflections, Symbol $symbol)
     {
-        foreach ($classes as $class) {
-            if ($class->getName() == $className) {
-                return $class;
+        foreach ($reflections as $reflection) {
+            if ($reflection->getName() == $symbol->getName()) {
+                return $reflection;
             }
         }
 
         throw new \UnexpectedValueException(sprintf(
-            'Class "%s" could not be found to load',
-            $className
+            '%s "%s" could not be found to load',
+            $symbol->getDisplayType(),
+            $symbol->getName()
         ));
     }
 
     /**
-     * Read all the classes from a LocatedSource and find the specified class
+     * Read all the symbols from a LocatedSource and find the specified symbol
      *
-     * @param string $className
+     * @param Symbol $symbol
      * @param LocatedSource $locatedSource
-     * @return ReflectionClass
+     * @return BetterReflector
      */
-    private function reflectClassFromLocatedSource(
-        $className,
+    private function reflectFromLocatedSource(
+        Symbol $symbol,
         LocatedSource $locatedSource
     ) {
-        $classes = $this->getClasses($locatedSource);
-        return $this->findClassInArray($classes, $className);
+        $reflections = $this->getReflections($locatedSource, $symbol);
+        return $this->findInArray($reflections, $symbol);
+    }
+
+    /**
+     * @param Node $node
+     * @return BetterReflector|null
+     */
+    private function reflectNode(Node $node, Node\Stmt\Namespace_ $namespace = null, $filename = null)
+    {
+        if ($node instanceof Node\Stmt\Class_) {
+            return ReflectionClass::createFromNode(
+                $node,
+                $namespace,
+                $filename
+            );
+        }
+
+        return null;
     }
 
     /**
      * Process and reflect all the classes found inside a namespace node
      *
      * @param Node\Stmt\Namespace_ $namespace
+     * @param Symbol $symbol
      * @param string|null $filename
-     * @return ReflectionClass[]
+     * @return Reflection\ReflectionClass[]
      */
-    private function reflectClassesFromNamespace(
+    private function reflectFromNamespace(
         Node\Stmt\Namespace_ $namespace,
+        Symbol $symbol,
         $filename
     ) {
-        $classes = [];
+        $reflections = [];
         foreach ($namespace->stmts as $node) {
-            if ($node instanceof Node\Stmt\Class_) {
-                $classes[] = ReflectionClass::createFromNode(
-                    $node,
-                    $namespace,
-                    $filename
-                );
+            $reflection = $this->reflectNode($node, $namespace, $filename);
+
+            if (null !== $reflection && $symbol->isMatchingReflector($reflection)) {
+                $reflections[] = $reflection;
             }
+
         }
-        return $classes;
+        return $reflections;
     }
 
     /**
@@ -121,45 +135,46 @@ class Reflector
      *
      * @param Node[] $ast
      * @param string|null $filename
-     * @return ReflectionClass[]
+     * @param Symbol $symbol
+     * @return Reflection\ReflectionClass[]
      */
-    private function reflectClassesFromTree(array $ast, $filename)
+    private function reflectFromTree(array $ast, $filename, Symbol $symbol)
     {
-        $classes = [];
+        $reflections = [];
         foreach ($ast as $node) {
             switch (get_class($node)) {
                 case Node\Stmt\Namespace_::class:
-                    $classes = array_merge(
-                        $classes,
-                        $this->reflectClassesFromNamespace($node, $filename)
+                    $reflections = array_merge(
+                        $reflections,
+                        $this->reflectFromNamespace($node, $symbol, $filename)
                     );
                     break;
                 case Node\Stmt\Class_::class:
-                    $classes[] = ReflectionClass::createFromNode(
-                        $node,
-                        null,
-                        $filename
-                    );
+                    if ($symbol->getType() == Symbol::SYMBOL_CLASS) {
+                        $reflections[] = $this->reflectNode($node, null, $filename);
+                    }
                     break;
             }
         }
-        return $classes;
+        return $reflections;
     }
 
     /**
      * Get an array of classes found in a LocatedSource
      *
      * @param LocatedSource $locatedSource
-     * @return ReflectionClass[]
+     * @param Symbol $symbol
+     * @return BetterReflection[]
      */
-    private function getClasses(LocatedSource $locatedSource)
+    private function getReflections(LocatedSource $locatedSource, Symbol $symbol)
     {
         $parser = new Parser(new Lexer);
         $ast = $parser->parse($locatedSource->getSource());
 
-        return $this->reflectClassesFromTree(
+        return $this->reflectFromTree(
             $ast,
-            $locatedSource->getFileName()
+            $locatedSource->getFileName(),
+            $symbol
         );
     }
 
@@ -170,7 +185,7 @@ class Reflector
      * LogicException will be thrown.
      *
      * @throws \LogicException
-     * @return Reflection\ReflectionClass[]
+     * @return Reflection\BetterReflection[]
      */
     public function getClassesFromFile()
     {
@@ -181,6 +196,8 @@ class Reflector
             );
         }
 
-        return $this->getClasses($this->sourceLocator->__invoke('*'));
+        $symbol = new Symbol('*', Symbol::SYMBOL_CLASS);
+
+        return $this->getReflections($this->sourceLocator->__invoke($symbol), $symbol);
     }
 }

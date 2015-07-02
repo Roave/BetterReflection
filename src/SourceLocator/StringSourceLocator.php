@@ -2,6 +2,8 @@
 
 namespace BetterReflection\SourceLocator;
 
+use BetterReflection\Reflection\Symbol;
+
 /**
  * This source locator simply parses the string given in the constructor as
  * valid PHP.
@@ -28,10 +30,10 @@ class StringSourceLocator implements SourceLocator
     }
 
     /**
-     * @param string $className
+     * @param Symbol $symbol
      * @return LocatedSource
      */
-    public function __invoke($className)
+    public function __invoke(Symbol $symbol)
     {
         return new LocatedSource($this->source, null);
     }
