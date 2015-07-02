@@ -127,25 +127,30 @@ class ReflectionParameter implements \Reflector
         $param->typeHint = TypesFinder::findTypeForAstType($node->type);
 
         if ($param->hasDefaultValue) {
-            $param->defaultValue = Reflector::compileNodeExpression($node->default);
-
-            if ($node->default instanceof Node\Expr\ClassConstFetch) {
-                $param->isDefaultValueConstant = true;
-                $param->defaultValueConstantName = $node->default->name;
-                $param->defaultValueConstantType = self::CONST_TYPE_CLASS;
-            }
-
-            if ($node->default instanceof Node\Expr\ConstFetch
-                && !in_array($node->default->name->parts[0], ['true', 'false', 'null'])) {
-                $param->isDefaultValueConstant = true;
-                $param->defaultValueConstantName = $node->default->name->parts[0];
-                $param->defaultValueConstantType = self::CONST_TYPE_DEFINED;
-            }
+            $param->parseDefaultValueNode($node->default);
         }
 
         $param->types = TypesFinder::findTypeForParameter($function, $node);
 
         return $param;
+    }
+
+    private function parseDefaultValueNode(Node $defaultValueNode)
+    {
+        $this->defaultValue = Reflector::compileNodeExpression($defaultValueNode);
+
+        if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
+            $this->isDefaultValueConstant = true;
+            $this->defaultValueConstantName = $defaultValueNode->name;
+            $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
+        }
+
+        if ($defaultValueNode instanceof Node\Expr\ConstFetch
+            && !in_array($defaultValueNode->name->parts[0], ['true', 'false', 'null'])) {
+            $this->isDefaultValueConstant = true;
+            $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
+            $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
+        }
     }
 
     /**
