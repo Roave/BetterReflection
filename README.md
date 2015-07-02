@@ -11,7 +11,9 @@ Example usage with the Composer autoloader:
 
 $classLoader = require "vendor/autoload.php";
 
-$reflector = new Reflector(new ComposerSourceLocator($classLoader));
+use BetterReflection\Reflector\ClassReflector;
+
+$reflector = new ClassReflector(new ComposerSourceLocator($classLoader));
 $reflectionClass = $reflector->reflect('Foo\Bar\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
@@ -24,7 +26,7 @@ Example usage for loading a class from a specific file:
 ```php
 <?php
 
-$reflector = new Reflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php'));
+$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php'));
 $reflectionClass = $reflector->reflect('MyApp\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
@@ -39,7 +41,7 @@ Example usage for loading a class from a string:
 
 $code = '<?php class Foo {};';
 
-$reflector = new Reflector(new StringSourceLocator($code));
+$reflector = new ClassReflector(new StringSourceLocator($code));
 $reflectionClass = $reflector->reflect('Foo');
 
 echo $reflectionClass->getShortName(); // Foo
@@ -50,6 +52,6 @@ Example usage to fetch a list of classes from a file
 ```php
 <?php
 
-$reflector = new Reflector(new SingleFileSourceLocator('path/to/file.php'));
+$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php'));
 $classes = $reflector->getClassesFromFile();
 ```
