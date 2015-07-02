@@ -13,7 +13,7 @@ class LocatedSource
     private $source;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $filename;
 
@@ -35,11 +35,17 @@ class LocatedSource
         $this->filename = $filename;
     }
 
+    /**
+     * @return string
+     */
     public function getSource()
     {
         return $this->source;
     }
 
+    /**
+     * @return null|string
+     */
     public function getFileName()
     {
         return $this->filename;
