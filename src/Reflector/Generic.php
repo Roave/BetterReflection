@@ -30,12 +30,8 @@ class Generic
      * @param Symbol $symbol
      * @return Reflection
      */
-    public function reflect($symbol)
+    public function reflect(Symbol $symbol)
     {
-        if (!($symbol instanceof Symbol)) {
-            throw new \InvalidArgumentException('$symbol parameter must be a Symbol');
-        }
-
         if ($symbol->isLoaded()) {
             throw new \LogicException(sprintf(
                 '%s "%s" is already loaded',
