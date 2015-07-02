@@ -2,6 +2,8 @@
 
 namespace BetterReflection\SourceLocator;
 
+use BetterReflection\Reflection\Symbol;
+
 interface SourceLocator
 {
     /**
@@ -9,8 +11,8 @@ interface SourceLocator
      *
      * This method should return a LocatedSource value object
      *
-     * @param string $className
+     * @param Symbol $symbol
      * @return LocatedSource
      */
-    public function __invoke($className);
+    public function __invoke(Symbol $symbol);
 }
