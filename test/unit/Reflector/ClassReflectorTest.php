@@ -14,7 +14,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
     public function testGetClassesFromFile()
     {
         $classes = (new ClassReflector(
-            new SingleFileSourceLocator('test/Fixture/ExampleClass.php')
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php')
         ))->getAllClasses();
 
         $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
