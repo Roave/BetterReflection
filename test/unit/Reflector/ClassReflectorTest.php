@@ -6,11 +6,11 @@ use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 
+/**
+ * @covers \BetterReflection\Reflector\ClassReflector
+ */
 class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers \BetterReflection\Reflector\ClassReflector::getAllClasses()
-     */
     public function testGetClassesFromFile()
     {
         $classes = (new ClassReflector(

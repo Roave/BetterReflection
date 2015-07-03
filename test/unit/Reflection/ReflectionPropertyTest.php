@@ -5,6 +5,9 @@ namespace BetterReflectionTest\Reflection;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 
+/**
+ * @covers \BetterReflection\Reflection\ReflectionProperty
+ */
 class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -18,11 +21,6 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
-    /**
-     * @covers \BetterReflection\Reflection\ReflectionProperty::isPublic()
-     * @covers \BetterReflection\Reflection\ReflectionProperty::isProtected()
-     * @covers \BetterReflection\Reflection\ReflectionProperty::isPrivate()
-     */
     public function testVisibilityMethods()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
@@ -37,9 +35,6 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($publicProp->isPublic());
     }
 
-    /**
-     * @covers \BetterReflection\Reflection\ReflectionProperty::isStatic()
-     */
     public function testIsStatic()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
@@ -64,7 +59,6 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string $propertyName
      * @param string[] $expectedTypes
      * @dataProvider typesDataProvider
-     * @covers \BetterReflection\Reflection\ReflectionProperty::getTypeStrings()
      */
     public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
     {
