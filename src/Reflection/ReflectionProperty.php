@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\TypesFinder\FindPropertyType;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
@@ -84,7 +85,7 @@ class ReflectionProperty implements \Reflector
 
         $prop->isStatic = $node->isStatic();
 
-        $prop->docBlockTypes = TypesFinder::findTypeForProperty($node, $prop);
+        $prop->docBlockTypes = (new FindPropertyType())->__invoke($node, $prop);
 
         return $prop;
     }
