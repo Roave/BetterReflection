@@ -46,11 +46,21 @@ class IdentifierType
      */
     public function getDisplayName()
     {
-        return ucfirst(basename($this->name));
+        return basename(str_replace('\\', '/', $this->name));
     }
 
+    /**
+     * Check to see if a reflector is of a valid type specified by this identifier
+     *
+     * @param Reflection $reflector
+     * @return bool
+     */
     public function isMatchingReflector(Reflection $reflector)
     {
-        return $this->name === get_class($reflector);
+        if ($this->name == self::IDENTIFIER_CLASS) {
+            return $reflector instanceof ReflectionClass;
+        }
+
+        return false;
     }
 }
