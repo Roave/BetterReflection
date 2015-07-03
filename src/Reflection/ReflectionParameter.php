@@ -2,12 +2,13 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\TypesFinder\FindParameterType;
+use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
 use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionParameter implements \Reflector
 {
@@ -125,13 +126,13 @@ class ReflectionParameter implements \Reflector
         $param->isVariadic = (bool)$node->variadic;
         $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;
-        $param->typeHint = TypesFinder::findTypeForAstType($node->type);
+        $param->typeHint = (new FindTypeFromAst())->__invoke($node->type);
 
         if ($param->hasDefaultValue) {
             $param->parseDefaultValueNode($node->default);
         }
 
-        $param->docBlockTypes = TypesFinder::findTypeForParameter($function, $node);
+        $param->docBlockTypes = (new FindParameterType())->__invoke($function, $node);
 
         return $param;
     }
