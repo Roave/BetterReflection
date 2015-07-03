@@ -2,6 +2,7 @@
 
 namespace BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\Types\Context;
 use PhpParser\Node\Name\FullyQualified;
 
 class FindTypeFromAst
@@ -27,7 +28,7 @@ class FindTypeFromAst
             return null;
         }
 
-        $types = (new ResolveTypes())->__invoke([$typeString]);
+        $types = (new ResolveTypes())->__invoke([$typeString], new Context(''));
 
         return reset($types);
     }
