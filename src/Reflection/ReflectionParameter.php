@@ -9,7 +9,6 @@ use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
 use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionParameter implements \Reflector
 {

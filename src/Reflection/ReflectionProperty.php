@@ -6,7 +6,6 @@ use BetterReflection\TypesFinder\FindPropertyType;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
-use BetterReflection\TypesFinder\TypesFinder;
 
 class ReflectionProperty implements \Reflector
 {
