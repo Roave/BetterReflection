@@ -31,7 +31,7 @@ class ReflectionProperty implements \Reflector
     /**
      * @var Type[]
      */
-    private $types;
+    private $docBlockTypes;
 
     /**
      * @var ReflectionClass
@@ -84,7 +84,7 @@ class ReflectionProperty implements \Reflector
 
         $prop->isStatic = $node->isStatic();
 
-        $prop->types = TypesFinder::findTypeForProperty($node, $prop);
+        $prop->docBlockTypes = TypesFinder::findTypeForProperty($node, $prop);
 
         return $prop;
     }
@@ -156,24 +156,31 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
+     * Get the DocBlock type hints as an array of strings
+     *
      * @return string[]
      */
-    public function getTypeStrings()
+    public function getDocBlockTypeStrings()
     {
         $stringTypes = [];
 
-        foreach ($this->types as $type) {
+        foreach ($this->docBlockTypes as $type) {
             $stringTypes[] = (string)$type;
         }
         return $stringTypes;
     }
 
     /**
+     * Get the types defined in the DocBlocks. This returns an array because
+     * the parameter may have multiple (compound) types specified (for example
+     * when you type hint pipe-separated "string|null", in which case this
+     * would return an array of Type objects, one for string, one for null.
+     *
      * @return Type[]
      */
-    public function getTypes()
+    public function getDocBlockTypes()
     {
-        return $this->types;
+        return $this->docBlockTypes;
     }
 
     /**
