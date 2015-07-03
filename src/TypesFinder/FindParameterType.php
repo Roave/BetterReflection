@@ -25,7 +25,7 @@ class FindParameterType
 
         foreach ($paramTags as $paramTag) {
             /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tag\ParamTag */
-            if ($paramTag->getVariableName() == '$' . $node->name) {
+            if ($paramTag->getVariableName() === '$' . $node->name) {
                 return (new ResolveTypes())->__invoke($paramTag->getTypes());
             }
         }
