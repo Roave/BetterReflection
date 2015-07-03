@@ -20,7 +20,7 @@ class FindTypeFromAst
         }
 
         if ($astType instanceof FullyQualified) {
-            $typeString = implode('\\', $astType->parts);
+            $typeString = $astType->toString();
         }
 
         if (!isset($typeString)) {
