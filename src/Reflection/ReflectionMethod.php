@@ -16,19 +16,12 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /**
      * @var int
      */
-    private $flags;
+    private $flags = 0;
 
     /**
      * @var ReflectionClass
      */
     private $declaringClass;
-
-    protected function __construct()
-    {
-        parent::__construct();
-
-        $this->flags = 0;
-    }
 
     /**
      * @param MethodNode $node
@@ -40,9 +33,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         ReflectionClass $declaringClass
     ) {
         $method = new self($node);
-        $method->populateFunctionAbstract($node, $declaringClass->getFileName());
-
         $method->declaringClass = $declaringClass;
+        
+        $method->populateFunctionAbstract($node, $declaringClass->getFileName());
 
         $method->flags |= $node->isAbstract() ? self::IS_ABSTRACT : 0;
         $method->flags |= $node->isFinal() ? self::IS_FINAL : 0;
