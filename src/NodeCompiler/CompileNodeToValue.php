@@ -24,9 +24,9 @@ class CompileNodeToValue
             case Node\Expr\ConstFetch::class:
                 if ($node->name->parts[0] == 'null') {
                     return null;
-                } else if ($node->name->parts[0] == 'false') {
+                } elseif ($node->name->parts[0] == 'false') {
                     return false;
-                } else if ($node->name->parts[0] == 'true') {
+                } elseif ($node->name->parts[0] == 'true') {
                     return true;
                 } else {
                     // @todo this should evaluate the VALUE, not the name

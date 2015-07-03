@@ -2,10 +2,8 @@
 
 namespace BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflection\Symbol;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;

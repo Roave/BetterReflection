@@ -123,7 +123,6 @@ class Generic
             if (null !== $reflection && $identifier->getType()->isMatchingReflector($reflection)) {
                 $reflections[] = $reflection;
             }
-
         }
         return $reflections;
     }
@@ -146,7 +145,7 @@ class Generic
                     $reflections,
                     $this->reflectFromNamespace($node, $identifier, $filename)
                 );
-            } else if ($node instanceof Node\Stmt\Class_) {
+            } elseif ($node instanceof Node\Stmt\Class_) {
                 $reflection = $this->reflectNode($node, null, $filename);
                 if ($identifier->getType()->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
