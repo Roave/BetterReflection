@@ -17,6 +17,6 @@ $reflectionClass = $reflector->reflect('Foo\Bar\MyClass');
 
 ## More documentation
 
-* [Compatibility with core Reflection API]((https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md))
-* [Basic usage instructions]((https://github.com/Roave/BetterReflection/tree/master/docs/usage.md))
+* [Compatibility with core Reflection API](https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md)
+* [Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md)
 * [Using types](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
