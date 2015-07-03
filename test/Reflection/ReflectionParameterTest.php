@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use phpDocumentor\Reflection\Types;
@@ -37,6 +37,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param string $defaultExpression
      * @param mixed $expectedValue
      * @dataProvider defaultParameterProvider
+     * @covers \BetterReflection\Reflection\ReflectionParameter::getDefaultValue()
      */
     public function testDefaultParametersTypes($defaultExpression, $expectedValue)
     {
@@ -51,6 +52,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedValue, $actualValue);
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::getDocBlockTypeStrings()
+     */
     public function testGetDocBlockTypeStrings()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -64,6 +68,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::__toString()
+     */
     public function testStringCast()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -76,7 +83,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Parameter #1 [ <optional> $optionalParameter = null ]', (string)$optionalParam);
     }
 
-    public function testGetPositions()
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::getPosition
+     */
+    public function testGetPosition()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
@@ -108,6 +118,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedType
      * @param string|null $expectedFqsen
      * @param string|null $expectedFqsenName
+     * @covers \BetterReflection\Reflection\ReflectionParameter::getTypeHint()
      */
     public function testGetTypeHint($parameterToTest, $expectedType, $expectedFqsen = null, $expectedFqsenName = null)
     {
@@ -127,6 +138,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::isCallable()
+     */
     public function testIsCallable()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -140,6 +154,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($callableParam->isCallable());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::isArray()
+     */
     public function testIsArray()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -153,6 +170,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($arrayParam->isArray());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::isVariadic()
+     */
     public function testIsVariadic()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -166,6 +186,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($variadicParam->isVariadic());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::isPassedByReference()
+     * @covres \BetterReflection\Reflection\ReflectionParameter::canBePassedByValue()
+     */
     public function testIsPassedByReference()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -181,6 +205,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($refParam->canBePassedByValue());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::isOptional()
+     * @covres \BetterReflection\Reflection\ReflectionParameter::isDefaultValueAvailable()
+     */
     public function testGetDefaultValueAndIsOptional()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -195,6 +223,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($secondParam->isDefaultValueAvailable());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::allowsNull()
+     */
     public function testAllowsNull()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -210,6 +241,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($thirdParam->allowsNull());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionParameter::isDefaultValueConstant()
+     * @covres \BetterReflection\Reflection\ReflectionParameter::getDefaultValueConstantName()
+     */
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');

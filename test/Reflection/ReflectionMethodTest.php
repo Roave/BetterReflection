@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
@@ -41,6 +41,12 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param bool $shouldBeAbstract
      * @param bool $shouldBeStatic
      * @dataProvider visibilityProvider
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isPublic()
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isPrivate()
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isProtected()
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isFinal()
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isAbstract()
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isStatic()
      */
     public function testVisibilityOfMethods($method, $shouldBePublic, $shouldBePrivate, $shouldBeProtected, $shouldBeFinal, $shouldBeAbstract, $shouldBeStatic)
     {
@@ -55,6 +61,10 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($shouldBeStatic, $method->isStatic());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isConstructor()
+     * @covers \BetterReflection\Reflection\ReflectionMethod::isDestructor()
+     */
     public function testIsConstructorDestructor()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -66,6 +76,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($method->isDestructor());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionMethod::getParameters()
+     */
     public function testGetParameters()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -80,6 +93,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('parameter2', $params[1]->getName());
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionMethod::getNumberOfParameters()
+     */
     public function testGetNumberOfParameters()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -91,6 +107,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $method2->getNumberOfParameters(), 'Failed asserting methodWithOptionalParameters has 2 params');
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionMethod::getNumberOfRequiredParameters()
+     */
     public function testGetNumberOfOptionalParameters()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -102,6 +121,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
     }
 
+    /**
+     * @covers \BetterReflection\Reflection\ReflectionMethod::getFileName()
+     */
     public function testGetFileName()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
