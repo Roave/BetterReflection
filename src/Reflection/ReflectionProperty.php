@@ -76,7 +76,7 @@ class ReflectionProperty implements \Reflector
 
         if ($node->isPrivate()) {
             $prop->visibility = self::IS_PRIVATE;
-        } else if ($node->isProtected()) {
+        } elseif ($node->isProtected()) {
             $prop->visibility = self::IS_PROTECTED;
         } else {
             $prop->visibility = self::IS_PUBLIC;
@@ -94,8 +94,7 @@ class ReflectionProperty implements \Reflector
      */
     private function getVisibilityAsString()
     {
-        switch($this->visibility)
-        {
+        switch ($this->visibility) {
             case self::IS_PROTECTED:
                 return 'protected';
             case self::IS_PRIVATE:

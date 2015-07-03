@@ -247,7 +247,7 @@ class ReflectionParameter implements \Reflector
     {
         $defaultValue = $this->getDefaultValue();
         $type = gettype($defaultValue);
-        switch($type) {
+        switch ($type) {
             case 'boolean':
                 return $defaultValue ? 'true' : 'false';
             case 'integer':

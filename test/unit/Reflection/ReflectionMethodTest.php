@@ -1,11 +1,14 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 
+/**
+ * @covers \BetterReflection\Reflection\ReflectionMethod
+ */
 class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 {
     /**

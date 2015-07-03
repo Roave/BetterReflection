@@ -1,10 +1,13 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 
+/**
+ * @covers \BetterReflection\Reflection\ReflectionProperty
+ */
 class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -41,5 +44,28 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
         $staticProp = $classInfo->getProperty('publicStaticProperty');
         $this->assertTrue($staticProp->isStatic());
+    }
+
+    public function typesDataProvider()
+    {
+        return [
+            ['privateProperty', ['int', 'float', '\stdClass']],
+            ['protectedProperty', ['bool', 'bool[]', 'bool[][]']],
+            ['publicProperty', ['string']],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param string[] $expectedTypes
+     * @dataProvider typesDataProvider
+     */
+    public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $property = $classInfo->getProperty($propertyName);
+
+        $this->assertSame($expectedTypes, $property->getDocBlockTypeStrings());
     }
 }

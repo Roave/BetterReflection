@@ -14,7 +14,7 @@
     "autoload": {
         "psr-4": {
             "BetterReflection\\": "src",
-            "BetterReflectionTest\\": "test"
+            "BetterReflectionTest\\": "test/unit"
         }
     },
     "suggest": {

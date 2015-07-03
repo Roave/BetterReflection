@@ -1,15 +1,16 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflection\Symbol;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 
+/**
+ * @covers \BetterReflection\Reflection\ReflectionClass
+ */
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
     private function getComposerLocator()
@@ -31,7 +32,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testClassNameMethodsWithoutNamespace()
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/Fixture/NoNamespace.php'));
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/NoNamespace.php'));
         $classInfo = $reflector->reflect('ClassWithNoNamespace');
 
         $this->assertFalse($classInfo->inNamespace());
@@ -42,7 +43,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testClassNameMethodsWithExplicitGlobalNamespace()
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/Fixture/ExampleClass.php'));
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
         $classInfo = $reflector->reflect('ClassWithExplicitGlobalNamespace');
 
         $this->assertFalse($classInfo->inNamespace());
@@ -51,6 +52,9 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 
+    /**
+     * @coversNothing
+     */
     public function testReflectingAClassDoesNotLoadTheClass()
     {
         $class = 'BetterReflectionTest\Fixture\ExampleClass';
@@ -88,7 +92,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(234, $classInfo->getConstant('MY_CONST_2'));
     }
 
-    public function testGetConstructor()
+    public function testIsConstructor()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
@@ -128,41 +132,5 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $detectedFilename = $classInfo->getFileName();
 
         $this->assertSame('ExampleClass.php', basename($detectedFilename));
-    }
-
-    public function testGetClassesFromFile()
-    {
-        $filename = 'test/Fixture/ExampleClass.php';
-        $singleFileSourceLocator = new SingleFileSourceLocator($filename);
-
-        $reflector = new ClassReflector($singleFileSourceLocator);
-        $classes = $reflector->getAllClasses();
-
-        $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        $this->assertCount(3, $classes);
-    }
-
-    public function typesDataProvider()
-    {
-        return [
-            ['privateProperty', ['int', 'float', '\stdClass']],
-            ['protectedProperty', ['bool', 'bool[]', 'bool[][]']],
-            ['publicProperty', ['string']],
-        ];
-    }
-
-    /**
-     * @param string $propertyName
-     * @param string[] $expectedTypes
-     * @dataProvider typesDataProvider
-     */
-    public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
-    {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
-
-        $property = $classInfo->getProperty($propertyName);
-
-        $this->assertSame($expectedTypes, $property->getDocBlockTypeStrings());
     }
 }

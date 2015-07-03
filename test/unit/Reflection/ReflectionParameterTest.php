@@ -1,12 +1,15 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use phpDocumentor\Reflection\Types;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 
+/**
+ * @covers \BetterReflection\Reflection\ReflectionParameter
+ */
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -76,7 +79,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Parameter #1 [ <optional> $optionalParameter = null ]', (string)$optionalParam);
     }
 
-    public function testGetPositions()
+    public function testGetPosition()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
 
