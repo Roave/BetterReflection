@@ -35,7 +35,14 @@ class FindPropertyType
         );
 
         /* @var \phpDocumentor\Reflection\DocBlock\Tag\VarTag $varTag */
-        $varTag = $docBlock->getTagsByName('var')[0];
-        return (new ResolveTypes())->__invoke($varTag->getTypes(), $context);
+        $resolvedTypes = [];
+        $varTags = $docBlock->getTagsByName('var');
+        foreach ($varTags as $varTag) {
+            $resolvedTypes = array_merge(
+                $resolvedTypes,
+                (new ResolveTypes())->__invoke($varTag->getTypes(), $context)
+            );
+        }
+        return $resolvedTypes;
     }
 }
