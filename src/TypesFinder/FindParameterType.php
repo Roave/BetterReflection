@@ -12,6 +12,7 @@ class FindParameterType
     /**
      * Given a function and parameter, attempt to find the type of the parameter
      *
+     * @todo needs some context going on here...
      * @param ReflectionFunctionAbstract $function
      * @param ParamNode $node
      * @return Type[]
