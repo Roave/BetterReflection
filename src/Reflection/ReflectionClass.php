@@ -52,8 +52,8 @@ class ReflectionClass implements Reflection
      * Create from a Class Node
      *
      * @param ClassNode $node
-     * @param NamespaceNode $namespace optional - if omitted, we assume it is global namespaced class
-     * @param string $filename If set, this is the filename the class was declared in
+     * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
+     * @param string|null $filename If set, this is the filename the class was declared in
      * @return ReflectionClass
      */
     public static function createFromNode(

@@ -64,14 +64,14 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getExtensionName | :x: No - extensions are not supported (#15) |
 | getFileName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
-| getNamespaceName | todo |
+| getNamespaceName | :heavy_check_mark: Yes |
 | getNumberOfParameters | :heavy_check_mark: Yes |
 | getNumberOfRequiredParameters | :heavy_check_mark: Yes |
 | getParameters | :heavy_check_mark: Yes |
-| getShortName | todo |
+| getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
 | getStaticVariables | todo |
-| inNamespace | todo |
+| inNamespace | :heavy_check_mark: Yes |
 | isClosure | todo |
 | isDeprecated | todo |
 | isGenerator | todo |

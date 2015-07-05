@@ -2,7 +2,8 @@
 
 namespace BetterReflection\Reflection;
 
-use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use PhpParser\Node\Stmt as MethodOrFunctionNode;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
 abstract class ReflectionFunctionAbstract
 {
@@ -17,12 +18,17 @@ abstract class ReflectionFunctionAbstract
     private $name;
 
     /**
+     * @var NamespaceNode
+     */
+    private $declaringNamespace;
+
+    /**
      * @var string
      */
     private $docBlock;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $filename;
 
@@ -34,13 +40,15 @@ abstract class ReflectionFunctionAbstract
     /**
      * Populate the common elements of the function abstract
      *
-     * @param MethodNode $node
-     * @param string $filename
+     * @param MethodOrFunctionNode $node
+     * @param NamespaceNode|null $declaringNamespace
+     * @param string|null $filename
      */
-    protected function populateFunctionAbstract(MethodNode $node, $filename)
+    protected function populateFunctionAbstract(MethodOrFunctionNode $node, NamespaceNode $declaringNamespace = null, $filename = null)
     {
         $this->name = $node->name;
         $this->filename = $filename;
+        $this->declaringNamespace = $declaringNamespace;
 
         if ($node->hasAttribute('comments')) {
             /* @var \PhpParser\Comment\Doc $comment */
@@ -75,13 +83,56 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the name of this function or method
+     * Get the "full" name of the function (e.g. for A\B\foo, this will return
+     * "A\B\foo")
      *
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
+        if (!$this->inNamespace()) {
+            return $this->getShortName();
+        }
+
+        return $this->getNamespaceName() . '\\' . $this->getShortName();
+    }
+
+    /**
+     * Get the "short" name of the function (e.g. for A\B\foo, this will return
+     * "foo")
+     *
+     * @return string
+     */
+    public function getShortName()
+    {
         return $this->name;
+    }
+
+    /**
+     * Get the "namespace" name of the function (e.g. for A\B\foo, this will
+     * return "A\B")
+     *
+     * @return string
+     */
+    public function getNamespaceName()
+    {
+        if (!$this->inNamespace()) {
+            return '';
+        }
+
+        return implode('\\', $this->declaringNamespace->name->parts);
+    }
+
+    /**
+     * Decide if this function is part of a namespace. Returns false if the class
+     * is in the global namespace or does not have a specified namespace
+     *
+     * @return bool
+     */
+    public function inNamespace()
+    {
+        return null !== $this->declaringNamespace
+            && null !== $this->declaringNamespace->name;
     }
 
     /**

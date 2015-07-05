@@ -34,8 +34,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     ) {
         $method = new self($node);
         $method->declaringClass = $declaringClass;
-        
-        $method->populateFunctionAbstract($node, $declaringClass->getFileName());
+
+        // Compat with core reflection means we should NOT pass namespace info
+        // for ReflectionMethod
+        $method->populateFunctionAbstract($node, null, $declaringClass->getFileName());
 
         $method->flags |= $node->isAbstract() ? self::IS_ABSTRACT : 0;
         $method->flags |= $node->isFinal() ? self::IS_FINAL : 0;
