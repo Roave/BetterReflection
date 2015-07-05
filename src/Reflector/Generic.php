@@ -4,6 +4,7 @@ namespace BetterReflection\Reflector;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\Reflection\ReflectionClass;
@@ -100,6 +101,14 @@ class Generic
             );
         }
 
+        if ($node instanceof Node\Stmt\Function_) {
+            return ReflectionFunction::createFromNode(
+                $node,
+                $namespace,
+                $filename
+            );
+        }
+
         return null;
     }
 
@@ -146,6 +155,11 @@ class Generic
                     $this->reflectFromNamespace($node, $identifier, $filename)
                 );
             } elseif ($node instanceof Node\Stmt\Class_) {
+                $reflection = $this->reflectNode($node, null, $filename);
+                if ($identifier->getType()->isMatchingReflector($reflection)) {
+                    $reflections[] = $reflection;
+                }
+            } elseif ($node instanceof Node\Stmt\Function_) {
                 $reflection = $this->reflectNode($node, null, $filename);
                 if ($identifier->getType()->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
