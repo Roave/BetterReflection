@@ -82,4 +82,28 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expectingGenerator, $function->isGenerator());
     }
+
+    public function startEndLineProvider()
+    {
+        return [
+            ["<?php\n\nfunction foo() {\n}\n", 3, 4],
+            ["<?php\n\nfunction foo() {\n\n}\n", 3, 5],
+            ["<?php\n\n\nfunction foo() {\n}\n", 4, 5],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $expectedStart
+     * @param int $expectedEnd
+     * @dataProvider startEndLineProvider
+     */
+    public function testStartEndLine($php, $expectedStart, $expectedEnd)
+    {
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->assertSame($expectedStart, $function->getStartLine());
+        $this->assertSame($expectedEnd, $function->getEndLine());
+    }
 }

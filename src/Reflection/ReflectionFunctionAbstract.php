@@ -320,4 +320,24 @@ abstract class ReflectionFunctionAbstract
         }
         return $this->checkStatementsForYield($this->node->stmts);
     }
+
+    /**
+     * Get the line number that this function starts on
+     *
+     * @return int
+     */
+    public function getStartLine()
+    {
+       return (int)$this->node->getAttribute('startLine', -1);
+    }
+
+    /**
+     * Get the line number that this function ends on
+     *
+     * @return int
+     */
+    public function getEndLine()
+    {
+        return (int)$this->node->getAttribute('endLine', -1);
+    }
 }

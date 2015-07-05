@@ -59,7 +59,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getClosureScopeClass | :x: No - would require loading of the method itself (#14) |
 | getClosureThis | :x: No - would require loading of the method itself (#14) |
 | getDocComment | :heavy_check_mark: Yes |
-| getEndLine | todo |
+| getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - extensions are not supported (#15) |
 | getExtensionName | :x: No - extensions are not supported (#15) |
 | getFileName | :heavy_check_mark: Yes |
@@ -69,7 +69,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getNumberOfRequiredParameters | :heavy_check_mark: Yes |
 | getParameters | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
-| getStartLine | todo |
+| getStartLine | :heavy_check_mark: Yes |
 | getStaticVariables | todo |
 | inNamespace | :heavy_check_mark: Yes |
 | isClosure | :heavy_check_mark: Yes - but see issue (#37) |
