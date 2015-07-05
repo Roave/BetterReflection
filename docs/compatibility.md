@@ -78,7 +78,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isInternal | :heavy_check_mark: Yes - but see issue (#38) |
 | isUserDefined | :heavy_check_mark: Yes |
 | isVariadic | :heavy_check_mark: Yes |
-| returnsReference | todo |
+| returnsReference | :heavy_check_mark: Ye |
 
 ## ReflectionMethod
 

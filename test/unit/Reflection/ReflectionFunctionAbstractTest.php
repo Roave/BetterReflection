@@ -106,4 +106,25 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedStart, $function->getStartLine());
         $this->assertSame($expectedEnd, $function->getEndLine());
     }
+
+    public function returnsReferenceProvider()
+    {
+        return [
+            ['<?php function foo() {}', false],
+            ['<?php function &foo() {}', true],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param bool $expectingReturnsReference
+     * @dataProvider returnsReferenceProvider
+     */
+    public function testReturnsReference($php, $expectingReturnsReference)
+    {
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->assertSame($expectingReturnsReference, $function->returnsReference());
+    }
 }

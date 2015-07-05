@@ -340,4 +340,14 @@ abstract class ReflectionFunctionAbstract
     {
         return (int)$this->node->getAttribute('endLine', -1);
     }
+
+    /**
+     * Is this function declared as a reference
+     *
+     * @return bool
+     */
+    public function returnsReference()
+    {
+        return (bool)$this->node->byRef;
+    }
 }
