@@ -72,11 +72,11 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getStartLine | todo |
 | getStaticVariables | todo |
 | inNamespace | :heavy_check_mark: Yes |
-| isClosure | todo |
-| isDeprecated | todo |
+| isClosure | :heavy_check_mark: Yes - but see issue (#37) |
+| isDeprecated | :heavy_check_mark: Yes - but see issue (#38) |
 | isGenerator | todo |
-| isInternal | todo |
-| isUserDefined | todo |
+| isInternal | :heavy_check_mark: Yes - but see issue (#38) |
+| isUserDefined | :heavy_check_mark: Yes |
 | isVariadic | todo |
 | returnsReference | todo |
 
@@ -129,7 +129,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getClosure | :x: No - would require actual compilation of the AST (#14) |
 | invoke | :x: No - would require loading of the function itself (#14) |
 | invokeArgs | :x: No - would require loading of the function itself (#14) |
-| isDisabled | :heavy_check_mark: Yes (note - we cannot currently reflect internal functions, so always returns false) |
+| isDisabled | :heavy_check_mark: Yes - but see issue (#38) |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionProperty

@@ -6,7 +6,7 @@ use BetterReflectionTest\SourceLocator\StringSourceLocatorTest;
 use BetterReflection\SourceLocator\StringSourceLocator;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionClass
+ * @covers \BetterReflection\Reflection\ReflectionFunction
  */
 class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,5 +57,15 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $function = $reflector->reflect('foo');
 
         $this->assertFalse($function->isDisabled());
+    }
+
+    public function testIsUserDefined()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->assertTrue($function->isUserDefined());
     }
 }

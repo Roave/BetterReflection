@@ -203,4 +203,59 @@ abstract class ReflectionFunctionAbstract
     {
         return $this->filename;
     }
+
+    /**
+     * Is this function a closure?
+     *
+     * Note - we cannot reflect on closures at the moment (as there is no PHP
+     * source code we can access).
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/37
+     * @return bool
+     */
+    public function isClosure()
+    {
+        return false;
+    }
+
+    /**
+     * Is this function deprecated?
+     *
+     * Note - we cannot reflect on internal functions (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return false
+     * from this function.
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/38
+     * @return bool
+     */
+    public function isDeprecated()
+    {
+        return false;
+    }
+
+    /**
+     * Is this an internal function?
+     *
+     * Note - we cannot reflect on internal functions (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return false
+     * from this function.
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/38
+     * @return bool
+     */
+    public function isInternal()
+    {
+        return false;
+    }
+
+    /**
+     * Is this a user-defined function (will always return the opposite of
+     * whatever isInternal returns).
+     *
+     * @return bool
+     */
+    public function isUserDefined()
+    {
+        return !$this->isInternal();
+    }
 }
