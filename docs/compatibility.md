@@ -26,8 +26,8 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
-| getStaticProperties | todo |
-| getStaticPropertyValue | :x: No - would require an instance (#14) |
+| getStaticProperties | :x: No - would require loading (#14) |
+| getStaticPropertyValue | :x: No - would require loading (#14) |
 | getTraitAliases | todo |
 | getTraitNames | todo |
 | getTraits | todo |
@@ -50,7 +50,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |
-| setStaticPropertyValue | :x: No - would require an instance (#14) |
+| setStaticPropertyValue | :x: No - would require loading (#14) |
 
 ## ReflectionFunctionAbstract
 
@@ -70,7 +70,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getParameters | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | :heavy_check_mark: Yes |
-| getStaticVariables | todo |
+| getStaticVariables | :x: No - would require loading (#14) |
 | inNamespace | :heavy_check_mark: Yes |
 | isClosure | :heavy_check_mark: Yes - but see issue (#37) |
 | isDeprecated | :heavy_check_mark: Yes - but see issue (#38) |
