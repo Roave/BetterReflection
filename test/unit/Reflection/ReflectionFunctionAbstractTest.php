@@ -61,4 +61,25 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expectingVariadic, $function->isVariadic());
     }
+
+    public function generatorProvider()
+    {
+        return [
+            ['<?php function foo() { return [1, 2, 3]; }', false],
+            ['<?php function foo() { for ($i = 1; $i <= 3; $i++) { yield $i; } }', true],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param bool $expectingGenerator
+     * @dataProvider generatorProvider
+     */
+    public function testIsGenerator($php, $expectingGenerator)
+    {
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->assertSame($expectingGenerator, $function->isGenerator());
+    }
 }

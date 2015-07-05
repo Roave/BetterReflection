@@ -4,6 +4,7 @@ namespace BetterReflection\Reflection;
 
 use PhpParser\Node\Stmt as MethodOrFunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Expr\Yield_ as YieldNode;
 
 abstract class ReflectionFunctionAbstract
 {
@@ -32,6 +33,11 @@ abstract class ReflectionFunctionAbstract
      */
     private $filename;
 
+    /**
+     * @var MethodOrFunctionNode
+     */
+    private $node;
+
     protected function __construct()
     {
         $this->parameters = [];
@@ -46,6 +52,7 @@ abstract class ReflectionFunctionAbstract
      */
     protected function populateFunctionAbstract(MethodOrFunctionNode $node, NamespaceNode $declaringNamespace = null, $filename = null)
     {
+        $this->node = $node;
         $this->name = $node->name;
         $this->filename = $filename;
         $this->declaringNamespace = $declaringNamespace;
@@ -275,5 +282,42 @@ abstract class ReflectionFunctionAbstract
         }
 
         return false;
+    }
+
+    /**
+     * Recursively search an array of statements (PhpParser nodes) to find if a
+     * yield expression exists anywhere.
+     *
+     * @param \PhpParser\Node[] $statements
+     * @return bool
+     */
+    private function checkStatementsForYield(array $statements)
+    {
+        $yieldFound = false;
+        foreach ($statements as $stmt) {
+            if ($stmt instanceof YieldNode) {
+                $yieldFound = true;
+            }
+            if (isset($stmt->stmts) && is_array($stmt->stmts) && count($stmt->stmts)) {
+                if ($this->checkStatementsForYield($stmt->stmts)) {
+                    $yieldFound = true;
+                }
+            }
+        }
+        return $yieldFound;
+    }
+
+    /**
+     * Check if this function can be used as a generator (i.e. contains the
+     * "yield" keyword)
+     *
+     * @return bool
+     */
+    public function isGenerator()
+    {
+        if (!isset($this->node->stmts)) {
+            return false;
+        }
+        return $this->checkStatementsForYield($this->node->stmts);
     }
 }

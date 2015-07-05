@@ -74,7 +74,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | inNamespace | :heavy_check_mark: Yes |
 | isClosure | :heavy_check_mark: Yes - but see issue (#37) |
 | isDeprecated | :heavy_check_mark: Yes - but see issue (#38) |
-| isGenerator | todo |
+| isGenerator | :heavy_check_mark: Yes |
 | isInternal | :heavy_check_mark: Yes - but see issue (#38) |
 | isUserDefined | :heavy_check_mark: Yes |
 | isVariadic | :heavy_check_mark: Yes |
