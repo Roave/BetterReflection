@@ -258,4 +258,22 @@ abstract class ReflectionFunctionAbstract
     {
         return !$this->isInternal();
     }
+
+    /**
+     * Check if the function has a variadic parameter
+     *
+     * @return bool
+     */
+    public function isVariadic()
+    {
+        $parameters = $this->getParameters();
+
+        foreach ($parameters as $parameter) {
+            if ($parameter->isVariadic()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -77,7 +77,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isGenerator | todo |
 | isInternal | :heavy_check_mark: Yes - but see issue (#38) |
 | isUserDefined | :heavy_check_mark: Yes |
-| isVariadic | todo |
+| isVariadic | :heavy_check_mark: Yes |
 | returnsReference | todo |
 
 ## ReflectionMethod
