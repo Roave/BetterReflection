@@ -48,4 +48,14 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', $function->getNamespaceName());
         $this->assertSame('foo', $function->getShortName());
     }
+
+    public function testIsDisabled()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->assertFalse($function->isDisabled());
+    }
 }

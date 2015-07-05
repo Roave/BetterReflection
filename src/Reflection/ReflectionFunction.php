@@ -24,4 +24,20 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
         return $method;
     }
+
+    /**
+     * Check to see if this function has been disabled (by the PHP INI file
+     * directive `disable_functions`)
+     *
+     * Note - we cannot reflect on internal functions (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return false
+     * from this function, because you cannot disable user-defined functions.
+     *
+     * @see http://php.net/manual/en/ini.core.php#ini.disable-functions
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return false;
+    }
 }

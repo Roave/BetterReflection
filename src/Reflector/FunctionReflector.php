@@ -23,7 +23,7 @@ class FunctionReflector implements Reflector
      * Create a ReflectionClass for the specified $className
      *
      * @param string $functionName
-     * @return \BetterReflection\Reflection\ReflectionClass
+     * @return \BetterReflection\Reflection\ReflectionFunction
      */
     public function reflect($functionName)
     {
