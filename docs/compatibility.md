@@ -56,12 +56,12 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 | Method | Supported |
 |--------|-----------|
-| getClosureScopeClass | todo |
-| getClosureThis | todo |
+| getClosureScopeClass | :x: No - would require loading of the method itself (#14) |
+| getClosureThis | :x: No - would require loading of the method itself (#14) |
 | getDocComment | :heavy_check_mark: Yes |
 | getEndLine | todo |
-| getExtension | todo |
-| getExtensionName | todo |
+| getExtension | :x: No - extensions are not supported (#15) |
+| getExtensionName | :x: No - extensions are not supported (#15) |
 | getFileName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | todo |
