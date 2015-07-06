@@ -26,7 +26,7 @@ class AutoloadSourceLocator implements SourceLocator
             } else {
                 $previousErrorHandler = set_error_handler(function () {});
                 stream_wrapper_unregister('file');
-                stream_wrapper_register('file', '\BetterReflection\SourceLocator\AutoloadSourceLocator');
+                stream_wrapper_register('file', self::class);
                 class_exists($identifier->getName());
                 stream_wrapper_restore('file');
                 set_error_handler($previousErrorHandler);
