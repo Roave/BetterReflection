@@ -4,9 +4,6 @@
         <testsuite name="unit-tests">
             <directory stuffix=".php">./test/unit</directory>
         </testsuite>
-        <testsuite name="compat-tests">
-            <directory suffix=".phpt">./test/compat</directory>
-        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
