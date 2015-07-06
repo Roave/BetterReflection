@@ -2,7 +2,10 @@
 <phpunit bootstrap="test/unit/bootstrap.php">
     <testsuites>
         <testsuite name="unit-tests">
-            <directory>./test/unit</directory>
+            <directory stuffix=".php">./test/unit</directory>
+        </testsuite>
+        <testsuite name="compat-tests">
+            <directory suffix=".phpt">./test/compat</directory>
         </testsuite>
     </testsuites>
     <filter>
