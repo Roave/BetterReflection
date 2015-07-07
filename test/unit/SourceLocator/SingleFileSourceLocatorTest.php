@@ -4,8 +4,8 @@ namespace BetterReflectionTest\SourceLocator;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use InvalidArgumentException;
 
 /**
  * @covers \BetterReflection\SourceLocator\SingleFileSourceLocator
@@ -30,7 +30,7 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException(InvalidFileLocation::class);
         new SingleFileSourceLocator('');
     }
 }

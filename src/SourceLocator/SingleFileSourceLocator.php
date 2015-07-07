@@ -24,7 +24,7 @@ class SingleFileSourceLocator implements SourceLocator
         $this->filename = (string)$filename;
 
         if (empty($this->filename)) {
-            throw new \InvalidArgumentException('Filename was empty');
+            throw new Exception\InvalidFileLocation('Filename was empty');
         }
     }
 
