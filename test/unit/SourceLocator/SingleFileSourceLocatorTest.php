@@ -30,7 +30,19 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()
     {
-        $this->setExpectedException(InvalidFileLocation::class);
+        $this->setExpectedException(InvalidFileLocation::class, 'Filename was empty');
         new SingleFileSourceLocator('');
+    }
+
+    public function testConstructorThrowsExceptionIfFileDoesNotExist()
+    {
+        $this->setExpectedException(InvalidFileLocation::class, 'File does not exist');
+        new SingleFileSourceLocator('sdklfjdfslsdfhlkjsdglkjsdflgkj');
+    }
+
+    public function testConstructorThrowsExceptionIfFileIsNotAFile()
+    {
+        $this->setExpectedException(InvalidFileLocation::class, 'Is not a file');
+        new SingleFileSourceLocator(__DIR__);
     }
 }

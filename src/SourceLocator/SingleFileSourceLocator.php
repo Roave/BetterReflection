@@ -26,6 +26,14 @@ class SingleFileSourceLocator implements SourceLocator
         if (empty($this->filename)) {
             throw new Exception\InvalidFileLocation('Filename was empty');
         }
+
+        if (!file_exists($this->filename)) {
+            throw new Exception\InvalidFileLocation('File does not exist');
+        }
+
+        if (!is_file($this->filename)) {
+            throw new Exception\InvalidFileLocation('Is not a file: ' . $this->filename);
+        }
     }
 
     /**
