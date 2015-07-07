@@ -53,11 +53,11 @@ class IdentifierType
     public function isMatchingReflector(Reflection $reflector)
     {
         if ($this->name == self::IDENTIFIER_CLASS) {
-            return ($reflector instanceof ReflectionClass);
+            return $reflector instanceof ReflectionClass;
         }
 
         if ($this->name == self::IDENTIFIER_FUNCTION) {
-            return ($reflector instanceof ReflectionFunction);
+            return $reflector instanceof ReflectionFunction;
         }
 
         return false;

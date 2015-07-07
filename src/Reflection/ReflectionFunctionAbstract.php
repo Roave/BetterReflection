@@ -293,18 +293,17 @@ abstract class ReflectionFunctionAbstract
      */
     private function checkStatementsForYield(array $statements)
     {
-        $yieldFound = false;
         foreach ($statements as $stmt) {
             if ($stmt instanceof YieldNode) {
-                $yieldFound = true;
+                return true;
             }
             if (isset($stmt->stmts) && is_array($stmt->stmts) && count($stmt->stmts)) {
                 if ($this->checkStatementsForYield($stmt->stmts)) {
-                    $yieldFound = true;
+                    return true;
                 }
             }
         }
-        return $yieldFound;
+        return false;
     }
 
     /**
