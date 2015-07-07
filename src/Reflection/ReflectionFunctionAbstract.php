@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\SourceLocator\LocatedSource;
 use PhpParser\Node;
 use PhpParser\Node\Stmt as MethodOrFunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -30,9 +31,9 @@ abstract class ReflectionFunctionAbstract
     private $docBlock;
 
     /**
-     * @var string|null
+     * @var LocatedSource
      */
-    private $filename;
+    private $locatedSource;
 
     /**
      * @var MethodOrFunctionNode
@@ -47,14 +48,14 @@ abstract class ReflectionFunctionAbstract
      * Populate the common elements of the function abstract
      *
      * @param MethodOrFunctionNode $node
+     * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
-     * @param string|null $filename
      */
-    protected function populateFunctionAbstract(MethodOrFunctionNode $node, NamespaceNode $declaringNamespace = null, $filename = null)
+    protected function populateFunctionAbstract(MethodOrFunctionNode $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
         $this->node = $node;
         $this->name = $node->name;
-        $this->filename = $filename;
+        $this->locatedSource = $locatedSource;
         $this->declaringNamespace = $declaringNamespace;
 
         if ($node->hasAttribute('comments')) {
@@ -208,7 +209,15 @@ abstract class ReflectionFunctionAbstract
      */
     public function getFileName()
     {
-        return $this->filename;
+        return $this->locatedSource->getFileName();
+    }
+
+    /**
+     * @return LocatedSource
+     */
+    public function getLocatedSource()
+    {
+        return $this->locatedSource;
     }
 
     /**
