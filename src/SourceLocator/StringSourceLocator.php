@@ -38,6 +38,7 @@ class StringSourceLocator implements SourceLocator
      */
     public function __invoke(Identifier $identifier)
     {
+        // @todo https://github.com/Roave/BetterReflection/issues/43
         return new LocatedSource($this->source, null);
     }
 }
