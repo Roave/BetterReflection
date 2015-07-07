@@ -2,6 +2,7 @@
 
 namespace BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\Types\Context;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
@@ -26,7 +27,8 @@ class FindParameterType
         foreach ($paramTags as $paramTag) {
             /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tag\ParamTag */
             if ($paramTag->getVariableName() === '$' . $node->name) {
-                return (new ResolveTypes())->__invoke($paramTag->getTypes());
+                // @todo https://github.com/Roave/BetterReflection/issues/29
+                return (new ResolveTypes())->__invoke($paramTag->getTypes(), new Context(''));
             }
         }
         return [];
