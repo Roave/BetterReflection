@@ -36,7 +36,7 @@ class Generic
         if ($identifier->isLoaded()) {
             throw new \LogicException(sprintf(
                 '%s "%s" is already loaded',
-                $identifier->getType()->getDisplayName(),
+                $identifier->getType()->getName(),
                 $identifier->getName()
             ));
         }
@@ -64,7 +64,7 @@ class Generic
 
         throw new \UnexpectedValueException(sprintf(
             '%s "%s" could not be found to load',
-            $identifier->getType()->getDisplayName(),
+            $identifier->getType()->getName(),
             $identifier->getName()
         ));
     }

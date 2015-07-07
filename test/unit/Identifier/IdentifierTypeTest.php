@@ -17,20 +17,18 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
     public function possibleIdentifierTypesProvider()
     {
         return [
-            [IdentifierType::IDENTIFIER_CLASS, 'ReflectionClass'],
+            [IdentifierType::IDENTIFIER_CLASS],
         ];
     }
 
     /**
      * @param string $full
-     * @param string $displayName
      * @dataProvider possibleIdentifierTypesProvider
      */
-    public function testPossibleIdentifierTypes($full, $displayName)
+    public function testPossibleIdentifierTypes($full)
     {
         $type = new IdentifierType($full);
         $this->assertSame($full, $type->getName());
-        $this->assertSame($displayName, $type->getDisplayName());
     }
 
     public function testThrowsAnExceptionWhenInvalidTypeGiven()

@@ -42,14 +42,6 @@ class IdentifierType
     }
 
     /**
-     * @return string
-     */
-    public function getDisplayName()
-    {
-        return basename(str_replace('\\', '/', $this->name));
-    }
-
-    /**
      * Check to see if a reflector is of a valid type specified by this identifier
      *
      * @param Reflection $reflector
