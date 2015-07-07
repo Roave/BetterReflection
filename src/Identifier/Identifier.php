@@ -40,13 +40,4 @@ class Identifier
     {
         return $this->type;
     }
-
-    /**
-     * @todo implement this
-     * @return bool
-     */
-    public function isLoaded()
-    {
-        return false;
-    }
 }

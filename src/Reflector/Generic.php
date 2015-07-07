@@ -34,14 +34,6 @@ class Generic
      */
     public function reflect(Identifier $identifier)
     {
-        if ($identifier->isLoaded()) {
-            throw new \LogicException(sprintf(
-                '%s "%s" is already loaded',
-                $identifier->getType()->getName(),
-                $identifier->getName()
-            ));
-        }
-
         return $this->reflectFromLocatedSource(
             $identifier,
             $this->sourceLocator->__invoke($identifier)
