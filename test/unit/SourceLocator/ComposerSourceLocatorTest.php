@@ -5,6 +5,7 @@ namespace BetterReflectionTest\SourceLocator;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
+use ClassWithNoNamespace;
 use Composer\Autoload\ClassLoader;
 use UnexpectedValueException;
 
@@ -43,7 +44,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokableThrowsExceptionWhenClassNotResolved()
     {
-        $className = 'ClassWithNoNamespace';
+        $className = ClassWithNoNamespace::class;
 
         $loader = $this->getMockBuilder(ClassLoader::class)
             ->setMethods(['findFile'])
