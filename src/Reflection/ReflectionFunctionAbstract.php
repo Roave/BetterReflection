@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use PhpParser\Node;
 use PhpParser\Node\Stmt as MethodOrFunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
@@ -286,23 +287,31 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Recursively search an array of statements (PhpParser nodes) to find if a
-     * yield expression exists anywhere.
+     * yield expression exists anywhere (thus indicating this is a generator)
      *
-     * @param \PhpParser\Node[] $statements
+     * @param \PhpParser\Node $node
      * @return bool
      */
-    private function checkStatementsForYield(array $statements)
+    private function nodeIsOrContainsYield(Node $node)
     {
-        foreach ($statements as $stmt) {
-            if ($stmt instanceof YieldNode) {
+        if ($node instanceof YieldNode) {
+            return true;
+        }
+
+        foreach ($node as $nodeProperty) {
+            if ($nodeProperty instanceof Node && $this->nodeIsOrContainsYield($nodeProperty)) {
                 return true;
             }
-            if (isset($stmt->stmts) && is_array($stmt->stmts) && count($stmt->stmts)) {
-                if ($this->checkStatementsForYield($stmt->stmts)) {
-                    return true;
+
+            if (is_array($nodeProperty)) {
+                foreach ($nodeProperty as $nodePropertyArrayItem) {
+                    if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
+                        return true;
+                    }
                 }
             }
         }
+
         return false;
     }
 
@@ -314,10 +323,10 @@ abstract class ReflectionFunctionAbstract
      */
     public function isGenerator()
     {
-        if (!isset($this->node->stmts)) {
+        if (!isset($this->node)) {
             return false;
         }
-        return $this->checkStatementsForYield($this->node->stmts);
+        return $this->nodeIsOrContainsYield($this->node);
     }
 
     /**

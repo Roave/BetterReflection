@@ -62,11 +62,32 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectingVariadic, $function->isVariadic());
     }
 
+    /**
+     * These generator tests were taken from nikic/php-parser - so a big thank
+     * you and credit to @nikic for this (and the awesome PHP-Parser library)
+     *
+     * @see https://github.com/nikic/PHP-Parser/blob/1.x/test/code/parser/stmt/function/generator.test
+     * @return array
+     */
     public function generatorProvider()
     {
         return [
             ['<?php function foo() { return [1, 2, 3]; }', false],
-            ['<?php function foo() { for ($i = 1; $i <= 3; $i++) { yield $i; } }', true],
+            ['<?php function foo() { yield; }', true],
+            ['<?php function foo() { yield $value; }', true],
+            ['<?php function foo() { yield $key => $value; }', true],
+            ['<?php function foo() { $data = yield; }', true],
+            ['<?php function foo() { $data = (yield $value); }', true],
+            ['<?php function foo() { $data = (yield $key => $value); }', true],
+            ['<?php function foo() { if (yield $foo); elseif (yield $foo); }', true],
+            ['<?php function foo() { if (yield $foo): elseif (yield $foo): endif; }', true],
+            ['<?php function foo() { while (yield $foo); }', true],
+            ['<?php function foo() { do {} while (yield $foo); }', true],
+            ['<?php function foo() { switch (yield $foo) {} }', true],
+            ['<?php function foo() { die(yield $foo); }', true],
+            ['<?php function foo() { func(yield $foo); }', true],
+            ['<?php function foo() { $foo->func(yield $foo); }', true],
+            ['<?php function foo() { new Foo(yield $foo); }', true],
         ];
     }
 
