@@ -10,15 +10,20 @@ use BetterReflection\Identifier\IdentifierType;
  */
 class IdentifierTest extends \PHPUnit_Framework_TestCase
 {
-    public function testValue()
+    public function testGetName()
     {
         $beforeName = '\Some\Thing\Here';
         $afterName = 'Some\Thing\Here';
 
-        $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $identifier = new Identifier($beforeName, $identifierType);
-
+        $identifier = new Identifier($beforeName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
         $this->assertSame($afterName, $identifier->getName());
+    }
+
+    public function testGetType()
+    {
+        $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+
+        $identifier = new Identifier('Foo', $identifierType);
         $this->assertSame($identifierType, $identifier->getType());
     }
 }
