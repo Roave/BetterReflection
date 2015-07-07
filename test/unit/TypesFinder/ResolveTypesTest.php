@@ -11,6 +11,9 @@ use phpDocumentor\Reflection\Types\Context;
  */
 class ResolveTypesTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function basicTypesToResolveProvider()
     {
         $context = new Context(
@@ -49,6 +52,9 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function contextualTypesToResolveProvider()
     {
         return [

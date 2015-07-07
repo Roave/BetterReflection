@@ -23,7 +23,10 @@ class StringSourceLocator implements SourceLocator
         $this->source = (string)$source;
 
         if (empty($this->source)) {
-            throw new \InvalidArgumentException(
+            // Whilst an empty string is still "valid" PHP code, there is no
+            // point in us even trying to parse it because we won't find what
+            // we are looking for, therefore this throws an exception
+            throw new Exception\EmptyPhpSourceCode(
                 'Source code string was empty'
             );
         }
@@ -35,6 +38,7 @@ class StringSourceLocator implements SourceLocator
      */
     public function __invoke(Identifier $identifier)
     {
+        // @todo https://github.com/Roave/BetterReflection/issues/43
         return new LocatedSource($this->source, null);
     }
 }

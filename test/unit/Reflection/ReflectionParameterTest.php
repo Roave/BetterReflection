@@ -23,6 +23,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    /**
+     * @return array
+     */
     public function defaultParameterProvider()
     {
         return [
@@ -92,6 +95,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $param2->getPosition());
     }
 
+    /**
+     * @return array
+     */
     public function typeHintProvider()
     {
         return [

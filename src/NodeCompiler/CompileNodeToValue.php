@@ -39,7 +39,7 @@ class CompileNodeToValue
                 $constName = $node->name;
                 return $className . '::' . $constName;
             default:
-                throw new \LogicException('Unable to compile expression: ' . $type);
+                throw new \LogicException('Unable to compile expression: ' . get_class($node));
         }
     }
 }
