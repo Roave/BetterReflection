@@ -28,6 +28,7 @@ class FindTypeFromAst
             return null;
         }
 
+        // @todo https://github.com/Roave/BetterReflection/issues/30
         $types = (new ResolveTypes())->__invoke([$typeString], new Context(''));
 
         return reset($types);
