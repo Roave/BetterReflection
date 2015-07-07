@@ -53,6 +53,8 @@ class IdentifierType
             return $reflector instanceof ReflectionClass;
         }
 
+        // @todo add more type checks
+
         return false;
     }
 }
