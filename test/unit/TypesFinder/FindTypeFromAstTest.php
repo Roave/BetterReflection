@@ -2,8 +2,9 @@
 
 namespace BetterReflectionTest\TypesFinder;
 
+use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\TypesFinder\FindTypeFromAst;
-use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Types;
 
 /**
@@ -17,15 +18,14 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
     public function findTypeFromAstTypeProvider()
     {
         return [
-            ['int', Types\Integer::class],
-            [new FullyQualified('int'), Types\Integer::class],
-            ['string', Types\String_::class],
-            [new FullyQualified('string'), Types\String_::class],
-            ['array', Types\Array_::class],
-            [new FullyQualified('array'), Types\Array_::class],
-            [new FullyQualified('My\Awesome\Class'), Types\Object_::class],
-            [new FullyQualified('\My\Awesome\Class'), Types\Object_::class],
-            [new FullyQualified('callable'), Types\Callable_::class],
+            ['int', Types\Integer::class, 'int'],
+            ['string', Types\String_::class, 'string'],
+            ['array', Types\Array_::class, 'array'],
+            ['int[]', Types\Array_::class, 'int[]'],
+            [new Name\FullyQualified('My\Awesome\Class'), Types\Object_::class, '\My\Awesome\Class'],
+            [new Name('SomeClass'), Types\Object_::class, '\MyNamespace\SomeClass'],
+            [new Name('Foo\Bar'), Types\Object_::class, '\MyNamespace\Foo\Bar'],
+            ['callable', Types\Callable_::class, 'callable'],
         ];
     }
 
@@ -34,16 +34,25 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
      * @param string $expected
      * @dataProvider findTypeFromAstTypeProvider
      */
-    public function testFindTypeFromAst($input, $expected)
+    public function testFindTypeFromAst($input, $expected, $toStringValue)
     {
-        $this->assertInstanceOf(
-            $expected,
-            (new FindTypeFromAst())->__invoke($input)
+        $resolvedType = (new FindTypeFromAst())->__invoke(
+            $input,
+            new LocatedSource('<?php', null),
+            'MyNamespace'
         );
+
+        $this->assertInstanceOf($expected, $resolvedType);
+        $this->assertSame($toStringValue, (string)$resolvedType);
     }
 
     public function testFindTypeFromAstReturnsNull()
     {
-        $this->assertNull((new FindTypeFromAst())->__invoke(null));
+        $this->assertNull(
+            (new FindTypeFromAst())->__invoke(
+                null,
+                new LocatedSource('<?php', null)
+            )
+        );
     }
 }
