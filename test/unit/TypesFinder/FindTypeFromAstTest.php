@@ -11,6 +11,9 @@ use phpDocumentor\Reflection\Types;
  */
 class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function findTypeFromAstTypeProvider()
     {
         return [

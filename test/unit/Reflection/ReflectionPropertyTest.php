@@ -46,6 +46,9 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($staticProp->isStatic());
     }
 
+    /**
+     * @return array
+     */
     public function typesDataProvider()
     {
         return [

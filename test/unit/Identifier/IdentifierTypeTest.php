@@ -11,6 +11,9 @@ use InvalidArgumentException;
  */
 class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return string[][]
+     */
     public function possibleIdentifierTypesProvider()
     {
         return [

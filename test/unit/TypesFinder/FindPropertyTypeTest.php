@@ -13,6 +13,9 @@ use phpDocumentor\Reflection\Types;
  */
 class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function propertyTypeProvider()
     {
         return [

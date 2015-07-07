@@ -30,6 +30,9 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($locatedSource->getFileName());
     }
 
+    /**
+     * @return array
+     */
     public function exceptionCasesProvider()
     {
         return [

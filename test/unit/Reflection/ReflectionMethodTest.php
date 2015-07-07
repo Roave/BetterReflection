@@ -22,6 +22,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    /**
+     * @return array
+     */
     public function visibilityProvider()
     {
         return [
