@@ -5,7 +5,7 @@ namespace BetterReflectionTest\SourceLocator;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\SourceLocator\StringSourceLocator;
-use InvalidArgumentException;
+use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 
 /**
  * @covers \BetterReflection\SourceLocator\StringSourceLocator
@@ -29,7 +29,7 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfEmptyStringGiven()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException(EmptyPhpSourceCode::class);
         new StringSourceLocator('');
     }
 }
