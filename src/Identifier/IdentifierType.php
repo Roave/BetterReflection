@@ -60,8 +60,6 @@ class IdentifierType
             return ($reflector instanceof ReflectionFunction);
         }
 
-        // @todo add more type checks
-
         return false;
     }
 }
