@@ -39,11 +39,11 @@ class AutoloadSourceLocator implements SourceLocator
                 throw new Exception\FunctionUndefined('Function ' . $identifier->getName() . ' was not already defined');
             }
         } else {
-            throw new \LogicException('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
+            throw new Exception\UnloadableIdentifierType('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
         }
 
         if (null == self::$autoloadLocatedFile) {
-            throw new \RuntimeException(sprintf(
+            throw new Exception\AutoloadFailure(sprintf(
                 'Unable to autoload the %s called %s',
                 $identifier->getType()->getName(),
                 $identifier->getName()
