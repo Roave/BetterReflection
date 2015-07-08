@@ -36,7 +36,7 @@ class AutoloadSourceLocator implements SourceLocator
                 $reflection = new \ReflectionFunction($identifier->getName());
                 self::$autoloadLocatedFile = $reflection->getFileName();
             } else {
-                throw new \RuntimeException('Function ' . $identifier->getName() . ' was not already defined');
+                throw new Exception\FunctionUndefined('Function ' . $identifier->getName() . ' was not already defined');
             }
         } else {
             throw new \LogicException('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
