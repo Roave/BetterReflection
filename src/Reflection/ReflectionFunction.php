@@ -9,35 +9,31 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
-    public function __construct($functionName = null)
+    /**
+     * @param string $functionName
+     * @return ReflectionFunction
+     */
+    public static function createFromName($functionName)
     {
-        if ($functionName) {
-            $reflection = (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
-            $this->parameters = $reflection->parameters;
-            $this->name = $reflection->name;
-            $this->declaringNamespace = $reflection->declaringNamespace;
-            $this->docBlock = $reflection->docBlock;
-            $this->filename = $reflection->filename;
-            $this->node = $reflection->node;
-        }
+        return (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
     }
 
     /**
      * @param FunctionNode $node
      * @param NamespaceNode|null $namespaceNode
      * @param string|null $filename
-     * @return ReflectionMethod
+     * @return ReflectionFunction
      */
     public static function createFromNode(
         FunctionNode $node,
         NamespaceNode $namespaceNode = null,
         $filename = null
     ) {
-        $method = new self();
+        $function = new self();
 
-        $method->populateFunctionAbstract($node, $namespaceNode, $filename);
+        $function->populateFunctionAbstract($node, $namespaceNode, $filename);
 
-        return $method;
+        return $function;
     }
 
     /**

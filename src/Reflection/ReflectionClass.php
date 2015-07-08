@@ -42,17 +42,13 @@ class ReflectionClass implements Reflection
      */
     private $filename;
 
-    public function __construct($className = null)
+    private function __construct()
     {
-        if ($className) {
-            $reflection = (new ClassReflector(new AutoloadSourceLocator()))->reflect($className);
-            $this->name = $reflection->name;
-            $this->declaringNamespace = $reflection->declaringNamespace;
-            $this->methods = $reflection->methods;
-            $this->constants = $reflection->constants;
-            $this->properties = $reflection->properties;
-            $this->filename = $reflection->filename;
-        }
+    }
+
+    public static function createFromName($className)
+    {
+        return (new ClassReflector(new AutoloadSourceLocator()))->reflect($className);
     }
 
     /**

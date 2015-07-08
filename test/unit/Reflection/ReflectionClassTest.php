@@ -137,7 +137,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testStaticCreation()
     {
-        $reflection = new ReflectionClass('BetterReflectionTest\Fixture\ExampleClass');
+        $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
         $this->assertSame('ExampleClass', $reflection->getShortName());
     }
 }
