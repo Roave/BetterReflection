@@ -19,28 +19,7 @@ class AutoloadSourceLocator implements SourceLocator
     {
         self::$autoloadLocatedFile = null;
 
-        if ($identifier->getType()->getName() == IdentifierType::IDENTIFIER_CLASS) {
-            if (class_exists($identifier->getName(), false)) {
-                $reflection = new \ReflectionClass($identifier->getName());
-                self::$autoloadLocatedFile = $reflection->getFileName();
-            } else {
-                $previousErrorHandler = set_error_handler(function () {});
-                stream_wrapper_unregister('file');
-                stream_wrapper_register('file', self::class);
-                class_exists($identifier->getName());
-                stream_wrapper_restore('file');
-                set_error_handler($previousErrorHandler);
-            }
-        } elseif ($identifier->getType()->getName() == IdentifierType::IDENTIFIER_FUNCTION) {
-            if (function_exists($identifier->getName())) {
-                $reflection = new \ReflectionFunction($identifier->getName());
-                self::$autoloadLocatedFile = $reflection->getFileName();
-            } else {
-                throw new Exception\FunctionUndefined('Function ' . $identifier->getName() . ' was not already defined');
-            }
-        } else {
-            throw new Exception\UnloadableIdentifierType('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
-        }
+        $this->locateIdentifier($identifier);
 
         if (null == self::$autoloadLocatedFile) {
             throw new Exception\AutoloadFailure(sprintf(
@@ -54,6 +33,72 @@ class AutoloadSourceLocator implements SourceLocator
             file_get_contents(self::$autoloadLocatedFile),
             self::$autoloadLocatedFile
         );
+    }
+
+    /**
+     * Attempts to locate the specified identifier and store the result in
+     * self::$autoloadLocatedFile
+     *
+     * @param Identifier $identifier
+     */
+    private function locateIdentifier(Identifier $identifier)
+    {
+        if ($identifier->getType()->getName() == IdentifierType::IDENTIFIER_CLASS) {
+            $this->locateClassByName($identifier->getName());
+        } elseif ($identifier->getType()->getName() == IdentifierType::IDENTIFIER_FUNCTION) {
+            $this->locateFunctionByName($identifier->getName());
+        } else {
+            throw new Exception\UnloadableIdentifierType('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
+        }
+    }
+
+    /**
+     * Attempt to locate a class by name
+     *
+     * If class already exists, simply use internal reflection API to get the
+     * filename and store it.
+     *
+     * If class does not exist, we make an assumption that whatever autoloaders
+     * that are registered will be loading a file. We then override the file://
+     * protocol stream wrapper to "capture" the filename we expect the class to
+     * be in, and then restore it. Note that class_exists will cause an error
+     * that it cannot find the file, so we squelch the errors by overriding the
+     * error handler temporarily.
+     *
+     * @param string $className#
+     */
+    private function locateClassByName($className)
+    {
+        if (class_exists($className, false)) {
+            $reflection = new \ReflectionClass($className);
+            self::$autoloadLocatedFile = $reflection->getFileName();
+        } else {
+            $previousErrorHandler = set_error_handler(function () {});
+            stream_wrapper_unregister('file');
+            stream_wrapper_register('file', self::class);
+            class_exists($className);
+            stream_wrapper_restore('file');
+            set_error_handler($previousErrorHandler);
+        }
+    }
+
+    /**
+     * We can only load functions if they already exist, because PHP does not
+     * have function autoloading. Therefore if it exists, we simply use the
+     * internal reflection API to find the filename. If it doesn't we can do
+     * nothing so throw an exception.
+     *
+     * @param string $functionName
+     * @throws Exception\FunctionUndefined
+     */
+    private function locateFunctionByName($functionName)
+    {
+        if (function_exists($functionName)) {
+            $reflection = new \ReflectionFunction($functionName);
+            self::$autoloadLocatedFile = $reflection->getFileName();
+        } else {
+            throw new Exception\FunctionUndefined('Function ' . $functionName . ' was not already defined');
+        }
     }
 
     /**
@@ -97,7 +142,6 @@ class AutoloadSourceLocator implements SourceLocator
             'blocks' => 8,
         ];
 
-        $x = array_merge(array_values($assoc), $assoc);
-        return $x;
+        return array_merge(array_values($assoc), $assoc);
     }
 }
