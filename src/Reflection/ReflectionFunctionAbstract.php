@@ -2,7 +2,10 @@
 
 namespace BetterReflection\Reflection;
 
-use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use PhpParser\Node;
+use PhpParser\Node\Stmt as MethodOrFunctionNode;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Expr\Yield_ as YieldNode;
 
 abstract class ReflectionFunctionAbstract
 {
@@ -17,14 +20,24 @@ abstract class ReflectionFunctionAbstract
     private $name;
 
     /**
+     * @var NamespaceNode
+     */
+    private $declaringNamespace;
+
+    /**
      * @var string
      */
     private $docBlock;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $filename;
+
+    /**
+     * @var MethodOrFunctionNode
+     */
+    private $node;
 
     protected function __construct()
     {
@@ -34,13 +47,16 @@ abstract class ReflectionFunctionAbstract
     /**
      * Populate the common elements of the function abstract
      *
-     * @param MethodNode $node
-     * @param string $filename
+     * @param MethodOrFunctionNode $node
+     * @param NamespaceNode|null $declaringNamespace
+     * @param string|null $filename
      */
-    protected function populateFunctionAbstract(MethodNode $node, $filename)
+    protected function populateFunctionAbstract(MethodOrFunctionNode $node, NamespaceNode $declaringNamespace = null, $filename = null)
     {
+        $this->node = $node;
         $this->name = $node->name;
         $this->filename = $filename;
+        $this->declaringNamespace = $declaringNamespace;
 
         if ($node->hasAttribute('comments')) {
             /* @var \PhpParser\Comment\Doc $comment */
@@ -75,13 +91,56 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the name of this function or method
+     * Get the "full" name of the function (e.g. for A\B\foo, this will return
+     * "A\B\foo")
      *
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
+        if (!$this->inNamespace()) {
+            return $this->getShortName();
+        }
+
+        return $this->getNamespaceName() . '\\' . $this->getShortName();
+    }
+
+    /**
+     * Get the "short" name of the function (e.g. for A\B\foo, this will return
+     * "foo")
+     *
+     * @return string
+     */
+    public function getShortName()
+    {
         return $this->name;
+    }
+
+    /**
+     * Get the "namespace" name of the function (e.g. for A\B\foo, this will
+     * return "A\B")
+     *
+     * @return string
+     */
+    public function getNamespaceName()
+    {
+        if (!$this->inNamespace()) {
+            return '';
+        }
+
+        return implode('\\', $this->declaringNamespace->name->parts);
+    }
+
+    /**
+     * Decide if this function is part of a namespace. Returns false if the class
+     * is in the global namespace or does not have a specified namespace
+     *
+     * @return bool
+     */
+    public function inNamespace()
+    {
+        return null !== $this->declaringNamespace
+            && null !== $this->declaringNamespace->name;
     }
 
     /**
@@ -151,5 +210,152 @@ abstract class ReflectionFunctionAbstract
     public function getFileName()
     {
         return $this->filename;
+    }
+
+    /**
+     * Is this function a closure?
+     *
+     * Note - we cannot reflect on closures at the moment (as there is no PHP
+     * source code we can access).
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/37
+     * @return bool
+     */
+    public function isClosure()
+    {
+        return false;
+    }
+
+    /**
+     * Is this function deprecated?
+     *
+     * Note - we cannot reflect on internal functions (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return false
+     * from this function.
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/38
+     * @return bool
+     */
+    public function isDeprecated()
+    {
+        return false;
+    }
+
+    /**
+     * Is this an internal function?
+     *
+     * Note - we cannot reflect on internal functions (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return false
+     * from this function.
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/38
+     * @return bool
+     */
+    public function isInternal()
+    {
+        return false;
+    }
+
+    /**
+     * Is this a user-defined function (will always return the opposite of
+     * whatever isInternal returns).
+     *
+     * @return bool
+     */
+    public function isUserDefined()
+    {
+        return !$this->isInternal();
+    }
+
+    /**
+     * Check if the function has a variadic parameter
+     *
+     * @return bool
+     */
+    public function isVariadic()
+    {
+        $parameters = $this->getParameters();
+
+        foreach ($parameters as $parameter) {
+            if ($parameter->isVariadic()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Recursively search an array of statements (PhpParser nodes) to find if a
+     * yield expression exists anywhere (thus indicating this is a generator)
+     *
+     * @param \PhpParser\Node $node
+     * @return bool
+     */
+    private function nodeIsOrContainsYield(Node $node)
+    {
+        if ($node instanceof YieldNode) {
+            return true;
+        }
+
+        foreach ($node as $nodeProperty) {
+            if ($nodeProperty instanceof Node && $this->nodeIsOrContainsYield($nodeProperty)) {
+                return true;
+            }
+
+            if (is_array($nodeProperty)) {
+                foreach ($nodeProperty as $nodePropertyArrayItem) {
+                    if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if this function can be used as a generator (i.e. contains the
+     * "yield" keyword)
+     *
+     * @return bool
+     */
+    public function isGenerator()
+    {
+        if (!isset($this->node)) {
+            return false;
+        }
+        return $this->nodeIsOrContainsYield($this->node);
+    }
+
+    /**
+     * Get the line number that this function starts on
+     *
+     * @return int
+     */
+    public function getStartLine()
+    {
+       return (int)$this->node->getAttribute('startLine', -1);
+    }
+
+    /**
+     * Get the line number that this function ends on
+     *
+     * @return int
+     */
+    public function getEndLine()
+    {
+        return (int)$this->node->getAttribute('endLine', -1);
+    }
+
+    /**
+     * Is this function declared as a reference
+     *
+     * @return bool
+     */
+    public function returnsReference()
+    {
+        return (bool)$this->node->byRef;
     }
 }

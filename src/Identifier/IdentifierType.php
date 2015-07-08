@@ -4,17 +4,20 @@ namespace BetterReflection\Identifier;
 
 use PhpParser\Node;
 use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\Reflection;
 
 class IdentifierType
 {
     const IDENTIFIER_CLASS = ReflectionClass::class;
+    const IDENTIFIER_FUNCTION = ReflectionFunction::class;
 
     /**
      * @var string[]
      */
     private $validTypes = [
         self::IDENTIFIER_CLASS,
+        self::IDENTIFIER_FUNCTION,
     ];
 
     /**
@@ -53,7 +56,9 @@ class IdentifierType
             return $reflector instanceof ReflectionClass;
         }
 
-        // @todo add more type checks
+        if ($this->name == self::IDENTIFIER_FUNCTION) {
+            return $reflector instanceof ReflectionFunction;
+        }
 
         return false;
     }

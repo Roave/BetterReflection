@@ -117,4 +117,15 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('Methods.php', basename($detectedFilename));
     }
+
+    public function testMethodNameWithNamespace()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $methodInfo = $classInfo->getMethod('someMethod');
+
+        $this->assertFalse($methodInfo->inNamespace());
+        $this->assertSame('someMethod', $methodInfo->getName());
+        $this->assertSame('', $methodInfo->getNamespaceName());
+        $this->assertSame('someMethod', $methodInfo->getShortName());
+    }
 }

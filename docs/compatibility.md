@@ -26,8 +26,8 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | todo |
-| getStaticProperties | todo |
-| getStaticPropertyValue | :x: No - would require an instance (#14) |
+| getStaticProperties | :x: No - would require loading (#14) |
+| getStaticPropertyValue | :x: No - would require loading (#14) |
 | getTraitAliases | todo |
 | getTraitNames | todo |
 | getTraits | todo |
@@ -50,35 +50,35 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |
-| setStaticPropertyValue | :x: No - would require an instance (#14) |
+| setStaticPropertyValue | :x: No - would require loading (#14) |
 
 ## ReflectionFunctionAbstract
 
 | Method | Supported |
 |--------|-----------|
-| getClosureScopeClass | todo |
-| getClosureThis | todo |
+| getClosureScopeClass | :x: No - would require loading of the method itself (#14) |
+| getClosureThis | :x: No - would require loading of the method itself (#14) |
 | getDocComment | :heavy_check_mark: Yes |
-| getEndLine | todo |
-| getExtension | todo |
-| getExtensionName | todo |
+| getEndLine | :heavy_check_mark: Yes |
+| getExtension | :x: No - extensions are not supported (#15) |
+| getExtensionName | :x: No - extensions are not supported (#15) |
 | getFileName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
-| getNamespaceName | todo |
+| getNamespaceName | :heavy_check_mark: Yes |
 | getNumberOfParameters | :heavy_check_mark: Yes |
 | getNumberOfRequiredParameters | :heavy_check_mark: Yes |
 | getParameters | :heavy_check_mark: Yes |
-| getShortName | todo |
-| getStartLine | todo |
-| getStaticVariables | todo |
-| inNamespace | todo |
-| isClosure | todo |
-| isDeprecated | todo |
-| isGenerator | todo |
-| isInternal | todo |
-| isUserDefined | todo |
-| isVariadic | todo |
-| returnsReference | todo |
+| getShortName | :heavy_check_mark: Yes |
+| getStartLine | :heavy_check_mark: Yes |
+| getStaticVariables | :x: No - would require loading (#14) |
+| inNamespace | :heavy_check_mark: Yes |
+| isClosure | :heavy_check_mark: Yes - but see issue (#37) |
+| isDeprecated | :heavy_check_mark: Yes - but see issue (#38) |
+| isGenerator | :heavy_check_mark: Yes |
+| isInternal | :heavy_check_mark: Yes - but see issue (#38) |
+| isUserDefined | :heavy_check_mark: Yes |
+| isVariadic | :heavy_check_mark: Yes |
+| returnsReference | :heavy_check_mark: Ye |
 
 ## ReflectionMethod
 
@@ -129,7 +129,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getClosure | :x: No - would require actual compilation of the AST (#14) |
 | invoke | :x: No - would require loading of the function itself (#14) |
 | invokeArgs | :x: No - would require loading of the function itself (#14) |
-| isDisabled | todo |
+| isDisabled | :heavy_check_mark: Yes - but see issue (#38) |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionProperty
