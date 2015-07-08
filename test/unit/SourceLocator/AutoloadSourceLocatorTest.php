@@ -49,7 +49,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $prop->setAccessible(true);
         $prop->setValue($type, 'nonsense');
 
-        $this->setExpectedException(\LogicException::class, 'AutoloadSourceLocator can only locate classes, you asked for: nonsense');
+        $this->setExpectedException(\LogicException::class, 'AutoloadSourceLocator cannot locate nonsense');
         $identifier = new Identifier('foo', $type);
         $locator->__invoke($identifier);
     }

@@ -31,14 +31,21 @@ class AutoloadSourceLocator implements SourceLocator
                 stream_wrapper_restore('file');
                 set_error_handler($previousErrorHandler);
             }
+        } elseif ($identifier->getType()->getName() == IdentifierType::IDENTIFIER_FUNCTION) {
+            if (function_exists($identifier->getName())) {
+                $reflection = new \ReflectionFunction($identifier->getName());
+                self::$autoloadLocatedFile = $reflection->getFileName();
+            } else {
+                throw new \RuntimeException('Function ' . $identifier->getName() . ' was not already defined');
+            }
         } else {
-            throw new \LogicException('AutoloadSourceLocator can only locate classes, you asked for: ' . $identifier->getType()->getName());
+            throw new \LogicException('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
         }
 
         if (null == self::$autoloadLocatedFile) {
             throw new \RuntimeException(sprintf(
                 'Unable to autoload the %s called %s',
-                $identifier->getType()->getDisplayName(),
+                $identifier->getType()->getName(),
                 $identifier->getName()
             ));
         }

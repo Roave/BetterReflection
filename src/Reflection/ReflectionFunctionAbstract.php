@@ -12,36 +12,35 @@ abstract class ReflectionFunctionAbstract
     /**
      * @var ReflectionParameter[]
      */
-    private $parameters;
+    protected $parameters = [];
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var NamespaceNode
      */
-    private $declaringNamespace;
+    protected $declaringNamespace;
 
     /**
      * @var string
      */
-    private $docBlock;
+    protected $docBlock;
 
     /**
      * @var string|null
      */
-    private $filename;
+    protected $filename;
 
     /**
      * @var MethodOrFunctionNode
      */
-    private $node;
+    protected $node;
 
     protected function __construct()
     {
-        $this->parameters = [];
     }
 
     /**
