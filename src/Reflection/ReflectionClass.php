@@ -5,6 +5,7 @@ namespace BetterReflection\Reflection;
 use BetterReflection\NodeCompiler\CompileNodeToValue;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\LocatedSource;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
@@ -38,9 +39,9 @@ class ReflectionClass implements Reflection
     private $properties = [];
 
     /**
-     * @var string
+     * @var LocatedSource
      */
-    private $filename;
+    private $locatedSource;
 
     private function __construct()
     {
@@ -55,18 +56,18 @@ class ReflectionClass implements Reflection
      * Create from a Class Node
      *
      * @param ClassNode $node
+     * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
-     * @param string|null $filename If set, this is the filename the class was declared in
      * @return ReflectionClass
      */
     public static function createFromNode(
         ClassNode $node,
-        NamespaceNode $namespace = null,
-        $filename = null
+        LocatedSource $locatedSource,
+        NamespaceNode $namespace = null
     ) {
         $class = new self();
 
-        $class->filename = $filename;
+        $class->locatedSource = $locatedSource;
         $class->name = $node->name;
 
         if (null !== $namespace) {
@@ -249,6 +250,14 @@ class ReflectionClass implements Reflection
      */
     public function getFileName()
     {
-        return $this->filename;
+        return $this->locatedSource->getFileName();
+    }
+
+    /**
+     * @return LocatedSource
+     */
+    public function getLocatedSource()
+    {
+        return $this->locatedSource;
     }
 }

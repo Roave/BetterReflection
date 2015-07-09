@@ -79,25 +79,25 @@ class Generic
 
     /**
      * @param Node $node
+     * @param LocatedSource $locatedSource
      * @param Node\Stmt\Namespace_|null $namespace
-     * @param string|null $filename
      * @return Reflection|null
      */
-    private function reflectNode(Node $node, Node\Stmt\Namespace_ $namespace = null, $filename = null)
+    private function reflectNode(Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
     {
         if ($node instanceof Node\Stmt\Class_) {
             return ReflectionClass::createFromNode(
                 $node,
-                $namespace,
-                $filename
+                $locatedSource,
+                $namespace
             );
         }
 
         if ($node instanceof Node\Stmt\Function_) {
             return ReflectionFunction::createFromNode(
                 $node,
-                $namespace,
-                $filename
+                $locatedSource,
+                $namespace
             );
         }
 
@@ -109,17 +109,17 @@ class Generic
      *
      * @param Node\Stmt\Namespace_ $namespace
      * @param Identifier $identifier
-     * @param string|null $filename
+     * @param LocatedSource $locatedSource
      * @return Reflection[]
      */
     private function reflectFromNamespace(
         Node\Stmt\Namespace_ $namespace,
         Identifier $identifier,
-        $filename
+        LocatedSource $locatedSource
     ) {
         $reflections = [];
         foreach ($namespace->stmts as $node) {
-            $reflection = $this->reflectNode($node, $namespace, $filename);
+            $reflection = $this->reflectNode($node, $locatedSource, $namespace);
 
             if (null !== $reflection && $identifier->getType()->isMatchingReflector($reflection)) {
                 $reflections[] = $reflection;
@@ -133,26 +133,26 @@ class Generic
      * matching identifiers found in the namespace
      *
      * @param Node[] $ast
-     * @param string|null $filename
      * @param Identifier $identifier
-     * @return Reflection[]
+     * @param LocatedSource $locatedSource
+     * @return \BetterReflection\Reflection\Reflection[]
      */
-    private function reflectFromTree(array $ast, $filename, Identifier $identifier)
+    private function reflectFromTree(array $ast, Identifier $identifier, LocatedSource $locatedSource)
     {
         $reflections = [];
         foreach ($ast as $node) {
             if ($node instanceof Node\Stmt\Namespace_) {
                 $reflections = array_merge(
                     $reflections,
-                    $this->reflectFromNamespace($node, $identifier, $filename)
+                    $this->reflectFromNamespace($node, $identifier, $locatedSource)
                 );
             } elseif ($node instanceof Node\Stmt\Class_) {
-                $reflection = $this->reflectNode($node, null, $filename);
+                $reflection = $this->reflectNode($node, $locatedSource, null);
                 if ($identifier->getType()->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
                 }
             } elseif ($node instanceof Node\Stmt\Function_) {
-                $reflection = $this->reflectNode($node, null, $filename);
+                $reflection = $this->reflectNode($node, $locatedSource, null);
                 if ($identifier->getType()->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
                 }
@@ -172,8 +172,8 @@ class Generic
     {
         return $this->reflectFromTree(
             (new Parser(new Lexer))->parse($locatedSource->getSource()),
-            $locatedSource->getFileName(),
-            $identifier
+            $identifier,
+            $locatedSource
         );
     }
 
