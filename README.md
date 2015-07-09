@@ -1,6 +1,8 @@
 Better Reflection
 =================
 
+[![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master)
+
 Mimics PHP's [reflection API](http://php.net/manual/en/book.reflection.php) but without actually loading the class at
 any point. Like magic. Idea credit goes to @ocramius.
 
