@@ -2,34 +2,45 @@
 
 namespace BetterReflection\TypesFinder;
 
-use phpDocumentor\Reflection\Types\Context;
-use PhpParser\Node\Name\FullyQualified;
+use BetterReflection\SourceLocator\LocatedSource;
+use phpDocumentor\Reflection\Types\ContextFactory;
+use PhpParser\Node\Name;
 
 class FindTypeFromAst
 {
     /**
      * Given an AST type, attempt to find a resolved type
      *
-     * @todo resolve with context
      * @param $astType
+     * @param LocatedSource $locatedSource
+     * @param string $namespace
      * @return \phpDocumentor\Reflection\Type|null
      */
-    public function __invoke($astType)
+    public function __invoke($astType, LocatedSource $locatedSource, $namespace = '')
     {
+        $context = (new ContextFactory())->createForNamespace(
+            $namespace,
+            $locatedSource->getSource()
+        );
+
         if (is_string($astType)) {
             $typeString = $astType;
         }
 
-        if ($astType instanceof FullyQualified) {
+        if ($astType instanceof Name) {
             $typeString = $astType->toString();
+        }
+
+        // If the AST determined this is a "fully qualified" name, prepend \
+        if ($astType instanceof Name\FullyQualified) {
+            $typeString = '\\' . $typeString;
         }
 
         if (!isset($typeString)) {
             return null;
         }
 
-        // @todo https://github.com/Roave/BetterReflection/issues/30
-        $types = (new ResolveTypes())->__invoke([$typeString], new Context(''));
+        $types = (new ResolveTypes())->__invoke([$typeString], $context);
 
         return reset($types);
     }

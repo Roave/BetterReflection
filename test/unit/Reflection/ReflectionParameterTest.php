@@ -105,9 +105,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
             ['fullyQualifiedClassParameter', Types\Object_::class, '\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
             ['arrayParameter', Types\Array_::class],
             ['callableParameter', Types\Callable_::class],
-
-            // @todo Currently failing as we cannot resolve this properly yet
-            //['namespaceClassParameter', Types\Object__::class, 'ClassForHinting'],
+            ['namespaceClassParameter', Types\Object_::class, '\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
         ];
     }
 

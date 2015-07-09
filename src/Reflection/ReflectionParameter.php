@@ -126,7 +126,15 @@ class ReflectionParameter implements \Reflector
         $param->isVariadic = (bool)$node->variadic;
         $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;
-        $param->typeHint = (new FindTypeFromAst())->__invoke($node->type);
+        $param->typeHint = (new FindTypeFromAst())->__invoke(
+            $node->type,
+            $function->getLocatedSource(),
+            (
+                $function instanceof ReflectionMethod
+                ? $function->getDeclaringClass()->getNamespaceName()
+                : $function->getNamespaceName()
+            )
+        );
 
         if ($param->hasDefaultValue) {
             $param->parseDefaultValueNode($node->default);
