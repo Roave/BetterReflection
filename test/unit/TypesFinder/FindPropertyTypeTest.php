@@ -2,7 +2,11 @@
 
 namespace BetterReflectionTest\TypesFinder;
 
+use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
+use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflection\TypesFinder\FindPropertyType;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Comment\Doc as DocNode;
@@ -45,19 +49,24 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $property = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getFileName', 'getDeclaringClass', 'getNamespaceName'])
+        $class = $this->getMockBuilder(ReflectionClass::class)
+            ->setMethods(['getNamespaceName', 'getLocatedSource'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $property->expects($this->any())->method('getFileName')
-            ->will($this->returnValue(__DIR__ . '/../Fixture/NoNamespace.php'));
+        $class->expects($this->any())->method('getNamespaceName')
+            ->will($this->returnValue(''));
+
+        $class->expects($this->any())->method('getLocatedSource')
+            ->will($this->returnValue(new LocatedSource('<?php', null)));
+
+        $property = $this->getMockBuilder(ReflectionProperty::class)
+            ->setMethods(['getDeclaringClass'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $property->expects($this->any())->method('getDeclaringClass')
-            ->will($this->returnSelf());
-
-        $property->expects($this->any())->method('getNamespaceName')
-            ->will($this->returnValue(''));
+            ->will($this->returnValue($class));
 
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($node, $property);
@@ -69,23 +78,51 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testNamespaceResolutionForProperty()
+    {
+        $php = '<?php
+            namespace MyNamespace;
+
+            use Psr\Log\LoggerInterface;
+
+            class ThingThatLogs
+            {
+                /**
+                 * @var LoggerInterface
+                 */
+                private $logger;
+            }
+        ';
+
+        $prop = (new ClassReflector(new StringSourceLocator($php)))
+            ->reflect('MyNamespace\ThingThatLogs')
+            ->getProperty('logger');
+
+        $this->assertSame(['\Psr\Log\LoggerInterface'], $prop->getDocBlockTypeStrings());
+    }
+
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound()
     {
         $node = new PropertyNode('foo', []);
 
-        $property = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getFileName', 'getDeclaringClass', 'getNamespaceName'])
+        $class = $this->getMockBuilder(ReflectionClass::class)
+            ->setMethods(['getNamespaceName', 'getLocatedSource'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $property->expects($this->any())->method('getFileName')
-            ->will($this->returnValue(__DIR__ . '/../Fixture/NoNamespace.php'));
+        $class->expects($this->any())->method('getNamespaceName')
+            ->will($this->returnValue(''));
+
+        $class->expects($this->any())->method('getLocatedSource')
+            ->will($this->returnValue(new LocatedSource('<?php', null)));
+
+        $property = $this->getMockBuilder(ReflectionProperty::class)
+            ->setMethods(['getDeclaringClass'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $property->expects($this->any())->method('getDeclaringClass')
-            ->will($this->returnSelf());
-
-        $property->expects($this->any())->method('getNamespaceName')
-            ->will($this->returnValue(''));
+            ->will($this->returnValue($class));
 
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($node, $property);
