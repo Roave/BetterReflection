@@ -45,6 +45,22 @@ class IdentifierType
     }
 
     /**
+     * @return bool
+     */
+    public function isClass()
+    {
+        return $this->name === self::IDENTIFIER_CLASS;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFunction()
+    {
+        return $this->name === self::IDENTIFIER_FUNCTION;
+    }
+
+    /**
      * Check to see if a reflector is of a valid type specified by this identifier
      *
      * @param Reflection $reflector
@@ -52,11 +68,11 @@ class IdentifierType
      */
     public function isMatchingReflector(Reflection $reflector)
     {
-        if ($this->name == self::IDENTIFIER_CLASS) {
+        if ($this->name === self::IDENTIFIER_CLASS) {
             return $reflector instanceof ReflectionClass;
         }
 
-        if ($this->name == self::IDENTIFIER_FUNCTION) {
+        if ($this->name === self::IDENTIFIER_FUNCTION) {
             return $reflector instanceof ReflectionFunction;
         }
 

@@ -40,4 +40,20 @@ class Identifier
     {
         return $this->type;
     }
+
+    /**
+     * @return bool
+     */
+    public function isClass()
+    {
+        return $this->type->isClass();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFunction()
+    {
+        return $this->type->isFunction();
+    }
 }
