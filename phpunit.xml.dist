@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="test/unit/bootstrap.php">
+<phpunit bootstrap="test/bootstrap.php">
     <testsuites>
-        <testsuite name="unit-tests">
+        <testsuite name="unit">
             <directory>./test/unit</directory>
+        </testsuite>
+        <testsuite name="compat">
+            <directory suffix=".phpt">./test/compat</directory>
         </testsuite>
     </testsuites>
     <filter>
