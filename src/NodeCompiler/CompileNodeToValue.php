@@ -11,35 +11,46 @@ class CompileNodeToValue
      *
      * @param Node $node
      * @return mixed
+     * @throw Exception\UnableToCompileNode
      */
     public function __invoke(Node $node)
     {
-        switch (get_class($node)) {
-            case Node\Scalar\String_::class:
-            case Node\Scalar\DNumber::class:
-            case Node\Scalar\LNumber::class:
-                return $node->value;
-            case Node\Expr\Array_::class:
-                return []; // @todo compile expression
-            case Node\Expr\ConstFetch::class:
-                if ($node->name->parts[0] == 'null') {
-                    return null;
-                } elseif ($node->name->parts[0] == 'false') {
-                    return false;
-                } elseif ($node->name->parts[0] == 'true') {
-                    return true;
-                } else {
-                    // @todo this should evaluate the VALUE, not the name
-                    return $node->name->parts[0];
-                }
-                break;
-            case Node\Expr\ClassConstFetch::class:
-                // @todo this should evaluate the VALUE, not the name
-                $className = implode('\\', $node->class->parts);
-                $constName = $node->name;
-                return $className . '::' . $constName;
-            default:
-                throw new \LogicException('Unable to compile expression: ' . get_class($node));
+        if ($node instanceof Node\Scalar\String_
+            || $node instanceof Node\Scalar\DNumber
+            || $node instanceof Node\Scalar\LNumber) {
+            return $node->value;
         }
+
+        if ($node instanceof Node\Expr\Array_) {
+            // @todo compile expression
+            /* @see https://github.com/Roave/BetterReflection/issues/51 */
+            return [];
+        }
+
+        if ($node instanceof Node\Expr\ConstFetch) {
+            $firstName = reset($node->name->parts);
+            switch ($firstName) {
+                case 'null':
+                    return null;
+                case 'false':
+                    return false;
+                case 'true':
+                    return true;
+                default:
+                    // @todo this should evaluate the VALUE, not the name
+                    /* @see https://github.com/Roave/BetterReflection/issues/19 */
+                    return $firstName;
+            }
+        }
+
+        if ($node instanceof Node\Expr\ClassConstFetch) {
+            // @todo this should evaluate the VALUE, not the name
+            /* @see https://github.com/Roave/BetterReflection/issues/19 */
+            $className = implode('\\', $node->class->parts);
+            $constName = $node->name;
+            return $className . '::' . $constName;
+        }
+
+        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
     }
 }
