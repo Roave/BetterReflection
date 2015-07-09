@@ -9,9 +9,8 @@ before_script:
   - composer install --dev
 
 script:
-  - vendor/bin/phpunit --coverage-text
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors
 
-matrix:
-  allow_failures:
-     - php: hhvm
-     - php: 7.0
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

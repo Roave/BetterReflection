@@ -1,0 +1,10 @@
+inherit: true
+
+before_commands:
+    - "composer install --no-dev --prefer-source"
+
+tools:
+    external_code_coverage:
+        enabled: true
+        timeout: 600
+        runs: 1
