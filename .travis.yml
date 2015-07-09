@@ -11,6 +11,7 @@ before_script:
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
   - vendor/bin/phpunit test/compat || true
+  - vendor/bin/phpunit test/core || true
 
 after_script:
   - if [ $TRAVIS_PHP_VERSION = '5.6' ]; then wget https://scrutinizer-ci.com/ocular.phar; php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
