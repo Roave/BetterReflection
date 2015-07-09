@@ -3,7 +3,7 @@
 namespace BetterReflectionTest\NodeCompiler;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
-use LogicException;
+use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use PhpParser\Lexer;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Parser;
@@ -43,7 +43,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownWhenInvalidNodeGiven()
     {
         $this->setExpectedException(
-            LogicException::class,
+            UnableToCompileNode::class,
             'Unable to compile expression: ' . Yield_::class
         );
         (new CompileNodeToValue())->__invoke(new Yield_());
