@@ -5,7 +5,9 @@ namespace BetterReflectionTest\TypesFinder;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionMethod;
+use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflection\TypesFinder\FindParameterType;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\Types;
@@ -27,6 +29,30 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ['@param int|int[]|int[][] $foo', 'foo', [Types\Integer::class, Types\Array_::class, Types\Array_::class]],
             ['', 'foo', []],
         ];
+    }
+
+    public function testNamespaceResolutionForProperty()
+    {
+        $php = '<?php
+            namespace MyNamespace;
+
+            use Psr\Log\LoggerInterface;
+
+            class ThingThatLogs
+            {
+                /**
+                 * @param LoggerInterface $bar
+                 */
+                public function foo($bar) {}
+            }
+        ';
+
+        $param = (new ClassReflector(new StringSourceLocator($php)))
+            ->reflect('MyNamespace\ThingThatLogs')
+            ->getMethod('foo')
+            ->getParameter('bar');
+
+        $this->assertSame(['\Psr\Log\LoggerInterface'], $param->getDocBlockTypeStrings());
     }
 
     /**

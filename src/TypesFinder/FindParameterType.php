@@ -23,7 +23,13 @@ class FindParameterType
     {
         $context = $this->createContextForFunction($function);
 
-        $docBlock = new DocBlock($function->getDocComment());
+        $docBlock = new DocBlock(
+            $function->getDocComment(),
+            new DocBlock\Context(
+                $context->getNamespace(),
+                $context->getNamespaceAliases()
+            )
+        );
 
         $paramTags = $docBlock->getTagsByName('param');
 
