@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
@@ -132,5 +133,11 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $detectedFilename = $classInfo->getFileName();
 
         $this->assertSame('ExampleClass.php', basename($detectedFilename));
+    }
+
+    public function testStaticCreation()
+    {
+        $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertSame('ExampleClass', $reflection->getShortName());
     }
 }

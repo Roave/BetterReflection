@@ -42,11 +42,18 @@ class Identifier
     }
 
     /**
-     * @todo implement this
      * @return bool
      */
-    public function isLoaded()
+    public function isClass()
     {
-        return false;
+        return $this->type->isClass();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFunction()
+    {
+        return $this->type->isFunction();
     }
 }

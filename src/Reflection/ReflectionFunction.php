@@ -2,27 +2,38 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\Reflector\FunctionReflector;
+use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use PhpParser\Node\Stmt\Function_ as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
     /**
+     * @param string $functionName
+     * @return ReflectionFunction
+     */
+    public static function createFromName($functionName)
+    {
+        return (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
+    }
+
+    /**
      * @param FunctionNode $node
      * @param NamespaceNode|null $namespaceNode
      * @param string|null $filename
-     * @return ReflectionMethod
+     * @return ReflectionFunction
      */
     public static function createFromNode(
         FunctionNode $node,
         NamespaceNode $namespaceNode = null,
         $filename = null
     ) {
-        $method = new self($node);
+        $function = new self();
 
-        $method->populateFunctionAbstract($node, $namespaceNode, $filename);
+        $function->populateFunctionAbstract($node, $namespaceNode, $filename);
 
-        return $method;
+        return $function;
     }
 
     /**

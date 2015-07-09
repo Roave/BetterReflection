@@ -12,7 +12,7 @@ abstract class ReflectionFunctionAbstract
     /**
      * @var ReflectionParameter[]
      */
-    private $parameters;
+    private $parameters = [];
 
     /**
      * @var string
@@ -41,7 +41,6 @@ abstract class ReflectionFunctionAbstract
 
     protected function __construct()
     {
-        $this->parameters = [];
     }
 
     /**

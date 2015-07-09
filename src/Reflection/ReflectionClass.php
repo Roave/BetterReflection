@@ -3,6 +3,8 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
@@ -18,22 +20,22 @@ class ReflectionClass implements Reflection
     /**
      * @var NamespaceNode
      */
-    private $declaringNamespace;
+    private $declaringNamespace = null;
 
     /**
      * @var ReflectionMethod[]
      */
-    private $methods;
+    private $methods = [];
 
     /**
      * @var mixed[]
      */
-    private $constants;
+    private $constants = [];
 
     /**
      * @var ReflectionProperty[]
      */
-    private $properties;
+    private $properties = [];
 
     /**
      * @var string
@@ -42,10 +44,11 @@ class ReflectionClass implements Reflection
 
     private function __construct()
     {
-        $this->declaringNamespace = null;
-        $this->methods = [];
-        $this->constants = [];
-        $this->properties = [];
+    }
+
+    public static function createFromName($className)
+    {
+        return (new ClassReflector(new AutoloadSourceLocator()))->reflect($className);
     }
 
     /**
