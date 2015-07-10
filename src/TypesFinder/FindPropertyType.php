@@ -13,11 +13,10 @@ class FindPropertyType
     /**
      * Given a property, attempt to find the type of the property
      *
-     * @param PropertyNode $node
      * @param ReflectionProperty $reflectionProperty
      * @return Type[]
      */
-    public function __invoke(PropertyNode $node, ReflectionProperty $reflectionProperty)
+    public function __invoke(ReflectionProperty $reflectionProperty)
     {
         $contextFactory = new ContextFactory();
         $context = $contextFactory->createForNamespace(
@@ -25,13 +24,8 @@ class FindPropertyType
             $reflectionProperty->getDeclaringClass()->getLocatedSource()->getSource()
         );
 
-        /* @var \PhpParser\Comment\Doc $comment */
-        if (!$node->hasAttribute('comments')) {
-            return [];
-        }
-        $comment = $node->getAttribute('comments')[0];
         $docBlock = new DocBlock(
-            $comment->getReformattedText(),
+            $reflectionProperty->getDocComment(),
             new DocBlock\Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()

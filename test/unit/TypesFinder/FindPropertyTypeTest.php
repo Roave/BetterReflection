@@ -23,32 +23,21 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
     public function propertyTypeProvider()
     {
         return [
-            ['@var int|string $foo', 'foo', [Types\Integer::class, Types\String_::class]],
-            ['@var array $foo', 'foo', [Types\Array_::class]],
-            ['@var \stdClass $foo', 'foo', [Types\Object_::class]],
-            ['@var int|int[]|int[][] $foo', 'foo', [Types\Integer::class, Types\Array_::class, Types\Array_::class]],
-            ['', 'foo', []],
+            ['@var int|string $foo', [Types\Integer::class, Types\String_::class]],
+            ['@var array $foo', [Types\Array_::class]],
+            ['@var \stdClass $foo', [Types\Object_::class]],
+            ['@var int|int[]|int[][] $foo', [Types\Integer::class, Types\Array_::class, Types\Array_::class]],
+            ['', []],
         ];
     }
 
     /**
      * @param string $docBlock
-     * @param string $nodeName
      * @param string[] $expectedInstances
      * @dataProvider propertyTypeProvider
      */
-    public function testFindPropertyType($docBlock, $nodeName, $expectedInstances)
+    public function testFindPropertyType($docBlock, $expectedInstances)
     {
-        $node = new PropertyNode(
-            $nodeName,
-            [],
-            [
-                'comments' => [
-                    new DocNode("/**\n * $docBlock\n */"),
-                ],
-            ]
-        );
-
         $class = $this->getMockBuilder(ReflectionClass::class)
             ->setMethods(['getNamespaceName', 'getLocatedSource'])
             ->disableOriginalConstructor()
@@ -61,15 +50,18 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
         $property = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getDeclaringClass'])
+            ->setMethods(['getDeclaringClass', 'getDocComment'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $property->expects($this->any())->method('getDeclaringClass')
             ->will($this->returnValue($class));
 
+        $property->expects($this->any())->method('getDocComment')
+            ->will($this->returnValue("/**\n * $docBlock\n */"));
+
         /* @var ReflectionProperty $property */
-        $foundTypes = (new FindPropertyType())->__invoke($node, $property);
+        $foundTypes = (new FindPropertyType())->__invoke($property);
 
         $this->assertCount(count($expectedInstances), $foundTypes);
 
@@ -103,8 +95,6 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound()
     {
-        $node = new PropertyNode('foo', []);
-
         $class = $this->getMockBuilder(ReflectionClass::class)
             ->setMethods(['getNamespaceName', 'getLocatedSource'])
             ->disableOriginalConstructor()
@@ -125,7 +115,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($class));
 
         /* @var ReflectionProperty $property */
-        $foundTypes = (new FindPropertyType())->__invoke($node, $property);
+        $foundTypes = (new FindPropertyType())->__invoke($property);
 
         $this->assertSame([], $foundTypes);
     }

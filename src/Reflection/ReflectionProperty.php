@@ -38,6 +38,11 @@ class ReflectionProperty implements \Reflector
      */
     private $declaringClass;
 
+    /**
+     * @var string
+     */
+    private $docBlock = '';
+
     private function __construct()
     {
     }
@@ -55,8 +60,10 @@ class ReflectionProperty implements \Reflector
     public function __toString()
     {
         return sprintf(
-            'Property [ <default> %s $%s ]',
+            'Property [%s %s%s $%s ]',
+            $this->isStatic() ? '' : ($this->isDefault() ? ' <default>' : ' <implicit>'),
             $this->getVisibilityAsString(),
+            $this->isStatic() ? ' static' : '',
             $this->getName()
         );
     }
@@ -74,6 +81,12 @@ class ReflectionProperty implements \Reflector
         $prop->name = $node->props[0]->name;
         $prop->declaringClass = $declaringClass;
 
+        if ($node->hasAttribute('comments')) {
+            /* @var \PhpParser\Comment\Doc $comment */
+            $comment = $node->getAttribute('comments')[0];
+            $prop->docBlock = $comment->getReformattedText();
+        }
+
         if ($node->isPrivate()) {
             $prop->visibility = self::IS_PRIVATE;
         } elseif ($node->isProtected()) {
@@ -84,7 +97,7 @@ class ReflectionProperty implements \Reflector
 
         $prop->isStatic = $node->isStatic();
 
-        $prop->docBlockTypes = (new FindPropertyType())->__invoke($node, $prop);
+        $prop->docBlockTypes = (new FindPropertyType())->__invoke($prop);
 
         return $prop;
     }
@@ -102,6 +115,39 @@ class ReflectionProperty implements \Reflector
             default:
                 return 'public';
         }
+    }
+
+    /**
+     * Has the property been declared at compile-time?
+     *
+     * Note that unless the property is static, this is hard coded to return
+     * true, because we are unable to reflect instances of classes, therefore
+     * we can be sure that all properties are always declared at compile-time.
+     *
+     * @return bool
+     */
+    public function isDefault()
+    {
+        if ($this->isStatic()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the core-reflection-compatible modifier values
+     *
+     * @return int
+     */
+    public function getModifiers()
+    {
+        $val = 0;
+        $val += $this->isStatic() ? \ReflectionProperty::IS_STATIC : 0;
+        $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? \ReflectionProperty::IS_PRIVATE : 0;
+        return $val;
     }
 
     /**
@@ -188,5 +234,13 @@ class ReflectionProperty implements \Reflector
     public function getDeclaringClass()
     {
         return $this->declaringClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocComment()
+    {
+        return $this->docBlock;
     }
 }

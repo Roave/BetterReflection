@@ -2,8 +2,10 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
+use phpDocumentor\Reflection\Types;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionProperty
@@ -49,7 +51,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function typesDataProvider()
+    public function stringTypesDataProvider()
     {
         return [
             ['privateProperty', ['int', 'float', '\stdClass']],
@@ -61,7 +63,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $propertyName
      * @param string[] $expectedTypes
-     * @dataProvider typesDataProvider
+     * @dataProvider stringTypesDataProvider
      */
     public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
     {
@@ -70,5 +72,108 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $property = $classInfo->getProperty($propertyName);
 
         $this->assertSame($expectedTypes, $property->getDocBlockTypeStrings());
+    }
+
+    /**
+     * @return array
+     */
+    public function typesDataProvider()
+    {
+        return [
+            ['privateProperty', [Types\Integer::class, Types\Float_::class, Types\Object_::class]],
+            ['protectedProperty', [Types\Boolean::class, Types\Array_::class, Types\Array_::class]],
+            ['publicProperty', [Types\String_::class]],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param string[] $expectedTypes
+     * @dataProvider typesDataProvider
+     */
+    public function testGetDocBlockTypes($propertyName, $expectedTypes)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
+
+        $this->assertCount(count($expectedTypes), $foundTypes);
+
+        foreach ($expectedTypes as $i => $expectedType) {
+            $this->assertInstanceOf($expectedType, $foundTypes[$i]);
+        }
+    }
+
+    public function testGetDocComment()
+    {
+        $expectedDoc = "/**\n * @var string\n */";
+
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $property = $classInfo->getProperty('publicProperty');
+
+        $this->assertSame($expectedDoc, $property->getDocComment());
+    }
+
+    public function testExportThrowsException()
+    {
+        $this->setExpectedException(\Exception::class);
+        ReflectionProperty::export();
+    }
+
+    public function modifierProvider()
+    {
+        return [
+            ['publicProperty', 256, ['public']],
+            ['protectedProperty', 512, ['protected']],
+            ['privateProperty', 1024, ['private']],
+            ['publicStaticProperty', 257, ['public', 'static']],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param int $expectedModifier
+     * @param string[] $expectedModifierNames
+     * @dataProvider modifierProvider
+     */
+    public function testGetModifiers($propertyName, $expectedModifier, array $expectedModifierNames)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $property = $classInfo->getProperty($propertyName);
+
+        $this->assertSame($expectedModifier, $property->getModifiers());
+        $this->assertSame(
+            $expectedModifierNames,
+            \Reflection::getModifierNames($property->getModifiers())
+        );
+    }
+
+    public function testIsDefault()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertTrue($classInfo->getProperty('publicProperty')->isDefault());
+        $this->assertFalse($classInfo->getProperty('publicStaticProperty')->isDefault());
+    }
+
+    public function castToStringProvider()
+    {
+        return [
+            ['publicProperty', 'Property [ <default> public $publicProperty ]'],
+            ['protectedProperty', 'Property [ <default> protected $protectedProperty ]'],
+            ['privateProperty', 'Property [ <default> private $privateProperty ]'],
+            ['publicStaticProperty', 'Property [ public static $publicStaticProperty ]'],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param string $expectedString
+     * @dataProvider castToStringProvider
+     */
+    public function testCastingToString($propertyName, $expectedString)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
     }
 }
