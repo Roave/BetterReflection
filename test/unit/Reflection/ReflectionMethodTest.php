@@ -2,9 +2,12 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionMethod
@@ -158,5 +161,14 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
             $expectedModifierNames,
             \Reflection::getModifierNames($method->getModifiers())
         );
+    }
+
+    public function testGetPrototype()
+    {
+        $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
+        $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
+
+        $this->setExpectedException(MethodPrototypeNotFound::class);
+        $reflector->reflect('ClassB')->getMethod('foo')->getPrototype();
     }
 }

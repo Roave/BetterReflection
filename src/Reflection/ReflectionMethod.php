@@ -50,6 +50,24 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Find the prototype for this method, if it exists. If it does not exist
+     * it will throw a MethodPrototypeNotFound exception.
+     *
+     * @return ReflectionMethod
+     * @throws Exception\MethodPrototypeNotFound
+     */
+    public function getPrototype()
+    {
+        // @todo complete this implementation
+        /* @see https://github.com/Roave/BetterReflection/issues/57 */
+        throw new Exception\MethodPrototypeNotFound(sprintf(
+            'Method %s::%s does not have a prototype',
+            $this->getDeclaringClass()->getName(),
+            $this->getName()
+        ));
+    }
+
+    /**
      * Get the core-reflection-compatible modifier values
      *
      * @return int
