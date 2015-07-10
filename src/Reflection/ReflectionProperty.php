@@ -43,11 +43,6 @@ class ReflectionProperty implements \Reflector
      */
     private $docBlock = '';
 
-    /**
-     * @var bool
-     */
-    private $isRuntimeDeclared = false;
-
     private function __construct()
     {
     }
@@ -123,7 +118,11 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
-     * Has the property been declared at runtime (rather than compile-time?)
+     * Has the property been declared at compile-time?
+     *
+     * Note that unless the property is static, this is hard coded to return
+     * true, because we are unable to reflect instances of classes, therefore
+     * we can be sure that all properties are always declared at compile-time.
      *
      * @return bool
      */
@@ -133,7 +132,7 @@ class ReflectionProperty implements \Reflector
             return false;
         }
 
-        return !$this->isRuntimeDeclared;
+        return true;
     }
 
     /**
