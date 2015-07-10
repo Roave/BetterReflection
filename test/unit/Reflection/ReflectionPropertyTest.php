@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 
@@ -70,5 +71,21 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $property = $classInfo->getProperty($propertyName);
 
         $this->assertSame($expectedTypes, $property->getDocBlockTypeStrings());
+    }
+
+    public function testGetDocComment()
+    {
+        $expectedDoc = "/**\n * @var string\n */";
+
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $property = $classInfo->getProperty('publicProperty');
+
+        $this->assertSame($expectedDoc, $property->getDocComment());
+    }
+
+    public function testExportThrowsException()
+    {
+        $this->setExpectedException(\Exception::class);
+        ReflectionProperty::export();
     }
 }

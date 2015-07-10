@@ -38,6 +38,11 @@ class ReflectionProperty implements \Reflector
      */
     private $declaringClass;
 
+    /**
+     * @var string
+     */
+    private $docBlock = '';
+
     private function __construct()
     {
     }
@@ -74,6 +79,12 @@ class ReflectionProperty implements \Reflector
         $prop->name = $node->props[0]->name;
         $prop->declaringClass = $declaringClass;
 
+        if ($node->hasAttribute('comments')) {
+            /* @var \PhpParser\Comment\Doc $comment */
+            $comment = $node->getAttribute('comments')[0];
+            $prop->docBlock = $comment->getReformattedText();
+        }
+
         if ($node->isPrivate()) {
             $prop->visibility = self::IS_PRIVATE;
         } elseif ($node->isProtected()) {
@@ -84,7 +95,7 @@ class ReflectionProperty implements \Reflector
 
         $prop->isStatic = $node->isStatic();
 
-        $prop->docBlockTypes = (new FindPropertyType())->__invoke($node, $prop);
+        $prop->docBlockTypes = (new FindPropertyType())->__invoke($prop);
 
         return $prop;
     }
@@ -188,5 +199,13 @@ class ReflectionProperty implements \Reflector
     public function getDeclaringClass()
     {
         return $this->declaringClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocComment()
+    {
+        return $this->docBlock;
     }
 }
