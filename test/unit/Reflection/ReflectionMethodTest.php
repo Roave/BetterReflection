@@ -2,9 +2,12 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionMethod
@@ -127,5 +130,45 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('someMethod', $methodInfo->getName());
         $this->assertSame('', $methodInfo->getNamespaceName());
         $this->assertSame('someMethod', $methodInfo->getShortName());
+    }
+
+    public function modifierProvider()
+    {
+        return [
+            ['publicMethod', \ReflectionMethod::IS_PUBLIC, ['public']],
+            ['privateMethod', \ReflectionMethod::IS_PRIVATE, ['private']],
+            ['protectedMethod', \ReflectionMethod::IS_PROTECTED, ['protected']],
+            ['finalPublicMethod', \ReflectionMethod::IS_FINAL | \ReflectionMethod::IS_PUBLIC, ['final', 'public']],
+            ['abstractPublicMethod', \ReflectionMethod::IS_ABSTRACT | \ReflectionMethod::IS_PUBLIC, ['abstract', 'public']],
+            ['staticPublicMethod', \ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC, ['public', 'static']],
+            ['noVisibility', \ReflectionMethod::IS_PUBLIC, ['public']],
+        ];
+    }
+
+    /**
+     * @param string $methodName
+     * @param int $expectedModifier
+     * @param string[] $expectedModifierNames
+     * @dataProvider modifierProvider
+     */
+    public function testGetModifiers($methodName, $expectedModifier, array $expectedModifierNames)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $method = $classInfo->getMethod($methodName);
+
+        $this->assertSame($expectedModifier, $method->getModifiers());
+        $this->assertSame(
+            $expectedModifierNames,
+            \Reflection::getModifierNames($method->getModifiers())
+        );
+    }
+
+    public function testGetPrototype()
+    {
+        $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
+        $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
+
+        $this->setExpectedException(MethodPrototypeNotFound::class);
+        $reflector->reflect('ClassB')->getMethod('foo')->getPrototype();
     }
 }

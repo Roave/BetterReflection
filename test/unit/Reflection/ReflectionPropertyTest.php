@@ -123,10 +123,10 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     public function modifierProvider()
     {
         return [
-            ['publicProperty', 256, ['public']],
-            ['protectedProperty', 512, ['protected']],
-            ['privateProperty', 1024, ['private']],
-            ['publicStaticProperty', 257, ['public', 'static']],
+            ['publicProperty', \ReflectionProperty::IS_PUBLIC, ['public']],
+            ['protectedProperty', \ReflectionProperty::IS_PROTECTED, ['protected']],
+            ['privateProperty', \ReflectionProperty::IS_PRIVATE, ['private']],
+            ['publicStaticProperty', \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_STATIC, ['public', 'static']],
         ];
     }
 
