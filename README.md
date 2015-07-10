@@ -3,11 +3,12 @@ Better Reflection
 
 [![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master)
 
-Better Reflection is a reflection API that aims to improve and provide more features than PHP's built-in [reflection API](http://php.net/manual/en/book.reflection.php).
+Better Reflection is a reflection API that aims to improve and provide more
+features than PHP's built-in [reflection API](http://php.net/manual/en/book.reflection.php).
 
 ## Why is it better?
 
-* You can reflect on classes that are not already loaded
+* You can reflect on classes that are not already loaded, without loading them
 * Ability to reflect on classes directly from a string of PHP code
 * Better Reflection analyses the DocBlocks (using [phpdocumentor/type-resolver](https://github.com/phpDocumentor/TypeResolver))
 * *Moar stuff coming soon!*
