@@ -135,13 +135,13 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     public function modifierProvider()
     {
         return [
-            ['publicMethod', 256, ['public']],
-            ['privateMethod', 1024, ['private']],
-            ['protectedMethod', 512, ['protected']],
-            ['finalPublicMethod', 260, ['final', 'public']],
-            ['abstractPublicMethod', 258, ['abstract', 'public']],
-            ['staticPublicMethod', 257, ['public', 'static']],
-            ['noVisibility', 256, ['public']],
+            ['publicMethod', \ReflectionMethod::IS_PUBLIC, ['public']],
+            ['privateMethod', \ReflectionMethod::IS_PRIVATE, ['private']],
+            ['protectedMethod', \ReflectionMethod::IS_PROTECTED, ['protected']],
+            ['finalPublicMethod', \ReflectionMethod::IS_FINAL | \ReflectionMethod::IS_PUBLIC, ['final', 'public']],
+            ['abstractPublicMethod', \ReflectionMethod::IS_ABSTRACT | \ReflectionMethod::IS_PUBLIC, ['abstract', 'public']],
+            ['staticPublicMethod', \ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC, ['public', 'static']],
+            ['noVisibility', \ReflectionMethod::IS_PUBLIC, ['public']],
         ];
     }
 
