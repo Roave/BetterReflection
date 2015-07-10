@@ -5,6 +5,7 @@ namespace BetterReflectionTest\Reflection;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
+use phpDocumentor\Reflection\Types;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionProperty
@@ -50,7 +51,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function typesDataProvider()
+    public function stringTypesDataProvider()
     {
         return [
             ['privateProperty', ['int', 'float', '\stdClass']],
@@ -62,7 +63,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $propertyName
      * @param string[] $expectedTypes
-     * @dataProvider typesDataProvider
+     * @dataProvider stringTypesDataProvider
      */
     public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
     {
@@ -71,6 +72,36 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $property = $classInfo->getProperty($propertyName);
 
         $this->assertSame($expectedTypes, $property->getDocBlockTypeStrings());
+    }
+
+    /**
+     * @return array
+     */
+    public function typesDataProvider()
+    {
+        return [
+            ['privateProperty', [Types\Integer::class, Types\Float_::class, Types\Object_::class]],
+            ['protectedProperty', [Types\Boolean::class, Types\Array_::class, Types\Array_::class]],
+            ['publicProperty', [Types\String_::class]],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param string[] $expectedTypes
+     * @dataProvider typesDataProvider
+     */
+    public function testGetDocBlockTypes($propertyName, $expectedTypes)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
+
+        $this->assertCount(count($expectedTypes), $foundTypes);
+
+        foreach ($expectedTypes as $i => $expectedType) {
+            $this->assertInstanceOf($expectedType, $foundTypes[$i]);
+        }
     }
 
     public function testGetDocComment()
