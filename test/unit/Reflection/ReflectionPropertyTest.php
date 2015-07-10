@@ -88,4 +88,32 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\Exception::class);
         ReflectionProperty::export();
     }
+
+    public function modifierProvider()
+    {
+        return [
+            ['publicProperty', 256, ['public']],
+            ['protectedProperty', 512, ['protected']],
+            ['privateProperty', 1024, ['private']],
+            ['publicStaticProperty', 257, ['public', 'static']],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param int $expectedModifier
+     * @param string[] $expectedModifierNames
+     * @dataProvider modifierProvider
+     */
+    public function testGetModifiers($propertyName, $expectedModifier, array $expectedModifierNames)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $property = $classInfo->getProperty($propertyName);
+
+        $this->assertSame($expectedModifier, $property->getModifiers());
+        $this->assertSame(
+            $expectedModifierNames,
+            \Reflection::getModifierNames($property->getModifiers())
+        );
+    }
 }

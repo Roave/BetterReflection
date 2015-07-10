@@ -138,7 +138,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 |--------|-----------|
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getDocComment | :heavy_check_mark: Yes |
-| getModifiers | todo |
+| getModifiers | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getValue | :x: No - would require an instance of an object (#14) |
 | isDefault | todo |

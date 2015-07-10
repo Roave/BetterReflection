@@ -116,6 +116,21 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
+     * Get the core-reflection-compatible modifier values
+     *
+     * @return int
+     */
+    public function getModifiers()
+    {
+        $val = 0;
+        $val += $this->isStatic() ? \ReflectionProperty::IS_STATIC : 0;
+        $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? \ReflectionProperty::IS_PRIVATE : 0;
+        return $val;
+    }
+
+    /**
      * Get the name of the property
      *
      * @return string
