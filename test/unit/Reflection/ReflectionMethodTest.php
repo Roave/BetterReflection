@@ -128,4 +128,35 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', $methodInfo->getNamespaceName());
         $this->assertSame('someMethod', $methodInfo->getShortName());
     }
+
+    public function modifierProvider()
+    {
+        return [
+            ['publicMethod', 256, ['public']],
+            ['privateMethod', 1024, ['private']],
+            ['protectedMethod', 512, ['protected']],
+            ['finalPublicMethod', 260, ['final', 'public']],
+            ['abstractPublicMethod', 258, ['abstract', 'public']],
+            ['staticPublicMethod', 257, ['public', 'static']],
+            ['noVisibility', 256, ['public']],
+        ];
+    }
+
+    /**
+     * @param string $methodName
+     * @param int $expectedModifier
+     * @param string[] $expectedModifierNames
+     * @dataProvider modifierProvider
+     */
+    public function testGetModifiers($methodName, $expectedModifier, array $expectedModifierNames)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $method = $classInfo->getMethod($methodName);
+
+        $this->assertSame($expectedModifier, $method->getModifiers());
+        $this->assertSame(
+            $expectedModifierNames,
+            \Reflection::getModifierNames($method->getModifiers())
+        );
+    }
 }

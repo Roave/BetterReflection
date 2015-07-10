@@ -50,6 +50,23 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Get the core-reflection-compatible modifier values
+     *
+     * @return int
+     */
+    public function getModifiers()
+    {
+        $val = 0;
+        $val += $this->isStatic() ? \ReflectionMethod::IS_STATIC : 0;
+        $val += $this->isPublic() ? \ReflectionMethod::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? \ReflectionMethod::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? \ReflectionMethod::IS_PRIVATE : 0;
+        $val += $this->isAbstract() ? \ReflectionMethod::IS_ABSTRACT : 0;
+        $val += $this->isFinal() ? \ReflectionMethod::IS_FINAL : 0;
+        return $val;
+    }
+
+    /**
      * Check to see if a flag is set on this method
      *
      * @param int $flag

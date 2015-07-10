@@ -86,7 +86,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 |--------|-----------|
 | getClosure | :x: No - would require loading of the method itself (#14) |
 | getDeclaringClass | :heavy_check_mark: Yes |
-| getModifiers | todo |
+| getModifiers | :heavy_check_mark: Yes |
 | getPrototype | todo |
 | invoke | :x: No - would require loading of the method itself (#14) |
 | invokeArgs | :x: No - would require loading of the method itself (#14) |
