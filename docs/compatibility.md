@@ -141,7 +141,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getModifiers | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getValue | :x: No - would require an instance of an object (#14) |
-| isDefault | todo |
+| isDefault | :heavy_check_mark: Yes |
 | isPrivate | :heavy_check_mark: Yes |
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |

@@ -116,4 +116,33 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
             \Reflection::getModifierNames($property->getModifiers())
         );
     }
+
+    public function testIsDefault()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertTrue($classInfo->getProperty('publicProperty')->isDefault());
+        $this->assertFalse($classInfo->getProperty('publicStaticProperty')->isDefault());
+    }
+
+    public function castToStringProvider()
+    {
+        return [
+            ['publicProperty', 'Property [ <default> public $publicProperty ]'],
+            ['protectedProperty', 'Property [ <default> protected $protectedProperty ]'],
+            ['privateProperty', 'Property [ <default> private $privateProperty ]'],
+            ['publicStaticProperty', 'Property [ public static $publicStaticProperty ]'],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param string $expectedString
+     * @dataProvider castToStringProvider
+     */
+    public function testCastingToString($propertyName, $expectedString)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
+    }
 }

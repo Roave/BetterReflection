@@ -43,6 +43,11 @@ class ReflectionProperty implements \Reflector
      */
     private $docBlock = '';
 
+    /**
+     * @var bool
+     */
+    private $isRuntimeDeclared = false;
+
     private function __construct()
     {
     }
@@ -60,8 +65,10 @@ class ReflectionProperty implements \Reflector
     public function __toString()
     {
         return sprintf(
-            'Property [ <default> %s $%s ]',
+            'Property [%s %s%s $%s ]',
+            $this->isStatic() ? '' : ($this->isDefault() ? ' <default>' : ' <implicit>'),
             $this->getVisibilityAsString(),
+            $this->isStatic() ? ' static' : '',
             $this->getName()
         );
     }
@@ -113,6 +120,20 @@ class ReflectionProperty implements \Reflector
             default:
                 return 'public';
         }
+    }
+
+    /**
+     * Has the property been declared at runtime (rather than compile-time?)
+     *
+     * @return bool
+     */
+    public function isDefault()
+    {
+        if ($this->isStatic()) {
+            return false;
+        }
+
+        return !$this->isRuntimeDeclared;
     }
 
     /**
