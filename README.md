@@ -3,18 +3,43 @@ Better Reflection
 
 [![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master)
 
-Mimics PHP's [reflection API](http://php.net/manual/en/book.reflection.php) but without actually loading the class at
-any point. Like magic. Idea credit goes to @ocramius.
+Better Reflection is a reflection API that aims to improve and provide more features than PHP's built-in [reflection API](http://php.net/manual/en/book.reflection.php).
 
-## Example usage
+## Why is it better?
+
+* You can reflect on classes that are not already loaded
+* Ability to reflect on classes directly from a string of PHP code
+* Better Reflection analyses the DocBlocks (using [phpdocumentor/type-resolver](https://github.com/phpDocumentor/TypeResolver))
+* *Moar stuff coming soon!*
+
+Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).
+
+## Installation
+
+Simply require using composer:
+
+```shell
+$ composer require roave/better-reflection
+```
+
+Please note that the current version has unstable dependencies.
+
+In order to install those dependencies, you can set `"minimum-stability"` in
+your `composer.json`, and recommend that you set `"prefer-stable"`:
+
+```json
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+```
+
+## Usage
 
 ```php
-$classLoader = require "vendor/autoload.php";
+use BetterReflection\Reflector\ReflectionClass;
 
-use BetterReflection\Reflector\ClassReflector;
-
-$reflector = new ClassReflector(new ComposerSourceLocator($classLoader));
-$reflectionClass = $reflector->reflect('Foo\Bar\MyClass');
+$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ```
 
 ## More documentation
@@ -22,3 +47,23 @@ $reflectionClass = $reflector->reflect('Foo\Bar\MyClass');
 * [Compatibility with core Reflection API](https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md)
 * [Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md)
 * [Using types](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
+* [The features](https://github.com/Roave/BetterReflection/tree/master/docs/features.md)
+
+## Limitations
+
+* PHP cannot autoload functions, therefore we cannot statically reflect functions
+* Using `ReflectionClass::createFromName()` makes [some assumptions]([Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
+
+## Authors
+
+* [James Titcumb](https://github.com/asgrim)
+* [Marco Pivetta](https://github.com/Ocramius)
+* [Gary Hockin](https://github.com/GeeH)
+
+## License
+
+This package is released under the [MIT license](LICENSE).
+
+## Contributing
+
+If you wish to contribute to the project, please read the [CONTRIBUTING notes](CONTRIBUTING.md).

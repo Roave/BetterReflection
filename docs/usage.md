@@ -7,6 +7,29 @@ you must use the appropriate helper `\BetterReflection\Reflector\ClassReflector`
 All `*Reflector` classes require a class that implements the `SourceLocator`
 interface as a dependency.
 
+## Basic Reflection
+
+Better Reflection is, in most cases, able to automatically reflect on classes
+by using a similar creation technique to PHP's internal reflection. However,
+this works on the basic assumption that whichever autoloader you are using will
+attempt to load a file, and only one file, which should contain the class you
+are trying to reflect. For example, the autoloader that Composer provides will
+work with this technique.
+
+```php
+<?php
+
+use BetterReflection\Reflector\ReflectionClass;
+
+$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
+```
+
+If this instantiation technique is not possible - for example, your autoloader
+does not load classes from file, then you must use `SourceLocator` creation.
+
+*Fun fact... using `ReflectionClass::createFromName` actually uses a
+SourceLocator under the hood - it uses the `AutoloadSourceLocator`.*
+
 ## SourceLocators
 
 Source locators are helpers that identify how to load code that can be used
@@ -23,6 +46,13 @@ within the `Reflector`s. The library comes bundled with the following
     be used directly. Note that any references to filenames when using this
     locator will be `null` because no files are loaded.
 
+ * `AutoloadSourceLocator` - this is a little hacky, but works on the assumption
+    that when a registered autoloader identifies a file and attempts to open it,
+    then that file will contain the class. Internally, it works by overriding
+    the `file://` protocol stream wrapper to grab the path of the file the
+    autoloader is trying to locate. This source locator is used internally by
+    the `ReflectionClass::createFromName` static constructor.
+
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
 should be written so that it returns a `LocatedSource` object, which describes
@@ -34,7 +64,19 @@ The `ClassReflector` is used to create Better Reflection `ReflectionClass`
 instances. You may pass it any `SourceLocator` to reflect on any class that
 can be located using the given `SourceLocator`.
 
-### Example usage with the Composer autoloader:
+### Using the AutoloadSourceLocator
+
+There is no need to use the `AutoloadSourceLocator` directly. Simply use the
+static constructors for `ReflectionClass` and `ReflectionFunction`:
+
+```php
+<?php
+
+$classInfo = ReflectionClass::createFromName('MyClass');
+$functionInfo = ReflectionFunction::createFromName('foo');
+```
+
+### Using the Composer autoloader directly
 
 ```php
 <?php
@@ -51,7 +93,7 @@ echo $reflectionClass->getName(); // Foo\Bar\MyClass
 echo $reflectionClass->getNamespaceName(); // Foo\Bar
 ```
 
-### Example usage for loading a class from a specific file:
+### Loading a class from a specific file
 
 ```php
 <?php
@@ -64,7 +106,7 @@ echo $reflectionClass->getName(); // MyApp\MyClass
 echo $reflectionClass->getNamespaceName(); // MyApp
 ```
 
-### Example usage for loading a class from a string:
+### Loading a class from a string
 
 ```php
 <?php
@@ -77,7 +119,7 @@ $reflectionClass = $reflector->reflect('Foo');
 echo $reflectionClass->getShortName(); // Foo
 ```
 
-### Example usage to fetch a list of classes from a file
+### Fetch reflections of all the classes in a file
 
 ```php
 <?php
