@@ -307,6 +307,19 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Return an array with default properties (properties that were defined at
+     * compile-time rather than at run time)
+     *
+     * @return ReflectionProperty[]
+     */
+    public function getDefaultProperties()
+    {
+        return array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return $property->isDefault();
+        });
+    }
+
+    /**
      * @return string
      */
     public function getFileName()

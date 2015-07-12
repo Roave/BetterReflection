@@ -251,4 +251,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($classInfo->hasMethod('aNonExistentMethod'));
         $this->assertTrue($classInfo->hasMethod('someMethod'));
     }
+
+    public function testGetDefaultProperties()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $defaultProperties = $classInfo->getDefaultProperties();
+
+        $this->assertCount(3, $defaultProperties);
+    }
 }
