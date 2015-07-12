@@ -2,12 +2,14 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\NoParent;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\SourceLocator;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -139,5 +141,43 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
         $this->assertSame('ExampleClass', $reflection->getShortName());
+    }
+
+    public function testGetParentClassDefault()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+        $childReflection = $reflector->reflect('BetterReflectionTest\Fixture\ClassWithParent');
+
+        $parentReflection = $childReflection->getParentClass();
+        $this->assertSame('ExampleClass', $parentReflection->getShortName());
+    }
+
+    public function testGetParentClassThrowsExceptionWithNoParent()
+    {
+        $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->setExpectedException(NoParent::class);
+        $reflection->getParentClass();
+    }
+
+    public function testGetParentClassWithSpecificSourceLocator()
+    {
+        $mockLocator = $this->getMockBuilder(SourceLocator::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+
+        $mockLocator
+            ->expects($this->once())
+            ->method('__invoke')
+            ->will($this->returnCallback(function ($identifier) {
+                $realLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php');
+                return $realLocator->__invoke($identifier);
+            }));
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+        $childReflection = $reflector->reflect('BetterReflectionTest\Fixture\ClassWithParent');
+
+        $parentReflection = $childReflection->getParentClass($mockLocator);
+        $this->assertSame('ExampleClass', $parentReflection->getShortName());
     }
 }

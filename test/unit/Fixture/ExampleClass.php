@@ -31,6 +31,10 @@ namespace BetterReflectionTest\Fixture {
         {
         }
     }
+
+    class ClassWithParent extends ExampleClass
+    {
+    }
 }
 
 namespace BetterReflectionTest\FixtureOther {

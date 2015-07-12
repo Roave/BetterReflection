@@ -3,9 +3,14 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\Reflection\Exception\NoParent;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\SourceLocator;
+use BetterReflection\TypesFinder\FindTypeFromAst;
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
@@ -43,6 +48,11 @@ class ReflectionClass implements Reflection
      */
     private $locatedSource;
 
+    /**
+     * @var Fqsen|null
+     */
+    private $extendsClassType;
+
     private function __construct()
     {
     }
@@ -72,6 +82,13 @@ class ReflectionClass implements Reflection
 
         if (null !== $namespace) {
             $class->declaringNamespace = $namespace;
+        }
+
+        if (null !== $node->extends) {
+            $objectType = (new FindTypeFromAst())->__invoke($node->extends, $locatedSource, $class->getNamespaceName());
+            if (null !== $objectType && $objectType instanceof Object_) {
+                $class->extendsClassType = $objectType->getFqsen();
+            }
         }
 
         $methodNodes = $node->getMethods();
@@ -259,5 +276,34 @@ class ReflectionClass implements Reflection
     public function getLocatedSource()
     {
         return $this->locatedSource;
+    }
+
+    /**
+     * Get the parent class, if it is defined. If this class does not have a
+     * specified parent class, this will throw an exception.
+     *
+     * You may optionally specify a source locator that will be used to locate
+     * the parent class. If no source locator is given, a default will be used.
+     *
+     * @param SourceLocator|null $sourceLocator
+     * @return ReflectionClass
+     * @throws NoParent
+     */
+    public function getParentClass(SourceLocator $sourceLocator = null)
+    {
+        if (null === $this->extendsClassType) {
+            throw new NoParent(sprintf(
+                'Class %s does not have a defined parent class',
+                $this->getName()
+            ));
+        }
+
+        $fqsen = $this->extendsClassType->__toString();
+
+        if (null !== $sourceLocator) {
+            return (new ClassReflector($sourceLocator))->reflect($fqsen);
+        }
+
+        return self::createFromName($fqsen);
     }
 }

@@ -21,7 +21,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getModifiers | todo |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | :heavy_check_mark: Yes |
-| getParentClass | todo |
+| getParentClass | :heavy_check_mark: Yes |
 | getProperties | :heavy_check_mark: Yes |
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
