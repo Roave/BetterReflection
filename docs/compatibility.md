@@ -31,9 +31,9 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getTraitAliases | todo |
 | getTraitNames | todo |
 | getTraits | todo |
-| hasConstant | todo |
-| hasMethod | todo |
-| hasProperty | todo |
+| hasConstant | :heavy_check_mark: Yes |
+| hasMethod | :heavy_check_mark: Yes |
+| hasProperty | :heavy_check_mark: Yes |
 | implementsInterface | todo |
 | inNamespace | :heavy_check_mark: Yes |
 | isAbstract | todo |

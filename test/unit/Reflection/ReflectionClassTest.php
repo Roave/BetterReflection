@@ -94,6 +94,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertSame(123, $classInfo->getConstant('MY_CONST_1'));
         $this->assertSame(234, $classInfo->getConstant('MY_CONST_2'));
+        $this->assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 
     public function testIsConstructor()
@@ -121,6 +122,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertNull($classInfo->getProperty('aNonExistentProperty'));
 
         $property = $classInfo->getProperty('publicProperty');
 
@@ -220,5 +223,32 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\BetterReflectionTest\FixtureOther\AnotherClass');
 
         $this->assertSame('', $classInfo->getDocComment());
+    }
+
+    public function testHasProperty()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertFalse($classInfo->hasProperty('aNonExistentProperty'));
+        $this->assertTrue($classInfo->hasProperty('publicProperty'));
+    }
+
+    public function testHasConstant()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertFalse($classInfo->hasConstant('NON_EXISTENT_CONSTANT'));
+        $this->assertTrue($classInfo->hasConstant('MY_CONST_1'));
+    }
+
+    public function testHasMethod()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertFalse($classInfo->hasMethod('aNonExistentMethod'));
+        $this->assertTrue($classInfo->hasMethod('someMethod'));
     }
 }

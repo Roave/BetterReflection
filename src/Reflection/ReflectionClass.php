@@ -205,6 +205,22 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Does the class have the specified method method?
+     *
+     * @param $methodName
+     * @return bool
+     */
+    public function hasMethod($methodName)
+    {
+        try {
+            $this->getMethod($methodName);
+            return true;
+        } catch (\OutOfBoundsException $exception) {
+            return false;
+        }
+    }
+
+    /**
      * Get an array of the defined constants in this class.
      *
      * @return mixed[]
@@ -224,11 +240,22 @@ class ReflectionClass implements Reflection
      */
     public function getConstant($name)
     {
-        if (!isset($this->constants[$name])) {
+        if (!$this->hasConstant($name)) {
             return null;
         }
 
         return $this->constants[$name];
+    }
+
+    /**
+     * Does this class have the specified constant?
+     *
+     * @param $name
+     * @return bool
+     */
+    public function hasConstant($name)
+    {
+        return isset($this->constants[$name]);
     }
 
     /**
@@ -261,11 +288,22 @@ class ReflectionClass implements Reflection
      */
     public function getProperty($name)
     {
-        if (!isset($this->properties[$name])) {
+        if (!$this->hasProperty($name)) {
             return null;
         }
 
         return $this->properties[$name];
+    }
+
+    /**
+     * Does this class have the specified property?
+     *
+     * @param $name
+     * @return bool
+     */
+    public function hasProperty($name)
+    {
+        return isset($this->properties[$name]);
     }
 
     /**
