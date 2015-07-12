@@ -46,6 +46,10 @@ namespace BetterReflectionTest\Fixture {
     final class FinalClass
     {
     }
+
+    trait ExampleTrait
+    {
+    }
 }
 
 namespace BetterReflectionTest\FixtureOther {

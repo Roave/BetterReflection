@@ -12,7 +12,9 @@ use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 
@@ -54,7 +56,7 @@ class ReflectionClass implements Reflection
     private $extendsClassType;
 
     /**
-     * @var ClassNode
+     * @var ClassLikeNode
      */
     private $node;
 
@@ -70,13 +72,13 @@ class ReflectionClass implements Reflection
     /**
      * Create from a Class Node.
      *
-     * @param ClassNode $node
+     * @param ClassLikeNode $node
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
      * @return ReflectionClass
      */
     public static function createFromNode(
-        ClassNode $node,
+        ClassLikeNode $node,
         LocatedSource $locatedSource,
         NamespaceNode $namespace = null
     ) {
@@ -90,7 +92,7 @@ class ReflectionClass implements Reflection
             $class->declaringNamespace = $namespace;
         }
 
-        if (null !== $node->extends) {
+        if ($node instanceof ClassNode && null !== $node->extends) {
             $objectType = (new FindTypeFromAst())->__invoke($node->extends, $locatedSource, $class->getNamespaceName());
             if (null !== $objectType && $objectType instanceof Object_) {
                 $class->extendsClassType = $objectType->getFqsen();
@@ -457,5 +459,15 @@ class ReflectionClass implements Reflection
         $val += $this->isAbstract() ? \ReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $val += $this->isFinal() ? \ReflectionClass::IS_FINAL : 0;
         return $val;
+    }
+
+    /**
+     * Is this reflection a trait?
+     *
+     * @return bool
+     */
+    public function isTrait()
+    {
+        return $this->node instanceof TraitNode;
     }
 }

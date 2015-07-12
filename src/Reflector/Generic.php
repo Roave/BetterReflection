@@ -85,7 +85,7 @@ class Generic
      */
     private function reflectNode(Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
     {
-        if ($node instanceof Node\Stmt\Class_) {
+        if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
                 $node,
                 $locatedSource,

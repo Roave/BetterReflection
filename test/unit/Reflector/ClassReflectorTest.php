@@ -20,7 +20,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         ))->getAllClasses();
 
         $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        $this->assertCount(6, $classes);
+        $this->assertCount(7, $classes);
     }
 
     public function testReflectProxiesToGenericReflectMethod()

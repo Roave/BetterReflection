@@ -45,7 +45,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isInternal | :heavy_check_mark: Yes |
 | isIterateable | todo |
 | isSubclassOf | todo |
-| isTrait | todo |
+| isTrait | :heavy_check_mark: Yes |
 | isUserDefined | :heavy_check_mark: Yes |
 | newInstance | todo |
 | newInstanceArgs | todo |

@@ -319,4 +319,15 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             \Reflection::getModifierNames($classInfo->getModifiers())
         );
     }
+
+    public function testIsTrait()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleTrait');
+        $this->assertTrue($classInfo->isTrait());
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertFalse($classInfo->isTrait());
+    }
 }
