@@ -41,7 +41,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isFinal | :heavy_check_mark: Yes |
 | isInstance | todo |
 | isInstantiable | todo |
-| isInterface | todo |
+| isInterface | :heavy_check_mark: Yes |
 | isInternal | :heavy_check_mark: Yes |
 | isIterateable | todo |
 | isSubclassOf | todo |

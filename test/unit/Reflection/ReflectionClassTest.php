@@ -330,4 +330,15 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertFalse($classInfo->isTrait());
     }
+
+    public function testIsInterface()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleInterface');
+        $this->assertTrue($classInfo->isInterface());
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertFalse($classInfo->isInterface());
+    }
 }

@@ -50,6 +50,10 @@ namespace BetterReflectionTest\Fixture {
     trait ExampleTrait
     {
     }
+
+    interface ExampleInterface
+    {
+    }
 }
 
 namespace BetterReflectionTest\FixtureOther {

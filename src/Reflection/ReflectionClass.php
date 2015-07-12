@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
+use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 
@@ -469,5 +470,15 @@ class ReflectionClass implements Reflection
     public function isTrait()
     {
         return $this->node instanceof TraitNode;
+    }
+
+    /**
+     * Is this reflection an interface?
+     *
+     * @return bool
+     */
+    public function isInterface()
+    {
+        return $this->node instanceof InterfaceNode;
     }
 }
