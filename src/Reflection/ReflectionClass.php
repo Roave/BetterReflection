@@ -436,7 +436,7 @@ class ReflectionClass implements Reflection
      */
     public function isAbstract()
     {
-        return $this->node->isAbstract();
+        return $this->node instanceof ClassNode && $this->node->isAbstract();
     }
 
     /**
@@ -446,7 +446,7 @@ class ReflectionClass implements Reflection
      */
     public function isFinal()
     {
-        return $this->node->isFinal();
+        return $this->node instanceof ClassNode && $this->node->isFinal();
     }
 
     /**
