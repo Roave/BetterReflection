@@ -89,5 +89,4 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
         /* @var $resolvedType Types\Object_ */
         $this->assertSame($expectedType, (string)$resolvedType->getFqsen());
     }
-
 }

@@ -344,7 +344,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getStartLine()
     {
-       return (int)$this->node->getAttribute('startLine', -1);
+        return (int)$this->node->getAttribute('startLine', -1);
     }
 
     /**

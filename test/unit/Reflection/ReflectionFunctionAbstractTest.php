@@ -1,6 +1,7 @@
 <?php
 
 namespace BetterReflectionTest\Reflection;
+
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflectionTest\SourceLocator\StringSourceLocatorTest;
 use BetterReflection\SourceLocator\StringSourceLocator;
