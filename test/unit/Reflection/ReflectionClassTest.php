@@ -205,4 +205,20 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedStart, $classInfo->getStartLine());
         $this->assertSame($expectedEnd, $classInfo->getEndLine());
     }
+
+    public function testGetDocComment()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->assertContains('Some comments here', $classInfo->getDocComment());
+    }
+
+    public function testGetDocCommentReturnsEmptyStringWithNoComment()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+        $classInfo = $reflector->reflect('\BetterReflectionTest\FixtureOther\AnotherClass');
+
+        $this->assertSame('', $classInfo->getDocComment());
+    }
 }

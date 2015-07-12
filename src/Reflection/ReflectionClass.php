@@ -332,4 +332,18 @@ class ReflectionClass implements Reflection
 
         return self::createFromName($fqsen);
     }
+
+    /**
+     * @return string
+     */
+    public function getDocComment()
+    {
+        if (!$this->node->hasAttribute('comments')) {
+            return '';
+        }
+
+        /* @var \PhpParser\Comment\Doc $comment */
+        $comment = $this->node->getAttribute('comments')[0];
+        return $comment->getReformattedText();
+    }
 }

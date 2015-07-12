@@ -10,7 +10,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getConstants | :heavy_check_mark: Yes |
 | getConstructor | :heavy_check_mark: Yes |
 | getDefaultProperties | todo |
-| getDocComment | todo |
+| getDocComment | :heavy_check_mark: Yes |
 | getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
 | getFileName | :heavy_check_mark: Yes |

@@ -1,6 +1,9 @@
 <?php
 
 namespace BetterReflectionTest\Fixture {
+    /**
+     * Some comments here
+     */
     class ExampleClass
     {
         const MY_CONST_1 = 123;
