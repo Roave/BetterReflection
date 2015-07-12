@@ -292,4 +292,31 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertFalse($classInfo->isFinal());
     }
+
+    public function modifierProvider()
+    {
+        return [
+            ['ExampleClass', 0, []],
+            ['AbstractClass', \ReflectionClass::IS_EXPLICIT_ABSTRACT, ['abstract']],
+            ['FinalClass', \ReflectionClass::IS_FINAL, ['final']],
+        ];
+    }
+
+    /**
+     * @param string $className
+     * @param int $expectedModifier
+     * @param string[] $expectedModifierNames
+     * @dataProvider modifierProvider
+     */
+    public function testGetModifiers($className, $expectedModifier, array $expectedModifierNames)
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\\' . $className);
+
+        $this->assertSame($expectedModifier, $classInfo->getModifiers());
+        $this->assertSame(
+            $expectedModifierNames,
+            \Reflection::getModifierNames($classInfo->getModifiers())
+        );
+    }
 }

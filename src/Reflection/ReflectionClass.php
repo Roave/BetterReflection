@@ -445,4 +445,17 @@ class ReflectionClass implements Reflection
     {
         return $this->node->isFinal();
     }
+
+    /**
+     * Get the core-reflection-compatible modifier values
+     *
+     * @return int
+     */
+    public function getModifiers()
+    {
+        $val = 0;
+        $val += $this->isAbstract() ? \ReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
+        $val += $this->isFinal() ? \ReflectionClass::IS_FINAL : 0;
+        return $val;
+    }
 }

@@ -18,7 +18,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getInterfaces | todo |
 | getMethod | :heavy_check_mark: Yes |
 | getMethods | :heavy_check_mark: Yes |
-| getModifiers | todo |
+| getModifiers | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | :heavy_check_mark: Yes |
 | getParentClass | :heavy_check_mark: Yes |
