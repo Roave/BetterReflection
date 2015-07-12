@@ -2,8 +2,6 @@
 
 namespace BetterReflection\Identifier;
 
-use PhpParser\Node;
-
 class Identifier
 {
     /**

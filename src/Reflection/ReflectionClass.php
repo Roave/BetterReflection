@@ -53,7 +53,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Create from a Class Node
+     * Create from a Class Node.
      *
      * @param ClassNode $node
      * @param LocatedSource $locatedSource
@@ -101,7 +101,7 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the "short" name of the class (e.g. for A\B\Foo, this will return
-     * "Foo")
+     * "Foo").
      *
      * @return string
      */
@@ -112,7 +112,7 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the "full" name of the class (e.g. for A\B\Foo, this will return
-     * "A\B\Foo")
+     * "A\B\Foo").
      *
      * @return string
      */
@@ -127,7 +127,7 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
-     * return "A\B")
+     * return "A\B").
      *
      * @return string
      */
@@ -142,7 +142,7 @@ class ReflectionClass implements Reflection
 
     /**
      * Decide if this class is part of a namespace. Returns false if the class
-     * is in the global namespace or does not have a specified namespace
+     * is in the global namespace or does not have a specified namespace.
      *
      * @return bool
      */
@@ -153,7 +153,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Fetch an array of all methods for this class
+     * Fetch an array of all methods for this class.
      *
      * @return ReflectionMethod[]
      */
@@ -163,7 +163,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get a single method with the name $methodName
+     * Get a single method with the name $methodName.
      *
      * @param string $methodName
      * @return ReflectionMethod
@@ -171,7 +171,7 @@ class ReflectionClass implements Reflection
     public function getMethod($methodName)
     {
         foreach ($this->getMethods() as $method) {
-            if ($method->getName() == $methodName) {
+            if ($method->getName() === $methodName) {
                 return $method;
             }
         }
@@ -182,7 +182,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get an array of the defined constants in this class
+     * Get an array of the defined constants in this class.
      *
      * @return mixed[]
      */
@@ -209,7 +209,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get the constructor method for this class
+     * Get the constructor method for this class.
      *
      * @return ReflectionMethod
      */
@@ -219,7 +219,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get the properties for this class
+     * Get the properties for this class.
      *
      * @return ReflectionProperty[]
      */

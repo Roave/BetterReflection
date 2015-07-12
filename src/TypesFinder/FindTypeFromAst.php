@@ -9,7 +9,7 @@ use PhpParser\Node\Name;
 class FindTypeFromAst
 {
     /**
-     * Given an AST type, attempt to find a resolved type
+     * Given an AST type, attempt to find a resolved type.
      *
      * @param $astType
      * @param LocatedSource $locatedSource

@@ -45,7 +45,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Populate the common elements of the function abstract
+     * Populate the common elements of the function abstract.
      *
      * @param MethodOrFunctionNode $node
      * @param LocatedSource $locatedSource
@@ -92,7 +92,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Get the "full" name of the function (e.g. for A\B\foo, this will return
-     * "A\B\foo")
+     * "A\B\foo").
      *
      * @return string
      */
@@ -107,7 +107,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Get the "short" name of the function (e.g. for A\B\foo, this will return
-     * "foo")
+     * "foo").
      *
      * @return string
      */
@@ -118,7 +118,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
-     * return "A\B")
+     * return "A\B").
      *
      * @return string
      */
@@ -133,7 +133,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Decide if this function is part of a namespace. Returns false if the class
-     * is in the global namespace or does not have a specified namespace
+     * is in the global namespace or does not have a specified namespace.
      *
      * @return bool
      */
@@ -144,7 +144,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the number of parameters for this class
+     * Get the number of parameters for this class.
      *
      * @return int
      */
@@ -154,7 +154,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the number of required parameters for this method
+     * Get the number of required parameters for this method.
      *
      * @return int
      */
@@ -170,7 +170,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Get an array list of the parameters for this method signature, as an
-     * array of ReflectionParameter instances
+     * array of ReflectionParameter instances.
      *
      * @return ReflectionParameter[]
      */
@@ -181,7 +181,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Get a single parameter by name. Returns null if parameter not found for
-     * the function
+     * the function.
      *
      * @param string $parameterName
      * @return ReflectionParameter|null
@@ -189,7 +189,7 @@ abstract class ReflectionFunctionAbstract
     public function getParameter($parameterName)
     {
         foreach ($this->parameters as $parameter) {
-            if ($parameter->getName() == $parameterName) {
+            if ($parameter->getName() === $parameterName) {
                 return $parameter;
             }
         }
@@ -276,7 +276,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Check if the function has a variadic parameter
+     * Check if the function has a variadic parameter.
      *
      * @return bool
      */
@@ -295,7 +295,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Recursively search an array of statements (PhpParser nodes) to find if a
-     * yield expression exists anywhere (thus indicating this is a generator)
+     * yield expression exists anywhere (thus indicating this is a generator).
      *
      * @param \PhpParser\Node $node
      * @return bool
@@ -325,7 +325,7 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Check if this function can be used as a generator (i.e. contains the
-     * "yield" keyword)
+     * "yield" keyword).
      *
      * @return bool
      */
@@ -338,17 +338,17 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the line number that this function starts on
+     * Get the line number that this function starts on.
      *
      * @return int
      */
     public function getStartLine()
     {
-       return (int)$this->node->getAttribute('startLine', -1);
+        return (int)$this->node->getAttribute('startLine', -1);
     }
 
     /**
-     * Get the line number that this function ends on
+     * Get the line number that this function ends on.
      *
      * @return int
      */
@@ -358,7 +358,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Is this function declared as a reference
+     * Is this function declared as a reference.
      *
      * @return bool
      */

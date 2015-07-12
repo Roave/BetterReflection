@@ -3,7 +3,6 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\TypesFinder\FindPropertyType;
-use PhpParser\Node;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
 
@@ -53,7 +52,7 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
-     * Return string representation of this little old property
+     * Return string representation of this little old property.
      *
      * @return string
      */
@@ -136,7 +135,7 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
-     * Get the core-reflection-compatible modifier values
+     * Get the core-reflection-compatible modifier values.
      *
      * @return int
      */
@@ -151,7 +150,7 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
-     * Get the name of the property
+     * Get the name of the property.
      *
      * @return string
      */
@@ -167,7 +166,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isPrivate()
     {
-        return $this->visibility == self::IS_PRIVATE;
+        return $this->visibility === self::IS_PRIVATE;
     }
 
     /**
@@ -177,7 +176,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isProtected()
     {
-        return $this->visibility == self::IS_PROTECTED;
+        return $this->visibility === self::IS_PROTECTED;
     }
 
     /**
@@ -187,7 +186,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isPublic()
     {
-        return $this->visibility == self::IS_PUBLIC;
+        return $this->visibility === self::IS_PUBLIC;
     }
 
     /**
@@ -201,7 +200,7 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
-     * Get the DocBlock type hints as an array of strings
+     * Get the DocBlock type hints as an array of strings.
      *
      * @return string[]
      */

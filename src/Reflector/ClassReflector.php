@@ -20,7 +20,7 @@ class ClassReflector implements Reflector
     }
 
     /**
-     * Create a ReflectionClass for the specified $className
+     * Create a ReflectionClass for the specified $className.
      *
      * @param string $className
      * @return \BetterReflection\Reflection\ReflectionClass
@@ -33,7 +33,7 @@ class ClassReflector implements Reflector
     }
 
     /**
-     * Get all the classes available in the scope specified by the SourceLocator
+     * Get all the classes available in the scope specified by the SourceLocator.
      *
      * @return \BetterReflection\Reflection\ReflectionClass[]
      */

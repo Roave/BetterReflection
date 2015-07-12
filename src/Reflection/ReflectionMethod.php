@@ -68,7 +68,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Get the core-reflection-compatible modifier values
+     * Get the core-reflection-compatible modifier values.
      *
      * @return int
      */
@@ -85,7 +85,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Check to see if a flag is set on this method
+     * Check to see if a flag is set on this method.
      *
      * @param int $flag
      * @return bool
@@ -96,7 +96,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method abstract
+     * Is the method abstract.
      *
      * @return bool
      */
@@ -106,7 +106,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method final
+     * Is the method final.
      *
      * @return bool
      */
@@ -116,7 +116,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method private visibility
+     * Is the method private visibility.
      *
      * @return bool
      */
@@ -126,7 +126,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method protected visibility
+     * Is the method protected visibility.
      *
      * @return bool
      */
@@ -136,7 +136,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method public visibility
+     * Is the method public visibility.
      *
      * @return bool
      */
@@ -146,7 +146,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method static
+     * Is the method static.
      *
      * @return bool
      */
@@ -156,27 +156,27 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Is the method a constructor
+     * Is the method a constructor.
      *
      * @return bool
      */
     public function isConstructor()
     {
-        return $this->getName() == '__construct';
+        return $this->getName() === '__construct';
     }
 
     /**
-     * Is the method a destructor
+     * Is the method a destructor.
      *
      * @return bool
      */
     public function isDestructor()
     {
-        return $this->getName() == '__destruct';
+        return $this->getName() === '__destruct';
     }
 
     /**
-     * Get the class that declares this method
+     * Get the class that declares this method.
      *
      * @return ReflectionClass
      */

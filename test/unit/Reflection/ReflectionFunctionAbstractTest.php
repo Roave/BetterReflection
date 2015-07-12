@@ -1,8 +1,8 @@
 <?php
 
 namespace BetterReflectionTest\Reflection;
+
 use BetterReflection\Reflector\FunctionReflector;
-use BetterReflectionTest\SourceLocator\StringSourceLocatorTest;
 use BetterReflection\SourceLocator\StringSourceLocator;
 
 /**
@@ -64,7 +64,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * These generator tests were taken from nikic/php-parser - so a big thank
-     * you and credit to @nikic for this (and the awesome PHP-Parser library)
+     * you and credit to @nikic for this (and the awesome PHP-Parser library).
      *
      * @see https://github.com/nikic/PHP-Parser/blob/1.x/test/code/parser/stmt/function/generator.test
      * @return array

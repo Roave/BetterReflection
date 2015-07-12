@@ -8,8 +8,6 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflection\TypesFinder\FindPropertyType;
-use PhpParser\Node\Stmt\Property as PropertyNode;
-use PhpParser\Comment\Doc as DocNode;
 use phpDocumentor\Reflection\Types;
 
 /**

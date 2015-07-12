@@ -7,7 +7,7 @@ use PhpParser\Node;
 class CompileNodeToValue
 {
     /**
-     * Compile an expression from a node into a value
+     * Compile an expression from a node into a value.
      *
      * @param Node $node
      * @return mixed
