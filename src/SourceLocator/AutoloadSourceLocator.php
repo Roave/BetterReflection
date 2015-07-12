@@ -3,7 +3,6 @@
 namespace BetterReflection\SourceLocator;
 
 use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -15,7 +14,7 @@ class AutoloadSourceLocator implements SourceLocator
 {
     /**
      * Primarily used by the non-loading-autoloader magic trickery to determine
-     * the filename used during autoloading
+     * the filename used during autoloading.
      *
      * @var string|null
      */
@@ -45,7 +44,7 @@ class AutoloadSourceLocator implements SourceLocator
     }
 
     /**
-     * Attempts to locate the specified identifier
+     * Attempts to locate the specified identifier.
      *
      * @param Identifier $identifier
      * @return string
@@ -64,7 +63,7 @@ class AutoloadSourceLocator implements SourceLocator
     }
 
     /**
-     * Attempt to locate a class by name
+     * Attempt to locate a class by name.
      *
      * If class already exists, simply use internal reflection API to get the
      * filename and store it.
@@ -118,7 +117,7 @@ class AutoloadSourceLocator implements SourceLocator
 
     /**
      * Our wrapper simply records which file we tried to load and returns
-     * boolean false indicating failure
+     * boolean false indicating failure.
      *
      * @param string $path
      * @param string $mode
@@ -135,7 +134,7 @@ class AutoloadSourceLocator implements SourceLocator
     }
 
     /**
-     * Must be implemented to return some data so that calls like is_file will work
+     * Must be implemented to return some data so that calls like is_file will work.
      *
      * @param $path
      * @param $flags

@@ -3,7 +3,7 @@
 namespace BetterReflection\SourceLocator;
 
 /**
- * Value object containing source code that has been located
+ * Value object containing source code that has been located.
  */
 class LocatedSource
 {

@@ -27,7 +27,7 @@ class Generic
 
     /**
      * Uses the SourceLocator given in the constructor to locate the $identifier
-     * specified and returns the \Reflector
+     * specified and returns the \Reflector.
      *
      * @param Identifier $identifier
      * @return Reflection
@@ -41,7 +41,7 @@ class Generic
     }
 
     /**
-     * Given an array of Reflections, try to find the identifier
+     * Given an array of Reflections, try to find the identifier.
      *
      * @param Reflection[] $reflections
      * @param Identifier $identifier
@@ -63,7 +63,7 @@ class Generic
     }
 
     /**
-     * Read all the identifiers from a LocatedSource and find the specified identifier
+     * Read all the identifiers from a LocatedSource and find the specified identifier.
      *
      * @param Identifier $identifier
      * @param LocatedSource $locatedSource
@@ -105,7 +105,7 @@ class Generic
     }
 
     /**
-     * Process and reflect all the matching identifiers found inside a namespace node
+     * Process and reflect all the matching identifiers found inside a namespace node.
      *
      * @param Node\Stmt\Namespace_ $namespace
      * @param Identifier $identifier
@@ -130,7 +130,7 @@ class Generic
 
     /**
      * Reflect identifiers from an AST. If a namespace is found, also load all the
-     * matching identifiers found in the namespace
+     * matching identifiers found in the namespace.
      *
      * @param Node[] $ast
      * @param Identifier $identifier
@@ -162,7 +162,7 @@ class Generic
     }
 
     /**
-     * Get an array of reflections found in a LocatedSource
+     * Get an array of reflections found in a LocatedSource.
      *
      * @param LocatedSource $locatedSource
      * @param Identifier $identifier
@@ -171,14 +171,14 @@ class Generic
     private function getReflections(LocatedSource $locatedSource, Identifier $identifier)
     {
         return $this->reflectFromTree(
-            (new Parser(new Lexer))->parse($locatedSource->getSource()),
+            (new Parser(new Lexer()))->parse($locatedSource->getSource()),
             $identifier,
             $locatedSource
         );
     }
 
     /**
-     * Get all identifiers of a matching identifier type from a file
+     * Get all identifiers of a matching identifier type from a file.
      *
      * @param IdentifierType $identifierType
      * @return Reflection[]

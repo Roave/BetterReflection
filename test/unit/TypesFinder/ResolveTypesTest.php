@@ -64,7 +64,6 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @param string $inputType
      * @param string $expectedType

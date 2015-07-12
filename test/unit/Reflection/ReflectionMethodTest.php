@@ -3,7 +3,6 @@
 namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
-use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;

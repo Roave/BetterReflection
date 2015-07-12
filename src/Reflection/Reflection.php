@@ -4,7 +4,7 @@ namespace BetterReflection\Reflection;
 
 /**
  * This interface is used internally by the Generic reflector in order to
- * ensure we are working with BetterReflection reflections
+ * ensure we are working with BetterReflection reflections.
  *
  * @internal
  */

@@ -13,7 +13,7 @@ use BetterReflection\Reflection\ReflectionFunctionAbstract;
 class FindParameterType
 {
     /**
-     * Given a function and parameter, attempt to find the type of the parameter
+     * Given a function and parameter, attempt to find the type of the parameter.
      *
      * @param ReflectionFunctionAbstract $function
      * @param ParamNode $node

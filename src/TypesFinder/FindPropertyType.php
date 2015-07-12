@@ -2,7 +2,6 @@
 
 namespace BetterReflection\TypesFinder;
 
-use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\ContextFactory;
@@ -11,7 +10,7 @@ use BetterReflection\Reflection\ReflectionProperty;
 class FindPropertyType
 {
     /**
-     * Given a property, attempt to find the type of the property
+     * Given a property, attempt to find the type of the property.
      *
      * @param ReflectionProperty $reflectionProperty
      * @return Type[]

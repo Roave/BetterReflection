@@ -7,7 +7,7 @@ use BetterReflection\Identifier\Identifier;
 interface SourceLocator
 {
     /**
-     * Locate some source code
+     * Locate some source code.
      *
      * This method should return a LocatedSource value object
      *

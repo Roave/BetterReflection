@@ -91,7 +91,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Return string representation of this parameter
+     * Return string representation of this parameter.
      *
      * @return string
      */
@@ -164,7 +164,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the name of the parameter
+     * Get the name of the parameter.
      *
      * @return string
      */
@@ -174,7 +174,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the function (or method) that declared this parameter
+     * Get the function (or method) that declared this parameter.
      *
      * @return ReflectionFunctionAbstract
      */
@@ -217,7 +217,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Does the parameter have a default, regardless of whether it is optional
+     * Does the parameter have a default, regardless of whether it is optional.
      *
      * Note this is distinct from "isOptional" because you can have
      * a default value, but the parameter not be optional. In the example, the
@@ -233,7 +233,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the default value of the parameter
+     * Get the default value of the parameter.
      *
      * @return mixed
      * @throws \LogicException
@@ -248,7 +248,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the default value represented as a string
+     * Get the default value represented as a string.
      *
      * @return string
      */
@@ -297,7 +297,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Get the DocBlock type hints as an array of strings
+     * Get the DocBlock type hints as an array of strings.
      *
      * @return string[]
      */
@@ -326,7 +326,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Find the position of the parameter, left to right, starting at zero
+     * Find the position of the parameter, left to right, starting at zero.
      *
      * @return int
      */
@@ -338,7 +338,7 @@ class ReflectionParameter implements \Reflector
     /**
      * Get the type hint declared for the parameter. This is the real type hint
      * for the parameter, e.g. `method(closure $someFunc)` defined by the
-     * method itself, and is separate from the docblock type hints
+     * method itself, and is separate from the docblock type hints.
      *
      * @see getDocBlockTypes()
      * @return Type
@@ -369,7 +369,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Is this parameter a variadic (denoted by ...$param)
+     * Is this parameter a variadic (denoted by ...$param).
      *
      * @return bool
      */
@@ -379,7 +379,7 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Is this parameter passed by reference (denoted by &$param)
+     * Is this parameter passed by reference (denoted by &$param).
      *
      * @return bool
      */
