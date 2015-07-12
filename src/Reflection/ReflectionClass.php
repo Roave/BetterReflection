@@ -53,6 +53,11 @@ class ReflectionClass implements Reflection
      */
     private $extendsClassType;
 
+    /**
+     * @var ClassNode
+     */
+    private $node;
+
     private function __construct()
     {
     }
@@ -76,6 +81,7 @@ class ReflectionClass implements Reflection
         NamespaceNode $namespace = null
     ) {
         $class = new self();
+        $class->node = $node;
 
         $class->locatedSource = $locatedSource;
         $class->name = $node->name;
@@ -276,6 +282,26 @@ class ReflectionClass implements Reflection
     public function getLocatedSource()
     {
         return $this->locatedSource;
+    }
+
+    /**
+     * Get the line number that this class starts on
+     *
+     * @return int
+     */
+    public function getStartLine()
+    {
+        return (int)$this->node->getAttribute('startLine', -1);
+    }
+
+    /**
+     * Get the line number that this class ends on
+     *
+     * @return int
+     */
+    public function getEndLine()
+    {
+        return (int)$this->node->getAttribute('endLine', -1);
     }
 
     /**

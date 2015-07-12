@@ -11,7 +11,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getConstructor | :heavy_check_mark: Yes |
 | getDefaultProperties | todo |
 | getDocComment | todo |
-| getEndLine | todo |
+| getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | todo |
@@ -25,7 +25,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getProperties | :heavy_check_mark: Yes |
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
-| getStartLine | todo |
+| getStartLine | :heavy_check_mark: Yes |
 | getStaticProperties | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getTraitAliases | todo |

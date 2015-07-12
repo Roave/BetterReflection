@@ -10,6 +10,7 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
+use BetterReflection\SourceLocator\StringSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -179,5 +180,29 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $parentReflection = $childReflection->getParentClass($mockLocator);
         $this->assertSame('ExampleClass', $parentReflection->getShortName());
+    }
+
+    public function startEndLineProvider()
+    {
+        return [
+            ["<?php\n\nclass Foo {\n}\n", 3, 4],
+            ["<?php\n\nclass Foo {\n\n}\n", 3, 5],
+            ["<?php\n\n\nclass Foo {\n}\n", 4, 5],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $expectedStart
+     * @param int $expectedEnd
+     * @dataProvider startEndLineProvider
+     */
+    public function testStartEndLine($php, $expectedStart, $expectedEnd)
+    {
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classInfo = $reflector->reflect('Foo');
+
+        $this->assertSame($expectedStart, $classInfo->getStartLine());
+        $this->assertSame($expectedEnd, $classInfo->getEndLine());
     }
 }
