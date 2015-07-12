@@ -36,9 +36,9 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | hasProperty | :heavy_check_mark: Yes |
 | implementsInterface | todo |
 | inNamespace | :heavy_check_mark: Yes |
-| isAbstract | todo |
+| isAbstract | :heavy_check_mark: Yes |
 | isCloneable | todo |
-| isFinal | todo |
+| isFinal | :heavy_check_mark: Yes |
 | isInstance | todo |
 | isInstantiable | todo |
 | isInterface | todo |

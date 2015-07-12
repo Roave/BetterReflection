@@ -38,6 +38,14 @@ namespace BetterReflectionTest\Fixture {
     class ClassWithParent extends ExampleClass
     {
     }
+
+    abstract class AbstractClass
+    {
+    }
+
+    final class FinalClass
+    {
+    }
 }
 
 namespace BetterReflectionTest\FixtureOther {

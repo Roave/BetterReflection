@@ -270,4 +270,26 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($classInfo->isInternal());
         $this->assertTrue($classInfo->isUserDefined());
     }
+
+    public function testIsAbstract()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\AbstractClass');
+        $this->assertTrue($classInfo->isAbstract());
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertFalse($classInfo->isAbstract());
+    }
+
+    public function testIsFinal()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\FinalClass');
+        $this->assertTrue($classInfo->isFinal());
+
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertFalse($classInfo->isFinal());
+    }
 }

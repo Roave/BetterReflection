@@ -425,4 +425,24 @@ class ReflectionClass implements Reflection
     {
         return !$this->isInternal();
     }
+
+    /**
+     * Is this class an abstract class
+     *
+     * @return bool
+     */
+    public function isAbstract()
+    {
+        return $this->node->isAbstract();
+    }
+
+    /**
+     * Is this class a final class
+     *
+     * @return bool
+     */
+    public function isFinal()
+    {
+        return $this->node->isFinal();
+    }
 }
