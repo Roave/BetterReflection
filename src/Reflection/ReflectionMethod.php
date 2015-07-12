@@ -162,7 +162,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isConstructor()
     {
-        return $this->getName() == '__construct';
+        return $this->getName() === '__construct';
     }
 
     /**
@@ -172,7 +172,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isDestructor()
     {
-        return $this->getName() == '__destruct';
+        return $this->getName() === '__destruct';
     }
 
     /**

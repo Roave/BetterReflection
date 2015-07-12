@@ -166,7 +166,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isPrivate()
     {
-        return $this->visibility == self::IS_PRIVATE;
+        return $this->visibility === self::IS_PRIVATE;
     }
 
     /**
@@ -176,7 +176,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isProtected()
     {
-        return $this->visibility == self::IS_PROTECTED;
+        return $this->visibility === self::IS_PROTECTED;
     }
 
     /**
@@ -186,7 +186,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isPublic()
     {
-        return $this->visibility == self::IS_PUBLIC;
+        return $this->visibility === self::IS_PUBLIC;
     }
 
     /**

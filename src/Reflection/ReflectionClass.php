@@ -171,7 +171,7 @@ class ReflectionClass implements Reflection
     public function getMethod($methodName)
     {
         foreach ($this->getMethods() as $method) {
-            if ($method->getName() == $methodName) {
+            if ($method->getName() === $methodName) {
                 return $method;
             }
         }

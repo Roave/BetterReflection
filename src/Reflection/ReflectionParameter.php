@@ -285,7 +285,7 @@ class ReflectionParameter implements \Reflector
      */
     public function allowsNull()
     {
-        if (null == $this->getTypeHint()) {
+        if (null === $this->getTypeHint()) {
             return true;
         }
 
@@ -293,7 +293,7 @@ class ReflectionParameter implements \Reflector
             return false;
         }
 
-        return $this->getDefaultValue() == null;
+        return $this->getDefaultValue() === null;
     }
 
     /**

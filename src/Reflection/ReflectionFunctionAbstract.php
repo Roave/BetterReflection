@@ -189,7 +189,7 @@ abstract class ReflectionFunctionAbstract
     public function getParameter($parameterName)
     {
         foreach ($this->parameters as $parameter) {
-            if ($parameter->getName() == $parameterName) {
+            if ($parameter->getName() === $parameterName) {
                 return $parameter;
             }
         }
