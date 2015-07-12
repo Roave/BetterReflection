@@ -42,11 +42,11 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isInstance | todo |
 | isInstantiable | todo |
 | isInterface | todo |
-| isInternal | todo |
+| isInternal | :heavy_check_mark: Yes |
 | isIterateable | todo |
 | isSubclassOf | todo |
 | isTrait | todo |
-| isUserDefined | todo |
+| isUserDefined | :heavy_check_mark: Yes |
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |

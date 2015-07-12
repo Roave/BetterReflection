@@ -397,4 +397,32 @@ class ReflectionClass implements Reflection
         $comment = $this->node->getAttribute('comments')[0];
         return $comment->getReformattedText();
     }
+
+
+
+    /**
+     * Is this an internal class?
+     *
+     * Note - we cannot reflect on internal classes (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return false
+     * from this function.
+     *
+     * @see https://github.com/Roave/BetterReflection/issues/38
+     * @return bool
+     */
+    public function isInternal()
+    {
+        return false;
+    }
+
+    /**
+     * Is this a user-defined function (will always return the opposite of
+     * whatever isInternal returns).
+     *
+     * @return bool
+     */
+    public function isUserDefined()
+    {
+        return !$this->isInternal();
+    }
 }
