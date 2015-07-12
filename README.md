@@ -53,7 +53,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ## Limitations
 
 * PHP cannot autoload functions, therefore we cannot statically reflect functions
-* Using `ReflectionClass::createFromName()` makes [some assumptions]([Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
+* Using `ReflectionClass::createFromName()` makes [some assumptions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
 
 ## Authors
 
