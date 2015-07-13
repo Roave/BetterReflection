@@ -11,6 +11,7 @@ use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -18,6 +19,7 @@ use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use PhpParser\Node\Stmt\TraitUse;
 
 class ReflectionClass implements Reflection
 {
@@ -311,7 +313,7 @@ class ReflectionClass implements Reflection
 
     /**
      * Return an array with default properties (properties that were defined at
-     * compile-time rather than at run time)
+     * compile-time rather than at run time).
      *
      * @return ReflectionProperty[]
      */
@@ -339,7 +341,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get the line number that this class starts on
+     * Get the line number that this class starts on.
      *
      * @return int
      */
@@ -349,7 +351,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get the line number that this class ends on
+     * Get the line number that this class ends on.
      *
      * @return int
      */
@@ -401,8 +403,6 @@ class ReflectionClass implements Reflection
         return $comment->getReformattedText();
     }
 
-
-
     /**
      * Is this an internal class?
      *
@@ -430,7 +430,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Is this class an abstract class
+     * Is this class an abstract class.
      *
      * @return bool
      */
@@ -440,7 +440,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Is this class a final class
+     * Is this class a final class.
      *
      * @return bool
      */
@@ -450,7 +450,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Get the core-reflection-compatible modifier values
+     * Get the core-reflection-compatible modifier values.
      *
      * @return int
      */
@@ -480,5 +480,43 @@ class ReflectionClass implements Reflection
     public function isInterface()
     {
         return $this->node instanceof InterfaceNode;
+    }
+
+    /**
+     * Get the traits used, if any are defined. If this class does not have any
+     * defined traits, this will return an empty array.
+     *
+     * You may optionally specify a source locator that will be used to locate
+     * the traits. If no source locator is given, a default will be used.
+     *
+     * @param SourceLocator|null $sourceLocator
+     * @return ReflectionClass[]
+     */
+    public function getTraits(SourceLocator $sourceLocator = null)
+    {
+        $traitUsages = array_filter($this->node->stmts, function (Node $node) {
+            return $node instanceof TraitUse;
+        });
+
+        $traitNameNodes = [];
+        foreach ($traitUsages as $traitUsage) {
+            // @todo resolve adaptations here probably
+            $traitNameNodes = array_merge($traitNameNodes, $traitUsage->traits);
+        }
+
+        return array_map(function (Node\Name $importedTrait) use ($sourceLocator) {
+            $objectType = (new FindTypeFromAst())->__invoke($importedTrait, $this->locatedSource, $this->getNamespaceName());
+            if (null === $objectType || !($objectType instanceof Object_)) {
+                throw new \Exception('Unable to determine FQSEN for trait usage');
+            }
+
+            $fqsen = $objectType->getFqsen()->__toString();
+
+            if (null !== $sourceLocator) {
+                return (new ClassReflector($sourceLocator))->reflect($fqsen);
+            }
+
+            return self::createFromName($fqsen);
+        }, $traitNameNodes);
     }
 }

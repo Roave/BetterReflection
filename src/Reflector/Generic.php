@@ -146,7 +146,7 @@ class Generic
                     $reflections,
                     $this->reflectFromNamespace($node, $identifier, $locatedSource)
                 );
-            } elseif ($node instanceof Node\Stmt\Class_) {
+            } elseif ($node instanceof Node\Stmt\ClassLike) {
                 $reflection = $this->reflectNode($node, $locatedSource, null);
                 if ($identifier->getType()->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;

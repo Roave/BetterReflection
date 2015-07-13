@@ -341,4 +341,28 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertFalse($classInfo->isInterface());
     }
+
+    public function testGetTraits()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $classInfo = $reflector->reflect('TraitFixtureA');
+        $traits = $classInfo->getTraits($sourceLocator);
+
+        $this->assertCount(1, $traits);
+        $this->assertInstanceOf(ReflectionClass::class, $traits[0]);
+        $this->assertTrue($traits[0]->isTrait());
+    }
+
+    public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $classInfo = $reflector->reflect('TraitFixtureB');
+        $traits = $classInfo->getTraits($sourceLocator);
+
+        $this->assertCount(0, $traits);
+    }
 }

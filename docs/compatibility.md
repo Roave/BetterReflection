@@ -30,7 +30,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getTraitAliases | todo |
 | getTraitNames | todo |
-| getTraits | todo |
+| getTraits | :heavy_check_mark: Yes |
 | hasConstant | :heavy_check_mark: Yes |
 | hasMethod | :heavy_check_mark: Yes |
 | hasProperty | :heavy_check_mark: Yes |
