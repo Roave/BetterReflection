@@ -500,23 +500,52 @@ class ReflectionClass implements Reflection
 
         $traitNameNodes = [];
         foreach ($traitUsages as $traitUsage) {
-            // @todo resolve adaptations here probably
             $traitNameNodes = array_merge($traitNameNodes, $traitUsage->traits);
         }
 
         return array_map(function (Node\Name $importedTrait) use ($sourceLocator) {
-            $objectType = (new FindTypeFromAst())->__invoke($importedTrait, $this->locatedSource, $this->getNamespaceName());
-            if (null === $objectType || !($objectType instanceof Object_)) {
-                throw new \Exception('Unable to determine FQSEN for trait usage');
-            }
-
-            $fqsen = $objectType->getFqsen()->__toString();
-
-            if (null !== $sourceLocator) {
-                return (new ClassReflector($sourceLocator))->reflect($fqsen);
-            }
-
-            return self::createFromName($fqsen);
+            return $this->reflectClassForNamedNode($importedTrait, $sourceLocator);
         }, $traitNameNodes);
+    }
+
+    /**
+     * Given an AST Node\Name, try to resolve the type into a fully qualified
+     * structural element name (FQSEN).
+     *
+     * @param Node\Name $node
+     * @return string
+     * @throws \Exception
+     */
+    private function getFqsenFromNamedNode(Node\Name $node)
+    {
+        $objectType = (new FindTypeFromAst())->__invoke($node, $this->locatedSource, $this->getNamespaceName());
+        if (null === $objectType || !($objectType instanceof Object_)) {
+            throw new \Exception('Unable to determine FQSEN for named node');
+        }
+
+        return $objectType->getFqsen()->__toString();
+    }
+
+    /**
+     * Given an AST Node\Name, create a new ReflectionClass for the element.
+     * This should work with traits, interfaces and classes alike, as long as
+     * the FQSEN resolves to something that exists.
+     *
+     * You may optionally specify a source locator that will be used to locate
+     * the traits. If no source locator is given, a default will be used.
+     *
+     * @param Node\Name $node
+     * @param SourceLocator|null $sourceLocator
+     * @return ReflectionClass
+     */
+    private function reflectClassForNamedNode(Node\Name $node, SourceLocator $sourceLocator = null)
+    {
+        $fqsen = $this->getFqsenFromNamedNode($node);
+
+        if (null !== $sourceLocator) {
+            return (new ClassReflector($sourceLocator))->reflect($fqsen);
+        }
+
+        return self::createFromName($fqsen);
     }
 }
