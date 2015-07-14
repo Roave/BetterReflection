@@ -3,6 +3,9 @@ ReflectionClass::getName()
 --FILE--
 <?php
 require 'vendor/autoload.php';
+use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
+$reflector = new ClassReflector(new SingleFileSourceLocator(__FILE__));
 
 class TrickClass {
 	function __toString() {
@@ -12,9 +15,7 @@ class TrickClass {
 }
 
 
-$r3 = (new \BetterReflection\Reflector\ClassReflector(
-    new \BetterReflection\SourceLocator\SingleFileSourceLocator(__FILE__)
-))->reflect('TrickClass');
+$r3 = $reflector->reflect('TrickClass');
 
 var_dump($r3->getName());
 
