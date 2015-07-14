@@ -548,4 +548,25 @@ class ReflectionClass implements Reflection
 
         return self::createFromName($fqsen);
     }
+
+    /**
+     * Get the names of the traits used as an array of strings, if any are
+     * defined. If this class does not have any defined traits, this will
+     * return an empty array.
+     *
+     * You may optionally specify a source locator that will be used to locate
+     * the traits. If no source locator is given, a default will be used.
+     *
+     * @param SourceLocator|null $sourceLocator
+     * @return string[]
+     */
+    public function getTraitNames(SourceLocator $sourceLocator = null)
+    {
+        return array_map(
+            function (ReflectionClass $trait) {
+                return $trait->getName();
+            },
+            $this->getTraits($sourceLocator)
+        );
+    }
 }

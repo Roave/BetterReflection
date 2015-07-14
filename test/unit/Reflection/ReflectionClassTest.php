@@ -365,4 +365,16 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(0, $traits);
     }
+
+    public function testGetTraitNames()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
+
+        $this->assertSame(
+            [
+                'TraitFixtureTraitA'
+            ],
+            (new ClassReflector($sourceLocator))->reflect('TraitFixtureA')->getTraitNames($sourceLocator)
+        );
+    }
 }
