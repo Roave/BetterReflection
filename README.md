@@ -49,6 +49,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 * [Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md)
 * [Using types](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
 * [The features](https://github.com/Roave/BetterReflection/tree/master/docs/features.md)
+* [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
 
 ## Limitations
 

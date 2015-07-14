@@ -35,3 +35,5 @@ $ vendor/bin/phpunit
 ```
 
 Please ensure all new features or conditions are covered by unit tests.
+
+Read more about testing in [test/README.md](https://github.com/Roave/BetterReflection/blob/master/test/README.md).
