@@ -126,14 +126,14 @@ class ReflectionParameter implements \Reflector
         $param->isVariadic = (bool)$node->variadic;
         $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;
+
+        $namespaceForType = $function instanceof ReflectionMethod
+            ? $function->getDeclaringClass()->getNamespaceName()
+            : $function->getNamespaceName();
         $param->typeHint = (new FindTypeFromAst())->__invoke(
             $node->type,
             $function->getLocatedSource(),
-            (
-                $function instanceof ReflectionMethod
-                ? $function->getDeclaringClass()->getNamespaceName()
-                : $function->getNamespaceName()
-            )
+            $namespaceForType
         );
 
         if ($param->hasDefaultValue) {
@@ -254,28 +254,7 @@ class ReflectionParameter implements \Reflector
      */
     public function getDefaultValueAsString()
     {
-        $defaultValue = $this->getDefaultValue();
-        $type = gettype($defaultValue);
-        switch ($type) {
-            case 'boolean':
-                return $defaultValue ? 'true' : 'false';
-            case 'integer':
-            case 'float':
-            case 'double':
-                return (string)$defaultValue;
-            case 'array':
-                return '[]'; // @todo do this less terribly
-            case 'NULL':
-                return 'null';
-            case 'object':
-            case 'resource':
-            case 'unknown type':
-            default:
-                throw new Exception\InvalidDefaultValueType(sprintf(
-                    'Default value as an instance of an %s does not make any sense',
-                    $type
-                ));
-        }
+        return var_export($this->getDefaultValue(), true);
     }
 
     /**
