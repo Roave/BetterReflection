@@ -29,6 +29,11 @@ abstract class ReflectionFunctionAbstract
     {
     }
 
+    public static function export()
+    {
+        throw new \Exception('Unable to export statically');
+    }
+
     /**
      * Populate the common elements of the function abstract.
      *

@@ -15,6 +15,12 @@ use PhpParser\Node\Stmt\Function_;
  */
 class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 {
+    public function testExportThrowsException()
+    {
+        $this->setExpectedException(\Exception::class);
+        ReflectionFunctionAbstract::export();
+    }
+
     public function testNameMethodsWithNamespace()
     {
         $php = '<?php namespace Foo { function bar() {}}';
