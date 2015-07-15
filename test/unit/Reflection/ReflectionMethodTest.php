@@ -27,6 +27,14 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testImplementsReflector()
+    {
+        $classInfo = $this->reflector->reflect('BetterReflectionTest\Fixture\Methods');
+        $methodInfo = $classInfo->getMethod('publicMethod');
+
+        $this->assertInstanceOf(\Reflector::class, $methodInfo);
+    }
+
     /**
      * @return array
      */

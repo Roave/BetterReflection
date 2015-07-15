@@ -25,6 +25,15 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testImplementsReflector()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $methodInfo = $classInfo->getMethod('methodWithParameters');
+        $paramInfo = $methodInfo->getParameter('parameter1');
+
+        $this->assertInstanceOf(\Reflector::class, $paramInfo);
+    }
+
     public function testExportThrowsException()
     {
         $this->setExpectedException(\Exception::class);

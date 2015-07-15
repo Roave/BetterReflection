@@ -11,6 +11,16 @@ use BetterReflection\SourceLocator\StringSourceLocator;
  */
 class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
 {
+    public function testImplementsReflector()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertInstanceOf(\Reflector::class, $functionInfo);
+    }
+
     public function testNameMethodsWithNoNamespace()
     {
         $php = '<?php function foo() {}';
