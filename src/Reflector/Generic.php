@@ -55,8 +55,8 @@ class Generic
             }
         }
 
-        throw new \UnexpectedValueException(sprintf(
-            '%s "%s" could not be found to load',
+        throw new Exception\IdentifierNotFound(sprintf(
+            '%s "%s" could not be found in the located source',
             $identifier->getType()->getName(),
             $identifier->getName()
         ));
