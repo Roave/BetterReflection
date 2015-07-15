@@ -20,6 +20,29 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
+     * Check to see if a flag is set on this method.
+     * Return string representation of this parameter
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
+
+        return sprintf(
+            "Function [ <user> function %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
+            $this->getName(),
+            $this->getFileName(),
+            $this->getStartLine(),
+            $this->getEndLine(),
+            count($this->getParameters()),
+            array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
+                return $str . "\n    " . $param;
+            }, '')
+        );
+    }
+
+    /**
      * @param FunctionNode $node
      * @param NamespaceNode|null $namespaceNode
      * @param LocatedSource $locatedSource
