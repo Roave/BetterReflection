@@ -2,7 +2,11 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionFunction;
+use BetterReflection\Reflection\ReflectionFunctionAbstract;
+use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 
 /**
@@ -10,6 +14,30 @@ use BetterReflection\SourceLocator\StringSourceLocator;
  */
 class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 {
+    public function testNameMethodsWithNamespace()
+    {
+        $php = '<?php namespace Foo { function bar() {}}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('Foo\bar');
+
+        $this->assertSame('Foo\bar', $functionInfo->getName());
+        $this->assertSame('Foo', $functionInfo->getNamespaceName());
+        $this->assertSame('bar', $functionInfo->getShortName());
+    }
+
+    public function testNameMethodsWithoutNamespace()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertSame('foo', $functionInfo->getName());
+        $this->assertSame('', $functionInfo->getNamespaceName());
+        $this->assertSame('foo', $functionInfo->getShortName());
+    }
+
     public function testIsClosure()
     {
         $php = '<?php function foo() {}';
@@ -38,6 +66,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $function = $reflector->reflect('foo');
 
         $this->assertFalse($function->isInternal());
+        $this->assertTrue($function->isUserDefined());
     }
 
     public function variadicProvider()
@@ -104,6 +133,20 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectingGenerator, $function->isGenerator());
     }
 
+    public function testIsGeneratorWhenNodeNotSet()
+    {
+        $php = '<?php function foo() { yield 1; }';
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $rfaRef = new \ReflectionClass('\BetterReflection\Reflection\ReflectionFunctionAbstract');
+        $rfaRefNode = $rfaRef->getProperty('node');
+        $rfaRefNode->setAccessible(true);
+        $rfaRefNode->setValue($functionInfo, null);
+
+        $this->assertFalse($functionInfo->isGenerator());
+    }
+
     public function startEndLineProvider()
     {
         return [
@@ -147,5 +190,72 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $function = $reflector->reflect('foo');
 
         $this->assertSame($expectingReturnsReference, $function->returnsReference());
+    }
+
+    public function testGetDocCommentWithComment()
+    {
+        $php = "<?php
+        /**
+         * Some function comment
+         */
+        function foo() {}
+        ";
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertContains('Some function comment', $functionInfo->getDocComment());
+    }
+
+    public function testGetDocReturnsEmptyStringWithNoComment()
+    {
+        $php = "<?php function foo() {}";
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertSame('', $functionInfo->getDocComment());
+    }
+
+    public function testGetNumberOfParameters()
+    {
+        $php = '<?php function foo($a, $b, $c = 1) {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertSame(3, $functionInfo->getNumberOfParameters());
+        $this->assertSame(2, $functionInfo->getNumberOfRequiredParameters());
+    }
+
+    public function testGetParameter()
+    {
+        $php = '<?php function foo($a, $b, $c = 1) {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $paramInfo = $functionInfo->getParameter('a');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $paramInfo);
+        $this->assertSame('a', $paramInfo->getName());
+    }
+
+    public function testGetParameterReturnsNullWhenNotFound()
+    {
+        $php = '<?php function foo($a, $b, $c = 1) {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertNull($functionInfo->getParameter('d'));
+    }
+
+    public function testGetFileName()
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php'));
+        $functionInfo = $reflector->reflect('BetterReflectionTest\Fixture\myFunction');
+
+        $this->assertContains('Fixture/Functions.php', $functionInfo->getFileName());
     }
 }

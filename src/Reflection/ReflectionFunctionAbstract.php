@@ -28,7 +28,7 @@ abstract class ReflectionFunctionAbstract
     /**
      * @var string
      */
-    private $docBlock;
+    private $docBlock = '';
 
     /**
      * @var LocatedSource
