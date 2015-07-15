@@ -320,7 +320,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
             ['false', 'false'],
             ['null', 'NULL'],
             ['[]', "array (\n)"],
-            ['[1, 2, 3]', "array (\n)"],
+            ['[1, 2, 3]', "array (\n  0 => 1,\n  1 => 2,\n  2 => 3,\n)"],
             ['"foo"', "'foo'"],
         ];
     }
