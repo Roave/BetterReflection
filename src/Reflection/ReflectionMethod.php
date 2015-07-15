@@ -84,6 +84,23 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Check to see if a flag is set on this method.
+     * @return string
+     */
+    private function getVisibilityAsString()
+    {
+        if ($this->isPrivate()) {
+            return 'private';
+        }
+
+        if ($this->isProtected()) {
+            return 'protected';
+        }
+
+        return 'public';
+    }
+
+    /**
      * Get the method node (ensuring it is a ClassMethod node)
      *
      * @throws \RuntimeException
