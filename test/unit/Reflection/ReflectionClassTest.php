@@ -372,7 +372,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-                'TraitFixtureTraitA'
+                'TraitFixtureTraitA',
             ],
             (new ClassReflector($sourceLocator))->reflect('TraitFixtureA')->getTraitNames($sourceLocator)
         );
