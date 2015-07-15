@@ -569,4 +569,58 @@ class ReflectionClass implements Reflection
             $this->getTraits($sourceLocator)
         );
     }
+
+    /**
+     * Return a list of the aliases used when importing traits for this class.
+     * The returned array is in key/value pair in this format:
+     *
+     *   'aliasedMethodName' => 'ActualClass::actualMethod'
+     *
+     * @example
+     * // When reflecting a class such as:
+     * class Foo
+     * {
+     *     use MyTrait {
+     *         myTraitMethod as myAliasedMethod;
+     *     }
+     * }
+     * // This method would return
+     * //   ['myAliasedMethod' => 'MyTrait::myTraitMethod']
+     *
+     * @return string[]
+     */
+    public function getTraitAliases()
+    {
+        $traitUsages = array_filter($this->node->stmts, function (Node $node) {
+            return $node instanceof TraitUse;
+        });
+
+        $resolvedAliases = [];
+
+        /* @var Node\Stmt\TraitUse[] $traitUsages */
+        foreach ($traitUsages as $traitUsage) {
+            $traitNames = $traitUsage->traits;
+
+            $adaptations = $traitUsage->adaptations;
+
+            foreach ($adaptations as $adaptation) {
+                $usedTrait = $adaptation->trait;
+                if (null === $usedTrait) {
+                    $usedTrait = $traitNames[0];
+                }
+
+                if (empty($adaptation->newName)) {
+                    continue;
+                }
+
+                $resolvedAliases[$adaptation->newName] = sprintf(
+                    '%s::%s',
+                    ltrim($this->getFqsenFromNamedNode($usedTrait), '\\'),
+                    $adaptation->method
+                );
+            }
+        }
+
+        return $resolvedAliases;
+    }
 }

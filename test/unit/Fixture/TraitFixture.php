@@ -28,9 +28,6 @@ class TraitFixtureC
         b as b_renamed;
         c as private;
     }
-    use TraitFixtureTraitD1 {
-        foo as blah;
-    }
 }
 
 // Conflict resolution

@@ -377,4 +377,18 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             (new ClassReflector($sourceLocator))->reflect('TraitFixtureA')->getTraitNames($sourceLocator)
         );
     }
+
+    public function testGetTraitAliases()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $classInfo = $reflector->reflect('TraitFixtureC');
+        $traitAliases = $classInfo->getTraitAliases();
+
+        $this->assertSame([
+            'a_protected' => 'TraitFixtureTraitC::a',
+            'b_renamed' => 'TraitFixtureTraitC::b',
+        ], $classInfo->getTraitAliases());
+    }
 }
