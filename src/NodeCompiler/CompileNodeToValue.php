@@ -3,6 +3,7 @@
 namespace BetterReflection\NodeCompiler;
 
 use PhpParser\Node;
+use PhpParser\PrettyPrinter\Standard as Printer;
 
 class CompileNodeToValue
 {
@@ -15,17 +16,8 @@ class CompileNodeToValue
      */
     public function __invoke(Node $node)
     {
-        if ($node instanceof Node\Scalar) {
-            return $this->compileScalar($node);
-        }
-
-        // common edge case - negative numbers
-        if ($node instanceof Node\Expr\UnaryMinus) {
-            return $this->__invoke($node->expr) * -1;
-        }
-
-        if ($node instanceof Node\Expr\Array_) {
-            return $this->compileArray($node);
+        if (!$this->isCompilable($node)) {
+            throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
         }
 
         if ($node instanceof Node\Expr\ConstFetch) {
@@ -36,36 +28,22 @@ class CompileNodeToValue
             return $this->compileClassConstFetch($node);
         }
 
-        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
+        $printer = new Printer();
+        $code = $printer->prettyPrint([$node]);
+
+        eval('$x = ' . $code);
+        return $x;
     }
 
-    /**
-     * @param Node\Scalar\String_|Node\Scalar\DNumber|Node\Scalar\LNumber|Node\Scalar $node
-     * @return string|int|float
-     */
-    private function compileScalar($node)
+    private function isCompilable(Node $node)
     {
-        return $node->value;
-    }
-
-    /**
-     * @param Node\Expr\Array_ $node
-     * @return array
-     */
-    private function compileArray(Node\Expr\Array_ $node)
-    {
-        $compiledArray = [];
-        foreach ($node->items as $arrayItem) {
-            $compiledValue = $this->__invoke($arrayItem->value);
-
-            if (null == $arrayItem->key) {
-                $compiledArray[] = $compiledValue;
-                continue;
-            }
-
-            $compiledArray[$this->__invoke($arrayItem->key)] = $compiledValue;
+        if ($node instanceof Node\Expr\Yield_
+            || $node instanceof Node\Stmt\ClassLike) {
+            /* @todo add more */
+            return false;
         }
-        return $compiledArray;
+
+        return true;
     }
 
     /**

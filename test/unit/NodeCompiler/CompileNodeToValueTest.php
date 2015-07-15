@@ -29,6 +29,12 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             ['["foo" => "bar"]', ['foo' => 'bar']],
             ['-1', -1],
             ['-123.456', -123.456],
+            ['2 * 3', 6],
+            ['2 + 2 * 3', 8],
+            ['2 + (2 * 3)', 8],
+            ['(2 + 2) * 3', 12],
+            ['5 - 2', 3],
+            ['8 / 2', 4],
         ];
     }
 
