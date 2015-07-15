@@ -23,6 +23,10 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             ['[]', []],
             ['false', false],
             ['true', true],
+            ['[1,2,3]', [1, 2, 3]],
+            ['["foo","bar"]', ['foo', 'bar']],
+            ['[1 => "foo", 2 => "bar"]', [1 => 'foo', 2 => 'bar']],
+            ['["foo" => "bar"]', ['foo' => 'bar']],
         ];
     }
 

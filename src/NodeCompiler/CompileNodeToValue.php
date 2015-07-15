@@ -22,9 +22,18 @@ class CompileNodeToValue
         }
 
         if ($node instanceof Node\Expr\Array_) {
-            // @todo compile expression
-            /* @see https://github.com/Roave/BetterReflection/issues/51 */
-            return [];
+            $compiledArray = [];
+            foreach ($node->items as $arrayItem) {
+                $compiledValue = $this->__invoke($arrayItem->value);
+
+                if (null == $arrayItem->key) {
+                    $compiledArray[] = $compiledValue;
+                    continue;
+                }
+
+                $compiledArray[$this->__invoke($arrayItem->key)] = $compiledValue;
+            }
+            return $compiledArray;
         }
 
         if ($node instanceof Node\Expr\ConstFetch) {
