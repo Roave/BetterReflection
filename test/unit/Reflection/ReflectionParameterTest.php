@@ -2,7 +2,9 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\FunctionReflector;
 use phpDocumentor\Reflection\Types;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
@@ -21,6 +23,12 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         global $loader;
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
+    }
+
+    public function testExportThrowsException()
+    {
+        $this->setExpectedException(\Exception::class);
+        ReflectionParameter::export();
     }
 
     /**
@@ -57,6 +65,19 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedValue, $actualValue);
     }
 
+    public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException()
+    {
+        $content = "<?php class Foo { public function myMethod(\$var) {} }";
+
+        $reflector = new ClassReflector(new StringSourceLocator($content));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+        $paramInfo = $methodInfo->getParameter('var');
+
+        $this->setExpectedException(\LogicException::class, 'This parameter does not have a default value available');
+        $paramInfo->getDefaultValue();
+    }
+
     public function testGetDocBlockTypeStrings()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -70,6 +91,24 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
     }
 
+    public function testGetDocBlockTypes()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+
+        $method = $classInfo->getMethod('methodWithParameters');
+
+        $param1 = $method->getParameter('parameter1');
+        $param1Types = $param1->getDocBlockTypes();
+        $this->assertCount(1, $param1Types);
+        $this->assertInstanceOf(Types\String_::class, $param1Types[0]);
+
+        $param2 = $method->getParameter('parameter2');
+        $param2Types = $param2->getDocBlockTypes();
+        $this->assertCount(2, $param2Types);
+        $this->assertInstanceOf(Types\Integer::class, $param2Types[0]);
+        $this->assertInstanceOf(Types\Float_::class, $param2Types[1]);
+    }
+
     public function testStringCast()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
@@ -79,7 +118,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
 
         $optionalParam = $method->getParameter('optionalParameter');
-        $this->assertSame('Parameter #1 [ <optional> $optionalParameter = null ]', (string)$optionalParam);
+        $this->assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string)$optionalParam);
     }
 
     public function testGetPosition()
@@ -222,9 +261,6 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithConstAsDefault');
 
-        $intDefault = $method->getParameter('intDefault');
-        $this->assertFalse($intDefault->isDefaultValueConstant());
-
         $constDefault = $method->getParameter('constDefault');
         $this->assertTrue($constDefault->isDefaultValueConstant());
         $this->assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
@@ -232,5 +268,75 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $definedDefault = $method->getParameter('definedDefault');
         $this->assertTrue($definedDefault->isDefaultValueConstant());
         $this->assertSame('SOME_DEFINED_VALUE', $definedDefault->getDefaultValueConstantName());
+
+        $intDefault = $method->getParameter('intDefault');
+        $this->assertFalse($intDefault->isDefaultValueConstant());
+
+        $this->setExpectedException(\LogicException::class, 'This parameter is not a constant default value, so cannot have a constant name');
+        $intDefault->getDefaultValueConstantName();
+    }
+
+    public function testGetDeclaringFunction()
+    {
+        $content = "<?php class Foo { public function myMethod(\$var = 123) {} }";
+
+        $reflector = new ClassReflector(new StringSourceLocator($content));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+        $paramInfo = $methodInfo->getParameter('var');
+
+        $this->assertSame($methodInfo, $paramInfo->getDeclaringFunction());
+    }
+
+    public function testGetDeclaringClassForMethod()
+    {
+        $content = "<?php class Foo { public function myMethod(\$var = 123) {} }";
+
+        $reflector = new ClassReflector(new StringSourceLocator($content));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+        $paramInfo = $methodInfo->getParameter('var');
+
+        $this->assertSame($classInfo, $paramInfo->getDeclaringClass());
+    }
+
+    public function testGetDeclaringClassForFunctionReturnsNull()
+    {
+        $content = "<?php function myMethod(\$var = 123) {}";
+
+        $reflector = new FunctionReflector(new StringSourceLocator($content));
+        $functionInfo = $reflector->reflect('myMethod');
+        $paramInfo = $functionInfo->getParameter('var');
+
+        $this->assertNull($paramInfo->getDeclaringClass());
+    }
+
+    public function defaultValueStringProvider()
+    {
+        return [
+            ['123', '123'],
+            ['12.3', '12.300000000000001'], // Oh, yes, because PHP.
+            ['true', 'true'],
+            ['false', 'false'],
+            ['null', 'NULL'],
+            ['[]', "array (\n)"],
+            ['[1, 2, 3]', "array (\n  0 => 1,\n  1 => 2,\n  2 => 3,\n)"],
+            ['"foo"', "'foo'"],
+        ];
+    }
+
+    /**
+     * @param string $defaultValue
+     * @dataProvider defaultValueStringProvider
+     */
+    public function testGetDefaultValueAsString($defaultValue, $expectedValue)
+    {
+        $content = "<?php function myMethod(\$var = $defaultValue) {}";
+
+        $reflector = new FunctionReflector(new StringSourceLocator($content));
+        $functionInfo = $reflector->reflect('myMethod');
+        $paramInfo = $functionInfo->getParameter('var');
+
+        $this->assertSame($expectedValue, $paramInfo->getDefaultValueAsString());
     }
 }

@@ -7,6 +7,7 @@ use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use ClassWithNoNamespace;
 use Composer\Autoload\ClassLoader;
+use LogicException;
 use UnexpectedValueException;
 
 /**
@@ -63,6 +64,20 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $locator->__invoke(new Identifier(
             $className,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        ));
+    }
+
+    public function testInvokeThrowsExceptionWhenTryingToLocateFunction()
+    {
+        $loader = $this->getMock(ClassLoader::class);
+
+        /** @var ClassLoader $loader */
+        $locator = new ComposerSourceLocator($loader);
+
+        $this->setExpectedException(LogicException::class);
+        $locator->__invoke(new Identifier(
+            'foo',
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         ));
     }
 }
