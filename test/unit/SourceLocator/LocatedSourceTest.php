@@ -73,4 +73,22 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(InvalidFileLocation::class, 'Is not a file');
         new LocatedSource('<?php', __DIR__);
     }
+
+    public function testConstructorThrowsExceptionIfFileIsNotReadable()
+    {
+        $file = __DIR__ . '/../Fixture/NoNamespace.php';
+
+        $originalPermission = fileperms($file);
+        chmod($file, 0000);
+
+        $this->setExpectedException(InvalidFileLocation::class, 'File is not readable');
+
+        try {
+            new LocatedSource('<?php', $file);
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            chmod($file, $originalPermission);
+        }
+    }
 }

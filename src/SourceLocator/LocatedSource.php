@@ -40,6 +40,10 @@ class LocatedSource
                 throw new Exception\InvalidFileLocation('File does not exist');
             }
 
+            if (!is_readable($filename)) {
+                throw new Exception\InvalidFileLocation('File is not readable');
+            }
+
             if (!is_file($filename)) {
                 throw new Exception\InvalidFileLocation('Is not a file: ' . $filename);
             }
