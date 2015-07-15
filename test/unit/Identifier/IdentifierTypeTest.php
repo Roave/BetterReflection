@@ -4,6 +4,7 @@ namespace BetterReflectionTest\Identifier;
 
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\Reflection\ReflectionFunction;
 use InvalidArgumentException;
 
 /**
@@ -40,15 +41,26 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
         new IdentifierType('foo');
     }
 
-    public function testIsMatchingReflector()
+    public function testIsMatchingReflectorClass()
     {
         $reflectionClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+        $type = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        $this->assertTrue($classType->isMatchingReflector($reflectionClass));
+        $this->assertTrue($type->isMatchingReflector($reflectionClass));
+    }
+
+    public function testIsMatchingReflectorFunction()
+    {
+        $reflectionFunction = $this->getMockBuilder(ReflectionFunction::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $type = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
+
+        $this->assertTrue($type->isMatchingReflector($reflectionFunction));
     }
 
     public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid()
@@ -67,5 +79,21 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->assertFalse($classType->isMatchingReflector($reflectionClass));
+    }
+
+    public function testIsTypesForClass()
+    {
+        $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+
+        $this->assertTrue($classType->isClass());
+        $this->assertFalse($classType->isFunction());
+    }
+
+    public function testIsTypesForFunction()
+    {
+        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
+
+        $this->assertFalse($functionType->isClass());
+        $this->assertTrue($functionType->isFunction());
     }
 }
