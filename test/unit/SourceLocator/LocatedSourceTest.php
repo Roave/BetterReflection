@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\SourceLocator;
 
+use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use BetterReflection\SourceLocator\LocatedSource;
 use InvalidArgumentException;
 
@@ -13,7 +14,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     public function testValuesHappyPath()
     {
         $source = '<?php echo "Hello world";';
-        $file = 'path/to/file.php';
+        $file = __DIR__ . '/../Fixture/NoNamespace.php';
         $locatedSource = new LocatedSource($source, $file);
 
         $this->assertSame($source, $locatedSource->getSource());
@@ -53,5 +54,23 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException($expectedException, $expectedMessage);
         new LocatedSource($source, $file);
+    }
+
+    public function testConstructorThrowsExceptionIfEmptyFileGiven()
+    {
+        $this->setExpectedException(InvalidFileLocation::class, 'Filename was empty');
+        new LocatedSource('<?php', '');
+    }
+
+    public function testConstructorThrowsExceptionIfFileDoesNotExist()
+    {
+        $this->setExpectedException(InvalidFileLocation::class, 'File does not exist');
+        new LocatedSource('<?php', 'sdklfjdfslsdfhlkjsdglkjsdflgkj');
+    }
+
+    public function testConstructorThrowsExceptionIfFileIsNotAFile()
+    {
+        $this->setExpectedException(InvalidFileLocation::class, 'Is not a file');
+        new LocatedSource('<?php', __DIR__);
     }
 }

@@ -31,6 +31,20 @@ class LocatedSource
             );
         }
 
+        if (null !== $filename) {
+            if (empty($filename)) {
+                throw new Exception\InvalidFileLocation('Filename was empty');
+            }
+
+            if (!file_exists($filename)) {
+                throw new Exception\InvalidFileLocation('File does not exist');
+            }
+
+            if (!is_file($filename)) {
+                throw new Exception\InvalidFileLocation('Is not a file: ' . $filename);
+            }
+        }
+
         $this->source = $source;
         $this->filename = $filename;
     }
