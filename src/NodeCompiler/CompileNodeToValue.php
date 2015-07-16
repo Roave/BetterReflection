@@ -32,18 +32,22 @@ class CompileNodeToValue
         $code = $printer->prettyPrint([$node]);
 
         eval('$x = ' . $code);
+        /* @var mixed $x */
         return $x;
     }
 
     private function isCompilable(Node $node)
     {
-        if ($node instanceof Node\Expr\Yield_
-            || $node instanceof Node\Stmt\ClassLike) {
+        if ($node instanceof Node\Expr\BinaryOp
+            || $node instanceof Node\Scalar
+            || $node instanceof Node\Expr\Array_
+            || $node instanceof Node\Expr\ConstFetch
+            || $node instanceof Node\Expr\ClassConstFetch) {
             /* @todo add more */
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

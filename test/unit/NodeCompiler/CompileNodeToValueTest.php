@@ -60,4 +60,21 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         );
         (new CompileNodeToValue())->__invoke(new Yield_());
     }
+
+    public function testClassConstantUsedAsDefaultValue()
+    {
+        $php = '<?php
+            class MyClass {
+                const FOO = 123;
+
+                public function bar($baz = self::FOO);
+            }
+        ';
+
+        $tree = (new Parser(new Lexer))->parse($php);
+
+        $actualValue = (new CompileNodeToValue())
+            ->__invoke($tree[0]->stmts[1]->params[0]->default);
+        $this->assertSame(123, $actualValue);
+    }
 }
