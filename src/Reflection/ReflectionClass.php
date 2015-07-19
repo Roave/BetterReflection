@@ -4,6 +4,7 @@ namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
 use BetterReflection\Reflection\Exception\NoParent;
+use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
@@ -660,6 +661,32 @@ class ReflectionClass implements Reflection
             },
             $this->getInterfaces($sourceLocator)
         ));
+    }
+
+    /**
+     * Checks whether the given object is an instance
+     *
+     * @link http://php.net/manual/en/reflectionclass.isinstance.php
+     *
+     * @param object $object
+     *
+     * @throws
+     *
+     * @return bool
+     *
+     * @throws NotAnObject
+     */
+    public function isInstance($object)
+    {
+        if (! is_object($object)) {
+            throw NotAnObject::fromNonObject($object);
+        }
+
+        $className = $this->getName();
+
+        // note: since $object was loaded, we can safely assume that $className is available in the current
+        //       php script execution context
+        return $object instanceof $className;
     }
 
     /**
