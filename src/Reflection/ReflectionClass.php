@@ -628,13 +628,13 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfaces.php
      *
-     * @param SourceLocator|null $sourceLocator a source locator - if none is provided, an autoloader-based locator
-     *                                          will be used
+     * @param SourceLocator $sourceLocator a source locator - if none is provided, an autoloader-based locator
+     *                                     will be used
      *
      * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
      *                           values as {@see ReflectionClass} objects.
      */
-    public function getInterfaces(SourceLocator $sourceLocator = null)
+    public function getInterfaces(SourceLocator $sourceLocator)
     {
         return array_merge(...array_map(
             function (self $reflectionClass) use ($sourceLocator) {
@@ -649,12 +649,12 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
-     * @param SourceLocator|null $sourceLocator a source locator - if none is provided, an autoloader-based locator
-     *                                          will be used
+     * @param SourceLocator $sourceLocator a source locator - if none is provided, an autoloader-based locator
+     *                                     will be used
      *
      * @return string[] A numerical array with interface names as the values.
      */
-    public function getInterfaceNames(SourceLocator $sourceLocator = null)
+    public function getInterfaceNames(SourceLocator $sourceLocator)
     {
         return array_values(array_map(
             function (self $interface) {
