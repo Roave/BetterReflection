@@ -406,8 +406,27 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
                 \E::class,
             ],
             (new ClassReflector($sourceLocator))
-            ->reflect(ClassWithInterfaces\ExampleClass::class)
-            ->getInterfaceNames($sourceLocator)
+                ->reflect(ClassWithInterfaces\ExampleClass::class)
+                ->getInterfaceNames($sourceLocator)
+        );
+    }
+
+
+    public function testGetInterfaceNamesWillReturnAllInheritedInterfaceImplementationsOnASubclass()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+
+        $this->assertSame(
+            [
+                ClassWithInterfaces\A::class,
+                ClassWithInterfacesOther\B::class,
+                ClassWithInterfaces\C::class,
+                ClassWithInterfacesOther\D::class,
+                \E::class,
+            ],
+            (new ClassReflector($sourceLocator))
+                ->reflect(ClassWithInterfaces\SubExampleClass::class)
+                ->getInterfaceNames($sourceLocator)
         );
     }
 }
