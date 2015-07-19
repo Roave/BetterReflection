@@ -476,4 +476,25 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
         }
     }
+
+    public function testGetInterfaceNamesWillConsiderMultipleInheritanceLevelsAndImplementsOrderOverrides()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+
+        $this->assertSame(
+            [
+
+                ClassWithInterfaces\A::class,
+                ClassWithInterfacesOther\B::class,
+                ClassWithInterfaces\C::class,
+                ClassWithInterfacesOther\D::class,
+                \E::class,
+                ClassWithInterfaces\B::class,
+            ],
+            (new ClassReflector($sourceLocator))
+                ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
+                ->getInterfaceNames($sourceLocator),
+            'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
+        );
+    }
 }
