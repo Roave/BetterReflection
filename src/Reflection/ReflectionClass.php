@@ -5,6 +5,7 @@ namespace BetterReflection\Reflection;
 use BetterReflection\NodeCompiler\CompileNodeToValue;
 use BetterReflection\Reflection\Exception\NoParent;
 use BetterReflection\Reflection\Exception\NotAnObject;
+use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
@@ -700,8 +701,7 @@ class ReflectionClass implements Reflection
     public function isSubclassOf($className, SourceLocator $sourceLocator)
     {
         if (! is_string($className)) {
-            // @todo throw an exception if not a string
-            //throw NotAnObject::fromNonObject($object);
+            throw NotAString::fromNonString($className);
         }
 
         return in_array(
