@@ -11,6 +11,8 @@ use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflectionTest\ClassWithInterfaces;
+use BetterReflectionTest\ClassWithInterfacesOther;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -384,11 +386,26 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector($sourceLocator);
 
         $classInfo = $reflector->reflect('TraitFixtureC');
-        $traitAliases = $classInfo->getTraitAliases();
 
         $this->assertSame([
             'a_protected' => 'TraitFixtureTraitC::a',
             'b_renamed' => 'TraitFixtureTraitC::b',
         ], $classInfo->getTraitAliases());
+    }
+
+    public function testGetInterfaceNames()
+    {
+        $this->assertSame(
+            [
+                ClassWithInterfaces\A::class,
+                ClassWithInterfacesOther\A::class,
+                ClassWithInterfaces\C::class,
+                ClassWithInterfacesOther\D::class,
+                \E::class,
+            ],
+            (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php')))
+            ->reflect(ClassWithInterfaces\ExampleClass::class)
+            ->getInterfaceNames()
+        );
     }
 }
