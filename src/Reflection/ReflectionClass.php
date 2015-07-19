@@ -670,8 +670,6 @@ class ReflectionClass implements Reflection
      *
      * @param object $object
      *
-     * @throws
-     *
      * @return bool
      *
      * @throws NotAnObject
