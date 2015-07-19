@@ -14,6 +14,7 @@ namespace BetterReflectionTest\ClassWithInterfaces {
     interface C {}
 
     class SubExampleClass extends ExampleClass {}
+    class SubSubExampleClass extends SubExampleClass implements ImportedB, B {}
 }
 
 namespace BetterReflectionTest\ClassWithInterfacesOther {
