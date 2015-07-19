@@ -374,10 +374,7 @@ class ReflectionClass implements Reflection
     public function getParentClass(SourceLocator $sourceLocator = null)
     {
         if (null === $this->extendsClassType) {
-            throw new NoParent(sprintf(
-                'Class %s does not have a defined parent class',
-                $this->getName()
-            ));
+            return null;
         }
 
         $fqsen = $this->extendsClassType->__toString();
@@ -637,12 +634,12 @@ class ReflectionClass implements Reflection
      */
     public function getInterfaces(SourceLocator $sourceLocator = null)
     {
-        return array_map(
-            function (Node\Name $interfaceName) use ($sourceLocator) {
-                return $this->reflectClassForNamedNode($interfaceName, $sourceLocator);
+        return array_merge(...array_map(
+            function (self $reflectionClass) use ($sourceLocator) {
+                return $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName($sourceLocator);
             },
-            $this->node instanceof ClassNode ? $this->node->implements : []
-        );
+            $this->getInheritanceClassHierarchy($sourceLocator)
+        ));
     }
 
     /**
@@ -666,12 +663,38 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * @param SourceLocator $sourceLocator
+     *
+     * @return ReflectionClass[] indexed by interface name
+     */
+    private function getCurrentClassImplementedInterfacesIndexedByName(SourceLocator $sourceLocator)
+    {
+        /* @var $interfaces ReflectionClass[] */
+        $interfaces = array_map(
+            function (Node\Name $interfaceName) use ($sourceLocator) {
+                return $this->reflectClassForNamedNode($interfaceName, $sourceLocator);
+            },
+            $this->node instanceof ClassNode ? $this->node->implements : []
+        );
+
+        $interfacesByName = [];
+
+        foreach ($interfaces as $interface) {
+            $interfacesByName[$interface->getName()] = $interface;
+        }
+
+        return $interfacesByName;
+    }
+
+    /**
      * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
      */
     private function getInheritanceClassHierarchy(SourceLocator $sourceLocator)
     {
         $parentClass = $this->getParentClass($sourceLocator);
 
-        return $parentClass ? [$this] : array_merge($parentClass->getInheritanceClassHierarchy(), [$this]);
+        return $parentClass
+            ? array_merge($parentClass->getInheritanceClassHierarchy($sourceLocator), [$this])
+            : [$this];
     }
 }
