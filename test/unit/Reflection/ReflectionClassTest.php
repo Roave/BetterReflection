@@ -452,4 +452,28 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
         );
     }
+
+    public function testGetInterfacesWillReturnAllInheritedInterfaceImplementationsOnASubclass()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $interfaces    = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\SubExampleClass::class)
+            ->getInterfaces($sourceLocator);
+
+        $expectedInterfaces = [
+            ClassWithInterfaces\A::class,
+            ClassWithInterfacesOther\B::class,
+            ClassWithInterfaces\C::class,
+            ClassWithInterfacesOther\D::class,
+            \E::class,
+        ];
+
+        $this->assertCount(count($expectedInterfaces), $interfaces);
+
+        foreach ($expectedInterfaces as $expectedInterface) {
+            $this->assertArrayHasKey($expectedInterface, $interfaces);
+            $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
+            $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
+        }
+    }
 }
