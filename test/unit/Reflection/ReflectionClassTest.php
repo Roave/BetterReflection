@@ -539,4 +539,37 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class->isInstance('foo');
     }
+
+    public function testIsSubclassOf()
+    {
+        $sourceLocator   = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $subExampleClass = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\SubExampleClass::class);
+
+        $this->assertFalse($subExampleClass->isSubclassOf(
+            ClassWithInterfaces\SubExampleClass::class,
+            $sourceLocator,
+            'Not a subclass of itself'
+        ));
+        $this->assertFalse($subExampleClass->isSubclassOf(
+            ClassWithInterfaces\SubSubExampleClass::class,
+            $sourceLocator,
+            'Not a subclass of a child class'
+        ));
+        $this->assertFalse($subExampleClass->isSubclassOf(
+            \stdClass::class,
+            $sourceLocator,
+            'Not a subclass of a unrelated'
+        ));
+        $this->assertTrue($subExampleClass->isSubclassOf(
+            ClassWithInterfaces\ExampleClass::class,
+            $sourceLocator,
+            'A subclass of a parent class'
+        ));
+        $this->assertTrue($subExampleClass->isSubclassOf(
+            '\\' . ClassWithInterfaces\ExampleClass::class,
+            $sourceLocator,
+            'A subclass of a parent class (considering eventual backslashes upfront)'
+        ));
+    }
 }
