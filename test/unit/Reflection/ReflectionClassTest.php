@@ -3,6 +3,7 @@
 namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\Exception\NotAnObject;
+use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflection\ReflectionProperty;
@@ -571,5 +572,9 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             $sourceLocator,
             'A subclass of a parent class (considering eventual backslashes upfront)'
         ));
+
+        $this->setExpectedException(NotAString::class);
+
+        $subExampleClass->isSubclassOf($this, $sourceLocator);
     }
 }
