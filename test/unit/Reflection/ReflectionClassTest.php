@@ -162,8 +162,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
 
-        $this->setExpectedException(NoParent::class);
-        $reflection->getParentClass();
+        $this->assertNull($reflection->getParentClass());
     }
 
     public function testGetParentClassWithSpecificSourceLocator()
