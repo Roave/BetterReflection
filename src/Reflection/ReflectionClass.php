@@ -31,7 +31,7 @@ class ReflectionClass implements Reflection
     /**
      * @var NamespaceNode
      */
-    private $declaringNamespace = null;
+    private $declaringNamespace;
 
     /**
      * @var ReflectionMethod[]
