@@ -395,6 +395,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInterfaceNames()
     {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+
         $this->assertSame(
             [
                 ClassWithInterfaces\A::class,
@@ -403,9 +405,9 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
                 ClassWithInterfacesOther\D::class,
                 \E::class,
             ],
-            (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php')))
+            (new ClassReflector($sourceLocator))
             ->reflect(ClassWithInterfaces\ExampleClass::class)
-            ->getInterfaceNames()
+            ->getInterfaceNames($sourceLocator)
         );
     }
 }
