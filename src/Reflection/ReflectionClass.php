@@ -664,4 +664,14 @@ class ReflectionClass implements Reflection
             $this->getInterfaces($sourceLocator)
         ));
     }
+
+    /**
+     * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
+     */
+    private function getInheritanceClassHierarchy(SourceLocator $sourceLocator)
+    {
+        $parentClass = $this->getParentClass($sourceLocator);
+
+        return $parentClass ? [$this] : array_merge($parentClass->getInheritanceClassHierarchy(), [$this]);
+    }
 }
