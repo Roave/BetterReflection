@@ -655,7 +655,7 @@ class ReflectionClass implements Reflection
      *
      * @return string[] A numerical array with interface names as the values.
      */
-    public function getInterfaceNames (SourceLocator $sourceLocator = null)
+    public function getInterfaceNames(SourceLocator $sourceLocator = null)
     {
         return array_values(array_map(
             function (self $interface) {
