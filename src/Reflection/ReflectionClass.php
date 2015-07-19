@@ -31,7 +31,7 @@ class ReflectionClass implements Reflection
     /**
      * @var NamespaceNode
      */
-    private $declaringNamespace = null;
+    private $declaringNamespace;
 
     /**
      * @var ReflectionMethod[]
@@ -374,10 +374,7 @@ class ReflectionClass implements Reflection
     public function getParentClass(SourceLocator $sourceLocator = null)
     {
         if (null === $this->extendsClassType) {
-            throw new NoParent(sprintf(
-                'Class %s does not have a defined parent class',
-                $this->getName()
-            ));
+            return null;
         }
 
         $fqsen = $this->extendsClassType->__toString();
@@ -622,5 +619,82 @@ class ReflectionClass implements Reflection
         }
 
         return $resolvedAliases;
+    }
+
+    /**
+     * Gets the interfaces
+     *
+     * @link http://php.net/manual/en/reflectionclass.getinterfaces.php
+     *
+     * @param SourceLocator|null $sourceLocator a source locator - if none is provided, an autoloader-based locator
+     *                                          will be used
+     *
+     * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
+     *                           values as {@see ReflectionClass} objects.
+     */
+    public function getInterfaces(SourceLocator $sourceLocator = null)
+    {
+        return array_merge(...array_map(
+            function (self $reflectionClass) use ($sourceLocator) {
+                return $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName($sourceLocator);
+            },
+            $this->getInheritanceClassHierarchy($sourceLocator)
+        ));
+    }
+
+    /**
+     * Gets the interface names
+     *
+     * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php
+     *
+     * @param SourceLocator|null $sourceLocator a source locator - if none is provided, an autoloader-based locator
+     *                                          will be used
+     *
+     * @return string[] A numerical array with interface names as the values.
+     */
+    public function getInterfaceNames(SourceLocator $sourceLocator = null)
+    {
+        return array_values(array_map(
+            function (self $interface) {
+                return $interface->getName();
+            },
+            $this->getInterfaces($sourceLocator)
+        ));
+    }
+
+    /**
+     * @param SourceLocator $sourceLocator
+     *
+     * @return ReflectionClass[] indexed by interface name
+     */
+    private function getCurrentClassImplementedInterfacesIndexedByName(SourceLocator $sourceLocator)
+    {
+        /* @var $interfaces ReflectionClass[] */
+        $interfaces = array_map(
+            function (Node\Name $interfaceName) use ($sourceLocator) {
+                return $this->reflectClassForNamedNode($interfaceName, $sourceLocator);
+            },
+            $this->node instanceof ClassNode ? $this->node->implements : []
+        );
+
+        $interfacesByName = [];
+
+        foreach ($interfaces as $interface) {
+            $interfacesByName[$interface->getName()] = $interface;
+        }
+
+        return $interfacesByName;
+    }
+
+    /**
+     * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
+     */
+    private function getInheritanceClassHierarchy(SourceLocator $sourceLocator)
+    {
+        $parentClass = $this->getParentClass($sourceLocator);
+
+        return $parentClass
+            ? array_merge($parentClass->getInheritanceClassHierarchy($sourceLocator), [$this])
+            : [$this];
     }
 }

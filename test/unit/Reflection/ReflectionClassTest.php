@@ -2,15 +2,16 @@
 
 namespace BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Exception\NoParent;
 use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflection\ReflectionMethod;
+use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflectionTest\ClassWithInterfaces;
+use BetterReflectionTest\ClassWithInterfacesOther;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -160,8 +161,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
 
-        $this->setExpectedException(NoParent::class);
-        $reflection->getParentClass();
+        $this->assertNull($reflection->getParentClass());
     }
 
     public function testGetParentClassWithSpecificSourceLocator()
@@ -384,11 +384,142 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector($sourceLocator);
 
         $classInfo = $reflector->reflect('TraitFixtureC');
-        $traitAliases = $classInfo->getTraitAliases();
 
         $this->assertSame([
             'a_protected' => 'TraitFixtureTraitC::a',
             'b_renamed' => 'TraitFixtureTraitC::b',
         ], $classInfo->getTraitAliases());
+    }
+
+    public function testGetInterfaceNames()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+
+        $this->assertSame(
+            [
+                ClassWithInterfaces\A::class,
+                ClassWithInterfacesOther\B::class,
+                ClassWithInterfaces\C::class,
+                ClassWithInterfacesOther\D::class,
+                \E::class,
+            ],
+            (new ClassReflector($sourceLocator))
+                ->reflect(ClassWithInterfaces\ExampleClass::class)
+                ->getInterfaceNames($sourceLocator),
+            'Interfaces are retrieved in the correct numeric order (indexed by number)'
+        );
+    }
+
+    public function testGetInterfaces()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $interfaces    = (new ClassReflector($sourceLocator))
+                ->reflect(ClassWithInterfaces\ExampleClass::class)
+                ->getInterfaces($sourceLocator);
+
+        $expectedInterfaces = [
+            ClassWithInterfaces\A::class,
+            ClassWithInterfacesOther\B::class,
+            ClassWithInterfaces\C::class,
+            ClassWithInterfacesOther\D::class,
+            \E::class,
+        ];
+
+        $this->assertCount(count($expectedInterfaces), $interfaces);
+
+        foreach ($expectedInterfaces as $expectedInterface) {
+            $this->assertArrayHasKey($expectedInterface, $interfaces);
+            $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
+            $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
+        }
+    }
+
+    public function testGetInterfaceNamesWillReturnAllInheritedInterfaceImplementationsOnASubclass()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+
+        $this->assertSame(
+            [
+                ClassWithInterfaces\A::class,
+                ClassWithInterfacesOther\B::class,
+                ClassWithInterfaces\C::class,
+                ClassWithInterfacesOther\D::class,
+                \E::class,
+            ],
+            (new ClassReflector($sourceLocator))
+                ->reflect(ClassWithInterfaces\SubExampleClass::class)
+                ->getInterfaceNames($sourceLocator),
+            'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
+        );
+    }
+
+    public function testGetInterfacesWillReturnAllInheritedInterfaceImplementationsOnASubclass()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $interfaces    = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\SubExampleClass::class)
+            ->getInterfaces($sourceLocator);
+
+        $expectedInterfaces = [
+            ClassWithInterfaces\A::class,
+            ClassWithInterfacesOther\B::class,
+            ClassWithInterfaces\C::class,
+            ClassWithInterfacesOther\D::class,
+            \E::class,
+        ];
+
+        $this->assertCount(count($expectedInterfaces), $interfaces);
+
+        foreach ($expectedInterfaces as $expectedInterface) {
+            $this->assertArrayHasKey($expectedInterface, $interfaces);
+            $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
+            $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
+        }
+    }
+
+    public function testGetInterfaceNamesWillConsiderMultipleInheritanceLevelsAndImplementsOrderOverrides()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+
+        $this->assertSame(
+            [
+
+                ClassWithInterfaces\A::class,
+                ClassWithInterfacesOther\B::class,
+                ClassWithInterfaces\C::class,
+                ClassWithInterfacesOther\D::class,
+                \E::class,
+                ClassWithInterfaces\B::class,
+            ],
+            (new ClassReflector($sourceLocator))
+                ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
+                ->getInterfaceNames($sourceLocator),
+            'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
+        );
+    }
+
+    public function testGetInterfacesWillConsiderMultipleInheritanceLevels()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $interfaces    = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
+            ->getInterfaces($sourceLocator);
+
+        $expectedInterfaces = [
+            ClassWithInterfaces\A::class,
+            ClassWithInterfacesOther\B::class,
+            ClassWithInterfaces\C::class,
+            ClassWithInterfacesOther\D::class,
+            \E::class,
+            ClassWithInterfaces\B::class,
+        ];
+
+        $this->assertCount(count($expectedInterfaces), $interfaces);
+
+        foreach ($expectedInterfaces as $expectedInterface) {
+            $this->assertArrayHasKey($expectedInterface, $interfaces);
+            $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
+            $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
+        }
     }
 }
