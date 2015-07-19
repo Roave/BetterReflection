@@ -212,7 +212,7 @@ class ReflectionClass implements Reflection
     /**
      * Does the class have the specified method method?
      *
-     * @param $methodName
+     * @param string $methodName
      * @return bool
      */
     public function hasMethod($methodName)
@@ -255,7 +255,7 @@ class ReflectionClass implements Reflection
     /**
      * Does this class have the specified constant?
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
     public function hasConstant($name)
@@ -303,7 +303,7 @@ class ReflectionClass implements Reflection
     /**
      * Does this class have the specified property?
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
     public function hasProperty($name)
