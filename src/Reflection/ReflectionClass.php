@@ -623,4 +623,45 @@ class ReflectionClass implements Reflection
 
         return $resolvedAliases;
     }
+
+    /**
+     * Gets the interfaces
+     *
+     * @link http://php.net/manual/en/reflectionclass.getinterfaces.php
+     *
+     * @param SourceLocator|null $sourceLocator a source locator - if none is provided, an autoloader-based locator
+     *                                          will be used
+     *
+     * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
+     *                           values as {@see ReflectionClass} objects.
+     */
+    public function getInterfaces(SourceLocator $sourceLocator = null)
+    {
+        return array_map(
+            function (Node\Name $interfaceName) use ($sourceLocator) {
+                return $this->reflectClassForNamedNode($interfaceName, $sourceLocator);
+            },
+            $this->node instanceof ClassNode ? $this->node->implements : []
+        );
+    }
+
+    /**
+     * Gets the interface names
+     *
+     * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php
+     *
+     * @param SourceLocator|null $sourceLocator a source locator - if none is provided, an autoloader-based locator
+     *                                          will be used
+     *
+     * @return string[] A numerical array with interface names as the values.
+     */
+    public function getInterfaceNames (SourceLocator $sourceLocator = null)
+    {
+        return array_values(array_map(
+            function (self $interface) {
+                return $interface->getName();
+            },
+            $this->getInterfaces($sourceLocator)
+        ));
+    }
 }
