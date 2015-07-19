@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflection\ReflectionProperty;
@@ -12,6 +13,7 @@ use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflectionTest\ClassWithInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
+use BetterReflectionTest\Fixture\ClassForHinting;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -521,5 +523,20 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
             $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
         }
+    }
+
+    public function testIsInstance()
+    {
+        // note: ClassForHinting is safe to type-check against, as it will actually be loaded at runtime
+        $class = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassForHinting.php')))
+            ->reflect(ClassForHinting::class);
+
+        $this->assertFalse($class->isInstance(new \stdClass()));
+        $this->assertFalse($class->isInstance($this));
+        $this->assertTrue($class->isInstance(new ClassForHinting()));
+
+        $this->setExpectedException(NotAnObject::class);
+
+        $class->isInstance('foo');
     }
 }
