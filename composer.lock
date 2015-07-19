@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f67df423b712b0d5ffe903c55bfaef1e",
+    "hash": "adff438cea0b94105ee46e3611c7af34",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -156,16 +156,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "dev-ignore-class-trait-usage",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/asgrim/TypeResolver.git",
-                "reference": "0c11dd904d5caa4a3e889bb54d0b31d1ef314189"
+                "url": "https://github.com/phpDocumentor/TypeResolver.git",
+                "reference": "83e31258fb03b9a27884a83b81501cb4cb297a81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asgrim/TypeResolver/zipball/0c11dd904d5caa4a3e889bb54d0b31d1ef314189",
-                "reference": "0c11dd904d5caa4a3e889bb54d0b31d1ef314189",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/83e31258fb03b9a27884a83b81501cb4cb297a81",
+                "reference": "83e31258fb03b9a27884a83b81501cb4cb297a81",
                 "shasum": ""
             },
             "require": {
@@ -189,13 +189,7 @@
                     ]
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "phpDocumentor\\Reflection\\": [
-                        "tests/unit"
-                    ]
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -205,10 +199,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "support": {
-                "source": "https://github.com/asgrim/TypeResolver/tree/ignore-class-trait-usage"
-            },
-            "time": "2015-07-14 18:26:42"
+            "time": "2015-07-18 13:58:32"
         }
     ],
     "packages-dev": [
