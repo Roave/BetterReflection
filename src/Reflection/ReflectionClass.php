@@ -688,6 +688,35 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Checks whether the given object is an instance
+     *
+     * @link http://php.net/manual/en/reflectionclass.isinstance.php
+     *
+     * @param string        $className
+     * @param SourceLocator $sourceLocator
+     *
+     * @return bool
+     */
+    public function isSubclassOf($className, SourceLocator $sourceLocator)
+    {
+        if (! is_string($className)) {
+            // @todo throw an exception if not a string
+            //throw NotAnObject::fromNonObject($object);
+        }
+
+        return in_array(
+            ltrim($className, '\\'),
+            array_map(
+                function (self $reflectionClass) {
+                    return $reflectionClass->getName();
+                },
+                array_slice(array_reverse($this->getInheritanceClassHierarchy($sourceLocator)), 1)
+            ),
+            true
+        );
+    }
+
+    /**
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] indexed by interface name
