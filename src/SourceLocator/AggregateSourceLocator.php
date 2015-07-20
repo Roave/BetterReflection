@@ -30,7 +30,13 @@ class AggregateSourceLocator implements SourceLocator
     public function __invoke(Identifier $identifier)
     {
         foreach ($this->sourceLocators as $sourceLocator) {
-            yield $sourceLocator->__invoke($identifier);
+            if ($sourceLocator instanceof self) {
+                foreach ($sourceLocator->__invoke($identifier) as $value) {
+                    yield $value;
+                }
+                continue;
+            }
+            yield $sourceLocator($identifier);
         }
     }
 }
