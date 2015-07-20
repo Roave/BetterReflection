@@ -1,6 +1,9 @@
 <?php
 
 namespace BetterReflectionTest\Fixture {
+    /**
+     * Some comments here
+     */
     class ExampleClass
     {
         const MY_CONST_1 = 123;
@@ -30,6 +33,26 @@ namespace BetterReflectionTest\Fixture {
         public function someMethod()
         {
         }
+    }
+
+    class ClassWithParent extends ExampleClass
+    {
+    }
+
+    abstract class AbstractClass
+    {
+    }
+
+    final class FinalClass
+    {
+    }
+
+    trait ExampleTrait
+    {
+    }
+
+    interface ExampleInterface
+    {
     }
 }
 

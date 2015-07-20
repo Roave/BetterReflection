@@ -9,44 +9,44 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getConstant | :heavy_check_mark: Yes |
 | getConstants | :heavy_check_mark: Yes |
 | getConstructor | :heavy_check_mark: Yes |
-| getDefaultProperties | todo |
-| getDocComment | todo |
-| getEndLine | todo |
+| getDefaultProperties | :heavy_check_mark: Yes |
+| getDocComment | :heavy_check_mark: Yes |
+| getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | todo |
 | getInterfaces | todo |
 | getMethod | :heavy_check_mark: Yes |
 | getMethods | :heavy_check_mark: Yes |
-| getModifiers | todo |
+| getModifiers | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | :heavy_check_mark: Yes |
-| getParentClass | todo |
+| getParentClass | :heavy_check_mark: Yes |
 | getProperties | :heavy_check_mark: Yes |
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
-| getStartLine | todo |
+| getStartLine | :heavy_check_mark: Yes |
 | getStaticProperties | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getTraitAliases | todo |
 | getTraitNames | todo |
-| getTraits | todo |
-| hasConstant | todo |
-| hasMethod | todo |
-| hasProperty | todo |
+| getTraits | :heavy_check_mark: Yes |
+| hasConstant | :heavy_check_mark: Yes |
+| hasMethod | :heavy_check_mark: Yes |
+| hasProperty | :heavy_check_mark: Yes |
 | implementsInterface | todo |
 | inNamespace | :heavy_check_mark: Yes |
-| isAbstract | todo |
+| isAbstract | :heavy_check_mark: Yes |
 | isCloneable | todo |
-| isFinal | todo |
+| isFinal | :heavy_check_mark: Yes |
 | isInstance | todo |
 | isInstantiable | todo |
-| isInterface | todo |
-| isInternal | todo |
+| isInterface | :heavy_check_mark: Yes |
+| isInternal | :heavy_check_mark: Yes |
 | isIterateable | todo |
 | isSubclassOf | todo |
-| isTrait | todo |
-| isUserDefined | todo |
+| isTrait | :heavy_check_mark: Yes |
+| isUserDefined | :heavy_check_mark: Yes |
 | newInstance | todo |
 | newInstanceArgs | todo |
 | newInstanceWithoutConstructor | todo |
