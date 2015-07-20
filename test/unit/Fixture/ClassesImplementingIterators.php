@@ -15,4 +15,12 @@ namespace BetterReflectionTest\ClassesImplementingIterators
     class NonTraversableImplementation
     {
     }
+
+    abstract class AbstractTraversableImplementation implements \Traversable
+    {
+    }
+
+    interface TraversableExtension extends \Traversable
+    {
+    }
 }
