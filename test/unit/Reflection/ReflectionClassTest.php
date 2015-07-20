@@ -12,7 +12,6 @@ use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflectionTest\ClassesImplementingIterators;
 use BetterReflectionTest\ClassesWithCloneMethod;
@@ -172,27 +171,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
 
         $this->assertNull($reflection->getParentClass());
-    }
-
-    public function testGetParentClassWithSpecificSourceLocator()
-    {
-        $mockLocator = $this->getMockBuilder(SourceLocator::class)
-            ->setMethods(['__invoke'])
-            ->getMock();
-
-        $mockLocator
-            ->expects($this->once())
-            ->method('__invoke')
-            ->will($this->returnCallback(function ($identifier) {
-                $realLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php');
-                return $realLocator->__invoke($identifier);
-            }));
-
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
-        $childReflection = $reflector->reflect('BetterReflectionTest\Fixture\ClassWithParent');
-
-        $parentReflection = $childReflection->getParentClass($mockLocator);
-        $this->assertSame('ExampleClass', $parentReflection->getShortName());
     }
 
     public function startEndLineProvider()
@@ -358,7 +336,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector($sourceLocator);
 
         $classInfo = $reflector->reflect('TraitFixtureA');
-        $traits = $classInfo->getTraits($sourceLocator);
+        $traits = $classInfo->getTraits();
 
         $this->assertCount(1, $traits);
         $this->assertInstanceOf(ReflectionClass::class, $traits[0]);
@@ -371,7 +349,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector($sourceLocator);
 
         $classInfo = $reflector->reflect('TraitFixtureB');
-        $traits = $classInfo->getTraits($sourceLocator);
+        $traits = $classInfo->getTraits();
 
         $this->assertCount(0, $traits);
     }
@@ -384,7 +362,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             [
                 'TraitFixtureTraitA',
             ],
-            (new ClassReflector($sourceLocator))->reflect('TraitFixtureA')->getTraitNames($sourceLocator)
+            (new ClassReflector($sourceLocator))->reflect('TraitFixtureA')->getTraitNames()
         );
     }
 
@@ -415,7 +393,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ],
             (new ClassReflector($sourceLocator))
                 ->reflect(ClassWithInterfaces\ExampleClass::class)
-                ->getInterfaceNames($sourceLocator),
+                ->getInterfaceNames(),
             'Interfaces are retrieved in the correct numeric order (indexed by number)'
         );
     }
@@ -425,7 +403,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
                 ->reflect(ClassWithInterfaces\ExampleClass::class)
-                ->getInterfaces($sourceLocator);
+                ->getInterfaces();
 
         $expectedInterfaces = [
             ClassWithInterfaces\A::class,
@@ -458,7 +436,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ],
             (new ClassReflector($sourceLocator))
                 ->reflect(ClassWithInterfaces\SubExampleClass::class)
-                ->getInterfaceNames($sourceLocator),
+                ->getInterfaceNames(),
             'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
         );
     }
@@ -468,7 +446,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
             ->reflect(ClassWithInterfaces\SubExampleClass::class)
-            ->getInterfaces($sourceLocator);
+            ->getInterfaces();
 
         $expectedInterfaces = [
             ClassWithInterfaces\A::class,
@@ -502,7 +480,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ],
             (new ClassReflector($sourceLocator))
                 ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
-                ->getInterfaceNames($sourceLocator),
+                ->getInterfaceNames(),
             'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
         );
     }
@@ -512,7 +490,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
             ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
-            ->getInterfaces($sourceLocator);
+            ->getInterfaces();
 
         $expectedInterfaces = [
             ClassWithInterfaces\A::class,
@@ -537,7 +515,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
             ->reflect(ClassWithInterfaces\ExampleImplementingCompositeInterface::class)
-            ->getInterfaces($sourceLocator);
+            ->getInterfaces();
 
         $expectedInterfaces = [
             ClassWithInterfacesExtendingInterfaces\D::class,
@@ -577,29 +555,29 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ->reflect(ClassWithInterfaces\SubExampleClass::class);
 
         $this->assertFalse(
-            $subExampleClass->isSubclassOf(ClassWithInterfaces\SubExampleClass::class, $sourceLocator),
+            $subExampleClass->isSubclassOf(ClassWithInterfaces\SubExampleClass::class),
             'Not a subclass of itself'
         );
         $this->assertFalse(
-            $subExampleClass->isSubclassOf(ClassWithInterfaces\SubSubExampleClass::class, $sourceLocator),
+            $subExampleClass->isSubclassOf(ClassWithInterfaces\SubSubExampleClass::class),
             'Not a subclass of a child class'
         );
         $this->assertFalse(
-            $subExampleClass->isSubclassOf(\stdClass::class, $sourceLocator),
+            $subExampleClass->isSubclassOf(\stdClass::class),
             'Not a subclass of a unrelated'
         );
         $this->assertTrue(
-            $subExampleClass->isSubclassOf(ClassWithInterfaces\ExampleClass::class, $sourceLocator),
+            $subExampleClass->isSubclassOf(ClassWithInterfaces\ExampleClass::class),
             'A subclass of a parent class'
         );
         $this->assertTrue(
-            $subExampleClass->isSubclassOf('\\' . ClassWithInterfaces\ExampleClass::class, $sourceLocator),
+            $subExampleClass->isSubclassOf('\\' . ClassWithInterfaces\ExampleClass::class),
             'A subclass of a parent class (considering eventual backslashes upfront)'
         );
 
         $this->setExpectedException(NotAString::class);
 
-        $subExampleClass->isSubclassOf($this, $sourceLocator);
+        $subExampleClass->isSubclassOf($this);
     }
 
     public function testImplementsInterface()
@@ -608,17 +586,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $subExampleClass = (new ClassReflector($sourceLocator))
             ->reflect(ClassWithInterfaces\SubExampleClass::class);
 
-        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\A::class, $sourceLocator));
-        $this->assertFalse($subExampleClass->implementsInterface(ClassWithInterfaces\B::class, $sourceLocator));
-        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\B::class, $sourceLocator));
-        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\C::class, $sourceLocator));
-        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\D::class, $sourceLocator));
-        $this->assertTrue($subExampleClass->implementsInterface(\E::class, $sourceLocator));
-        $this->assertFalse($subExampleClass->implementsInterface(\Iterator::class, $sourceLocator));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\A::class));
+        $this->assertFalse($subExampleClass->implementsInterface(ClassWithInterfaces\B::class));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\B::class));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\C::class));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\D::class));
+        $this->assertTrue($subExampleClass->implementsInterface(\E::class));
+        $this->assertFalse($subExampleClass->implementsInterface(\Iterator::class));
 
         $this->setExpectedException(NotAString::class);
 
-        $subExampleClass->implementsInterface($this, $sourceLocator);
+        $subExampleClass->implementsInterface($this);
     }
 
     public function testIsInstantiable()
@@ -661,22 +639,22 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             $reflector
                 ->reflect(ClassesImplementingIterators\TraversableImplementation::class)
-                ->isIterateable($sourceLocator)
+                ->isIterateable()
         );
         $this->assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\NonTraversableImplementation::class)
-                ->isIterateable($sourceLocator)
+                ->isIterateable()
         );
         $this->assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\AbstractTraversableImplementation::class)
-                ->isIterateable($sourceLocator)
+                ->isIterateable()
         );
         $this->assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\TraversableExtension::class)
-                ->isIterateable($sourceLocator)
+                ->isIterateable()
         );
     }
 
@@ -689,7 +667,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(NotAClassReflection::class);
 
-        $class->getParentClass($sourceLocator);
+        $class->getParentClass();
     }
 
     public function testGetParentClassesFailsWithClassExtendingFromTrait()
@@ -701,7 +679,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(NotAClassReflection::class);
 
-        $class->getParentClass($sourceLocator);
+        $class->getParentClass();
     }
 
     public function testGetInterfacesFailsWithInterfaceExtendingFromClass()
@@ -713,7 +691,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(NotAnInterfaceReflection::class);
 
-        $class->getInterfaces($sourceLocator);
+        $class->getInterfaces();
     }
 
     public function testGetInterfacesFailsWithInterfaceExtendingFromTrait()
@@ -725,6 +703,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(NotAnInterfaceReflection::class);
 
-        $class->getInterfaces($sourceLocator);
+        $class->getInterfaces();
     }
 }
