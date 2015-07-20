@@ -838,6 +838,8 @@ class ReflectionClass implements Reflection
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] parent interfaces of this interface
+     *
+     * @TODO throw an exception if used outside the context of an interface?
      */
     private function getInterfacesHierarchy(SourceLocator $sourceLocator)
     {
