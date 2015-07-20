@@ -12,10 +12,11 @@ use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflectionTest\ClassesWithCloneMethod;
 use BetterReflectionTest\ClassWithInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
-use BetterReflectionTest\Fixture\ClassForHinting;
 use BetterReflectionTest\Fixture;
+use BetterReflectionTest\Fixture\ClassForHinting;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -603,5 +604,25 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isInstantiable());
         $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isInstantiable());
         $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isInstantiable());
+    }
+
+    public function testIsCloneable()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $this->assertTrue($reflector->reflect(Fixture\ExampleClass::class)->isCloneable());
+        $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isCloneable());
+        $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isCloneable());
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassesWithCloneMethod.php'
+        ));
+
+        $this->assertTrue($reflector->reflect(ClassesWithCloneMethod\WithPublicClone::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithProtectedClone::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithPrivateClone::class)->isCloneable());
     }
 }
