@@ -703,4 +703,16 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class->getParentClass();
     }
+
+    public function testGetInterfacesFailsWithInvalidInheritanceGraphs()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingClass::class);
+
+        $this->setExpectedException(NotAnInterfaceReflection::class);
+
+        $class->getInterfaces($sourceLocator);
+    }
 }
