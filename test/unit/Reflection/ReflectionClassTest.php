@@ -12,12 +12,13 @@ use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflectionTest\ClassesImplementingIterators;
 use BetterReflectionTest\ClassesWithCloneMethod;
 use BetterReflectionTest\ClassWithInterfaces;
+use BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
 use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
-use BetterReflectionTest\ClassesImplementingIterators;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -518,6 +519,29 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ClassWithInterfacesOther\D::class,
             \E::class,
             ClassWithInterfaces\B::class,
+        ];
+
+        $this->assertCount(count($expectedInterfaces), $interfaces);
+
+        foreach ($expectedInterfaces as $expectedInterface) {
+            $this->assertArrayHasKey($expectedInterface, $interfaces);
+            $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
+            $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
+        }
+    }
+
+    public function testGetInterfacesWillConsiderInterfaceInheritanceLevels()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $interfaces    = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\ExampleImplementingCompositeInterface::class)
+            ->getInterfaces($sourceLocator);
+
+        $expectedInterfaces = [
+            ClassWithInterfacesExtendingInterfaces\D::class,
+            ClassWithInterfacesExtendingInterfaces\C::class,
+            ClassWithInterfacesExtendingInterfaces\B::class,
+            ClassWithInterfacesExtendingInterfaces\A::class,
         ];
 
         $this->assertCount(count($expectedInterfaces), $interfaces);
