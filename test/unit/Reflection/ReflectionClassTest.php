@@ -490,7 +490,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-
                 ClassWithInterfaces\A::class,
                 ClassWithInterfacesOther\B::class,
                 ClassWithInterfaces\C::class,
