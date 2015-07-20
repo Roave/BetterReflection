@@ -87,6 +87,7 @@ class Generic
     {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
+                new ClassReflector($this->sourceLocator),
                 $node,
                 $locatedSource,
                 $namespace
@@ -94,11 +95,7 @@ class Generic
         }
 
         if ($node instanceof Node\Stmt\Function_) {
-            return ReflectionFunction::createFromNode(
-                $node,
-                $locatedSource,
-                $namespace
-            );
+            return ReflectionFunction::createFromNode($node, $locatedSource, $namespace);
         }
 
         return null;

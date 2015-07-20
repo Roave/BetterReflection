@@ -8,9 +8,9 @@ use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
-use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
@@ -26,6 +26,11 @@ use PhpParser\Node\Stmt\TraitUse;
 
 class ReflectionClass implements Reflection
 {
+    /**
+     * @var Reflector
+     */
+    private $reflector;
+
     /**
      * @var string
      */
@@ -72,27 +77,32 @@ class ReflectionClass implements Reflection
 
     public static function createFromName($className)
     {
+        // @TODO consider having one main "DefaultReflector"
         return (new ClassReflector(new AutoloadSourceLocator()))->reflect($className);
     }
 
     /**
      * Create from a Class Node.
      *
-     * @param ClassLikeNode $node
-     * @param LocatedSource $locatedSource
+     * @param Reflector          $reflector
+     * @param ClassLikeNode      $node
+     * @param LocatedSource      $locatedSource
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
+     *
      * @return ReflectionClass
      */
     public static function createFromNode(
+        Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
         NamespaceNode $namespace = null
     ) {
         $class = new self();
-        $class->node = $node;
 
+        $class->reflector     = $reflector;
+        $class->node          = $node;
         $class->locatedSource = $locatedSource;
-        $class->name = $node->name;
+        $class->name          = $node->name;
 
         if (null !== $namespace) {
             $class->declaringNamespace = $namespace;
@@ -370,22 +380,17 @@ class ReflectionClass implements Reflection
      * You may optionally specify a source locator that will be used to locate
      * the parent class. If no source locator is given, a default will be used.
      *
-     * @param SourceLocator|null $sourceLocator
      * @return ReflectionClass
      */
-    public function getParentClass(SourceLocator $sourceLocator = null)
+    public function getParentClass()
     {
         if (null === $this->extendsClassType) {
             return null;
         }
 
-        $fqsen = $this->extendsClassType->__toString();
-
-        if (null !== $sourceLocator) {
-            $parent = (new ClassReflector($sourceLocator))->reflect($fqsen);
-        } else {
-            $parent = self::createFromName($fqsen);
-        }
+        // @TODO use actual `ClassReflector` or `FunctionReflector`?
+        /* @var $parent self */
+        $parent = $this->reflector->reflect((string) $this->extendsClassType);
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);
@@ -494,10 +499,9 @@ class ReflectionClass implements Reflection
      * You may optionally specify a source locator that will be used to locate
      * the traits. If no source locator is given, a default will be used.
      *
-     * @param SourceLocator|null $sourceLocator
      * @return ReflectionClass[]
      */
-    public function getTraits(SourceLocator $sourceLocator = null)
+    public function getTraits()
     {
         $traitUsages = array_filter($this->node->stmts, function (Node $node) {
             return $node instanceof TraitUse;
@@ -508,8 +512,8 @@ class ReflectionClass implements Reflection
             $traitNameNodes = array_merge($traitNameNodes, $traitUsage->traits);
         }
 
-        return array_map(function (Node\Name $importedTrait) use ($sourceLocator) {
-            return $this->reflectClassForNamedNode($importedTrait, $sourceLocator);
+        return array_map(function (Node\Name $importedTrait) {
+            return $this->reflectClassForNamedNode($importedTrait);
         }, $traitNameNodes);
     }
 
@@ -540,18 +544,12 @@ class ReflectionClass implements Reflection
      * the traits. If no source locator is given, a default will be used.
      *
      * @param Node\Name $node
-     * @param SourceLocator|null $sourceLocator
      * @return ReflectionClass
      */
-    private function reflectClassForNamedNode(Node\Name $node, SourceLocator $sourceLocator = null)
+    private function reflectClassForNamedNode(Node\Name $node)
     {
-        $fqsen = $this->getFqsenFromNamedNode($node);
-
-        if (null !== $sourceLocator) {
-            return (new ClassReflector($sourceLocator))->reflect($fqsen);
-        }
-
-        return self::createFromName($fqsen);
+        // @TODO use actual `ClassReflector` or `FunctionReflector`?
+        return $this->reflector->reflect($this->getFqsenFromNamedNode($node));
     }
 
     /**
@@ -562,16 +560,15 @@ class ReflectionClass implements Reflection
      * You may optionally specify a source locator that will be used to locate
      * the traits. If no source locator is given, a default will be used.
      *
-     * @param SourceLocator|null $sourceLocator
      * @return string[]
      */
-    public function getTraitNames(SourceLocator $sourceLocator = null)
+    public function getTraitNames()
     {
         return array_map(
             function (ReflectionClass $trait) {
                 return $trait->getName();
             },
-            $this->getTraits($sourceLocator)
+            $this->getTraits()
         );
     }
 
@@ -634,19 +631,16 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfaces.php
      *
-     * @param SourceLocator $sourceLocator a source locator - if none is provided, an autoloader-based locator
-     *                                     will be used
-     *
      * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
      *                           values as {@see ReflectionClass} objects.
      */
-    public function getInterfaces(SourceLocator $sourceLocator)
+    public function getInterfaces()
     {
         return array_merge(...array_map(
-            function (self $reflectionClass) use ($sourceLocator) {
-                return $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName($sourceLocator);
+            function (self $reflectionClass) {
+                return $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName();
             },
-            $this->getInheritanceClassHierarchy($sourceLocator)
+            $this->getInheritanceClassHierarchy()
         ));
     }
 
@@ -655,18 +649,15 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
-     * @param SourceLocator $sourceLocator a source locator - if none is provided, an autoloader-based locator
-     *                                     will be used
-     *
      * @return string[] A numerical array with interface names as the values.
      */
-    public function getInterfaceNames(SourceLocator $sourceLocator)
+    public function getInterfaceNames()
     {
         return array_values(array_map(
             function (self $interface) {
                 return $interface->getName();
             },
-            $this->getInterfaces($sourceLocator)
+            $this->getInterfaces()
         ));
     }
 
@@ -699,12 +690,11 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.isinstance.php
      *
-     * @param string        $className
-     * @param SourceLocator $sourceLocator
+     * @param string $className
      *
      * @return bool
      */
-    public function isSubclassOf($className, SourceLocator $sourceLocator)
+    public function isSubclassOf($className)
     {
         if (! is_string($className)) {
             throw NotAString::fromNonString($className);
@@ -716,7 +706,7 @@ class ReflectionClass implements Reflection
                 function (self $reflectionClass) {
                     return $reflectionClass->getName();
                 },
-                array_slice(array_reverse($this->getInheritanceClassHierarchy($sourceLocator)), 1)
+                array_slice(array_reverse($this->getInheritanceClassHierarchy()), 1)
             ),
             true
         );
@@ -727,18 +717,17 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.implementsinterface.php
      *
-     * @param string        $interfaceName
-     * @param SourceLocator $sourceLocator
+     * @param string $interfaceName
      *
      * @return bool
      */
-    public function implementsInterface($interfaceName, SourceLocator $sourceLocator)
+    public function implementsInterface($interfaceName)
     {
         if (! is_string($interfaceName)) {
             throw NotAString::fromNonString($interfaceName);
         }
 
-        return in_array(ltrim($interfaceName, '\\'), $this->getInterfaceNames($sourceLocator), true);
+        return in_array(ltrim($interfaceName, '\\'), $this->getInterfaceNames(), true);
     }
 
     /**
@@ -779,21 +768,17 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.isiterateable.php
      *
-     * @param SourceLocator $sourceLocator
-     *
      * @return bool
      */
-    public function isIterateable(SourceLocator $sourceLocator)
+    public function isIterateable()
     {
-        return $this->isInstantiable() && $this->implementsInterface(\Traversable::class, $sourceLocator);
+        return $this->isInstantiable() && $this->implementsInterface(\Traversable::class);
     }
 
     /**
-     * @param SourceLocator $sourceLocator
-     *
      * @return ReflectionClass[] indexed by interface name
      */
-    private function getCurrentClassImplementedInterfacesIndexedByName(SourceLocator $sourceLocator)
+    private function getCurrentClassImplementedInterfacesIndexedByName()
     {
         $node = $this->node;
 
@@ -801,10 +786,10 @@ class ReflectionClass implements Reflection
             return array_merge(
                 [],
                 ...array_map(
-                    function (Node\Name $interfaceName) use ($sourceLocator) {
+                    function (Node\Name $interfaceName) {
                         return $this
-                            ->reflectClassForNamedNode($interfaceName, $sourceLocator)
-                            ->getInterfacesHierarchy($sourceLocator);
+                            ->reflectClassForNamedNode($interfaceName)
+                            ->getInterfacesHierarchy();
                     },
                     $node->implements
                 )
@@ -812,34 +797,30 @@ class ReflectionClass implements Reflection
         }
 
         if ($node instanceof InterfaceNode) {
-            return array_merge([], ...$this->getInterfacesHierarchy($sourceLocator));
+            return array_merge([], ...$this->getInterfacesHierarchy());
         }
 
         return [];
     }
 
     /**
-     * @param SourceLocator $sourceLocator
-     *
      * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
      */
-    private function getInheritanceClassHierarchy(SourceLocator $sourceLocator)
+    private function getInheritanceClassHierarchy()
     {
-        $parentClass = $this->getParentClass($sourceLocator);
+        $parentClass = $this->getParentClass();
 
         return $parentClass
-            ? array_merge($parentClass->getInheritanceClassHierarchy($sourceLocator), [$this])
+            ? array_merge($parentClass->getInheritanceClassHierarchy(), [$this])
             : [$this];
     }
 
     /**
      * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
      *
-     * @param SourceLocator $sourceLocator
-     *
      * @return ReflectionClass[] parent interfaces of this interface
      */
-    private function getInterfacesHierarchy(SourceLocator $sourceLocator)
+    private function getInterfacesHierarchy()
     {
         if (! $this->isInterface()) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
@@ -851,10 +832,10 @@ class ReflectionClass implements Reflection
         return array_merge(
             [$this->getName() => $this],
             ...array_map(
-                function (Node\Name $interfaceName) use ($sourceLocator) {
+                function (Node\Name $interfaceName) {
                     return $this
-                        ->reflectClassForNamedNode($interfaceName, $sourceLocator)
-                        ->getInterfacesHierarchy($sourceLocator);
+                        ->reflectClassForNamedNode($interfaceName)
+                        ->getInterfacesHierarchy();
                 },
                 $node->extends
             )
