@@ -571,7 +571,7 @@ class ReflectionClass implements Reflection
 
     /**
      * Return a list of the aliases used when importing traits for this class.
-     * The returned array is in key/value pair in this format:
+     * The returned array is in key/value pair in this format:.
      *
      *   'aliasedMethodName' => 'ActualClass::actualMethod'
      *
@@ -624,7 +624,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Gets the interfaces
+     * Gets the interfaces.
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfaces.php
      *
@@ -645,7 +645,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Gets the interface names
+     * Gets the interface names.
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
@@ -665,7 +665,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Checks whether the given object is an instance
+     * Checks whether the given object is an instance.
      *
      * @link http://php.net/manual/en/reflectionclass.isinstance.php
      *
@@ -689,7 +689,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Checks whether the given class string is a subclass of this class
+     * Checks whether the given class string is a subclass of this class.
      *
      * @link http://php.net/manual/en/reflectionclass.isinstance.php
      *
@@ -717,7 +717,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Checks whether this class implements the given interface
+     * Checks whether this class implements the given interface.
      *
      * @link http://php.net/manual/en/reflectionclass.implementsinterface.php
      *

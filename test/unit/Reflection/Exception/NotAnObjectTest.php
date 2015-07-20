@@ -3,8 +3,6 @@
 namespace BetterReflectionTest\Reflection\Exception;
 
 use BetterReflection\Reflection\Exception\NotAnObject;
-use BetterReflectionTest\ClassWithInterfaces;
-use BetterReflectionTest\ClassWithInterfacesOther;
 use PHPUnit_Framework_TestCase;
 
 /**
