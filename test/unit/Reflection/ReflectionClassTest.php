@@ -572,4 +572,23 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $subExampleClass->isSubclassOf($this, $sourceLocator);
     }
+
+    public function testImplementsInterface()
+    {
+        $sourceLocator   = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $subExampleClass = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\SubExampleClass::class);
+
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\A::class, $sourceLocator));
+        $this->assertFalse($subExampleClass->implementsInterface(ClassWithInterfaces\B::class, $sourceLocator));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\B::class, $sourceLocator));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\C::class, $sourceLocator));
+        $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\D::class, $sourceLocator));
+        $this->assertTrue($subExampleClass->implementsInterface(\E::class, $sourceLocator));
+        $this->assertFalse($subExampleClass->implementsInterface(\Iterator::class, $sourceLocator));
+
+        $this->setExpectedException(NotAString::class);
+
+        $subExampleClass->implementsInterface($this, $sourceLocator);
+    }
 }
