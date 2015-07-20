@@ -40,7 +40,7 @@ class Generic
             $aggregate = new AggregateSourceLocator([$this->sourceLocator]);
         }
 
-        foreach ($aggregate->__invoke($identifier) as $locatedSource) {
+        foreach ($aggregate($identifier) as $locatedSource) {
             try {
                 return $this->reflectFromLocatedSource($identifier, $locatedSource);
             }
