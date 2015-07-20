@@ -23,10 +23,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectingWithinNamespace()
     {
-        $php = "<?php
+        $php = '<?php
         namespace Foo;
         class Bar {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
         $classInfo = $reflector->reflect($this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS));
@@ -36,9 +36,9 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectingTopLevelClass()
     {
-        $php = "<?php
+        $php = '<?php
         class Foo {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
         $classInfo = $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
@@ -48,9 +48,9 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectingTopLevelFunction()
     {
-        $php = "<?php
+        $php = '<?php
         function foo() {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect($this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION));
@@ -60,7 +60,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectThrowsExeptionWhenClassNotFoundAndNoNodesExist()
     {
-        $php = "<?php";
+        $php = '<?php';
 
         $reflector = new Generic(new StringSourceLocator($php));
 
@@ -83,11 +83,11 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAllFunctions()
     {
-        $php = "<?php
+        $php = '<?php
         namespace Foo;
         function a() {}
         function b() {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
 
@@ -100,11 +100,11 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAllFunctionsWhenNoneExist()
     {
-        $php = "<?php
+        $php = '<?php
         namespace Foo;
         class a {}
         class b {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
 
@@ -116,11 +116,11 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAllClasses()
     {
-        $php = "<?php
+        $php = '<?php
         namespace Foo;
         class a {}
         class b {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
 
@@ -133,11 +133,11 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAllClassesWhenNoneExist()
     {
-        $php = "<?php
+        $php = '<?php
         namespace Foo;
         function a() {}
         function b() {}
-        ";
+        ';
 
         $reflector = new Generic(new StringSourceLocator($php));
 

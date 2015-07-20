@@ -2,8 +2,6 @@
 
 namespace BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
@@ -194,12 +192,12 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDocCommentWithComment()
     {
-        $php = "<?php
+        $php = '<?php
         /**
          * Some function comment
          */
         function foo() {}
-        ";
+        ';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
@@ -209,7 +207,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDocReturnsEmptyStringWithNoComment()
     {
-        $php = "<?php function foo() {}";
+        $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
