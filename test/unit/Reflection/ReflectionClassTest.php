@@ -2,6 +2,8 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\NotAClassReflection;
+use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflection\ReflectionClass;
@@ -19,6 +21,7 @@ use BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
 use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
+use BetterReflectionTest\Fixture\InvalidInheritances;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -675,5 +678,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
                 ->reflect(ClassesImplementingIterators\TraversableExtension::class)
                 ->isIterateable($sourceLocator)
         );
+    }
+
+    public function testGetParentClassesFailsWithClassExtendingFromInterface()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\ClassExtendingInterface::class);
+
+        $this->setExpectedException(NotAClassReflection::class);
+
+        $class->getParentClass();
     }
 }
