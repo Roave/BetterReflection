@@ -17,6 +17,7 @@ use BetterReflectionTest\ClassWithInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
 use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
+use BetterReflectionTest\ClassesImplementingIterators;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -624,5 +625,22 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($reflector->reflect(ClassesWithCloneMethod\WithPublicClone::class)->isCloneable());
         $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithProtectedClone::class)->isCloneable());
         $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithPrivateClone::class)->isCloneable());
+    }
+
+    public function testIsIterateable()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesImplementingIterators.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $this->assertTrue(
+            $reflector
+                ->reflect(ClassesImplementingIterators\TraversableImplementation::class)
+                ->isIterateable($sourceLocator)
+        );
+        $this->assertFalse(
+            $reflector
+                ->reflect(ClassesImplementingIterators\NonTraversableImplementation::class)
+                ->isIterateable($sourceLocator)
+        );
     }
 }
