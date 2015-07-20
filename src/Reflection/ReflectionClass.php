@@ -787,13 +787,27 @@ class ReflectionClass implements Reflection
      */
     private function getCurrentClassImplementedInterfacesIndexedByName(SourceLocator $sourceLocator)
     {
-        /* @var $interfaces ReflectionClass[] */
-        $interfaces = array_map(
-            function (Node\Name $interfaceName) use ($sourceLocator) {
-                return $this->reflectClassForNamedNode($interfaceName, $sourceLocator);
-            },
-            $this->node instanceof ClassNode ? $this->node->implements : []
-        );
+        $node       = $this->node;
+        /* @var $interfaces self[] */
+        $interfaces = [];
+
+        if ($node instanceof ClassNode) {
+            $interfaces = array_merge(
+                [],
+                ...array_map(
+                    function (Node\Name $interfaceName) use ($sourceLocator) {
+                        return $this
+                            ->reflectClassForNamedNode($interfaceName, $sourceLocator)
+                            ->getInterfacesHierarchy($sourceLocator);
+                    },
+                    $node->implements
+                )
+            );
+        }
+
+        if ($node instanceof InterfaceNode) {
+            $interfaces = array_merge([], ...$this->getInterfacesHierarchy($sourceLocator));
+        }
 
         $interfacesByName = [];
 
@@ -814,5 +828,30 @@ class ReflectionClass implements Reflection
         return $parentClass
             ? array_merge($parentClass->getInheritanceClassHierarchy($sourceLocator), [$this])
             : [$this];
+    }
+
+    /**
+     * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
+     *
+     * @param SourceLocator $sourceLocator
+     *
+     * @return ReflectionClass[] parent interfaces of this interface
+     */
+    private function getInterfacesHierarchy(SourceLocator $sourceLocator)
+    {
+        /* @var $node InterfaceNode */
+        $node = $this->node;
+
+        return array_merge(
+            [$this->getName() => $this],
+            ...array_map(
+                function (Node\Name $interfaceName) use ($sourceLocator) {
+                    return $this
+                        ->reflectClassForNamedNode($interfaceName, $sourceLocator)
+                        ->getInterfacesHierarchy($sourceLocator);
+                },
+                $node->extends
+            )
+        );
     }
 }
