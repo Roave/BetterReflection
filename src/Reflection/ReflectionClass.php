@@ -749,9 +749,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Checks whether this reflection is an instantiable class
+     * Checks whether this is a reflection of a class that supports the clone operator
      *
-     * @link http://php.net/manual/en/reflectionclass.isinstantiable.php
+     * @link http://php.net/manual/en/reflectionclass.iscloneable.php
      *
      * @return bool
      */
