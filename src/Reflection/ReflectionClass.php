@@ -3,7 +3,8 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\Reflection\Exception\NoParent;
+use BetterReflection\Reflection\Exception\NotAClassReflection;
+use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
@@ -371,7 +372,6 @@ class ReflectionClass implements Reflection
      *
      * @param SourceLocator|null $sourceLocator
      * @return ReflectionClass
-     * @throws NoParent
      */
     public function getParentClass(SourceLocator $sourceLocator = null)
     {
@@ -382,10 +382,16 @@ class ReflectionClass implements Reflection
         $fqsen = $this->extendsClassType->__toString();
 
         if (null !== $sourceLocator) {
-            return (new ClassReflector($sourceLocator))->reflect($fqsen);
+            $parent = (new ClassReflector($sourceLocator))->reflect($fqsen);
+        } else {
+            $parent = self::createFromName($fqsen);
         }
 
-        return self::createFromName($fqsen);
+        if ($parent->isInterface() || $parent->isTrait()) {
+            throw NotAClassReflection::fromReflectionClass($parent);
+        }
+
+        return $parent;
     }
 
     /**
@@ -736,30 +742,85 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Checks whether this reflection is an instantiable class
+     *
+     * @link http://php.net/manual/en/reflectionclass.isinstantiable.php
+     *
+     * @return bool
+     */
+    public function isInstantiable()
+    {
+        // @TODO doesn't consider internal non-instantiable classes yet.
+        return ! ($this->isAbstract() || $this->isInterface() || $this->isTrait());
+    }
+
+    /**
+     * Checks whether this is a reflection of a class that supports the clone operator
+     *
+     * @link http://php.net/manual/en/reflectionclass.iscloneable.php
+     *
+     * @return bool
+     */
+    public function isCloneable()
+    {
+        if (! $this->isInstantiable()) {
+            return false;
+        }
+
+        if (! $this->hasMethod('__clone')) {
+            return true;
+        }
+
+        return $this->getMethod('__clone')->isPublic();
+    }
+
+    /**
+     * Checks if iterateable
+     *
+     * @link http://php.net/manual/en/reflectionclass.isiterateable.php
+     *
+     * @param SourceLocator $sourceLocator
+     *
+     * @return bool
+     */
+    public function isIterateable(SourceLocator $sourceLocator)
+    {
+        return $this->isInstantiable() && $this->implementsInterface(\Traversable::class, $sourceLocator);
+    }
+
+    /**
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] indexed by interface name
      */
     private function getCurrentClassImplementedInterfacesIndexedByName(SourceLocator $sourceLocator)
     {
-        /* @var $interfaces ReflectionClass[] */
-        $interfaces = array_map(
-            function (Node\Name $interfaceName) use ($sourceLocator) {
-                return $this->reflectClassForNamedNode($interfaceName, $sourceLocator);
-            },
-            $this->node instanceof ClassNode ? $this->node->implements : []
-        );
+        $node = $this->node;
 
-        $interfacesByName = [];
-
-        foreach ($interfaces as $interface) {
-            $interfacesByName[$interface->getName()] = $interface;
+        if ($node instanceof ClassNode) {
+            return array_merge(
+                [],
+                ...array_map(
+                    function (Node\Name $interfaceName) use ($sourceLocator) {
+                        return $this
+                            ->reflectClassForNamedNode($interfaceName, $sourceLocator)
+                            ->getInterfacesHierarchy($sourceLocator);
+                    },
+                    $node->implements
+                )
+            );
         }
 
-        return $interfacesByName;
+        if ($node instanceof InterfaceNode) {
+            return array_merge([], ...$this->getInterfacesHierarchy($sourceLocator));
+        }
+
+        return [];
     }
 
     /**
+     * @param SourceLocator $sourceLocator
+     *
      * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
      */
     private function getInheritanceClassHierarchy(SourceLocator $sourceLocator)
@@ -769,5 +830,34 @@ class ReflectionClass implements Reflection
         return $parentClass
             ? array_merge($parentClass->getInheritanceClassHierarchy($sourceLocator), [$this])
             : [$this];
+    }
+
+    /**
+     * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
+     *
+     * @param SourceLocator $sourceLocator
+     *
+     * @return ReflectionClass[] parent interfaces of this interface
+     */
+    private function getInterfacesHierarchy(SourceLocator $sourceLocator)
+    {
+        if (! $this->isInterface()) {
+            throw NotAnInterfaceReflection::fromReflectionClass($this);
+        }
+
+        /* @var $node InterfaceNode */
+        $node = $this->node;
+
+        return array_merge(
+            [$this->getName() => $this],
+            ...array_map(
+                function (Node\Name $interfaceName) use ($sourceLocator) {
+                    return $this
+                        ->reflectClassForNamedNode($interfaceName, $sourceLocator)
+                        ->getInterfacesHierarchy($sourceLocator);
+                },
+                $node->extends
+            )
+        );
     }
 }

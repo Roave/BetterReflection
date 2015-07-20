@@ -2,6 +2,8 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\NotAClassReflection;
+use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflection\ReflectionClass;
@@ -12,9 +14,14 @@ use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflectionTest\ClassesImplementingIterators;
+use BetterReflectionTest\ClassesWithCloneMethod;
 use BetterReflectionTest\ClassWithInterfaces;
+use BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
+use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
+use BetterReflectionTest\Fixture\InvalidInheritances;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -486,7 +493,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-
                 ClassWithInterfaces\A::class,
                 ClassWithInterfacesOther\B::class,
                 ClassWithInterfaces\C::class,
@@ -515,6 +521,29 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ClassWithInterfacesOther\D::class,
             \E::class,
             ClassWithInterfaces\B::class,
+        ];
+
+        $this->assertCount(count($expectedInterfaces), $interfaces);
+
+        foreach ($expectedInterfaces as $expectedInterface) {
+            $this->assertArrayHasKey($expectedInterface, $interfaces);
+            $this->assertInstanceOf(ReflectionClass::class, $interfaces[$expectedInterface]);
+            $this->assertSame($expectedInterface, $interfaces[$expectedInterface]->getName());
+        }
+    }
+
+    public function testGetInterfacesWillConsiderInterfaceInheritanceLevels()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
+        $interfaces    = (new ClassReflector($sourceLocator))
+            ->reflect(ClassWithInterfaces\ExampleImplementingCompositeInterface::class)
+            ->getInterfaces($sourceLocator);
+
+        $expectedInterfaces = [
+            ClassWithInterfacesExtendingInterfaces\D::class,
+            ClassWithInterfacesExtendingInterfaces\C::class,
+            ClassWithInterfacesExtendingInterfaces\B::class,
+            ClassWithInterfacesExtendingInterfaces\A::class,
         ];
 
         $this->assertCount(count($expectedInterfaces), $interfaces);
@@ -590,5 +619,112 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(NotAString::class);
 
         $subExampleClass->implementsInterface($this, $sourceLocator);
+    }
+
+    public function testIsInstantiable()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $this->assertTrue($reflector->reflect(Fixture\ExampleClass::class)->isInstantiable());
+        $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isInstantiable());
+        $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isInstantiable());
+    }
+
+    public function testIsCloneable()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $this->assertTrue($reflector->reflect(Fixture\ExampleClass::class)->isCloneable());
+        $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isCloneable());
+        $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isCloneable());
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassesWithCloneMethod.php'
+        ));
+
+        $this->assertTrue($reflector->reflect(ClassesWithCloneMethod\WithPublicClone::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithProtectedClone::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithPrivateClone::class)->isCloneable());
+    }
+
+    public function testIsIterateable()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesImplementingIterators.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $this->assertTrue(
+            $reflector
+                ->reflect(ClassesImplementingIterators\TraversableImplementation::class)
+                ->isIterateable($sourceLocator)
+        );
+        $this->assertFalse(
+            $reflector
+                ->reflect(ClassesImplementingIterators\NonTraversableImplementation::class)
+                ->isIterateable($sourceLocator)
+        );
+        $this->assertFalse(
+            $reflector
+                ->reflect(ClassesImplementingIterators\AbstractTraversableImplementation::class)
+                ->isIterateable($sourceLocator)
+        );
+        $this->assertFalse(
+            $reflector
+                ->reflect(ClassesImplementingIterators\TraversableExtension::class)
+                ->isIterateable($sourceLocator)
+        );
+    }
+
+    public function testGetParentClassesFailsWithClassExtendingFromInterface()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\ClassExtendingInterface::class);
+
+        $this->setExpectedException(NotAClassReflection::class);
+
+        $class->getParentClass($sourceLocator);
+    }
+
+    public function testGetParentClassesFailsWithClassExtendingFromTrait()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\ClassExtendingTrait::class);
+
+        $this->setExpectedException(NotAClassReflection::class);
+
+        $class->getParentClass($sourceLocator);
+    }
+
+    public function testGetInterfacesFailsWithInterfaceExtendingFromClass()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingClass::class);
+
+        $this->setExpectedException(NotAnInterfaceReflection::class);
+
+        $class->getInterfaces($sourceLocator);
+    }
+
+    public function testGetInterfacesFailsWithInterfaceExtendingFromTrait()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingTrait::class);
+
+        $this->setExpectedException(NotAnInterfaceReflection::class);
+
+        $class->getInterfaces($sourceLocator);
     }
 }

@@ -3,6 +3,7 @@
 namespace BetterReflectionTest\ClassWithInterfaces {
     use BetterReflectionTest\ClassWithInterfacesOther\B as ImportedB;
     use BetterReflectionTest\ClassWithInterfacesOther;
+    use BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 
     interface A {}
     interface B {}
@@ -15,6 +16,7 @@ namespace BetterReflectionTest\ClassWithInterfaces {
 
     class SubExampleClass extends ExampleClass {}
     class SubSubExampleClass extends SubExampleClass implements ImportedB, B {}
+    class ExampleImplementingCompositeInterface implements ClassWithInterfacesExtendingInterfaces\D {}
 }
 
 namespace BetterReflectionTest\ClassWithInterfacesOther {
@@ -23,6 +25,24 @@ namespace BetterReflectionTest\ClassWithInterfacesOther {
     }
 
     interface D
+    {
+    }
+}
+
+namespace BetterReflectionTest\ClassWithInterfacesExtendingInterfaces {
+    interface A
+    {
+    }
+
+    interface B
+    {
+    }
+
+    interface C extends B
+    {
+    }
+
+    interface D extends C, A
     {
     }
 }
