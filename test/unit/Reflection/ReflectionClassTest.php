@@ -250,7 +250,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $defaultProperties);
     }
 
-    public function testIsInternal()
+    public function testIsInternalWithUserDefinedClass()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');

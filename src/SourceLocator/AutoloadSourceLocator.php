@@ -22,7 +22,7 @@ class AutoloadSourceLocator implements SourceLocator
 
     /**
      * @param Identifier $identifier
-     * @return LocatedSource
+     * @return LocatedSource|null
      * @throws Exception\AutoloadFailure
      */
     public function __invoke(Identifier $identifier)
@@ -30,11 +30,7 @@ class AutoloadSourceLocator implements SourceLocator
         $potentiallyLocatedFile = $this->locateIdentifier($identifier);
 
         if (!$potentiallyLocatedFile) {
-            throw new Exception\AutoloadFailure(sprintf(
-                'Unable to autoload the %s called %s',
-                $identifier->getType()->getName(),
-                $identifier->getName()
-            ));
+            return null;
         }
 
         return new LocatedSource(
@@ -58,8 +54,6 @@ class AutoloadSourceLocator implements SourceLocator
         if ($identifier->isFunction()) {
             return $this->locateFunctionByName($identifier->getName());
         }
-
-        throw new Exception\UnloadableIdentifierType('AutoloadSourceLocator cannot locate ' . $identifier->getType()->getName());
     }
 
     /**

@@ -8,9 +8,13 @@ class PhpInternalSourceLocator implements SourceLocator
 {
     public function __invoke(Identifier $identifier)
     {
+        if (!$identifier->isClass()) {
+            return null;
+        }
+
         $methodName = str_replace('\\', '__', $identifier->getName());
         if (!method_exists($this, $methodName)) {
-            return new LocatedSource('<?php', LocatedSource::INTERNAL_SOURCE_MAGIC_CONST);
+            return null;
         }
 
         return new LocatedSource(

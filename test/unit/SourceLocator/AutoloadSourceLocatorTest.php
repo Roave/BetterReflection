@@ -5,6 +5,7 @@ namespace BetterReflectionTest\SourceLocator;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Exception\AutoloadFailure;
@@ -61,7 +62,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $reflector->reflect('this function does not exist, hopefully');
     }
 
-    public function testExceptionThrownWhenInvalidTypeGiven()
+    public function testNullReturnedWhenInvalidTypeGiven()
     {
         $locator = new AutoloadSourceLocator();
 
@@ -71,16 +72,15 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $prop->setAccessible(true);
         $prop->setValue($type, 'nonsense');
 
-        $this->setExpectedException(UnloadableIdentifierType::class, 'AutoloadSourceLocator cannot locate nonsense');
         $identifier = new Identifier('foo', $type);
-        $locator->__invoke($identifier);
+        $this->assertNull($locator->__invoke($identifier));
     }
 
     public function testExceptionThrownWhenUnableToAutoload()
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator());
 
-        $this->setExpectedException(AutoloadFailure::class);
+        $this->setExpectedException(IdentifierNotFound::class);
         $reflector->reflect('Some\Class\That\Cannot\Exist');
     }
 }

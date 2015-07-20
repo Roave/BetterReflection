@@ -41,6 +41,10 @@ class Generic
         }
 
         foreach ($aggregate($identifier) as $locatedSource) {
+            if (null === $locatedSource) {
+                continue;
+            }
+
             try {
                 return $this->reflectFromLocatedSource($identifier, $locatedSource);
             }

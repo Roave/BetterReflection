@@ -12,7 +12,7 @@ interface SourceLocator
      * This method should return a LocatedSource value object
      *
      * @param Identifier $identifier
-     * @return LocatedSource
+     * @return LocatedSource|null
      */
     public function __invoke(Identifier $identifier);
 }
