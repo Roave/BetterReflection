@@ -7,6 +7,7 @@ namespace BetterReflectionTest\Fixture\InvalidInheritances
     trait ATrait {}
 
     interface InterfaceExtendingClass extends AClass {}
+    interface InterfaceExtendingTrait extends ATrait {}
     class ClassExtendingInterface extends AInterface {}
     class ClassExtendingTrait extends ATrait {}
 }
