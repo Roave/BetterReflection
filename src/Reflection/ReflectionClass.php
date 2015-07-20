@@ -689,7 +689,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Checks whether the given object is an instance
+     * Checks whether the given class string is a subclass of this class
      *
      * @link http://php.net/manual/en/reflectionclass.isinstance.php
      *
