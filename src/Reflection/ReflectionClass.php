@@ -777,7 +777,7 @@ class ReflectionClass implements Reflection
      */
     public function isIterateable(SourceLocator $sourceLocator)
     {
-        return $this->implementsInterface(\Traversable::class, $sourceLocator);
+        return $this->isInstantiable() && $this->implementsInterface(\Traversable::class, $sourceLocator);
     }
 
     /**
