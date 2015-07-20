@@ -15,6 +15,7 @@ use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflectionTest\ClassWithInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
 use BetterReflectionTest\Fixture\ClassForHinting;
+use BetterReflectionTest\Fixture;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -590,5 +591,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(NotAString::class);
 
         $subExampleClass->implementsInterface($this, $sourceLocator);
+    }
+
+    public function testIsInstantiable()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $this->assertTrue($reflector->reflect(Fixture\ExampleClass::class)->isInstantiable());
+        $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isInstantiable());
+        $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isInstantiable());
     }
 }
