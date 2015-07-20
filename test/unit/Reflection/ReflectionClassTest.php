@@ -689,7 +689,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(NotAClassReflection::class);
 
-        $class->getParentClass();
+        $class->getParentClass($sourceLocator);
     }
 
     public function testGetParentClassesFailsWithClassExtendingFromTrait()
@@ -697,19 +697,31 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
         $reflector     = new ClassReflector($sourceLocator);
 
-        $class = $reflector->reflect(InvalidInheritances\ClassExtendingInterface::class);
+        $class = $reflector->reflect(InvalidInheritances\ClassExtendingTrait::class);
 
         $this->setExpectedException(NotAClassReflection::class);
 
-        $class->getParentClass();
+        $class->getParentClass($sourceLocator);
     }
 
-    public function testGetInterfacesFailsWithInvalidInheritanceGraphs()
+    public function testGetInterfacesFailsWithInterfaceExtendingFromClass()
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
         $reflector     = new ClassReflector($sourceLocator);
 
         $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingClass::class);
+
+        $this->setExpectedException(NotAnInterfaceReflection::class);
+
+        $class->getInterfaces($sourceLocator);
+    }
+
+    public function testGetInterfacesFailsWithInterfaceExtendingFromTrait()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingTrait::class);
 
         $this->setExpectedException(NotAnInterfaceReflection::class);
 
