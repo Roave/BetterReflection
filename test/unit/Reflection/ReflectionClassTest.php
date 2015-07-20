@@ -691,4 +691,16 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class->getParentClass();
     }
+
+    public function testGetParentClassesFailsWithClassExtendingFromTrait()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
+        $reflector     = new ClassReflector($sourceLocator);
+
+        $class = $reflector->reflect(InvalidInheritances\ClassExtendingInterface::class);
+
+        $this->setExpectedException(NotAClassReflection::class);
+
+        $class->getParentClass();
+    }
 }
