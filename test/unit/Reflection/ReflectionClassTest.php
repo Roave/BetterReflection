@@ -259,6 +259,15 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($classInfo->isUserDefined());
     }
 
+    public function testIsInternalWithInternalClass()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('stdClass');
+
+        $this->assertTrue($classInfo->isInternal());
+        $this->assertFalse($classInfo->isUserDefined());
+    }
+
     public function testIsAbstract()
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
