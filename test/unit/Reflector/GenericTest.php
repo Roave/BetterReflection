@@ -4,6 +4,7 @@ namespace BetterReflectionTest\Reflector;
 
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\Generic;
+use BetterReflection\SourceLocator\AggregateSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
@@ -144,5 +145,29 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInternalType('array', $found);
         $this->assertCount(0, $found);
+    }
+
+    public function testReflectWithAggregateSourceLocatorWhenIdentifierDoesNotExist()
+    {
+        $reflector = new Generic(new AggregateSourceLocator([
+            new StringSourceLocator('<?php'),
+            new StringSourceLocator('<?php'),
+        ]));
+
+        $this->setExpectedException(IdentifierNotFound::class);
+        $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
+    }
+
+    public function testReflectWithAggregateSourceLocatorFindsClass()
+    {
+        $reflector = new Generic(new AggregateSourceLocator([
+            new StringSourceLocator('<?php'),
+            new StringSourceLocator('<?php class Foo {}'),
+        ]));
+
+        $classInfo = $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
+
+        $this->assertInstanceOf(ReflectionClass::class, $classInfo);
+        $this->assertSame('Foo', $classInfo->getName());
     }
 }
