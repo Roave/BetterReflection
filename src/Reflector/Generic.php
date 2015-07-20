@@ -5,6 +5,7 @@ namespace BetterReflection\Reflector;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionFunction;
+use BetterReflection\SourceLocator\AggregateSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\Reflection\ReflectionClass;
@@ -34,10 +35,20 @@ class Generic
      */
     public function reflect(Identifier $identifier)
     {
-        return $this->reflectFromLocatedSource(
-            $identifier,
-            $this->sourceLocator->__invoke($identifier)
-        );
+        $aggregate = $this->sourceLocator;
+        if (!($aggregate instanceof AggregateSourceLocator)) {
+            $aggregate = new AggregateSourceLocator([$this->sourceLocator]);
+        }
+
+        foreach ($aggregate($identifier) as $locatedSource) {
+            try {
+                return $this->reflectFromLocatedSource($identifier, $locatedSource);
+            }
+            catch (Exception\IdentifierNotFound $identifierNotFound) {
+            }
+        }
+
+        throw Exception\IdentifierNotFound::fromIdentifier($identifier);
     }
 
     /**
@@ -55,11 +66,7 @@ class Generic
             }
         }
 
-        throw new Exception\IdentifierNotFound(sprintf(
-            '%s "%s" could not be found in the located source',
-            $identifier->getType()->getName(),
-            $identifier->getName()
-        ));
+        throw Exception\IdentifierNotFound::fromIdentifier($identifier);
     }
 
     /**
