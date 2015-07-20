@@ -642,5 +642,15 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
                 ->reflect(ClassesImplementingIterators\NonTraversableImplementation::class)
                 ->isIterateable($sourceLocator)
         );
+        $this->assertFalse(
+            $reflector
+                ->reflect(ClassesImplementingIterators\AbstractTraversableImplementation::class)
+                ->isIterateable($sourceLocator)
+        );
+        $this->assertFalse(
+            $reflector
+                ->reflect(ClassesImplementingIterators\TraversableExtension::class)
+                ->isIterateable($sourceLocator)
+        );
     }
 }
