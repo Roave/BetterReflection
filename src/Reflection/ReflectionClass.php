@@ -787,12 +787,10 @@ class ReflectionClass implements Reflection
      */
     private function getCurrentClassImplementedInterfacesIndexedByName(SourceLocator $sourceLocator)
     {
-        $node       = $this->node;
-        /* @var $interfaces self[] */
-        $interfaces = [];
+        $node = $this->node;
 
         if ($node instanceof ClassNode) {
-            $interfaces = array_merge(
+            return array_merge(
                 [],
                 ...array_map(
                     function (Node\Name $interfaceName) use ($sourceLocator) {
@@ -806,16 +804,10 @@ class ReflectionClass implements Reflection
         }
 
         if ($node instanceof InterfaceNode) {
-            $interfaces = array_merge([], ...$this->getInterfacesHierarchy($sourceLocator));
+            return array_merge([], ...$this->getInterfacesHierarchy($sourceLocator));
         }
 
-        $interfacesByName = [];
-
-        foreach ($interfaces as $interface) {
-            $interfacesByName[$interface->getName()] = $interface;
-        }
-
-        return $interfacesByName;
+        return [];
     }
 
     /**
