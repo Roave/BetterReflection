@@ -749,6 +749,26 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Checks whether this reflection is an instantiable class
+     *
+     * @link http://php.net/manual/en/reflectionclass.isinstantiable.php
+     *
+     * @return bool
+     */
+    public function isCloneable()
+    {
+        if (! $this->isInstantiable()) {
+            return false;
+        }
+
+        if (! $this->hasMethod('__clone')) {
+            return true;
+        }
+
+        return $this->getMethod('__clone')->isPublic();
+    }
+
+    /**
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] indexed by interface name
