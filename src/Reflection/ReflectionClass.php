@@ -3,6 +3,8 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\Reflection\Exception\NotAClassReflection;
+use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
@@ -380,10 +382,16 @@ class ReflectionClass implements Reflection
         $fqsen = $this->extendsClassType->__toString();
 
         if (null !== $sourceLocator) {
-            return (new ClassReflector($sourceLocator))->reflect($fqsen);
+            $parent = (new ClassReflector($sourceLocator))->reflect($fqsen);
+        } else {
+            $parent = self::createFromName($fqsen);
         }
 
-        return self::createFromName($fqsen);
+        if ($parent->isInterface() || $parent->isTrait()) {
+            throw NotAClassReflection::fromReflectionClass($parent);
+        }
+
+        return $parent;
     }
 
     /**
@@ -830,11 +838,13 @@ class ReflectionClass implements Reflection
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] parent interfaces of this interface
-     *
-     * @TODO throw an exception if used outside the context of an interface?
      */
     private function getInterfacesHierarchy(SourceLocator $sourceLocator)
     {
+        if (! $this->isInterface()) {
+            throw NotAnInterfaceReflection::fromReflectionClass($this);
+        }
+
         /* @var $node InterfaceNode */
         $node = $this->node;
 
