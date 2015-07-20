@@ -717,6 +717,25 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Checks whether this class implements the given interface
+     *
+     * @link http://php.net/manual/en/reflectionclass.implementsinterface.php
+     *
+     * @param string        $interfaceName
+     * @param SourceLocator $sourceLocator
+     *
+     * @return bool
+     */
+    public function implementsInterface($interfaceName, SourceLocator $sourceLocator)
+    {
+        if (! is_string($interfaceName)) {
+            throw NotAString::fromNonString($interfaceName);
+        }
+
+        return in_array(ltrim($interfaceName, '\\'), $this->getInterfaceNames($sourceLocator), true);
+    }
+
+    /**
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] indexed by interface name
