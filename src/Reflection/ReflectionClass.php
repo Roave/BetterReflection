@@ -769,6 +769,18 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Checks if iterateable
+     *
+     * @link http://php.net/manual/en/reflectionclass.isiterateable.php
+     *
+     * @return bool
+     */
+    public function isIterateable(SourceLocator $sourceLocator)
+    {
+        return $this->implementsInterface(\Traversable::class, $sourceLocator);
+    }
+
+    /**
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] indexed by interface name
