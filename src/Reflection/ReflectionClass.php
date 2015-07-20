@@ -736,6 +736,19 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Checks whether this reflection is an instantiable class
+     *
+     * @link http://php.net/manual/en/reflectionclass.isinstantiable.php
+     *
+     * @return bool
+     */
+    public function isInstantiable()
+    {
+        // @TODO doesn't consider internal non-instantiable classes yet.
+        return ! ($this->isAbstract() || $this->isInterface() || $this->isTrait());
+    }
+
+    /**
      * @param SourceLocator $sourceLocator
      *
      * @return ReflectionClass[] indexed by interface name
