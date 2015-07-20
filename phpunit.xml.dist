@@ -13,4 +13,7 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
+    <listeners>
+        <listener class="BetterReflectionTest\TestListener" file="test/unit/TestListener.php" />
+    </listeners>
 </phpunit>
