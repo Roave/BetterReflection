@@ -7,7 +7,7 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\AggregateSourceLocator
+ * @covers \BetterReflection\SourceLocator\PhpInternalSourceLocator
  */
 class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
