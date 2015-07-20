@@ -18,5 +18,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ReflectionClass::class, $classInfo);
         $this->assertSame('stdClass', $classInfo->getName());
+        $this->assertTrue($classInfo->isInternal());
+        $this->assertFalse($classInfo->isUserDefined());
     }
 }

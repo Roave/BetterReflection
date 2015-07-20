@@ -8,23 +8,19 @@ class PhpInternalSourceLocator implements SourceLocator
 {
     public function __invoke(Identifier $identifier)
     {
-        if (!$identifier->isClass()) {
-            throw new \LogicException(__CLASS__ . ' can only be used to locate classes');
-        }
-
         $methodName = str_replace('\\', '__', $identifier->getName());
         if (!method_exists($this, $methodName)) {
-            throw new Exception\NotInternalClass(sprintf(
-                '%s was not a defined internal class, or stub was not found',
-                $identifier->getName()
-            ));
+            return new LocatedSource('<?php', LocatedSource::INTERNAL_SOURCE_MAGIC_CONST);
         }
 
-        return new LocatedSource($this->$methodName(), null);
+        return new LocatedSource(
+            '<?php ' . $this->$methodName(),
+            LocatedSource::INTERNAL_SOURCE_MAGIC_CONST
+        );
     }
 
     public function stdClass()
     {
-        return '<?php class stdClass {}';
+        return 'class stdClass {}';
     }
 }

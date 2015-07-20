@@ -416,16 +416,11 @@ class ReflectionClass implements Reflection
     /**
      * Is this an internal class?
      *
-     * Note - we cannot reflect on internal classes (as there is no PHP source
-     * code we can access. This means, at present, we can only EVER return false
-     * from this function.
-     *
-     * @see https://github.com/Roave/BetterReflection/issues/38
      * @return bool
      */
     public function isInternal()
     {
-        return false;
+        return $this->locatedSource->isInternal();
     }
 
     /**
