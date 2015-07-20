@@ -3,7 +3,6 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\Reflection\Exception\NoParent;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
@@ -371,7 +370,6 @@ class ReflectionClass implements Reflection
      *
      * @param SourceLocator|null $sourceLocator
      * @return ReflectionClass
-     * @throws NoParent
      */
     public function getParentClass(SourceLocator $sourceLocator = null)
     {
@@ -773,6 +771,8 @@ class ReflectionClass implements Reflection
      *
      * @link http://php.net/manual/en/reflectionclass.isiterateable.php
      *
+     * @param SourceLocator $sourceLocator
+     *
      * @return bool
      */
     public function isIterateable(SourceLocator $sourceLocator)
@@ -819,6 +819,8 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * @param SourceLocator $sourceLocator
+     *
      * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
      */
     private function getInheritanceClassHierarchy(SourceLocator $sourceLocator)
