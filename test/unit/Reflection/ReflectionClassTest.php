@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use BetterReflection\Reflection\Exception\NotAClassReflection;
 use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
@@ -704,5 +705,30 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(NotAnInterfaceReflection::class);
 
         $class->getInterfaces();
+    }
+
+    public function testGetPrototype()
+    {
+        $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
+        $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
+
+        $b = $reflector->reflect('Zoom\B')->getMethod('foo')->getPrototype();
+        $this->assertInstanceOf(ReflectionMethod::class, $b);
+        $this->assertSame('Zoom\FooInterface', $b->getDeclaringClass()->getName());
+
+        $b = $reflector->reflect('Xoom\B')->getMethod('foo')->getPrototype();
+        $this->assertInstanceOf(ReflectionMethod::class, $b);
+        $this->assertSame('Xoom\A', $b->getDeclaringClass()->getName());
+
+        $b = $reflector->reflect('ClassB')->getMethod('foo')->getPrototype();
+        $this->assertInstanceOf(ReflectionMethod::class, $b);
+        $this->assertSame('ClassA', $b->getDeclaringClass()->getName());
+
+        $c = $reflector->reflect('ClassC')->getMethod('foo')->getPrototype();
+        $this->assertInstanceOf(ReflectionMethod::class, $c);
+        $this->assertSame('FooInterface', $c->getDeclaringClass()->getName());
+
+        $this->setExpectedException(MethodPrototypeNotFound::class);
+        $t = $reflector->reflect('ClassT')->getMethod('bar')->getPrototype();
     }
 }
