@@ -11,24 +11,9 @@ use PhpParser\Node\Expr\Yield_ as YieldNode;
 abstract class ReflectionFunctionAbstract
 {
     /**
-     * @var ReflectionParameter[]
-     */
-    private $parameters = [];
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var NamespaceNode
      */
     private $declaringNamespace;
-
-    /**
-     * @var string
-     */
-    private $docBlock = '';
 
     /**
      * @var LocatedSource
@@ -54,22 +39,22 @@ abstract class ReflectionFunctionAbstract
     protected function populateFunctionAbstract(MethodOrFunctionNode $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
         $this->node = $node;
-        $this->name = $node->name;
         $this->locatedSource = $locatedSource;
         $this->declaringNamespace = $declaringNamespace;
 
-        if ($node->hasAttribute('comments')) {
-            /* @var \PhpParser\Comment\Doc $comment */
-            $comment = $node->getAttribute('comments')[0];
-            $this->docBlock = $comment->getReformattedText();
-        }
+        $this->setNodeOptionalFlag();
+    }
 
-        // We must determine if params are optional or not ahead of time, but
-        // we must do it in reverse...
+    /**
+     * We must determine if params are optional or not ahead of time, but we
+     * must do it in reverse...
+     */
+    private function setNodeOptionalFlag()
+    {
         $overallOptionalFlag = true;
-        $lastParamIndex = (count($node->params) - 1);
+        $lastParamIndex = (count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
-            $hasDefault = ($node->params[$i]->default !== null);
+            $hasDefault = ($this->node->params[$i]->default !== null);
 
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional
@@ -78,15 +63,7 @@ abstract class ReflectionFunctionAbstract
                 $overallOptionalFlag = false;
             }
 
-            $node->params[$i]->isOptional = $overallOptionalFlag;
-        }
-
-        foreach ($node->params as $paramIndex => $paramNode) {
-            $this->parameters[] = ReflectionParameter::createFromNode(
-                $paramNode,
-                $this,
-                $paramIndex
-            );
+            $this->node->params[$i]->isOptional = $overallOptionalFlag;
         }
     }
 
@@ -113,7 +90,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getShortName()
     {
-        return $this->name;
+        return $this->node->name;
     }
 
     /**
@@ -150,7 +127,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getNumberOfParameters()
     {
-        return count($this->parameters);
+        return count($this->getParameters());
     }
 
     /**
@@ -161,7 +138,7 @@ abstract class ReflectionFunctionAbstract
     public function getNumberOfRequiredParameters()
     {
         return count(array_filter(
-            $this->parameters,
+            $this->getParameters(),
             function (ReflectionParameter $p) {
                 return !$p->isOptional();
             }
@@ -176,7 +153,15 @@ abstract class ReflectionFunctionAbstract
      */
     public function getParameters()
     {
-        return $this->parameters;
+        $parameters = [];
+        foreach ($this->node->params as $paramIndex => $paramNode) {
+            $parameters[] = ReflectionParameter::createFromNode(
+                $paramNode,
+                $this,
+                $paramIndex
+            );
+        }
+        return $parameters;
     }
 
     /**
@@ -188,7 +173,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getParameter($parameterName)
     {
-        foreach ($this->parameters as $parameter) {
+        foreach ($this->getParameters() as $parameter) {
             if ($parameter->getName() === $parameterName) {
                 return $parameter;
             }
@@ -201,7 +186,12 @@ abstract class ReflectionFunctionAbstract
      */
     public function getDocComment()
     {
-        return $this->docBlock;
+        if (!$this->node->hasAttribute('comments')) {
+            return '';
+        }
+        /* @var \PhpParser\Comment\Doc $comment */
+        $comment = $this->node->getAttribute('comments')[0];
+        return $comment->getReformattedText();
     }
 
     /**
