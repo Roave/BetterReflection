@@ -19,6 +19,10 @@ class LocatedSource
      */
     private $filename;
 
+    /**
+     * @param string      $source
+     * @param string|null $filename
+     */
     public function __construct($source, $filename)
     {
         if (!is_string($source) || empty($source)) {
