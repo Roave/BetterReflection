@@ -39,7 +39,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
      */
     public function testCompilations($phpCode, $expectedValue)
     {
-        $node = (new Parser(new Lexer()))->parse('<?php ' . $phpCode . ';');
+        $node = (new Parser\Php7(new Lexer()))->parse('<?php ' . $phpCode . ';');
 
         $actualValue = (new CompileNodeToValue())->__invoke($node[0]);
 

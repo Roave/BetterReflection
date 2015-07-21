@@ -3,9 +3,10 @@
     "description": "Better Reflection - an improved code reflection API",
     "require": {
         "php": ">= 5.6",
-        "nikic/php-parser": "^1.3",
+        "nikic/php-parser": "dev-master",
         "phpdocumentor/reflection-docblock": "^2.0",
-        "phpdocumentor/type-resolver": "dev-master"
+        "phpdocumentor/type-resolver": "dev-master",
+        "zendframework/zend-code": "^2.5@dev"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.8",
