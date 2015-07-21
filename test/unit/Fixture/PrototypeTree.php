@@ -97,3 +97,11 @@ namespace Foom {
         }
     }
 }
+
+namespace Boom {
+    interface Foo {}
+    interface Bar {}
+
+    class A implements Foo {}
+    class B extends A implements Bar {}
+}

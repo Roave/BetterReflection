@@ -706,4 +706,15 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class->getInterfaces();
     }
+
+    public function testGetImmediateInterfaces()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PrototypeTree.php'));
+
+        $interfaces = $reflector->reflect('Boom\B')->getImmediateInterfaces();
+
+        $this->assertCount(1, $interfaces);
+        $this->assertInstanceOf(ReflectionClass::class, $interfaces['Boom\Bar']);
+        $this->assertSame('Boom\Bar', $interfaces['Boom\Bar']->getName());
+    }
 }
