@@ -3,6 +3,7 @@
 namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
@@ -162,12 +163,36 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetPrototype()
+    public function prototypeProvider()
+    {
+        return [
+            ['Zoom\B', 'foo', 'Zoom\FooInterface'],
+            ['Xoom\B', 'foo', 'Xoom\A'],
+            ['ClassB', 'foo', 'ClassA'],
+            ['ClassC', 'foo', 'FooInterface'],
+            ['ClassT', 'bar', null],
+            ['Foom\A', 'foo', 'Foom\Foo'],
+        ];
+    }
+
+    /**
+     * @param string $class
+     * @param string $method
+     * @param string|null $expectedPrototype
+     * @dataProvider prototypeProvider
+     */
+    public function testGetPrototype($class, $method, $expectedPrototype)
     {
         $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
 
-        $this->setExpectedException(MethodPrototypeNotFound::class);
-        $reflector->reflect('ClassB')->getMethod('foo')->getPrototype();
+
+        if (null === $expectedPrototype) {
+            $this->setExpectedException(MethodPrototypeNotFound::class);
+        }
+
+        $b = $reflector->reflect($class)->getMethod($method)->getPrototype();
+        $this->assertInstanceOf(ReflectionMethod::class, $b);
+        $this->assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
 }

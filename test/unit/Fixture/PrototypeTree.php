@@ -83,3 +83,17 @@ namespace Xoom {
         }
     }
 }
+
+namespace Foom {
+    interface Foo
+    {
+        public function foo($a, $b);
+    }
+
+    class A implements Foo
+    {
+        public function foo($a, $b)
+        {
+        }
+    }
+}
