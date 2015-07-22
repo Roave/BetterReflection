@@ -105,12 +105,15 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
         $property = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getDeclaringClass'])
+            ->setMethods(['getDeclaringClass', 'getDocComment'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $property->expects($this->any())->method('getDeclaringClass')
             ->will($this->returnValue($class));
+
+        $property->expects($this->any())->method('getDocComment')
+            ->will($this->returnValue(''));
 
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);

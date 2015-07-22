@@ -8,39 +8,15 @@ use phpDocumentor\Reflection\Type;
 
 class ReflectionProperty implements \Reflector
 {
-    const IS_PUBLIC = 1;
-    const IS_PROTECTED = 2;
-    const IS_PRIVATE = 3;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var int
-     */
-    private $visibility;
-
-    /**
-     * @var bool
-     */
-    private $isStatic;
-
-    /**
-     * @var Type[]
-     */
-    private $docBlockTypes;
-
     /**
      * @var ReflectionClass
      */
     private $declaringClass;
 
     /**
-     * @var string
+     * @var PropertyNode
      */
-    private $docBlock = '';
+    private $node;
 
     private function __construct()
     {
@@ -77,27 +53,8 @@ class ReflectionProperty implements \Reflector
         ReflectionClass $declaringClass
     ) {
         $prop = new self();
-        $prop->name = $node->props[0]->name;
+        $prop->node = $node;
         $prop->declaringClass = $declaringClass;
-
-        if ($node->hasAttribute('comments')) {
-            /* @var \PhpParser\Comment\Doc $comment */
-            $comment = $node->getAttribute('comments')[0];
-            $prop->docBlock = $comment->getReformattedText();
-        }
-
-        if ($node->isPrivate()) {
-            $prop->visibility = self::IS_PRIVATE;
-        } elseif ($node->isProtected()) {
-            $prop->visibility = self::IS_PROTECTED;
-        } else {
-            $prop->visibility = self::IS_PUBLIC;
-        }
-
-        $prop->isStatic = $node->isStatic();
-
-        $prop->docBlockTypes = (new FindPropertyType())->__invoke($prop);
-
         return $prop;
     }
 
@@ -106,14 +63,15 @@ class ReflectionProperty implements \Reflector
      */
     private function getVisibilityAsString()
     {
-        switch ($this->visibility) {
-            case self::IS_PROTECTED:
-                return 'protected';
-            case self::IS_PRIVATE:
-                return 'private';
-            default:
-                return 'public';
+        if ($this->isProtected()) {
+            return 'protected';
         }
+
+        if ($this->isPrivate()) {
+            return 'private';
+        }
+
+        return 'public';
     }
 
     /**
@@ -156,7 +114,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getName()
     {
-        return $this->name;
+        return $this->node->props[0]->name;
     }
 
     /**
@@ -166,7 +124,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isPrivate()
     {
-        return $this->visibility === self::IS_PRIVATE;
+        return $this->node->isPrivate();
     }
 
     /**
@@ -176,7 +134,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isProtected()
     {
-        return $this->visibility === self::IS_PROTECTED;
+        return $this->node->isProtected();
     }
 
     /**
@@ -186,7 +144,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isPublic()
     {
-        return $this->visibility === self::IS_PUBLIC;
+        return $this->node->isPublic();
     }
 
     /**
@@ -196,7 +154,7 @@ class ReflectionProperty implements \Reflector
      */
     public function isStatic()
     {
-        return $this->isStatic;
+        return $this->node->isStatic();
     }
 
     /**
@@ -208,7 +166,7 @@ class ReflectionProperty implements \Reflector
     {
         $stringTypes = [];
 
-        foreach ($this->docBlockTypes as $type) {
+        foreach ($this->getDocBlockTypes() as $type) {
             $stringTypes[] = (string)$type;
         }
         return $stringTypes;
@@ -224,7 +182,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getDocBlockTypes()
     {
-        return $this->docBlockTypes;
+        return (new FindPropertyType())->__invoke($this);
     }
 
     /**
@@ -240,6 +198,12 @@ class ReflectionProperty implements \Reflector
      */
     public function getDocComment()
     {
-        return $this->docBlock;
+        if (!$this->node->hasAttribute('comments')) {
+            return '';
+        }
+
+        /* @var \PhpParser\Comment\Doc $comment */
+        $comment = $this->node->getAttribute('comments')[0];
+        return $comment->getReformattedText();
     }
 }
