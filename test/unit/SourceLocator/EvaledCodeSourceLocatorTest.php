@@ -18,7 +18,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $className = uniqid('foo');
 
-        eval('class ' . $className . ' {function foo() {}}');
+        eval('class ' . $className . ' {function foo(){}}');
 
         $locator = new EvaledCodeSourceLocator();
 
@@ -28,6 +28,38 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(EvaledLocatedSource::class, $source);
         $this->assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());
+    }
+
+    public function testCanReflectEvaledInterface()
+    {
+        $interfaceName = uniqid('foo');
+
+        eval('interface ' . $interfaceName . ' {function foo();}');
+
+        $locator = new EvaledCodeSourceLocator();
+
+        $source = $locator->__invoke(
+            new Identifier($interfaceName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+        );
+
+        $this->assertInstanceOf(EvaledLocatedSource::class, $source);
+        $this->assertStringMatchesFormat('%Aclass%A' . $interfaceName . '%A', $source->getSource());
+    }
+
+    public function testCanReflectEvaledTrait()
+    {
+        $traitName = uniqid('foo');
+
+        eval('trait ' . $traitName . ' {function foo(){}}');
+
+        $locator = new EvaledCodeSourceLocator();
+
+        $source = $locator->__invoke(
+            new Identifier($traitName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+        );
+
+        $this->assertInstanceOf(EvaledLocatedSource::class, $source);
+        $this->assertStringMatchesFormat('%Aclass%A' . $traitName . '%A', $source->getSource());
     }
 
     public function testCanReflectEvaledLocatedSourceClass()
