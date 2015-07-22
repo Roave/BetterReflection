@@ -27,7 +27,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(EvaledLocatedSource::class, $source);
-        $this->assertNotEmpty($source->getSource());
+        $this->assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());
     }
 
     public function testCanReflectEvaledLocatedSourceClass()
