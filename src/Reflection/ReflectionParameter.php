@@ -17,9 +17,9 @@ class ReflectionParameter implements \Reflector
     const CONST_TYPE_DEFINED = 2;
 
     /**
-     * @var string
+     * @var ParamNode
      */
-    private $name;
+    private $node;
 
     /**
      * @var ReflectionFunctionAbstract
@@ -27,44 +27,14 @@ class ReflectionParameter implements \Reflector
     private $function;
 
     /**
-     * @var bool
+     * @var int
      */
-    private $isOptional;
-
-    /**
-     * @var bool
-     */
-    private $hasDefaultValue;
+    private $parameterIndex;
 
     /**
      * @var mixed
      */
     private $defaultValue;
-
-    /**
-     * @var bool
-     */
-    private $isVariadic;
-
-    /**
-     * @var bool
-     */
-    private $isByReference;
-
-    /**
-     * @var Type[]
-     */
-    private $docBlockTypes;
-
-    /**
-     * @var Type|null
-     */
-    private $typeHint;
-
-    /**
-     * @var int
-     */
-    private $parameterIndex;
 
     /**
      * @var bool
@@ -80,6 +50,7 @@ class ReflectionParameter implements \Reflector
      * @var int
      */
     private $defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
+
 
     private function __construct()
     {
@@ -119,34 +90,20 @@ class ReflectionParameter implements \Reflector
         ReflectionFunctionAbstract $function, $parameterIndex
     ) {
         $param = new self();
-        $param->name = $node->name;
+        $param->node = $node;
         $param->function = $function;
-        $param->isOptional = (bool)$node->isOptional;
-        $param->hasDefaultValue = (null !== $node->default);
-        $param->isVariadic = (bool)$node->variadic;
-        $param->isByReference = (bool)$node->byRef;
         $param->parameterIndex = (int)$parameterIndex;
-
-        $namespaceForType = $function instanceof ReflectionMethod
-            ? $function->getDeclaringClass()->getNamespaceName()
-            : $function->getNamespaceName();
-        $param->typeHint = (new FindTypeFromAst())->__invoke(
-            $node->type,
-            $function->getLocatedSource(),
-            $namespaceForType
-        );
-
-        if ($param->hasDefaultValue) {
-            $param->parseDefaultValueNode($node->default);
-        }
-
-        $param->docBlockTypes = (new FindParameterType())->__invoke($function, $node);
-
         return $param;
     }
 
-    private function parseDefaultValueNode(Node $defaultValueNode)
+    private function parseDefaultValueNode()
     {
+        if (!$this->isDefaultValueAvailable()) {
+            throw new \LogicException('This parameter does not have a default value available');
+        }
+
+        $defaultValueNode = $this->node->default;
+
         $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode);
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
@@ -170,7 +127,7 @@ class ReflectionParameter implements \Reflector
      */
     public function getName()
     {
-        return $this->name;
+        return $this->node->name;
     }
 
     /**
@@ -213,7 +170,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isOptional()
     {
-        return $this->isOptional;
+        return (bool)$this->node->isOptional;
     }
 
     /**
@@ -229,7 +186,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isDefaultValueAvailable()
     {
-        return $this->hasDefaultValue;
+        return (null !== $this->node->default);
     }
 
     /**
@@ -240,9 +197,7 @@ class ReflectionParameter implements \Reflector
      */
     public function getDefaultValue()
     {
-        if (!$this->isDefaultValueAvailable()) {
-            throw new \LogicException('This parameter does not have a default value available');
-        }
+        $this->parseDefaultValueNode();
 
         return $this->defaultValue;
     }
@@ -284,7 +239,7 @@ class ReflectionParameter implements \Reflector
     {
         $stringTypes = [];
 
-        foreach ($this->docBlockTypes as $type) {
+        foreach ($this->getDocBlockTypes() as $type) {
             $stringTypes[] = (string)$type;
         }
         return $stringTypes;
@@ -301,7 +256,7 @@ class ReflectionParameter implements \Reflector
      */
     public function getDocBlockTypes()
     {
-        return $this->docBlockTypes;
+        return  (new FindParameterType())->__invoke($this->function, $this->node);
     }
 
     /**
@@ -324,7 +279,15 @@ class ReflectionParameter implements \Reflector
      */
     public function getTypeHint()
     {
-        return $this->typeHint;
+        $namespaceForType = $this->function instanceof ReflectionMethod
+            ? $this->function->getDeclaringClass()->getNamespaceName()
+            : $this->function->getNamespaceName();
+
+        return (new FindTypeFromAst())->__invoke(
+            $this->node->type,
+            $this->function->getLocatedSource(),
+            $namespaceForType
+        );
     }
 
     /**
@@ -354,7 +317,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isVariadic()
     {
-        return $this->isVariadic;
+        return (bool)$this->node->variadic;
     }
 
     /**
@@ -364,7 +327,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isPassedByReference()
     {
-        return $this->isByReference;
+        return (bool)$this->node->byRef;
     }
 
     /**
@@ -380,6 +343,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isDefaultValueConstant()
     {
+        $this->parseDefaultValueNode();
         return $this->isDefaultValueConstant;
     }
 
@@ -389,6 +353,7 @@ class ReflectionParameter implements \Reflector
      */
     public function getDefaultValueConstantName()
     {
+        $this->parseDefaultValueNode();
         if (!$this->isDefaultValueConstant()) {
             throw new \LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
