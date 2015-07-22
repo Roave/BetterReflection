@@ -338,7 +338,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFileName()
     {
