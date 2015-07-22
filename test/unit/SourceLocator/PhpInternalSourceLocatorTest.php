@@ -2,8 +2,11 @@
 
 namespace BetterReflectionTest\SourceLocator;
 
+use BetterReflection\Identifier\Identifier;
+use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\SourceLocator\InternalLocatedSource;
 use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use ReflectionClass as PhpReflectionClass;
 
@@ -12,6 +15,33 @@ use ReflectionClass as PhpReflectionClass;
  */
 class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @dataProvider internalSymbolsProvider
+     *
+     * @param string $className
+     */
+    public function testCanFetchInternalLocatedSource($className)
+    {
+        /* @var $class */
+        $locator = new PhpInternalSourceLocator();
+
+        try {
+            $source = $locator->__invoke(
+                new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            );
+
+            $this->assertInstanceOf(InternalLocatedSource::class, $source);
+            $this->assertNotEmpty($source->getSource());
+        } catch (\ReflectionException $e) {
+            $this->markTestIncomplete(sprintf(
+                'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
+                $className,
+                $e->getMessage()
+            ));
+        }
+
+    }
+
     /**
      * @dataProvider internalSymbolsProvider
      *
