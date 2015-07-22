@@ -9,8 +9,11 @@ use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
+use BetterReflection\SourceLocator\AggregateSourceLocator;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
@@ -77,8 +80,11 @@ class ReflectionClass implements Reflection
 
     public static function createFromName($className)
     {
-        // @TODO consider having one main "DefaultReflector"
-        return (new ClassReflector(new AutoloadSourceLocator()))->reflect($className);
+        return (new ClassReflector(new AggregateSourceLocator([
+            new PhpInternalSourceLocator(),
+            new EvaledCodeSourceLocator(),
+            new AutoloadSourceLocator(),
+        ])))->reflect($className);
     }
 
     /**
