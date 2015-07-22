@@ -17,9 +17,8 @@ class PhpInternalSourceLocator implements SourceLocator
             return null;
         }
 
-        return new LocatedSource(
-            "<?php\n\n" . ClassGenerator::fromReflection(new ClassReflection($name))->generate(),
-            null
+        return new InternalLocatedSource(
+            "<?php\n\n" . ClassGenerator::fromReflection(new ClassReflection($name))->generate()
         );
     }
 
