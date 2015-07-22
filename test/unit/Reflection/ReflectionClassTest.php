@@ -33,6 +33,20 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         return new ComposerSourceLocator($loader);
     }
 
+    public function testCanReflectInternalClassWithDefaultLocator()
+    {
+        $this->assertSame(\stdClass::class, ReflectionClass::createFromName(\stdClass::class)->getName());
+    }
+
+    public function testCanReflectEvaledClassWithDefaultLocator()
+    {
+        $className = uniqid('foo');
+
+        eval('class ' . $className . '{}');
+
+        $this->assertSame($className, ReflectionClass::createFromName($className)->getName());
+    }
+
     public function testClassNameMethodsWithNamespace()
     {
         $reflector = new ClassReflector($this->getComposerLocator());

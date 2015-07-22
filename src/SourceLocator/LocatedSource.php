@@ -7,8 +7,6 @@ namespace BetterReflection\SourceLocator;
  */
 class LocatedSource
 {
-    const INTERNAL_SOURCE_MAGIC_CONST = 'BetterReflectionPhpInternalSourceStub';
-
     /**
      * @var string
      */
@@ -19,6 +17,10 @@ class LocatedSource
      */
     private $filename;
 
+    /**
+     * @param string      $source
+     * @param string|null $filename
+     */
     public function __construct($source, $filename)
     {
         if (!is_string($source) || empty($source)) {
@@ -33,7 +35,7 @@ class LocatedSource
             );
         }
 
-        if (null !== $filename && self::INTERNAL_SOURCE_MAGIC_CONST !== $filename) {
+        if (null !== $filename) {
             if (empty($filename)) {
                 throw new Exception\InvalidFileLocation('Filename was empty');
             }
@@ -78,6 +80,16 @@ class LocatedSource
      */
     public function isInternal()
     {
-        return $this->filename === self::INTERNAL_SOURCE_MAGIC_CONST;
+        return false;
+    }
+
+    /**
+     * Is the located source produced by eval() or function_create()?
+     *
+     * @return bool
+     */
+    public function isEvaled()
+    {
+        return false;
     }
 }

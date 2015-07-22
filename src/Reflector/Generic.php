@@ -22,9 +22,18 @@ class Generic
      */
     private $sourceLocator;
 
+    /**
+     * @var Parser
+     */
+    private $parser;
+
     public function __construct(SourceLocator $sourceLocator)
     {
         $this->sourceLocator = $sourceLocator;
+        $this->parser        = new Parser\Multiple([
+            new Parser\Php7(new Lexer()),
+            new Parser\Php5(new Lexer())
+        ]);
     }
 
     /**
@@ -185,7 +194,7 @@ class Generic
     private function getReflections(LocatedSource $locatedSource, Identifier $identifier)
     {
         return $this->reflectFromTree(
-            (new Parser(new Lexer()))->parse($locatedSource->getSource()),
+            $this->parser->parse($locatedSource->getSource()),
             $identifier,
             $locatedSource
         );

@@ -6,7 +6,7 @@ use BetterReflection\Identifier\Identifier;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
-class PhpInternalSourceLocator implements SourceLocator
+class EvaledCodeSourceLocator implements SourceLocator
 {
     /**
      * {@inheritDoc}
@@ -17,7 +17,7 @@ class PhpInternalSourceLocator implements SourceLocator
             return null;
         }
 
-        return new InternalLocatedSource(
+        return new EvaledLocatedSource(
             "<?php\n\n" . ClassGenerator::fromReflection(new ClassReflection($name))->generate()
         );
     }
@@ -41,6 +41,6 @@ class PhpInternalSourceLocator implements SourceLocator
 
         $reflection = new \ReflectionClass($name);
 
-        return $reflection->isInternal() ? $reflection->getName() : null;
+        return $reflection->getFileName() ? $reflection->getName() : null;
     }
 }
