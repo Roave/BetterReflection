@@ -33,6 +33,20 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         return new ComposerSourceLocator($loader);
     }
 
+    public function testCanReflectInternalClassWithDefaultLocator()
+    {
+        $this->assertSame(\stdClass::class, ReflectionClass::createFromName(\stdClass::class)->getName());
+    }
+
+    public function testCanReflectEvaledClassWithDefaultLocator()
+    {
+        $className = uniqid('foo');
+
+        eval('class ' . $className . '{}');
+
+        $this->assertSame($className, ReflectionClass::createFromName($className)->getName());
+    }
+
     public function testClassNameMethodsWithNamespace()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
@@ -250,13 +264,22 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $defaultProperties);
     }
 
-    public function testIsInternal()
+    public function testIsInternalWithUserDefinedClass()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $this->assertFalse($classInfo->isInternal());
         $this->assertTrue($classInfo->isUserDefined());
+    }
+
+    public function testIsInternalWithInternalClass()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('stdClass');
+
+        $this->assertTrue($classInfo->isInternal());
+        $this->assertFalse($classInfo->isUserDefined());
     }
 
     public function testIsAbstract()

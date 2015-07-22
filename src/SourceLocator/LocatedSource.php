@@ -17,6 +17,10 @@ class LocatedSource
      */
     private $filename;
 
+    /**
+     * @param string      $source
+     * @param string|null $filename
+     */
     public function __construct($source, $filename)
     {
         if (!is_string($source) || empty($source)) {
@@ -67,5 +71,25 @@ class LocatedSource
     public function getFileName()
     {
         return $this->filename;
+    }
+
+    /**
+     * Is the located source in PHP internals?
+     *
+     * @return bool
+     */
+    public function isInternal()
+    {
+        return false;
+    }
+
+    /**
+     * Is the located source produced by eval() or function_create()?
+     *
+     * @return bool
+     */
+    public function isEvaled()
+    {
+        return false;
     }
 }

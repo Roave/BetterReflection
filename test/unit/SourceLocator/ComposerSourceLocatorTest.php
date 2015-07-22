@@ -60,11 +60,10 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->setExpectedException(UnexpectedValueException::class);
-        $locator->__invoke(new Identifier(
+        $this->assertNull($locator->__invoke(new Identifier(
             $className,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-        ));
+        )));
     }
 
     public function testInvokeThrowsExceptionWhenTryingToLocateFunction()
@@ -74,10 +73,9 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->setExpectedException(LogicException::class);
-        $locator->__invoke(new Identifier(
+        $this->assertNull($locator->__invoke(new Identifier(
             'foo',
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-        ));
+        )));
     }
 }

@@ -27,20 +27,18 @@ class ComposerSourceLocator implements SourceLocator
 
     /**
      * @param Identifier $identifier
-     * @return LocatedSource
+     * @return LocatedSource|null
      */
     public function __invoke(Identifier $identifier)
     {
         if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
-            throw new \LogicException(__CLASS__ . ' can only be used to locate classes');
+            return null;
         }
 
         $filename = $this->classLoader->findFile($identifier->getName());
 
         if (!$filename) {
-            throw new \UnexpectedValueException(sprintf(
-                'Could not locate file to load "%s"', $identifier->getName()
-            ));
+            return null;
         }
 
         return new LocatedSource(

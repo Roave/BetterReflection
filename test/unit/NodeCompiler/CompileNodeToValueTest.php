@@ -27,6 +27,8 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             ['["foo","bar"]', ['foo', 'bar']],
             ['[1 => "foo", 2 => "bar"]', [1 => 'foo', 2 => 'bar']],
             ['["foo" => "bar"]', ['foo' => 'bar']],
+            ['-1', -1],
+            ['-123.456', -123.456],
         ];
     }
 
@@ -37,7 +39,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
      */
     public function testCompilations($phpCode, $expectedValue)
     {
-        $node = (new Parser(new Lexer()))->parse('<?php ' . $phpCode . ';');
+        $node = (new Parser\Php7(new Lexer()))->parse('<?php ' . $phpCode . ';');
 
         $actualValue = (new CompileNodeToValue())->__invoke($node[0]);
 

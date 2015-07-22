@@ -21,6 +21,11 @@ class CompileNodeToValue
             return $node->value;
         }
 
+        // common edge case - negative numbers
+        if ($node instanceof Node\Expr\UnaryMinus) {
+            return $this->__invoke($node->expr) * -1;
+        }
+
         if ($node instanceof Node\Expr\Array_) {
             $compiledArray = [];
             foreach ($node->items as $arrayItem) {

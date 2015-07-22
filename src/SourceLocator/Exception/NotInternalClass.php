@@ -2,6 +2,6 @@
 
 namespace BetterReflection\SourceLocator\Exception;
 
-class AutoloadFailure extends \RuntimeException
+class NotInternalClass extends \LogicException
 {
 }

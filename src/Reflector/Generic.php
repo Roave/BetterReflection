@@ -7,6 +7,7 @@ use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\SourceLocator\AggregateSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\Reflection;
@@ -21,9 +22,18 @@ class Generic
      */
     private $sourceLocator;
 
+    /**
+     * @var Parser
+     */
+    private $parser;
+
     public function __construct(SourceLocator $sourceLocator)
     {
         $this->sourceLocator = $sourceLocator;
+        $this->parser        = new Parser\Multiple([
+            new Parser\Php7(new Lexer()),
+            new Parser\Php5(new Lexer())
+        ]);
     }
 
     /**
@@ -31,16 +41,25 @@ class Generic
      * specified and returns the \Reflector.
      *
      * @param Identifier $identifier
+     * @param bool $autoReflectInternals
      * @return Reflection
      */
-    public function reflect(Identifier $identifier)
+    public function reflect(Identifier $identifier, $autoReflectInternals = true)
     {
         $aggregate = $this->sourceLocator;
         if (!($aggregate instanceof AggregateSourceLocator)) {
             $aggregate = new AggregateSourceLocator([$this->sourceLocator]);
         }
 
+        if ($autoReflectInternals) {
+            $aggregate = new AggregateSourceLocator([$aggregate, new PhpInternalSourceLocator()]);
+        }
+
         foreach ($aggregate($identifier) as $locatedSource) {
+            if (null === $locatedSource) {
+                continue;
+            }
+
             try {
                 return $this->reflectFromLocatedSource($identifier, $locatedSource);
             }
@@ -175,7 +194,7 @@ class Generic
     private function getReflections(LocatedSource $locatedSource, Identifier $identifier)
     {
         return $this->reflectFromTree(
-            (new Parser(new Lexer()))->parse($locatedSource->getSource()),
+            $this->parser->parse($locatedSource->getSource()),
             $identifier,
             $locatedSource
         );
