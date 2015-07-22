@@ -22,7 +22,6 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanFetchInternalLocatedSource($className)
     {
-        /* @var $class */
         $locator = new PhpInternalSourceLocator();
 
         try {
