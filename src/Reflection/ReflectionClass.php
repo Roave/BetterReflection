@@ -646,6 +646,17 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * Get only the interfaces that this class implements (i.e. do not search
+     * up parent classes etc.)
+     *
+     * @return ReflectionClass[]
+     */
+    public function getImmediateInterfaces()
+    {
+        return $this->getCurrentClassImplementedInterfacesIndexedByName();
+    }
+
+    /**
      * Gets the interface names.
      *
      * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php

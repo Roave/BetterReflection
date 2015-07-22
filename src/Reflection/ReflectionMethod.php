@@ -58,8 +58,26 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getPrototype()
     {
-        // @todo complete this implementation
-        /* @see https://github.com/Roave/BetterReflection/issues/57 */
+        $i = $this->getDeclaringClass();
+
+        while ($i) {
+            foreach ($i->getImmediateInterfaces() as $interface) {
+                if ($interface->hasMethod($this->getName())) {
+                    return $interface->getMethod($this->getName());
+                }
+            }
+
+            $i = $i->getParentClass();
+
+            if (null === $i) {
+                continue;
+            }
+
+            if ($i->hasMethod($this->getName()) && $i->getMethod($this->getName())->isAbstract()) {
+                return $i->getMethod($this->getName());
+            }
+        }
+
         throw new Exception\MethodPrototypeNotFound(sprintf(
             'Method %s::%s does not have a prototype',
             $this->getDeclaringClass()->getName(),
