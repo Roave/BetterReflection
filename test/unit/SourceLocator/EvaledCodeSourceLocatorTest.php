@@ -8,9 +8,6 @@ use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use BetterReflection\SourceLocator\EvaledLocatedSource;
-use BetterReflection\SourceLocator\InternalLocatedSource;
-use BetterReflection\SourceLocator\PhpInternalSourceLocator;
-use ReflectionClass as PhpReflectionClass;
 
 /**
  * @covers \BetterReflection\SourceLocator\EvaledCodeSourceLocator
@@ -31,5 +28,23 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(EvaledLocatedSource::class, $source);
         $this->assertNotEmpty($source->getSource());
+    }
+
+    public function testCanReflectEvaledLocatedSourceClass()
+    {
+        /* @var $class */
+        $reflector = (new ClassReflector(new EvaledCodeSourceLocator()));
+        $className = uniqid('foo');
+
+        eval('class ' . $className . ' {function foo($bar = "baz") {}}');
+
+        $class = $reflector->reflect($className);
+
+        $this->assertInstanceOf(ReflectionClass::class, $class);
+        $this->assertSame($className, $class->getName());
+        $this->assertFalse($class->isInternal());
+        $this->assertTrue($class->isUserDefined());
+        $this->assertNull($class->getFileName());
+        $this->assertCount(1, $class->getMethods());
     }
 }
