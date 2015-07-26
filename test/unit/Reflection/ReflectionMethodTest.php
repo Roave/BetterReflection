@@ -3,11 +3,13 @@
 namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
+use PhpParser\Node\Stmt\Function_;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionMethod
@@ -194,5 +196,20 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $b = $reflector->reflect($class)->getMethod($method)->getPrototype();
         $this->assertInstanceOf(ReflectionMethod::class, $b);
         $this->assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
+    }
+
+
+    public function testGetMethodNodeFailsWhenNodeIsNotClassMethod()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $method = $classInfo->getMethod('publicMethod');
+
+        $methodReflection = new \ReflectionClass(ReflectionFunctionAbstract::class);
+        $methodNodeProp = $methodReflection->getProperty('node');
+        $methodNodeProp->setAccessible(true);
+        $methodNodeProp->setValue($method, new Function_('foo'));
+
+        $this->setExpectedException(\RuntimeException::class, 'Expected a ClassMethod node');
+        $method->isPublic();
     }
 }
