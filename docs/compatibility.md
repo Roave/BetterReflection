@@ -14,8 +14,8 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
 | getFileName | :heavy_check_mark: Yes |
-| getInterfaceNames | todo |
-| getInterfaces | todo |
+| getInterfaceNames | :heavy_check_mark: Yes  |
+| getInterfaces | :heavy_check_mark: Yes  |
 | getMethod | :heavy_check_mark: Yes |
 | getMethods | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
@@ -28,28 +28,28 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getStartLine | :heavy_check_mark: Yes |
 | getStaticProperties | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| getTraitAliases | todo |
-| getTraitNames | todo |
+| getTraitAliases | :heavy_check_mark: Yes |
+| getTraitNames | :heavy_check_mark: Yes |
 | getTraits | :heavy_check_mark: Yes |
 | hasConstant | :heavy_check_mark: Yes |
 | hasMethod | :heavy_check_mark: Yes |
 | hasProperty | :heavy_check_mark: Yes |
-| implementsInterface | todo |
+| implementsInterface | :heavy_check_mark: Yes |
 | inNamespace | :heavy_check_mark: Yes |
 | isAbstract | :heavy_check_mark: Yes |
-| isCloneable | todo |
+| isCloneable | :heavy_check_mark: Yes |
 | isFinal | :heavy_check_mark: Yes |
-| isInstance | todo |
-| isInstantiable | todo |
+| isInstance | :heavy_check_mark: Yes  |
+| isInstantiable | :heavy_check_mark: Yes  |
 | isInterface | :heavy_check_mark: Yes |
 | isInternal | :heavy_check_mark: Yes |
-| isIterateable | todo |
-| isSubclassOf | todo |
+| isIterateable | :heavy_check_mark: Yes  |
+| isSubclassOf | :heavy_check_mark: Yes  |
 | isTrait | :heavy_check_mark: Yes |
 | isUserDefined | :heavy_check_mark: Yes |
-| newInstance | todo |
-| newInstanceArgs | todo |
-| newInstanceWithoutConstructor | todo |
+| newInstance | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| newInstanceArgs | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| newInstanceWithoutConstructor | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | setStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 
 ## ReflectionFunctionAbstract
@@ -87,7 +87,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getClosure | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
-| getPrototype | todo - [#57](https://github.com/Roave/BetterReflection/issues/57) |
+| getPrototype | :heavy_check_mark: Yes |
 | invoke | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | invokeArgs | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | isAbstract | :heavy_check_mark: Yes |

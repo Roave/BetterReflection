@@ -53,10 +53,23 @@ within the `Reflector`s. The library comes bundled with the following
     autoloader is trying to locate. This source locator is used internally by
     the `ReflectionClass::createFromName` static constructor.
 
+ * `EvaledCodeSourceLocator` - used to perform reflection on code that is
+    already loaded into memory using `eval()`
+
+ * `PhpInternalSourceLocator` - used to perform reflection on PHP's internal
+    classes and functions.
+
+ * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
+    are hunted through in the given order to locate the source.
+
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
 should be written so that it returns a `LocatedSource` object, which describes
 source code and the filename in which the source code was loaded.
+
+Note that using `EvaledCodeSourceLocator` and `PhpInternalSourceLocator` will
+result in specific types of `LocatedSource` - namely `EvaledLocatedSource` and
+`InternalLocatedSource` respectively.
 
 ## Reflecting Classes
 
