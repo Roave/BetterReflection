@@ -3,6 +3,7 @@
 namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\ReflectionFunction;
+use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\LocatedSource;
