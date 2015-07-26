@@ -53,6 +53,11 @@ class ReflectionClass implements Reflection
      */
     private $cachedConstants;
 
+    /**
+     * @var ReflectionProperty[]
+     */
+    private $cachedProperties;
+
     private function __construct()
     {
     }
@@ -268,6 +273,10 @@ class ReflectionClass implements Reflection
      */
     public function getProperties()
     {
+        if (isset($this->cachedProperties)) {
+            return $this->cachedProperties;
+        }
+
         $properties = [];
         foreach ($this->node->stmts as $stmt) {
             if ($stmt instanceof PropertyNode) {
@@ -276,6 +285,7 @@ class ReflectionClass implements Reflection
             }
         }
 
+        $this->cachedProperties = $properties;
         return $properties;
     }
 
