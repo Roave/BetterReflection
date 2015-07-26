@@ -49,14 +49,14 @@ class ReflectionClass implements Reflection
     private $node;
 
     /**
-     * @var mixed[];
+     * @var mixed[]|null
      */
-    private $cachedConstants;
+    private $cachedConstants = null;
 
     /**
-     * @var ReflectionProperty[]
+     * @var ReflectionProperty[]|null
      */
-    private $cachedProperties;
+    private $cachedProperties = null;
 
     private function __construct()
     {
@@ -209,7 +209,7 @@ class ReflectionClass implements Reflection
      */
     public function getConstants()
     {
-        if (isset($this->cachedConstants)) {
+        if (null !== $this->cachedConstants) {
             return $this->cachedConstants;
         }
 
@@ -273,7 +273,7 @@ class ReflectionClass implements Reflection
      */
     public function getProperties()
     {
-        if (isset($this->cachedProperties)) {
+        if (null !== $this->cachedProperties) {
             return $this->cachedProperties;
         }
 
