@@ -2,10 +2,13 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
+use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use PhpParser\Node\Stmt\Function_;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionFunctionAbstract
@@ -255,5 +258,14 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $functionInfo = $reflector->reflect('BetterReflectionTest\Fixture\myFunction');
 
         $this->assertContains('Fixture/Functions.php', $functionInfo->getFileName());
+    }
+
+    public function testGetLocatedSource()
+    {
+        $node = new Function_('foo');
+        $locatedSource = new LocatedSource('<?php function foo() {}', null);
+        $functionInfo = ReflectionFunction::createFromNode($node, $locatedSource);
+
+        $this->assertSame($locatedSource, $functionInfo->getLocatedSource());
     }
 }
