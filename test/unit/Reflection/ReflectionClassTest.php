@@ -780,4 +780,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             $reflection->__toString()
         );
     }
+    
+    public function testImplementsReflector()
+    {
+        $php = '<?php class Foo {}';
+
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classInfo = $reflector->reflect('Foo');
+
+        $this->assertInstanceOf(\Reflector::class, $classInfo);
+    }
 }
