@@ -15,5 +15,7 @@ class InternalLocatedSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('foo', $locatedSource->getSource());
         $this->assertNull($locatedSource->getFileName());
+        $this->assertTrue($locatedSource->isInternal());
+        $this->assertFalse($locatedSource->isEvaled());
     }
 }

@@ -114,6 +114,14 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedDoc, $property->getDocComment());
     }
 
+    public function testGetDocCommentReturnsEmptyStringWithNoComment()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $property = $classInfo->getProperty('publicStaticProperty');
+
+        $this->assertSame('', $property->getDocComment());
+    }
+
     public function testExportThrowsException()
     {
         $this->setExpectedException(\Exception::class);

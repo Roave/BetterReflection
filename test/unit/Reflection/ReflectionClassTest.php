@@ -2,7 +2,8 @@
 
 namespace BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use BetterReflection\Identifier\Identifier;
+use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\Exception\NotAClassReflection;
 use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
@@ -22,6 +23,8 @@ use BetterReflectionTest\ClassWithInterfacesOther;
 use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
 use BetterReflectionTest\Fixture\InvalidInheritances;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -739,5 +742,33 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $interfaces);
         $this->assertInstanceOf(ReflectionClass::class, $interfaces['Boom\Bar']);
         $this->assertSame('Boom\Bar', $interfaces['Boom\Bar']->getName());
+    }
+
+    public function testReflectedTraitHasNoInterfaces()
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $traitReflection = $reflector->reflect('TraitFixtureTraitA');
+        $this->assertSame([], $traitReflection->getInterfaces());
+    }
+
+    public function testFetchingFqsenThrowsExceptionWithNonObjectName()
+    {
+        $sourceLocator = new StringSourceLocator('<?php class Foo {}');
+        $reflector = new ClassReflector($sourceLocator);
+        $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        $locatedSource = $sourceLocator->__invoke($identifier);
+        $node = new Class_('Foo');
+        $reflection = ReflectionClass::createFromNode($reflector, $node, $locatedSource);
+
+        $reflectionClassReflection = new \ReflectionClass(ReflectionClass::class);
+        $reflectionClassMethodReflection = $reflectionClassReflection->getMethod('getFqsenFromNamedNode');
+        $reflectionClassMethodReflection->setAccessible(true);
+
+        $nameNode = new Name(['int']);
+
+        $this->setExpectedException(\Exception::class, 'Unable to determine FQSEN for named node');
+        $reflectionClassMethodReflection->invoke($reflection, $nameNode);
     }
 }

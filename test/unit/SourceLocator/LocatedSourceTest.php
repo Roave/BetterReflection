@@ -20,6 +20,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($source, $locatedSource->getSource());
         $this->assertSame($file, $locatedSource->getFileName());
         $this->assertFalse($locatedSource->isEvaled());
+        $this->assertFalse($locatedSource->isInternal());
     }
 
     public function testValuesWithNullFilename()
@@ -31,6 +32,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($source, $locatedSource->getSource());
         $this->assertNull($locatedSource->getFileName());
         $this->assertFalse($locatedSource->isEvaled());
+        $this->assertFalse($locatedSource->isInternal());
     }
 
     /**
