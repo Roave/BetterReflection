@@ -780,7 +780,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             $reflection->__toString()
         );
     }
-    
+
     public function testImplementsReflector()
     {
         $php = '<?php class Foo {}';
@@ -789,5 +789,19 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('Foo');
 
         $this->assertInstanceOf(\Reflector::class, $classInfo);
+    }
+
+    public function testExportMatchesFormat()
+    {
+        $this->assertStringMatchesFormat(
+            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            ReflectionClass::export('BetterReflectionTest\Fixture\ExampleClass')
+        );
+    }
+
+    public function testExportWithNoClassName()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        ReflectionClass::export();
     }
 }
