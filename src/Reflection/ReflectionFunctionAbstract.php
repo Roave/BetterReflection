@@ -46,6 +46,16 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
+     * Get the AST node from which this function was created
+     *
+     * @return MethodOrFunctionNode
+     */
+    protected function getNode()
+    {
+        return $this->node;
+    }
+
+    /**
      * We must determine if params are optional or not ahead of time, but we
      * must do it in reverse...
      */

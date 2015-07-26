@@ -6,18 +6,6 @@ use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
-    const IS_ABSTRACT = (1 << 0);
-    const IS_FINAL = (1 << 1);
-    const IS_PRIVATE = (1 << 2);
-    const IS_PROTECTED = (1 << 3);
-    const IS_PUBLIC = (1 << 4);
-    const IS_STATIC = (1 << 5);
-
-    /**
-     * @var int
-     */
-    private $flags = 0;
-
     /**
      * @var ReflectionClass
      */
@@ -32,19 +20,12 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         MethodNode $node,
         ReflectionClass $declaringClass
     ) {
-        $method = new self($node);
+        $method = new self();
         $method->declaringClass = $declaringClass;
 
         // Compat with core reflection means we should NOT pass namespace info
         // for ReflectionMethod
         $method->populateFunctionAbstract($node, $declaringClass->getLocatedSource(), null);
-
-        $method->flags |= $node->isAbstract() ? self::IS_ABSTRACT : 0;
-        $method->flags |= $node->isFinal() ? self::IS_FINAL : 0;
-        $method->flags |= $node->isPrivate() ? self::IS_PRIVATE : 0;
-        $method->flags |= $node->isProtected() ? self::IS_PROTECTED : 0;
-        $method->flags |= $node->isPublic() ? self::IS_PUBLIC : 0;
-        $method->flags |= $node->isStatic() ? self::IS_STATIC : 0;
 
         return $method;
     }
@@ -103,14 +84,17 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Check to see if a flag is set on this method.
+     * Get the method node (ensuring it is a ClassMethod node)
      *
-     * @param int $flag
-     * @return bool
+     * @throws \RuntimeException
+     * @return MethodNode
      */
-    private function flagsHas($flag)
+    private function getMethodNode()
     {
-        return (bool)($this->flags & $flag);
+        if (!($this->getNode() instanceof MethodNode)) {
+            throw new \RuntimeException('Expected a ClassMethod node');
+        }
+        return $this->getNode();
     }
 
     /**
@@ -120,7 +104,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isAbstract()
     {
-        return $this->flagsHas(self::IS_ABSTRACT);
+        return $this->getMethodNode()->isAbstract();
     }
 
     /**
@@ -130,7 +114,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isFinal()
     {
-        return $this->flagsHas(self::IS_FINAL);
+        return $this->getMethodNode()->isFinal();
     }
 
     /**
@@ -140,7 +124,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isPrivate()
     {
-        return $this->flagsHas(self::IS_PRIVATE);
+        return $this->getMethodNode()->isPrivate();
     }
 
     /**
@@ -150,7 +134,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isProtected()
     {
-        return $this->flagsHas(self::IS_PROTECTED);
+        return $this->getMethodNode()->isProtected();
     }
 
     /**
@@ -160,7 +144,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isPublic()
     {
-        return $this->flagsHas(self::IS_PUBLIC);
+        return $this->getMethodNode()->isPublic();
     }
 
     /**
@@ -170,7 +154,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isStatic()
     {
-        return $this->flagsHas(self::IS_STATIC);
+        return $this->getMethodNode()->isStatic();
     }
 
     /**
