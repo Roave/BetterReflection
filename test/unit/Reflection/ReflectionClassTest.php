@@ -771,4 +771,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\Exception::class, 'Unable to determine FQSEN for named node');
         $reflectionClassMethodReflection->invoke($reflection, $nameNode);
     }
+
+    public function testClassToString()
+    {
+        $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertStringMatchesFormat(
+            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            $reflection->__toString()
+        );
+    }
 }
