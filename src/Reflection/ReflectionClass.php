@@ -15,7 +15,6 @@ use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\TypesFinder\FindTypeFromAst;
-use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -35,39 +34,14 @@ class ReflectionClass implements Reflection
     private $reflector;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var NamespaceNode
      */
-    private $declaringNamespace;
-
-    /**
-     * @var ReflectionMethod[]
-     */
-    private $methods = [];
-
-    /**
-     * @var mixed[]
-     */
-    private $constants = [];
-
-    /**
-     * @var ReflectionProperty[]
-     */
-    private $properties = [];
+    private $declaringNamespace = null;
 
     /**
      * @var LocatedSource
      */
     private $locatedSource;
-
-    /**
-     * @var Fqsen|null
-     */
-    private $extendsClassType;
 
     /**
      * @var ClassLikeNode
@@ -106,41 +80,11 @@ class ReflectionClass implements Reflection
         $class = new self();
 
         $class->reflector     = $reflector;
-        $class->node          = $node;
         $class->locatedSource = $locatedSource;
-        $class->name          = $node->name;
+        $class->node          = $node;
 
         if (null !== $namespace) {
             $class->declaringNamespace = $namespace;
-        }
-
-        if ($node instanceof ClassNode && null !== $node->extends) {
-            $objectType = (new FindTypeFromAst())->__invoke($node->extends, $locatedSource, $class->getNamespaceName());
-            if (null !== $objectType && $objectType instanceof Object_) {
-                $class->extendsClassType = $objectType->getFqsen();
-            }
-        }
-
-        $methodNodes = $node->getMethods();
-
-        foreach ($methodNodes as $methodNode) {
-            $class->methods[] = ReflectionMethod::createFromNode(
-                $methodNode,
-                $class
-            );
-        }
-
-        foreach ($node->stmts as $stmt) {
-            if ($stmt instanceof ConstNode) {
-                $constName = $stmt->consts[0]->name;
-                $constValue = (new CompileNodeToValue())->__invoke($stmt->consts[0]->value);
-                $class->constants[$constName] = $constValue;
-            }
-
-            if ($stmt instanceof PropertyNode) {
-                $prop = ReflectionProperty::createFromNode($stmt, $class);
-                $class->properties[$prop->getName()] = $prop;
-            }
         }
 
         return $class;
@@ -154,7 +98,7 @@ class ReflectionClass implements Reflection
      */
     public function getShortName()
     {
-        return $this->name;
+        return $this->node->name;
     }
 
     /**
@@ -206,7 +150,13 @@ class ReflectionClass implements Reflection
      */
     public function getMethods()
     {
-        return $this->methods;
+        $methodNodes = $this->node->getMethods();
+
+        $methodReflections = [];
+        foreach ($methodNodes as $methodNode) {
+            $methodReflections[] = ReflectionMethod::createFromNode($methodNode, $this);
+        }
+        return $methodReflections;
     }
 
     /**
@@ -217,15 +167,13 @@ class ReflectionClass implements Reflection
      */
     public function getMethod($methodName)
     {
-        foreach ($this->getMethods() as $method) {
-            if ($method->getName() === $methodName) {
-                return $method;
-            }
+        $methodNode = $this->node->getMethod($methodName);
+
+        if (null === $methodNode) {
+            throw new \OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
-        throw new \OutOfBoundsException(
-            'Could not find method: ' . $methodName
-        );
+        return ReflectionMethod::createFromNode($methodNode, $this);
     }
 
     /**
@@ -251,7 +199,15 @@ class ReflectionClass implements Reflection
      */
     public function getConstants()
     {
-        return $this->constants;
+        $constants = [];
+        foreach ($this->node->stmts as $stmt) {
+            if ($stmt instanceof ConstNode) {
+                $constName = $stmt->consts[0]->name;
+                $constValue = (new CompileNodeToValue())->__invoke($stmt->consts[0]->value);
+                $constants[$constName] = $constValue;
+            }
+        }
+        return $constants;
     }
 
     /**
@@ -264,11 +220,13 @@ class ReflectionClass implements Reflection
      */
     public function getConstant($name)
     {
-        if (!$this->hasConstant($name)) {
+        $constants = $this->getConstants();
+
+        if (!isset($constants[$name])) {
             return null;
         }
 
-        return $this->constants[$name];
+        return $constants[$name];
     }
 
     /**
@@ -279,7 +237,7 @@ class ReflectionClass implements Reflection
      */
     public function hasConstant($name)
     {
-        return isset($this->constants[$name]);
+        return null !== $this->getConstant($name);
     }
 
     /**
@@ -299,7 +257,15 @@ class ReflectionClass implements Reflection
      */
     public function getProperties()
     {
-        return $this->properties;
+        $properties = [];
+        foreach ($this->node->stmts as $stmt) {
+            if ($stmt instanceof PropertyNode) {
+                $prop = ReflectionProperty::createFromNode($stmt, $this);
+                $properties[$prop->getName()] = $prop;
+            }
+        }
+
+        return $properties;
     }
 
     /**
@@ -312,11 +278,13 @@ class ReflectionClass implements Reflection
      */
     public function getProperty($name)
     {
-        if (!$this->hasProperty($name)) {
+        $properties = $this->getProperties();
+
+        if (!isset($properties[$name])) {
             return null;
         }
 
-        return $this->properties[$name];
+        return $properties[$name];
     }
 
     /**
@@ -327,7 +295,7 @@ class ReflectionClass implements Reflection
      */
     public function hasProperty($name)
     {
-        return isset($this->properties[$name]);
+        return null !== $this->getProperty($name);
     }
 
     /**
@@ -390,13 +358,18 @@ class ReflectionClass implements Reflection
      */
     public function getParentClass()
     {
-        if (null === $this->extendsClassType) {
+        if (!($this->node instanceof ClassNode) || null === $this->node->extends) {
+            return null;
+        }
+
+        $objectType = (new FindTypeFromAst())->__invoke($this->node->extends, $this->locatedSource, $this->getNamespaceName());
+        if (null === $objectType || !($objectType instanceof Object_)) {
             return null;
         }
 
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         /* @var $parent self */
-        $parent = $this->reflector->reflect((string) $this->extendsClassType);
+        $parent = $this->reflector->reflect((string)$objectType->getFqsen());
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);
