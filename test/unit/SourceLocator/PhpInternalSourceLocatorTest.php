@@ -94,4 +94,30 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    public function testReturnsNullForNonExistentCode()
+    {
+        $locator = new PhpInternalSourceLocator();
+        $this->assertNull(
+            $locator->__invoke(
+                new Identifier(
+                    'Foo\Bar',
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+                )
+            )
+        );
+    }
+
+    public function testReturnsNullForFunctions()
+    {
+        $locator = new PhpInternalSourceLocator();
+        $this->assertNull(
+            $locator->__invoke(
+                new Identifier(
+                    'foo',
+                    new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+                )
+            )
+        );
+    }
 }
