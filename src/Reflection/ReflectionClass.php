@@ -58,6 +58,11 @@ class ReflectionClass implements Reflection
      */
     private $cachedProperties = null;
 
+    /**
+     * @var ReflectionMethod[]
+     */
+    private $cachedMethods = [];
+
     private function __construct()
     {
     }
@@ -162,11 +167,12 @@ class ReflectionClass implements Reflection
     {
         $methodNodes = $this->node->getMethods();
 
-        $methodReflections = [];
+        $methods = [];
         foreach ($methodNodes as $methodNode) {
-            $methodReflections[] = ReflectionMethod::createFromNode($methodNode, $this);
+            $methods[] = $this->getMethod($methodNode->name);
         }
-        return $methodReflections;
+
+        return $methods;
     }
 
     /**
@@ -177,13 +183,18 @@ class ReflectionClass implements Reflection
      */
     public function getMethod($methodName)
     {
+        if (isset($this->cachedMethods[$methodName])) {
+            return $this->cachedMethods[$methodName];
+        }
+
         $methodNode = $this->node->getMethod($methodName);
 
         if (null === $methodNode) {
             throw new \OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
-        return ReflectionMethod::createFromNode($methodNode, $this);
+        $this->cachedMethods[$methodName] = ReflectionMethod::createFromNode($methodNode, $this);
+        return $this->cachedMethods[$methodName];
     }
 
     /**
