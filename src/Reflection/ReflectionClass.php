@@ -48,6 +48,11 @@ class ReflectionClass implements Reflection
      */
     private $node;
 
+    /**
+     * @var mixed[];
+     */
+    private $cachedConstants;
+
     private function __construct()
     {
     }
@@ -199,6 +204,10 @@ class ReflectionClass implements Reflection
      */
     public function getConstants()
     {
+        if (isset($this->cachedConstants)) {
+            return $this->cachedConstants;
+        }
+
         $constants = [];
         foreach ($this->node->stmts as $stmt) {
             if ($stmt instanceof ConstNode) {
@@ -207,6 +216,8 @@ class ReflectionClass implements Reflection
                 $constants[$constName] = $constValue;
             }
         }
+
+        $this->cachedConstants = $constants;
         return $constants;
     }
 
