@@ -18,6 +18,11 @@ class ReflectionProperty implements \Reflector
      */
     private $node;
 
+    /**
+     * @var bool
+     */
+    private $declaredAtCompileTime = true;
+
     private function __construct()
     {
     }
@@ -46,15 +51,18 @@ class ReflectionProperty implements \Reflector
     /**
      * @param PropertyNode $node
      * @param ReflectionClass $declaringClass
+     * @param bool $declaredAtCompileTime
      * @return ReflectionProperty
      */
     public static function createFromNode(
         PropertyNode $node,
-        ReflectionClass $declaringClass
+        ReflectionClass $declaringClass,
+        $declaredAtCompileTime = true
     ) {
         $prop = new self();
         $prop->node = $node;
         $prop->declaringClass = $declaringClass;
+        $prop->declaredAtCompileTime = $declaredAtCompileTime;
         return $prop;
     }
 
@@ -89,7 +97,7 @@ class ReflectionProperty implements \Reflector
             return false;
         }
 
-        return true;
+        return $this->declaredAtCompileTime;
     }
 
     /**
