@@ -79,7 +79,7 @@ class ReflectionClass implements Reflection, \Reflector
 
     public function __toString()
     {
-        $format  = "Class [ <user> class %s%s ] {\n";
+        $format  = "Class [ <user> class %s%s%s ] {\n";
         $format .= "  @@ %s %d-%d\n\n";
         $format .= "  - Constants [%d] {%s\n  }\n\n";
         $format .= "  - Static properties [%d] {%s\n  }\n\n";
@@ -125,10 +125,13 @@ class ReflectionClass implements Reflection, \Reflector
             return $str;
         };
 
+        $interfaceNames = $this->getInterfaceNames();
+
         $str = sprintf(
             $format,
             $this->getName(),
-            '', // @todo extends+implements - in https://github.com/Roave/BetterReflection/issues/7
+            null !== $this->getParentClass() ? (' extends ' . $this->getParentClass()->getName()) : '',
+            count($interfaceNames) ? (' implements ' . implode(', ', $interfaceNames)) : '',
             $this->getFileName(),
             $this->getStartLine(),
             $this->getEndLine(),
