@@ -90,8 +90,8 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
     public function functionStringRepresentations()
     {
         return [
-            ['BetterReflectionTest\Fixture\myFunction', "Function [ <user> function BetterReflectionTest\Fixture\myFunction ] {\n  @@ /home/james/workspace/better-reflection/test/unit/Fixture/Functions.php 5 - 6\n}"],
-            ['BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ /home/james/workspace/better-reflection/test/unit/Fixture/Functions.php 8 - 9\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
+            ['BetterReflectionTest\Fixture\myFunction', "Function [ <user> function BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}"],
+            ['BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ %s/test/unit/Fixture/Functions.php 8 - 9\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
         ];
     }
 
@@ -105,6 +105,6 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         require_once(__DIR__ . '/../Fixture/Functions.php');
         $functionInfo = ReflectionFunction::createFromName($functionName);
 
-        $this->assertSame($expectedStringValue, (string)$functionInfo);
+        $this->assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);
     }
 }
