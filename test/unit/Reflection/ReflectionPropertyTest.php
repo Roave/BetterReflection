@@ -23,6 +23,14 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testImplementsReflector()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $publicProp = $classInfo->getProperty('publicProperty');
+
+        $this->assertInstanceOf(\Reflector::class, $publicProp);
+    }
+
     public function testVisibilityMethods()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');

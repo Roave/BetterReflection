@@ -84,6 +84,52 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Return string representation of this parameter
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
+
+        return sprintf(
+            "Method [ <user%s%s>%s%s%s %s method %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
+            $this->isConstructor() ? ', ctor' : '',
+            $this->isDestructor() ? ', dtor' : '',
+            $this->isFinal() ? ' final' : '',
+            $this->isStatic() ? ' static' : '',
+            $this->isAbstract() ? ' abstract' : '',
+            $this->getVisibilityAsString(),
+            $this->getName(),
+            $this->getFileName(),
+            $this->getStartLine(),
+            $this->getEndLine(),
+            count($this->getParameters()),
+            array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
+                return $str . "\n    " . $param;
+            }, '')
+        );
+    }
+
+    /**
+     * Get the visibility of this method as a string (private/protected/public)
+     *
+     * @return string
+     */
+    private function getVisibilityAsString()
+    {
+        if ($this->isPrivate()) {
+            return 'private';
+        }
+
+        if ($this->isProtected()) {
+            return 'protected';
+        }
+
+        return 'public';
+    }
+
+    /**
      * Get the method node (ensuring it is a ClassMethod node)
      *
      * @throws \RuntimeException

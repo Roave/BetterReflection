@@ -68,12 +68,18 @@ class ReflectionParameter implements \Reflector
      */
     public function __toString()
     {
+        $isNullableObjectParam = $this->getTypeHint() && $this->getTypeHint() instanceof Types\Object_ && $this->isOptional();
+
         return sprintf(
-            'Parameter #%d [ %s $%s%s ]',
+            'Parameter #%d [ %s %s%s%s%s$%s%s ]',
             $this->parameterIndex,
-            $this->isOptional() ? '<optional>' : '<required>',
+            ($this->isVariadic() || $this->isOptional()) ? '<optional>' : '<required>',
+            $this->getTypeHint() ? ltrim($this->getTypeHint()->__toString(), '\\') . ' ' : '',
+            $isNullableObjectParam ? 'or NULL ' : '',
+            $this->isVariadic() ? '...' : '',
+            $this->isPassedByReference() ? '&' : '',
             $this->getName(),
-            $this->isDefaultValueAvailable()
+            $this->isOptional()
                 ? (' = ' . $this->getDefaultValueAsString())
                 : ''
         );

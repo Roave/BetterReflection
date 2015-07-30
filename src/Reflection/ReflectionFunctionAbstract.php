@@ -8,7 +8,7 @@ use PhpParser\Node\Stmt as MethodOrFunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 
-abstract class ReflectionFunctionAbstract
+abstract class ReflectionFunctionAbstract implements \Reflector
 {
     /**
      * @var NamespaceNode
@@ -27,6 +27,11 @@ abstract class ReflectionFunctionAbstract
 
     protected function __construct()
     {
+    }
+
+    public static function export()
+    {
+        throw new \Exception('Unable to export statically');
     }
 
     /**

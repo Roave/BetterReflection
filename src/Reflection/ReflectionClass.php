@@ -26,7 +26,7 @@ use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\TraitUse;
 
-class ReflectionClass implements Reflection
+class ReflectionClass implements Reflection, \Reflector
 {
     /**
      * @var Reflector
@@ -65,6 +65,89 @@ class ReflectionClass implements Reflection
 
     private function __construct()
     {
+    }
+
+    public static function export($className = null)
+    {
+        if (null === $className) {
+            throw new \InvalidArgumentException('Class name must be provided');
+        }
+
+        $reflection = self::createFromName($className);
+        return $reflection->__toString();
+    }
+
+    public function __toString()
+    {
+        $format  = "Class [ <user> class %s%s%s ] {\n";
+        $format .= "  @@ %s %d-%d\n\n";
+        $format .= "  - Constants [%d] {%s\n  }\n\n";
+        $format .= "  - Static properties [%d] {%s\n  }\n\n";
+        $format .= "  - Static methods [%d] {%s\n  }\n\n";
+        $format .= "  - Properties [%d] {%s\n  }\n\n";
+        $format .= "  - Methods [%d] {%s\n  }\n";
+        $format .= "}\n";
+
+        $staticProperties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return $property->isStatic();
+        });
+        $staticMethods = array_filter($this->getMethods(), function (ReflectionMethod $method) {
+            return $method->isStatic();
+        });
+        $properties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return !$property->isStatic();
+        });
+        $methods = array_filter($this->getMethods(), function (ReflectionMethod $method) {
+            return !$method->isStatic();
+        });
+
+        $buildString = function (array $items, $indentLevel = 4) {
+            if (!count($items)) {
+                return '';
+            }
+            $indent = "\n" . str_repeat(' ', $indentLevel);
+            return $indent . implode($indent, explode("\n", implode("\n", $items)));
+        };
+
+        $buildConstants = function (array $items, $indentLevel = 4) {
+            $str = '';
+
+            foreach ($items as $name => $value) {
+                $str .= "\n" . str_repeat(' ', $indentLevel);
+                $str .= sprintf(
+                    'Constant [ %s %s ] { %s }',
+                    gettype($value),
+                    $name,
+                    $value
+                );
+            }
+
+            return $str;
+        };
+
+        $interfaceNames = $this->getInterfaceNames();
+
+        $str = sprintf(
+            $format,
+            $this->getName(),
+            null !== $this->getParentClass() ? (' extends ' . $this->getParentClass()->getName()) : '',
+            count($interfaceNames) ? (' implements ' . implode(', ', $interfaceNames)) : '',
+            $this->getFileName(),
+            $this->getStartLine(),
+            $this->getEndLine(),
+            count($this->getConstants()),
+            $buildConstants($this->getConstants()),
+            count($staticProperties),
+            $buildString($staticProperties),
+            count($staticMethods),
+            $buildString($staticMethods),
+            count($properties),
+            $buildString($properties),
+            count($methods),
+            $buildString($methods)
+        );
+
+        return $str;
     }
 
     public static function createFromName($className)

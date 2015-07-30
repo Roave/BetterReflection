@@ -27,6 +27,14 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testImplementsReflector()
+    {
+        $classInfo = $this->reflector->reflect('BetterReflectionTest\Fixture\Methods');
+        $methodInfo = $classInfo->getMethod('publicMethod');
+
+        $this->assertInstanceOf(\Reflector::class, $methodInfo);
+    }
+
     /**
      * @return array
      */
@@ -211,5 +219,40 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\RuntimeException::class, 'Expected a ClassMethod node');
         $method->isPublic();
+    }
+
+    public function methodStringRepresentations()
+    {
+        return [
+            ['__construct', "Method [ <user, ctor> public method __construct ] {\n  @@ %s/test/unit/Fixture/Methods.php 11 - 13\n}"],
+            ['publicMethod', "Method [ <user> public method publicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 15 - 17\n}"],
+            ['privateMethod', "Method [ <user> private method privateMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 19 - 21\n}"],
+            ['protectedMethod', "Method [ <user> protected method protectedMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 23 - 25\n}"],
+            ['finalPublicMethod', "Method [ <user> final public method finalPublicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 27 - 29\n}"],
+            ['abstractPublicMethod', "Method [ <user> abstract public method abstractPublicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 31 - 31\n}"],
+            ['staticPublicMethod', "Method [ <user> static public method staticPublicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 33 - 35\n}"],
+            ['noVisibility', "Method [ <user> public method noVisibility ] {\n  @@ %s/test/unit/Fixture/Methods.php 37 - 39\n}"],
+            ['__destruct', "Method [ <user, dtor> public method __destruct ] {\n  @@ %s/test/unit/Fixture/Methods.php 41 - 43\n}"],
+            ['methodWithParameters', "Method [ <user> public method methodWithParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 49 - 51\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$parameter1 ]\n    Parameter #1 [ <required> \$parameter2 ]\n  }\n}"],
+            ['methodWithOptionalParameters', "Method [ <user> public method methodWithOptionalParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 53 - 55\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$parameter ]\n    Parameter #1 [ <optional> \$optionalParameter = NULL ]\n  }\n}"],
+            ['methodWithExplicitTypedParameters', "Method [ <user> public method methodWithExplicitTypedParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 57 - 64\n\n  - Parameters [5] {\n    Parameter #0 [ <required> stdClass \$stdClassParameter ]\n    Parameter #1 [ <required> BetterReflectionTest\Fixture\ClassForHinting \$namespaceClassParameter ]\n    Parameter #2 [ <required> BetterReflectionTest\Fixture\ClassForHinting \$fullyQualifiedClassParameter ]\n    Parameter #3 [ <required> array \$arrayParameter ]\n    Parameter #4 [ <required> callable \$callableParameter ]\n  }\n}"],
+            ['methodWithVariadic', "Method [ <user> public method methodWithVariadic ] {\n  @@ %s/test/unit/Fixture/Methods.php 66 - 68\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$nonVariadicParameter ]\n    Parameter #1 [ <optional> ...\$variadicParameter ]\n  }\n}"],
+            ['methodWithReference', "Method [ <user> public method methodWithReference ] {\n  @@ %s/test/unit/Fixture/Methods.php 70 - 72\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$nonRefParameter ]\n    Parameter #1 [ <required> &\$refParameter ]\n  }\n}"],
+            ['methodWithNonOptionalDefaultValue', "Method [ <user> public method methodWithNonOptionalDefaultValue ] {\n  @@ %s/test/unit/Fixture/Methods.php 74 - 76\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$firstParameter ]\n    Parameter #1 [ <required> \$secondParameter ]\n  }\n}"],
+            ['methodToCheckAllowsNull', "Method [ <user> public method methodToCheckAllowsNull ] {\n  @@ %s/test/unit/Fixture/Methods.php 78 - 80\n\n  - Parameters [3] {\n    Parameter #0 [ <required> \$allowsNull ]\n    Parameter #1 [ <required> stdClass \$hintDisallowNull ]\n    Parameter #2 [ <optional> stdClass or NULL \$hintAllowNull = NULL ]\n  }\n}"],
+        ];
+    }
+
+    /**
+     * @param string $methodName
+     * @param string $expectedStringValue
+     * @dataProvider methodStringRepresentations
+     */
+    public function testStringCast($methodName, $expectedStringValue)
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $method = $classInfo->getMethod($methodName);
+
+        $this->assertStringMatchesFormat($expectedStringValue, (string)$method);
     }
 }

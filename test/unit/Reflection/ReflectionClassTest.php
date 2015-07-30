@@ -771,4 +771,78 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\Exception::class, 'Unable to determine FQSEN for named node');
         $reflectionClassMethodReflection->invoke($reflection, $nameNode);
     }
+
+    public function testClassToString()
+    {
+        $reflection = ReflectionClass::createFromName('BetterReflectionTest\Fixture\ExampleClass');
+        $this->assertStringMatchesFormat(
+            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            $reflection->__toString()
+        );
+    }
+
+    public function testImplementsReflector()
+    {
+        $php = '<?php class Foo {}';
+
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classInfo = $reflector->reflect('Foo');
+
+        $this->assertInstanceOf(\Reflector::class, $classInfo);
+    }
+
+    public function testExportMatchesFormat()
+    {
+        $this->assertStringMatchesFormat(
+            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            ReflectionClass::export('BetterReflectionTest\Fixture\ExampleClass')
+        );
+    }
+
+    public function testExportWithNoClassName()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        ReflectionClass::export();
+    }
+
+    public function testToStringWhenImplementingInterface()
+    {
+        $php = '<?php
+            namespace Qux;
+            interface Foo {}
+            class Bar implements Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Qux\Bar');
+
+        $this->assertStringStartsWith('Class [ <user> class Qux\Bar implements Qux\Foo ] {', $reflection->__toString());
+    }
+
+    public function testToStringWhenExtending()
+    {
+        $php = '<?php
+            namespace Qux;
+            class Foo {}
+            class Bar extends Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Qux\Bar');
+
+        $this->assertStringStartsWith('Class [ <user> class Qux\Bar extends Qux\Foo ] {', $reflection->__toString());
+    }
+
+    public function testToStringWhenExtendingAndImplementing()
+    {
+        $php = '<?php
+            namespace Qux;
+            interface Foo {}
+            interface Bar {}
+            class Bat {}
+            class Baz extends Bat implements Foo, Bar {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Qux\Baz');
+
+        $this->assertStringStartsWith('Class [ <user> class Qux\Baz extends Qux\Bat implements Qux\Foo, Qux\Bar ] {', $reflection->__toString());
+    }
 }
