@@ -414,6 +414,18 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Protected API to add properties at runtime (used in ReflectionObject)
+     *
+     * @param ReflectionProperty $property
+     */
+    protected function addProperty(ReflectionProperty $property)
+    {
+        // Ensure the properties are already cached
+        $this->getProperties();
+        $this->cachedProperties[$property->getName()] = $property;
+    }
+
+    /**
      * Return an array with default properties (properties that were defined at
      * compile-time rather than at run time).
      *
