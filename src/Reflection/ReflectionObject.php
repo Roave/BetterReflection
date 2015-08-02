@@ -26,6 +26,26 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
+     * Cannot instantiate this way, use ReflectionObject::createFromInstance
+     *
+     * @throws \LogicException
+     */
+    public static function createFromNode()
+    {
+        throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
+    }
+
+    /**
+     * Cannot instantiate this way, use ReflectionObject::createFromInstance
+     *
+     * @throws \LogicException
+     */
+    public static function createFromName()
+    {
+        throw new \LogicException('Cannot create a ReflectionObject from name - use ReflectionObject::createFromInstance');
+    }
+
+    /**
      * Pass an instance of an object to this method to reflect it
      *
      * @param object $object

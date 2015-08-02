@@ -129,4 +129,16 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
         $reflectionObject->{$methodName}('foo', 'bar', 'baz');
     }
+
+    public function testCreateFromNodeThrowsException()
+    {
+        $this->setExpectedException(\LogicException::class);
+        ReflectionObject::createFromNode();
+    }
+
+    public function testCreateFromNameThrowsException()
+    {
+        $this->setExpectedException(\LogicException::class);
+        ReflectionObject::createFromName();
+    }
 }
