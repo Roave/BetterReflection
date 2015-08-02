@@ -17,6 +17,10 @@ class PhpInternalSourceLocator implements SourceLocator
             return null;
         }
 
+        if ($stub = $this->getStub($name)) {
+            return new InternalLocatedSource($stub);
+        }
+
         return new InternalLocatedSource(
             "<?php\n\n" . ClassGenerator::fromReflection(new ClassReflection($name))->generate()
         );
@@ -42,5 +46,16 @@ class PhpInternalSourceLocator implements SourceLocator
         $reflection = new \ReflectionClass($name);
 
         return $reflection->isInternal() ? $reflection->getName() : null;
+    }
+
+    private function getStub($name)
+    {
+        $expectedStubName = __DIR__ . '/../../stub/' . $name . '.stub.php';
+
+        if (!file_exists($expectedStubName) || !is_readable($expectedStubName) || !is_file($expectedStubName)) {
+            return null;
+        }
+
+        return file_get_contents($expectedStubName);
     }
 }
