@@ -8,11 +8,11 @@ namespace BetterReflection\SourceLocator;
 class EvaledLocatedSource extends LocatedSource
 {
     /**
-     * @param string $fileName
+     * @param string $source
      */
-    public function __construct($fileName)
+    public function __construct($source)
     {
-        parent::__construct($fileName, null);
+        parent::__construct($source, null);
     }
 
     /**
