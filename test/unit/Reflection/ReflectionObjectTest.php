@@ -5,13 +5,35 @@ namespace BetterReflectionTest\Reflection;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionObject;
 use BetterReflection\Reflection\ReflectionProperty;
+use BetterReflection\SourceLocator\EvaledLocatedSource;
+use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflectionTest\Fixture\ClassForHinting;
+use PhpParser\Lexer;
+use PhpParser\Parser;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionObject
  */
 class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
+    private $parser;
+
+    /**
+     * @return Parser
+     */
+    private function getPhpParser()
+    {
+        if (isset($this->parser)) {
+            return $this->parser;
+        }
+
+        $this->parser = new Parser\Multiple([
+            new Parser\Php7(new Lexer()),
+            new Parser\Php5(new Lexer())
+        ]);
+        return $this->parser;
+    }
+
     public function testExceptionThrownWhenNonObjectGiven()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
@@ -83,6 +105,8 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $ignoreMethods = [
             'createFromName',
             'createFromNode',
+            '__toString',
+            'export',
         ];
 
         $filteredMethods = [];
@@ -107,18 +131,23 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
         $mockReflectionClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
-            ->setMethods(array_unique([$methodName, 'getName']))
+            ->setMethods([$methodName])
             ->getMock();
         $mockReflectionClass
             ->expects($this->atLeastOnce())
             ->method($methodName);
 
-        if ($methodName !== 'getName') {
-            $mockReflectionClass
-                ->expects($this->any())
-                ->method('getName')
-                ->will($this->returnValue('stdClass'));
-        }
+        $mockReflectionClassReflection = new \ReflectionClass(ReflectionClass::class);
+
+        $php = '<?php class stdClass {}';
+
+        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('locatedSource');
+        $mockReflectionClassNodeReflection->setAccessible(true);
+        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, new EvaledLocatedSource($php));
+
+        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('node');
+        $mockReflectionClassNodeReflection->setAccessible(true);
+        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $this->getPhpParser()->parse($php)[0]);
 
         $reflectionObject = ReflectionObject::createFromInstance(new \stdClass());
 
