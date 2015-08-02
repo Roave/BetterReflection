@@ -23,8 +23,6 @@ class ReflectionObject extends ReflectionClass
     {
         $this->reflectionClass = $reflectionClass;
         $this->object = $object;
-
-        $this->reflectRuntimeProperties($this->object);
     }
 
     /**
@@ -46,17 +44,13 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * Reflect on runtime properties on a specific instance of an object.
+     * Reflect on runtime properties for the current instance
      *
-     * Note that this method does not return anything, but simply appends the
-     * properties that have not already been reflected to the cached properties.
-     *
-     * @param $instance
-     * @return void
+     * @return ReflectionProperty[]
      */
-    private function reflectRuntimeProperties($instance)
+    private function getRuntimeProperties()
     {
-        if (!$this->reflectionClass->isInstance($instance)) {
+        if (!$this->reflectionClass->isInstance($this->object)) {
             throw new \InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
@@ -65,19 +59,21 @@ class ReflectionObject extends ReflectionClass
 
         // Only known current way is to use internal ReflectionObject to get
         // the runtime-declared properties  :/
-        $reflectionProperties = (new \ReflectionObject($instance))->getProperties();
+        $reflectionProperties = (new \ReflectionObject($this->object))->getProperties();
+        $runtimeProperties = [];
         foreach ($reflectionProperties as $property) {
-            if ($this->hasProperty($property->getName())) {
+            if ($this->reflectionClass->hasProperty($property->getName())) {
                 continue;
             }
 
-            $betterReflectionProperty = ReflectionProperty::createFromNode(
-                $this->createPropertyNodeFromReflection($property, $instance),
+            $runtimeProperty = ReflectionProperty::createFromNode(
+                $this->createPropertyNodeFromReflection($property, $this->object),
                 $this,
                 false
             );
-            $this->reflectionClass->addProperty($betterReflectionProperty);
+            $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
         }
+        return $runtimeProperties;
     }
 
     /**
@@ -195,7 +191,10 @@ class ReflectionObject extends ReflectionClass
      */
     public function getProperties()
     {
-        return $this->reflectionClass->getProperties();
+        return array_merge(
+            $this->reflectionClass->getProperties(),
+            $this->getRuntimeProperties()
+        );
     }
 
     /**
@@ -203,6 +202,12 @@ class ReflectionObject extends ReflectionClass
      */
     public function getProperty($name)
     {
+        $runtimeProperties = $this->getRuntimeProperties();
+
+        if (isset($runtimeProperties[$name])) {
+            return $runtimeProperties[$name];
+        }
+
         return $this->reflectionClass->getProperty($name);
     }
 
@@ -211,7 +216,9 @@ class ReflectionObject extends ReflectionClass
      */
     public function hasProperty($name)
     {
-        return $this->reflectionClass->hasProperty($name);
+        $runtimeProperties = $this->getRuntimeProperties();
+
+        return isset($runtimeProperties[$name]) || $this->reflectionClass->hasProperty($name);
     }
 
     /**

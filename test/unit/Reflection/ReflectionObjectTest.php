@@ -63,11 +63,17 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $reflectionObjectReflection = new \ReflectionObject($classInfo);
-        $reflectionObjectConstructorReflection = $reflectionObjectReflection->getConstructor();
-        $reflectionObjectConstructorReflection->setAccessible(true);
+
+        $reflectionObjectObjectReflection = $reflectionObjectReflection->getProperty('object');
+        $reflectionObjectObjectReflection->setAccessible(true);
+        $reflectionObjectObjectReflection->setValue($classInfo, new \stdClass());
+
+        $reflectionObjectReflectionClassReflection = $reflectionObjectReflection->getProperty('reflectionClass');
+        $reflectionObjectReflectionClassReflection->setAccessible(true);
+        $reflectionObjectReflectionClassReflection->setValue($classInfo, $mockClass);
 
         $this->setExpectedException(\InvalidArgumentException::class);
-        $reflectionObjectConstructorReflection->invokeArgs($classInfo, [$mockClass, new \stdClass]);
+        $classInfo->getProperties();
     }
 
     public function reflectionClassMethodProvider()
@@ -101,11 +107,18 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
         $mockReflectionClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
-            ->setMethods([$methodName])
+            ->setMethods(array_unique([$methodName, 'getName']))
             ->getMock();
         $mockReflectionClass
             ->expects($this->atLeastOnce())
             ->method($methodName);
+
+        if ($methodName !== 'getName') {
+            $mockReflectionClass
+                ->expects($this->any())
+                ->method('getName')
+                ->will($this->returnValue('stdClass'));
+        }
 
         $reflectionObject = ReflectionObject::createFromInstance(new \stdClass());
 
