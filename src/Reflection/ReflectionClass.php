@@ -79,12 +79,15 @@ class ReflectionClass implements Reflection, \Reflector
 
     public function __toString()
     {
-        $format  = "Class [ <user> class %s%s%s ] {\n";
+        $isObject = $this instanceof ReflectionObject;
+
+        $format  = "%s [ <user> class %s%s%s ] {\n";
         $format .= "  @@ %s %d-%d\n\n";
         $format .= "  - Constants [%d] {%s\n  }\n\n";
         $format .= "  - Static properties [%d] {%s\n  }\n\n";
         $format .= "  - Static methods [%d] {%s\n  }\n\n";
         $format .= "  - Properties [%d] {%s\n  }\n\n";
+        $format .= ($isObject ? "  - Dynamic properties [%d] {%s\n  }\n\n" : '%s%s');
         $format .= "  - Methods [%d] {%s\n  }\n";
         $format .= "}\n";
 
@@ -94,8 +97,11 @@ class ReflectionClass implements Reflection, \Reflector
         $staticMethods = array_filter($this->getMethods(), function (ReflectionMethod $method) {
             return $method->isStatic();
         });
-        $properties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
-            return !$property->isStatic();
+        $defaultProperties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return !$property->isStatic() && $property->isDefault();
+        });
+        $dynamicProperties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return !$property->isStatic() && !$property->isDefault();
         });
         $methods = array_filter($this->getMethods(), function (ReflectionMethod $method) {
             return !$method->isStatic();
@@ -129,6 +135,7 @@ class ReflectionClass implements Reflection, \Reflector
 
         $str = sprintf(
             $format,
+            ($isObject ? 'Object of class' : 'Class'),
             $this->getName(),
             null !== $this->getParentClass() ? (' extends ' . $this->getParentClass()->getName()) : '',
             count($interfaceNames) ? (' implements ' . implode(', ', $interfaceNames)) : '',
@@ -141,8 +148,10 @@ class ReflectionClass implements Reflection, \Reflector
             $buildString($staticProperties),
             count($staticMethods),
             $buildString($staticMethods),
-            count($properties),
-            $buildString($properties),
+            count($defaultProperties),
+            $buildString($defaultProperties),
+            $isObject ? count($dynamicProperties) : '',
+            $isObject ? $buildString($dynamicProperties) : '',
             count($methods),
             $buildString($methods)
         );

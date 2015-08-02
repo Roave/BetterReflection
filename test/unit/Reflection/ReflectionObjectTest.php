@@ -170,4 +170,39 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\LogicException::class);
         ReflectionObject::createFromName();
     }
+
+    public function testReflectionObjectExportMatchesExpectation()
+    {
+        $foo = new ClassForHinting();
+        $foo->bar = 'huzzah';
+
+        $expectedExport = <<<'BLAH'
+Object of class [ <user> class BetterReflectionTest\Fixture\ClassForHinting ] {
+  @@ %s
+
+  - Constants [0] {
+  }
+
+  - Static properties [0] {
+  }
+
+  - Static methods [0] {
+  }
+
+  - Properties [1] {
+    Property [ <default> public $someProperty ]
+  }
+
+  - Dynamic properties [1] {
+    Property [ <dynamic> public $bar ]
+  }
+
+  - Methods [0] {
+  }
+}
+BLAH;
+        $actualExport = ReflectionObject::export($foo);
+
+        $this->assertStringMatchesFormat($expectedExport, $actualExport);
+    }
 }

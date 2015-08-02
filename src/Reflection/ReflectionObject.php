@@ -26,6 +26,20 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
+     * @param object $instance
+     * @return string
+     */
+    public static function export($instance = null)
+    {
+        if (null === $instance) {
+            throw new \InvalidArgumentException('Class instance must be provided');
+        }
+
+        $reflection = self::createFromInstance($instance);
+        return $reflection->__toString();
+    }
+
+    /**
      * Cannot instantiate this way, use ReflectionObject::createFromInstance
      *
      * @throws \LogicException

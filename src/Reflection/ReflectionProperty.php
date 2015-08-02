@@ -41,7 +41,7 @@ class ReflectionProperty implements \Reflector
     {
         return sprintf(
             'Property [%s %s%s $%s ]',
-            $this->isStatic() ? '' : ($this->isDefault() ? ' <default>' : ' <implicit>'),
+            $this->isStatic() ? '' : ($this->isDefault() ? ' <default>' : ' <dynamic>'),
             $this->getVisibilityAsString(),
             $this->isStatic() ? ' static' : '',
             $this->getName()
