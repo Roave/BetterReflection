@@ -67,6 +67,12 @@ class ReflectionClass implements Reflection, \Reflector
     {
     }
 
+    /**
+     * Create a reflection and return the string representation of a named class
+     *
+     * @param string $className
+     * @return string
+     */
     public static function export($className = null)
     {
         if (null === $className) {
@@ -77,14 +83,25 @@ class ReflectionClass implements Reflection, \Reflector
         return $reflection->__toString();
     }
 
+    /**
+     * Get a string representation of this reflection
+     *
+     * @todo Refactor this
+     * @see https://github.com/Roave/BetterReflection/issues/94
+     *
+     * @return string
+     */
     public function __toString()
     {
-        $format  = "Class [ <user> class %s%s%s ] {\n";
+        $isObject = $this instanceof ReflectionObject;
+
+        $format  = "%s [ <user> class %s%s%s ] {\n";
         $format .= "  @@ %s %d-%d\n\n";
         $format .= "  - Constants [%d] {%s\n  }\n\n";
         $format .= "  - Static properties [%d] {%s\n  }\n\n";
         $format .= "  - Static methods [%d] {%s\n  }\n\n";
         $format .= "  - Properties [%d] {%s\n  }\n\n";
+        $format .= ($isObject ? "  - Dynamic properties [%d] {%s\n  }\n\n" : '%s%s');
         $format .= "  - Methods [%d] {%s\n  }\n";
         $format .= "}\n";
 
@@ -94,8 +111,11 @@ class ReflectionClass implements Reflection, \Reflector
         $staticMethods = array_filter($this->getMethods(), function (ReflectionMethod $method) {
             return $method->isStatic();
         });
-        $properties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
-            return !$property->isStatic();
+        $defaultProperties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return !$property->isStatic() && $property->isDefault();
+        });
+        $dynamicProperties = array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            return !$property->isStatic() && !$property->isDefault();
         });
         $methods = array_filter($this->getMethods(), function (ReflectionMethod $method) {
             return !$method->isStatic();
@@ -129,6 +149,7 @@ class ReflectionClass implements Reflection, \Reflector
 
         $str = sprintf(
             $format,
+            ($isObject ? 'Object of class' : 'Class'),
             $this->getName(),
             null !== $this->getParentClass() ? (' extends ' . $this->getParentClass()->getName()) : '',
             count($interfaceNames) ? (' implements ' . implode(', ', $interfaceNames)) : '',
@@ -141,8 +162,10 @@ class ReflectionClass implements Reflection, \Reflector
             $buildString($staticProperties),
             count($staticMethods),
             $buildString($staticMethods),
-            count($properties),
-            $buildString($properties),
+            count($defaultProperties),
+            $buildString($defaultProperties),
+            $isObject ? count($dynamicProperties) : '',
+            $isObject ? $buildString($dynamicProperties) : '',
             count($methods),
             $buildString($methods)
         );
