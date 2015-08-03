@@ -26,6 +26,8 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
+     * Create a reflection and return the string representation of a class instance
+     *
      * @param object $instance
      * @return string
      */

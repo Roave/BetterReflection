@@ -67,6 +67,12 @@ class ReflectionClass implements Reflection, \Reflector
     {
     }
 
+    /**
+     * Create a reflection and return the string representation of a named class
+     *
+     * @param string $className
+     * @return string
+     */
     public static function export($className = null)
     {
         if (null === $className) {
@@ -77,6 +83,14 @@ class ReflectionClass implements Reflection, \Reflector
         return $reflection->__toString();
     }
 
+    /**
+     * Get a string representation of this reflection
+     *
+     * @todo Refactor this
+     * @see https://github.com/Roave/BetterReflection/issues/94
+     *
+     * @return string
+     */
     public function __toString()
     {
         $isObject = $this instanceof ReflectionObject;
