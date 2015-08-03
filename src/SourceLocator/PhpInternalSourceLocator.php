@@ -53,18 +53,51 @@ class PhpInternalSourceLocator implements SourceLocator
      *
      * Returns null if nothing is found.
      *
-     * @param string $name Should only contain [A-Za-z]
+     * @param string $className Should only contain [A-Za-z]
      * @return string|null
      */
-    private function getStub($name)
+    private function getStub($className)
     {
-        $name = preg_replace('[^A-Za-z]', '', $name);
-        $expectedStubName = __DIR__ . '/../../stub/' . $name . '.stub';
-
-        if (!file_exists($expectedStubName) || !is_readable($expectedStubName) || !is_file($expectedStubName)) {
+        if (!$this->hasStub($className)) {
             return null;
         }
 
-        return file_get_contents($expectedStubName);
+        return file_get_contents($this->buildStubName($className));
+    }
+
+    /**
+     * Determine the stub name
+     *
+     * @param string $className
+     * @return string
+     */
+    private function buildStubName($className)
+    {
+        if (!preg_match('/^[a-zA-Z]+$/', $className)) {
+            throw new \InvalidArgumentException('Not a valid class name.');
+        }
+
+        return __DIR__ . '/../../stub/' . $className . '.stub';
+    }
+
+    /**
+     * Determine if a stub exists for specified class name
+     *
+     * @param string $className
+     * @return bool
+     */
+    public function hasStub($className)
+    {
+        try {
+            $expectedStubName = $this->buildStubName($className);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+
+        if (!file_exists($expectedStubName) || !is_readable($expectedStubName) || !is_file($expectedStubName)) {
+            return false;
+        }
+
+        return true;
     }
 }
