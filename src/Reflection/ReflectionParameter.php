@@ -4,6 +4,7 @@ namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
+use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use BetterReflection\TypesFinder\FindParameterType;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types;
@@ -119,8 +120,6 @@ class ReflectionParameter implements \Reflector
 
         $defaultValueNode = $this->node->default;
 
-        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode);
-
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
             $this->isDefaultValueConstant = true;
             $this->defaultValueConstantName = $defaultValueNode->name;
@@ -132,7 +131,11 @@ class ReflectionParameter implements \Reflector
             $this->isDefaultValueConstant = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
+            $this->defaultValue = null;
+            return;
         }
+
+        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode);
     }
 
     /**
