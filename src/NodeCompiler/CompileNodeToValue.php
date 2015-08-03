@@ -41,6 +41,7 @@ class CompileNodeToValue
         if ($node instanceof Node\Expr\BinaryOp
             || $node instanceof Node\Scalar
             || $node instanceof Node\Expr\Array_
+            || $node instanceof Node\Expr\UnaryMinus
             || $node instanceof Node\Expr\ConstFetch
             || $node instanceof Node\Expr\ClassConstFetch) {
             /* @todo add more */
