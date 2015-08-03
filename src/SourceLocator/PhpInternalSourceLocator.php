@@ -48,6 +48,14 @@ class PhpInternalSourceLocator implements SourceLocator
         return $reflection->isInternal() ? $reflection->getName() : null;
     }
 
+    /**
+     * Get the stub source code for an internal class.
+     *
+     * Returns null if nothing is found.
+     *
+     * @param string $name Should only contain [A-Za-z]
+     * @return string|null
+     */
     private function getStub($name)
     {
         $name = preg_replace('[^A-Za-z]', '', $name);
