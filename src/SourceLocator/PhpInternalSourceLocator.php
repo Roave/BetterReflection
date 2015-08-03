@@ -69,12 +69,12 @@ class PhpInternalSourceLocator implements SourceLocator
      * Determine the stub name
      *
      * @param string $className
-     * @return string
+     * @return string|null
      */
     private function buildStubName($className)
     {
         if (!preg_match('/^[a-zA-Z]+$/', $className)) {
-            throw new \InvalidArgumentException('Not a valid class name.');
+            return null;
         }
 
         return __DIR__ . '/../../stub/' . $className . '.stub';
@@ -88,9 +88,9 @@ class PhpInternalSourceLocator implements SourceLocator
      */
     public function hasStub($className)
     {
-        try {
-            $expectedStubName = $this->buildStubName($className);
-        } catch (\InvalidArgumentException $e) {
+        $expectedStubName = $this->buildStubName($className);
+
+        if (null === $expectedStubName) {
             return false;
         }
 
