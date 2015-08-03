@@ -366,4 +366,19 @@ class ReflectionParameter implements \Reflector
 
         return $this->defaultValueConstantName;
     }
+
+    /**
+     * Gets a ReflectionClass for the type hint (returns null if not a class)
+     *
+     * @return ReflectionClass|null
+     */
+    public function getClass()
+    {
+        $hint = $this->getTypeHint();
+        if (!($hint instanceof Types\Object_)) {
+            return null;
+        }
+
+        return ReflectionClass::createFromName($hint->getFqsen()->__toString());
+    }
 }

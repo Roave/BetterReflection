@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\FunctionReflector;
@@ -347,5 +348,21 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $paramInfo = $functionInfo->getParameter('var');
 
         $this->assertSame($expectedValue, $paramInfo->getDefaultValueAsString());
+    }
+
+    public function testGetClassForTypeHintedMethodParameters()
+    {
+        $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
+
+        $reflector = new ClassReflector(new StringSourceLocator($content));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+
+        $this->assertNull($methodInfo->getParameter('untyped')->getClass());
+        $this->assertNull($methodInfo->getParameter('array')->getClass());
+
+        $hintedClassReflection = $methodInfo->getParameter('object')->getClass();
+        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        $this->assertSame('stdClass', $hintedClassReflection->getName());
     }
 }

@@ -107,7 +107,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 |--------|-----------|
 | allowsNull | :heavy_check_mark: Yes |
 | canBePassedByValue | :heavy_check_mark: Yes |
-| getClass | :x: No - could currently cause recursion |
+| getClass | :heavy_check_mark: Yes |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getDeclaringFunction | :heavy_check_mark: Yes |
 | getDefaultValue | :heavy_check_mark: Yes (*some assumptions are made) |
