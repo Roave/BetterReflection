@@ -17,6 +17,10 @@ class PhpInternalSourceLocator implements SourceLocator
             return null;
         }
 
+        if ($stub = $this->getStub($name)) {
+            return new InternalLocatedSource("<?php\n\n" . $stub);
+        }
+
         return new InternalLocatedSource(
             "<?php\n\n" . ClassGenerator::fromReflection(new ClassReflection($name))->generate()
         );
@@ -42,5 +46,58 @@ class PhpInternalSourceLocator implements SourceLocator
         $reflection = new \ReflectionClass($name);
 
         return $reflection->isInternal() ? $reflection->getName() : null;
+    }
+
+    /**
+     * Get the stub source code for an internal class.
+     *
+     * Returns null if nothing is found.
+     *
+     * @param string $className Should only contain [A-Za-z]
+     * @return string|null
+     */
+    private function getStub($className)
+    {
+        if (!$this->hasStub($className)) {
+            return null;
+        }
+
+        return file_get_contents($this->buildStubName($className));
+    }
+
+    /**
+     * Determine the stub name
+     *
+     * @param string $className
+     * @return string|null
+     */
+    private function buildStubName($className)
+    {
+        if (!preg_match('/^[a-zA-Z]+$/', $className)) {
+            return null;
+        }
+
+        return __DIR__ . '/../../stub/' . $className . '.stub';
+    }
+
+    /**
+     * Determine if a stub exists for specified class name
+     *
+     * @param string $className
+     * @return bool
+     */
+    public function hasStub($className)
+    {
+        $expectedStubName = $this->buildStubName($className);
+
+        if (null === $expectedStubName) {
+            return false;
+        }
+
+        if (!file_exists($expectedStubName) || !is_readable($expectedStubName) || !is_file($expectedStubName)) {
+            return false;
+        }
+
+        return true;
     }
 }

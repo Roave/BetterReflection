@@ -49,11 +49,16 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testCanReflectInternalClasses($className)
     {
         /* @var $class */
-        $reflector = (new ClassReflector(new PhpInternalSourceLocator()));
+        $phpInternalSourceLocator = new PhpInternalSourceLocator();
+        $reflector = (new ClassReflector($phpInternalSourceLocator));
 
         try {
             $class = $reflector->reflect($className);
         } catch (\ReflectionException $e) {
+            if ($phpInternalSourceLocator->hasStub($className)) {
+                throw $e;
+            }
+
             $this->markTestIncomplete(sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
                 $className,
