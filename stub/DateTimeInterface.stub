@@ -1,4 +1,3 @@
-<?php
 interface DateTimeInterface {
     public function diff ( DateTimeInterface $datetime2, $absolute = false);
     public function format ($format);

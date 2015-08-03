@@ -18,7 +18,7 @@ class PhpInternalSourceLocator implements SourceLocator
         }
 
         if ($stub = $this->getStub($name)) {
-            return new InternalLocatedSource($stub);
+            return new InternalLocatedSource("<?php\n\n" . $stub);
         }
 
         return new InternalLocatedSource(
@@ -50,7 +50,8 @@ class PhpInternalSourceLocator implements SourceLocator
 
     private function getStub($name)
     {
-        $expectedStubName = __DIR__ . '/../../stub/' . $name . '.stub.php';
+        $name = preg_replace('[^A-Za-z]', '', $name);
+        $expectedStubName = __DIR__ . '/../../stub/' . $name . '.stub';
 
         if (!file_exists($expectedStubName) || !is_readable($expectedStubName) || !is_file($expectedStubName)) {
             return null;

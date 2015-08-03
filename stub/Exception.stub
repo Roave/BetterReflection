@@ -1,4 +1,3 @@
-<?php
 class Exception {
     protected $message;
     protected $code;
