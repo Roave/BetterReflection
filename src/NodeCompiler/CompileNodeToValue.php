@@ -38,6 +38,22 @@ class CompileNodeToValue
             return $this->compileClassConstFetch($node);
         }
 
+        if ($node instanceof Node\Expr\BinaryOp\Plus) {
+            return $this->__invoke($node->left) + $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Mul) {
+            return $this->__invoke($node->left) * $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Minus) {
+            return $this->__invoke($node->left) - $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Div) {
+            return $this->__invoke($node->left) / $this->__invoke($node->right);
+        }
+
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
     }
 
