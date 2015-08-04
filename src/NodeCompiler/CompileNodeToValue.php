@@ -38,20 +38,8 @@ class CompileNodeToValue
             return $this->compileClassConstFetch($node);
         }
 
-        if ($node instanceof Node\Expr\BinaryOp\Plus) {
-            return $this->__invoke($node->left) + $this->__invoke($node->right);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Mul) {
-            return $this->__invoke($node->left) * $this->__invoke($node->right);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Minus) {
-            return $this->__invoke($node->left) - $this->__invoke($node->right);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Div) {
-            return $this->__invoke($node->left) / $this->__invoke($node->right);
+        if ($node instanceof Node\Expr\BinaryOp) {
+            return $this->compileBinaryOperator($node);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
@@ -113,5 +101,110 @@ class CompileNodeToValue
         $className = implode('\\', $node->class->parts);
         $constName = $node->name;
         return $className . '::' . $constName;
+    }
+
+    private function compileBinaryOperator(Node\Expr\BinaryOp $node)
+    {
+        if ($node instanceof Node\Expr\BinaryOp\Plus) {
+            return $this->__invoke($node->left) + $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Mul) {
+            return $this->__invoke($node->left) * $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Minus) {
+            return $this->__invoke($node->left) - $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Div) {
+            return $this->__invoke($node->left) / $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Concat) {
+            return $this->__invoke($node->left) . $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\BooleanAnd) {
+            return $this->__invoke($node->left) && $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\BooleanOr) {
+            return $this->__invoke($node->left) || $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\BitwiseAnd) {
+            return $this->__invoke($node->left) & $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\BitwiseOr) {
+            return $this->__invoke($node->left) | $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\BitwiseXor) {
+            return $this->__invoke($node->left) ^ $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Equal) {
+            return $this->__invoke($node->left) == $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Greater) {
+            return $this->__invoke($node->left) > $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\GreaterOrEqual) {
+            return $this->__invoke($node->left) >= $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Identical) {
+            return $this->__invoke($node->left) === $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\LogicalAnd) {
+            return $this->__invoke($node->left) and $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\LogicalOr) {
+            return $this->__invoke($node->left) or $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\LogicalXor) {
+            return $this->__invoke($node->left) xor $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Mod) {
+            return $this->__invoke($node->left) % $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\NotEqual) {
+            return $this->__invoke($node->left) != $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\NotIdentical) {
+            return $this->__invoke($node->left) !== $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Pow) {
+            return $this->__invoke($node->left) ** $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\ShiftLeft) {
+            return $this->__invoke($node->left) << $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\ShiftRight) {
+            return $this->__invoke($node->left) >> $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\Smaller) {
+            return $this->__invoke($node->left) < $this->__invoke($node->right);
+        }
+
+        if ($node instanceof Node\Expr\BinaryOp\SmallerOrEqual) {
+            return $this->__invoke($node->left) <= $this->__invoke($node->right);
+        }
+
+        throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));
     }
 }
