@@ -2,6 +2,7 @@
 
 namespace BetterReflection\NodeCompiler;
 
+use BetterReflection\Reflector\Reflector;
 use PhpParser\Node;
 
 class CompileNodeToValue
@@ -10,10 +11,11 @@ class CompileNodeToValue
      * Compile an expression from a node into a value.
      *
      * @param Node $node
+     * @param Reflector $reflector
      * @return mixed
      * @throw Exception\UnableToCompileNode
      */
-    public function __invoke(Node $node)
+    public function __invoke(Node $node, Reflector $reflector)
     {
         if ($node instanceof Node\Scalar\String_
             || $node instanceof Node\Scalar\DNumber
@@ -23,11 +25,11 @@ class CompileNodeToValue
 
         // common edge case - negative numbers
         if ($node instanceof Node\Expr\UnaryMinus) {
-            return $this->__invoke($node->expr) * -1;
+            return $this($node->expr, $reflector) * -1;
         }
 
         if ($node instanceof Node\Expr\Array_) {
-            return $this->compileArray($node);
+            return $this->compileArray($node, $reflector);
         }
 
         if ($node instanceof Node\Expr\ConstFetch) {
@@ -35,11 +37,11 @@ class CompileNodeToValue
         }
 
         if ($node instanceof Node\Expr\ClassConstFetch) {
-            return $this->compileClassConstFetch($node);
+            return $this->compileClassConstFetch($node, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp) {
-            return $this->compileBinaryOperator($node);
+            return $this->compileBinaryOperator($node, $reflector);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
@@ -49,20 +51,21 @@ class CompileNodeToValue
      * Compile arrays
      *
      * @param Node\Expr\Array_ $arrayNode
+     * @param Reflector $reflector
      * @return array
      */
-    private function compileArray(Node\Expr\Array_ $arrayNode)
+    private function compileArray(Node\Expr\Array_ $arrayNode, Reflector $reflector)
     {
         $compiledArray = [];
         foreach ($arrayNode->items as $arrayItem) {
-            $compiledValue = $this->__invoke($arrayItem->value);
+            $compiledValue = $this($arrayItem->value, $reflector);
 
             if (null == $arrayItem->key) {
                 $compiledArray[] = $compiledValue;
                 continue;
             }
 
-            $compiledArray[$this->__invoke($arrayItem->key)] = $compiledValue;
+            $compiledArray[$this($arrayItem->key, $reflector)] = $compiledValue;
         }
         return $compiledArray;
     }
@@ -92,9 +95,10 @@ class CompileNodeToValue
      * Compile class constants
      *
      * @param Node\Expr\ClassConstFetch $node
+     * @param Reflector $reflector
      * @return string
      */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node)
+    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, Reflector $reflector)
     {
         // @todo this should evaluate the VALUE, not the name
         /* @see https://github.com/Roave/BetterReflection/issues/19 */
@@ -103,106 +107,113 @@ class CompileNodeToValue
         return $className . '::' . $constName;
     }
 
-    private function compileBinaryOperator(Node\Expr\BinaryOp $node)
+    /**
+     * Compile a binary operator node
+     *
+     * @param Node\Expr\BinaryOp $node
+     * @param Reflector $reflector
+     * @return mixed
+     */
+    private function compileBinaryOperator(Node\Expr\BinaryOp $node, Reflector $reflector)
     {
         if ($node instanceof Node\Expr\BinaryOp\Plus) {
-            return $this->__invoke($node->left) + $this->__invoke($node->right);
+            return $this($node->left, $reflector) + $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Mul) {
-            return $this->__invoke($node->left) * $this->__invoke($node->right);
+            return $this($node->left, $reflector) * $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Minus) {
-            return $this->__invoke($node->left) - $this->__invoke($node->right);
+            return $this($node->left, $reflector) - $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Div) {
-            return $this->__invoke($node->left) / $this->__invoke($node->right);
+            return $this($node->left, $reflector) / $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Concat) {
-            return $this->__invoke($node->left) . $this->__invoke($node->right);
+            return $this($node->left, $reflector) . $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BooleanAnd) {
-            return $this->__invoke($node->left) && $this->__invoke($node->right);
+            return $this($node->left, $reflector) && $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BooleanOr) {
-            return $this->__invoke($node->left) || $this->__invoke($node->right);
+            return $this($node->left, $reflector) || $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BitwiseAnd) {
-            return $this->__invoke($node->left) & $this->__invoke($node->right);
+            return $this($node->left, $reflector) & $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BitwiseOr) {
-            return $this->__invoke($node->left) | $this->__invoke($node->right);
+            return $this($node->left, $reflector) | $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BitwiseXor) {
-            return $this->__invoke($node->left) ^ $this->__invoke($node->right);
+            return $this($node->left, $reflector) ^ $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Equal) {
-            return $this->__invoke($node->left) == $this->__invoke($node->right);
+            return $this($node->left, $reflector) == $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Greater) {
-            return $this->__invoke($node->left) > $this->__invoke($node->right);
+            return $this($node->left, $reflector) > $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\GreaterOrEqual) {
-            return $this->__invoke($node->left) >= $this->__invoke($node->right);
+            return $this($node->left, $reflector) >= $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Identical) {
-            return $this->__invoke($node->left) === $this->__invoke($node->right);
+            return $this($node->left, $reflector) === $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\LogicalAnd) {
-            return $this->__invoke($node->left) and $this->__invoke($node->right);
+            return $this($node->left, $reflector) and $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\LogicalOr) {
-            return $this->__invoke($node->left) or $this->__invoke($node->right);
+            return $this($node->left, $reflector) or $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\LogicalXor) {
-            return $this->__invoke($node->left) xor $this->__invoke($node->right);
+            return $this($node->left, $reflector) xor $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Mod) {
-            return $this->__invoke($node->left) % $this->__invoke($node->right);
+            return $this($node->left, $reflector) % $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\NotEqual) {
-            return $this->__invoke($node->left) != $this->__invoke($node->right);
+            return $this($node->left, $reflector) != $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\NotIdentical) {
-            return $this->__invoke($node->left) !== $this->__invoke($node->right);
+            return $this($node->left, $reflector) !== $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Pow) {
-            return $this->__invoke($node->left) ** $this->__invoke($node->right);
+            return $this($node->left, $reflector) ** $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\ShiftLeft) {
-            return $this->__invoke($node->left) << $this->__invoke($node->right);
+            return $this($node->left, $reflector) << $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\ShiftRight) {
-            return $this->__invoke($node->left) >> $this->__invoke($node->right);
+            return $this($node->left, $reflector) >> $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Smaller) {
-            return $this->__invoke($node->left) < $this->__invoke($node->right);
+            return $this($node->left, $reflector) < $this($node->right, $reflector);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\SmallerOrEqual) {
-            return $this->__invoke($node->left) <= $this->__invoke($node->right);
+            return $this($node->left, $reflector) <= $this($node->right, $reflector);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));

@@ -334,7 +334,7 @@ class ReflectionClass implements Reflection, \Reflector
         foreach ($this->node->stmts as $stmt) {
             if ($stmt instanceof ConstNode) {
                 $constName = $stmt->consts[0]->name;
-                $constValue = (new CompileNodeToValue())->__invoke($stmt->consts[0]->value);
+                $constValue = (new CompileNodeToValue())->__invoke($stmt->consts[0]->value, $this->reflector);
                 $constants[$constName] = $constValue;
             }
         }

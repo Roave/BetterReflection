@@ -135,7 +135,7 @@ class ReflectionParameter implements \Reflector
             return;
         }
 
-        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode);
+        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode, $this->reflector);
     }
 
     /**
