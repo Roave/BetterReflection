@@ -2,6 +2,7 @@
 
 namespace BetterReflection\NodeCompiler;
 
+use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\Reflector;
 use PhpParser\Node;
 
@@ -100,11 +101,13 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, Reflector $reflector)
     {
-        // @todo this should evaluate the VALUE, not the name
-        /* @see https://github.com/Roave/BetterReflection/issues/19 */
         $className = implode('\\', $node->class->parts);
+
+        /* @var ReflectionClass $classInfo */
+        $classInfo = $reflector->reflect($className);
+
         $constName = $node->name;
-        return $className . '::' . $constName;
+        return $classInfo->getConstant($constName);
     }
 
     /**
