@@ -121,7 +121,12 @@ class Generic
         }
 
         if ($node instanceof Node\Stmt\Function_) {
-            return ReflectionFunction::createFromNode($node, $locatedSource, $namespace);
+            return ReflectionFunction::createFromNode(
+                new FunctionReflector($this->sourceLocator),
+                $node,
+                $locatedSource,
+                $namespace
+            );
         }
 
         return null;

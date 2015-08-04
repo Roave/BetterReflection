@@ -299,7 +299,7 @@ class ReflectionClass implements Reflection, \Reflector
             throw new \OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
-        $this->cachedMethods[$methodName] = ReflectionMethod::createFromNode($methodNode, $this);
+        $this->cachedMethods[$methodName] = ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
         return $this->cachedMethods[$methodName];
     }
 
@@ -397,7 +397,7 @@ class ReflectionClass implements Reflection, \Reflector
         $properties = [];
         foreach ($this->node->stmts as $stmt) {
             if ($stmt instanceof PropertyNode) {
-                $prop = ReflectionProperty::createFromNode($stmt, $this);
+                $prop = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
                 $properties[$prop->getName()] = $prop;
             }
         }

@@ -2,6 +2,8 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\TypesFinder\FindParameterType;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types;
@@ -51,6 +53,10 @@ class ReflectionParameter implements \Reflector
      */
     private $defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
 
+    /**
+     * @var Reflector
+     */
+    private $reflector;
 
     private function __construct()
     {
@@ -86,16 +92,19 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * @param Reflector $reflector
      * @param ParamNode $node
      * @param ReflectionFunctionAbstract $function
      * @param int $parameterIndex
      * @return ReflectionParameter
      */
     public static function createFromNode(
+        Reflector $reflector,
         ParamNode $node,
         ReflectionFunctionAbstract $function, $parameterIndex
     ) {
         $param = new self();
+        $param->reflector = $reflector;
         $param->node = $node;
         $param->function = $function;
         $param->parameterIndex = (int)$parameterIndex;
@@ -379,6 +388,10 @@ class ReflectionParameter implements \Reflector
             return null;
         }
 
-        return ReflectionClass::createFromName($hint->getFqsen()->__toString());
+        if (!$this->reflector instanceof ClassReflector) {
+            throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
+        }
+
+        return $this->reflector->reflect($hint->getFqsen()->__toString());
     }
 }
