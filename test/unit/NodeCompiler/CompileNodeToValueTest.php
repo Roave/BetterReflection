@@ -29,6 +29,12 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             ['["foo" => "bar"]', ['foo' => 'bar']],
             ['-1', -1],
             ['-123.456', -123.456],
+            ['2 * 3', 6],
+            ['2 + 2 * 3', 8],
+            ['2 + (2 * 3)', 8],
+            ['(2 + 2) * 3', 12],
+            ['5 - 2', 3],
+            ['8 / 2', 4],
         ];
     }
 
@@ -53,5 +59,28 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             'Unable to compile expression: ' . Yield_::class
         );
         (new CompileNodeToValue())->__invoke(new Yield_());
+    }
+
+    public function testClassConstantUsedAsDefaultValue()
+    {
+        // @todo remove this
+        // @see https://github.com/Roave/BetterReflection/issues/19
+        $this->markTestIncomplete('Implementation is not complete yet');
+        $php = '<?php
+            class MyClass {
+                const FOO = 123;
+
+                public function bar($baz = self::FOO);
+            }
+        ';
+
+        $tree = (new Parser\Multiple([
+            new Parser\Php7(new Lexer()),
+            new Parser\Php5(new Lexer())
+        ]))->parse($php);
+
+        $actualValue = (new CompileNodeToValue())
+            ->__invoke($tree[0]->stmts[1]->params[0]->default);
+        $this->assertSame(123, $actualValue);
     }
 }
