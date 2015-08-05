@@ -73,7 +73,7 @@ class PhpInternalSourceLocator implements SourceLocator
      */
     private function buildStubName($className)
     {
-        if (!preg_match('/^[a-zA-Z]+$/', $className)) {
+        if (!preg_match('/^[a-zA-Z_]+$/', $className)) {
             return null;
         }
 
