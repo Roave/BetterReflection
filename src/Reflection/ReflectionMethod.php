@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\Reflector\Reflector;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
@@ -12,11 +13,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     private $declaringClass;
 
     /**
+     * @param Reflector $reflector
      * @param MethodNode $node
      * @param ReflectionClass $declaringClass
      * @return ReflectionMethod
      */
     public static function createFromNode(
+        Reflector $reflector,
         MethodNode $node,
         ReflectionClass $declaringClass
     ) {
@@ -25,7 +28,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
         // Compat with core reflection means we should NOT pass namespace info
         // for ReflectionMethod
-        $method->populateFunctionAbstract($node, $declaringClass->getLocatedSource(), null);
+        $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), null);
 
         return $method;
     }

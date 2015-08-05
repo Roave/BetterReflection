@@ -271,7 +271,8 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $node = new Function_('foo');
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
-        $functionInfo = ReflectionFunction::createFromNode($node, $locatedSource);
+        $reflector = new FunctionReflector(new StringSourceLocator('<?php'));
+        $functionInfo = ReflectionFunction::createFromNode($reflector, $node, $locatedSource);
 
         $this->assertSame($locatedSource, $functionInfo->getLocatedSource());
     }

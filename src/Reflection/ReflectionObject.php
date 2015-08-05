@@ -3,6 +3,7 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
@@ -19,8 +20,14 @@ class ReflectionObject extends ReflectionClass
      */
     private $object;
 
-    private function __construct(ReflectionClass $reflectionClass, $object)
+    /**
+     * @var Reflector
+     */
+    private $reflector;
+
+    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
     {
+        $this->reflector = $reflector;
         $this->reflectionClass = $reflectionClass;
         $this->object = $object;
     }
@@ -73,10 +80,10 @@ class ReflectionObject extends ReflectionClass
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
-        $reflectionClass = (new ClassReflector(new EvaledCodeSourceLocator()))
-            ->reflect(get_class($object));
+        $reflector = new ClassReflector(new EvaledCodeSourceLocator());
+        $reflectionClass = $reflector->reflect(get_class($object));
 
-        return new self($reflectionClass, $object);
+        return new self($reflector, $reflectionClass, $object);
     }
 
     /**
@@ -103,6 +110,7 @@ class ReflectionObject extends ReflectionClass
             }
 
             $runtimeProperty = ReflectionProperty::createFromNode(
+                $this->reflector,
                 $this->createPropertyNodeFromReflection($property, $this->object),
                 $this,
                 false

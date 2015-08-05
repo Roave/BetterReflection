@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\LocatedSource;
 use PhpParser\Node;
 use PhpParser\Node\Stmt as MethodOrFunctionNode;
@@ -25,6 +26,11 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     private $node;
 
+    /**
+     * @var Reflector
+     */
+    private $reflector;
+
     protected function __construct()
     {
     }
@@ -37,12 +43,14 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Populate the common elements of the function abstract.
      *
+     * @param Reflector $reflector
      * @param MethodOrFunctionNode $node
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
-    protected function populateFunctionAbstract(MethodOrFunctionNode $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
+    protected function populateFunctionAbstract(Reflector $reflector, MethodOrFunctionNode $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
+        $this->reflector = $reflector;
         $this->node = $node;
         $this->locatedSource = $locatedSource;
         $this->declaringNamespace = $declaringNamespace;
@@ -171,6 +179,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         $parameters = [];
         foreach ($this->node->params as $paramIndex => $paramNode) {
             $parameters[] = ReflectionParameter::createFromNode(
+                $this->reflector,
                 $paramNode,
                 $this,
                 $paramIndex

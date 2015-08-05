@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\TypesFinder\FindPropertyType;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
@@ -22,6 +23,11 @@ class ReflectionProperty implements \Reflector
      * @var bool
      */
     private $declaredAtCompileTime = true;
+
+    /**
+     * @var Reflector
+     */
+    private $reflector;
 
     private function __construct()
     {
@@ -49,17 +55,20 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
+     * @param Reflector $reflector
      * @param PropertyNode $node
      * @param ReflectionClass $declaringClass
      * @param bool $declaredAtCompileTime
      * @return ReflectionProperty
      */
     public static function createFromNode(
+        Reflector $reflector,
         PropertyNode $node,
         ReflectionClass $declaringClass,
         $declaredAtCompileTime = true
     ) {
         $prop = new self();
+        $prop->reflector = $reflector;
         $prop->node = $node;
         $prop->declaringClass = $declaringClass;
         $prop->declaredAtCompileTime = $declaredAtCompileTime;
