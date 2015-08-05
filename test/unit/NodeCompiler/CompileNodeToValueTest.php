@@ -16,6 +16,9 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
 
+/**
+ * @covers \BetterReflection\NodeCompiler\CompileNodeToValue
+ */
 class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -179,7 +182,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
     }
 
-    public function testClassConstantResolutionForMethod()
+    public function testClassConstantResolutionSelfForMethod()
     {
         $phpCode = '<?php
         class Foo {
@@ -190,6 +193,26 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode));
         $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('method');
+        $paramInfo = $methodInfo->getParameter('param');
+
+        $this->assertSame('baz', $paramInfo->getDefaultValue());
+    }
+
+    public function testClassConstantResolutionExternalForMethod()
+    {
+        $phpCode = '<?php
+        class Foo {
+            const BAR = "baz";
+        }
+        class Bat {
+            const QUX = "quux";
+            public function method($param = Foo::BAR) {}
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Bat');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo = $methodInfo->getParameter('param');
 
