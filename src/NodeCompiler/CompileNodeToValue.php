@@ -3,7 +3,6 @@
 namespace BetterReflection\NodeCompiler;
 
 use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\Reflector;
 use PhpParser\Node;
 
 class CompileNodeToValue
@@ -12,11 +11,11 @@ class CompileNodeToValue
      * Compile an expression from a node into a value.
      *
      * @param Node $node
-     * @param Reflector $reflector
+     * @param CompilerContext $context
      * @return mixed
      * @throw Exception\UnableToCompileNode
      */
-    public function __invoke(Node $node, Reflector $reflector)
+    public function __invoke(Node $node, CompilerContext $context)
     {
         if ($node instanceof Node\Scalar\String_
             || $node instanceof Node\Scalar\DNumber
@@ -26,11 +25,11 @@ class CompileNodeToValue
 
         // common edge case - negative numbers
         if ($node instanceof Node\Expr\UnaryMinus) {
-            return $this($node->expr, $reflector) * -1;
+            return $this($node->expr, $context) * -1;
         }
 
         if ($node instanceof Node\Expr\Array_) {
-            return $this->compileArray($node, $reflector);
+            return $this->compileArray($node, $context);
         }
 
         if ($node instanceof Node\Expr\ConstFetch) {
@@ -38,11 +37,11 @@ class CompileNodeToValue
         }
 
         if ($node instanceof Node\Expr\ClassConstFetch) {
-            return $this->compileClassConstFetch($node, $reflector);
+            return $this->compileClassConstFetch($node, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp) {
-            return $this->compileBinaryOperator($node, $reflector);
+            return $this->compileBinaryOperator($node, $context);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
@@ -52,21 +51,21 @@ class CompileNodeToValue
      * Compile arrays
      *
      * @param Node\Expr\Array_ $arrayNode
-     * @param Reflector $reflector
+     * @param CompilerContext $context
      * @return array
      */
-    private function compileArray(Node\Expr\Array_ $arrayNode, Reflector $reflector)
+    private function compileArray(Node\Expr\Array_ $arrayNode, CompilerContext $context)
     {
         $compiledArray = [];
         foreach ($arrayNode->items as $arrayItem) {
-            $compiledValue = $this($arrayItem->value, $reflector);
+            $compiledValue = $this($arrayItem->value, $context);
 
             if (null == $arrayItem->key) {
                 $compiledArray[] = $compiledValue;
                 continue;
             }
 
-            $compiledArray[$this($arrayItem->key, $reflector)] = $compiledValue;
+            $compiledArray[$this($arrayItem->key, $context)] = $compiledValue;
         }
         return $compiledArray;
     }
@@ -96,16 +95,23 @@ class CompileNodeToValue
      * Compile class constants
      *
      * @param Node\Expr\ClassConstFetch $node
-     * @param Reflector $reflector
+     * @param CompilerContext $context
      * @return string
      */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, Reflector $reflector)
+    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
         $className = implode('\\', $node->class->parts);
 
-        /* @var ReflectionClass $classInfo */
-        $classInfo = $reflector->reflect($className);
+        $classInfo = null;
+        if ($className == 'self') {
+            $classInfo = $context->getSelf();
+        }
 
+        if (null === $classInfo) {
+            $classInfo = $context->getReflector()->reflect($className);
+        }
+
+        /* @var ReflectionClass $classInfo */
         $constName = $node->name;
         return $classInfo->getConstant($constName);
     }
@@ -114,109 +120,109 @@ class CompileNodeToValue
      * Compile a binary operator node
      *
      * @param Node\Expr\BinaryOp $node
-     * @param Reflector $reflector
+     * @param CompilerContext $context
      * @return mixed
      */
-    private function compileBinaryOperator(Node\Expr\BinaryOp $node, Reflector $reflector)
+    private function compileBinaryOperator(Node\Expr\BinaryOp $node, CompilerContext $context)
     {
         if ($node instanceof Node\Expr\BinaryOp\Plus) {
-            return $this($node->left, $reflector) + $this($node->right, $reflector);
+            return $this($node->left, $context) + $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Mul) {
-            return $this($node->left, $reflector) * $this($node->right, $reflector);
+            return $this($node->left, $context) * $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Minus) {
-            return $this($node->left, $reflector) - $this($node->right, $reflector);
+            return $this($node->left, $context) - $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Div) {
-            return $this($node->left, $reflector) / $this($node->right, $reflector);
+            return $this($node->left, $context) / $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Concat) {
-            return $this($node->left, $reflector) . $this($node->right, $reflector);
+            return $this($node->left, $context) . $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BooleanAnd) {
-            return $this($node->left, $reflector) && $this($node->right, $reflector);
+            return $this($node->left, $context) && $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BooleanOr) {
-            return $this($node->left, $reflector) || $this($node->right, $reflector);
+            return $this($node->left, $context) || $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BitwiseAnd) {
-            return $this($node->left, $reflector) & $this($node->right, $reflector);
+            return $this($node->left, $context) & $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BitwiseOr) {
-            return $this($node->left, $reflector) | $this($node->right, $reflector);
+            return $this($node->left, $context) | $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\BitwiseXor) {
-            return $this($node->left, $reflector) ^ $this($node->right, $reflector);
+            return $this($node->left, $context) ^ $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Equal) {
-            return $this($node->left, $reflector) == $this($node->right, $reflector);
+            return $this($node->left, $context) == $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Greater) {
-            return $this($node->left, $reflector) > $this($node->right, $reflector);
+            return $this($node->left, $context) > $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\GreaterOrEqual) {
-            return $this($node->left, $reflector) >= $this($node->right, $reflector);
+            return $this($node->left, $context) >= $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Identical) {
-            return $this($node->left, $reflector) === $this($node->right, $reflector);
+            return $this($node->left, $context) === $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\LogicalAnd) {
-            return $this($node->left, $reflector) and $this($node->right, $reflector);
+            return $this($node->left, $context) and $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\LogicalOr) {
-            return $this($node->left, $reflector) or $this($node->right, $reflector);
+            return $this($node->left, $context) or $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\LogicalXor) {
-            return $this($node->left, $reflector) xor $this($node->right, $reflector);
+            return $this($node->left, $context) xor $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Mod) {
-            return $this($node->left, $reflector) % $this($node->right, $reflector);
+            return $this($node->left, $context) % $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\NotEqual) {
-            return $this($node->left, $reflector) != $this($node->right, $reflector);
+            return $this($node->left, $context) != $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\NotIdentical) {
-            return $this($node->left, $reflector) !== $this($node->right, $reflector);
+            return $this($node->left, $context) !== $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Pow) {
-            return $this($node->left, $reflector) ** $this($node->right, $reflector);
+            return $this($node->left, $context) ** $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\ShiftLeft) {
-            return $this($node->left, $reflector) << $this($node->right, $reflector);
+            return $this($node->left, $context) << $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\ShiftRight) {
-            return $this($node->left, $reflector) >> $this($node->right, $reflector);
+            return $this($node->left, $context) >> $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\Smaller) {
-            return $this($node->left, $reflector) < $this($node->right, $reflector);
+            return $this($node->left, $context) < $this($node->right, $context);
         }
 
         if ($node instanceof Node\Expr\BinaryOp\SmallerOrEqual) {
-            return $this($node->left, $reflector) <= $this($node->right, $reflector);
+            return $this($node->left, $context) <= $this($node->right, $context);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));

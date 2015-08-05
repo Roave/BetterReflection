@@ -3,6 +3,7 @@
 namespace BetterReflectionTest\NodeCompiler;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\StringSourceLocator;
@@ -26,9 +27,9 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         return (new Parser\Php7(new Lexer()))->parse('<?php ' . $phpCode . ';')[0];
     }
 
-    private function getDummyReflector()
+    private function getDummyContext()
     {
-        return new ClassReflector(new StringSourceLocator('<?php'));
+        return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php')), null);
     }
 
     /**
@@ -137,7 +138,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
     {
         $node = $this->parseCode($phpCode);
 
-        $actualValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyReflector());
+        $actualValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyContext());
 
         $this->assertSame($expectedValue, $actualValue);
     }
@@ -148,7 +149,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             UnableToCompileNode::class,
             'Unable to compile expression: ' . Yield_::class
         );
-        (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyReflector());
+        (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenCoalesceOperatorUsed()
@@ -157,7 +158,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             UnableToCompileNode::class,
             'Unable to compile binary operator'
         );
-        (new CompileNodeToValue())->__invoke(new Coalesce(new LNumber(5), new LNumber(3)), $this->getDummyReflector());
+        (new CompileNodeToValue())->__invoke(new Coalesce(new LNumber(5), new LNumber(3)), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenSpaceshipOperatorUsed()
@@ -166,7 +167,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             UnableToCompileNode::class,
             'Unable to compile binary operator'
         );
-        (new CompileNodeToValue())->__invoke(new Spaceship(new LNumber(5), new LNumber(3)), $this->getDummyReflector());
+        (new CompileNodeToValue())->__invoke(new Spaceship(new LNumber(5), new LNumber(3)), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenConstUsed()
@@ -175,7 +176,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             UnableToCompileNode::class,
             'Unable to compile constant expressions'
         );
-        (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyReflector());
+        (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
     }
 
     public function testClassConstantResolutionForMethod()

@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -135,7 +136,10 @@ class ReflectionParameter implements \Reflector
             return;
         }
 
-        $this->defaultValue = (new CompileNodeToValue())->__invoke($defaultValueNode, $this->reflector);
+        $this->defaultValue = (new CompileNodeToValue())->__invoke(
+            $defaultValueNode,
+            new CompilerContext($this->reflector, $this->getDeclaringClass())
+        );
     }
 
     /**
