@@ -103,7 +103,7 @@ class CompileNodeToValue
         $className = implode('\\', $node->class->parts);
 
         $classInfo = null;
-        if ($className == 'self') {
+        if ('self' === $className || 'static' === $className) {
             $classInfo = $context->getSelf();
         }
 
