@@ -218,4 +218,21 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('baz', $paramInfo->getDefaultValue());
     }
+
+    public function testClassConstantResolutionStaticForMethod()
+    {
+        $phpCode = '<?php
+        class Foo {
+            const BAR = "baz";
+            public function method($param = static::BAR) {}
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('method');
+        $paramInfo = $methodInfo->getParameter('param');
+
+        $this->assertSame('baz', $paramInfo->getDefaultValue());
+    }
 }
