@@ -3,6 +3,7 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\Reflection\Exception\NotAClassReflection;
 use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
@@ -334,7 +335,10 @@ class ReflectionClass implements Reflection, \Reflector
         foreach ($this->node->stmts as $stmt) {
             if ($stmt instanceof ConstNode) {
                 $constName = $stmt->consts[0]->name;
-                $constValue = (new CompileNodeToValue())->__invoke($stmt->consts[0]->value);
+                $constValue = (new CompileNodeToValue())->__invoke(
+                    $stmt->consts[0]->value,
+                    new CompilerContext($this->reflector, $this)
+                );
                 $constants[$constName] = $constValue;
             }
         }
