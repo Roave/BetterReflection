@@ -1,0 +1,63 @@
+<?php
+
+class SoapClient
+{
+
+    public function SoapClient($wsdl, $options = null)
+    {
+    }
+
+    public function __call($function_name, $arguments)
+    {
+    }
+
+    public function __soapCall($function_name, $arguments, $options = null, $input_headers = null, &$output_headers = null)
+    {
+    }
+
+    public function __getLastRequest()
+    {
+    }
+
+    public function __getLastResponse()
+    {
+    }
+
+    public function __getLastRequestHeaders()
+    {
+    }
+
+    public function __getLastResponseHeaders()
+    {
+    }
+
+    public function __getFunctions()
+    {
+    }
+
+    public function __getTypes()
+    {
+    }
+
+    public function __doRequest($request, $location, $action, $version, $one_way = 0)
+    {
+    }
+
+    public function __setCookie($name, $value = null)
+    {
+    }
+
+    public function __getCookies()
+    {
+    }
+
+    public function __setLocation($new_location = null)
+    {
+    }
+
+    public function __setSoapHeaders($soapheaders)
+    {
+    }
+
+
+}

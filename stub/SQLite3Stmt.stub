@@ -1,0 +1,43 @@
+<?php
+
+class SQLite3Stmt
+{
+
+    public function paramCount()
+    {
+    }
+
+    public function close()
+    {
+    }
+
+    public function reset()
+    {
+    }
+
+    public function clear()
+    {
+    }
+
+    public function execute()
+    {
+    }
+
+    public function bindParam($param_number, &$param, $type = null)
+    {
+    }
+
+    public function bindValue($param_number, $param, $type = null)
+    {
+    }
+
+    public function readOnly()
+    {
+    }
+
+    private function __construct($sqlite3)
+    {
+    }
+
+
+}

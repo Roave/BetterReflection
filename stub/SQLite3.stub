@@ -1,0 +1,87 @@
+<?php
+
+class SQLite3
+{
+
+    public function open($filename, $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, $encryption_key = null)
+    {
+    }
+
+    public function close()
+    {
+    }
+
+    public function exec($query)
+    {
+    }
+
+    public static function version()
+    {
+    }
+
+    public function lastInsertRowID()
+    {
+    }
+
+    public function lastErrorCode()
+    {
+    }
+
+    public function lastErrorMsg()
+    {
+    }
+
+    public function busyTimeout($ms)
+    {
+    }
+
+    public function loadExtension($shared_library)
+    {
+    }
+
+    public function changes()
+    {
+    }
+
+    public static function escapeString($value)
+    {
+    }
+
+    public function prepare($query)
+    {
+    }
+
+    public function query($query)
+    {
+    }
+
+    public function querySingle($query, $entire_row = false)
+    {
+    }
+
+    public function createFunction($name, $callback, $argument_count = -1)
+    {
+    }
+
+    public function createAggregate($name, $step_callback, $final_callback, $argument_count = -1)
+    {
+    }
+
+    public function createCollation($name, $callback)
+    {
+    }
+
+    public function openBlob($table, $column, $rowid, $dbname = null)
+    {
+    }
+
+    public function enableExceptions($enableExceptions)
+    {
+    }
+
+    public function __construct($filename, $flags = null, $encryption_key = null)
+    {
+    }
+
+
+}

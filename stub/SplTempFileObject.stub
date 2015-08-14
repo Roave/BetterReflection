@@ -1,0 +1,19 @@
+<?php
+
+class SplTempFileObject extends SplFileObject
+{
+
+    const DROP_NEW_LINE = 1;
+
+    const READ_AHEAD = 2;
+
+    const SKIP_EMPTY = 4;
+
+    const READ_CSV = 8;
+
+    public function __construct($max_memory = null)
+    {
+    }
+
+
+}

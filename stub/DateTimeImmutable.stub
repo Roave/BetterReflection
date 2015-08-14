@@ -1,0 +1,83 @@
+<?php
+
+class DateTimeImmutable implements DateTimeInterface
+{
+
+    public function __construct($time = 'now', $timezone = null)
+    {
+    }
+
+    public function __wakeup()
+    {
+    }
+
+    public static function __set_state()
+    {
+    }
+
+    public static function createFromFormat($format, $time, $object = null)
+    {
+    }
+
+    public static function getLastErrors()
+    {
+    }
+
+    public function format($format)
+    {
+    }
+
+    public function getTimezone()
+    {
+    }
+
+    public function getOffset()
+    {
+    }
+
+    public function getTimestamp()
+    {
+    }
+
+    public function diff($object, $absolute = false)
+    {
+    }
+
+    public function modify($modify)
+    {
+    }
+
+    public function add($interval)
+    {
+    }
+
+    public function sub($interval)
+    {
+    }
+
+    public function setTimezone($timezone)
+    {
+    }
+
+    public function setTime($hour, $minute, $second = 0)
+    {
+    }
+
+    public function setDate($year, $month, $day)
+    {
+    }
+
+    public function setISODate($year, $week, $day = 1)
+    {
+    }
+
+    public function setTimestamp($unixtimestamp)
+    {
+    }
+
+    public static function createFromMutable($DateTime)
+    {
+    }
+
+
+}

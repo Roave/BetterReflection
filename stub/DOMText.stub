@@ -1,0 +1,27 @@
+<?php
+
+class DOMText extends DOMCharacterData
+{
+
+    public function splitText($offset)
+    {
+    }
+
+    public function isWhitespaceInElementContent()
+    {
+    }
+
+    public function isElementContentWhitespace()
+    {
+    }
+
+    public function replaceWholeText($content)
+    {
+    }
+
+    public function __construct($value = null)
+    {
+    }
+
+
+}

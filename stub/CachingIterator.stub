@@ -1,0 +1,87 @@
+<?php
+
+class CachingIterator extends IteratorIterator implements ArrayAccess, Countable
+{
+
+    const CALL_TOSTRING = 1;
+
+    const CATCH_GET_CHILD = 16;
+
+    const TOSTRING_USE_KEY = 2;
+
+    const TOSTRING_USE_CURRENT = 4;
+
+    const TOSTRING_USE_INNER = 8;
+
+    const FULL_CACHE = 256;
+
+    public function __construct(\Iterator $iterator, $flags = self::CALL_TOSTRING)
+    {
+    }
+
+    public function rewind()
+    {
+    }
+
+    public function valid()
+    {
+    }
+
+    public function key()
+    {
+    }
+
+    public function current()
+    {
+    }
+
+    public function next()
+    {
+    }
+
+    public function hasNext()
+    {
+    }
+
+    public function __toString()
+    {
+    }
+
+    public function getInnerIterator()
+    {
+    }
+
+    public function getFlags()
+    {
+    }
+
+    public function setFlags($flags)
+    {
+    }
+
+    public function offsetGet($index)
+    {
+    }
+
+    public function offsetSet($index, $newval)
+    {
+    }
+
+    public function offsetUnset($index)
+    {
+    }
+
+    public function offsetExists($index)
+    {
+    }
+
+    public function getCache()
+    {
+    }
+
+    public function count()
+    {
+    }
+
+
+}

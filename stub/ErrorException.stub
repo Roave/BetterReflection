@@ -1,0 +1,17 @@
+<?php
+
+class ErrorException extends Exception
+{
+
+    protected $severity = 1;
+
+    public function __construct($message = '', $code = 0, $severity = 1, $filename = null, $lineno = null, $previous = null)
+    {
+    }
+
+    final public function getSeverity()
+    {
+    }
+
+
+}

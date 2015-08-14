@@ -1,0 +1,19 @@
+<?php
+
+class Directory
+{
+
+    public function close($dir_handle = null)
+    {
+    }
+
+    public function rewind($dir_handle = null)
+    {
+    }
+
+    public function read($dir_handle = null)
+    {
+    }
+
+
+}

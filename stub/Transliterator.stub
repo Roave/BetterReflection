@@ -1,0 +1,45 @@
+<?php
+
+class Transliterator
+{
+
+    const FORWARD = 0;
+
+    const REVERSE = 1;
+
+    public $id = null;
+
+    final private function __construct()
+    {
+    }
+
+    public static function create($id, $direction = null)
+    {
+    }
+
+    public static function createFromRules($rules, $direction = null)
+    {
+    }
+
+    public function createInverse()
+    {
+    }
+
+    public static function listIDs()
+    {
+    }
+
+    public function transliterate($subject, $start = null, $end = null)
+    {
+    }
+
+    public function getErrorCode()
+    {
+    }
+
+    public function getErrorMessage()
+    {
+    }
+
+
+}

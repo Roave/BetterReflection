@@ -1,0 +1,37 @@
+<?php
+
+class RecursiveRegexIterator extends RegexIterator implements RecursiveIterator
+{
+
+    const USE_KEY = 1;
+
+    const INVERT_MATCH = 2;
+
+    const MATCH = 0;
+
+    const GET_MATCH = 1;
+
+    const ALL_MATCHES = 2;
+
+    const SPLIT = 3;
+
+    const REPLACE = 4;
+
+    public function __construct(\RecursiveIterator $iterator, $regex, $mode = self::MATCH, $flags = 0, $preg_flags = 0)
+    {
+    }
+
+    public function accept()
+    {
+    }
+
+    public function hasChildren()
+    {
+    }
+
+    public function getChildren()
+    {
+    }
+
+
+}

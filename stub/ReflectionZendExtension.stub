@@ -1,0 +1,45 @@
+<?php
+
+class ReflectionZendExtension implements Reflector
+{
+
+    public $name = '';
+
+    final private function __clone()
+    {
+    }
+
+    public static function export($name, $return = null)
+    {
+    }
+
+    public function __construct($name)
+    {
+    }
+
+    public function __toString()
+    {
+    }
+
+    public function getName()
+    {
+    }
+
+    public function getVersion()
+    {
+    }
+
+    public function getAuthor()
+    {
+    }
+
+    public function getURL()
+    {
+    }
+
+    public function getCopyright()
+    {
+    }
+
+
+}
