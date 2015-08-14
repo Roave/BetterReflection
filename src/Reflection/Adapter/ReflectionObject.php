@@ -2,19 +2,19 @@
 
 namespace BetterReflection\Reflection\Adapter;
 
-use ReflectionClass as CoreReflectionClass;
-use BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use ReflectionObject as CoreReflectionObject;
+use BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 
-class ReflectionClass extends CoreReflectionClass
+class ReflectionObject extends CoreReflectionObject
 {
     /**
-     * @var BetterReflectionClass
+     * @var BetterReflectionObject
      */
-    private $betterReflectionClass;
+    private $betterReflectionObject;
 
-    public function __construct(BetterReflectionClass $betterReflectionClass)
+    public function __construct(BetterReflectionObject $betterReflectionObject)
     {
-        $this->betterReflectionClass = $betterReflectionClass;
+        $this->betterReflectionObject = $betterReflectionObject;
     }
 
     /**
@@ -22,7 +22,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public static function export()
     {
-        return BetterReflectionClass::export(...func_get_args());
+        return BetterReflectionObject::export(...func_get_args());
     }
 
     /**
@@ -30,7 +30,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function __toString()
     {
-        return $this->betterReflectionClass->__toString();
+        return $this->betterReflectionObject->__toString();
     }
 
     /**
@@ -38,7 +38,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getName()
     {
-        return $this->betterReflectionClass->getName();
+        return $this->betterReflectionObject->getName();
     }
 
     /**
@@ -46,7 +46,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isInternal()
     {
-        return $this->betterReflectionClass->isInternal();
+        return $this->betterReflectionObject->isInternal();
     }
 
     /**
@@ -54,7 +54,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isUserDefined()
     {
-        return $this->betterReflectionClass->isUserDefined();
+        return $this->betterReflectionObject->isUserDefined();
     }
 
     /**
@@ -62,7 +62,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isInstantiable()
     {
-        return $this->betterReflectionClass->isInstantiable();
+        return $this->betterReflectionObject->isInstantiable();
     }
 
     /**
@@ -70,7 +70,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isCloneable()
     {
-        return $this->betterReflectionClass->isCloneable();
+        return $this->betterReflectionObject->isCloneable();
     }
 
     /**
@@ -78,7 +78,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getFileName()
     {
-        return $this->betterReflectionClass->getFileName();
+        return $this->betterReflectionObject->getFileName();
     }
 
     /**
@@ -86,7 +86,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getStartLine()
     {
-        return $this->betterReflectionClass->getStartLine();
+        return $this->betterReflectionObject->getStartLine();
     }
 
     /**
@@ -94,7 +94,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getEndLine()
     {
-        return $this->betterReflectionClass->getEndLine();
+        return $this->betterReflectionObject->getEndLine();
     }
 
     /**
@@ -102,7 +102,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getDocComment()
     {
-        return $this->betterReflectionClass->getEndLine();
+        return $this->betterReflectionObject->getEndLine();
     }
 
     /**
@@ -110,7 +110,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getConstructor()
     {
-        return new ReflectionMethod($this->betterReflectionClass->getConstructor());
+        return new ReflectionMethod($this->betterReflectionObject->getConstructor());
     }
 
     /**
@@ -119,7 +119,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function hasMethod($name)
     {
-        return $this->betterReflectionClass->hasMethod($name);
+        return $this->betterReflectionObject->hasMethod($name);
     }
 
     /**
@@ -128,7 +128,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethod($name)
     {
-        return new ReflectionMethod($this->betterReflectionClass->getMethod($name));
+        return new ReflectionMethod($this->betterReflectionObject->getMethod($name));
     }
 
     /**
@@ -136,7 +136,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethods()
     {
-        $methods = $this->betterReflectionClass->getMethods();
+        $methods = $this->betterReflectionObject->getMethods();
 
         $wrappedMethods = [];
         foreach ($methods as $key => $method) {
@@ -151,7 +151,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function hasProperty($name)
     {
-        return $this->betterReflectionClass->hasProperty($name);
+        return $this->betterReflectionObject->hasProperty($name);
     }
 
     /**
@@ -160,7 +160,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getProperty($name)
     {
-        return new ReflectionProperty($this->betterReflectionClass->getProperty($name));
+        return new ReflectionProperty($this->betterReflectionObject->getProperty($name));
     }
 
     /**
@@ -168,7 +168,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getProperties()
     {
-        $properties = $this->betterReflectionClass->getProperties();
+        $properties = $this->betterReflectionObject->getProperties();
 
         $wrappedProperties = [];
         foreach ($properties as $key => $property) {
@@ -183,7 +183,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function hasConstant($name)
     {
-        return $this->betterReflectionClass->hasConstant($name);
+        return $this->betterReflectionObject->hasConstant($name);
     }
 
     /**
@@ -191,7 +191,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getConstants()
     {
-        return $this->betterReflectionClass->getConstants();
+        return $this->betterReflectionObject->getConstants();
     }
 
     /**
@@ -200,7 +200,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getConstant($name)
     {
-        return $this->betterReflectionClass->getConstant($name);
+        return $this->betterReflectionObject->getConstant($name);
     }
 
     /**
@@ -208,7 +208,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getInterfaces()
     {
-        $interfaces = $this->betterReflectionClass->getInterfaces();
+        $interfaces = $this->betterReflectionObject->getInterfaces();
 
         $wrappedInterfaces = [];
         foreach ($interfaces as $key => $interface) {
@@ -222,7 +222,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getInterfaceNames()
     {
-        return $this->betterReflectionClass->getInterfaceNames();
+        return $this->betterReflectionObject->getInterfaceNames();
     }
 
     /**
@@ -230,7 +230,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isInterface()
     {
-        return $this->betterReflectionClass->isInterface();
+        return $this->betterReflectionObject->isInterface();
     }
 
     /**
@@ -238,7 +238,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getTraits()
     {
-        $traits = $this->betterReflectionClass->getInterfaces();
+        $traits = $this->betterReflectionObject->getInterfaces();
 
         $wrappedTraits = [];
         foreach ($traits as $key => $trait) {
@@ -252,7 +252,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getTraitNames()
     {
-        return $this->betterReflectionClass->getTraitNames();
+        return $this->betterReflectionObject->getTraitNames();
     }
 
     /**
@@ -260,7 +260,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getTraitAliases()
     {
-        return $this->betterReflectionClass->getTraitAliases();
+        return $this->betterReflectionObject->getTraitAliases();
     }
 
     /**
@@ -268,7 +268,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isTrait()
     {
-        return $this->betterReflectionClass->isTrait();
+        return $this->betterReflectionObject->isTrait();
     }
 
     /**
@@ -276,7 +276,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isAbstract()
     {
-        return $this->betterReflectionClass->isAbstract();
+        return $this->betterReflectionObject->isAbstract();
     }
 
     /**
@@ -284,7 +284,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isFinal()
     {
-        return $this->betterReflectionClass->isFinal();
+        return $this->betterReflectionObject->isFinal();
     }
 
     /**
@@ -292,7 +292,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getModifiers()
     {
-        return $this->betterReflectionClass->getModifiers();
+        return $this->betterReflectionObject->getModifiers();
     }
 
     /**
@@ -301,7 +301,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isInstance($object)
     {
-        return $this->betterReflectionClass->isInstance($object);
+        return $this->betterReflectionObject->isInstance($object);
     }
 
     /**
@@ -329,11 +329,11 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return BetterReflectionClass
+     * @return BetterReflectionObject
      */
     public function getParentClass()
     {
-        return new ReflectionClass($this->betterReflectionClass->getParentClass());
+        return new ReflectionClass($this->betterReflectionObject->getParentClass());
     }
 
     /**
@@ -342,7 +342,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isSubclassOf($class)
     {
-        return $this->betterReflectionClass->isSubclassOf($class);
+        return $this->betterReflectionObject->isSubclassOf($class);
     }
 
     /**
@@ -374,7 +374,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getDefaultProperties()
     {
-        $properties = $this->betterReflectionClass->getDefaultProperties();
+        $properties = $this->betterReflectionObject->getDefaultProperties();
 
         $wrappedProperties = [];
         foreach ($properties as $key => $property) {
@@ -388,7 +388,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isIterateable()
     {
-        return $this->betterReflectionClass->isIterateable();
+        return $this->betterReflectionObject->isIterateable();
     }
 
     /**
@@ -397,7 +397,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function implementsInterface($interface)
     {
-        return $this->betterReflectionClass->implementsInterface($interface);
+        return $this->betterReflectionObject->implementsInterface($interface);
     }
 
     /**
@@ -421,7 +421,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function inNamespace()
     {
-        return $this->betterReflectionClass->inNamespace();
+        return $this->betterReflectionObject->inNamespace();
     }
 
     /**
@@ -429,7 +429,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getNamespaceName()
     {
-        return $this->betterReflectionClass->getNamespaceName();
+        return $this->betterReflectionObject->getNamespaceName();
     }
 
     /**
@@ -437,6 +437,6 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getShortName()
     {
-        return $this->betterReflectionClass->getShortName();
+        return $this->betterReflectionObject->getShortName();
     }
 }
