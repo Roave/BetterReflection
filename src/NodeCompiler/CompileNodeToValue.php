@@ -87,7 +87,13 @@ class CompileNodeToValue
             case 'true':
                 return true;
             default:
-                throw new Exception\UnableToCompileNode('Unable to compile constant expressions');
+                if (!defined($firstName)) {
+                    throw new Exception\UnableToCompileNode(
+                        sprintf('Constant "%s" has not been defined', $firstName)
+                    );
+                }
+
+                return constant($firstName);
         }
     }
 
