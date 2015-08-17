@@ -78,7 +78,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getClosureThis()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -86,7 +86,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getClosureScopeClass()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -110,7 +110,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getExtension()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -118,7 +118,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getExtensionName()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -196,7 +196,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getStaticVariables()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -228,7 +228,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function isDisabled()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -236,7 +236,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function invoke($args = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -244,7 +244,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function invokeArgs(array $args)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -252,6 +252,6 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getClosure()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 }
