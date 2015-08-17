@@ -20,7 +20,7 @@ class ReflectionFunction extends CoreReflectionFunction
     /**
      * @return string
      */
-    public static function export()
+    public static function export($name, $return = null)
     {
         return BetterReflectionFunction::export(...func_get_args());
     }
@@ -234,7 +234,7 @@ class ReflectionFunction extends CoreReflectionFunction
     /**
      * @throws \Exception
      */
-    public function invoke()
+    public function invoke($args = null)
     {
         throw new \Exception('Not implemented');
     }
@@ -242,7 +242,7 @@ class ReflectionFunction extends CoreReflectionFunction
     /**
      * @throws \Exception
      */
-    public function invokeArgs()
+    public function invokeArgs(array $args)
     {
         throw new \Exception('Not implemented');
     }

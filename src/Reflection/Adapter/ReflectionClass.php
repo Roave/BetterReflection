@@ -20,7 +20,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @return string
      */
-    public static function export()
+    public static function export($argument, $return = false)
     {
         return BetterReflectionClass::export(...func_get_args());
     }
@@ -134,7 +134,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @return ReflectionMethod[]
      */
-    public function getMethods()
+    public function getMethods($filter = null)
     {
         $methods = $this->betterReflectionClass->getMethods();
 
@@ -166,7 +166,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @return ReflectionProperty[]
      */
-    public function getProperties()
+    public function getProperties($filter = null)
     {
         $properties = $this->betterReflectionClass->getProperties();
 
@@ -307,7 +307,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @throws \Exception
      */
-    public function newInstance()
+    public function newInstance($args = null, $_ = null)
     {
         throw new \Exception('Not implemented');
     }
@@ -323,7 +323,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @throws \Exception
      */
-    public function newInstanceArgs()
+    public function newInstanceArgs(array $args = null)
     {
         throw new \Exception('Not implemented');
     }
@@ -356,7 +356,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @throws \Exception
      */
-    public function getStaticPropertyValue()
+    public function getStaticPropertyValue($name, $default = null)
     {
         throw new \Exception('Not implemented');
     }
@@ -364,7 +364,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @throws \Exception
      */
-    public function setStaticPropertyValue()
+    public function setStaticPropertyValue($name, $value)
     {
         throw new \Exception('Not implemented');
     }

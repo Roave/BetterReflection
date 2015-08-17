@@ -20,7 +20,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * @return string
      */
-    public static function export()
+    public static function export($class, $name, $reutrn = null)
     {
         return BetterReflectionMethod::export(...func_get_args());
     }
@@ -290,7 +290,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * @throws \Exception
      */
-    public function getClosure()
+    public function getClosure($object)
     {
         throw new \Exception('Not implemented');
     }
@@ -306,7 +306,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * @throws \Exception
      */
-    public function invoke()
+    public function invoke($object, $args)
     {
         throw new \Exception('Not implemented');
     }
@@ -314,7 +314,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * @throws \Exception
      */
-    public function invokeArgs()
+    public function invokeArgs($object, array $args)
     {
         throw new \Exception('Not implemented');
     }
@@ -339,7 +339,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * @throws \Exception
      */
-    public function setAccessible()
+    public function setAccessible($value)
     {
         throw new \Exception('Not implemented');
     }

@@ -20,7 +20,7 @@ class ReflectionProperty extends CoreReflectionProperty
     /**
      * @return string
      */
-    public static function export()
+    public static function export($class, $name, $return = null)
     {
         return BetterReflectionProperty::export(...func_get_args());
     }
@@ -44,7 +44,7 @@ class ReflectionProperty extends CoreReflectionProperty
     /**
      * @throws \Exception
      */
-    public function getValue()
+    public function getValue($object = null)
     {
         throw new \Exception('Not implemented');
     }
@@ -52,7 +52,7 @@ class ReflectionProperty extends CoreReflectionProperty
     /**
      * @throws \Exception
      */
-    public function setValue()
+    public function setValue($object, $value = null)
     {
         throw new \Exception('Not implemented');
     }
@@ -124,7 +124,7 @@ class ReflectionProperty extends CoreReflectionProperty
     /**
      * @throws \Exception
      */
-    public function setAccessible()
+    public function setAccessible($visible)
     {
         throw new \Exception('Not implemented');
     }

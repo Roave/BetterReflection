@@ -16,4 +16,7 @@
     <listeners>
         <listener class="BetterReflectionTest\TestListener" file="test/unit/TestListener.php" />
     </listeners>
+    <php>
+        <ini name="error_reporting" value="E_ALL"/>
+    </php>
 </phpunit>
