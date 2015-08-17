@@ -129,6 +129,8 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             ['1 <= 2', true],
             ['2 <= 2', true],
             ['3 <= 2', false],
+            ['PHP_INT_MAX', PHP_INT_MAX],
+            ['PHP_EOL', PHP_EOL],
         ];
     }
 
@@ -173,13 +175,26 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         (new CompileNodeToValue())->__invoke(new Spaceship(new LNumber(5), new LNumber(3)), $this->getDummyContext());
     }
 
-    public function testExceptionThrownWhenConstUsed()
+    public function testExceptionThrownWhenUndefinedConstUsed()
     {
         $this->setExpectedException(
             UnableToCompileNode::class,
-            'Unable to compile constant expressions'
+            'Constant "FOO" has not been defined'
         );
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
+    }
+
+    public function testConstantValueCompiled()
+    {
+        define('BETTER_REFLECTION_TEST_CONST', 123);
+
+        $this->assertSame(
+            123,
+            (new CompileNodeToValue())->__invoke(
+                new ConstFetch(new Name('BETTER_REFLECTION_TEST_CONST')),
+                $this->getDummyContext()
+            )
+        );
     }
 
     public function testClassConstantResolutionSelfForMethod()
