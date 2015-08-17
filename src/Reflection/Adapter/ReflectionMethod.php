@@ -20,7 +20,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * @return string
      */
-    public static function export($class, $name, $reutrn = null)
+    public static function export($class, $name, $return = null)
     {
         return BetterReflectionMethod::export(...func_get_args());
     }
@@ -78,7 +78,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getClosureThis()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -86,7 +86,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getClosureScopeClass()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -110,7 +110,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getExtension()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -118,7 +118,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getExtensionName()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -196,7 +196,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getStaticVariables()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -292,7 +292,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getClosure($object)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -308,7 +308,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function invoke($object, $args)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -316,7 +316,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function invokeArgs($object, array $args)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -341,6 +341,6 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function setAccessible($value)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 }
