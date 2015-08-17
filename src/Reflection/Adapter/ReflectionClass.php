@@ -98,7 +98,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getDocComment()
     {
@@ -238,7 +238,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getTraits()
     {
-        $traits = $this->betterReflectionClass->getInterfaces();
+        $traits = $this->betterReflectionClass->getTraits();
 
         $wrappedTraits = [];
         foreach ($traits as $key => $trait) {
