@@ -46,7 +46,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function getValue($object = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -54,7 +54,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function setValue($object, $value = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -126,6 +126,6 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function setAccessible($visible)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 }
