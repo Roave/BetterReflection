@@ -102,7 +102,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getDocComment()
     {
-        return $this->betterReflectionObject->getEndLine();
+        return $this->betterReflectionObject->getDocComment();
     }
 
     /**
@@ -238,7 +238,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getTraits()
     {
-        $traits = $this->betterReflectionObject->getInterfaces();
+        $traits = $this->betterReflectionObject->getTraits();
 
         $wrappedTraits = [];
         foreach ($traits as $key => $trait) {
@@ -309,7 +309,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function newInstance($args)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -317,7 +317,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function newInstanceWithoutConstructor()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -325,7 +325,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function newInstanceArgs(array $args = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -350,7 +350,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getStaticProperties()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -358,7 +358,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getStaticPropertyValue($name, $default = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -366,7 +366,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function setStaticPropertyValue($name, $value)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -405,7 +405,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getExtension()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -413,7 +413,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getExtensionName()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
