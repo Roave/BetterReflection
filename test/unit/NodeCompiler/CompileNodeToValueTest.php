@@ -186,12 +186,13 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 
     public function testConstantValueCompiled()
     {
-        define('BETTER_REFLECTION_TEST_CONST', 123);
+        $constName = uniqid('BETTER_REFLECTION_TEST_CONST_');
+        define($constName, 123);
 
         $this->assertSame(
             123,
             (new CompileNodeToValue())->__invoke(
-                new ConstFetch(new Name('BETTER_REFLECTION_TEST_CONST')),
+                new ConstFetch(new Name($constName)),
                 $this->getDummyContext()
             )
         );
