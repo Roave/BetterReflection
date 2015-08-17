@@ -7,6 +7,9 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
+use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use BetterReflection\SourceLocator\LocatedSource;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -53,8 +56,12 @@ class ReflectionObject extends ReflectionClass
      *
      * @throws \LogicException
      */
-    public static function createFromNode()
-    {
+    public static function createFromNode(
+        Reflector $reflector,
+        ClassLikeNode $node,
+        LocatedSource $locatedSource,
+        NamespaceNode $namespace = null
+    ) {
         throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }
 
@@ -63,7 +70,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @throws \LogicException
      */
-    public static function createFromName()
+    public static function createFromName($className)
     {
         throw new \LogicException('Cannot create a ReflectionObject from name - use ReflectionObject::createFromInstance');
     }
