@@ -102,7 +102,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getDocComment()
     {
-        return $this->betterReflectionClass->getEndLine();
+        return $this->betterReflectionClass->getDocComment();
     }
 
     /**
@@ -309,7 +309,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function newInstance($args = null, $_ = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -317,7 +317,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function newInstanceWithoutConstructor()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -325,7 +325,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function newInstanceArgs(array $args = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -350,7 +350,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getStaticProperties()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -358,7 +358,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getStaticPropertyValue($name, $default = null)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -366,7 +366,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function setStaticPropertyValue($name, $value)
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -405,7 +405,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getExtension()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
@@ -413,7 +413,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getExtensionName()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
