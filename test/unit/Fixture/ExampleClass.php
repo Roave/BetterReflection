@@ -30,6 +30,9 @@ namespace BetterReflectionTest\Fixture {
         {
         }
 
+        /**
+         * @return int
+         */
         public function someMethod()
         {
         }
