@@ -18,7 +18,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public static function export($argument, $return = false)
     {
@@ -26,7 +26,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {
@@ -34,7 +34,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -42,7 +42,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isInternal()
     {
@@ -50,7 +50,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isUserDefined()
     {
@@ -58,7 +58,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isInstantiable()
     {
@@ -66,7 +66,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isCloneable()
     {
@@ -74,7 +74,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return null|string
+     * {@inheritDoc}
      */
     public function getFileName()
     {
@@ -82,7 +82,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getStartLine()
     {
@@ -90,7 +90,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getEndLine()
     {
@@ -98,7 +98,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getDocComment()
     {
@@ -106,7 +106,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return ReflectionMethod
+     * {@inheritDoc}
      */
     public function getConstructor()
     {
@@ -114,8 +114,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     * @return bool
+     * {@inheritDoc}
      */
     public function hasMethod($name)
     {
@@ -123,8 +122,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     * @return ReflectionMethod
+     * {@inheritDoc}
      */
     public function getMethod($name)
     {
@@ -132,7 +130,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return ReflectionMethod[]
+     * {@inheritDoc}
      */
     public function getMethods($filter = null)
     {
@@ -146,8 +144,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     * @return bool
+     * {@inheritDoc}
      */
     public function hasProperty($name)
     {
@@ -155,8 +152,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     * @return ReflectionProperty|null
+     * {@inheritDoc}
      */
     public function getProperty($name)
     {
@@ -164,7 +160,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return ReflectionProperty[]
+     * {@inheritDoc}
      */
     public function getProperties($filter = null)
     {
@@ -178,8 +174,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     * @return bool
+     * {@inheritDoc}
      */
     public function hasConstant($name)
     {
@@ -187,7 +182,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return mixed[]
+     * {@inheritDoc}
      */
     public function getConstants()
     {
@@ -195,8 +190,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     * @return mixed|null
+     * {@inheritDoc}
      */
     public function getConstant($name)
     {
@@ -204,7 +198,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return ReflectionClass[]
+     * {@inheritDoc}
      */
     public function getInterfaces()
     {
@@ -218,7 +212,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string[]
+     * {@inheritDoc}
      */
     public function getInterfaceNames()
     {
@@ -226,7 +220,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isInterface()
     {
@@ -234,7 +228,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return ReflectionClass[]
+     * {@inheritDoc}
      */
     public function getTraits()
     {
@@ -248,7 +242,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string[]
+     * {@inheritDoc}
      */
     public function getTraitNames()
     {
@@ -256,7 +250,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string[]
+     * {@inheritDoc}
      */
     public function getTraitAliases()
     {
@@ -264,7 +258,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isTrait()
     {
@@ -272,7 +266,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isAbstract()
     {
@@ -280,7 +274,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isFinal()
     {
@@ -288,7 +282,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getModifiers()
     {
@@ -296,8 +290,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param object $object
-     * @return bool
+     * {@inheritDoc}
      */
     public function isInstance($object)
     {
@@ -305,7 +298,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function newInstance($args = null, ...$args)
     {
@@ -313,7 +306,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function newInstanceWithoutConstructor()
     {
@@ -321,7 +314,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function newInstanceArgs(array $args = null)
     {
@@ -329,7 +322,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return BetterReflectionClass
+     * {@inheritDoc}
      */
     public function getParentClass()
     {
@@ -337,8 +330,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $class
-     * @return bool
+     * {@inheritDoc}
      */
     public function isSubclassOf($class)
     {
@@ -346,7 +338,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getStaticProperties()
     {
@@ -354,7 +346,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getStaticPropertyValue($name, $default = null)
     {
@@ -362,7 +354,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function setStaticPropertyValue($name, $value)
     {
@@ -370,7 +362,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return ReflectionProperty[]
+     * {@inheritDoc}
      */
     public function getDefaultProperties()
     {
@@ -384,7 +376,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isIterateable()
     {
@@ -392,8 +384,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $interface
-     * @return bool
+     * {@inheritDoc}
      */
     public function implementsInterface($interface)
     {
@@ -401,7 +392,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getExtension()
     {
@@ -409,7 +400,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getExtensionName()
     {
@@ -417,7 +408,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function inNamespace()
     {
@@ -425,7 +416,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getNamespaceName()
     {
@@ -433,7 +424,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getShortName()
     {

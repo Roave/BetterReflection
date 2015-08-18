@@ -18,7 +18,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public static function export($class, $name, $return = null)
     {
@@ -26,7 +26,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {
@@ -34,7 +34,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -42,7 +42,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getValue($object = null)
     {
@@ -50,7 +50,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function setValue($object, $value = null)
     {
@@ -58,7 +58,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isPublic()
     {
@@ -66,7 +66,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isPrivate()
     {
@@ -74,7 +74,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isProtected()
     {
@@ -82,7 +82,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isStatic()
     {
@@ -90,7 +90,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isDefault()
     {
@@ -98,7 +98,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getModifiers()
     {
@@ -106,7 +106,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return ReflectionClass
+     * {@inheritDoc}
      */
     public function getDeclaringClass()
     {
@@ -114,7 +114,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getDocComment()
     {
@@ -122,7 +122,7 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function setAccessible($visible)
     {

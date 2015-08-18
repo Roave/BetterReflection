@@ -18,7 +18,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public static function export($class, $name, $return = null)
     {
@@ -26,7 +26,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {
@@ -34,7 +34,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function inNamespace()
     {
@@ -42,7 +42,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isClosure()
     {
@@ -50,7 +50,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isDeprecated()
     {
@@ -58,7 +58,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isInternal()
     {
@@ -66,7 +66,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isUserDefined()
     {
@@ -74,7 +74,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getClosureThis()
     {
@@ -82,7 +82,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getClosureScopeClass()
     {
@@ -90,7 +90,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getDocComment()
     {
@@ -98,7 +98,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getEndLine()
     {
@@ -106,7 +106,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getExtension()
     {
@@ -114,7 +114,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getExtensionName()
     {
@@ -122,7 +122,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getFileName()
     {
@@ -130,7 +130,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -138,7 +138,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getNamespaceName()
     {
@@ -146,7 +146,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getNumberOfParameters()
     {
@@ -154,7 +154,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getNumberOfRequiredParameters()
     {
@@ -162,7 +162,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return ReflectionParameter[]
+     * {@inheritDoc}
      */
     public function getParameters()
     {
@@ -176,7 +176,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getShortName()
     {
@@ -184,7 +184,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getStartLine()
     {
@@ -192,7 +192,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getStaticVariables()
     {
@@ -200,7 +200,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function returnsReference()
     {
@@ -208,7 +208,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isGenerator()
     {
@@ -216,7 +216,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isVariadic()
     {
@@ -224,7 +224,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isPublic()
     {
@@ -232,7 +232,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isPrivate()
     {
@@ -240,7 +240,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isProtected()
     {
@@ -248,7 +248,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isAbstract()
     {
@@ -256,7 +256,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isFinal()
     {
@@ -264,7 +264,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isStatic()
     {
@@ -272,7 +272,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isConstructor()
     {
@@ -280,7 +280,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isDestructor()
     {
@@ -288,7 +288,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function getClosure($object)
     {
@@ -296,7 +296,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getModifiers()
     {
@@ -304,7 +304,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function invoke($object, $args)
     {
@@ -312,7 +312,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function invokeArgs($object, array $args)
     {
@@ -320,7 +320,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return ReflectionClass
+     * {@inheritDoc}
      */
     public function getDeclaringClass()
     {
@@ -328,8 +328,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return BetterReflectionMethod
-     * @throws \BetterReflection\Reflection\Exception\MethodPrototypeNotFound
+     * {@inheritDoc}
      */
     public function getPrototype()
     {
@@ -337,7 +336,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @throws \Exception
+     * {@inheritDoc}
      */
     public function setAccessible($value)
     {

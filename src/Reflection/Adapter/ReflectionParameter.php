@@ -19,7 +19,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public static function export($function, $parameter, $return = null)
     {
@@ -27,7 +27,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {
@@ -35,7 +35,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -43,7 +43,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isPassedByReference()
     {
@@ -51,7 +51,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function canBePassedByValue()
     {
@@ -59,7 +59,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return ReflectionFunction|ReflectionMethod
+     * {@inheritDoc}
      */
     public function getDeclaringFunction()
     {
@@ -73,7 +73,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return ReflectionClass|null
+     * {@inheritDoc}
      */
     public function getDeclaringClass()
     {
@@ -87,7 +87,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return ReflectionClass|null
+     * {@inheritDoc}
      */
     public function getClass()
     {
@@ -101,7 +101,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isArray()
     {
@@ -109,7 +109,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isCallable()
     {
@@ -117,7 +117,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function allowsNull()
     {
@@ -125,7 +125,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return int
+     * {@inheritDoc}
      */
     public function getPosition()
     {
@@ -133,7 +133,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isOptional()
     {
@@ -141,7 +141,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isDefaultValueAvailable()
     {
@@ -149,7 +149,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getDefaultValue()
     {
@@ -157,7 +157,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isDefaultValueConstant()
     {
@@ -165,7 +165,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getDefaultValueConstantName()
     {
