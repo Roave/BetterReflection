@@ -300,7 +300,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function newInstance($args = null, ...$args)
+    public function newInstance(...$args)
     {
         throw new Exception\NotImplemented('Not implemented');
     }
