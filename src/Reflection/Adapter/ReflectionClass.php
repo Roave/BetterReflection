@@ -372,13 +372,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getDefaultProperties()
     {
-        $properties = $this->betterReflectionClass->getDefaultProperties();
-
-        $wrappedProperties = [];
-        foreach ($properties as $key => $property) {
-            $wrappedProperties[$key] = new ReflectionProperty($property);
-        }
-        return $wrappedProperties;
+        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**
