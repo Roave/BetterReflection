@@ -372,7 +372,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getDefaultProperties()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionClass->getDefaultProperties();
     }
 
     /**

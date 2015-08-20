@@ -86,7 +86,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             ['getStaticProperties', NotImplemented::class, null, []],
             ['getStaticPropertyValue', NotImplemented::class, null, ['foo']],
             ['setStaticPropertyValue', NotImplemented::class, null, ['foo', 'bar']],
-            ['getDefaultProperties', NotImplemented::class, null, []],
+            ['getDefaultProperties', null, ['foo' => 'bar'], []],
             ['isIterateable', null, true, []],
             ['implementsInterface', null, true, ['\Traversable']],
             ['getExtension', NotImplemented::class, null, []],

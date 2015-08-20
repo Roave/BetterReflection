@@ -258,6 +258,16 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($classInfo->hasMethod('someMethod'));
     }
 
+    public function testGetDefaultProperties()
+    {
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php')))->reflect('Foo');
+
+        $this->assertSame([
+            'hasDefault' => 123,
+            'noDefault' => null,
+        ], $classInfo->getDefaultProperties());
+    }
+
     public function testIsInternalWithUserDefinedClass()
     {
         $reflector = new ClassReflector($this->getComposerLocator());

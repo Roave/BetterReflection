@@ -440,6 +440,18 @@ class ReflectionClass implements Reflection, \Reflector
         return null !== $this->getProperty($name);
     }
 
+    public function getDefaultProperties()
+    {
+        return array_map(
+            function (ReflectionProperty $property) {
+                return $property->getDefaultValue();
+            },
+            array_filter($this->getProperties(), function (ReflectionProperty $property) {
+                return $property->isDefault();
+            })
+        );
+    }
+
     /**
      * @return string|null
      */
