@@ -326,7 +326,13 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getParentClass()
     {
-        return new ReflectionClass($this->betterReflectionClass->getParentClass());
+        $parentClass = $this->betterReflectionClass->getParentClass();
+
+        if (null === $parentClass) {
+            return null;
+        }
+
+        return new ReflectionClass($parentClass);
     }
 
     /**
