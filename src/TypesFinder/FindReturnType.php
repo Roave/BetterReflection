@@ -21,15 +21,13 @@ class FindReturnType
     {
         $context = $this->createContextForFunction($function);
 
-        $docBlock = new DocBlock(
+        $returnTags = (new DocBlock(
             $function->getDocComment(),
             new DocBlock\Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()
             )
-        );
-
-        $returnTags = $docBlock->getTagsByName('return');
+        ))->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
             /* @var $returnTag \phpDocumentor\Reflection\DocBlock\Tag\ReturnTag */
