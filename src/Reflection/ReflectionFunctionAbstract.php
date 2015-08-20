@@ -4,10 +4,12 @@ namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\TypesFinder\FindReturnType;
 use PhpParser\Node;
 use PhpParser\Node\Stmt as MethodOrFunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
+use phpDocumentor\Reflection\Type;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
@@ -379,5 +381,18 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     public function returnsReference()
     {
         return (bool)$this->node->byRef;
+    }
+
+    /**
+     * Get the return types defined in the DocBlocks. This returns an array because
+     * the parameter may have multiple (compound) types specified (for example
+     * when you type hint pipe-separated "string|null", in which case this
+     * would return an array of Type objects, one for string, one for null.
+     *
+     * @return Type[]
+     */
+    public function getDocblockReturnTypes()
+    {
+        return  (new FindReturnType())->__invoke($this);
     }
 }

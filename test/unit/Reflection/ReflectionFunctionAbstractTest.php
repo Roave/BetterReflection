@@ -9,6 +9,7 @@ use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Stmt\Function_;
 
 /**
@@ -275,5 +276,23 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $functionInfo = ReflectionFunction::createFromNode($reflector, $node, $locatedSource);
 
         $this->assertSame($locatedSource, $functionInfo->getLocatedSource());
+    }
+
+    public function testGetDocblockReturnTypes()
+    {
+        $php = '<?php
+            /**
+             * @return bool
+             */
+            function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $types = $function->getDocblockReturnTypes();
+
+        $this->assertInternalType('array', $types);
+        $this->assertCount(1, $types);
+        $this->assertInstanceOf(Boolean::class, $types[0]);
     }
 }

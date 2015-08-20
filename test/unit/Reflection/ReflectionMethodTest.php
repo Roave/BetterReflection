@@ -9,6 +9,9 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflectionTest\Fixture\ExampleClass;
+use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
 
 /**
@@ -140,6 +143,28 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('someMethod', $methodInfo->getName());
         $this->assertSame('', $methodInfo->getNamespaceName());
         $this->assertSame('someMethod', $methodInfo->getShortName());
+    }
+
+    public function testGetDocblockReturnTypes()
+    {
+        $php = '<?php
+        class Foo {
+            /**
+             * @return int
+             */
+            public function someMethod() {}
+        }
+        ';
+
+        $methodInfo = (new ClassReflector(new StringSourceLocator($php)))
+            ->reflect('Foo')
+            ->getMethod('someMethod');
+
+        $types = $methodInfo->getDocblockReturnTypes();
+
+        $this->assertInternalType('array', $types);
+        $this->assertCount(1, $types);
+        $this->assertInstanceOf(Integer::class, $types[0]);
     }
 
     public function modifierProvider()

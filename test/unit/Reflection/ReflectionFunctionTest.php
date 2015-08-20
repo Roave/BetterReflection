@@ -5,6 +5,7 @@ namespace BetterReflectionTest\Reflection;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\StringSourceLocator;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionFunction
@@ -106,5 +107,23 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $functionInfo = ReflectionFunction::createFromName($functionName);
 
         $this->assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);
+    }
+
+    public function testGetDocblockReturnTypes()
+    {
+        $php = '<?php
+            /**
+             * @return bool
+             */
+            function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $types = $function->getDocblockReturnTypes();
+
+        $this->assertInternalType('array', $types);
+        $this->assertCount(1, $types);
+        $this->assertInstanceOf(Boolean::class, $types[0]);
     }
 }

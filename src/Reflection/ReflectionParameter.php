@@ -5,7 +5,6 @@ namespace BetterReflection\Reflection;
 use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use BetterReflection\TypesFinder\FindParameterType;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types;
