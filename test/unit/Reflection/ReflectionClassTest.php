@@ -260,12 +260,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultProperties()
     {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php')))->reflect('Foo');
 
-        $defaultProperties = $classInfo->getDefaultProperties();
-
-        $this->assertCount(3, $defaultProperties);
+        $this->assertSame([
+            'hasDefault' => 123,
+            'noDefault' => null,
+        ], $classInfo->getDefaultProperties());
     }
 
     public function testIsInternalWithUserDefinedClass()

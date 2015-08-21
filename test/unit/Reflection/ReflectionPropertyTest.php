@@ -5,6 +5,7 @@ namespace BetterReflectionTest\Reflection;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
+use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use phpDocumentor\Reflection\Types;
 
 /**
@@ -191,5 +192,13 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $this->assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
+    }
+
+    public function testGetDefaultProperty()
+    {
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php')))->reflect('Foo');
+
+        $this->assertSame(123, $classInfo->getProperty('hasDefault')->getDefaultValue());
+        $this->assertNull($classInfo->getProperty('noDefault')->getDefaultValue());
     }
 }

@@ -2,8 +2,11 @@
 
 namespace BetterReflection\Reflection;
 
+use BetterReflection\NodeCompiler\CompileNodeToValue;
+use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\TypesFinder\FindPropertyType;
+use BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
 
@@ -222,5 +225,25 @@ class ReflectionProperty implements \Reflector
         /* @var \PhpParser\Comment\Doc $comment */
         $comment = $this->node->getAttribute('comments')[0];
         return $comment->getReformattedText();
+    }
+
+    /**
+     * Get the default value of the property (as defined before constructor is
+     * called, when the property is defined)
+     *
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        $defaultValueNode = $this->node->props[0]->default;
+
+        if (null === $defaultValueNode) {
+            return null;
+        }
+
+        return (new CompileNodeToValue())->__invoke(
+            $defaultValueNode,
+            new CompilerContext($this->reflector, $this->getDeclaringClass())
+        );
     }
 }

@@ -5,10 +5,12 @@ namespace BetterReflectionTest\Reflection;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionObject;
 use BetterReflection\Reflection\ReflectionProperty;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\EvaledLocatedSource;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflectionTest\Fixture\ClassForHinting;
 use PhpParser\Lexer;
+use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
 
 /**
@@ -182,14 +184,29 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromNodeThrowsException()
     {
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mReflector */
+        $mReflector = $this->getMockBuilder(Reflector::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var ClassLike|\PHPUnit_Framework_MockObject_MockObject $mClassNode */
+        $mClassNode = $this->getMockBuilder(ClassLike::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var LocatedSource|\PHPUnit_Framework_MockObject_MockObject $mLocatedSource */
+        $mLocatedSource = $this->getMockBuilder(LocatedSource::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->setExpectedException(\LogicException::class);
-        ReflectionObject::createFromNode();
+        ReflectionObject::createFromNode($mReflector, $mClassNode, $mLocatedSource);
     }
 
     public function testCreateFromNameThrowsException()
     {
         $this->setExpectedException(\LogicException::class);
-        ReflectionObject::createFromName();
+        ReflectionObject::createFromName('foo');
     }
 
     public function testReflectionObjectExportMatchesExpectation()
