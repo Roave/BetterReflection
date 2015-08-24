@@ -7,6 +7,9 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use phpDocumentor\Reflection\Types;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\PropertyProperty;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionProperty
@@ -171,6 +174,19 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($classInfo->getProperty('publicProperty')->isDefault());
         $this->assertTrue($classInfo->getProperty('publicStaticProperty')->isDefault());
+    }
+
+    public function testIsDefaultWithRuntimeDeclaredProperty()
+    {
+        $this->assertFalse(
+            ReflectionProperty::createFromNode(
+                $this->reflector,
+                new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
+                $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass'),
+                false
+            )
+            ->isDefault()
+        );
     }
 
     public function castToStringProvider()
