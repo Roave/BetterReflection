@@ -105,10 +105,6 @@ class ReflectionProperty implements \Reflector
      */
     public function isDefault()
     {
-        if ($this->isStatic()) {
-            return false;
-        }
-
         return $this->declaredAtCompileTime;
     }
 
