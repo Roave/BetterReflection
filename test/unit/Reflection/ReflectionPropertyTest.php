@@ -170,7 +170,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
         $this->assertTrue($classInfo->getProperty('publicProperty')->isDefault());
-        $this->assertFalse($classInfo->getProperty('publicStaticProperty')->isDefault());
+        $this->assertTrue($classInfo->getProperty('publicStaticProperty')->isDefault());
     }
 
     public function castToStringProvider()
