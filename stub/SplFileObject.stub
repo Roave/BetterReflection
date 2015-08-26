@@ -1,5 +1,3 @@
-<?php
-
 class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversable, Iterator, SeekableIterator
 {
 
