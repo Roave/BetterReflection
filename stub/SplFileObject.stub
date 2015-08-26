@@ -73,7 +73,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
     {
     }
 
-    public function fscanf($format, &$vars = null)
+    public function fscanf($format, & ...$vars)
     {
     }
 
