@@ -81,7 +81,7 @@ class DOMDocument extends DOMNode
     {
     }
 
-    public function saveXML(\DOMNode $node = null)
+    public function saveXML(\DOMNode $node = null, $options = null)
     {
     }
 
