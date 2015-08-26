@@ -1,0 +1,21 @@
+class IntlGregorianCalendar extends IntlCalendar
+{
+
+    public function __construct($timeZoneOrYear = null, $localeOrMonth = null, $dayOfMonth = null, $hour = null, $minute = null, $second = null)
+    {
+    }
+
+    public function setGregorianChange($date)
+    {
+    }
+
+    public function getGregorianChange()
+    {
+    }
+
+    public function isLeapYear($year)
+    {
+    }
+
+
+}
