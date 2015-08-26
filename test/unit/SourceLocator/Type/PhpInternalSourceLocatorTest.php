@@ -239,13 +239,13 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             array_map(
                 function (\ReflectionParameter $parameter) {
-                    return $parameter->getName();
+                    return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },
                 $original->getParameters()
             ),
             array_map(
                 function (ReflectionParameter $parameter) {
-                    return $parameter->getName();
+                    return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },
                 $stubbed->getParameters()
             )
@@ -265,6 +265,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue());
         $this->assertSame($original->isOptional(), $stubbed->isOptional());
         $this->assertSame($original->isPassedByReference(), $stubbed->isPassedByReference());
+        $this->assertSame($original->isVariadic(), $stubbed->isVariadic());
 
         if ($class = $original->getClass()) {
             $stubbedClass = $stubbed->getClass();
