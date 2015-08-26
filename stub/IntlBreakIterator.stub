@@ -1,0 +1,129 @@
+<?php
+
+class IntlBreakIterator implements Traversable
+{
+
+    const DONE = -1;
+
+    const WORD_NONE = 0;
+
+    const WORD_NONE_LIMIT = 100;
+
+    const WORD_NUMBER = 100;
+
+    const WORD_NUMBER_LIMIT = 200;
+
+    const WORD_LETTER = 200;
+
+    const WORD_LETTER_LIMIT = 300;
+
+    const WORD_KANA = 300;
+
+    const WORD_KANA_LIMIT = 400;
+
+    const WORD_IDEO = 400;
+
+    const WORD_IDEO_LIMIT = 500;
+
+    const LINE_SOFT = 0;
+
+    const LINE_SOFT_LIMIT = 100;
+
+    const LINE_HARD = 100;
+
+    const LINE_HARD_LIMIT = 200;
+
+    const SENTENCE_TERM = 0;
+
+    const SENTENCE_TERM_LIMIT = 100;
+
+    const SENTENCE_SEP = 100;
+
+    const SENTENCE_SEP_LIMIT = 200;
+
+    private function __construct()
+    {
+    }
+
+    public static function createWordInstance($locale = null)
+    {
+    }
+
+    public static function createLineInstance($locale = null)
+    {
+    }
+
+    public static function createCharacterInstance($locale = null)
+    {
+    }
+
+    public static function createSentenceInstance($locale = null)
+    {
+    }
+
+    public static function createTitleInstance($locale = null)
+    {
+    }
+
+    public static function createCodePointInstance()
+    {
+    }
+
+    public function getText()
+    {
+    }
+
+    public function setText($text)
+    {
+    }
+
+    public function first()
+    {
+    }
+
+    public function last()
+    {
+    }
+
+    public function previous()
+    {
+    }
+
+    public function next($offset = null)
+    {
+    }
+
+    public function current()
+    {
+    }
+
+    public function following($offset)
+    {
+    }
+
+    public function preceding($offset)
+    {
+    }
+
+    public function isBoundary($offset)
+    {
+    }
+
+    public function getLocale($locale_type)
+    {
+    }
+
+    public function getPartsIterator($key_type = null)
+    {
+    }
+
+    public function getErrorCode()
+    {
+    }
+
+    public function getErrorMessage()
+    {
+    }
+
+
+}
