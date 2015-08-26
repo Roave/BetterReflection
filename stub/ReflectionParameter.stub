@@ -63,7 +63,7 @@ class ReflectionParameter implements Reflector
     {
     }
 
-    public bool hasType()
+    public hasType()
     {
     }
 
