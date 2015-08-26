@@ -1,0 +1,63 @@
+class Error implements Throwable
+{
+
+    protected $message = '';
+
+    private $string = '';
+
+    protected $code = 0;
+
+    protected $file = null;
+
+    protected $line = null;
+
+    private $trace = null;
+
+    private $previous = null;
+
+    final private function __clone()
+    {
+    }
+
+    public function __construct($message = '', $code = 0, $previous = null)
+    {
+    }
+
+    public function __wakeup()
+    {
+    }
+
+    final public function getMessage()
+    {
+    }
+
+    final public function getCode()
+    {
+    }
+
+    final public function getFile()
+    {
+    }
+
+    final public function getLine()
+    {
+    }
+
+    final public function getTrace()
+    {
+    }
+
+    final public function getPrevious()
+    {
+    }
+
+    final public function getTraceAsString()
+    {
+    }
+
+    public function __toString()
+    {
+    }
+
+
+}
