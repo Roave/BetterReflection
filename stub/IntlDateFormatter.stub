@@ -1,0 +1,105 @@
+<?php
+
+class IntlDateFormatter
+{
+
+    const FULL = 0;
+
+    const LONG = 1;
+
+    const MEDIUM = 2;
+
+    const SHORT = 3;
+
+    const NONE = -1;
+
+    const GREGORIAN = 1;
+
+    const TRADITIONAL = 0;
+
+    public function __construct($locale, $datetype, $timetype, $timezone = NULL, $calendar = NULL, $pattern = '')
+    {
+    }
+
+    public static function create($locale, $datetype, $timetype, $timezone = NULL, $calendar = NULL, $pattern = '')
+    {
+    }
+
+    public function getDateType()
+    {
+    }
+
+    public function getTimeType()
+    {
+    }
+
+    public function getCalendar()
+    {
+    }
+
+    public function getCalendarObject()
+    {
+    }
+
+    public function setCalendar($which)
+    {
+    }
+
+    public function getTimeZoneId()
+    {
+    }
+
+    public function getTimeZone()
+    {
+    }
+
+    public function setTimeZone($zone)
+    {
+    }
+
+    public function setPattern($pattern)
+    {
+    }
+
+    public function getPattern()
+    {
+    }
+
+    public function getLocale()
+    {
+    }
+
+    public function setLenient($lenient)
+    {
+    }
+
+    public function isLenient()
+    {
+    }
+
+    public function format($args = null, $array = null)
+    {
+    }
+
+    public static function formatObject($object, $format = NULL, $locale = NULL)
+    {
+    }
+
+    public function parse($string, &$position = null)
+    {
+    }
+
+    public function localtime($string, &$position = null)
+    {
+    }
+
+    public function getErrorCode()
+    {
+    }
+
+    public function getErrorMessage()
+    {
+    }
+
+
+}
