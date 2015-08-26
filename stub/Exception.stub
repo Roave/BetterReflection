@@ -12,5 +12,6 @@ class Exception {
     final public function getTrace(){}
     final public function getTraceAsString(){}
     public function __toString(){}
+    public function __wakeup(){}
     final private function __clone(){}
 }
