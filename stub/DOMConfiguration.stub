@@ -1,0 +1,19 @@
+<?php
+
+class DOMConfiguration
+{
+
+    public function setParameter($name, $value)
+    {
+    }
+
+    public function getParameter($name = null)
+    {
+    }
+
+    public function canSetParameter($name = null, $value = null)
+    {
+    }
+
+
+}
