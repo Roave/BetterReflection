@@ -209,7 +209,24 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $this->assertCount(count($originalMethods), $stubbed->getMethods()); // @TODO see #107
+        $originalMethodNames = array_map(
+            function (\ReflectionMethod $method) {
+                return $method->getName();
+            },
+            $originalMethods
+        );
+
+        $stubbedMethodNames = array_map(
+            function (ReflectionMethod $method) {
+                return $method->getName();
+            },
+            $stubbed->getMethods() // @TODO see #107
+        );
+
+        sort($originalMethodNames);
+        sort($stubbedMethodNames);
+
+        $this->assertSame($originalMethodNames, $stubbedMethodNames);
         $this->assertEquals($original->getConstants(), $stubbed->getConstants());
 
         foreach ($originalMethods as $method) {
@@ -219,7 +236,20 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed)
     {
-        $this->assertCount(count($original->getParameters()), $stubbed->getParameters());
+        $this->assertSame(
+            array_map(
+                function (\ReflectionParameter $parameter) {
+                    return $parameter->getName();
+                },
+                $original->getParameters()
+            ),
+            array_map(
+                function (ReflectionParameter $parameter) {
+                    return $parameter->getName();
+                },
+                $stubbed->getParameters()
+            )
+        );
 
         foreach ($original->getParameters() as $parameter) {
             $this->assertSameParameterAttributes($parameter, $stubbed->getParameter($parameter->getName()));
