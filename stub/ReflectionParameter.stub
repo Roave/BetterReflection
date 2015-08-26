@@ -59,11 +59,11 @@ class ReflectionParameter implements Reflector
     {
     }
 
-    public getType()
+    public function getType()
     {
     }
 
-    public hasType()
+    public function hasType()
     {
     }
 
