@@ -6,6 +6,7 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionMethod;
+use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\InternalLocatedSource;
@@ -199,18 +200,49 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $betterParentName   = $betterParent ? $betterParent->getName() : null;
 
         $this->assertSame($internalParentName, $betterParentName);
-        //$this->assertCount(count($original->getMethods()), $stubbed->getMethods());
 
+        // @TODO to be removed once #107 is merged
+        $originalMethods = array_filter(
+            $original->getMethods(),
+            function (\ReflectionMethod $method) use ($original) {
+                return $method->getDeclaringClass()->getName() === $original->getName();
+            }
+        );
+
+        $this->assertCount(count($originalMethods), $stubbed->getMethods()); // @TODO see #107
         $this->assertEquals($original->getConstants(), $stubbed->getConstants());
 
-        foreach ($original->getMethods() as $method) {
+        foreach ($originalMethods as $method) {
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
     }
 
     private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed)
     {
-        $this->markTestIncomplete('TBD - #107 required');
-        // @TODO once https://github.com/Roave/BetterReflection/issues/107 is handled
+        $this->assertCount(count($original->getParameters()), $stubbed->getParameters());
+
+        foreach ($original->getParameters() as $parameter) {
+            $this->assertSameParameterAttributes($parameter, $stubbed->getParameter($parameter->getName()));
+        }
+    }
+
+    private function assertSameParameterAttributes(\ReflectionParameter $original, ReflectionParameter $stubbed)
+    {
+        $this->assertSame($original->getName(), $stubbed->getName());
+        $this->assertSame($original->isArray(), $stubbed->isArray());
+        $this->assertSame($original->isCallable(), $stubbed->isCallable());
+        //$this->assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
+        $this->assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue());
+        $this->assertSame($original->isOptional(), $stubbed->isOptional());
+        $this->assertSame($original->isPassedByReference(), $stubbed->isPassedByReference());
+
+        if ($class = $original->getClass()) {
+            $stubbedClass = $stubbed->getClass();
+
+            $this->assertInstanceOf(ReflectionClass::class, $stubbedClass);
+            $this->assertSame($class->getName(), $stubbedClass->getName());
+        } else {
+            $this->assertNull($stubbed->getClass());
+        }
     }
 }
