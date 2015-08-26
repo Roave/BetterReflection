@@ -254,6 +254,13 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         foreach ($original->getParameters() as $parameter) {
             $this->assertSameParameterAttributes($parameter, $stubbed->getParameter($parameter->getName()));
         }
+
+        $this->assertSame($original->isPublic(), $stubbed->isPublic());
+        $this->assertSame($original->isPrivate(), $stubbed->isPrivate());
+        $this->assertSame($original->isProtected(), $stubbed->isProtected());
+        $this->assertSame($original->returnsReference(), $stubbed->returnsReference());
+        $this->assertSame($original->isStatic(), $stubbed->isStatic());
+        $this->assertSame($original->isFinal(), $stubbed->isFinal());
     }
 
     private function assertSameParameterAttributes(\ReflectionParameter $original, ReflectionParameter $stubbed)
