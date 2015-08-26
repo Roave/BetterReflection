@@ -6,7 +6,6 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
 use PhpParser\Node;
-use PhpParser\Node\Stmt as MethodOrFunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use phpDocumentor\Reflection\Type;
@@ -24,7 +23,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     private $locatedSource;
 
     /**
-     * @var MethodOrFunctionNode
+     * @var Node\Stmt\ClassMethod|Node\Stmt\Function_
      */
     private $node;
 
@@ -46,12 +45,16 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * Populate the common elements of the function abstract.
      *
      * @param Reflector $reflector
-     * @param MethodOrFunctionNode $node
+     * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt $node
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
-    protected function populateFunctionAbstract(Reflector $reflector, MethodOrFunctionNode $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
+    protected function populateFunctionAbstract(Reflector $reflector, Node\Stmt $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
+        if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\Stmt\Function_)) {
+            throw new \InvalidArgumentException('Node parameter must be ClassMethod or Function_');
+        }
+
         $this->reflector = $reflector;
         $this->node = $node;
         $this->locatedSource = $locatedSource;
@@ -63,7 +66,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Get the AST node from which this function was created
      *
-     * @return MethodOrFunctionNode
+     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_
      */
     protected function getNode()
     {

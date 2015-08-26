@@ -10,6 +10,7 @@ use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
+use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Stmt\Function_;
 
 /**
@@ -21,6 +22,28 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(\Exception::class);
         ReflectionFunctionAbstract::export();
+    }
+
+    public function testPopulateFunctionAbstractThrowsExceptionWithInvalidNode()
+    {
+        $reflector = new FunctionReflector(new StringSourceLocator('<?php'));
+        $locatedSource = new LocatedSource('<?php', null);
+
+        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $abstract */
+        $abstract = $this->getMockBuilder(ReflectionFunctionAbstract::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $numberNode = new LNumber(5);
+
+        $populateMethodReflection = new \ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
+        $populateMethodReflection->setAccessible(true);
+
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            'Node parameter must be ClassMethod or Function_'
+        );
+        $populateMethodReflection->invoke($abstract, $reflector, $numberNode, $locatedSource, null);
     }
 
     public function testNameMethodsWithNamespace()

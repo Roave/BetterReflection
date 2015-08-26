@@ -44,9 +44,10 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
+     * @param Reflector $reflector
      * @param FunctionNode $node
-     * @param NamespaceNode|null $namespaceNode
      * @param LocatedSource $locatedSource
+     * @param NamespaceNode|null $namespaceNode
      * @return ReflectionFunction
      */
     public static function createFromNode(
