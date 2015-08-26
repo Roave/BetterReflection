@@ -5,7 +5,7 @@ class ReflectionObject extends ReflectionClass
 
     const IS_EXPLICIT_ABSTRACT = 32;
 
-    const IS_FINAL = 64;
+    const IS_FINAL = 4;
 
     public static function export($argument, $return = null)
     {
