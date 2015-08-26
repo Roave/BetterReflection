@@ -1,0 +1,147 @@
+<?php
+
+class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversable, Iterator, SeekableIterator
+{
+
+    const DROP_NEW_LINE = 1;
+
+    const READ_AHEAD = 2;
+
+    const SKIP_EMPTY = 4;
+
+    const READ_CSV = 8;
+
+    public function __construct($file_name, $open_mode = 'r', $use_include_path = false, $context = null)
+    {
+    }
+
+    public function rewind()
+    {
+    }
+
+    public function eof()
+    {
+    }
+
+    public function valid()
+    {
+    }
+
+    public function fgets()
+    {
+    }
+
+    public function fgetcsv($delimiter = ',', $enclosure = '"', $escape = '\\')
+    {
+    }
+
+    public function fputcsv($fields, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    {
+    }
+
+    public function setCsvControl($delimiter = ',', $enclosure = '"', $escape = '\\')
+    {
+    }
+
+    public function getCsvControl()
+    {
+    }
+
+    public function flock($operation, &$wouldblock = null)
+    {
+    }
+
+    public function fflush()
+    {
+    }
+
+    public function ftell()
+    {
+    }
+
+    public function fseek($pos, $whence = SEEK_SET)
+    {
+    }
+
+    public function fgetc()
+    {
+    }
+
+    public function fpassthru()
+    {
+    }
+
+    public function fgetss($allowable_tags = null)
+    {
+    }
+
+    public function fscanf($format, &$vars = null)
+    {
+    }
+
+    public function fwrite($str, $length = null)
+    {
+    }
+
+    public function fread($length)
+    {
+    }
+
+    public function fstat()
+    {
+    }
+
+    public function ftruncate($size)
+    {
+    }
+
+    public function current()
+    {
+    }
+
+    public function key()
+    {
+    }
+
+    public function next()
+    {
+    }
+
+    public function setFlags($flags)
+    {
+    }
+
+    public function getFlags()
+    {
+    }
+
+    public function setMaxLineLen($max_len)
+    {
+    }
+
+    public function getMaxLineLen()
+    {
+    }
+
+    public function hasChildren()
+    {
+    }
+
+    public function getChildren()
+    {
+    }
+
+    public function seek($line_pos)
+    {
+    }
+
+    public function getCurrentLine()
+    {
+    }
+
+    public function __toString()
+    {
+    }
+
+
+}
