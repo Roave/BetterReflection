@@ -1,5 +1,3 @@
-<?php
-
 class RegexIterator extends FilterIterator
 {
 

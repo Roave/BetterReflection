@@ -1,5 +1,3 @@
-<?php
-
 class DateTimeImmutable implements DateTimeInterface
 {
 

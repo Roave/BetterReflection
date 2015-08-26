@@ -1,5 +1,3 @@
-<?php
-
 class DOMText extends DOMCharacterData
 {
 

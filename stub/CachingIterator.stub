@@ -1,5 +1,3 @@
-<?php
-
 class CachingIterator extends IteratorIterator implements ArrayAccess, Countable
 {
 

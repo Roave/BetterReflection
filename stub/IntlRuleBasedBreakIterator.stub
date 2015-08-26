@@ -1,5 +1,3 @@
-<?php
-
 class IntlRuleBasedBreakIterator extends IntlBreakIterator
 {
 

@@ -1,5 +1,3 @@
-<?php
-
 class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, SeekableIterator
 {
 

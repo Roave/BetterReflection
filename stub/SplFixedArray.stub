@@ -1,5 +1,3 @@
-<?php
-
 class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable
 {
 

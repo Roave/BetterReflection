@@ -1,5 +1,3 @@
-<?php
-
 class RecursiveRegexIterator extends RegexIterator implements RecursiveIterator
 {
 

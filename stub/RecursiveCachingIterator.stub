@@ -1,5 +1,3 @@
-<?php
-
 class RecursiveCachingIterator extends CachingIterator implements RecursiveIterator
 {
 
