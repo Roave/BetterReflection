@@ -10,7 +10,7 @@ use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflection\SourceLocator\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
-use PhpParser\Node\Scalar\LNumber;
+use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Function_;
 
 /**
@@ -34,7 +34,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
-        $numberNode = new LNumber(5);
+        $breakNode = new Break_();
 
         $populateMethodReflection = new \ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
         $populateMethodReflection->setAccessible(true);
@@ -43,7 +43,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
             \InvalidArgumentException::class,
             'Node parameter must be ClassMethod or Function_'
         );
-        $populateMethodReflection->invoke($abstract, $reflector, $numberNode, $locatedSource, null);
+        $populateMethodReflection->invoke($abstract, $reflector, $breakNode, $locatedSource, null);
     }
 
     public function testNameMethodsWithNamespace()
