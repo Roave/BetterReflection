@@ -59,6 +59,14 @@ class ReflectionParameter implements Reflector
     {
     }
 
+    public getType()
+    {
+    }
+
+    public bool hasType()
+    {
+    }
+
     public function isOptional()
     {
     }
