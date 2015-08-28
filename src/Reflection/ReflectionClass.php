@@ -18,6 +18,7 @@ use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -266,16 +267,51 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Construct a flat list of methods that are available. This will search up
+     * all parent classes/traits/interfaces/current scope for methods.
+     *
+     * @param ReflectionClass $_this
+     * @return Node\Stmt\ClassMethod[]
+     */
+    private function findMethodsInNode(self $_this)
+    {
+        $thisNodeMethods = [];
+        foreach ($_this->node->getMethods() as $method) {
+            // Grab methods from interfaces
+            if (!$_this->isInterface()) {
+                $interfaces = $_this->getInterfaces();
+                foreach ($interfaces as $interface) {
+                    $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($interface));
+                }
+            }
+
+            // Grab methods from traits
+            $traits = $_this->getTraits();
+            foreach ($traits as $trait) {
+                $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($trait));
+            }
+
+            // Grab methods from parent classes
+            if ($_this->getParentClass()) {
+                $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($_this->getParentClass()));
+            }
+
+            $thisNodeMethods[$method->name] = [$_this, $method];
+        }
+        return $thisNodeMethods;
+    }
+
+    /**
      * Fetch an array of all methods for this class.
      *
      * @return ReflectionMethod[]
      */
     public function getMethods()
     {
-        $methodNodes = $this->node->getMethods();
+        $methodNodes = $this->findMethodsInNode($this);
 
         $methods = [];
-        foreach ($methodNodes as $methodNode) {
+        foreach ($methodNodes as list($reflectionClass, $methodNode)) {
             $methods[] = $this->getMethod($methodNode->name);
         }
 
@@ -294,13 +330,18 @@ class ReflectionClass implements Reflection, \Reflector
             return $this->cachedMethods[$methodName];
         }
 
-        $methodNode = $this->node->getMethod($methodName);
+        $methodNodes = $this->findMethodsInNode($this);
 
-        if (null === $methodNode) {
+        if (!isset($methodNodes[$methodName])) {
             throw new \OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
-        $this->cachedMethods[$methodName] = ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+        list($reflectionClass, $methodNode) = $methodNodes[$methodName];
+        $this->cachedMethods[$methodName] = ReflectionMethod::createFromNode(
+            $this->reflector,
+            $methodNode,
+            $reflectionClass
+        );
         return $this->cachedMethods[$methodName];
     }
 
