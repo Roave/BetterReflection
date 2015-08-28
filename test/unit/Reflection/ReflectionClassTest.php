@@ -106,6 +106,34 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
+    public function testGetMethodsReturnsInheritedMethods()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassMethods.php'));
+        $classInfo = $reflector->reflect('Qux');
+
+        $methods = $classInfo->getMethods();
+        $this->assertCount(6, $methods);
+        $this->assertContainsOnlyInstancesOf(ReflectionMethod::class, $methods);
+
+        $this->assertSame('a', $classInfo->getMethod('a')->getName(), 'Failed asserting that method a from interface Foo was returned');
+        $this->assertSame('Foo', $classInfo->getMethod('a')->getDeclaringClass()->getName());
+
+        $this->assertSame('b', $classInfo->getMethod('b')->getName(), 'Failed asserting that method b from trait Bar was returned');
+        $this->assertSame('Bar', $classInfo->getMethod('b')->getDeclaringClass()->getName());
+
+        $this->assertSame('c', $classInfo->getMethod('c')->getName(), 'Failed asserting that public method c from parent class Baz was returned');
+        $this->assertSame('Baz', $classInfo->getMethod('c')->getDeclaringClass()->getName());
+
+        $this->assertSame('d', $classInfo->getMethod('d')->getName(), 'Failed asserting that protected method d from parent class Baz was returned');
+        $this->assertSame('Baz', $classInfo->getMethod('d')->getDeclaringClass()->getName());
+
+        $this->assertSame('e', $classInfo->getMethod('e')->getName(), 'Failed asserting that private method e from parent class Baz was returned');
+        $this->assertSame('Baz', $classInfo->getMethod('e')->getDeclaringClass()->getName());
+
+        $this->assertSame('f', $classInfo->getMethod('f')->getName(), 'Failed asserting that method from SUT was returned');
+        $this->assertSame('Qux', $classInfo->getMethod('f')->getDeclaringClass()->getName());
+    }
+
     public function testGetConstants()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
