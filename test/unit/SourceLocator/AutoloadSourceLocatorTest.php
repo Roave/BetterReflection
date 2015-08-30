@@ -11,6 +11,7 @@ use BetterReflection\SourceLocator\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Exception\FunctionUndefined;
 use BetterReflection\SourceLocator\LocatedSource;
 use BetterReflectionTest\Fixture\AutoloadableInterface;
+use BetterReflectionTest\Fixture\AutoloadableTrait;
 use BetterReflectionTest\Fixture\ClassForHinting;
 
 /**
@@ -78,6 +79,25 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
                 ))
         );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCanLocateAutoloadableTrait()
+    {
+        $this->assertFalse(trait_exists(AutoloadableTrait::class, false));
+
+        $this->assertInstanceOf(
+            LocatedSource::class,
+            (new AutoloadSourceLocator())
+                ->__invoke(new Identifier(
+                    AutoloadableTrait::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+                ))
+        );
+
+        $this->assertFalse(trait_exists(AutoloadableTrait::class, false));
     }
 
     public function testFunctionLoads()
