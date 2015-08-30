@@ -100,6 +100,23 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(trait_exists(AutoloadableTrait::class, false));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCanLocateAutoloadedTrait()
+    {
+        $this->assertTrue(trait_exists(AutoloadableTrait::class));
+
+        $this->assertInstanceOf(
+            LocatedSource::class,
+            (new AutoloadSourceLocator())
+                ->__invoke(new Identifier(
+                    AutoloadableTrait::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+                ))
+        );
+    }
+
     public function testFunctionLoads()
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
