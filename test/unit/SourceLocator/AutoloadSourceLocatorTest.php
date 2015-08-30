@@ -8,9 +8,9 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\Exception\AutoloadFailure;
 use BetterReflection\SourceLocator\Exception\FunctionUndefined;
-use BetterReflection\SourceLocator\Exception\UnloadableIdentifierType;
+use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflectionTest\Fixture\AutoloadableInterface;
 use BetterReflectionTest\Fixture\ClassForHinting;
 
 /**
@@ -42,6 +42,25 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect($className);
 
         $this->assertSame('ClassForHinting', $classInfo->getShortName());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCanLocateAutoloadableInterface()
+    {
+        $this->assertFalse(interface_exists(AutoloadableInterface::class, false));
+
+        $this->assertInstanceOf(
+            LocatedSource::class,
+            (new AutoloadSourceLocator())
+                ->__invoke(new Identifier(
+                    AutoloadableInterface::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+                ))
+        );
+
+        $this->assertFalse(interface_exists(AutoloadableInterface::class, false));
     }
 
     public function testFunctionLoads()
