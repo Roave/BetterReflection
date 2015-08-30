@@ -63,6 +63,23 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(interface_exists(AutoloadableInterface::class, false));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCanLocateAutoloadedInterface()
+    {
+        $this->assertTrue(interface_exists(AutoloadableInterface::class));
+
+        $this->assertInstanceOf(
+            LocatedSource::class,
+            (new AutoloadSourceLocator())
+                ->__invoke(new Identifier(
+                    AutoloadableInterface::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+                ))
+        );
+    }
+
     public function testFunctionLoads()
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
