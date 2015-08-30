@@ -80,6 +80,14 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $class->getMethods());
     }
 
+    public function testCannotReflectRequiredClass()
+    {
+        $this->assertNull(
+            (new EvaledCodeSourceLocator())
+                ->__invoke(new Identifier(__CLASS__, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+        );
+    }
+
     public function testReturnsNullForNonExistentCode()
     {
         $locator = new EvaledCodeSourceLocator();
