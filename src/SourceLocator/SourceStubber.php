@@ -46,11 +46,23 @@ final class SourceStubber
             return $stubCode;
         }
 
-        $statements = $this->parser->parse('<?php ' . $stubCode);
+        return $this->prettyPrinter->prettyPrint(
+            $this->replaceNodesRecursively($this->parser->parse('<?php ' . $stubCode), $interface)
+        );
+    }
 
+    /**
+     * @param \PhpParser\Node[] $statements
+     * @param bool              $interfaceOrTrait (true => interface, false => trait)
+     * @param bool              $trait
+     *
+     * @return \PhpParser\Node[]
+     */
+    private function replaceNodesRecursively(array $statements, $interfaceOrTrait)
+    {
         foreach ($statements as $key => $statement) {
             if ($statement instanceof Class_) {
-                $statements[$key] = $interface
+                $statements[$key] = $interfaceOrTrait
                     ? new Interface_(
                         $statement->name,
                         [
@@ -59,9 +71,15 @@ final class SourceStubber
                         ]
                     )
                     : new Trait_($statement->name, $statement->stmts);
+
+                continue;
+            }
+
+            if (property_exists($statement, 'stmts')) {
+                $statement->stmts = $this->replaceNodesRecursively($statement->stmts, $interfaceOrTrait);
             }
         }
 
-        return $this->prettyPrinter->prettyPrint($statements);
+        return $statements;
     }
 }
