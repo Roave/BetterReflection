@@ -41,33 +41,18 @@ class Generic
      * specified and returns the \Reflector.
      *
      * @param Identifier $identifier
-     * @param bool $autoReflectInternals
+     *
      * @return Reflection
      */
-    public function reflect(Identifier $identifier, $autoReflectInternals = true)
+    public function reflect(Identifier $identifier)
     {
         $aggregate = $this->sourceLocator;
-        if (!($aggregate instanceof AggregateSourceLocator)) {
-            $aggregate = new AggregateSourceLocator([$this->sourceLocator]);
+
+        if (! $locatedSource = $aggregate($identifier)) {
+            throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
 
-        if ($autoReflectInternals) {
-            $aggregate = new AggregateSourceLocator([$aggregate, new PhpInternalSourceLocator()]);
-        }
-
-        foreach ($aggregate($identifier) as $locatedSource) {
-            if (null === $locatedSource) {
-                continue;
-            }
-
-            try {
-                return $this->reflectFromLocatedSource($identifier, $locatedSource);
-            }
-            catch (Exception\IdentifierNotFound $identifierNotFound) {
-            }
-        }
-
-        throw Exception\IdentifierNotFound::fromIdentifier($identifier);
+        return $this->reflectFromLocatedSource($identifier, $locatedSource);
     }
 
     /**
@@ -95,12 +80,9 @@ class Generic
      * @param LocatedSource $locatedSource
      * @return Reflection
      */
-    private function reflectFromLocatedSource(
-        Identifier $identifier,
-        LocatedSource $locatedSource
-    ) {
-        $reflections = $this->getReflections($locatedSource, $identifier);
-        return $this->findInArray($reflections, $identifier);
+    private function reflectFromLocatedSource(Identifier $identifier, LocatedSource $locatedSource)
+    {
+        return $this->findInArray($this->getReflections($locatedSource, $identifier), $identifier);
     }
 
     /**

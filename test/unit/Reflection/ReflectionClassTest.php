@@ -279,7 +279,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testIsInternalWithInternalClass()
     {
-        $reflector = new ClassReflector($this->getComposerLocator());
+        $reflector = ClassReflector::buildDefaultReflector();
         $classInfo = $reflector->reflect('stdClass');
 
         $this->assertTrue($classInfo->isInternal());

@@ -176,11 +176,7 @@ class ReflectionClass implements Reflection, \Reflector
 
     public static function createFromName($className)
     {
-        return (new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new EvaledCodeSourceLocator(),
-            new AutoloadSourceLocator(),
-        ])))->reflect($className);
+        return ClassReflector::buildDefaultReflector()->reflect($className);
     }
 
     /**

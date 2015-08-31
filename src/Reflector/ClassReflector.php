@@ -5,6 +5,10 @@ namespace BetterReflection\Reflector;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Generic as GenericReflector;
+use BetterReflection\SourceLocator\AggregateSourceLocator;
+use BetterReflection\SourceLocator\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
+use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
 
 class ClassReflector implements Reflector
@@ -17,6 +21,15 @@ class ClassReflector implements Reflector
     public function __construct(SourceLocator $sourceLocator)
     {
         $this->reflector = new GenericReflector($sourceLocator);
+    }
+
+    public static function buildDefaultReflector()
+    {
+        return new self(new AggregateSourceLocator([
+            new PhpInternalSourceLocator(),
+            new EvaledCodeSourceLocator(),
+            new AutoloadSourceLocator(),
+        ]));
     }
 
     /**
