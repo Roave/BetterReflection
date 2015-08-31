@@ -29,7 +29,7 @@ class AutoloadSourceLocator implements SourceLocator
     {
         $potentiallyLocatedFile = $this->locateIdentifier($identifier);
 
-        if (!$potentiallyLocatedFile) {
+        if (! ($potentiallyLocatedFile && file_exists($potentiallyLocatedFile))) {
             return null;
         }
 
