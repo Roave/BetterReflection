@@ -275,7 +275,6 @@ class ReflectionClass implements Reflection, \Reflector
     private function scanMethods()
     {
         // merging together methods from interfaces, parent class, traits, current class (in this precise order)
-        /* @var $inheritedMethods \ReflectionMethod[] */
         $inheritedMethods = array_merge(
             array_merge(
                 [],
@@ -300,11 +299,34 @@ class ReflectionClass implements Reflection, \Reflector
 
         $methodsByName = [];
 
-        foreach ($inheritedMethods as $inheritedMethod) {
+        /* @var $inheritedMethod \ReflectionMethod */
+        foreach (array_filter($inheritedMethods, [$this, 'inheritedMethodIsVisibleInThisClass']) as $inheritedMethod) {
             $methodsByName[$inheritedMethod->getName()] = $inheritedMethod;
         }
 
         return $methodsByName;
+    }
+
+    /**
+     * Checks whether a given reflection method is visible in the context of this class
+     *
+     * NOTE: only pass inherited methods, as it doesn't check if the method is declared in the hierarchy!
+     *
+     * @param ReflectionMethod $inheritedMethod
+     *
+     * @return bool
+     */
+    private function inheritedMethodIsVisibleInThisClass(ReflectionMethod $inheritedMethod)
+    {
+        if (! $inheritedMethod->isPrivate()) {
+            return true;
+        }
+
+        $declaringClass = $inheritedMethod->getDeclaringClass();
+
+        return $declaringClass->isInterface()
+            || $declaringClass->isTrait()
+            || ($declaringClass->getName() === $this->getName());
     }
 
     /**
