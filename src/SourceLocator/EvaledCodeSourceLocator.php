@@ -3,11 +3,20 @@
 namespace BetterReflection\SourceLocator;
 
 use BetterReflection\Identifier\Identifier;
-use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
-class EvaledCodeSourceLocator implements SourceLocator
+final class EvaledCodeSourceLocator implements SourceLocator
 {
+    /**
+     * @var SourceStubber
+     */
+    private $stubber;
+
+    public function __construct()
+    {
+        $this->stubber = new SourceStubber();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -17,9 +26,9 @@ class EvaledCodeSourceLocator implements SourceLocator
             return null;
         }
 
-        return new EvaledLocatedSource(
-            "<?php\n\n" . ClassGenerator::fromReflection(new ClassReflection($name))->generate()
-        );
+        $stubber = $this->stubber;
+
+        return new EvaledLocatedSource("<?php\n\n" . $stubber(new ClassReflection($name)));
     }
 
     /**
