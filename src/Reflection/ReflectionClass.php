@@ -18,6 +18,7 @@ use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -37,7 +38,7 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * @var NamespaceNode
      */
-    private $declaringNamespace = null;
+    private $declaringNamespace;
 
     /**
      * @var LocatedSource
@@ -52,17 +53,17 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * @var mixed[]|null
      */
-    private $cachedConstants = null;
+    private $cachedConstants;
 
     /**
      * @var ReflectionProperty[]|null
      */
-    private $cachedProperties = null;
+    private $cachedProperties;
 
     /**
-     * @var ReflectionMethod[]
+     * @var ReflectionMethod[]|null
      */
-    private $cachedMethods = [];
+    private $cachedMethods;
 
     private function __construct()
     {
@@ -266,42 +267,86 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Construct a flat list of methods that are available. This will search up
+     * all parent classes/traits/interfaces/current scope for methods.
+     *
+     * @return ReflectionMethod[]
+     */
+    private function scanMethods()
+    {
+        // merging together methods from interfaces, parent class, traits, current class (in this precise order)
+        /* @var $inheritedMethods \ReflectionMethod[] */
+        $inheritedMethods = array_merge(
+            array_merge(
+                [],
+                ...array_map(
+                    function (ReflectionClass $ancestor) {
+                        return $ancestor->getMethods();
+                    },
+                    array_values(array_merge(
+                        $this->getInterfaces(),
+                        array_filter([$this->getParentClass()]),
+                        $this->getTraits()
+                    ))
+                )
+            ),
+            array_map(
+                function (ClassMethod $methodNode) {
+                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+                },
+                $this->node->getMethods()
+            )
+        );
+
+        $methodsByName = [];
+
+        foreach ($inheritedMethods as $inheritedMethod) {
+            $methodsByName[$inheritedMethod->getName()] = $inheritedMethod;
+        }
+
+        return $methodsByName;
+    }
+
+    /**
+     * @return ReflectionMethod[] indexed by method name
+     */
+    private function getMethodsIndexedByName()
+    {
+        if (! isset($this->cachedMethods)) {
+            $this->cachedMethods = $this->scanMethods();
+        }
+
+        return $this->cachedMethods;
+    }
+
+    /**
      * Fetch an array of all methods for this class.
      *
      * @return ReflectionMethod[]
      */
     public function getMethods()
     {
-        $methodNodes = $this->node->getMethods();
-
-        $methods = [];
-        foreach ($methodNodes as $methodNode) {
-            $methods[] = $this->getMethod($methodNode->name);
-        }
-
-        return $methods;
+        return array_values($this->getMethodsIndexedByName());
     }
 
     /**
      * Get a single method with the name $methodName.
      *
      * @param string $methodName
+     *
      * @return ReflectionMethod
+     *
+     * @throws \OutOfBoundsException
      */
     public function getMethod($methodName)
     {
-        if (isset($this->cachedMethods[$methodName])) {
-            return $this->cachedMethods[$methodName];
-        }
+        $methods = $this->getMethodsIndexedByName();
 
-        $methodNode = $this->node->getMethod($methodName);
-
-        if (null === $methodNode) {
+        if (! isset($methods[$methodName])) {
             throw new \OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
-        $this->cachedMethods[$methodName] = ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
-        return $this->cachedMethods[$methodName];
+        return $methods[$methodName];
     }
 
     /**
@@ -922,11 +967,10 @@ class ReflectionClass implements Reflection, \Reflector
             );
         }
 
-        if ($node instanceof InterfaceNode) {
-            return array_merge([], ...$this->getInterfacesHierarchy());
-        }
-
-        return [];
+        // assumption: first key is the current interface
+        return $this->isInterface()
+            ? array_slice($this->getInterfacesHierarchy(), 1)
+            : [];
     }
 
     /**
