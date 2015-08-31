@@ -18,11 +18,17 @@ class ClassReflector implements Reflector
      */
     private $reflector;
 
+    /**
+     * @param SourceLocator $sourceLocator
+     */
     public function __construct(SourceLocator $sourceLocator)
     {
         $this->reflector = new GenericReflector($sourceLocator);
     }
 
+    /**
+     * @return self
+     */
     public static function buildDefaultReflector()
     {
         return new self(new AggregateSourceLocator([
