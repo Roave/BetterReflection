@@ -83,4 +83,16 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(IdentifierNotFound::class);
         $reflector->reflect('Some\Class\That\Cannot\Exist');
     }
+
+    public function testShouldNotConsiderEvaledSources()
+    {
+        $className = uniqid('generatedClassName');
+
+        eval('class ' . $className . '{}');
+
+        $this->assertNull(
+            (new AutoloadSourceLocator())
+                ->__invoke(new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+        );
+    }
 }
