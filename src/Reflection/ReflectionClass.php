@@ -270,33 +270,34 @@ class ReflectionClass implements Reflection, \Reflector
      * Construct a flat list of methods that are available. This will search up
      * all parent classes/traits/interfaces/current scope for methods.
      *
-     * @param ReflectionClass $_this
-     * @return Node\Stmt\ClassMethod[]
+     * @param ReflectionClass $self
+     *
+*@return Node\Stmt\ClassMethod[]
      */
-    private function findMethodsInNode(self $_this)
+    private function findMethodsInNode(self $self)
     {
         $thisNodeMethods = [];
-        foreach ($_this->node->getMethods() as $method) {
+        foreach ($self->node->getMethods() as $method) {
             // Grab methods from interfaces
-            if (!$_this->isInterface()) {
-                $interfaces = $_this->getInterfaces();
+            if (! $self->isInterface()) {
+                $interfaces = $self->getInterfaces();
                 foreach ($interfaces as $interface) {
                     $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($interface));
                 }
             }
 
             // Grab methods from traits
-            $traits = $_this->getTraits();
+            $traits = $self->getTraits();
             foreach ($traits as $trait) {
                 $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($trait));
             }
 
             // Grab methods from parent classes
-            if ($_this->getParentClass()) {
-                $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($_this->getParentClass()));
+            if ($self->getParentClass()) {
+                $thisNodeMethods = array_merge($thisNodeMethods, $this->findMethodsInNode($self->getParentClass()));
             }
 
-            $thisNodeMethods[$method->name] = [$_this, $method];
+            $thisNodeMethods[$method->name] = [$self, $method];
         }
         return $thisNodeMethods;
     }
