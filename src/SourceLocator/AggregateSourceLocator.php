@@ -11,6 +11,9 @@ class AggregateSourceLocator implements SourceLocator
      */
     private $sourceLocators;
 
+    /**
+     * @param SourceLocator[] $sourceLocators
+     */
     public function __construct(array $sourceLocators = [])
     {
         // This slightly confusing code simply type-checks the $sourceLocators
@@ -22,21 +25,16 @@ class AggregateSourceLocator implements SourceLocator
     }
 
     /**
-     * Generator to invoke multiple source locators
-     *
-     * @param Identifier $identifier
-     * @return LocatedSource
+     * {@inheritDoc}
      */
     public function __invoke(Identifier $identifier)
     {
         foreach ($this->sourceLocators as $sourceLocator) {
-            if ($sourceLocator instanceof self) {
-                foreach ($sourceLocator->__invoke($identifier) as $value) {
-                    yield $value;
-                }
-                continue;
+            if ($located = $sourceLocator($identifier)) {
+                return $located;
             }
-            yield $sourceLocator($identifier);
         }
+
+        return null;
     }
 }

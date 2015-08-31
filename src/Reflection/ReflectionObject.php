@@ -87,7 +87,7 @@ class ReflectionObject extends ReflectionClass
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
-        $reflector = new ClassReflector(new EvaledCodeSourceLocator());
+        $reflector = ClassReflector::buildDefaultReflector();
         $reflectionClass = $reflector->reflect(get_class($object));
 
         return new self($reflector, $reflectionClass, $object);

@@ -6,6 +6,8 @@ use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\FunctionReflector;
+use BetterReflection\SourceLocator\AggregateSourceLocator;
+use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use phpDocumentor\Reflection\Types;
 use BetterReflection\SourceLocator\ComposerSourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
@@ -354,7 +356,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
 
-        $reflector = new ClassReflector(new StringSourceLocator($content));
+        $reflector = new ClassReflector(new AggregateSourceLocator([
+            new PhpInternalSourceLocator(),
+            new StringSourceLocator($content),
+        ]));
         $classInfo = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
 

@@ -5,6 +5,7 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\SourceLocator\AggregateSourceLocator;
 use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\SourceLocator;
 use BetterReflection\SourceLocator\StringSourceLocator;
 
 /**
@@ -12,62 +13,38 @@ use BetterReflection\SourceLocator\StringSourceLocator;
  */
 class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInvokeGenerator()
+    public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve()
     {
-        $inputLocators = [
-            new StringSourceLocator('<?php source1'),
-            new StringSourceLocator('<?php source2'),
-        ];
-
-        $aggregate = new AggregateSourceLocator($inputLocators);
-
+        $locator1   = $this->getMock(SourceLocator::class);
+        $locator2   = $this->getMock(SourceLocator::class);
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        /** @var \Generator $values */
-        $values = $aggregate->__invoke($identifier);
+        $locator1->expects($this->once())->method('__invoke')->with($identifier);
+        $locator2->expects($this->once())->method('__invoke')->with($identifier);
 
-        $values->rewind();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php source1', $values->current()->getSource());
-
-        $values->next();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php source2', $values->current()->getSource());
-
-        $values->next();
-        $this->assertNull($values->current());
+        $this->assertNull((new AggregateSourceLocator([$locator1, $locator2]))->__invoke($identifier));
     }
 
-    public function testNestedAggregate()
+    public function testInvokeWillTraverseAllGivenLocatorsAndSucceed()
     {
-        $nestedAggregate = new AggregateSourceLocator([
-            new AggregateSourceLocator([
-                new StringSourceLocator('<?php level2'),
-                new AggregateSourceLocator([
-                    new StringSourceLocator('<?php level3'),
-                ]),
-            ]),
-            new StringSourceLocator('<?php level1')
-        ]);
+        $locator1   = $this->getMock(SourceLocator::class);
+        $locator2   = $this->getMock(SourceLocator::class);
+        $locator3   = $this->getMock(SourceLocator::class);
+        $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        $source     = new LocatedSource('<?php foo', null);
 
-        $identifier = new Identifier('Level3', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        $locator1->expects($this->once())->method('__invoke')->with($identifier);
+        $locator2->expects($this->once())->method('__invoke')->with($identifier)->willReturn($source);
+        $locator3->expects($this->never())->method('__invoke');
 
-        /** @var \Generator $values */
-        $values = $nestedAggregate->__invoke($identifier);
+        $this->assertSame($source, (new AggregateSourceLocator([$locator1, $locator2]))->__invoke($identifier));
+    }
 
-        $values->rewind();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php level2', $values->current()->getSource());
-
-        $values->next();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php level3', $values->current()->getSource());
-
-        $values->next();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php level1', $values->current()->getSource());
-
-        $values->next();
-        $this->assertNull($values->current());
+    public function testWillNotResolveWithEmptyLocatorsList()
+    {
+        $this->assertNull(
+            (new AggregateSourceLocator([]))
+                ->__invoke(new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+        );
     }
 }
