@@ -47,38 +47,4 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 ->__invoke(new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
         );
     }
-
-    public function testNestedAggregate()
-    {
-        $this->markTestIncomplete();
-        $nestedAggregate = new AggregateSourceLocator([
-            new AggregateSourceLocator([
-                new StringSourceLocator('<?php level2'),
-                new AggregateSourceLocator([
-                    new StringSourceLocator('<?php level3'),
-                ]),
-            ]),
-            new StringSourceLocator('<?php level1')
-        ]);
-
-        $identifier = new Identifier('Level3', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
-
-        /** @var \Generator $values */
-        $values = $nestedAggregate->__invoke($identifier);
-
-        $values->rewind();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php level2', $values->current()->getSource());
-
-        $values->next();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php level3', $values->current()->getSource());
-
-        $values->next();
-        $this->assertInstanceOf(LocatedSource::class, $values->current());
-        $this->assertSame('<?php level1', $values->current()->getSource());
-
-        $values->next();
-        $this->assertNull($values->current());
-    }
 }
