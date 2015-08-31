@@ -272,7 +272,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @param ReflectionClass $self
      *
-*@return Node\Stmt\ClassMethod[]
+     * @return Node\Stmt\ClassMethod[]
      */
     private function findMethodsInNode(self $self)
     {
