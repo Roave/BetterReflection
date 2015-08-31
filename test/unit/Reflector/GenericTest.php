@@ -160,7 +160,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectWithAggregateSourceLocatorFindsClass()
     {
-        $this->markTestIncomplete('See https://github.com/Roave/BetterReflection/issues/43');
+        $this->markTestIncomplete('See https://github.com/Roave/BetterReflection/issues/123');
 
         $reflector = new Generic(new AggregateSourceLocator([
             new StringSourceLocator('<?php'),
