@@ -3,6 +3,7 @@
 namespace BetterReflectionTest\SourceLocator;
 
 use BetterReflection\SourceLocator\SourceStubber;
+use BetterReflectionTest\Fixture\EmptyTrait;
 use Zend\Code\Reflection\ClassReflection;
 
 /**
@@ -36,6 +37,14 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
         $this->assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection(\Traversable::class))
+        );
+    }
+
+    public function testCanStubTraits()
+    {
+        $this->assertStringMatchesFormat(
+            '%Atrait EmptyTrait%A{%A}%A',
+            $this->stubber->__invoke(new ClassReflection(EmptyTrait::class))
         );
     }
 }
