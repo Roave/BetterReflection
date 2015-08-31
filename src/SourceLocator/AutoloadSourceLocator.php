@@ -74,9 +74,8 @@ class AutoloadSourceLocator implements SourceLocator
      */
     private function locateClassByName($className)
     {
-        if (class_exists($className, false)) {
-            $reflection = new \ReflectionClass($className);
-            return $reflection->getFileName();
+        if (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false)) {
+            return (new \ReflectionClass($className))->getFileName();
         }
 
         self::$autoloadLocatedFile = null;
