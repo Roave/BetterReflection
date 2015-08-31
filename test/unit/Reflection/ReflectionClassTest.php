@@ -772,6 +772,30 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Boom\Bar', $interfaces['Boom\Bar']->getName());
     }
 
+    public function testGetImmediateInterfacesDoesNotIncludeCurrentInterface()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php'));
+
+        $cInterfaces = array_map(
+            function (ReflectionClass $interface) {
+                return $interface->getShortName();
+            },
+            $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces()
+        );
+        $dInterfaces = array_map(
+            function (ReflectionClass $interface) {
+                return $interface->getShortName();
+            },
+            $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces()
+        );
+
+        sort($cInterfaces);
+        sort($dInterfaces);
+
+        $this->assertSame(['B'], $cInterfaces);
+        $this->assertSame(['A', 'B', 'C'], $dInterfaces);
+    }
+
     public function testReflectedTraitHasNoInterfaces()
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
