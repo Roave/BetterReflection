@@ -275,46 +275,58 @@ class ReflectionClass implements Reflection, \Reflector
     private function scanMethods()
     {
         // merging together methods from interfaces, parent class, traits, current class (in this precise order)
-        /* @var $inheritedMethods \ReflectionMethod[] */
-        $inheritedMethods = array_filter(
+        $inheritedMethods = array_merge(
             array_merge(
-                array_merge(
-                    [],
-                    ...array_map(
-                        function (ReflectionClass $ancestor) {
-                            return $ancestor->getMethods();
-                        },
-                        array_values(array_merge(
-                            $this->getInterfaces(),
-                            array_filter([$this->getParentClass()]),
-                            $this->getTraits()
-                        ))
-                    )
-                ),
-                array_map(
-                    function (ClassMethod $methodNode) {
-                        return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+                [],
+                ...array_map(
+                    function (ReflectionClass $ancestor) {
+                        return $ancestor->getMethods();
                     },
-                    $this->node->getMethods()
+                    array_values(array_merge(
+                        $this->getInterfaces(),
+                        array_filter([$this->getParentClass()]),
+                        $this->getTraits()
+                    ))
                 )
             ),
-            function (ReflectionMethod $inheritedMethod) {
-                $declaringClass = $inheritedMethod->getDeclaringClass();
-
-                return (! $inheritedMethod->isPrivate())
-                    || $declaringClass->isInterface()
-                    || $declaringClass->isTrait()
-                    || ($declaringClass->getName() === $this->getName());
-            }
+            array_map(
+                function (ClassMethod $methodNode) {
+                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+                },
+                $this->node->getMethods()
+            )
         );
 
         $methodsByName = [];
 
-        foreach ($inheritedMethods as $inheritedMethod) {
+        /* @var $inheritedMethod \ReflectionMethod */
+        foreach (array_filter($inheritedMethods, [$this, 'inheritedMethodIsVisibleInThisClass']) as $inheritedMethod) {
             $methodsByName[$inheritedMethod->getName()] = $inheritedMethod;
         }
 
         return $methodsByName;
+    }
+
+    /**
+     * Checks whether a given reflection method is visible in the context of this class
+     *
+     * NOTE: only pass inherited methods, as it doesn't check if the method is declared in the hierarchy!
+     *
+     * @param ReflectionMethod $inheritedMethod
+     *
+     * @return bool
+     */
+    private function inheritedMethodIsVisibleInThisClass(ReflectionMethod $inheritedMethod)
+    {
+        if (! $inheritedMethod->isPrivate()) {
+            return true;
+        }
+
+        $declaringClass = $inheritedMethod->getDeclaringClass();
+
+        return $declaringClass->isInterface()
+            || $declaringClass->isTrait()
+            || ($declaringClass->getName() === $this->getName());
     }
 
     /**
