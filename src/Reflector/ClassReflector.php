@@ -7,6 +7,7 @@ use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Generic as GenericReflector;
 use BetterReflection\SourceLocator\AggregateSourceLocator;
 use BetterReflection\SourceLocator\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\DefaultSourceLocator;
 use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use BetterReflection\SourceLocator\PhpInternalSourceLocator;
 use BetterReflection\SourceLocator\SourceLocator;
@@ -31,11 +32,7 @@ class ClassReflector implements Reflector
      */
     public static function buildDefaultReflector()
     {
-        return new self(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new EvaledCodeSourceLocator(),
-            new AutoloadSourceLocator(),
-        ]));
+        return new self(new DefaultSourceLocator());
     }
 
     /**
