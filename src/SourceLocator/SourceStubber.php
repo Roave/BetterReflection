@@ -38,31 +38,29 @@ final class SourceStubber
      */
     public function __invoke(ClassReflection $reflection)
     {
-        $stubCode   = ClassGenerator::fromReflection($reflection)->generate();
-        $interface  = $reflection->isInterface();
-        $trait      = $reflection->isTrait();
+        $stubCode    = ClassGenerator::fromReflection($reflection)->generate();
+        $isInterface = $reflection->isInterface();
 
-        if (! ($interface || $trait)) {
+        if (! ($isInterface || $reflection->isTrait())) {
             return $stubCode;
         }
 
         return $this->prettyPrinter->prettyPrint(
-            $this->replaceNodesRecursively($this->parser->parse('<?php ' . $stubCode), $interface)
+            $this->replaceNodesRecursively($this->parser->parse('<?php ' . $stubCode), $isInterface)
         );
     }
 
     /**
      * @param \PhpParser\Node[] $statements
-     * @param bool              $interfaceOrTrait (true => interface, false => trait)
-     * @param bool              $trait
+     * @param bool              $isInterfaceOrTrait (true => interface, false => trait)
      *
      * @return \PhpParser\Node[]
      */
-    private function replaceNodesRecursively(array $statements, $interfaceOrTrait)
+    private function replaceNodesRecursively(array $statements, $isInterfaceOrTrait)
     {
         foreach ($statements as $key => $statement) {
             if ($statement instanceof Class_) {
-                $statements[$key] = $interfaceOrTrait
+                $statements[$key] = $isInterfaceOrTrait
                     ? new Interface_(
                         $statement->name,
                         [
@@ -76,7 +74,7 @@ final class SourceStubber
             }
 
             if (property_exists($statement, 'stmts')) {
-                $statement->stmts = $this->replaceNodesRecursively($statement->stmts, $interfaceOrTrait);
+                $statement->stmts = $this->replaceNodesRecursively($statement->stmts, $isInterfaceOrTrait);
             }
         }
 
