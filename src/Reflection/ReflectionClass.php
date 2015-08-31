@@ -967,11 +967,10 @@ class ReflectionClass implements Reflection, \Reflector
             );
         }
 
-        if ($node instanceof InterfaceNode) {
-            return array_merge([], ...$this->getInterfacesHierarchy());
-        }
-
-        return [];
+        // assumption: first key is the current interface
+        return $this->isInterface()
+            ? array_slice($this->getInterfacesHierarchy(), 1)
+            : [];
     }
 
     /**
