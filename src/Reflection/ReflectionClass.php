@@ -276,26 +276,36 @@ class ReflectionClass implements Reflection, \Reflector
     {
         // merging together methods from interfaces, parent class, traits, current class (in this precise order)
         /* @var $inheritedMethods \ReflectionMethod[] */
-        $inheritedMethods = array_merge(
+        $inheritedMethods = array_filter(
             array_merge(
-                [],
-                ...array_map(
-                    function (ReflectionClass $ancestor) {
-                        return $ancestor->getMethods();
+                array_merge(
+                    [],
+                    ...array_map(
+                        function (ReflectionClass $ancestor) {
+                            return $ancestor->getMethods();
+                        },
+                        array_values(array_merge(
+                            $this->getInterfaces(),
+                            array_filter([$this->getParentClass()]),
+                            $this->getTraits()
+                        ))
+                    )
+                ),
+                array_map(
+                    function (ClassMethod $methodNode) {
+                        return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
                     },
-                    array_values(array_merge(
-                        $this->getInterfaces(),
-                        array_filter([$this->getParentClass()]),
-                        $this->getTraits()
-                    ))
+                    $this->node->getMethods()
                 )
             ),
-            array_map(
-                function (ClassMethod $methodNode) {
-                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
-                },
-                $this->node->getMethods()
-            )
+            function (ReflectionMethod $inheritedMethod) {
+                $declaringClass = $inheritedMethod->getDeclaringClass();
+
+                return (! $inheritedMethod->isPrivate())
+                    || $declaringClass->isInterface()
+                    || $declaringClass->isTrait()
+                    || ($declaringClass->getName() === $this->getName());
+            }
         );
 
         $methodsByName = [];
