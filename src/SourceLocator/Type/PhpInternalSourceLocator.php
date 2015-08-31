@@ -90,7 +90,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private function buildStubName($className)
     {
-        if (!preg_match('/^[a-zA-Z]+$/', $className)) {
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
             return null;
         }
 
