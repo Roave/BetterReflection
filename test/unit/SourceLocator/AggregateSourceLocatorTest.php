@@ -40,6 +40,14 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($source, (new AggregateSourceLocator([$locator1, $locator2]))->__invoke($identifier));
     }
 
+    public function testWillNotResolveWithEmptyLocatorsList()
+    {
+        $this->assertNull(
+            (new AggregateSourceLocator([]))
+                ->__invoke(new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+        );
+    }
+
     public function testNestedAggregate()
     {
         $this->markTestIncomplete();
