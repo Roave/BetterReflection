@@ -43,7 +43,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(EvaledLocatedSource::class, $source);
-        $this->assertStringMatchesFormat('%Aclass%A' . $interfaceName . '%A', $source->getSource());
+        $this->assertStringMatchesFormat('%Ainterface%A' . $interfaceName . '%A', $source->getSource());
     }
 
     public function testCanReflectEvaledTrait()
@@ -59,7 +59,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(EvaledLocatedSource::class, $source);
-        $this->assertStringMatchesFormat('%Aclass%A' . $traitName . '%A', $source->getSource());
+        $this->assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $source->getSource());
     }
 
     public function testCanReflectEvaledLocatedSourceClass()
