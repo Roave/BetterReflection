@@ -46,9 +46,9 @@ class Generic
      */
     public function reflect(Identifier $identifier)
     {
-        $aggregate = $this->sourceLocator;
+        $locator = $this->sourceLocator;
 
-        if (! $locatedSource = $aggregate($identifier)) {
+        if (! $locatedSource = $locator($identifier)) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
 
