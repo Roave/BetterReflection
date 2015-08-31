@@ -201,13 +201,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($internalParentName, $betterParentName);
 
-        // @TODO to be removed once #107 is merged
-        $originalMethods = array_filter(
-            $original->getMethods(),
-            function (\ReflectionMethod $method) use ($original) {
-                return $method->getDeclaringClass()->getName() === $original->getName();
-            }
-        );
+        $originalMethods = $original->getMethods();
 
         $originalMethodNames = array_map(
             function (\ReflectionMethod $method) {
