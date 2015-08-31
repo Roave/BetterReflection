@@ -25,6 +25,21 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertNull((new AggregateSourceLocator([$locator1, $locator2]))->__invoke($identifier));
     }
 
+    public function testInvokeWillTraverseAllGivenLocatorsAndSucceed()
+    {
+        $locator1   = $this->getMock(SourceLocator::class);
+        $locator2   = $this->getMock(SourceLocator::class);
+        $locator3   = $this->getMock(SourceLocator::class);
+        $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        $source     = new LocatedSource('<?php foo', null);
+
+        $locator1->expects($this->once())->method('__invoke')->with($identifier);
+        $locator2->expects($this->once())->method('__invoke')->with($identifier)->willReturn($source);
+        $locator3->expects($this->never())->method('__invoke');
+
+        $this->assertSame($source, (new AggregateSourceLocator([$locator1, $locator2]))->__invoke($identifier));
+    }
+
     public function testNestedAggregate()
     {
         $this->markTestIncomplete();
