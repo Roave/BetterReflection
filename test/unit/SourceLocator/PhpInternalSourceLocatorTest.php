@@ -74,7 +74,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $internalReflection = new \ReflectionClass($class);
 
         $this->assertSame($internalReflection->isInterface(), $class->isInterface());
-        $this->assertSame($internalReflection, $class->isTrait());
+        $this->assertSame($internalReflection->isTrait(), $class->isTrait());
     }
 
     /**
