@@ -30,4 +30,12 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
             $this->stubber->__invoke(new ClassReflection('stdClass'))
         );
     }
+
+    public function testCanStubInterface()
+    {
+        $this->assertStringMatchesFormat(
+            '%Ainterface Traversable%A{%A}%A',
+            $this->stubber->__invoke(new ClassReflection(\Traversable::class))
+        );
+    }
 }
