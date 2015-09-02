@@ -1078,6 +1078,5 @@ class ReflectionClass implements Reflection, \Reflector
 
         $className = $this->getName();
         $className::${$propertyName} = $value;
-        return;
     }
 }
