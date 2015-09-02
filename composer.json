@@ -1,6 +1,7 @@
 {
     "name": "roave/better-reflection",
     "description": "Better Reflection - an improved code reflection API",
+    "license": "MIT",
     "require": {
         "php": ">= 5.6",
         "nikic/php-parser": "dev-master",
