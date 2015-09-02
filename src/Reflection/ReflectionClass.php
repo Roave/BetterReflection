@@ -1048,11 +1048,11 @@ class ReflectionClass implements Reflection, \Reflector
     public function getStaticPropertyValue($propertyName)
     {
         if (!class_exists($this->getName(), false)) {
-            throw new Exception\ClassDoesNotExist('Class does not exist to retrieve property');
+            throw new Exception\ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
 
         if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
-            throw new Exception\PropertyDoesNotExist('Property does not exist or is not static');
+            throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         $className = $this->getName();
@@ -1069,11 +1069,11 @@ class ReflectionClass implements Reflection, \Reflector
     public function setStaticPropertyValue($propertyName, $value)
     {
         if (!class_exists($this->getName(), false)) {
-            throw new Exception\ClassDoesNotExist('Class does not exist to retrieve property');
+            throw new Exception\ClassDoesNotExist('Property cannot be set as the class is not loaded');
         }
 
         if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
-            throw new Exception\PropertyDoesNotExist('Property does not exist or is not static');
+            throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         $className = $this->getName();
