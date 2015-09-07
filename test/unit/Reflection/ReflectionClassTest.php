@@ -11,6 +11,7 @@ use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\Exception\PropertyDoesNotExist;
+use BetterReflection\Reflection\Exception\PropertyNotPublic;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflection\ReflectionProperty;
@@ -940,6 +941,30 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(PropertyDoesNotExist::class);
         $classInfo->getStaticPropertyValue('foo');
+    }
+
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsProtected()
+    {
+        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once($staticPropertyGetSetFixture);
+
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
+            ->reflect(StaticPropertyGetSet\Bar::class);
+
+        $this->setExpectedException(PropertyNotPublic::class);
+        $classInfo->getStaticPropertyValue('bat');
+    }
+
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsPrivate()
+    {
+        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once($staticPropertyGetSetFixture);
+
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
+            ->reflect(StaticPropertyGetSet\Bar::class);
+
+        $this->setExpectedException(PropertyNotPublic::class);
+        $classInfo->getStaticPropertyValue('qux');
     }
 
     public function testGetStaticPropertyValueGetsValue()
