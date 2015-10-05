@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Located;
 
-use BetterReflection\SourceLocator\InternalLocatedSource;
+use BetterReflection\SourceLocator\Located\InternalLocatedSource;
 
 /**
- * @covers \BetterReflection\SourceLocator\InternalLocatedSource
+ * @covers \BetterReflection\SourceLocator\Located\InternalLocatedSource
  */
 class InternalLocatedSourceTest extends \PHPUnit_Framework_TestCase
 {

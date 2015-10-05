@@ -1,6 +1,8 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Located;
+
+use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 
 /**
  * Value object containing source code that has been located.
@@ -37,19 +39,19 @@ class LocatedSource
 
         if (null !== $filename) {
             if (empty($filename)) {
-                throw new Exception\InvalidFileLocation('Filename was empty');
+                throw new InvalidFileLocation('Filename was empty');
             }
 
             if (!file_exists($filename)) {
-                throw new Exception\InvalidFileLocation('File does not exist');
+                throw new InvalidFileLocation('File does not exist');
             }
 
             if (!is_readable($filename)) {
-                throw new Exception\InvalidFileLocation('File is not readable');
+                throw new InvalidFileLocation('File is not readable');
             }
 
             if (!is_file($filename)) {
-                throw new Exception\InvalidFileLocation('Is not a file: ' . $filename);
+                throw new InvalidFileLocation('Is not a file: ' . $filename);
             }
         }
 

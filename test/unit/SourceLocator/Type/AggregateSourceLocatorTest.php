@@ -1,15 +1,15 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
+
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\AggregateSourceLocator;
-use BetterReflection\SourceLocator\LocatedSource;
-use BetterReflection\SourceLocator\SourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Type\SourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\AggregateSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\AggregateSourceLocator
  */
 class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

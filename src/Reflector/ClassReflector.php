@@ -5,11 +5,11 @@ namespace BetterReflection\Reflector;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Generic as GenericReflector;
-use BetterReflection\SourceLocator\AggregateSourceLocator;
-use BetterReflection\SourceLocator\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
-use BetterReflection\SourceLocator\PhpInternalSourceLocator;
-use BetterReflection\SourceLocator\SourceLocator;
+use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use BetterReflection\SourceLocator\Type\SourceLocator;
 
 class ClassReflector implements Reflector
 {

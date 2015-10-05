@@ -1,21 +1,21 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Exception\FunctionUndefined;
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflectionTest\Fixture\AutoloadableInterface;
 use BetterReflectionTest\Fixture\AutoloadableTrait;
 use BetterReflectionTest\Fixture\ClassForHinting;
 
 /**
- * @covers \BetterReflection\SourceLocator\AutoloadSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\AutoloadSourceLocator
  */
 class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -121,7 +121,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
-        require_once(__DIR__ . '/../Fixture/Functions.php');
+        require_once(__DIR__ . '/../../Fixture/Functions.php');
         $classInfo = $reflector->reflect('BetterReflectionTest\Fixture\myFunction');
 
         $this->assertSame('myFunction', $classInfo->getShortName());

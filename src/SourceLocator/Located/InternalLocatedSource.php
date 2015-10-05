@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Located;
 
 /**
  * {@inheritDoc}
  */
-class EvaledLocatedSource extends LocatedSource
+class InternalLocatedSource extends LocatedSource
 {
     /**
      * @param string $source
@@ -18,7 +18,7 @@ class EvaledLocatedSource extends LocatedSource
     /**
      * {@inheritDoc}
      */
-    public function isEvaled()
+    public function isInternal()
     {
         return true;
     }

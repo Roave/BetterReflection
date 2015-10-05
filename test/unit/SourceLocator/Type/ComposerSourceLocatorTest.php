@@ -1,24 +1,22 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\ComposerSourceLocator;
+use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use ClassWithNoNamespace;
 use Composer\Autoload\ClassLoader;
-use LogicException;
-use UnexpectedValueException;
 
 /**
- * @covers \BetterReflection\SourceLocator\ComposerSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\ComposerSourceLocator
  */
 class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     public function testInvokableLoadsSource()
     {
         $className = 'ClassWithNoNamespace';
-        $fileName = __DIR__ . '/../Fixture/NoNamespace.php';
+        $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
         $expectedContent = file_get_contents($fileName);
 
         $loader = $this->getMockBuilder(ClassLoader::class)

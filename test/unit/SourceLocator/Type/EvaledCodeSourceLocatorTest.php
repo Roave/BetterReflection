@@ -1,16 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
-use BetterReflection\SourceLocator\EvaledLocatedSource;
+use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 
 /**
- * @covers \BetterReflection\SourceLocator\EvaledCodeSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
  */
 class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

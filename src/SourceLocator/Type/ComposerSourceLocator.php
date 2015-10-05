@@ -1,8 +1,9 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use Composer\Autoload\ClassLoader;
 use BetterReflection\Identifier\Identifier;
 

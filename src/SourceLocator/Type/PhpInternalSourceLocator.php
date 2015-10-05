@@ -1,8 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
+use BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Zend\Code\Reflection\ClassReflection;
 
 final class PhpInternalSourceLocator implements SourceLocator

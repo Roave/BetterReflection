@@ -1,20 +1,20 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\SingleFileSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\SingleFileSourceLocator
  */
 class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     public function testInvokableLoadsSource()
     {
-        $fileName = __DIR__ . '/../Fixture/NoNamespace.php';
+        $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
         $expectedContent = file_get_contents($fileName);
 
         $locator = new SingleFileSourceLocator($fileName);

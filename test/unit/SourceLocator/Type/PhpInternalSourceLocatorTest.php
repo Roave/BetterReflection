@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\InternalLocatedSource;
-use BetterReflection\SourceLocator\PhpInternalSourceLocator;
+use BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use ReflectionClass as PhpReflectionClass;
 
 /**
- * @covers \BetterReflection\SourceLocator\PhpInternalSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
  */
 class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,6 +45,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      * @dataProvider internalSymbolsProvider
      *
      * @param string $className
+     * @throws \ReflectionException
      */
     public function testCanReflectInternalClasses($className)
     {

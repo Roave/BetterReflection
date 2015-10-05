@@ -4,7 +4,7 @@ namespace BetterReflectionTest\Reflection\Exception;
 
 use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflectionTest\ClassWithInterfaces;
 use BetterReflectionTest\ClassWithInterfacesOther;
 use BetterReflectionTest\Fixture;

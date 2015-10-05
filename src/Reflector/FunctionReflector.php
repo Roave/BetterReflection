@@ -5,7 +5,7 @@ namespace BetterReflection\Reflector;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Generic as GenericReflector;
-use BetterReflection\SourceLocator\SourceLocator;
+use BetterReflection\SourceLocator\Type\SourceLocator;
 
 class FunctionReflector implements Reflector
 {

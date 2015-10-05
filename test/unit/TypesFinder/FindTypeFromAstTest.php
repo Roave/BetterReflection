@@ -2,7 +2,7 @@
 
 namespace BetterReflectionTest\TypesFinder;
 
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Types;

@@ -5,7 +5,7 @@ namespace BetterReflectionTest\Reflector;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\Reflector\Generic;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflector\FunctionReflector

@@ -1,8 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Type;
 
+use BetterReflection\SourceLocator\Exception\FunctionUndefined;
 use BetterReflection\Identifier\Identifier;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -23,7 +25,6 @@ class AutoloadSourceLocator implements SourceLocator
     /**
      * @param Identifier $identifier
      * @return LocatedSource|null
-     * @throws Exception\AutoloadFailure
      */
     public function __invoke(Identifier $identifier)
     {
@@ -96,12 +97,12 @@ class AutoloadSourceLocator implements SourceLocator
      *
      * @param string $functionName
      * @return string
-     * @throws Exception\FunctionUndefined
+     * @throws FunctionUndefined
      */
     private function locateFunctionByName($functionName)
     {
         if (!function_exists($functionName)) {
-            throw new Exception\FunctionUndefined('Function ' . $functionName . ' was not already defined');
+            throw new FunctionUndefined('Function ' . $functionName . ' was not already defined');
         }
 
         $reflection = new \ReflectionFunction($functionName);

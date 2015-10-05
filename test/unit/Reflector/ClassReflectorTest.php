@@ -5,8 +5,8 @@ namespace BetterReflectionTest\Reflector;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Generic;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflector\ClassReflector

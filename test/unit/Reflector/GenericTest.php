@@ -4,8 +4,8 @@ namespace BetterReflectionTest\Reflector;
 
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\Generic;
-use BetterReflection\SourceLocator\AggregateSourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;

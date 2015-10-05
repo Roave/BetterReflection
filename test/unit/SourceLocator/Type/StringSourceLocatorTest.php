@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 
 /**
- * @covers \BetterReflection\SourceLocator\StringSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\StringSourceLocator
  */
 class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

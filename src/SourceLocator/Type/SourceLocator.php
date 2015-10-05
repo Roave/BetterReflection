@@ -1,8 +1,9 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 interface SourceLocator
 {

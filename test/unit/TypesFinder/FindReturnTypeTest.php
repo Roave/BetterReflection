@@ -5,7 +5,7 @@ namespace BetterReflectionTest\TypesFinder;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
 use phpDocumentor\Reflection\Types;
 

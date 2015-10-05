@@ -1,8 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
+use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator simply parses the string given in the constructor as
@@ -26,7 +28,7 @@ class StringSourceLocator implements SourceLocator
             // Whilst an empty string is still "valid" PHP code, there is no
             // point in us even trying to parse it because we won't find what
             // we are looking for, therefore this throws an exception
-            throw new Exception\EmptyPhpSourceCode(
+            throw new EmptyPhpSourceCode(
                 'Source code string was empty'
             );
         }

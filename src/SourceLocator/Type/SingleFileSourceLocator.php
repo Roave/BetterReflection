@@ -1,8 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator;
+namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
+use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator loads an entire file, specified in the constructor
@@ -24,15 +26,15 @@ class SingleFileSourceLocator implements SourceLocator
         $this->filename = (string)$filename;
 
         if (empty($this->filename)) {
-            throw new Exception\InvalidFileLocation('Filename was empty');
+            throw new InvalidFileLocation('Filename was empty');
         }
 
         if (!file_exists($this->filename)) {
-            throw new Exception\InvalidFileLocation('File does not exist');
+            throw new InvalidFileLocation('File does not exist');
         }
 
         if (!is_file($this->filename)) {
-            throw new Exception\InvalidFileLocation('Is not a file: ' . $this->filename);
+            throw new InvalidFileLocation('Is not a file: ' . $this->filename);
         }
     }
 

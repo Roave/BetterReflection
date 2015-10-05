@@ -1,20 +1,20 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator;
+namespace BetterReflectionTest\SourceLocator\Located;
 
 use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use InvalidArgumentException;
 
 /**
- * @covers \BetterReflection\SourceLocator\LocatedSource
+ * @covers \BetterReflection\SourceLocator\Located\LocatedSource
  */
 class LocatedSourceTest extends \PHPUnit_Framework_TestCase
 {
     public function testValuesHappyPath()
     {
         $source = '<?php echo "Hello world";';
-        $file = __DIR__ . '/../Fixture/NoNamespace.php';
+        $file = __DIR__ . '/../../Fixture/NoNamespace.php';
         $locatedSource = new LocatedSource($source, $file);
 
         $this->assertSame($source, $locatedSource->getSource());
@@ -80,7 +80,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfFileIsNotReadable()
     {
-        $file = __DIR__ . '/../Fixture/NoNamespace.php';
+        $file = __DIR__ . '/../../Fixture/NoNamespace.php';
 
         $originalPermission = fileperms($file);
         chmod($file, 0000);

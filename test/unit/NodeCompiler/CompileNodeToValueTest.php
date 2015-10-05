@@ -6,7 +6,7 @@ use BetterReflection\NodeCompiler\CompileNodeToValue;
 use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use PhpParser\Lexer;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
