@@ -8,8 +8,6 @@ use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
 use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\Reflection\Reflection;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use PhpParser\Node;
@@ -19,9 +17,9 @@ use PhpParser\Lexer;
 class Locator
 {
     /**
-     * @var Reflector
+     * @var NodeReflector
      */
-    private $reflector;
+    private $nodeReflector;
 
     /**
      * @var Parser
@@ -30,9 +28,9 @@ class Locator
 
     public function __construct(Reflector $reflector)
     {
-        $this->reflector = $reflector;
+        $this->nodeReflector = new NodeReflector($reflector);
 
-        $this->parser        = new Parser\Multiple([
+        $this->parser = new Parser\Multiple([
             new Parser\Php7(new Lexer()),
             new Parser\Php5(new Lexer())
         ]);
@@ -119,25 +117,7 @@ class Locator
             $locatedSource = DefiniteLocatedSource::fromPotentiallyLocatedSource($locatedSource);
         }
 
-        if ($node instanceof Node\Stmt\ClassLike) {
-            return ReflectionClass::createFromNode(
-                $this->reflector,
-                $node,
-                $locatedSource,
-                $namespace
-            );
-        }
-
-        if ($node instanceof Node\Stmt\Function_) {
-            return ReflectionFunction::createFromNode(
-                $this->reflector,
-                $node,
-                $locatedSource,
-                $namespace
-            );
-        }
-
-        return null;
+        return $this->nodeReflector->__invoke($node, $locatedSource, $namespace);
     }
 
     /**
