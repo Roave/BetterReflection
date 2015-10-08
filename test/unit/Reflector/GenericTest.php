@@ -4,6 +4,7 @@ namespace BetterReflectionTest\Reflector;
 
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\Generic;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\Identifier\Identifier;
@@ -28,7 +29,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         class Bar {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
         $classInfo = $reflector->reflect($this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS));
 
         $this->assertInstanceOf(ReflectionClass::class, $classInfo);
@@ -40,7 +44,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         class Foo {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
         $classInfo = $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
 
         $this->assertInstanceOf(ReflectionClass::class, $classInfo);
@@ -52,7 +59,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         function foo() {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
         $functionInfo = $reflector->reflect($this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION));
 
         $this->assertInstanceOf(ReflectionFunction::class, $functionInfo);
@@ -62,7 +72,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     {
         $php = '<?php';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
 
         $this->setExpectedException(IdentifierNotFound::class);
         $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
@@ -75,7 +88,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         echo 'Hello world';
         ";
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
 
         $this->setExpectedException(IdentifierNotFound::class);
         $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
@@ -89,7 +105,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         function b() {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
 
         $found = $reflector->getAllByIdentifierType(new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
@@ -106,7 +125,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         class b {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
 
         $found = $reflector->getAllByIdentifierType(new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
@@ -122,7 +144,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         class b {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
 
         $found = $reflector->getAllByIdentifierType(new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -139,7 +164,10 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         function b() {}
         ';
 
-        $reflector = new Generic(new StringSourceLocator($php));
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
+        $reflector = new Generic(new StringSourceLocator($php), $mockReflector);
 
         $found = $reflector->getAllByIdentifierType(new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -149,10 +177,13 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectWithAggregateSourceLocatorWhenIdentifierDoesNotExist()
     {
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
+
         $reflector = new Generic(new AggregateSourceLocator([
             new StringSourceLocator('<?php'),
             new StringSourceLocator('<?php'),
-        ]));
+        ]), $mockReflector);
 
         $this->setExpectedException(IdentifierNotFound::class);
         $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
@@ -160,12 +191,13 @@ class GenericTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectWithAggregateSourceLocatorFindsClass()
     {
-        $this->markTestIncomplete('See https://github.com/Roave/BetterReflection/issues/123');
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
+        $mockReflector = $this->getMock(Reflector::class);
 
         $reflector = new Generic(new AggregateSourceLocator([
             new StringSourceLocator('<?php'),
             new StringSourceLocator('<?php class Foo {}'),
-        ]));
+        ]), $mockReflector);
 
         $classInfo = $reflector->reflect($this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS));
 
