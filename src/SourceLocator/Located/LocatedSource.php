@@ -7,7 +7,7 @@ use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 /**
  * Value object containing source code that has been located.
  */
-class LocatedSource
+abstract class LocatedSource
 {
     /**
      * @var string
@@ -23,7 +23,7 @@ class LocatedSource
      * @param string      $source
      * @param string|null $filename
      */
-    public function __construct($source, $filename)
+    protected function __construct($source, $filename)
     {
         if (!is_string($source) || empty($source)) {
             throw new \InvalidArgumentException(

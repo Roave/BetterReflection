@@ -6,7 +6,7 @@ use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -27,7 +27,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
     public function testPopulateFunctionAbstractThrowsExceptionWithInvalidNode()
     {
         $reflector = new FunctionReflector(new StringSourceLocator('<?php'));
-        $locatedSource = new LocatedSource('<?php', null);
+        $locatedSource = new PotentiallyLocatedSource('<?php', null);
 
         /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $abstract */
         $abstract = $this->getMockBuilder(ReflectionFunctionAbstract::class)
@@ -294,7 +294,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
     public function testGetLocatedSource()
     {
         $node = new Function_('foo');
-        $locatedSource = new LocatedSource('<?php function foo() {}', null);
+        $locatedSource = new PotentiallyLocatedSource('<?php function foo() {}', null);
         $reflector = new FunctionReflector(new StringSourceLocator('<?php'));
         $functionInfo = ReflectionFunction::createFromNode($reflector, $node, $locatedSource);
 

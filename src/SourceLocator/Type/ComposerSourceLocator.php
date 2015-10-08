@@ -3,7 +3,7 @@
 namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use Composer\Autoload\ClassLoader;
 use BetterReflection\Identifier\Identifier;
 
@@ -28,7 +28,7 @@ class ComposerSourceLocator implements SourceLocator
 
     /**
      * @param Identifier $identifier
-     * @return LocatedSource|null
+     * @return PotentiallyLocatedSource|null
      */
     public function __invoke(Identifier $identifier)
     {
@@ -42,7 +42,7 @@ class ComposerSourceLocator implements SourceLocator
             return null;
         }
 
-        return new LocatedSource(
+        return new PotentiallyLocatedSource(
             file_get_contents($filename),
             $filename
         );

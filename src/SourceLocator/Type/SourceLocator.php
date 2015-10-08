@@ -3,7 +3,7 @@
 namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 
 interface SourceLocator
 {
@@ -18,7 +18,7 @@ interface SourceLocator
      * thrown, it will break the Generic Reflector.
      *
      * @param Identifier $identifier
-     * @return LocatedSource|null
+     * @return PotentiallyLocatedSource|null
      */
     public function __invoke(Identifier $identifier);
 }

@@ -6,7 +6,7 @@ use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\TypesFinder\FindParameterType;
 use PhpParser\Node\Param as ParamNode;
@@ -79,7 +79,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         $function
             ->expects($this->once())
             ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
+            ->will($this->returnValue(new PotentiallyLocatedSource('<?php', null)));
 
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindParameterType())->__invoke($function, $node);
@@ -110,7 +110,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         $class
             ->expects($this->once())
             ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
+            ->will($this->returnValue(new PotentiallyLocatedSource('<?php', null)));
 
         $method = $this->getMockBuilder(ReflectionMethod::class)
             ->setMethods(['getDocComment', 'getDeclaringClass'])

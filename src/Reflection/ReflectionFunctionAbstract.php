@@ -3,7 +3,7 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -18,7 +18,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     private $declaringNamespace;
 
     /**
-     * @var LocatedSource
+     * @var DefiniteLocatedSource
      */
     private $locatedSource;
 
@@ -46,10 +46,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param Reflector $reflector
      * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt $node
-     * @param LocatedSource $locatedSource
+     * @param DefiniteLocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
-    protected function populateFunctionAbstract(Reflector $reflector, Node\Stmt $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
+    protected function populateFunctionAbstract(Reflector $reflector, Node\Stmt $node, DefiniteLocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
         if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\Stmt\Function_)) {
             throw new \InvalidArgumentException('Node parameter must be ClassMethod or Function_');
@@ -232,7 +232,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     }
 
     /**
-     * @return LocatedSource
+     * @return DefiniteLocatedSource
      */
     public function getLocatedSource()
     {

@@ -2,7 +2,7 @@
 
 namespace BetterReflectionTest\TypesFinder;
 
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Types;
@@ -38,7 +38,7 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
     {
         $resolvedType = (new FindTypeFromAst())->__invoke(
             $input,
-            new LocatedSource('<?php', null),
+            new PotentiallyLocatedSource('<?php', null),
             'MyNamespace'
         );
 
@@ -51,7 +51,7 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(
             (new FindTypeFromAst())->__invoke(
                 null,
-                new LocatedSource('<?php', null)
+                new PotentiallyLocatedSource('<?php', null)
             )
         );
     }

@@ -4,7 +4,7 @@ namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\SourceLocator\Exception\FunctionUndefined;
 use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -24,7 +24,7 @@ class AutoloadSourceLocator implements SourceLocator
 
     /**
      * @param Identifier $identifier
-     * @return LocatedSource|null
+     * @return PotentiallyLocatedSource|null
      */
     public function __invoke(Identifier $identifier)
     {
@@ -34,7 +34,7 @@ class AutoloadSourceLocator implements SourceLocator
             return null;
         }
 
-        return new LocatedSource(
+        return new PotentiallyLocatedSource(
             file_get_contents($potentiallyLocatedFile),
             $potentiallyLocatedFile
         );

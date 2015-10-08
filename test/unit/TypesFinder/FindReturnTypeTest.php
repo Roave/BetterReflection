@@ -5,7 +5,7 @@ namespace BetterReflectionTest\TypesFinder;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
 use phpDocumentor\Reflection\Types;
 
@@ -51,7 +51,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         $function
             ->expects($this->once())
             ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
+            ->will($this->returnValue(new PotentiallyLocatedSource('<?php', null)));
 
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindReturnType())->__invoke($function);
@@ -80,7 +80,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         $class
             ->expects($this->once())
             ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
+            ->will($this->returnValue(new PotentiallyLocatedSource('<?php', null)));
 
         $method = $this->getMockBuilder(ReflectionMethod::class)
             ->setMethods(['getDocComment', 'getDeclaringClass'])

@@ -16,7 +16,7 @@ class FunctionReflector implements Reflector
 
     public function __construct(SourceLocator $sourceLocator)
     {
-        $this->reflector = new GenericReflector($sourceLocator);
+        $this->reflector = new GenericReflector($sourceLocator, $this);
     }
 
     /**

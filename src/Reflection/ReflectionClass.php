@@ -10,7 +10,7 @@ use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
 use BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
@@ -37,7 +37,7 @@ class ReflectionClass implements Reflection, \Reflector
     private $declaringNamespace;
 
     /**
-     * @var LocatedSource
+     * @var DefiniteLocatedSource
      */
     private $locatedSource;
 
@@ -181,7 +181,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @param Reflector          $reflector
      * @param ClassLikeNode      $node
-     * @param LocatedSource      $locatedSource
+     * @param DefiniteLocatedSource      $locatedSource
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
      *
      * @return ReflectionClass
@@ -189,7 +189,7 @@ class ReflectionClass implements Reflection, \Reflector
     public static function createFromNode(
         Reflector $reflector,
         ClassLikeNode $node,
-        LocatedSource $locatedSource,
+        DefiniteLocatedSource $locatedSource,
         NamespaceNode $namespace = null
     ) {
         $class = new self();
@@ -523,7 +523,7 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * @return LocatedSource
+     * @return DefiniteLocatedSource
      */
     public function getLocatedSource()
     {

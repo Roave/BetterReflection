@@ -4,7 +4,7 @@ namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 
 /**
  * This source locator simply parses the string given in the constructor as
@@ -36,11 +36,10 @@ class StringSourceLocator implements SourceLocator
 
     /**
      * @param Identifier $identifier
-     * @return LocatedSource
+     * @return PotentiallyLocatedSource
      */
     public function __invoke(Identifier $identifier)
     {
-        // @todo https://github.com/Roave/BetterReflection/issues/43
-        return new LocatedSource($this->source, null);
+        return new PotentiallyLocatedSource($this->source, null);
     }
 }

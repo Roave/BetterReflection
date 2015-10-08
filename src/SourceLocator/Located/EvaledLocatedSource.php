@@ -5,10 +5,10 @@ namespace BetterReflection\SourceLocator\Located;
 /**
  * {@inheritDoc}
  */
-class EvaledLocatedSource extends LocatedSource
+class EvaledLocatedSource extends DefiniteLocatedSource
 {
     /**
-     * @param string $source
+     * {@inheritDoc}
      */
     public function __construct($source)
     {
