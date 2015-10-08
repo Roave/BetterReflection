@@ -39,6 +39,25 @@ class Locator
     }
 
     /**
+     * Determine if the AST from a located source contains the identifier
+     *
+     * @todo improve this implementation to peek instead of just throwing exception
+     *
+     * @param LocatedSource $locatedSource
+     * @param Identifier $identifier
+     * @return bool
+     */
+    public function hasIdentifier(LocatedSource $locatedSource, Identifier $identifier)
+    {
+        try {
+            $this->findReflection($locatedSource, $identifier);
+            return true;
+        } catch (IdentifierNotFound $identifierNotFoundException) {
+            return false;
+        }
+    }
+
+    /**
      * @param Identifier $identifier
      * @param LocatedSource $locatedSource
      * @return Reflection

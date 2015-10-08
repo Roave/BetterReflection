@@ -3,6 +3,10 @@
 namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
+use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
+use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 
 class AggregateSourceLocator implements SourceLocator
 {
@@ -10,6 +14,11 @@ class AggregateSourceLocator implements SourceLocator
      * @var SourceLocator[]
      */
     private $sourceLocators;
+
+    /**
+     * @param AstLocator $astLocator
+     */
+    private $astLocator;
 
     /**
      * @param SourceLocator[] $sourceLocators
@@ -22,6 +31,7 @@ class AggregateSourceLocator implements SourceLocator
             return $sourceLocator;
         };
         $this->sourceLocators = $validator(...$sourceLocators);
+        $this->astLocator = new AstLocator(new ClassReflector($this));
     }
 
     /**
@@ -30,7 +40,10 @@ class AggregateSourceLocator implements SourceLocator
     public function __invoke(Identifier $identifier)
     {
         foreach ($this->sourceLocators as $sourceLocator) {
-            if ($located = $sourceLocator($identifier)) {
+            $located = $sourceLocator($identifier);
+
+            if (($located instanceof PotentiallyLocatedSource && $this->astLocator->hasIdentifier($located, $identifier))
+                || $located instanceof DefiniteLocatedSource) {
                 return $located;
             }
         }
