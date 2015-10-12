@@ -4,15 +4,12 @@ namespace BetterReflection\Reflector;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\SourceLocator;
-use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use BetterReflection\Reflection\Reflection;
 use PhpParser\Parser;
 use PhpParser\Lexer;
 use PhpParser\Node;
-use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 
 class Generic
 {
