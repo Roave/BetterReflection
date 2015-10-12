@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Ast;
+namespace BetterReflection\SourceLocator\Ast\Strategy;
 
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
