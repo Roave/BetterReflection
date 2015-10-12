@@ -17,9 +17,9 @@ use PhpParser\Lexer;
 class Locator
 {
     /**
-     * @var NodeReflector
+     * @var NodeToReflection
      */
-    private $nodeReflector;
+    private $nodeToReflection;
 
     /**
      * @var Parser
@@ -28,7 +28,7 @@ class Locator
 
     public function __construct(Reflector $reflector)
     {
-        $this->nodeReflector = new NodeReflector($reflector);
+        $this->nodeToReflection = new NodeToReflection($reflector);
 
         $this->parser = new Parser\Multiple([
             new Parser\Php7(new Lexer()),
@@ -117,7 +117,7 @@ class Locator
             $locatedSource = DefiniteLocatedSource::fromPotentiallyLocatedSource($locatedSource);
         }
 
-        return $this->nodeReflector->__invoke($node, $locatedSource, $namespace);
+        return $this->nodeToReflection->__invoke($node, $locatedSource, $namespace);
     }
 
     /**

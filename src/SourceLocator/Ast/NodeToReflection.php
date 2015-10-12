@@ -12,7 +12,7 @@ use PhpParser\Node;
 /**
  * @internal
  */
-class NodeReflector
+class NodeToReflection
 {
     /**
      * @var Reflector
