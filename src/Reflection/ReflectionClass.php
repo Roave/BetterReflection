@@ -1117,4 +1117,14 @@ class ReflectionClass implements Reflection, \Reflector
         $className = $this->getName();
         $className::${$propertyName} = $value;
     }
+
+    /**
+     * Retrieve the AST node for this class
+     *
+     * @return ClassNode|InterfaceNode|TraitNode|ClassLikeNode
+     */
+    public function getAst()
+    {
+        return $this->node;
+    }
 }

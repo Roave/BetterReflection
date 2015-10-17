@@ -29,6 +29,7 @@ use BetterReflectionTest\Fixture\ClassForHinting;
 use BetterReflectionTest\Fixture\InvalidInheritances;
 use PhpParser\Node\Name;
 use BetterReflection\Fixture\StaticPropertyGetSet;
+use PhpParser\Node\Stmt\Class_;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -1031,5 +1032,19 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->setStaticPropertyValue('baz', 'value after');
 
         $this->assertSame('value after', StaticPropertyGetSet\Bar::$baz);
+    }
+
+    public function testGetAst()
+    {
+        $php = '<?php
+            class Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $ast = $reflection->getAst();
+
+        $this->assertInstanceOf(Class_::class, $ast);
+        $this->assertSame('Foo', $ast->name);
     }
 }
