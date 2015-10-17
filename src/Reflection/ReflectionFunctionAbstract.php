@@ -9,6 +9,8 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use phpDocumentor\Reflection\Type;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PhpParser\PrettyPrinterAbstract;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
@@ -415,5 +417,27 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     public function getBodyAst()
     {
         return $this->node->stmts;
+    }
+
+    /**
+     * Retrieves the body of this function as code.
+     *
+     * If a PrettyPrinter is provided as a paramter, it will be used, otherwise
+     * a default will be used.
+     *
+     * Note that the formatting of the code may not be the same as the original
+     * function. If specific formatting is required, you should provide your
+     * own implementation of a PrettyPrinter to unparse the AST.
+     *
+     * @param PrettyPrinterAbstract|null $printer
+     * @return string
+     */
+    public function getBodyCode(PrettyPrinterAbstract $printer = null)
+    {
+        if (null === $printer) {
+            $printer = new StandardPrettyPrinter();
+        }
+
+        return $printer->prettyPrint($this->getBodyAst());
     }
 }

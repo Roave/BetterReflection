@@ -365,4 +365,21 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $ast);
         $this->assertInstanceOf(Echo_::class, $ast[0]);
     }
+
+    public function testGetBodyCode()
+    {
+        $php = '<?php
+            function foo() {
+                echo "Hello world";
+            }
+        ';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->assertSame(
+            "echo 'Hello world';",
+            $function->getBodyCode()
+        );
+    }
 }
