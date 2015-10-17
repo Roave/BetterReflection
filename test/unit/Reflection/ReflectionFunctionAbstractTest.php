@@ -382,4 +382,19 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
             $function->getBodyCode()
         );
     }
+
+    public function getAst()
+    {
+        $php = '<?php
+            function foo() {}
+        ';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $ast = $function->getAst();
+
+        $this->assertInstanceOf(Function_::class, $ast);
+        $this->assertSame('foo', $ast->name);
+    }
 }

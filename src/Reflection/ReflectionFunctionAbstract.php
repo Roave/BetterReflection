@@ -440,4 +440,14 @@ abstract class ReflectionFunctionAbstract implements \Reflector
 
         return $printer->prettyPrint($this->getBodyAst());
     }
+
+    /**
+     * Fetch the AST for this method or function.
+     *
+     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_
+     */
+    public function getAst()
+    {
+        return $this->node;
+    }
 }
