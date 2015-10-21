@@ -4,7 +4,6 @@ namespace BetterReflection\Reflector;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;

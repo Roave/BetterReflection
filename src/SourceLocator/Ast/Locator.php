@@ -9,7 +9,6 @@ use BetterReflection\Reflection\Reflection;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\SourceLocator\Located\LocatedSource;
-use PhpParser\Node;
 use PhpParser\Parser;
 use PhpParser\Lexer;
 
@@ -31,7 +30,7 @@ class Locator
 
         $this->parser = new Parser\Multiple([
             new Parser\Php7(new Lexer()),
-            new Parser\Php5(new Lexer())
+            new Parser\Php5(new Lexer()),
         ]);
     }
 

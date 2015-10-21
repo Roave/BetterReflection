@@ -6,7 +6,6 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\SourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -60,7 +59,7 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 $locator1,
                 $locator2,
                 $locator3,
-                $locator4
+                $locator4,
             ]))->locateIdentifier($this->getMockReflector(), $identifier)
         );
     }

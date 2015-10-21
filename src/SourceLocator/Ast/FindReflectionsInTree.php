@@ -8,8 +8,6 @@ use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
-use PhpParser\Parser;
-use PhpParser\Lexer;
 
 class FindReflectionsInTree
 {

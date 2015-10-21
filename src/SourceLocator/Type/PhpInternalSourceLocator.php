@@ -30,7 +30,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
         if ($stub = $this->getStub($name)) {
             return [
-                "<?php\n\n" . $stub
+                "<?php\n\n" . $stub,
             ];
         }
 

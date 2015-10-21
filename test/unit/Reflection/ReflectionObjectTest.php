@@ -31,7 +31,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
         $this->parser = new Parser\Multiple([
             new Parser\Php7(new Lexer()),
-            new Parser\Php5(new Lexer())
+            new Parser\Php5(new Lexer()),
         ]);
         return $this->parser;
     }

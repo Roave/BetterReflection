@@ -24,7 +24,6 @@ use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
 use BetterReflectionTest\Fixture\InvalidInheritances;
 use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\Class_;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass

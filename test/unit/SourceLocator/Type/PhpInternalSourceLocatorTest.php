@@ -50,7 +50,6 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 $e->getMessage()
             ));
         }
-
     }
 
     /**

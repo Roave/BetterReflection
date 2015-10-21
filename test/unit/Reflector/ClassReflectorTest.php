@@ -4,7 +4,6 @@ namespace BetterReflectionTest\Reflector;
 
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Generic;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;

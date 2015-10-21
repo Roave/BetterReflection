@@ -1,6 +1,7 @@
 <?php
 
 namespace BetterReflection\SourceLocator\Type;
+
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Exception\IdentifierNotFound;

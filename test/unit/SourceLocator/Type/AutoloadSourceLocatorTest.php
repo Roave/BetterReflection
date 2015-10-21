@@ -5,7 +5,6 @@ namespace BetterReflectionTest\SourceLocator\Type;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
