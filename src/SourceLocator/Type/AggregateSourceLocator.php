@@ -3,10 +3,8 @@
 namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
-use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflector\Reflector;
 
 class AggregateSourceLocator implements SourceLocator
 {
@@ -14,11 +12,6 @@ class AggregateSourceLocator implements SourceLocator
      * @var SourceLocator[]
      */
     private $sourceLocators;
-
-    /**
-     * @param AstLocator $astLocator
-     */
-    private $astLocator;
 
     /**
      * @param SourceLocator[] $sourceLocators
@@ -31,23 +24,33 @@ class AggregateSourceLocator implements SourceLocator
             return $sourceLocator;
         };
         $this->sourceLocators = $validator(...$sourceLocators);
-        $this->astLocator = new AstLocator(new ClassReflector($this));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function __invoke(Identifier $identifier)
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier)
     {
         foreach ($this->sourceLocators as $sourceLocator) {
-            $located = $sourceLocator($identifier);
-
-            if (($located instanceof PotentiallyLocatedSource && $this->astLocator->hasIdentifier($located, $identifier))
-                || $located instanceof DefiniteLocatedSource) {
+            if ($located = $sourceLocator->locateIdentifier($reflector, $identifier)) {
                 return $located;
             }
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    {
+        $located = [];
+
+        foreach ($this->sourceLocators as $sourceLocator) {
+            $located += $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
+        }
+
+        return $located;
     }
 }

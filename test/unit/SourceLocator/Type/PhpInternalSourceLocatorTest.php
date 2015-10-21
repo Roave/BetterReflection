@@ -6,6 +6,7 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use ReflectionClass as PhpReflectionClass;
@@ -16,6 +17,14 @@ use ReflectionClass as PhpReflectionClass;
 class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockReflector()
+    {
+        return $this->getMock(Reflector::class);
+    }
+
+    /**
      * @dataProvider internalSymbolsProvider
      *
      * @param string $className
@@ -25,9 +34,12 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $locator = new PhpInternalSourceLocator();
 
         try {
-            $source = $locator->__invoke(
+            /** @var ReflectionClass $reflection */
+            $reflection = $locator->locateIdentifier(
+                $this->getMockReflector(),
                 new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
             );
+            $source = $reflection->getLocatedSource();
 
             $this->assertInstanceOf(InternalLocatedSource::class, $source);
             $this->assertNotEmpty($source->getSource());
@@ -110,7 +122,8 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $locator = new PhpInternalSourceLocator();
         $this->assertNull(
-            $locator->__invoke(
+            $locator->locateIdentifier(
+                $this->getMockReflector(),
                 new Identifier(
                     'Foo\Bar',
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -123,7 +136,8 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $locator = new PhpInternalSourceLocator();
         $this->assertNull(
-            $locator->__invoke(
+            $locator->locateIdentifier(
+                $this->getMockReflector(),
                 new Identifier(
                     'foo',
                     new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)

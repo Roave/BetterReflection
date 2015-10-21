@@ -16,26 +16,18 @@ class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
-
-        $reflectionMock = $this->getMockBuilder(ReflectionFunction::class)
-            ->disableOriginalConstructor()
+        /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
+        $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
+            ->setConstructorArgs([$php])
+            ->setMethods(['locateIdentifier'])
             ->getMock();
 
-        $genericReflectorMock = $this->getMockBuilder(Generic::class)
-            ->setMethods(['reflect'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $sourceLocator
+            ->expects($this->once())
+            ->method('locateIdentifier')
+            ->will($this->returnValue('foobar'));
 
-        $genericReflectorMock->expects($this->once())
-            ->method('reflect')
-            ->will($this->returnValue($reflectionMock));
-
-        $reflectorReflection = new \ReflectionObject($reflector);
-        $reflectorReflectorReflection = $reflectorReflection->getProperty('reflector');
-        $reflectorReflectorReflection->setAccessible(true);
-        $reflectorReflectorReflection->setValue($reflector, $genericReflectorMock);
-
-        $reflector->reflect('foo');
+        $reflector = new FunctionReflector($sourceLocator);
+        $this->assertSame('foobar', $reflector->reflect('foo'));
     }
 }

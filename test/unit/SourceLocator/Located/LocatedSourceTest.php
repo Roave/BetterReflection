@@ -3,11 +3,11 @@
 namespace BetterReflectionTest\SourceLocator\Located;
 
 use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use InvalidArgumentException;
 
 /**
- * @covers \BetterReflection\SourceLocator\Located\PotentiallyLocatedSource
+ * @covers \BetterReflection\SourceLocator\Located\LocatedSource
  */
 class LocatedSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     {
         $source = '<?php echo "Hello world";';
         $file = __DIR__ . '/../../Fixture/NoNamespace.php';
-        $locatedSource = new PotentiallyLocatedSource($source, $file);
+        $locatedSource = new LocatedSource($source, $file);
 
         $this->assertSame($source, $locatedSource->getSource());
         $this->assertSame($file, $locatedSource->getFileName());
@@ -27,7 +27,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     {
         $source = '<?php echo "Hello world";';
         $file = null;
-        $locatedSource = new PotentiallyLocatedSource($source, $file);
+        $locatedSource = new LocatedSource($source, $file);
 
         $this->assertSame($source, $locatedSource->getSource());
         $this->assertNull($locatedSource->getFileName());
@@ -57,25 +57,25 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     public function testThrowsExceptionWhenInvalidValuesGiven($source, $file, $expectedException, $expectedMessage)
     {
         $this->setExpectedException($expectedException, $expectedMessage);
-        new PotentiallyLocatedSource($source, $file);
+        new LocatedSource($source, $file);
     }
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()
     {
         $this->setExpectedException(InvalidFileLocation::class, 'Filename was empty');
-        new PotentiallyLocatedSource('<?php', '');
+        new LocatedSource('<?php', '');
     }
 
     public function testConstructorThrowsExceptionIfFileDoesNotExist()
     {
         $this->setExpectedException(InvalidFileLocation::class, 'File does not exist');
-        new PotentiallyLocatedSource('<?php', 'sdklfjdfslsdfhlkjsdglkjsdflgkj');
+        new LocatedSource('<?php', 'sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
     public function testConstructorThrowsExceptionIfFileIsNotAFile()
     {
         $this->setExpectedException(InvalidFileLocation::class, 'Is not a file');
-        new PotentiallyLocatedSource('<?php', __DIR__);
+        new LocatedSource('<?php', __DIR__);
     }
 
     public function testConstructorThrowsExceptionIfFileIsNotReadable()
@@ -88,7 +88,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(InvalidFileLocation::class, 'File is not readable');
 
         try {
-            new PotentiallyLocatedSource('<?php', $file);
+            new LocatedSource('<?php', $file);
         } catch (\Exception $e) {
             throw $e;
         } finally {

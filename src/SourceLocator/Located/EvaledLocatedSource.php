@@ -5,7 +5,7 @@ namespace BetterReflection\SourceLocator\Located;
 /**
  * {@inheritDoc}
  */
-class EvaledLocatedSource extends DefiniteLocatedSource
+class EvaledLocatedSource extends LocatedSource
 {
     /**
      * {@inheritDoc}

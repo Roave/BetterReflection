@@ -4,7 +4,7 @@ namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator simply parses the string given in the constructor as
@@ -13,7 +13,7 @@ use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
  * Note that this source locator does NOT specify a filename, because we did
  * not load it from a file, so it will be null if you use this locator.
  */
-class StringSourceLocator implements SourceLocator
+class StringSourceLocator extends AbstractSourceLocator
 {
     /**
      * @var string
@@ -35,11 +35,13 @@ class StringSourceLocator implements SourceLocator
     }
 
     /**
-     * @param Identifier $identifier
-     * @return PotentiallyLocatedSource
+     * {@inheritDoc}
      */
-    public function __invoke(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier)
     {
-        return new PotentiallyLocatedSource($this->source, null);
+        return new LocatedSource(
+            $this->source,
+            null
+        );
     }
 }

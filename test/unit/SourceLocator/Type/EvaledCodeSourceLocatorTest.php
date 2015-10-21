@@ -6,6 +6,7 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 
@@ -14,6 +15,14 @@ use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
  */
 class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockReflector()
+    {
+        return $this->getMock(Reflector::class);
+    }
+
     public function testCanReflectEvaledClass()
     {
         $className = uniqid('foo');
@@ -22,9 +31,12 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new EvaledCodeSourceLocator();
 
-        $source = $locator->__invoke(
+        /** @var ReflectionClass $reflection */
+        $reflection = $locator->locateIdentifier(
+            $this->getMockReflector(),
             new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
+        $source = $reflection->getLocatedSource();
 
         $this->assertInstanceOf(EvaledLocatedSource::class, $source);
         $this->assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());
@@ -38,12 +50,13 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new EvaledCodeSourceLocator();
 
-        $source = $locator->__invoke(
+        $reflection = $locator->locateIdentifier(
+            $this->getMockReflector(),
             new Identifier($interfaceName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
 
-        $this->assertInstanceOf(EvaledLocatedSource::class, $source);
-        $this->assertStringMatchesFormat('%Ainterface%A' . $interfaceName . '%A', $source->getSource());
+        $this->assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
+        $this->assertStringMatchesFormat('%Ainterface%A' . $interfaceName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
     public function testCanReflectEvaledTrait()
@@ -54,12 +67,13 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new EvaledCodeSourceLocator();
 
-        $source = $locator->__invoke(
+        $reflection = $locator->locateIdentifier(
+            $this->getMockReflector(),
             new Identifier($traitName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
 
-        $this->assertInstanceOf(EvaledLocatedSource::class, $source);
-        $this->assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $source->getSource());
+        $this->assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
+        $this->assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
     public function testCanReflectEvaledLocatedSourceClass()
@@ -84,7 +98,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNull(
             (new EvaledCodeSourceLocator())
-                ->__invoke(new Identifier(__CLASS__, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+                ->locateIdentifier($this->getMockReflector(), new Identifier(__CLASS__, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
         );
     }
 
@@ -92,7 +106,8 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $locator = new EvaledCodeSourceLocator();
         $this->assertNull(
-            $locator->__invoke(
+            $locator->locateIdentifier(
+                $this->getMockReflector(),
                 new Identifier(
                     'Foo\Bar',
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -105,7 +120,8 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $locator = new EvaledCodeSourceLocator();
         $this->assertNull(
-            $locator->__invoke(
+            $locator->locateIdentifier(
+                $this->getMockReflector(),
                 new Identifier(
                     'foo',
                     new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)

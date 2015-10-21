@@ -4,6 +4,7 @@ namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use ClassWithNoNamespace;
 use Composer\Autoload\ClassLoader;
@@ -13,11 +14,18 @@ use Composer\Autoload\ClassLoader;
  */
 class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockReflector()
+    {
+        return $this->getMock(Reflector::class);
+    }
+
     public function testInvokableLoadsSource()
     {
         $className = 'ClassWithNoNamespace';
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
-        $expectedContent = file_get_contents($fileName);
 
         $loader = $this->getMockBuilder(ClassLoader::class)
             ->setMethods(['findFile'])
@@ -32,13 +40,12 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $locatedSource = $locator->__invoke(new Identifier(
+        $reflectionClass = $locator->locateIdentifier($this->getMockReflector(), new Identifier(
             $className,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         ));
 
-        $this->assertSame($expectedContent, $locatedSource->getSource());
-        $this->assertSame($fileName, $locatedSource->getFileName());
+        $this->assertSame('ClassWithNoNamespace', $reflectionClass->getName());
     }
 
     public function testInvokableThrowsExceptionWhenClassNotResolved()
@@ -58,7 +65,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->assertNull($locator->__invoke(new Identifier(
+        $this->assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             $className,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         )));
@@ -71,7 +78,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->assertNull($locator->__invoke(new Identifier(
+        $this->assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             'foo',
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         )));

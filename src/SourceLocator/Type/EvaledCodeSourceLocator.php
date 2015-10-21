@@ -7,7 +7,7 @@ use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Zend\Code\Reflection\ClassReflection;
 
-final class EvaledCodeSourceLocator implements SourceLocator
+final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
     /**
      * @var SourceStubber
@@ -22,7 +22,7 @@ final class EvaledCodeSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      */
-    public function __invoke(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier)
     {
         if (! $name = $this->getInternalReflectionClassName($identifier)) {
             return null;
@@ -30,7 +30,10 @@ final class EvaledCodeSourceLocator implements SourceLocator
 
         $stubber = $this->stubber;
 
-        return new EvaledLocatedSource("<?php\n\n" . $stubber(new ClassReflection($name)));
+        return new EvaledLocatedSource(
+            "<?php\n\n" . $stubber(new ClassReflection($name)),
+            null
+        );
     }
 
     /**

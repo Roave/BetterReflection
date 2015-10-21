@@ -4,9 +4,10 @@ namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
+use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\Reflector\Reflector;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\SourceLocator\Type\SourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 
@@ -15,16 +16,24 @@ use BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockReflector()
+    {
+        return $this->getMock(Reflector::class);
+    }
+
     public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve()
     {
         $locator1   = $this->getMock(SourceLocator::class);
         $locator2   = $this->getMock(SourceLocator::class);
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $locator1->expects($this->once())->method('__invoke')->with($identifier);
-        $locator2->expects($this->once())->method('__invoke')->with($identifier);
+        $locator1->expects($this->once())->method('locateIdentifier');
+        $locator2->expects($this->once())->method('locateIdentifier');
 
-        $this->assertNull((new AggregateSourceLocator([$locator1, $locator2]))->__invoke($identifier));
+        $this->assertNull((new AggregateSourceLocator([$locator1, $locator2]))->locateIdentifier($this->getMockReflector(), $identifier));
     }
 
     public function testInvokeWillTraverseAllGivenLocatorsAndSucceed()
@@ -36,22 +45,33 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $locator3   = $this->getMock(SourceLocator::class);
         $locator4   = $this->getMock(SourceLocator::class);
 
-        $source2     = new PotentiallyLocatedSource('<?php', null);
-        $source3     = DefiniteLocatedSource::fromPotentiallyLocatedSource(new PotentiallyLocatedSource('<?php foo', null));
+        $source3     = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $locator1->expects($this->once())->method('__invoke')->with($identifier);
-        $locator2->expects($this->once())->method('__invoke')->with($identifier)->willReturn($source2);
-        $locator3->expects($this->once())->method('__invoke')->with($identifier)->willReturn($source3);
-        $locator4->expects($this->never())->method('__invoke');
+        $locator1->expects($this->once())->method('locateIdentifier');
+        $locator2->expects($this->once())->method('locateIdentifier');
+        $locator3->expects($this->once())->method('locateIdentifier')->willReturn($source3);
+        $locator4->expects($this->never())->method('locateIdentifier');
 
-        $this->assertSame($source3, (new AggregateSourceLocator([$locator1, $locator2, $locator3, $locator4]))->__invoke($identifier));
+        $this->assertSame(
+            $source3,
+            (new AggregateSourceLocator([
+                $locator1,
+                $locator2,
+                $locator3,
+                $locator4
+            ]))->locateIdentifier($this->getMockReflector(), $identifier)
+        );
     }
 
     public function testWillNotResolveWithEmptyLocatorsList()
     {
         $this->assertNull(
-            (new AggregateSourceLocator([]))
-                ->__invoke(new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+            (new AggregateSourceLocator([]))->locateIdentifier(
+                $this->getMockReflector(),
+                new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            )
         );
     }
 
@@ -63,8 +83,9 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $locator2 = new StringSourceLocator('<?php class Foo {}');
 
         $aggregate = new AggregateSourceLocator([$locator1, $locator2]);
-        $locatedSource = $aggregate->__invoke($identifier);
 
-        $this->assertSame('<?php class Foo {}', $locatedSource->getSource());
+        $reflection = $aggregate->locateIdentifier($this->getMockReflector(), $identifier);
+
+        $this->assertSame('Foo', $reflection->getName());
     }
 }

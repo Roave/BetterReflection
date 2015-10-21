@@ -3,9 +3,8 @@
 namespace BetterReflection\SourceLocator\Ast;
 
 use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
@@ -27,47 +26,47 @@ class FindReflectionsInTree
     /**
      * Find all reflections of type in an Abstract Syntax Tree
      *
+     * @param Reflector $reflector
      * @param array $ast
      * @param IdentifierType $identifierType
      * @param LocatedSource $locatedSource
      * @return \BetterReflection\Reflection\Reflection[]
      */
-    public function __invoke(array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
+    public function __invoke(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
     {
-        return $this->reflectFromTree($ast, $identifierType, $locatedSource);
+        return $this->reflectFromTree($reflector, $ast, $identifierType, $locatedSource);
     }
 
     /**
+     * @param Reflector $reflector
      * @param Node $node
      * @param LocatedSource $locatedSource
      * @param Node\Stmt\Namespace_|null $namespace
      * @return Reflection|null
      */
-    private function reflectNode(Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
+    private function reflectNode(Reflector $reflector, Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
     {
-        if ($locatedSource instanceof PotentiallyLocatedSource) {
-            $locatedSource = DefiniteLocatedSource::fromPotentiallyLocatedSource($locatedSource);
-        }
-
-        return $this->nodeToReflection->__invoke($node, $locatedSource, $namespace);
+        return $this->nodeToReflection->__invoke($reflector, $node, $locatedSource, $namespace);
     }
 
     /**
      * Process and reflect all the matching identifiers found inside a namespace node.
      *
+     * @param Reflector $reflector
      * @param Node\Stmt\Namespace_ $namespace
      * @param IdentifierType $identifierType
      * @param LocatedSource $locatedSource
-     * @return Reflection[]
+     * @return \BetterReflection\Reflection\Reflection[]
      */
     private function reflectFromNamespace(
+        Reflector $reflector,
         Node\Stmt\Namespace_ $namespace,
         IdentifierType $identifierType,
         LocatedSource $locatedSource
     ) {
         $reflections = [];
         foreach ($namespace->stmts as $node) {
-            $reflection = $this->reflectNode($node, $locatedSource, $namespace);
+            $reflection = $this->reflectNode($reflector, $node, $locatedSource, $namespace);
 
             if (null !== $reflection && $identifierType->isMatchingReflector($reflection)) {
                 $reflections[] = $reflection;
@@ -80,27 +79,28 @@ class FindReflectionsInTree
      * Reflect identifiers from an AST. If a namespace is found, also load all the
      * matching identifiers found in the namespace.
      *
+     * @param Reflector $reflector
      * @param Node[] $ast
      * @param IdentifierType $identifierType
      * @param LocatedSource $locatedSource
      * @return \BetterReflection\Reflection\Reflection[]
      */
-    private function reflectFromTree(array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
+    private function reflectFromTree(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
     {
         $reflections = [];
         foreach ($ast as $node) {
             if ($node instanceof Node\Stmt\Namespace_) {
                 $reflections = array_merge(
                     $reflections,
-                    $this->reflectFromNamespace($node, $identifierType, $locatedSource)
+                    $this->reflectFromNamespace($reflector, $node, $identifierType, $locatedSource)
                 );
             } elseif ($node instanceof Node\Stmt\ClassLike) {
-                $reflection = $this->reflectNode($node, $locatedSource, null);
+                $reflection = $this->reflectNode($reflector, $node, $locatedSource, null);
                 if ($identifierType->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
                 }
             } elseif ($node instanceof Node\Stmt\Function_) {
-                $reflection = $this->reflectNode($node, $locatedSource, null);
+                $reflection = $this->reflectNode($reflector, $node, $locatedSource, null);
                 if ($identifierType->isMatchingReflector($reflection)) {
                     $reflections[] = $reflection;
                 }

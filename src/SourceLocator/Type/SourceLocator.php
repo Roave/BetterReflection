@@ -3,7 +3,9 @@
 namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflection\Reflection;
+use BetterReflection\Reflector\Reflector;
 
 interface SourceLocator
 {
@@ -17,8 +19,18 @@ interface SourceLocator
      * locate the identifier, it should simply return null. If an exception is
      * thrown, it will break the Generic Reflector.
      *
+     * @param Reflector $reflector
      * @param Identifier $identifier
-     * @return PotentiallyLocatedSource|null
+     * @return Reflection|null
      */
-    public function __invoke(Identifier $identifier);
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier);
+
+    /**
+     * Find all identifiers of a type
+     *
+     * @param Reflector $reflector
+     * @param IdentifierType $identifierType
+     * @return \BetterReflection\Reflection\Reflection[]
+     */
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType);
 }

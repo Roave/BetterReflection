@@ -5,7 +5,7 @@ namespace BetterReflectionTest\TypesFinder;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\TypesFinder\FindPropertyType;
 use phpDocumentor\Reflection\Types;
@@ -45,7 +45,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(''));
 
         $class->expects($this->any())->method('getLocatedSource')
-            ->will($this->returnValue(new PotentiallyLocatedSource('<?php', null)));
+            ->will($this->returnValue(new LocatedSource('<?php', null)));
 
         $property = $this->getMockBuilder(ReflectionProperty::class)
             ->setMethods(['getDeclaringClass', 'getDocComment'])
@@ -102,7 +102,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(''));
 
         $class->expects($this->any())->method('getLocatedSource')
-            ->will($this->returnValue(new PotentiallyLocatedSource('<?php', null)));
+            ->will($this->returnValue(new LocatedSource('<?php', null)));
 
         $property = $this->getMockBuilder(ReflectionProperty::class)
             ->setMethods(['getDeclaringClass', 'getDocComment'])

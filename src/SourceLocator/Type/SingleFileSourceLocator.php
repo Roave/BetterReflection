@@ -4,7 +4,7 @@ namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator loads an entire file, specified in the constructor
@@ -14,7 +14,7 @@ use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
  * also the class required if you want to use Reflector->getClassesFromFile
  * (which loads all classes from specified file)
  */
-class SingleFileSourceLocator implements SourceLocator
+class SingleFileSourceLocator extends AbstractSourceLocator
 {
     /**
      * @var string
@@ -39,12 +39,11 @@ class SingleFileSourceLocator implements SourceLocator
     }
 
     /**
-     * @param Identifier $identifier
-     * @return PotentiallyLocatedSource
+     * {@inheritDoc}
      */
-    public function __invoke(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier)
     {
-        return new PotentiallyLocatedSource(
+        return new LocatedSource(
             file_get_contents($this->filename),
             $this->filename
         );

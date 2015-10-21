@@ -821,9 +821,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new StringSourceLocator('<?php class Foo {}');
         $reflector = new ClassReflector($sourceLocator);
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
-        $locatedSource = $sourceLocator->__invoke($identifier);
-        $node = new Class_('Foo');
-        $reflection = ReflectionClass::createFromNode($reflector, $node, $locatedSource);
+        $reflection = $sourceLocator->locateIdentifier($reflector, $identifier);
 
         $reflectionClassReflection = new \ReflectionClass(ReflectionClass::class);
         $reflectionClassMethodReflection = $reflectionClassReflection->getMethod('getFqsenFromNamedNode');

@@ -4,19 +4,18 @@ namespace BetterReflection\Reflector;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Generic as GenericReflector;
 use BetterReflection\SourceLocator\Type\SourceLocator;
 
 class FunctionReflector implements Reflector
 {
     /**
-     * @var GenericReflector
+     * @var SourceLocator
      */
-    private $reflector;
+    private $sourceLocator;
 
     public function __construct(SourceLocator $sourceLocator)
     {
-        $this->reflector = new GenericReflector($sourceLocator, $this);
+        $this->sourceLocator = $sourceLocator;
     }
 
     /**
@@ -27,7 +26,8 @@ class FunctionReflector implements Reflector
      */
     public function reflect($functionName)
     {
-        return $this->reflector->reflect(
+        return $this->sourceLocator->locateIdentifier(
+            $this,
             new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
     }

@@ -4,7 +4,7 @@ namespace BetterReflection\SourceLocator\Type;
 
 use BetterReflection\SourceLocator\Exception\FunctionUndefined;
 use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -12,7 +12,7 @@ use BetterReflection\SourceLocator\Located\PotentiallyLocatedSource;
  * There are some prerequisites...
  *   - we expect the autoloader to load classes from a file (i.e. using require/include)
  */
-class AutoloadSourceLocator implements SourceLocator
+class AutoloadSourceLocator extends AbstractSourceLocator
 {
     /**
      * Primarily used by the non-loading-autoloader magic trickery to determine
@@ -23,18 +23,17 @@ class AutoloadSourceLocator implements SourceLocator
     private static $autoloadLocatedFile;
 
     /**
-     * @param Identifier $identifier
-     * @return PotentiallyLocatedSource|null
+     * {@inheritDoc}
      */
-    public function __invoke(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier)
     {
-        $potentiallyLocatedFile = $this->locateIdentifier($identifier);
+        $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
         if (! ($potentiallyLocatedFile && file_exists($potentiallyLocatedFile))) {
             return null;
         }
 
-        return new PotentiallyLocatedSource(
+        return new LocatedSource(
             file_get_contents($potentiallyLocatedFile),
             $potentiallyLocatedFile
         );
@@ -46,7 +45,7 @@ class AutoloadSourceLocator implements SourceLocator
      * @param Identifier $identifier
      * @return string
      */
-    private function locateIdentifier(Identifier $identifier)
+    private function attemptAutoloadForIdentifier(Identifier $identifier)
     {
         if ($identifier->isClass()) {
             return $this->locateClassByName($identifier->getName());

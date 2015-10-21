@@ -5,7 +5,7 @@ namespace BetterReflection\Reflection;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node\Stmt\Function_ as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
@@ -46,14 +46,14 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      * @param Reflector $reflector
      * @param FunctionNode $node
-     * @param DefiniteLocatedSource $locatedSource
+     * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $namespaceNode
      * @return ReflectionFunction
      */
     public static function createFromNode(
         Reflector $reflector,
         FunctionNode $node,
-        DefiniteLocatedSource $locatedSource,
+        LocatedSource $locatedSource,
         NamespaceNode $namespaceNode = null
     ) {
         $function = new self();

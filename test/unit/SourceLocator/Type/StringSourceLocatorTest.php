@@ -4,6 +4,7 @@ namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 
@@ -12,19 +13,44 @@ use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
  */
 class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInvokableLoadsSource()
+    /**
+     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockReflector()
+    {
+        return $this->getMock(Reflector::class);
+    }
+
+    public function testReturnsNullWhenSourceDoesNotContainClass()
     {
         $sourceCode = '<?php echo "Hello world!";';
 
         $locator = new StringSourceLocator($sourceCode);
 
-        $locatedSource = $locator->__invoke(new Identifier(
-            'does not matter what the class name is',
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        $this->assertNull($locator->locateIdentifier(
+            $this->getMockReflector(),
+            new Identifier(
+                'does not matter what the class name is',
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            )
         ));
+    }
 
-        $this->assertSame($sourceCode, $locatedSource->getSource());
-        $this->assertNull($locatedSource->getFileName());
+    public function testReturnsReflectionWhenSourceHasClass()
+    {
+        $sourceCode = '<?php class Foo {}';
+
+        $locator = new StringSourceLocator($sourceCode);
+
+        $reflectionClass = $locator->locateIdentifier(
+            $this->getMockReflector(),
+            new Identifier(
+                'Foo',
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            )
+        );
+
+        $this->assertSame('Foo', $reflectionClass->getName());
     }
 
     public function testConstructorThrowsExceptionIfEmptyStringGiven()

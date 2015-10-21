@@ -3,7 +3,7 @@
 namespace BetterReflection\SourceLocator\Ast\Strategy;
 
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\DefiniteLocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\Reflection;
@@ -15,29 +15,17 @@ use PhpParser\Node;
 class NodeToReflection
 {
     /**
-     * @var Reflector
-     */
-    private $reflector;
-
-    /**
      * @param Reflector $reflector
-     */
-    public function __construct(Reflector $reflector)
-    {
-        $this->reflector = $reflector;
-    }
-
-    /**
      * @param Node $node
-     * @param DefiniteLocatedSource $locatedSource
+     * @param LocatedSource $locatedSource
      * @param Node\Stmt\Namespace_|null $namespace
      * @return Reflection|null
      */
-    public function __invoke(Node $node, DefiniteLocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
+    public function __invoke(Reflector $reflector, Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
     {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
-                $this->reflector,
+                $reflector,
                 $node,
                 $locatedSource,
                 $namespace
@@ -46,7 +34,7 @@ class NodeToReflection
 
         if ($node instanceof Node\Stmt\Function_) {
             return ReflectionFunction::createFromNode(
-                $this->reflector,
+                $reflector,
                 $node,
                 $locatedSource,
                 $namespace
