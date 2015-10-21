@@ -27,6 +27,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
     public function testPopulateFunctionAbstractThrowsExceptionWithInvalidNode()
     {
         $reflector = new FunctionReflector(new StringSourceLocator('<?php'));
+        $locatedSource = new LocatedSource('<?php', null);
 
         /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $abstract */
         $abstract = $this->getMockBuilder(ReflectionFunctionAbstract::class)
