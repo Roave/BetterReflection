@@ -18,6 +18,11 @@ use BetterReflection\SourceLocator\Located\LocatedSource;
 abstract class AbstractSourceLocator implements SourceLocator
 {
     /**
+     * @var AstLocator
+     */
+    private $astLocator;
+
+    /**
      * Children should implement this method return an array with two values.
      * The first key should be the code itself, and the second key the filename
      * containing the key, or null.
@@ -31,6 +36,11 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     abstract protected function createLocatedSource(Identifier $identifier);
 
+    public function __construct(AstLocator $astLocator = null)
+    {
+        $this->astLocator = (null !== $astLocator) ? $astLocator : new AstLocator();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -41,7 +51,7 @@ abstract class AbstractSourceLocator implements SourceLocator
         }
 
         try {
-            return (new AstLocator())->findReflection($reflector, $locatedSource, $identifier);
+            return $this->astLocator->findReflection($reflector, $locatedSource, $identifier);
         } catch (IdentifierNotFound $exception) {
             return null;
         }
@@ -56,7 +66,7 @@ abstract class AbstractSourceLocator implements SourceLocator
             return [];
         }
 
-        return (new AstLocator())->findReflectionsOfType(
+        return $this->astLocator->findReflectionsOfType(
             $reflector,
             $locatedSource,
             $identifierType

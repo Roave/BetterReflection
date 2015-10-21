@@ -22,6 +22,7 @@ class StringSourceLocator extends AbstractSourceLocator
 
     public function __construct($source)
     {
+        parent::__construct();
         $this->source = (string)$source;
 
         if (empty($this->source)) {

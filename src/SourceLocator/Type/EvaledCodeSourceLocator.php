@@ -16,6 +16,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
 
     public function __construct()
     {
+        parent::__construct();
         $this->stubber = new SourceStubber();
     }
 

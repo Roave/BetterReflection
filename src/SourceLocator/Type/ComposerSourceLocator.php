@@ -23,6 +23,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
 
     public function __construct(ClassLoader $classLoader)
     {
+        parent::__construct();
         $this->classLoader = $classLoader;
     }
 
