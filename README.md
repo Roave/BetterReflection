@@ -12,6 +12,8 @@ features than PHP's built-in [reflection API](http://php.net/manual/en/book.refl
 * Ability to reflect on classes directly from a string of PHP code
 * Better Reflection analyses the DocBlocks (using [phpdocumentor/type-resolver](https://github.com/phpDocumentor/TypeResolver))
 * Reflecting directly on closures
+* Ability to extract AST from methods and functions
+* Ability to return AST representation of a class or function
 * *Moar stuff coming soon!*
 
 Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).
@@ -51,6 +53,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 * [Using types](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
 * [The features](https://github.com/Roave/BetterReflection/tree/master/docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
+* [AST extraction](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
 
 ## Limitations
 

@@ -17,3 +17,7 @@ See [Loading a class from a string](https://github.com/Roave/BetterReflection/tr
 ## Analysing types from DocBlocks
 
 See [types documentation](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
+
+## AST extraction from Reflections
+
+See [AST extraction documentation](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
