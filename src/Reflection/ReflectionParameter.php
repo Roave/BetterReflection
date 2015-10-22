@@ -293,7 +293,7 @@ class ReflectionParameter implements \Reflector
     /**
      * Get the type hint declared for the parameter. This is the real type hint
      * for the parameter, e.g. `method(closure $someFunc)` defined by the
-     * method itself, and is separate from the docblock type hints.
+     * method itself, and is separate from the DocBlock type hints.
      *
      * @see getDocBlockTypes()
      * @return Type

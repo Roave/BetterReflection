@@ -130,7 +130,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * Create an AST PropertyNode given a reflection
      *
-     * Note that we don't copy across Docblock, protected, private or static
+     * Note that we don't copy across DocBlock, protected, private or static
      * because runtime properties can't have these attributes.
      *
      * @param \ReflectionProperty $property

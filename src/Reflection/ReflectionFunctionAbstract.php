@@ -394,7 +394,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return Type[]
      */
-    public function getDocblockReturnTypes()
+    public function getDocBlockReturnTypes()
     {
         return  (new FindReturnType())->__invoke($this);
     }

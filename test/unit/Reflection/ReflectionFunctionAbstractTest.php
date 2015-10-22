@@ -301,7 +301,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($locatedSource, $functionInfo->getLocatedSource());
     }
 
-    public function testGetDocblockReturnTypes()
+    public function testGetDocBlockReturnTypes()
     {
         $php = '<?php
             /**
@@ -312,7 +312,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $types = $function->getDocblockReturnTypes();
+        $types = $function->getDocBlockReturnTypes();
 
         $this->assertInternalType('array', $types);
         $this->assertCount(1, $types);
