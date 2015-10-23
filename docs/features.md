@@ -14,6 +14,6 @@ not then *unload* that class - this is not currently possible in PHP.
 
 See [Loading a class from a string](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md#Loading-a-class-from-a-string)
 
-## Analysing types from docblocks
+## Analysing types from DocBlocks
 
 See [types documentation](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)

@@ -145,7 +145,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('someMethod', $methodInfo->getShortName());
     }
 
-    public function testGetDocblockReturnTypes()
+    public function testGetDocBlockReturnTypes()
     {
         $php = '<?php
         class Foo {
@@ -160,7 +160,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
             ->reflect('Foo')
             ->getMethod('someMethod');
 
-        $types = $methodInfo->getDocblockReturnTypes();
+        $types = $methodInfo->getDocBlockReturnTypes();
 
         $this->assertInternalType('array', $types);
         $this->assertCount(1, $types);
