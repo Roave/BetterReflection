@@ -326,6 +326,31 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Get only the methods that this class implements (i.e. do not search
+     * up parent classes etc.)
+     *
+     * @return ReflectionMethod[]
+     */
+    public function getImmediateMethods()
+    {
+        /* @var $methods \ReflectionMethod[] */
+        $methods = array_map (
+            function (ClassMethod $methodNode) {
+                return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+            },
+            $this->node->getMethods()
+        );
+
+        $methodsByName = [];
+
+        foreach ($methods as $method) {
+            $methodsByName[$method->getName()] = $method;
+        }
+
+        return $methodsByName;
+    }
+
+    /**
      * Get a single method with the name $methodName.
      *
      * @param string $methodName

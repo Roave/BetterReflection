@@ -134,6 +134,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Qux', $classInfo->getMethod('f')->getDeclaringClass()->getName());
     }
 
+    public function testGetImmediateMethods()
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassMethods.php'));
+
+        $methods = $reflector->reflect('Qux')->getImmediateMethods();
+
+        $this->assertCount(1, $methods);
+        $this->assertInstanceOf(ReflectionMethod::class, $methods['f']);
+        $this->assertSame('f', $methods['f']->getName());
+    }
+
     public function testGetConstants()
     {
         $reflector = new ClassReflector($this->getComposerLocator());

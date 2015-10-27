@@ -192,6 +192,14 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getImmediateMethods()
+    {
+        return $this->reflectionClass->getImmediateMethods();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMethod($methodName)
     {
         return $this->reflectionClass->getMethod($methodName);
