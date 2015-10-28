@@ -3,11 +3,11 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": ">= 5.6",
-        "nikic/php-parser": "dev-master",
+        "php": ">=5.6",
+        "nikic/php-parser": "^2.0",
         "phpdocumentor/reflection-docblock": "^2.0",
-        "phpdocumentor/type-resolver": "dev-master",
-        "zendframework/zend-code": "^2.5@dev"
+        "phpdocumentor/type-resolver": "^0.1",
+        "zendframework/zend-code": "^2.5"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.8",
