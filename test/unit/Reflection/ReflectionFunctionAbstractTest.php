@@ -383,7 +383,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getAst()
+    public function testGetAst()
     {
         $php = '<?php
             function foo() {}
