@@ -15,6 +15,7 @@ features than PHP's built-in [reflection API](http://php.net/manual/en/book.refl
 * Ability to extract AST from methods and functions
 * Ability to return AST representation of a class or function
 * Fetch return type declaration and parameter type declarations in PHP 7 code (even when running PHP 5!)
+* Change the body of a function or method to do something different
 * *Moar stuff coming soon!*
 
 Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).
@@ -55,6 +56,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 * [The features](https://github.com/Roave/BetterReflection/tree/master/docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
 * [AST extraction](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
+* [Reflection modification](https://github.com/Roave/BetterReflection/tree/master/docs/reflection-modification.md)
 
 ## Limitations
 
