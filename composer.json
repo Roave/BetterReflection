@@ -15,7 +15,11 @@
     },
     "autoload": {
         "psr-4": {
-            "BetterReflection\\": "src",
+            "BetterReflection\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "BetterReflectionTest\\": "test/unit"
         }
     },
