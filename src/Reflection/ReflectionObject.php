@@ -4,12 +4,11 @@ namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 
 class ReflectionObject extends ReflectionClass
 {

@@ -4,8 +4,8 @@ namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\ComposerSourceLocator;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;

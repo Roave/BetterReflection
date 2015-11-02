@@ -4,9 +4,7 @@ namespace BetterReflectionTest\Reflection\Exception;
 
 use BetterReflection\Reflection\Exception\NotAClassReflection;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use BetterReflectionTest\ClassWithInterfaces;
-use BetterReflectionTest\ClassWithInterfacesOther;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflectionTest\Fixture;
 use PHPUnit_Framework_TestCase;
 

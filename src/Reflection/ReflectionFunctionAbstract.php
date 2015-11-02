@@ -3,7 +3,7 @@
 namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;

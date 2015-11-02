@@ -6,7 +6,6 @@ use BetterReflection\NodeCompiler\CompileNodeToValue;
 use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\TypesFinder\FindPropertyType;
-use BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
 

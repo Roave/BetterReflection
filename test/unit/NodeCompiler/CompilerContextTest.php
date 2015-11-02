@@ -4,7 +4,7 @@ namespace BetterReflectionTest\NodeCompiler;
 
 use BetterReflection\NodeCompiler\CompilerContext;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \BetterReflection\NodeCompiler\CompilerContext

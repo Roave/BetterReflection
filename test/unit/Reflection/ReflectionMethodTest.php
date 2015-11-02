@@ -7,10 +7,9 @@ use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflection\ReflectionParameter;
-use BetterReflection\SourceLocator\ComposerSourceLocator;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
-use BetterReflectionTest\Fixture\ExampleClass;
+use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
 
@@ -221,7 +220,6 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
 
-
         if (null === $expectedPrototype) {
             $this->setExpectedException(MethodPrototypeNotFound::class);
         }
@@ -230,7 +228,6 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ReflectionMethod::class, $b);
         $this->assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
-
 
     public function testGetMethodNodeFailsWhenNodeIsNotClassMethod()
     {

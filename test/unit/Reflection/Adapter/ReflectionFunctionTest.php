@@ -9,7 +9,6 @@ use BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunction
 use BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 
-
 /**
  * @covers \BetterReflection\Reflection\Adapter\ReflectionFunction
  */

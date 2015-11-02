@@ -5,8 +5,8 @@ namespace BetterReflectionTest\TypesFinder;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\LocatedSource;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflection\TypesFinder\FindPropertyType;
 use phpDocumentor\Reflection\Types;
 

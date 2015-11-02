@@ -4,9 +4,9 @@ namespace BetterReflectionTest\Reflector;
 
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Generic;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflector\ClassReflector
@@ -23,28 +23,29 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(8, $classes);
     }
 
-    public function testReflectProxiesToGenericReflectMethod()
+    public function testReflectProxiesToSourceLocator()
     {
-        $reflector = new ClassReflector(new StringSourceLocator('<?php'));
-
-        $reflectionMock = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
+        /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
+        $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
+            ->setConstructorArgs(['<?php'])
+            ->setMethods(['locateIdentifier'])
             ->getMock();
 
-        $genericReflectorMock = $this->getMockBuilder(Generic::class)
-            ->setMethods(['reflect'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $sourceLocator
+            ->expects($this->once())
+            ->method('locateIdentifier')
+            ->will($this->returnValue('foo'));
 
-        $genericReflectorMock->expects($this->once())
-            ->method('reflect')
-            ->will($this->returnValue($reflectionMock));
+        $reflector = new ClassReflector($sourceLocator);
 
-        $reflectorReflection = new \ReflectionObject($reflector);
-        $reflectorReflectorReflection = $reflectorReflection->getProperty('reflector');
-        $reflectorReflectorReflection->setAccessible(true);
-        $reflectorReflectorReflection->setValue($reflector, $genericReflectorMock);
+        $this->assertSame('foo', $reflector->reflect('MyClass'));
+    }
 
-        $reflector->reflect('MyClass');
+    public function testBuildDefaultReflector()
+    {
+        $defaultReflector = ClassReflector::buildDefaultReflector();
+
+        $sourceLocator = $this->getObjectAttribute($defaultReflector, 'sourceLocator');
+        $this->assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
     }
 }

@@ -4,7 +4,7 @@ namespace BetterReflectionTest\Reflection;
 
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
 
 /**

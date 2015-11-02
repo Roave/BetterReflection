@@ -6,11 +6,11 @@ use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\AggregateSourceLocator;
-use BetterReflection\SourceLocator\PhpInternalSourceLocator;
+use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use phpDocumentor\Reflection\Types;
-use BetterReflection\SourceLocator\ComposerSourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionParameter

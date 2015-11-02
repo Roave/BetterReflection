@@ -2,7 +2,7 @@
 
 namespace BetterReflection\TypesFinder;
 
-use BetterReflection\SourceLocator\LocatedSource;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Name;
 

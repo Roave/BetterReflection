@@ -12,9 +12,9 @@ use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\ComposerSourceLocator;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\StringSourceLocator;
+use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use BetterReflectionTest\ClassesImplementingIterators;
 use BetterReflectionTest\ClassesWithCloneMethod;
 use BetterReflectionTest\ClassWithInterfaces;
@@ -24,7 +24,6 @@ use BetterReflectionTest\Fixture;
 use BetterReflectionTest\Fixture\ClassForHinting;
 use BetterReflectionTest\Fixture\InvalidInheritances;
 use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\Class_;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionClass
@@ -821,9 +820,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $sourceLocator = new StringSourceLocator('<?php class Foo {}');
         $reflector = new ClassReflector($sourceLocator);
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
-        $locatedSource = $sourceLocator->__invoke($identifier);
-        $node = new Class_('Foo');
-        $reflection = ReflectionClass::createFromNode($reflector, $node, $locatedSource);
+        $reflection = $sourceLocator->locateIdentifier($reflector, $identifier);
 
         $reflectionClassReflection = new \ReflectionClass(ReflectionClass::class);
         $reflectionClassMethodReflection = $reflectionClassReflection->getMethod('getFqsenFromNamedNode');

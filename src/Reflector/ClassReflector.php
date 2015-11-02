@@ -4,26 +4,25 @@ namespace BetterReflection\Reflector;
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Generic as GenericReflector;
-use BetterReflection\SourceLocator\AggregateSourceLocator;
-use BetterReflection\SourceLocator\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\EvaledCodeSourceLocator;
-use BetterReflection\SourceLocator\PhpInternalSourceLocator;
-use BetterReflection\SourceLocator\SourceLocator;
+use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use BetterReflection\SourceLocator\Type\SourceLocator;
 
 class ClassReflector implements Reflector
 {
     /**
-     * @var GenericReflector
+     * @var SourceLocator
      */
-    private $reflector;
+    private $sourceLocator;
 
     /**
      * @param SourceLocator $sourceLocator
      */
     public function __construct(SourceLocator $sourceLocator)
     {
-        $this->reflector = new GenericReflector($sourceLocator);
+        $this->sourceLocator = $sourceLocator;
     }
 
     /**
@@ -46,7 +45,8 @@ class ClassReflector implements Reflector
      */
     public function reflect($className)
     {
-        return $this->reflector->reflect(
+        return $this->sourceLocator->locateIdentifier(
+            $this,
             new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
     }
@@ -58,7 +58,8 @@ class ClassReflector implements Reflector
      */
     public function getAllClasses()
     {
-        return $this->reflector->getAllByIdentifierType(
+        return $this->sourceLocator->locateIdentifiersByType(
+            $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
     }
