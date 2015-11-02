@@ -12,9 +12,12 @@ use PhpParser\Node;
 /**
  * @internal
  */
-class NodeToReflection
+class NodeToReflection implements AstConversionStrategy
 {
     /**
+     * Take an AST node in some located source (potentially in a namespace) and
+     * convert it to a Reflection
+     *
      * @param Reflector $reflector
      * @param Node $node
      * @param LocatedSource $locatedSource

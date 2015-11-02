@@ -4,7 +4,7 @@ namespace BetterReflection\SourceLocator\Ast;
 
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
@@ -12,13 +12,13 @@ use PhpParser\Node;
 class FindReflectionsInTree
 {
     /**
-     * @var NodeToReflection
+     * @var AstConversionStrategy
      */
-    private $nodeToReflection;
+    private $astConversionStrategy;
 
-    public function __construct(NodeToReflection $nodeToReflection)
+    public function __construct(AstConversionStrategy $astConversionStrategy)
     {
-        $this->nodeToReflection = $nodeToReflection;
+        $this->astConversionStrategy = $astConversionStrategy;
     }
 
     /**
@@ -44,7 +44,7 @@ class FindReflectionsInTree
      */
     private function reflectNode(Reflector $reflector, Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
     {
-        return $this->nodeToReflection->__invoke($reflector, $node, $locatedSource, $namespace);
+        return $this->astConversionStrategy->__invoke($reflector, $node, $locatedSource, $namespace);
     }
 
     /**
