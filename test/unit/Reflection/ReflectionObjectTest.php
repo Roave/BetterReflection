@@ -9,9 +9,9 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflectionTest\Fixture\ClassForHinting;
-use PhpParser\Lexer;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
+use PhpParser\ParserFactory;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionObject
@@ -29,10 +29,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             return $this->parser;
         }
 
-        $this->parser = new Parser\Multiple([
-            new Parser\Php7(new Lexer()),
-            new Parser\Php5(new Lexer()),
-        ]);
+        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         return $this->parser;
     }
 

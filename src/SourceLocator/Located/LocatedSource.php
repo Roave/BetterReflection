@@ -6,6 +6,8 @@ use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 
 /**
  * Value object containing source code that has been located.
+ *
+ * @internal
  */
 class LocatedSource
 {

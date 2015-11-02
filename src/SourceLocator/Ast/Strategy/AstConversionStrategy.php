@@ -6,6 +6,9 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node;
 
+/**
+ * @internal
+ */
 interface AstConversionStrategy
 {
     /**

@@ -9,7 +9,10 @@ use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
 
-class FindReflectionsInTree
+/**
+ * @internal
+ */
+final class FindReflectionsInTree
 {
     /**
      * @var AstConversionStrategy

@@ -9,12 +9,6 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 
-/**
- * Use PHP's built in autoloader to locate a class, without actually loading.
- *
- * There are some prerequisites...
- *   - we expect the autoloader to load classes from a file (i.e. using require/include)
- */
 abstract class AbstractSourceLocator implements SourceLocator
 {
     /**

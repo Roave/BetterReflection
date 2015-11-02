@@ -12,6 +12,8 @@ use Zend\Code\Reflection\ClassReflection;
 
 /**
  * Function that generates a stub source from a given reflection instance.
+ *
+ * @internal
  */
 final class SourceStubber
 {
