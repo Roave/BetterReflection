@@ -10,6 +10,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
+  - vendor/bin/phpunit test/compat || true
   - vendor/bin/phpunit test/core || true
 
 after_script:

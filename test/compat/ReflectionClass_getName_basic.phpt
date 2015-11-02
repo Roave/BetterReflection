@@ -1,12 +1,7 @@
 --TEST--
 ReflectionClass::getName()
 --FILE--
-<?php
-require 'vendor/autoload.php';
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\SingleFileSourceLocator;
-$reflector = new ClassReflector(new SingleFileSourceLocator(__FILE__));
-
+<?php require 'vendor/autoload.php';
 class TrickClass {
 	function __toString() {
 		//Return the name of another class
@@ -14,11 +9,17 @@ class TrickClass {
 	}
 }
 
+$r1 = \BetterReflection\Reflection\ReflectionClass::createFromName('stdClass');
 
-$r3 = $reflector->reflect('TrickClass');
+$myInstance = new stdClass;
+$r2 = \BetterReflection\Reflection\ReflectionObject::createFromInstance($myInstance);
 
-var_dump($r3->getName());
+$r3 = \BetterReflection\Reflection\ReflectionClass::createFromName('TrickClass');
+
+var_dump($r1->getName(), $r2->getName(), $r3->getName());
 
 ?> 
 --EXPECTF--
+string(8) "stdClass"
+string(8) "stdClass"
 string(10) "TrickClass"
