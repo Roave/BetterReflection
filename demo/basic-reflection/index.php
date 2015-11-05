@@ -8,7 +8,7 @@ namespace Example1
     use BetterReflection\Reflection\ReflectionClass;
 
     $reflection = ReflectionClass::createFromName('stdClass');
-    var_dump($reflection->getName()); // MyClass
+    var_dump($reflection->getName()); // stdClass
     var_dump($reflection->isInternal()); // true
 }
 
@@ -30,8 +30,8 @@ namespace Example3
     require_once __DIR__ . '/../../vendor/autoload.php';
 
     use BetterReflection\Reflector\ClassReflector;
-    use BetterReflection\SourceLocator\AggregateSourceLocator;
-    use BetterReflection\SourceLocator\SingleFileSourceLocator;
+    use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+    use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
     $reflector = new ClassReflector(new AggregateSourceLocator([
         new SingleFileSourceLocator('MyClass.php'),
