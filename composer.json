@@ -4,7 +4,7 @@
     "license": "MIT",
     "require": {
         "php": ">= 5.6",
-        "nikic/php-parser": "^2.0@dev",
+        "nikic/php-parser": "^2.0-beta",
         "phpdocumentor/reflection-docblock": "^2.0",
         "phpdocumentor/type-resolver": "^1.0@dev",
         "zendframework/zend-code": "^2.5@dev"
