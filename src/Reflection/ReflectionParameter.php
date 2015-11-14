@@ -400,4 +400,12 @@ class ReflectionParameter implements \Reflector
 
         return $this->reflector->reflect($hint->getFqsen()->__toString());
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __clone()
+    {
+        throw new Exception\Uncloneable('Trying to clone an uncloneable object of class ' . __CLASS__);
+    }
 }

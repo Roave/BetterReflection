@@ -1028,4 +1028,12 @@ class ReflectionClass implements Reflection, \Reflector
             )
         );
     }
+
+    /**
+     * @throws Exception\Uncloneable
+     */
+    public function __clone()
+    {
+        throw new Exception\Uncloneable('Trying to clone an uncloneable object of class ' . __CLASS__);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionObject;
 use BetterReflection\Reflection\ReflectionProperty;
@@ -112,6 +113,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             'createFromNode',
             '__toString',
             'export',
+            '__clone',
         ];
 
         $filteredMethods = [];
@@ -239,5 +241,13 @@ BLAH;
         $actualExport = ReflectionObject::export($foo);
 
         $this->assertStringMatchesFormat($expectedExport, $actualExport);
+    }
+
+    public function testCannotClone()
+    {
+        $classInfo = ReflectionObject::createFromInstance(new \stdClass);
+
+        $this->setExpectedException(Uncloneable::class);
+        $unused = clone $classInfo;
     }
 }

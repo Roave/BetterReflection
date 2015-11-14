@@ -398,4 +398,12 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     {
         return  (new FindReturnType())->__invoke($this);
     }
+
+    /**
+     * @throws Exception\Uncloneable
+     */
+    public function __clone()
+    {
+        throw new Exception\Uncloneable('Trying to clone an uncloneable object of class ' . __CLASS__);
+    }
 }

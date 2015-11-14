@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
@@ -317,5 +318,15 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $types);
         $this->assertCount(1, $types);
         $this->assertInstanceOf(Boolean::class, $types[0]);
+    }
+
+    public function testCannotClone()
+    {
+        $php = '<?php function foo() {}';
+
+        $functionInfo = (new FunctionReflector(new StringSourceLocator($php)))->reflect('foo');
+
+        $this->setExpectedException(Uncloneable::class);
+        $unused = clone $functionInfo;
     }
 }
