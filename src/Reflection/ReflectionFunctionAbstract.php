@@ -404,6 +404,6 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function __clone()
     {
-        throw new Exception\Uncloneable('Trying to clone an uncloneable object of class ' . __CLASS__);
+        throw Exception\Uncloneable::fromClass(__CLASS__);
     }
 }
