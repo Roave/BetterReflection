@@ -8,6 +8,7 @@ use BetterReflection\Reflection\Exception\NotAClassReflection;
 use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use BetterReflection\Reflection\Exception\NotAnObject;
 use BetterReflection\Reflection\Exception\NotAString;
+use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionMethod;
 use BetterReflection\Reflection\ReflectionProperty;
@@ -904,5 +905,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Qux\Baz');
 
         $this->assertStringStartsWith('Class [ <user> class Qux\Baz extends Qux\Bat implements Qux\Foo, Qux\Bar ] {', $reflection->__toString());
+    }
+
+    public function testCannotClone()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+
+        $this->setExpectedException(Uncloneable::class);
+        $unused = clone $classInfo;
     }
 }

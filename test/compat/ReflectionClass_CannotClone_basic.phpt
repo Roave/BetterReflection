@@ -12,7 +12,8 @@ if (!extension_loaded('reflection')) print 'skip';
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("stdClass");
 $rc2 = clone($rc);
 --EXPECTF--
-Fatal error: Uncaught Error: Trying to clone an uncloneable object of class ReflectionClass in %s:%d
+Fatal error: Uncaught exception 'BetterReflection\Reflection\Exception\Uncloneable' with message 'Trying to clone an uncloneable object of class BetterReflection\Reflection\ReflectionClass' in %s:%d
 Stack trace:
-#0 {main}
-  thrown in %s on line %d
+#0 -(3): BetterReflection\Reflection\ReflectionClass->__clone()
+#1 {main}
+  thrown in %s/ReflectionClass.php on line %d

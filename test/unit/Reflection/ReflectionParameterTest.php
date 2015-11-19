@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\ClassReflector;
@@ -369,5 +370,15 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $hintedClassReflection = $methodInfo->getParameter('object')->getClass();
         $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
         $this->assertSame('stdClass', $hintedClassReflection->getName());
+    }
+
+    public function testCannotClone()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $methodInfo = $classInfo->getMethod('methodWithParameters');
+        $paramInfo = $methodInfo->getParameter('parameter1');
+
+        $this->setExpectedException(Uncloneable::class);
+        $unused = clone $paramInfo;
     }
 }

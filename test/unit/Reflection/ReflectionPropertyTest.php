@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
@@ -216,5 +217,14 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(123, $classInfo->getProperty('hasDefault')->getDefaultValue());
         $this->assertNull($classInfo->getProperty('noDefault')->getDefaultValue());
+    }
+
+    public function testCannotClone()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $publicProp = $classInfo->getProperty('publicProperty');
+
+        $this->setExpectedException(Uncloneable::class);
+        $unused = clone $publicProp;
     }
 }

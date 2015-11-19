@@ -486,4 +486,12 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->isIterateable();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __clone()
+    {
+        throw Exception\Uncloneable::fromClass(__CLASS__);
+    }
 }

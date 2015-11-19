@@ -241,4 +241,12 @@ class ReflectionProperty implements \Reflector
             new CompilerContext($this->reflector, $this->getDeclaringClass())
         );
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __clone()
+    {
+        throw Exception\Uncloneable::fromClass(__CLASS__);
+    }
 }
