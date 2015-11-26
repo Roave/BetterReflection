@@ -38,7 +38,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame('{closure}', $reflection->getName());
+        $this->assertSame('{closure}', $reflection->getShortName());
         $this->assertContains('Hello world!', $reflection->getLocatedSource()->getSource());
     }
 }

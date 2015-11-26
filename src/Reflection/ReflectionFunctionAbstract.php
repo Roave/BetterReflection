@@ -118,6 +118,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getShortName()
     {
+        if ($this->node instanceof Node\Expr\Closure) {
+            return '{closure}';
+        }
+
         return $this->node->name;
     }
 
