@@ -11,6 +11,7 @@ features than PHP's built-in [reflection API](http://php.net/manual/en/book.refl
 * You can reflect on classes that are not already loaded, without loading them
 * Ability to reflect on classes directly from a string of PHP code
 * Better Reflection analyses the DocBlocks (using [phpdocumentor/type-resolver](https://github.com/phpDocumentor/TypeResolver))
+* Reflecting directly on closures
 * *Moar stuff coming soon!*
 
 Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).

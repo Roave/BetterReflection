@@ -59,17 +59,18 @@ within the `Reflector`s. The library comes bundled with the following
  * `PhpInternalSourceLocator` - used to perform reflection on PHP's internal
     classes and functions.
 
+ * `ClosureSourceLocator` - used to perform reflection on a closure.
+
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
     are hunted through in the given order to locate the source.
 
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
-should be written so that it returns a `LocatedSource` object, which describes
-source code and the filename in which the source code was loaded.
+should be written so that it returns a `Reflection` object directly.
 
 Note that using `EvaledCodeSourceLocator` and `PhpInternalSourceLocator` will
-result in specific types of `LocatedSource` - namely `EvaledLocatedSource` and
-`InternalLocatedSource` respectively.
+result in specific types of `LocatedSource` within the reflection - namely
+`EvaledLocatedSource` and `InternalLocatedSource` respectively.
 
 ## Reflecting Classes
 
@@ -140,3 +141,31 @@ echo $reflectionClass->getShortName(); // Foo
 $reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php'));
 $classes = $reflector->getAllClasses();
 ```
+
+## Reflecting Functions
+
+The `FunctionReflector` is used to create Better Reflection `ReflectionFunction`
+instances. You may pass it any `SourceLocator` to reflect on any class that
+can be located using the given `SourceLocator`.
+
+### Using the AutoloadSourceLocator
+
+See example in "Reflecting Classes" section on the same subheading.
+
+### Reflecting a Closure
+
+The `ReflectionFunction` class has a static constructor which you can reflect
+directly on a closure:
+
+```php
+<?php
+
+$myClosure = function () {
+    echo "Hello world!\n";
+};
+
+$functionInfo = ReflectionFunction::createFromClosure($myClosure);
+```
+
+Note that when you reflect on a closure, in order to match the core reflection
+API, the function "short" name will be just `{closure}`.
