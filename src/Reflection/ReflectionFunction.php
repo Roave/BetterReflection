@@ -6,7 +6,7 @@ use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Located\LocatedSource;
-use PhpParser\Node\Stmt\Function_ as FunctionNode;
+use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
