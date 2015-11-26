@@ -82,7 +82,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('{closure}', $functionInfo->getShortName());
     }
 
-    public function testIsClosure()
+    public function testIsClosureWithRegularFunction()
     {
         $php = '<?php function foo() {}';
 
@@ -90,6 +90,14 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $function = $reflector->reflect('foo');
 
         $this->assertFalse($function->isClosure());
+    }
+
+    public function testIsClosureWithClosure()
+    {
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {}));
+        $function = $reflector->reflect('{closure}');
+
+        $this->assertTrue($function->isClosure());
     }
 
     public function testIsDeprecated()

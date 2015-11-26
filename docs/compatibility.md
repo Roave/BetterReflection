@@ -72,7 +72,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getStartLine | :heavy_check_mark: Yes |
 | getStaticVariables | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | inNamespace | :heavy_check_mark: Yes |
-| isClosure | :heavy_check_mark: Yes - but see issue ([#37](https://github.com/Roave/BetterReflection/issues/37)) |
+| isClosure | :heavy_check_mark: Yes |
 | isDeprecated | :heavy_check_mark: Yes - but see issue ([#38](https://github.com/Roave/BetterReflection/issues/38)) |
 | isGenerator | :heavy_check_mark: Yes |
 | isInternal | :heavy_check_mark: Yes - but see issue ([#38](https://github.com/Roave/BetterReflection/issues/38)) |

@@ -246,15 +246,11 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Is this function a closure?
      *
-     * Note - we cannot reflect on closures at the moment (as there is no PHP
-     * source code we can access).
-     *
-     * @see https://github.com/Roave/BetterReflection/issues/37
      * @return bool
      */
     public function isClosure()
     {
-        return false;
+        return $this->node instanceof Node\Expr\Closure;
     }
 
     /**
