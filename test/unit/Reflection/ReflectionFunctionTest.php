@@ -81,11 +81,20 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($function->isUserDefined());
     }
 
-    public function testStaticCreation()
+    public function testStaticCreationFromName()
     {
         require_once(__DIR__ . '/../Fixture/Functions.php');
         $reflection = ReflectionFunction::createFromName('BetterReflectionTest\Fixture\myFunction');
         $this->assertSame('myFunction', $reflection->getShortName());
+    }
+
+    public function testStaticCreationFromClosure()
+    {
+        $myClosure = function () {
+            return 5;
+        };
+        $reflection = ReflectionFunction::createFromClosure($myClosure);
+        $this->assertSame('{closure}', $reflection->getShortName());
     }
 
     public function functionStringRepresentations()

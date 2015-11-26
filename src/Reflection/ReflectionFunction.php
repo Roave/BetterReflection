@@ -6,6 +6,7 @@ use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
@@ -18,6 +19,15 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     public static function createFromName($functionName)
     {
         return (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
+    }
+
+    /**
+     * @param \Closure $closure
+     * @return ReflectionFunction
+     */
+    public static function createFromClosure(\Closure $closure)
+    {
+        return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect('{closure}');
     }
 
     /**
