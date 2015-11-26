@@ -43,7 +43,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(
             \InvalidArgumentException::class,
-            'Node parameter must be ClassMethod or Function_'
+            'Node parameter must be ClassMethod or FunctionLike'
         );
         $populateMethodReflection->invoke($abstract, $reflector, $breakNode, $locatedSource, null);
     }
