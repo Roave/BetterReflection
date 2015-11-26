@@ -9,6 +9,8 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use BetterReflection\SourceLocator\Located\LocatedSource;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Namespace_;
 use SuperClosure\Analyzer\AstAnalyzer;
 use SuperClosure\Analyzer\ClosureAnalyzer;
 use PhpParser\Node\Expr\Closure as ClosureNode;
@@ -61,11 +63,16 @@ class ClosureSourceLocator implements SourceLocator
             $closureData['reflection']->getFileName()
         );
 
+        $namespaceNode = null;
+        if (isset($closureData['location']['namespace'])) {
+            $namespaceNode = new Namespace_(new Name($closureData['location']['namespace']));
+        }
+
         return $this->conversionStrategy->__invoke(
             $reflector,
             $closureData['ast'],
             $locatedSource,
-            null
+            $namespaceNode
         );
     }
 

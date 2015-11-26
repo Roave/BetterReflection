@@ -8,6 +8,7 @@ use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -69,6 +70,16 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $functionInfo->getName());
         $this->assertSame('', $functionInfo->getNamespaceName());
         $this->assertSame('foo', $functionInfo->getShortName());
+    }
+
+    public function testNameMethodsWithClosure()
+    {
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {}));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertSame('BetterReflectionTest\Reflection\{closure}', $functionInfo->getName());
+        $this->assertSame('BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
+        $this->assertSame('{closure}', $functionInfo->getShortName());
     }
 
     public function testIsClosure()
