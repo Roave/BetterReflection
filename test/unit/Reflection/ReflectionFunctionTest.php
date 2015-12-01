@@ -88,13 +88,24 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('myFunction', $reflection->getShortName());
     }
 
-    public function testStaticCreationFromClosure()
+    public function testCreateFromClosure()
     {
         $myClosure = function () {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
         $this->assertSame('{closure}', $reflection->getShortName());
+    }
+
+    public function testCreateFromClosureCanReflectTypeHints()
+    {
+        $myClosure = function (\stdClass $theParam) {
+            return 5;
+        };
+        $reflection = ReflectionFunction::createFromClosure($myClosure);
+
+        $theParam = $reflection->getParameter('theParam')->getClass();
+        $this->assertSame('stdClass', $theParam->getName());
     }
 
     public function functionStringRepresentations()

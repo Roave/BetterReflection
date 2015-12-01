@@ -27,7 +27,7 @@ class FunctionReflector implements Reflector
     public function reflect($functionName)
     {
         return $this->sourceLocator->locateIdentifier(
-            $this,
+            ClassReflector::buildDefaultReflector(),
             new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
     }

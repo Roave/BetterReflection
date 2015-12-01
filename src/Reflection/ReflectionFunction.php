@@ -5,8 +5,8 @@ namespace BetterReflection\Reflection;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 
