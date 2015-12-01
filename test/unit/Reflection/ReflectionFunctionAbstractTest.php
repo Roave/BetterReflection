@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionFunctionAbstract;
@@ -41,10 +42,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $populateMethodReflection = new \ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
         $populateMethodReflection->setAccessible(true);
 
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            'Node parameter must be ClassMethod or FunctionLike'
-        );
+        $this->setExpectedException(InvalidAbstractFunctionNodeType::class);
         $populateMethodReflection->invoke($abstract, $reflector, $breakNode, $locatedSource, null);
     }
 

@@ -45,14 +45,14 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * Populate the common elements of the function abstract.
      *
      * @param Reflector $reflector
-     * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt $node
+     * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
     protected function populateFunctionAbstract(Reflector $reflector, Node $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
         if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
-            throw new \InvalidArgumentException('Node parameter must be ClassMethod or FunctionLike');
+            throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
 
         $this->reflector = $reflector;
