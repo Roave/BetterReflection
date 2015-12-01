@@ -41,4 +41,19 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('{closure}', $reflection->getShortName());
         $this->assertContains('Hello world!', $reflection->getLocatedSource()->getSource());
     }
+
+    public function testLocateIdentifiersByTypeIsNotImplemented()
+    {
+        $closure = function () {
+            echo "Hello world!";
+        };
+
+        $locator = new ClosureSourceLocator($closure);
+
+        $this->setExpectedException(\LogicException::class, 'Not implemented');
+        $locator->locateIdentifiersByType(
+            $this->getMockReflector(),
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+        );
+    }
 }
