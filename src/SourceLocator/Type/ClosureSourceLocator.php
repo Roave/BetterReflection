@@ -15,7 +15,7 @@ use SuperClosure\Analyzer\AstAnalyzer;
 use SuperClosure\Analyzer\ClosureAnalyzer;
 use PhpParser\Node\Expr\Closure as ClosureNode;
 
-class ClosureSourceLocator implements SourceLocator
+final class ClosureSourceLocator implements SourceLocator
 {
     /**
      * @var Closure
