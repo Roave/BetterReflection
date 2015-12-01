@@ -6,8 +6,8 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflector\Reflector;
+use BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
 use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use SuperClosure\Exception\ClosureAnalysisException;
 
 /**
  * @covers \BetterReflection\SourceLocator\Type\ClosureSourceLocator
@@ -64,7 +64,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new ClosureSourceLocator($closure1);
 
-        $this->setExpectedException(ClosureAnalysisException::class);
+        $this->setExpectedException(TwoClosuresOneLine::class);
 
         $locator->locateIdentifier(
             $this->getMockReflector(),

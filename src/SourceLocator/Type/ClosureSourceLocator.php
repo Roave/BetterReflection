@@ -14,6 +14,8 @@ use PhpParser\Node\Stmt\Namespace_;
 use SuperClosure\Analyzer\AstAnalyzer;
 use SuperClosure\Analyzer\ClosureAnalyzer;
 use PhpParser\Node\Expr\Closure as ClosureNode;
+use SuperClosure\Exception\ClosureAnalysisException;
+use BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
 
 final class ClosureSourceLocator implements SourceLocator
 {
@@ -52,7 +54,15 @@ final class ClosureSourceLocator implements SourceLocator
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier)
     {
-        $closureData = $this->closureAnalyzer->analyze($this->closure);
+        try {
+            $closureData = $this->closureAnalyzer->analyze($this->closure);
+        } catch (ClosureAnalysisException $closureAnalysisException) {
+            if (stripos($closureAnalysisException->getMessage(), 'Two closures were declared on the same line') !== false) {
+                throw TwoClosuresOneLine::fromClosureAnalysisException($closureAnalysisException);
+            } else {
+                throw $closureAnalysisException;
+            }
+        }
 
         if (!isset($closureData['ast']) || !($closureData['ast'] instanceof ClosureNode)) {
             return null;
