@@ -29,6 +29,14 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testCreateFromName()
+    {
+        $method = ReflectionMethod::createFromName(\ArrayObject::class, 'offsetExists');
+
+        $this->assertInstanceOf(ReflectionMethod::class, $method);
+        $this->assertSame('offsetExists', $method->getName());
+    }
+
     public function testImplementsReflector()
     {
         $classInfo = $this->reflector->reflect('BetterReflectionTest\Fixture\Methods');

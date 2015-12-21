@@ -46,6 +46,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(\stdClass::class, ReflectionClass::createFromName(\stdClass::class)->getName());
     }
 
+    public function testCanReflectInstance()
+    {
+        $instance = new \stdClass();
+        $this->assertSame(\stdClass::class, ReflectionClass::createFromName($instance)->getName());
+    }
+
     public function testCanReflectEvaledClassWithDefaultLocator()
     {
         $className = uniqid('foo');

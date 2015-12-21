@@ -28,6 +28,14 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testCreateFromName()
+    {
+        $property = ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
+
+        $this->assertInstanceOf(ReflectionProperty::class, $property);
+        $this->assertSame('name', $property->getName());
+    }
+
     public function testImplementsReflector()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');

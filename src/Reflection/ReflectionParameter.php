@@ -69,6 +69,52 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Create a reflection of a parameter
+     *
+     * @param string|object $classNameOrInstance
+     * @param string $methodName
+     * @param string $parameterName
+     * @return ReflectionParameter
+     */
+    public static function createFromClassAndMethod($classNameOrInstance, $methodName, $parameterName)
+    {
+        return ReflectionClass::createFromName($classNameOrInstance)
+            ->getMethod($methodName)
+            ->getParameter($parameterName);
+    }
+
+    /**
+     * Create the parameter from the given spec. Possible $spec parameters are:
+     *
+     *  - [$instance, 'method']
+     *  - ['Foo', 'bar']
+     *  - ['foo']
+     *  - [function () {}]
+     *
+     * @param string[]|string|\Closure $spec
+     * @param string $parameterName
+     * @return ReflectionParameter
+     * @throws \Exception
+     * @throws \InvalidArgumentException
+     */
+    public static function createFromSpec($spec, $parameterName)
+    {
+        if (is_array($spec) && count($spec) === 2) {
+            return self::createFromClassAndMethod($spec[0], $spec[1], $parameterName);
+        }
+
+        if (is_string($spec)) {
+            return ReflectionFunction::createFromName($spec)->getParameter($parameterName);
+        }
+
+        if ($spec instanceof \Closure) {
+            throw new \Exception('Creating by closure is not supported yet');
+        }
+
+        throw new \InvalidArgumentException('Could not create reflection from the spec given');
+    }
+
+    /**
      * Return string representation of this parameter.
      *
      * @return string

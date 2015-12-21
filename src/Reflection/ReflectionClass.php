@@ -171,9 +171,19 @@ class ReflectionClass implements Reflection, \Reflector
         return $str;
     }
 
-    public static function createFromName($className)
+    /**
+     * Create a ReflectionClass by name, using default reflectors etc.
+     *
+     * @param string $classNameOrInstance
+     * @return ReflectionClass
+     */
+    public static function createFromName($classNameOrInstance)
     {
-        return ClassReflector::buildDefaultReflector()->reflect($className);
+        if (gettype($classNameOrInstance) === 'object') {
+            return ReflectionObject::createFromInstance($classNameOrInstance);
+        }
+
+        return ClassReflector::buildDefaultReflector()->reflect($classNameOrInstance);
     }
 
     /**

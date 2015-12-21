@@ -34,6 +34,19 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
+     * Create a reflection of a method by it's name
+     *
+     * @param string|object $classNameOrInstance
+     * @param string $methodName
+     * @return ReflectionMethod
+     */
+    public static function createFromName($classNameOrInstance, $methodName)
+    {
+        return ReflectionClass::createFromName($classNameOrInstance)
+            ->getMethod($methodName);
+    }
+
+    /**
      * Find the prototype for this method, if it exists. If it does not exist
      * it will throw a MethodPrototypeNotFound exception.
      *
