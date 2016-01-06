@@ -2,12 +2,14 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\Located\LocatedSource;
+use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -40,10 +42,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $populateMethodReflection = new \ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
         $populateMethodReflection->setAccessible(true);
 
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            'Node parameter must be ClassMethod or Function_'
-        );
+        $this->setExpectedException(InvalidAbstractFunctionNodeType::class);
         $populateMethodReflection->invoke($abstract, $reflector, $breakNode, $locatedSource, null);
     }
 
@@ -71,7 +70,17 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $functionInfo->getShortName());
     }
 
-    public function testIsClosure()
+    public function testNameMethodsWithClosure()
+    {
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {}));
+        $functionInfo = $reflector->reflect('foo');
+
+        $this->assertSame('BetterReflectionTest\Reflection\{closure}', $functionInfo->getName());
+        $this->assertSame('BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
+        $this->assertSame('{closure}', $functionInfo->getShortName());
+    }
+
+    public function testIsClosureWithRegularFunction()
     {
         $php = '<?php function foo() {}';
 
@@ -79,6 +88,14 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $function = $reflector->reflect('foo');
 
         $this->assertFalse($function->isClosure());
+    }
+
+    public function testIsClosureWithClosure()
+    {
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {}));
+        $function = $reflector->reflect('{closure}');
+
+        $this->assertTrue($function->isClosure());
     }
 
     public function testIsDeprecated()

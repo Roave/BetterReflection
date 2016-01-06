@@ -45,14 +45,14 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * Populate the common elements of the function abstract.
      *
      * @param Reflector $reflector
-     * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt $node
+     * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
-    protected function populateFunctionAbstract(Reflector $reflector, Node\Stmt $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
+    protected function populateFunctionAbstract(Reflector $reflector, Node $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
     {
-        if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\Stmt\Function_)) {
-            throw new \InvalidArgumentException('Node parameter must be ClassMethod or Function_');
+        if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
+            throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
 
         $this->reflector = $reflector;
@@ -118,6 +118,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getShortName()
     {
+        if ($this->node instanceof Node\Expr\Closure) {
+            return '{closure}';
+        }
+
         return $this->node->name;
     }
 
@@ -242,15 +246,11 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Is this function a closure?
      *
-     * Note - we cannot reflect on closures at the moment (as there is no PHP
-     * source code we can access).
-     *
-     * @see https://github.com/Roave/BetterReflection/issues/37
      * @return bool
      */
     public function isClosure()
     {
-        return false;
+        return $this->node instanceof Node\Expr\Closure;
     }
 
     /**

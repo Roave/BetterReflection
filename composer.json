@@ -6,8 +6,9 @@
         "php": ">= 5.6",
         "nikic/php-parser": "^2.0-beta",
         "phpdocumentor/reflection-docblock": "^2.0",
-        "phpdocumentor/type-resolver": "^1.0@dev",
-        "zendframework/zend-code": "^2.5@dev"
+        "phpdocumentor/type-resolver": "^0.1.5",
+        "zendframework/zend-code": "^2.5",
+        "jeremeamia/superclosure": "^2.2"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.8",
@@ -24,7 +25,7 @@
         }
     },
     "suggest": {
-        "composer/composer": "Required to use the ComposerSourceLocator thing"
+        "composer/composer": "Required to use the ComposerSourceLocator"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
