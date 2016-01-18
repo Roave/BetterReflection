@@ -14,7 +14,7 @@ class StaticExample
 {
 	static function foo()
 	{
-		var_dump( "Static Example class, Hello World!" );
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Static Example class, Hello World!" );
 	}
 }
 
@@ -23,7 +23,7 @@ class Example
 	public $bar = 42;
 	public function foo()
 	{
-		var_dump( "Example class, bar: " . $this->bar );
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Example class, bar: " . $this->bar );
 	}
 }
 
@@ -36,18 +36,18 @@ $object = new Example();
 $fakeobj = new StdClass();
 
 echo "\n-- Testing ReflectionMethod::getClosure() function with more than expected no. of arguments --\n";
-var_dump( $staticmethod->getClosure( 'foobar' ) );
-var_dump( $staticmethod->getClosure( 'foo', 'bar' ) );
-var_dump( $method->getClosure( $object, 'foobar' ) );
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( $staticmethod->getClosure( 'foobar' ) );
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( $staticmethod->getClosure( 'foo', 'bar' ) );
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( $method->getClosure( $object, 'foobar' ) );
 
 echo "\n-- Testing ReflectionMethod::getClosure() function with Zero arguments --\n";
 $closure = $method->getClosure();
 
 echo "\n-- Testing ReflectionMethod::getClosure() function with Zero arguments --\n";
 try {
-        var_dump( $method->getClosure( $fakeobj ) );
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( $method->getClosure( $fakeobj ) );
 } catch( Exception $e ) {
-        var_dump( $e->getMessage() );
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( $e->getMessage() );
 }
 
 ?>

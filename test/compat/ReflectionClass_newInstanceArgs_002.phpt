@@ -12,7 +12,7 @@ class A {
 }
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('A');
 $a = $rc->newInstanceArgs('x');
-var_dump($a);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a);
 
 ?>
 --EXPECTF--

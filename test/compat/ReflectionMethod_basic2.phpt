@@ -8,9 +8,9 @@ function reflectMethod($class, $method) {
     echo "**********************************\n";
     echo "Reflecting on method $class::$method()\n\n";
     echo "__toString():\n";
-    var_dump($methodInfo->__toString());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->__toString());
     echo "\nexport():\n";
-    var_dump(ReflectionMethod::export($class, $method, true));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(ReflectionMethod::export($class, $method, true));
     echo "\n**********************************\n";
 }
 

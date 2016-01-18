@@ -50,7 +50,7 @@ $classes = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'I');
 foreach ($classes as $class) {
 	echo "\n\n---> Doc comment for class $class:\n";
 	$rc = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
-	var_dump($rc->getDocComment());	
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDocComment());
 }
 
 

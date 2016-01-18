@@ -12,10 +12,10 @@ class TestClass {
 }
 
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('TestClass::foo');
-var_dump($methodInfo->returnsReference());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->returnsReference());
 
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('TestClass::bar');
-var_dump($methodInfo->returnsReference());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->returnsReference());
 
 ?>
 --EXPECT--

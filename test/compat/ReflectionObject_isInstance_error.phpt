@@ -6,13 +6,13 @@ class X {}
 $instance = new X;
 $ro = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new X);
 
-var_dump($ro->isInstance());
-var_dump($ro->isInstance($instance, $instance));
-var_dump($ro->isInstance(1));
-var_dump($ro->isInstance(1.5));
-var_dump($ro->isInstance(true));
-var_dump($ro->isInstance('X'));
-var_dump($ro->isInstance(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance($instance, $instance));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance(1.5));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance(null));
 
 ?>
 --EXPECTF--

@@ -19,7 +19,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -27,7 +27,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -35,7 +35,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -43,7 +43,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -51,7 +51,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -59,7 +59,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -67,7 +67,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
@@ -75,7 +75,7 @@ try {
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 $private->setAccessible(TRUE);

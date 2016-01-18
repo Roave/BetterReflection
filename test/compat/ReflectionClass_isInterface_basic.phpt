@@ -14,9 +14,9 @@ $reflectionClass = \BetterReflection\Reflection\ReflectionClass::createFromName(
 $reflectionClass2 = \BetterReflection\Reflection\ReflectionClass::createFromName('TestClass');
 $reflectionClass3 = \BetterReflection\Reflection\ReflectionClass::createFromName('DerivedInterface');
 
-var_dump($reflectionClass->isInterface());
-var_dump($reflectionClass2->isInterface());
-var_dump($reflectionClass3->isInterface());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionClass->isInterface());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionClass2->isInterface());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionClass3->isInterface());
 
 ?>
 --EXPECT--

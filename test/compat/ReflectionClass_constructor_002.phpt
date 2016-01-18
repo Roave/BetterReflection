@@ -8,43 +8,43 @@ skip
 --FILE--
 <?php require 'vendor/autoload.php';
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName());
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }
 
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(null));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(null));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }
 
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(true));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(true));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }
 
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(1));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(1));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }
 
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(array(1,2,3)));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName(array(1,2,3)));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }
 
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName("stdClass", 1));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName("stdClass", 1));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }
 
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName("X"));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionClass::createFromName("X"));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";  
 }

@@ -16,8 +16,8 @@ class Child extends CParent {
 
 $r = \BetterReflection\Reflection\ReflectionClass::createFromName('Child');
 
-var_dump($r->getProperty('publicVar')->getDeclaringClass()->getName());
-var_dump($r->getProperty('protectedVar')->getDeclaringClass()->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getProperty('publicVar')->getDeclaringClass()->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getProperty('protectedVar')->getDeclaringClass()->getName());
 
 echo "Done\n";
 ?>

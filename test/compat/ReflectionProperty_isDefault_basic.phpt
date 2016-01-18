@@ -8,7 +8,7 @@ function reflectProperty($class, $property) {
     echo "**********************************\n";
     echo "Reflecting on property $class::$property\n\n";
     echo "isDefault():\n";
-    var_dump($propInfo->isDefault());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->isDefault());
     echo "\n**********************************\n";
 }
 

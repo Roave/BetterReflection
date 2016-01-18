@@ -24,7 +24,7 @@ $refParameters = $refMethod->getParameters();
 
 echo "parameter names from staticMethod method:\n\n";
 foreach($refParameters as $parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
 	if($parameter->isOptional()) {
 	  echo "this parameter is optional\n";
 	} else {
@@ -41,7 +41,7 @@ foreach($refParameters as $parameter) {
 	$val = 0;
 	try {
 		$val = $parameter->getDefaultValue();
-		var_dump($val);
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($val);
 	} catch (ReflectionException $e) {
 		print $e->getMessage();
 		echo "\n";

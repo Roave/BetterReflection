@@ -11,32 +11,32 @@ class C {
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 try {
-	var_dump($rc->setStaticPropertyValue("x", "default value", 'blah'));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->setStaticPropertyValue("x", "default value", 'blah'));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rc->setStaticPropertyValue());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->setStaticPropertyValue());
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rc->setStaticPropertyValue(null));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->setStaticPropertyValue(null));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rc->setStaticPropertyValue(null,null));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->setStaticPropertyValue(null,null));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rc->setStaticPropertyValue(1.5, 'def'));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->setStaticPropertyValue(1.5, 'def'));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rc->setStaticPropertyValue(array(1,2,3), 'blah'));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->setStaticPropertyValue(array(1,2,3), 'blah'));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }

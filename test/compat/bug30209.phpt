@@ -12,9 +12,9 @@ class Foo
 		try
 		{
 			$class  = \BetterReflection\Reflection\ReflectionClass::createFromName($this);
-			var_dump($this->name);
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this->name);
 			$method = $class->getMethod($this->name);
-			var_dump($this->name);
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this->name);
 		}
 
 		catch (Exception $e) {}

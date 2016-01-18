@@ -12,7 +12,7 @@ interface Bar { }
 class Baz implements Foo, Bar { }
 
 $rc1 = \BetterReflection\Reflection\ReflectionClass::createFromName("Baz");
-var_dump($rc1->getInterfaceNames());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc1->getInterfaceNames());
 ?>
 --EXPECT--
 array(2) {

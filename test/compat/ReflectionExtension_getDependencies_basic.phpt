@@ -9,7 +9,7 @@ if (!extension_loaded("dom")) die("skip no dom extension");
 --FILE--
 <?php require 'vendor/autoload.php';
 $dom = \BetterReflection\Reflection\ReflectionExtension::createFromName('dom');
-var_dump($dom->getDependencies());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($dom->getDependencies());
 ?>
 ==DONE==
 --EXPECTF--

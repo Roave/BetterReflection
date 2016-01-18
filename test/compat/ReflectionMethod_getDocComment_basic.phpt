@@ -59,7 +59,7 @@ foreach (array('A', 'B') as $class) {
     $rms = $rc->getMethods();
     foreach ($rms as $rm) {
         echo "\n\n---> Doc comment for $class::" . $rm->getName() . "():\n";
-        var_dump($rm->getDocComment());
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rm->getDocComment());
     }
 }
 ?>

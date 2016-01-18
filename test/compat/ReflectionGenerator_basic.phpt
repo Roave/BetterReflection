@@ -20,17 +20,17 @@ $gens = [
 ];
 
 foreach ($gens as $gen) {
-	var_dump($gen);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($gen);
 
 	$gen->valid(); // start Generator
 	$ref = \BetterReflection\Reflection\ReflectionGenerator::createFromName($gen);
 
-	var_dump($ref->getTrace());
-	var_dump($ref->getExecutingLine());
-	var_dump($ref->getExecutingFile());
-	var_dump($ref->getExecutingGenerator());
-	var_dump($ref->getFunction());
-	var_dump($ref->getThis());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getTrace());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getExecutingLine());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getExecutingFile());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getExecutingGenerator());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getFunction());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getThis());
 }
 
 ?>

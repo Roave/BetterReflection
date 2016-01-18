@@ -12,7 +12,7 @@ $closure = $reflector->getClosure($object);
 
 $closureReflector = new \ReflectionFunction($closure);
 
-var_dump($closureReflector->isClosure());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($closureReflector->isClosure());
 ?>
 --EXPECT--
 bool(true)

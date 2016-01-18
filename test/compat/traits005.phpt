@@ -12,7 +12,7 @@ class C4 { use T1 { m1 as a1; m2 as a2; } }
 for ($c = "C1"; $c <= "C4"; $c++) {
     echo "class $c:\n";
     $r = \BetterReflection\Reflection\ReflectionClass::createFromName($c);
-    var_dump($r->getTraitAliases());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getTraitAliases());
     echo "\n";
 }
 ?>

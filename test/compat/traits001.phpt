@@ -15,8 +15,8 @@ class Bar {
 $rFoo = \BetterReflection\Reflection\ReflectionClass::createFromName('Foo');
 $rBar = \BetterReflection\Reflection\ReflectionClass::createFromName('Bar');
 
-var_dump($rFoo->isTrait());
-var_dump($rBar->isTrait());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rFoo->isTrait());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rBar->isTrait());
 echo $rFoo;
 echo $rBar;
 --EXPECTF--

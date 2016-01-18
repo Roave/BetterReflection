@@ -16,10 +16,10 @@ class ReflectionMethodEx extends \BetterReflection\Reflection\ReflectionMethod
 
 $r = \BetterReflection\Reflection\ReflectionMethodEx::createFromName('ReflectionMethodEx','getName');
 
-var_dump($r->class);
-var_dump($r->name);
-var_dump($r->foo);
-@var_dump($r->bar);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->class);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->name);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->foo);
+@// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->bar);
 
 try
 {
@@ -41,10 +41,10 @@ catch(ReflectionException $e)
 $r->foo = 'bar';
 $r->bar = 'baz';
 
-var_dump($r->class);
-var_dump($r->name);
-var_dump($r->foo);
-var_dump($r->bar);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->class);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->name);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->foo);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->bar);
 
 ?>
 ===DONE===

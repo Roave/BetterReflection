@@ -9,7 +9,7 @@ Steve Seear <stevseea@php.net>
 include "included4.inc";
 
 $funcInfo = \BetterReflection\Reflection\ReflectionFunction::createFromName('g');
-var_dump($funcInfo->getFileName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->getFileName());
 
 ?>
 --EXPECTF--

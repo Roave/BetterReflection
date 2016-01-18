@@ -6,17 +6,17 @@ Testing ReflectionClass::isCloneable() with non instantiable objects
 trait foo {
 }
 $obj = \BetterReflection\Reflection\ReflectionClass::createFromName('foo');
-var_dump($obj->isCloneable());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($obj->isCloneable());
 
 abstract class bar {
 }
 $obj = \BetterReflection\Reflection\ReflectionClass::createFromName('bar');
-var_dump($obj->isCloneable());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($obj->isCloneable());
 
 interface baz {
 }
 $obj = \BetterReflection\Reflection\ReflectionClass::createFromName('baz');
-var_dump($obj->isCloneable());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($obj->isCloneable());
 
 ?>
 --EXPECT--

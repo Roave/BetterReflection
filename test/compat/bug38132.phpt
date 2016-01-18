@@ -9,10 +9,10 @@ class foo {
 
 $class = \BetterReflection\Reflection\ReflectionClass::createFromName('foo');
 $properties = $class->getStaticProperties();
-var_dump($properties, array_keys($properties));
-var_dump(isset($properties['*bar']));
-var_dump(isset($properties["\0*\0bar"]));
-var_dump(isset($properties["bar"]));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($properties, array_keys($properties));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(isset($properties['*bar']));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(isset($properties["\0*\0bar"]));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(isset($properties["bar"]));
 ?>
 --EXPECT--
 array(2) {

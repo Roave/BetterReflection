@@ -11,14 +11,14 @@ skip
 --FILE--
 <?php require 'vendor/autoload.php';
 
-echo "An object is in an array and is referenced. As expected, var_dumping the array shows '&':\n";
+echo "An object is in an array and is referenced. As expected, // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dumping the array shows '&':\n";
 $a = array(new stdclass);
 $b =& $a[0];
-var_dump($a);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a);
 
 echo "Naturally, this remains true if we modify the object:\n";
 $a[0]->x = 1;
-var_dump($a);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a);
 
 
 echo "\n\nObtain the array of interfaces implemented by C.\n";
@@ -27,16 +27,16 @@ class C implements I {}
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 $a = $rc->getInterfaces();
 echo "The result is an array in which each element is an object (an instance of ReflectionClass)\n";
-echo "Var_dumping this array shows that the elements are referenced. By what?\n";
-var_dump($a);
+echo "// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dumping this array shows that the elements are referenced. By what?\n";
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a);
 
 echo "Modify the object, and it is apparently no longer referenced.\n";
 $a['I']->x = 1;
-var_dump($a);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a);
 
 ?>
 --EXPECTF--
-An object is in an array and is referenced. As expected, var_dumping the array shows '&':
+An object is in an array and is referenced. As expected, // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dumping the array shows '&':
 array(1) {
   [0]=>
   &object(stdClass)#%d (0) {
@@ -54,7 +54,7 @@ array(1) {
 
 Obtain the array of interfaces implemented by C.
 The result is an array in which each element is an object (an instance of ReflectionClass)
-Var_dumping this array shows that the elements are referenced. By what?
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dumping this array shows that the elements are referenced. By what?
 array(1) {
   ["I"]=>
   object(ReflectionClass)#%d (1) {

@@ -10,13 +10,13 @@ function reflectProperty($class, $property) {
     echo "**********************************\n";
     echo "Reflecting on property $class::$property\n\n";
     echo "isDefault():\n";
-    var_dump($propInfo->isDefault());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->isDefault());
     echo "getModifiers():\n";
-    var_dump($propInfo->getModifiers());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getModifiers());
     echo "getDeclaringClass():\n";
-    var_dump($propInfo->getDeclaringClass());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getDeclaringClass());
     echo "getDocComment():\n";
-    var_dump($propInfo->getDocComment());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getDocComment());
     echo "\n**********************************\n";
 }
 

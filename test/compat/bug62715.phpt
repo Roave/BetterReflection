@@ -7,12 +7,12 @@ function test(PDO $a = null, $b = 0, array $c) {}
 $r = \BetterReflection\Reflection\ReflectionFunction::createFromName('test');
 
 foreach ($r->getParameters() as $p) {
-    var_dump($p->isDefaultValueAvailable());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->isDefaultValueAvailable());
 }
 
 foreach ($r->getParameters() as $p) {
     if ($p->isDefaultValueAvailable()) {
-        var_dump($p->getDefaultValue());
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->getDefaultValue());
     }
 }
 ?>

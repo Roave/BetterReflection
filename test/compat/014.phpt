@@ -6,7 +6,7 @@ ReflectionExtension::getConstants()
 <?php require 'vendor/autoload.php';
 $ext = \BetterReflection\Reflection\ReflectionExtension::createFromName("standard");
 $consts = $ext->getConstants();
-var_dump($consts["CONNECTION_NORMAL"]);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($consts["CONNECTION_NORMAL"]);
 ?>
 --EXPECT--	
 int(0)

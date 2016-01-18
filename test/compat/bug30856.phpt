@@ -9,7 +9,7 @@ class bogus {
 
 $class = \BetterReflection\Reflection\ReflectionClass::createFromName('bogus');
 
-var_dump($class->getStaticProperties());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($class->getStaticProperties());
 ?>
 ===DONE===
 --EXPECT--

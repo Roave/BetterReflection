@@ -8,8 +8,8 @@ class TestClass {}
 $declaredClass = \BetterReflection\Reflection\ReflectionClass::createFromName('TestClass');
 $anonymousClass = \BetterReflection\Reflection\ReflectionClass::createFromName(new class {});
 
-var_dump($declaredClass->isAnonymous());
-var_dump($anonymousClass->isAnonymous());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($declaredClass->isAnonymous());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($anonymousClass->isAnonymous());
 
 ?>
 --EXPECT--

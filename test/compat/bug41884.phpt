@@ -11,7 +11,7 @@ class Foo
 
 $class = \BetterReflection\Reflection\ReflectionClass::createFromName('Foo');
 
-var_dump($class->getDefaultProperties());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($class->getDefaultProperties());
 
 echo "Done\n";
 ?>

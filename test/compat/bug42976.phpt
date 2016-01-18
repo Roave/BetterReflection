@@ -11,15 +11,15 @@ Class C {
 
 $x = "x.original";
 new C($x); // OK
-var_dump($x);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($x);
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 $x = "x.original";
 $rc->newInstance($x); // causes crash
-var_dump($x);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($x);
 $x = "x.original";
 $rc->newInstanceArgs(array($x)); // causes crash	
-var_dump($x);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($x);
 
 echo "Done\n";
 ?>

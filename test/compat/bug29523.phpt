@@ -16,7 +16,7 @@ $numberOfNotOptionalParameters = 0;
 $numberOfOptionalParameters = 0;
 foreach($function->getParameters() as $parameter)
 {
-	var_dump($parameter->isOptional());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter->isOptional());
 	if ($parameter->isOptional())
 	{
 		++$numberOfOptionalParameters;
@@ -26,8 +26,8 @@ foreach($function->getParameters() as $parameter)
 		++$numberOfNotOptionalParameters;
 	}
 }
-var_dump($function->getNumberOfRequiredParameters());
-var_dump($numberOfNotOptionalParameters);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($function->getNumberOfRequiredParameters());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($numberOfNotOptionalParameters);
 
 ?>
 --EXPECT--

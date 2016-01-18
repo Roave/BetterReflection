@@ -7,13 +7,13 @@ class test {
 }
 
 $r = \BetterReflection\Reflection\ReflectionProperty::createFromName('test', 'a');
-var_dump($r->getValue(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getValue(null));
 
 $r->setValue(NULL, 2);
-var_dump($r->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getValue());
 
 $r->setValue(3);
-var_dump($r->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getValue());
 ?>
 ===DONE===
 --EXPECT--

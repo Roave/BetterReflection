@@ -65,7 +65,7 @@ $reflectionObjects = array(
 foreach($reflectionObjects  as $reflectionObject ) {
 	$name = $reflectionObject->getName();
 	echo "Is $name instantiable? ";
-	var_dump($reflectionObject->IsInstantiable()); 
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionObject->IsInstantiable());
 }
 ?>
 --EXPECTF--

@@ -15,10 +15,10 @@ $classes = array("A", "B", "C", "D", "I");
 
 foreach ($classes as $class) {
 	$rc = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
-	var_dump($rc->isFinal());
-	var_dump($rc->isInterface());
-	var_dump($rc->isAbstract());
-	var_dump($rc->getModifiers());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isFinal());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isInterface());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isAbstract());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getModifiers());
 }
 ?>
 --EXPECTF--

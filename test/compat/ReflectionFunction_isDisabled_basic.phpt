@@ -12,6 +12,6 @@ disable_functions=is_file
 --FILE-- 
 <?php require 'vendor/autoload.php';
 $rc = \BetterReflection\Reflection\ReflectionFunction::createFromName('is_file');
-var_dump($rc->isDisabled());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isDisabled());
 --EXPECTF--
 bool(true)

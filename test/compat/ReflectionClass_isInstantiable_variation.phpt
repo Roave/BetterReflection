@@ -36,7 +36,7 @@ $classes = array("noCtor", "publicCtorNew", "protectedCtorNew", "privateCtorNew"
 foreach($classes  as $class ) {
 	$reflectionClass = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
 	echo "Is $class instantiable?  ";
-	var_dump($reflectionClass->IsInstantiable()); 
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionClass->IsInstantiable());
 }
 
 ?>

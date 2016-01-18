@@ -8,11 +8,11 @@ function reflectMethod($class, $method) {
     echo "**********************************\n";
     echo "Reflecting on method $class::$method()\n\n";
     echo "\ngetName():\n";
-    var_dump($methodInfo->getName());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getName());
     echo "\nisInternal():\n";
-    var_dump($methodInfo->isInternal());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isInternal());
     echo "\nisUserDefined():\n";
-    var_dump($methodInfo->isUserDefined());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isUserDefined());
     echo "\n**********************************\n";
 }
 

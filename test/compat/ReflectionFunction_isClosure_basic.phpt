@@ -13,6 +13,6 @@ if (!extension_loaded('reflection') || !defined('PHP_VERSION_ID') || PHP_VERSION
 <?php require 'vendor/autoload.php';
 $closure = function($param) { return "this is a closure"; };
 $rc = \BetterReflection\Reflection\ReflectionFunction::createFromName($closure);
-var_dump($rc->isClosure());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isClosure());
 --EXPECTF--
 bool(true)

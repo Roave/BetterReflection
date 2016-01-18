@@ -17,7 +17,7 @@ $params = $methods[0]->getParameters();
 
 $class = $params[0]->getClass();
 
-var_dump($class->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($class->getName());
 ?>
 ===DONE===
 --EXPECT--

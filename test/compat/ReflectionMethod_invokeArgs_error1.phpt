@@ -19,7 +19,7 @@ $methodWithArgs = \BetterReflection\Reflection\ReflectionMethod::createFromName(
 $testClassInstance = new TestClass();
 
 echo "\nMethod with args:\n";
-var_dump($methodWithArgs->invokeArgs($testClassInstance, array())); 
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodWithArgs->invokeArgs($testClassInstance, array()));
 
 ?>
 --EXPECTF--

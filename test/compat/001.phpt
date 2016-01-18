@@ -68,12 +68,12 @@ foreach($exp as $m)
 	}
 }
 
-var_dump($miss);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($miss);
 
 $props = array_keys(get_class_vars('ReflectionClassEx'));
 sort($props);
-var_dump($props);
-var_dump($r->name);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->name);
 ?>
 ===DONE===
 --EXPECT--

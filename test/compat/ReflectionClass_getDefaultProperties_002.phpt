@@ -8,14 +8,14 @@ Steve Seear <stevseea@php.net>
 interface I {}
 class C implements I {}
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
-var_dump($rc->getDefaultProperties(null));
-var_dump($rc->getDefaultProperties('X'));
-var_dump($rc->getDefaultProperties(true));
-var_dump($rc->getDefaultProperties(array(1,2,3)));
-var_dump($rc->getStaticProperties(null));
-var_dump($rc->getStaticProperties('X'));
-var_dump($rc->getStaticProperties(true));
-var_dump($rc->getStaticProperties(array(1,2,3)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDefaultProperties(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDefaultProperties('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDefaultProperties(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDefaultProperties(array(1,2,3)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStaticProperties(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStaticProperties('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStaticProperties(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStaticProperties(array(1,2,3)));
 
 ?>
 --EXPECTF--

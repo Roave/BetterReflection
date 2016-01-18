@@ -31,13 +31,13 @@ abstract class y
 
 function dump_modifierNames($class) {
 	$obj = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
-	var_dump($obj->getName(), Reflection::getModifierNames($obj->getModifiers()));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($obj->getName(), Reflection::getModifierNames($obj->getModifiers()));
 }
 
 function dump_methodModifierNames($class) {
 	$obj = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
 	foreach($obj->getMethods() as $method) {
-		var_dump($obj->getName() . "::" . $method->getName(), Reflection::getModifierNames($method->getModifiers()));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($obj->getName() . "::" . $method->getName(), Reflection::getModifierNames($method->getModifiers()));
 	}
 }
 

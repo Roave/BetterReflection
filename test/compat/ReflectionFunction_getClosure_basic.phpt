@@ -12,12 +12,12 @@ echo "*** Testing ReflectionFunction::getClosure() : basic functionality ***\n";
 
 function foo()
 {
-	var_dump( "Inside foo function" );
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Inside foo function" );
 }
 
 function bar( $arg )
 {
-	var_dump( "Arg is " . $arg );
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Arg is " . $arg );
 }
 
 $func = \BetterReflection\Reflection\ReflectionFunction::createFromName( 'foo' );

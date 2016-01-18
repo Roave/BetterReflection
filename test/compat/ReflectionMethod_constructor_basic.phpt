@@ -11,13 +11,13 @@ class NewCtor {
 }
 echo "New-style constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("NewCtor::__construct");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class ExtendsNewCtor extends NewCtor {
 }
 echo "\nInherited new-style constructor\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("ExtendsNewCtor::__construct");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class OldCtor {
     function OldCtor() {
@@ -26,13 +26,13 @@ class OldCtor {
 }
 echo "\nOld-style constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("OldCtor::OldCtor");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class ExtendsOldCtor extends OldCtor {
 }
 echo "\nInherited old-style constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("ExtendsOldCtor::OldCtor");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class X {
     function Y() {
@@ -41,13 +41,13 @@ class X {
 }
 echo "\nNot a constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("X::Y");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class Y extends X {
 }
 echo "\nInherited method of the same name as the class:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("Y::Y");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class OldAndNewCtor {
     function OldAndNewCtor() {
@@ -60,11 +60,11 @@ class OldAndNewCtor {
 }
 echo "\nOld-style constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("OldAndNewCtor::OldAndNewCtor");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 echo "\nRedefined constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("OldAndNewCtor::__construct");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 class NewAndOldCtor {
     function __construct() {
@@ -77,11 +77,11 @@ class NewAndOldCtor {
 }
 echo "\nNew-style constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("NewAndOldCtor::__construct");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 echo "\nRedefined old-style constructor:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName("NewAndOldCtor::NewAndOldCtor");
-var_dump($methodInfo->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->isConstructor());
 
 ?>
 --EXPECTF--

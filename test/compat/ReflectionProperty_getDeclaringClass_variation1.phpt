@@ -11,7 +11,7 @@ class B extends A {
 }
 
 $propInfo = \BetterReflection\Reflection\ReflectionProperty::createFromName('B', 'prop');
-var_dump($propInfo->getDeclaringClass());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getDeclaringClass());
 
 echo "Wrong number of params:\n";
 $propInfo->getDeclaringClass(1);

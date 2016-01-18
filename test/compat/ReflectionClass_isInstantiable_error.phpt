@@ -7,8 +7,8 @@ class privateCtorOld {
 }
 $reflectionClass = \BetterReflection\Reflection\ReflectionClass::createFromName("privateCtorOld");
 
-var_dump($reflectionClass->IsInstantiable('X'));
-var_dump($reflectionClass->IsInstantiable(0, null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionClass->IsInstantiable('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionClass->IsInstantiable(0, null));
 
 ?>
 --EXPECTF--

@@ -22,7 +22,7 @@ class A
 		echo '===' . __CLASS__ . "===\n";
 		foreach($props as $p2) {
 			echo $oc, '::$' , $p2, "\n";
-			var_dump(property_exists($oc, $p2));
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists($oc, $p2));
 		}
 	}
 }
@@ -36,7 +36,7 @@ class B extends A
 		echo '===' . __CLASS__ . "===\n";
 		foreach($props as $p2) {
 			echo $oc, '::$' , $p2, "\n";
-			var_dump(property_exists($oc, $p2));
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists($oc, $p2));
 		}
 	}
 }
@@ -50,7 +50,7 @@ class C extends B
 		echo '===' . __CLASS__ . "===\n";
 		foreach($props as $p2) {
 			echo $oc, '::$' , $p2, "\n";
-			var_dump(property_exists($oc, $p2));
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists($oc, $p2));
 		}
 	}
 }
@@ -73,22 +73,22 @@ foreach($pc as $p1) {
 	echo "===GLOBAL===\n";
 	foreach($pr as $p2) {
 		echo $p1, '::$' , $p2, "\n";
-		var_dump(property_exists($p1, $p2));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists($p1, $p2));
 	}
 }
 
 echo "===PROBLEMS===\n";
-var_dump(property_exists(NULL, 'empty'));
-var_dump(property_exists(25,'empty'));
-var_dump(property_exists('',''));
-var_dump(property_exists('A',''));
-var_dump(property_exists('A','123'));
-var_dump(property_exists('A','init'));
-var_dump(property_exists('A','empty'));
-var_dump(property_exists(new A, ''));
-var_dump(property_exists(new A, '123'));
-var_dump(property_exists(new A, 'init'));
-var_dump(property_exists(new A, 'empty'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists(NULL, 'empty'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists(25,'empty'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists('',''));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists('A',''));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists('A','123'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists('A','init'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists('A','empty'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists(new A, ''));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists(new A, '123'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists(new A, 'init'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(property_exists(new A, 'empty'));
 ?>
 ===DONE===
 <?php require 'vendor/autoload.php'; exit(0); ?>

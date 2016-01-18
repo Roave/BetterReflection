@@ -22,19 +22,19 @@ class TestClass {
 
 echo "Public method:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('TestClass::foo');
-var_dump($methodInfo->getStaticVariables());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getStaticVariables());
 
 echo "\nPrivate method:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('TestClass::bar');
-var_dump($methodInfo->getStaticVariables());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getStaticVariables());
 
 echo "\nMethod with no static variables:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('TestClass::noStatics');
-var_dump($methodInfo->getStaticVariables());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getStaticVariables());
 
 echo "\nInternal Method:\n";
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('ReflectionClass::getName');
-var_dump($methodInfo->getStaticVariables());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getStaticVariables());
 
 ?>
 --EXPECT--

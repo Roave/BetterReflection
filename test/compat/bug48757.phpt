@@ -7,7 +7,7 @@ function test() {
 }
 
 function another_test($parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
 }
 
 $func = \BetterReflection\Reflection\ReflectionFunction::createFromName('test');

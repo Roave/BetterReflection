@@ -8,28 +8,28 @@ function reflectProperty($class, $property) {
     echo "**********************************\n";
     echo "Reflecting on property $class::$property\n\n";
     echo "__toString():\n";
-    var_dump($propInfo->__toString());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->__toString());
     echo "export():\n";
-    var_dump(ReflectionProperty::export($class, $property, true));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(ReflectionProperty::export($class, $property, true));
     echo "export():\n";
-    var_dump(ReflectionProperty::export($class, $property, false));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(ReflectionProperty::export($class, $property, false));
     echo "getName():\n";
-    var_dump($propInfo->getName());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getName());
     echo "isPublic():\n";
-    var_dump($propInfo->isPublic());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->isPublic());
     echo "isPrivate():\n";
-    var_dump($propInfo->isPrivate());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->isPrivate());
     echo "isProtected():\n";
-    var_dump($propInfo->isProtected());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->isProtected());
     echo "isStatic():\n";
-    var_dump($propInfo->isStatic());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->isStatic());
     $instance = new $class();
     if ($propInfo->isPublic()) {
         echo "getValue():\n";
-        var_dump($propInfo->getValue($instance));
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue($instance));
         $propInfo->setValue($instance, "NewValue");
         echo "getValue() after a setValue():\n";
-        var_dump($propInfo->getValue($instance));
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue($instance));
     }
     echo "\n**********************************\n";
 }

@@ -15,13 +15,13 @@ final class baz {
 }
 
 $x = \BetterReflection\Reflection\ReflectionClass::createFromName('foo');
-var_dump($x->isTrait());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($x->isTrait());
 
 $x = \BetterReflection\Reflection\ReflectionClass::createFromName('bar');
-var_dump($x->isTrait());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($x->isTrait());
 
 $x = \BetterReflection\Reflection\ReflectionClass::createFromName('baz');
-var_dump($x->isTrait());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($x->isTrait());
 
 ?>
 --EXPECT--

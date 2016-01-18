@@ -15,11 +15,11 @@ $RefObj = \BetterReflection\Reflection\ReflectionObject::createFromInstance($Obj
 
 $props = $RefObj->getProperties();
 
-var_dump($props);
-var_dump($props[0]->isStatic());
-var_dump($props[0]->isPrivate());
-var_dump($props[0]->isPublic());
-var_dump($props[0]->isProtected());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isStatic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPrivate());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPublic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isProtected());
 
 echo "=== 2nd test ===\n";
 
@@ -35,11 +35,11 @@ $RefObj = \BetterReflection\Reflection\ReflectionObject::createFromInstance($Obj
 
 $props = $RefObj->getProperties();
 
-var_dump($props);
-var_dump($props[0]->isStatic());
-var_dump($props[0]->isPrivate());
-var_dump($props[0]->isPublic());
-var_dump($props[0]->isProtected());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isStatic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPrivate());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPublic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isProtected());
 
 echo "=== 3rd test ===\n";
 
@@ -52,11 +52,11 @@ $RefObj = \BetterReflection\Reflection\ReflectionObject::createFromInstance($Obj
 
 $props = $RefObj->getProperties();
 
-var_dump($props);
-var_dump($props[0]->isStatic());
-var_dump($props[0]->isPrivate());
-var_dump($props[0]->isPublic());
-var_dump($props[0]->isProtected());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isStatic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPrivate());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPublic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isProtected());
 
 echo "=== 4th test ===\n";
 
@@ -73,11 +73,11 @@ $RefObj = \BetterReflection\Reflection\ReflectionObject::createFromInstance($Obj
 
 $props = $RefObj->getProperties();
 
-var_dump($props);
-var_dump($props[0]->isStatic());
-var_dump($props[0]->isPrivate());
-var_dump($props[0]->isPublic());
-var_dump($props[0]->isProtected());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isStatic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPrivate());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isPublic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($props[0]->isProtected());
 
 echo "Done\n";
 ?>

@@ -11,7 +11,7 @@ if (!extension_loaded("xml")) {
 <?php require 'vendor/autoload.php';
 $ext = \BetterReflection\Reflection\ReflectionExtension::createFromName("xml");
 $deps = $ext->getDependencies();
-var_dump($deps);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($deps);
 ?>
 --EXPECT--	
 array(1) {

@@ -18,9 +18,9 @@ class BlaMore implements Bla
 
 $r = \BetterReflection\Reflection\ReflectionClass::createFromName('BlaMore');
 
-var_dump(count($r->getMethods()));
-var_dump($r->getMethod('bla')->isConstructor());
-var_dump($r->getMethod('bla')->isAbstract());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(count($r->getMethods()));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getMethod('bla')->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getMethod('bla')->isAbstract());
 
 $o=new BlaMore;
 $o->bla();

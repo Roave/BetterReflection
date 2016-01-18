@@ -18,35 +18,35 @@ $private         = \BetterReflection\Reflection\ReflectionProperty::createFromNa
 $privateStatic   = \BetterReflection\Reflection\ReflectionProperty::createFromName('A', 'privateStatic');
 
 try {
-    var_dump($protected->getValue($a));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protected->getValue($a));
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
-    var_dump($protectedStatic->getValue());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protectedStatic->getValue());
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
-    var_dump($private->getValue($a));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($private->getValue($a));
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
-    var_dump($privateStatic->getValue());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($privateStatic->getValue());
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 $protected->setAccessible(TRUE);
@@ -54,20 +54,20 @@ $protectedStatic->setAccessible(TRUE);
 $private->setAccessible(TRUE);
 $privateStatic->setAccessible(TRUE);
 
-var_dump($protected->getValue($a));
-var_dump($protectedStatic->getValue());
-var_dump($private->getValue($a));
-var_dump($privateStatic->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protected->getValue($a));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protectedStatic->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($private->getValue($a));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($privateStatic->getValue());
 
 $protected->setValue($a, 'e');
 $protectedStatic->setValue('f');
 $private->setValue($a, 'g');
 $privateStatic->setValue('h');
 
-var_dump($protected->getValue($a));
-var_dump($protectedStatic->getValue());
-var_dump($private->getValue($a));
-var_dump($privateStatic->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protected->getValue($a));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protectedStatic->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($private->getValue($a));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($privateStatic->getValue());
 
 $a               = new A;
 $b               = new B;
@@ -76,44 +76,44 @@ $protectedStatic = \BetterReflection\Reflection\ReflectionProperty::createFromNa
 $private         = \BetterReflection\Reflection\ReflectionProperty::createFromName($a, 'private');
 
 try {
-    var_dump($protected->getValue($b));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protected->getValue($b));
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
-    var_dump($protectedStatic->getValue());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protectedStatic->getValue());
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 try {
-    var_dump($private->getValue($b));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($private->getValue($b));
 }
 
 catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 $protected->setAccessible(TRUE);
 $protectedStatic->setAccessible(TRUE);
 $private->setAccessible(TRUE);
 
-var_dump($protected->getValue($b));
-var_dump($protectedStatic->getValue());
-var_dump($private->getValue($b));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protected->getValue($b));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protectedStatic->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($private->getValue($b));
 
 $protected->setValue($b, 'e');
 $protectedStatic->setValue('f');
 $private->setValue($b, 'g');
 
-var_dump($protected->getValue($b));
-var_dump($protectedStatic->getValue());
-var_dump($private->getValue($b));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protected->getValue($b));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($protectedStatic->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($private->getValue($b));
 ?>
 --EXPECT--
 string(44) "Cannot access non-public member A::protected"

@@ -32,18 +32,18 @@ $classes = array('Traversable', 'Iterator', 'IteratorAggregate', 'ExtendsIterato
 foreach($classes as $class) {
 	$rc = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
 	echo "Is $class iterable? ";
-	var_dump($rc->isIterateable());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable());
 }
 
 echo "\nTest invalid params:\n";
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('IteratorImpl');
-var_dump($rc->isIterateable(null));
-var_dump($rc->isIterateable(null, null));
-var_dump($rc->isIterateable(1));
-var_dump($rc->isIterateable(1.5));
-var_dump($rc->isIterateable(true));
-var_dump($rc->isIterateable('X'));
-var_dump($rc->isIterateable(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable(null, null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable(1.5));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isIterateable(null));
 
 echo "\nTest static invocation:\n";
 ReflectionClass::isIterateable();

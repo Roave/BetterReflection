@@ -8,12 +8,12 @@ Leon Luijkx <leon@phpgg.nl>
 ob_start();
 ReflectionExtension::export("reflection", true);
 $test = ob_get_clean();
-var_dump(empty($test));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(empty($test));
 unset($test);
 ob_start();
 ReflectionExtension::export("reflection", false);
 $test = ob_get_clean();
-var_dump(empty($test));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(empty($test));
 ?>
 ==DONE==
 --EXPECT--

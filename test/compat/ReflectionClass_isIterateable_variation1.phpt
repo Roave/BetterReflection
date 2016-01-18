@@ -10,7 +10,7 @@ class BasicClass {}
 function dump_iterateable($obj)
 {
 	$reflection = \BetterReflection\Reflection\ReflectionClass::createFromName($obj);
-	var_dump($reflection->isIterateable());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflection->isIterateable());
 }
 
 $basicClass = new BasicClass();

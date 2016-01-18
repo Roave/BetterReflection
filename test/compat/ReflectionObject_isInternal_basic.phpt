@@ -11,7 +11,7 @@ $r3 = \BetterReflection\Reflection\ReflectionObject::createFromInstance(\BetterR
 $r4 = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new Exception);
 $r5 = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new C);
 
-var_dump($r1->isInternal(), $r2->isInternal(), $r3->isInternal(), 
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r1->isInternal(), $r2->isInternal(), $r3->isInternal(),
 		 $r4->isInternal(), $r5->isInternal());
 
 ?>

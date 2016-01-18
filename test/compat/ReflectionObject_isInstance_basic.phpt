@@ -16,7 +16,7 @@ foreach ($classes as $class) {
 	$ro = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new $class);
 	foreach ($instances as $name => $instance) {
 		echo "is $name a $class? ";
-		var_dump($ro->isInstance($instance));	
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ro->isInstance($instance));
 	}
 }
 

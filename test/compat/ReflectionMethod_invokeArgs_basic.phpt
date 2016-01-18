@@ -8,7 +8,7 @@ class TestClass {
 
     public function foo() {
         echo "Called foo(), property = $this->prop\n";
-        var_dump($this);
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this);
         return "Return Val";
     }
 
@@ -32,19 +32,19 @@ $methodThatThrows = \BetterReflection\Reflection\ReflectionMethod::createFromNam
 
 echo "Public method:\n";
 
-var_dump($foo->invokeArgs($testClassInstance, array()));
-var_dump($foo->invokeArgs($testClassInstance, array(true)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invokeArgs($testClassInstance, array()));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invokeArgs($testClassInstance, array(true)));
 
 echo "\nMethod with args:\n";
 
-var_dump($methodWithArgs->invokeArgs($testClassInstance, array(1, "arg2")));
-var_dump($methodWithArgs->invokeArgs($testClassInstance, array(1, "arg2", 3)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodWithArgs->invokeArgs($testClassInstance, array(1, "arg2")));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodWithArgs->invokeArgs($testClassInstance, array(1, "arg2", 3)));
 
 echo "\nMethod that throws an exception:\n";
 try {
     $methodThatThrows->invokeArgs($testClassInstance, array());
 } catch (Exception $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 ?>

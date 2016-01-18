@@ -8,7 +8,7 @@ function call(ReflectionGenerator $ref, $method, $rec = true) {
 		call($ref, $method, false);
 		return;
 	}
-	var_dump($ref->$method());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->$method());
 }
 
 function doCalls(ReflectionGenerator $ref) {

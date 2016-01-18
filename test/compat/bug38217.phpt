@@ -9,17 +9,17 @@ class Object {
 }
 
 $class= \BetterReflection\Reflection\ReflectionClass::createFromName('Object');
-var_dump($class->newInstanceArgs());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($class->newInstanceArgs());
 
 class Object1 {
 	public function __construct($var) {
-		var_dump($var);
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($var);
 	}
 }
 
 $class= \BetterReflection\Reflection\ReflectionClass::createFromName('Object1');
-var_dump($class->newInstanceArgs());
-var_dump($class->newInstanceArgs(array('test')));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($class->newInstanceArgs());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($class->newInstanceArgs(array('test')));
 
 
 echo "Done\n";

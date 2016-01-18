@@ -8,11 +8,11 @@ function reflectMethod($class, $method) {
     echo "**********************************\n";
     echo "Reflecting on method $class::$method()\n\n";
     echo "\ngetFileName():\n";
-    var_dump($methodInfo->getFileName());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getFileName());
     echo "\ngetStartLine():\n";
-    var_dump($methodInfo->getStartLine());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getStartLine());
     echo "\ngetEndLine():\n";
-    var_dump($methodInfo->getEndLine());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getEndLine());
     echo "\n**********************************\n";
 }
 

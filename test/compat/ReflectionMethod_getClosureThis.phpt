@@ -12,7 +12,7 @@ class StaticExample
 {
 	static function foo()
 	{
-		var_dump( "Static Example class, Hello World!" );
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Static Example class, Hello World!" );
 	}
 }
 
@@ -21,7 +21,7 @@ class Example
 	public $bar = 42;
 	public function foo()
 	{
-		var_dump( "Example class, bar: " . $this->bar );
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Example class, bar: " . $this->bar );
 	}
 }
 
@@ -34,14 +34,14 @@ $method = $staticclass->getMethod( 'foo' );
 $closure = $method->getClosure();
 $rf = \BetterReflection\Reflection\ReflectionFunction::createFromName($closure);
 
-var_dump($rf->getClosureThis());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf->getClosureThis());
 
 $method = $class->getMethod( 'foo' );
 
 $closure = $method->getClosure( $object );
 $rf = \BetterReflection\Reflection\ReflectionFunction::createFromName($closure);
 
-var_dump($rf->getClosureThis());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf->getClosureThis());
 
 echo "Done!\n";
 --EXPECTF--
