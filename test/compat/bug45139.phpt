@@ -21,31 +21,31 @@ class C extends B {
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 $rp = $rc->getProperty('foo');
-var_dump($rp->getDeclaringClass()->getName()); // c
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // c
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('A');
 $rp = $rc->getProperty('foo');
-var_dump($rp->getDeclaringClass()->getName()); // A
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // A
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('B');
 $rp = $rc->getProperty('bar');
-var_dump($rp->getDeclaringClass()->getName()); // B
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // B
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 $rp = $rc->getProperty('bar');
-var_dump($rp->getDeclaringClass()->getName()); // B
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // B
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 $rp = $rc->getProperty('baz');
-var_dump($rp->getDeclaringClass()->getName()); // C
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // C
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('B');
 $rp = $rc->getProperty('baz');
-var_dump($rp->getDeclaringClass()->getName()); // B
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // B
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
 $rp = $rc->getProperty('quux');
-var_dump($rp->getDeclaringClass()->getName()); // C
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDeclaringClass()->getName()); // C
 
 ?>
 --EXPECT--

@@ -16,8 +16,8 @@ $myClass->id = 1000;
 
 $reflect = \BetterReflection\Reflection\ReflectionObject::createFromInstance($myClass);
 
-var_dump($reflect->getProperty('id'));
-var_dump($reflect->getProperty('id')->getValue($myClass));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflect->getProperty('id'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflect->getProperty('id')->getValue($myClass));
 
 ?>
 --EXPECTF--

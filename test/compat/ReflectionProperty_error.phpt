@@ -26,13 +26,13 @@ try {
 
 
 $rp = \BetterReflection\Reflection\ReflectionProperty::createFromName('C', 'p');
-var_dump($rp->getName(1));
-var_dump($rp->isPrivate(1));
-var_dump($rp->isProtected(1));
-var_dump($rp->isPublic(1));
-var_dump($rp->isStatic(1));
-var_dump($rp->getModifiers(1));
-var_dump($rp->isDefault(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getName(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isPrivate(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isProtected(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isPublic(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isStatic(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getModifiers(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isDefault(1));
 
 ?>
 --EXPECTF--

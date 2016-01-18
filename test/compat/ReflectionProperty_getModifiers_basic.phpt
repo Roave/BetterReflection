@@ -24,10 +24,10 @@ class D extends C {
 for ($i = 1;$i <= 6;$i++) {
     $rp = \BetterReflection\Reflection\ReflectionProperty::createFromName("C", "a$i");
     echo "C::a$i: ";
-    var_dump($rp->getModifiers());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getModifiers());
     $rp = \BetterReflection\Reflection\ReflectionProperty::createFromName("D", "a$i");
     echo "D::a$i: ";
-    var_dump($rp->getModifiers());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getModifiers());
 }
 
 ?>

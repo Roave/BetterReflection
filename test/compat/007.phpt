@@ -12,38 +12,38 @@ function test($class)
 	}
 	catch (ReflectionException $e)
 	{
-		var_dump($e->getMessage());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 		return; // only here
 	}
 
 	echo "====>newInstance()\n";
 	try
 	{
-		var_dump($ref->newInstance());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->newInstance());
 	}
 	catch (ReflectionException $e)
 	{
-		var_dump($e->getMessage());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 	}
 	
 	echo "====>newInstance(25)\n";
 	try
 	{
-		var_dump($ref->newInstance(25));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->newInstance(25));
 	}
 	catch (ReflectionException $e)
 	{
-		var_dump($e->getMessage());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 	}
 
 	echo "====>newInstance(25, 42)\n";
 	try
 	{
-		var_dump($ref->newInstance(25, 42));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->newInstance(25, 42));
 	}
 	catch (ReflectionException $e)
 	{
-		var_dump($e->getMessage());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 	}
 	
 	echo "\n";
@@ -67,7 +67,7 @@ Class WithCtor
 	function __construct()
 	{
 		echo __METHOD__ . "()\n";
-		var_dump(func_get_args());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(func_get_args());
 	}
 }
 
@@ -78,7 +78,7 @@ Class WithCtorWithArgs
 	function __construct($arg)
 	{
 		echo __METHOD__ . "($arg)\n";
-		var_dump(func_get_args());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(func_get_args());
 	}
 }
 

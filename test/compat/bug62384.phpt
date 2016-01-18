@@ -12,8 +12,8 @@ $reflection_method  = $reflection_class->getMethod('__invoke');
 $arguments1         = array('hello');
 $arguments2         = array('world');
 
-var_dump($reflection_method->invokeArgs($closure1, $arguments1));
-var_dump($reflection_method->invokeArgs($closure2, $arguments2));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflection_method->invokeArgs($closure1, $arguments1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflection_method->invokeArgs($closure2, $arguments2));
 
 ?>
 --EXPECT--

@@ -24,7 +24,7 @@ function bar () {}
 
 function dumpFuncInfo($name) {
 	$funcInfo = \BetterReflection\Reflection\ReflectionFunction::createFromName($name);
-	var_dump($funcInfo->getFileName());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->getFileName());
 }
 
 dumpFuncInfo('foo');

@@ -19,27 +19,27 @@ $instanceWithNoProperties = new AnotherClass();
 $propInfo = \BetterReflection\Reflection\ReflectionProperty::createFromName('TestClass', 'pub2');
 
 echo "Too few args:\n";
-var_dump($propInfo->getValue());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue());
 
 echo "\nToo many args:\n";
-var_dump($propInfo->getValue($instance, true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue($instance, true));
 
 echo "\nWrong type of arg:\n";
-var_dump($propInfo->getValue(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue(true));
 
 echo "\nInstance without property:\n";
 $propInfo = \BetterReflection\Reflection\ReflectionProperty::createFromName('TestClass', 'stat');
 
 echo "\nStatic property / too many args:\n";
-var_dump($propInfo->getValue($instance, true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue($instance, true));
 
 echo "\nStatic property / wrong type of arg:\n";
-var_dump($propInfo->getValue(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue(true));
 
 echo "\nProtected property:\n";
 try {
     $propInfo = \BetterReflection\Reflection\ReflectionProperty::createFromName('TestClass', 'prot');
-    var_dump($propInfo->getValue($instance));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue($instance));
 }
 catch(Exception $exc) {
     echo $exc->getMessage();
@@ -47,7 +47,7 @@ catch(Exception $exc) {
 
 echo "\n\nInstance without property:\n";
 $propInfo = \BetterReflection\Reflection\ReflectionProperty::createFromName('TestClass', 'pub2');
-var_dump($propInfo->getValue($instanceWithNoProperties));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getValue($instanceWithNoProperties));
 
 ?>
 --EXPECTF--

@@ -12,7 +12,7 @@ echo "*** Testing ReflectionFunction::getClosure() : error conditions ***\n";
 
 function foo()
 {
-	var_dump( "Inside foo function" );
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( "Inside foo function" );
 }
 
 $func = \BetterReflection\Reflection\ReflectionFunction::createFromName( 'foo' );

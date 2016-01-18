@@ -21,29 +21,29 @@ class B extends A {
 
 echo "Retrieving static values from A:\n";
 $rcA = \BetterReflection\Reflection\ReflectionClass::createFromName('A');
-var_dump($rcA->getStaticPropertyValue("privateOverridden", "default value"));
-var_dump($rcA->getStaticPropertyValue("\0A\0privateOverridden"));
-var_dump($rcA->getStaticPropertyValue("protectedOverridden", "default value"));
-var_dump($rcA->getStaticPropertyValue("\0*\0protectedOverridden"));
-var_dump($rcA->getStaticPropertyValue("publicOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("privateOverridden", "default value"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("\0A\0privateOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("protectedOverridden", "default value"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("\0*\0protectedOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("publicOverridden"));
 
 echo "\nRetrieving static values from B:\n";
 $rcB = \BetterReflection\Reflection\ReflectionClass::createFromName('B');
-var_dump($rcB->getStaticPropertyValue("\0A\0privateOverridden"));
-var_dump($rcB->getStaticPropertyValue("\0B\0privateOverridden"));
-var_dump($rcB->getStaticPropertyValue("\0*\0protectedOverridden"));
-var_dump($rcB->getStaticPropertyValue("publicOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcB->getStaticPropertyValue("\0A\0privateOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcB->getStaticPropertyValue("\0B\0privateOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcB->getStaticPropertyValue("\0*\0protectedOverridden"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcB->getStaticPropertyValue("publicOverridden"));
 
 echo "\nRetrieving non-existent values from A with no default value:\n";
 try {
-	var_dump($rcA->getStaticPropertyValue("protectedOverridden"));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("protectedOverridden"));
 	echo "you should not see this";
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 
 try {
-	var_dump($rcA->getStaticPropertyValue("privateOverridden"));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcA->getStaticPropertyValue("privateOverridden"));
 	echo "you should not see this";	
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";

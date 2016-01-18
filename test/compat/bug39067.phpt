@@ -16,13 +16,13 @@ class C extends B {
 }
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
-var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('B');
-var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('A');
-var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
 
 class Test {
 	private $x;
@@ -33,7 +33,7 @@ class Test2 extends Test {
 }
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('Test2');
-var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty('x')->getDeclaringClass()->getName());
 
 echo "Done\n";
 ?>

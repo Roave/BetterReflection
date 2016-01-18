@@ -9,7 +9,7 @@ class C {
 	static function testFromC() {
 		try {
 		  $rp = \BetterReflection\Reflection\ReflectionProperty::createFromName("D", "p");
-		  var_dump($rp);
+		  // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp);
 		} catch (Exception $e) {
 			echo $e->getMessage();
 		}		
@@ -20,7 +20,7 @@ class D extends C{
 	static function testFromD() {
 		try {
 		  $rp = \BetterReflection\Reflection\ReflectionProperty::createFromName("D", "p");
-		  var_dump($rp);
+		  // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp);
 		} catch (Exception $e) {
 			echo $e->getMessage();
 		}		
@@ -30,7 +30,7 @@ class D extends C{
 echo "--> Reflect inherited private from global scope:\n";
 try {
   $rp = \BetterReflection\Reflection\ReflectionProperty::createFromName("D", "p");
-  var_dump($rp);
+  // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp);
 } catch (Exception $e) {
 	echo $e->getMessage();
 }

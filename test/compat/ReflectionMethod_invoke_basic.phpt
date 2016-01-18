@@ -8,7 +8,7 @@ class TestClass {
 
     public function foo() {
         echo "Called foo(), property = $this->prop\n";
-        var_dump($this);
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this);
         return "Return Val";
     }
 
@@ -22,7 +22,7 @@ class TestClass {
 
     public static function staticMethod() {
         echo "Called staticMethod()\n";
-        var_dump($this);
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this);
     }
 
     private static function privateMethod() {
@@ -45,26 +45,26 @@ $testClassInstance->prop = "Hello";
 
 echo "Public method:\n";
 
-var_dump($foo->invoke($testClassInstance));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invoke($testClassInstance));
 
-var_dump($foo->invoke($testClassInstance, true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invoke($testClassInstance, true));
 
 echo "\nMethod with args:\n";
 
-var_dump($methodWithArgs->invoke($testClassInstance, 1, "arg2"));
-var_dump($methodWithArgs->invoke($testClassInstance, 1, "arg2", 3));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodWithArgs->invoke($testClassInstance, 1, "arg2"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodWithArgs->invoke($testClassInstance, 1, "arg2", 3));
 
 echo "\nStatic method:\n";
 
-var_dump($staticMethod->invoke());
-var_dump($staticMethod->invoke(true));
-var_dump($staticMethod->invoke(new stdClass()));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($staticMethod->invoke());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($staticMethod->invoke(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($staticMethod->invoke(new stdClass()));
 
 echo "\nMethod that throws an exception:\n";
 try {
-	var_dump($methodThatThrows->invoke($testClassInstance));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodThatThrows->invoke($testClassInstance));
 } catch (Exception $exc) {
-	var_dump($exc->getMessage());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($exc->getMessage());
 }
 
 ?>

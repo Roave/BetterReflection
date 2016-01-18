@@ -14,11 +14,11 @@ class TestClass
 $class = \BetterReflection\Reflection\ReflectionClass::createFromName('TestClass');
 foreach ($class->getMethods() as $method)
 {
-	var_dump($method->getName());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($method->getName());
 	$arr_static_vars[] = $method->getStaticVariables();
 }
 
-var_dump($arr_static_vars);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($arr_static_vars);
 
 ?>
 ===DONE===

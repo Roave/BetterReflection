@@ -19,9 +19,9 @@ foreach ($rcs as $childName => $child) {
 	foreach ($rcs as $parentName => $parent) {
 		echo "Is " . $childName . " a subclass of " . $parentName . "? \n";
 		echo "   - Using object argument: ";
-		var_dump($child->isSubclassOf($parent));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($child->isSubclassOf($parent));
 		echo "   - Using string argument: ";
-		var_dump($child->isSubclassOf($parentName)); 
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($child->isSubclassOf($parentName));
 	}
 }
 ?>

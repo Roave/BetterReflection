@@ -9,7 +9,7 @@ extension_loaded('ctype') or die("skip Requires 'ctype' extension");
 --FILE--
 <?php require 'vendor/autoload.php';
 $extension = \BetterReflection\Reflection\ReflectionExtension::createFromName('ctype');
-var_dump($extension->getClassNames());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($extension->getClassNames());
 ?>
 ==DONE==
 --EXPECT--

@@ -8,7 +8,7 @@ user_agent=php
 <?php require 'vendor/autoload.php';
 $ext = \BetterReflection\Reflection\ReflectionExtension::createFromName("standard");
 $inis = $ext->getINIEntries();
-var_dump($inis["user_agent"]);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($inis["user_agent"]);
 ?>
 --EXPECT--	
 string(3) "php"

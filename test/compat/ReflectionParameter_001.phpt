@@ -25,7 +25,7 @@ $method = \BetterReflection\Reflection\ReflectionMethod::createFromName('Reflect
 $parameters = $method->getParameters();
 echo "Parameters from twoArgMethod:\n\n";
 foreach($parameters as $parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
 	$name = $parameter->getName();
 	echo "\n";
 }
@@ -34,7 +34,7 @@ $method = \BetterReflection\Reflection\ReflectionMethod::createFromName('Reflect
 $parameters = $method->getParameters();
 echo "Parameters from oneArgNonStatic:\n\n";
 foreach($parameters as $parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
 	$name = $parameter->getName();
 	echo "\n";
 }
@@ -43,9 +43,9 @@ foreach($parameters as $parameter) {
 $method = \BetterReflection\Reflection\ReflectionMethod::createFromName('ReflectTestClass', 'noArgs');
 $parameters = $method->getParameters();
 echo "Parameters from noArgs:\n\n";
-var_dump($parameters);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameters);
 foreach($parameters as $parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
 	$name = $parameter->getName();
 	echo "\n";
 }

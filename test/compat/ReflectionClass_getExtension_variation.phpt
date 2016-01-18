@@ -12,7 +12,7 @@ Rein Velt <rein@velt.org>
 		public $varY;
 	}
 	$rc=\BetterReflection\Reflection\ReflectionClass::createFromName('myClass');
-	var_dump( $rc->getExtension()) ;
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump( $rc->getExtension()) ;
 ?>
 --EXPECT--
 NULL

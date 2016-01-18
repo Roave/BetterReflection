@@ -8,9 +8,9 @@ $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 $methods = array("getFileName", "getStartLine", "getEndLine");
 
 foreach ($methods as $method) {
-	var_dump($rc->$method());
-	var_dump($rc->$method(null));
-	var_dump($rc->$method('X', 0));	
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->$method());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->$method(null));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->$method('X', 0));
 }
 ?>
 --EXPECTF--

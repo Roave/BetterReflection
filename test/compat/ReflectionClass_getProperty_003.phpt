@@ -50,8 +50,8 @@ function showInfo($name) {
 		return;
 	}
 	try {
-		var_dump($rp);
-		var_dump($rp->getValue($myC));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp);
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getValue($myC));
 	} catch (Exception $e) {		
 		echo $e->getMessage() . "\n";
 		return;

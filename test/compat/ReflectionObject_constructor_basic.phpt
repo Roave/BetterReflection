@@ -8,15 +8,15 @@ skip
 --FILE--
 <?php require 'vendor/autoload.php';
 $r1 = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new stdClass);
-var_dump($r1);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r1);
 
 class C { }
 $myInstance = new C;
 $r2 = \BetterReflection\Reflection\ReflectionObject::createFromInstance($myInstance);
-var_dump($r2);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r2);
 
 $r3 = \BetterReflection\Reflection\ReflectionObject::createFromInstance($r2);
-var_dump($r3);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r3);
 ?>
 --EXPECTF--
 object(ReflectionObject)#%d (1) {

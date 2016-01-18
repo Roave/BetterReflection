@@ -5,7 +5,7 @@ Reflection Bug #38194 (ReflectionClass::isSubclassOf() returns TRUE for the clas
 class Object { }
   
 $objectClass= \BetterReflection\Reflection\ReflectionClass::createFromName('Object');
-var_dump($objectClass->isSubclassOf($objectClass));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($objectClass->isSubclassOf($objectClass));
 ?>
 --EXPECT--
 bool(false)

@@ -33,7 +33,7 @@ function check_params_func($r, $f)
 {
 	echo $f . ': ';
 	$v = $r->$f();
-	var_dump($v);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($v);
 }
 
 function check_params($r)

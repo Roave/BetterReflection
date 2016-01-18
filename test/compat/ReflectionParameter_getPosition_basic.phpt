@@ -11,7 +11,7 @@ function ReflectionParameterTest($test, $test2 = null) {
 $reflect = \BetterReflection\Reflection\ReflectionFunction::createFromName('ReflectionParameterTest');
 $params = $reflect->getParameters();
 foreach($params as $key => $value) {
-	var_dump($value->getPosition());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($value->getPosition());
 }
 ?>
 ==DONE==

@@ -5,13 +5,13 @@ Bug #64007 (There is an ability to create instance of Generator by hand)
 $reflection = \BetterReflection\Reflection\ReflectionClass::createFromName('Generator');
 try {
     $generator = $reflection->newInstanceWithoutConstructor();
-    var_dump($generator);
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($generator);
 } catch (Exception $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 $generator  = $reflection->newInstance();
-var_dump($generator);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($generator);
 ?>
 --EXPECTF--
 string(%d) "Class Generator is an internal class marked as final that cannot be instantiated without invoking its constructor"

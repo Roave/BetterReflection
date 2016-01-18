@@ -4,7 +4,7 @@ Reflection::getModifierNames
 <?php extension_loaded('reflection') or die('skip'); ?>
 --FILE--
 <?php require 'vendor/autoload.php';
-var_dump(Reflection::getModifierNames(ReflectionMethod::IS_FINAL | ReflectionMethod::IS_PROTECTED));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(Reflection::getModifierNames(ReflectionMethod::IS_FINAL | ReflectionMethod::IS_PROTECTED));
 ?>
 --EXPECT--	
 array(2) {

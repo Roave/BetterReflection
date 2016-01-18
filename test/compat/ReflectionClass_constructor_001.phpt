@@ -16,7 +16,7 @@ class TrickClass {
 $myTrickClass = new TrickClass;
 $r3 = \BetterReflection\Reflection\ReflectionObject::createFromInstance($myTrickClass);
 
-var_dump($r1->getName(), $r2->getName(), $r3->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r1->getName(), $r2->getName(), $r3->getName());
 ?>
 --EXPECTF--
 string(8) "stdClass"

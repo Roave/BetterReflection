@@ -15,7 +15,7 @@ class g extends b {}
 
 function dump_modifiers($class) {
 	$obj = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
-	var_dump($obj->getModifiers());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($obj->getModifiers());
 }
 
 dump_modifiers('a');

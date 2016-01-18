@@ -23,12 +23,12 @@ foreach ([
 ] as $idx => $rf) {
   foreach ($rf->getParameters() as $idx2 => $rp) {
     echo "** Function $idx - Parameter $idx2\n";
-    var_dump($rp->hasType());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->hasType());
     $ra = $rp->getType();
     if ($ra) {
-      var_dump($ra->allowsNull());
-      var_dump($ra->isBuiltin());
-      var_dump((string)$ra);
+      // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ra->allowsNull());
+      // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ra->isBuiltin());
+      // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump((string)$ra);
     }
   }
 }
@@ -43,12 +43,12 @@ foreach ([
 ] as $idx => $rm) {
   foreach ($rm->getParameters() as $idx2 => $rp) {
     echo "** Method $idx - parameter $idx2\n";
-    var_dump($rp->hasType());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->hasType());
     $ra = $rp->getType();
     if ($ra) {
-      var_dump($ra->allowsNull());
-      var_dump($ra->isBuiltin());
-      var_dump((string)$ra);
+      // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ra->allowsNull());
+      // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ra->isBuiltin());
+      // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump((string)$ra);
     }
   }
 }
@@ -65,12 +65,12 @@ foreach ([
   \BetterReflection\Reflection\ReflectionMethod::createFromName($closure, '__invoke'),
 ] as $idx => $rf) {
   echo "** Function/method return type $idx\n";
-  var_dump($rf->hasReturnType());
+  // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf->hasReturnType());
   $ra = $rf->getReturnType();
   if ($ra) {
-    var_dump($ra->allowsNull());
-    var_dump($ra->isBuiltin());
-    var_dump((string)$ra);
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ra->allowsNull());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ra->isBuiltin());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump((string)$ra);
   }
 }
 --EXPECT--

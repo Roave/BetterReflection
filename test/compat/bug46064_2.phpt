@@ -16,7 +16,7 @@ $x->test = 2000;
 
 
 $p = \BetterReflection\Reflection\ReflectionObject::createFromInstance($x);
-var_dump($p->getProperty('test'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->getProperty('test'));
 
 
 class bar {
@@ -32,9 +32,9 @@ class test extends bar {
 		parent::__construct();
 		
 		$p = \BetterReflection\Reflection\ReflectionObject::createFromInstance($this);
-		var_dump($h = $p->getProperty('a'));
-		var_dump($h->isDefault(), $h->isProtected(), $h->isPrivate(), $h->isPublic(), $h->isStatic());
-		var_dump($p->getProperties());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h = $p->getProperty('a'));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h->isDefault(), $h->isProtected(), $h->isPrivate(), $h->isPublic(), $h->isStatic());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->getProperties());
 	}
 }
 

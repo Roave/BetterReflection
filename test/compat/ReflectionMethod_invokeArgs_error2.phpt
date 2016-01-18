@@ -7,7 +7,7 @@ class TestClass {
 
     public function foo() {
         echo "Called foo()\n";
-        var_dump($this);
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this);
         return "Return Val";
     }
 }
@@ -17,9 +17,9 @@ $foo = \BetterReflection\Reflection\ReflectionMethod::createFromName('TestClass'
 $testClassInstance = new TestClass();
 
 try {
-    var_dump($foo->invokeArgs($testClassInstance, true));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invokeArgs($testClassInstance, true));
 } catch (Error $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 ?>

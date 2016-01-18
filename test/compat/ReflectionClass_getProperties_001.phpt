@@ -36,7 +36,7 @@ $classes = array("pubf", "subpubf", "protf", "subprotf",
 foreach($classes as $class) {
 	echo "Reflecting on class $class: \n";
 	$rc = \BetterReflection\Reflection\ReflectionClass::createFromName($class);
-	var_dump($rc->getProperties());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperties());
 }
 
 ?>

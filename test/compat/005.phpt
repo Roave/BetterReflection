@@ -38,11 +38,11 @@ class A
 }
 
 $r = \BetterReflection\Reflection\ReflectionClass::createFromName('A');
-var_dump(strip_doc_comment($r->getDocComment()));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(strip_doc_comment($r->getDocComment()));
 
 foreach($r->getMethods() as $m)
 {
-	var_dump(strip_doc_comment($m->getDocComment()));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(strip_doc_comment($m->getDocComment()));
 }
 
 ?>

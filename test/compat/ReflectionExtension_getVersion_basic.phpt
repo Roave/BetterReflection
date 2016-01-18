@@ -8,7 +8,7 @@ Leon Luijkx <leon@phpgg.nl>
 $obj = \BetterReflection\Reflection\ReflectionExtension::createFromName('reflection');
 $var = $obj->getVersion() ? $obj->getVersion() : null;
 $test = floatval($var) == $var ? true : false;
-var_dump($test);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($test);
 ?>
 ==DONE==
 --EXPECT--

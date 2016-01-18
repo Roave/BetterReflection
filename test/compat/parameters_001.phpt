@@ -10,21 +10,21 @@ class Test {
 
 
 $f = \BetterReflection\Reflection\ReflectionMethod::createFromName('Test', 'func');
-var_dump($f->getNumberOfParameters());
-var_dump($f->getNumberOfRequiredParameters());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($f->getNumberOfParameters());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($f->getNumberOfRequiredParameters());
 
 $p = \BetterReflection\Reflection\ReflectionParameter::createFromName(array('Test', 'func'), 'x');
-var_dump($p->isOptional());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->isOptional());
 
 $p = \BetterReflection\Reflection\ReflectionParameter::createFromName(array('Test', 'func'), 'y');
-var_dump($p->isOptional());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->isOptional());
 
 try {
 	$p = \BetterReflection\Reflection\ReflectionParameter::createFromName(array('Test', 'func'), 'z');
-	var_dump($p->isOptional());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->isOptional());
 }
 catch (Exception $e) {
-	var_dump($e->getMessage());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 ?>

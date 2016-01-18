@@ -5,7 +5,7 @@ Thijs Lensselink <tl@lenss.nl>
 --FILE--
 <?php require 'vendor/autoload.php';
 $ext = \BetterReflection\Reflection\ReflectionExtension::createFromName('reflection');
-var_dump($ext->getClasses());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ext->getClasses());
 ?>
 ==DONE==
 --EXPECT--

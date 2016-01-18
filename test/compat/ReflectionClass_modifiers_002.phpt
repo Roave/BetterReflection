@@ -7,10 +7,10 @@ Steve Seear <stevseea@php.net>
 <?php require 'vendor/autoload.php';
 class C {}
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
-var_dump($rc->isFinal('X'));
-var_dump($rc->isInterface(null));
-var_dump($rc->isAbstract(true));
-var_dump($rc->getModifiers(array(1,2,3)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isFinal('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isInterface(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isAbstract(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getModifiers(array(1,2,3)));
 
 ?>
 --EXPECTF--

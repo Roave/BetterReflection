@@ -8,7 +8,7 @@ abstract class enum {
 
     public function __construct() {
         $property = \BetterReflection\Reflection\ReflectionProperty::createFromName(get_class($this),'_values');
-        var_dump($property->isProtected());
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($property->isProtected());
     }
 
 }

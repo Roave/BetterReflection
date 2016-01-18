@@ -7,10 +7,10 @@ Steve Seear <stevseea@php.net>
 <?php require 'vendor/autoload.php';
 class C {}
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('C');
-var_dump($rc->getDocComment(null));
-var_dump($rc->getDocComment('X'));
-var_dump($rc->getDocComment(true));
-var_dump($rc->getDocComment(array(1,2,3)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDocComment(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDocComment('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDocComment(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getDocComment(array(1,2,3)));
 ?>
 --EXPECTF--
 Warning: ReflectionClass::getDocComment() expects exactly 0 parameters, 1 given in %s on line %d

@@ -8,7 +8,7 @@ class TestClass {
 
     public function foo() {
         echo "Called foo(), property = $this->prop\n";
-        var_dump($this);
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($this);
         return "Return Val";
     }
 
@@ -29,23 +29,23 @@ $testClassInstance->prop = "Hello";
 
 echo "invoke() on a non-object:\n";
 try {
-    var_dump($foo->invoke(true));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invoke(true));
 } catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 echo "\ninvoke() on a non-instance:\n";
 try {
-    var_dump($foo->invoke(new stdClass()));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($foo->invoke(new stdClass()));
 } catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 echo "\nPrivate method:\n";
 try {
-    var_dump($privateMethod->invoke($testClassInstance));
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($privateMethod->invoke($testClassInstance));
 } catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 echo "\nAbstract method:\n";
@@ -53,7 +53,7 @@ $abstractMethod = \BetterReflection\Reflection\ReflectionMethod::createFromName(
 try {
     $abstractMethod->invoke(true);
 } catch (ReflectionException $e) {
-    var_dump($e->getMessage());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
 ?>

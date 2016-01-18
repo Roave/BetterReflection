@@ -15,18 +15,18 @@ class D extends C {
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 echo "Check existing constant: ";
-var_dump($rc->hasConstant("myConst"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasConstant("myConst"));
 echo "Check existing constant, different case: ";
-var_dump($rc->hasConstant("MyCoNsT"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasConstant("MyCoNsT"));
 echo "Check absent constant: ";
-var_dump($rc->hasConstant("doesntExist"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasConstant("doesntExist"));
 
 
 $rd = \BetterReflection\Reflection\ReflectionClass::createFromName("D");
 echo "Check inherited constant: ";
-var_dump($rd->hasConstant("myConst"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rd->hasConstant("myConst"));
 echo "Check absent constant: ";
-var_dump($rd->hasConstant("doesntExist"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rd->hasConstant("doesntExist"));
 ?>
 --EXPECTF--
 Check existing constant: bool(true)

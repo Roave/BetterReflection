@@ -11,7 +11,7 @@ $r3 = \BetterReflection\Reflection\ReflectionClass::createFromName("ReflectionPr
 $r4 = \BetterReflection\Reflection\ReflectionClass::createFromName("Exception");
 $r5 = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 
-var_dump($r1->isInternal(), $r2->isInternal(), $r3->isInternal(), 
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r1->isInternal(), $r2->isInternal(), $r3->isInternal(),
 		 $r4->isInternal(), $r5->isInternal());
 ?>
 --EXPECTF--

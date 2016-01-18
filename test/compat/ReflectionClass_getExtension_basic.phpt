@@ -8,7 +8,7 @@ Rein Velt <rein@velt.org>
 --FILE--
 <?php require 'vendor/autoload.php';
  	$rc=\BetterReflection\Reflection\ReflectionClass::createFromName('domDocument');
- 	var_dump($rc->getExtension()) ;
+ 	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getExtension()) ;
 ?>
 --EXPECTF--
 object(ReflectionExtension)#%d (1) {

@@ -6,19 +6,19 @@ ReflectionClass::getFileName(), ReflectionClass::getStartLine(), ReflectionClass
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 
 //Get the file name of the PHP script in which C is defined
-var_dump($rc->getFileName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getFileName());
 
 //Get the line number at the start of the definition of class C
-var_dump($rc->getStartLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStartLine());
 
 //Get the line number at the end of the definition of class C
-var_dump($rc->getEndLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getEndLine());
 
 //Same tests as above but stdclass is internal - so all results should be false. 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("stdClass");
-var_dump($rc->getFileName());
-var_dump($rc->getStartLine());
-var_dump($rc->getEndLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getFileName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStartLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getEndLine());
 
 Class C {
 

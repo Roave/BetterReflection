@@ -11,13 +11,13 @@ function ReflectionParameterTest($test1=array(), $test2 = CONST_TEST_1, $test3 =
 $reflect = \BetterReflection\Reflection\ReflectionFunction::createFromName('ReflectionParameterTest');
 foreach($reflect->getParameters() as $param) {
 	if($param->getName() == 'test1') {
-		var_dump($param->isDefaultValueConstant());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($param->isDefaultValueConstant());
 	}
 	if($param->getName() == 'test2') {
-		var_dump($param->isDefaultValueConstant());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($param->isDefaultValueConstant());
 	}
 	if($param->isDefaultValueAvailable() && $param->isDefaultValueConstant()) {
-		var_dump($param->getDefaultValueConstantName());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($param->getDefaultValueConstantName());
 	}
 }
 
@@ -37,7 +37,7 @@ $params = $method->getParameters();
 
 foreach ($params as $param) {
     if ($param->isDefaultValueConstant()) {
-        var_dump($param->getDefaultValueConstantName());
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($param->getDefaultValueConstantName());
     }
 }
 ?>

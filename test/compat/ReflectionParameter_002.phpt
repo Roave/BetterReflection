@@ -21,7 +21,7 @@ $method = \BetterReflection\Reflection\ReflectionMethod::createFromName('Reflect
 $parameters = $method->getParameters();
 echo "Parameters from staticMethod:\n\n";
 foreach($parameters as $parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
     if($parameter->isPassedByReference()) {
     	echo "This param is passed by reference\n";
     } else {
@@ -36,7 +36,7 @@ $method = \BetterReflection\Reflection\ReflectionMethod::createFromName('Reflect
 $parameters = $method->getParameters();
 echo "Parameters from instanceMethod:\n\n";
 foreach($parameters as $parameter) {
-	var_dump($parameter);
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($parameter);
     if($parameter->isPassedByReference()) {
     	echo "This param is passed by reference\n";
     } else {

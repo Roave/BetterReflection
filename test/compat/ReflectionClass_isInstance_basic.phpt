@@ -22,7 +22,7 @@ foreach ($classes as $class) {
 
 	foreach ($instances as $name => $instance) {
 		echo "is $name a $class? ";
-		var_dump($rc->isInstance($instance));	
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->isInstance($instance));
 	}
 
 }

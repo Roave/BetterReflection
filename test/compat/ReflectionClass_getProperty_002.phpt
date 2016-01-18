@@ -17,42 +17,42 @@ class C {
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 echo "Check invalid params:\n";
 try {
-	var_dump($rc->getProperty());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty());
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty("a", "a"));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty("a", "a"));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty(null));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty(null));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty(1));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty(1));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty(1.5));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty(1.5));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty(true));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty(true));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty(array(1,2,3)));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty(array(1,2,3)));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }
 try {
-	var_dump($rc->getProperty(new C));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getProperty(new C));
 } catch (exception $e) {
 	echo $e->getMessage() . "\n";	
 }

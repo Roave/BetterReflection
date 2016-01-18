@@ -21,10 +21,10 @@ Class Test
 		{
 			try
 			{
-				var_dump($ref->getStaticPropertyValue($name));
-				var_dump($ref->getStaticPropertyValue($name));
+				// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
+				// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
 				$ref->setStaticPropertyValue($name, 'updated');
-				var_dump($ref->getStaticPropertyValue($name));
+				// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
 			}
 			catch(Exception $e)
 			{
@@ -48,10 +48,10 @@ Class TestDerived extends Test
 		{
 			try
 			{
-				var_dump($ref->getStaticPropertyValue($name));
-				var_dump($ref->getStaticPropertyValue($name));
+				// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
+				// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
 				$ref->setStaticPropertyValue($name, 'updated');
-				var_dump($ref->getStaticPropertyValue($name));
+				// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
 			}
 			catch(Exception $e)
 			{
@@ -67,10 +67,10 @@ foreach(array('pub', 'pro', 'pri') as $name)
 {
 	try
 	{
-		var_dump($ref->getStaticPropertyValue($name));
-		var_dump($ref->getStaticPropertyValue($name));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
 		$ref->setStaticPropertyValue($name, 'updated');
-		var_dump($ref->getStaticPropertyValue($name));
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($ref->getStaticPropertyValue($name));
 	}
 	catch(Exception $e)
 	{

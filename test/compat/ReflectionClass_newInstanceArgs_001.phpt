@@ -40,11 +40,11 @@ $rcE = \BetterReflection\Reflection\ReflectionClass::createFromName('E');
 
 $a1 = $rcA->newInstanceArgs();
 $a2 = $rcA->newInstanceArgs(array('x'));
-var_dump($a1, $a2);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a1, $a2);
 
 $b1 = $rcB->newInstanceArgs();
 $b2 = $rcB->newInstanceArgs(array('x', 123));
-var_dump($b1, $b2);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($b1, $b2);
 
 try {
 	$rcC->newInstanceArgs();
@@ -61,7 +61,7 @@ try {
 }
 
 $e1 = $rcE->newInstanceArgs();
-var_dump($e1);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e1);
 
 try {
 	$e2 = $rcE->newInstanceArgs(array('x'));

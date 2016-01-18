@@ -5,7 +5,7 @@ Felix De Vliegher <felix.devliegher@gmail.com>
 --FILE--
 <?php require 'vendor/autoload.php';
 $standard = \BetterReflection\Reflection\ReflectionExtension::createFromName('standard');
-var_dump($standard->getClassNames());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($standard->getClassNames());
 ?>
 ==DONE==
 --EXPECTF--

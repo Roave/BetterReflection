@@ -9,7 +9,7 @@ foreach ($a as $val) {
 	try {
 		new \BetterReflection\Reflection\ReflectionMethod($val);
 	} catch (Exception $e) {
-		var_dump($e->getMessage());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 	}
 }
  
@@ -20,7 +20,7 @@ foreach ($a as $key=>$val) {
 	try {
 		new \BetterReflection\Reflection\ReflectionMethod($val, $b[$key]);
 	} catch (Exception $e) {
-		var_dump($e->getMessage());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 	}
 }
 

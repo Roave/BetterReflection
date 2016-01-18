@@ -27,19 +27,19 @@ $pubFlag =  0x100;
 $privFlag = 0x400;
 
 echo "No methods:";
-var_dump($rc->getMethods(0));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getMethods(0));
 
 echo "Public methods:";
-var_dump($rc->getMethods($pubFlag));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getMethods($pubFlag));
 
 echo "Private methods:";
-var_dump($rc->getMethods($privFlag));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getMethods($privFlag));
 
 echo "Public or static methods:";
-var_dump($rc->getMethods($StaticFlag | $pubFlag));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getMethods($StaticFlag | $pubFlag));
 
 echo "Private or static methods:";
-var_dump($rc->getMethods($StaticFlag | $privFlag));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getMethods($StaticFlag | $privFlag));
 
 
 ?>

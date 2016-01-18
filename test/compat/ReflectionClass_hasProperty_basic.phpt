@@ -9,19 +9,19 @@ Marc Veldman <marc@ibuildings.nl>
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 
 //Check if C has public property publicFoo
-var_dump($rc->hasProperty('publicFoo'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty('publicFoo'));
 
 //Check if C has protected property protectedFoo
-var_dump($rc->hasProperty('protectedFoo'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty('protectedFoo'));
 
 //Check if C has private property privateFoo
-var_dump($rc->hasProperty('privateFoo'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty('privateFoo'));
 
 //Check if C has static property staticFoo
-var_dump($rc->hasProperty('staticFoo'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty('staticFoo'));
 
 //C should not have property bar
-var_dump($rc->hasProperty('bar'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty('bar'));
 
 Class C {
   public $publicFoo;

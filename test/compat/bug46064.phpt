@@ -11,22 +11,22 @@ $o = new x;
 $o->z = 1000;
 $o->zzz = 3;
 
-var_dump($h = \BetterReflection\Reflection\ReflectionProperty::createFromName($o, 'z'));
-var_dump($h->isDefault());
-var_dump($h->isPublic());
-var_dump($h->isStatic());
-var_dump($h->getName());
-var_dump(Reflection::getModifierNames($h->getModifiers()));
-var_dump($h->getValue($o));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h = \BetterReflection\Reflection\ReflectionProperty::createFromName($o, 'z'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h->isDefault());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h->isPublic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h->isStatic());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(Reflection::getModifierNames($h->getModifiers()));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($h->getValue($o));
 
 print "---------------------------\n";
 try {
-	var_dump(\BetterReflection\Reflection\ReflectionProperty::createFromName($o, 'zz'));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionProperty::createFromName($o, 'zz'));
 } catch (Exception $e) {
-	var_dump($e->getMessage());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->getMessage());
 }
 
-var_dump(\BetterReflection\Reflection\ReflectionProperty::createFromName($o, 'zzz'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionProperty::createFromName($o, 'zzz'));
 
 class test {
 	protected $a = 1;
@@ -38,7 +38,7 @@ class bar extends test {
 		$this->a = 200;
 		
 		$p = \BetterReflection\Reflection\ReflectionProperty::createFromName($this, 'foobar');
-		var_dump($p->getValue($this), $p->isDefault(), $p->isPublic());
+		// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($p->getValue($this), $p->isDefault(), $p->isPublic());
 	}
 }
 

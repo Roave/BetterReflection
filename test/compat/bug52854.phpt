@@ -5,13 +5,13 @@ Bug #52854: ReflectionClass::newInstanceArgs does not work for classes without c
 class Test {
 }
 $c = \BetterReflection\Reflection\ReflectionClass::createFromName('Test');
-var_dump(new Test);
-var_dump(new Test());
-var_dump($c->newInstance());
-var_dump($c->newInstanceArgs(array()));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(new Test);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(new Test());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($c->newInstance());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($c->newInstanceArgs(array()));
 
 try {
-	var_dump($c->newInstanceArgs(array(1)));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($c->newInstanceArgs(array(1)));
 } catch(ReflectionException $e) {
 	echo $e->getMessage()."\n";
 }

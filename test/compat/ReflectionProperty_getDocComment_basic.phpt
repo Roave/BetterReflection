@@ -36,7 +36,7 @@ foreach(array('A', 'B') as $class) {
     $rps = $rc->getProperties();
     foreach($rps as $rp) {
         echo "\n\n---> Doc comment for $class::$" . $rp->getName() . ":\n";
-        var_dump($rp->getDocComment());
+        // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->getDocComment());
     }
 }
 

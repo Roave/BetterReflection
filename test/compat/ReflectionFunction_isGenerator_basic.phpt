@@ -9,10 +9,10 @@ $closure2 = function($param) {
 };
 
 $rf1 = \BetterReflection\Reflection\ReflectionFunction::createFromName($closure1);
-var_dump($rf1->isGenerator());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf1->isGenerator());
 
 $rf2 = \BetterReflection\Reflection\ReflectionFunction::createFromName($closure2);
-var_dump($rf2->isGenerator());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf2->isGenerator());
 
 function func1() {
 	return 'func1';
@@ -23,10 +23,10 @@ function func2() {
 }
 
 $rf1 = \BetterReflection\Reflection\ReflectionFunction::createFromName('func1');
-var_dump($rf1->isGenerator());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf1->isGenerator());
 
 $rf2 = \BetterReflection\Reflection\ReflectionFunction::createFromName('func2');
-var_dump($rf2->isGenerator());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rf2->isGenerator());
 
 
 class Foo {
@@ -40,7 +40,7 @@ class Foo {
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName('Foo');
 foreach($rc->getMethods() as $m) {
-	var_dump($m->isGenerator());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($m->isGenerator());
 }
 ?>
 --EXPECTF--

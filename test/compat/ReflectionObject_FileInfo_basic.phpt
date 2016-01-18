@@ -3,14 +3,14 @@ ReflectionObject::getFileName(), ReflectionObject::getStartLine(), ReflectionObj
 --FILE-- 
 <?php require 'vendor/autoload.php';
 $rc = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new C);
-var_dump($rc->getFileName());
-var_dump($rc->getStartLine());
-var_dump($rc->getEndLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getFileName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStartLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getEndLine());
 
 $rc = \BetterReflection\Reflection\ReflectionObject::createFromInstance(new stdclass);
-var_dump($rc->getFileName());
-var_dump($rc->getStartLine());
-var_dump($rc->getEndLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getFileName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getStartLine());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->getEndLine());
 
 Class C {
 

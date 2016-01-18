@@ -16,7 +16,7 @@ $r2 = \BetterReflection\Reflection\ReflectionObject::createFromInstance($myInsta
 
 $r3 = \BetterReflection\Reflection\ReflectionClass::createFromName('TrickClass');
 
-var_dump($r1->getName(), $r2->getName(), $r3->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r1->getName(), $r2->getName(), $r3->getName());
 
 ?> 
 --EXPECTF--

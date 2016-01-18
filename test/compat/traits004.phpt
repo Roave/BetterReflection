@@ -12,8 +12,8 @@ class C3 { use T1; use T2; }
 for ($c = "C1"; $c <= "C3"; $c++) {
     echo "class $c:\n";
     $r = \BetterReflection\Reflection\ReflectionClass::createFromName($c);
-    var_dump($r->getTraitNames());
-    var_dump($r->getTraits());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getTraitNames());
+    // @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getTraits());
     echo "\n";
 }
 --EXPECT--

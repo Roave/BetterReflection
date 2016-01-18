@@ -8,15 +8,15 @@ class Test {
 }
 
 $rm = \BetterReflection\Reflection\ReflectionMethod::createFromName(new Test, '__invoke');
-var_dump($rm->getName());
-var_dump($rm->getNumberOfParameters());
-var_dump($rm->getNumberOfRequiredParameters());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rm->getName());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rm->getNumberOfParameters());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rm->getNumberOfRequiredParameters());
 
 $rp = \BetterReflection\Reflection\ReflectionParameter::createFromName(array(new Test, '__invoke'), 0);
-var_dump($rp->isOptional());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isOptional());
 
 $rp = \BetterReflection\Reflection\ReflectionParameter::createFromName(array(new Test, '__invoke'), 1);
-var_dump($rp->isOptional());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rp->isOptional());
 
 ?>
 ===DONE===

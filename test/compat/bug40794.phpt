@@ -16,7 +16,7 @@ foreach($reflect->getProperties() as $prop)
 	$array[$prop->getName()] = $prop->getValue($obj);
 }
 
-var_dump($array);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($array);
 
 echo "Done\n";
 ?>

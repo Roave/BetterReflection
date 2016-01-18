@@ -12,8 +12,8 @@ final class TestFinalClass {}
 $normalClass = \BetterReflection\Reflection\ReflectionClass::createFromName('TestClass');
 $finalClass = \BetterReflection\Reflection\ReflectionClass::createFromName('TestFinalClass');
 
-var_dump($normalClass->isFinal());
-var_dump($finalClass->isFinal());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($normalClass->isFinal());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($finalClass->isFinal());
 
 ?>
 --EXPECT--

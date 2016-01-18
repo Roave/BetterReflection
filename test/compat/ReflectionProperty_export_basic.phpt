@@ -7,7 +7,7 @@ class TestClass {
     public $proper = 5;
 }
 
-var_dump(ReflectionProperty::export('TestClass', 'proper'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(ReflectionProperty::export('TestClass', 'proper'));
 
 ?>
 --EXPECT--

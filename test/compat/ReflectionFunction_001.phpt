@@ -24,12 +24,12 @@ function bar () {}
 
 function dumpFuncInfo($name) {
 	$funcInfo = \BetterReflection\Reflection\ReflectionFunction::createFromName($name);
-	var_dump($funcInfo->getName());
-	var_dump($funcInfo->isInternal());
-	var_dump($funcInfo->isUserDefined());
-	var_dump($funcInfo->getStartLine());
-	var_dump($funcInfo->getEndLine());
-	var_dump($funcInfo->getStaticVariables());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->getName());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->isInternal());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->isUserDefined());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->getStartLine());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->getEndLine());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($funcInfo->getStaticVariables());
 }
 
 dumpFuncInfo('foo');

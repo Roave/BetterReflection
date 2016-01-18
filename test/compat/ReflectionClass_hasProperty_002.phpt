@@ -11,14 +11,14 @@ class C {
 
 $rc = \BetterReflection\Reflection\ReflectionClass::createFromName("C");
 echo "Check invalid params:\n";
-var_dump($rc->hasProperty());
-var_dump($rc->hasProperty("a", "a"));
-var_dump($rc->hasProperty(null));
-var_dump($rc->hasProperty(1));
-var_dump($rc->hasProperty(1.5));
-var_dump($rc->hasProperty(true));
-var_dump($rc->hasProperty(array(1,2,3)));
-var_dump($rc->hasProperty(new C));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty("a", "a"));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty(1));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty(1.5));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty(true));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty(array(1,2,3)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rc->hasProperty(new C));
 ?>
 --EXPECTF--
 Check invalid params:

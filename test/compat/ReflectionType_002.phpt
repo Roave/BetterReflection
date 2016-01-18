@@ -9,7 +9,7 @@ $rp = $rm->getParameters()[0];
 $rt = $rp->getType();
 $rrt = $rm->getReturnType();
 unset($rm, $rp);
-var_dump((string) $rt, (string) $rrt);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump((string) $rt, (string) $rrt);
 
 --EXPECT--
 string(4) "Test"

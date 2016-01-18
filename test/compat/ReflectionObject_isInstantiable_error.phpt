@@ -10,8 +10,8 @@ class privateCtorOld {
 }
 $reflectionObject =  privateCtorOld::reflectionObjectFactory();
 
-var_dump($reflectionObject->IsInstantiable('X'));
-var_dump($reflectionObject->IsInstantiable(0, null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionObject->IsInstantiable('X'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($reflectionObject->IsInstantiable(0, null));
 
 ?>
 --EXPECTF--

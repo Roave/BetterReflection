@@ -20,7 +20,7 @@ $m['data2'] = 200;
 $m['data3'] = 300;
 $m['data4'] = 400;
 
-var_dump($r->getStaticProperties());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($r->getStaticProperties());
 ?>
 --EXPECT--
 array(2) {

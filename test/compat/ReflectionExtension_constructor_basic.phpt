@@ -7,7 +7,7 @@ Leon Luijkx <leon@phpgg.nl>
 <?php require 'vendor/autoload.php';
 $obj = \BetterReflection\Reflection\ReflectionExtension::createFromName('reflection');
 $test = $obj instanceof ReflectionExtension;
-var_dump($test);
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($test);
 ?>
 ==DONE==
 --EXPECT--

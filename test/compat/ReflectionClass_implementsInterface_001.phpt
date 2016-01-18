@@ -23,13 +23,13 @@ foreach ($rcs as $childName => $child) {
 		echo "Does " . $childName . " implement " . $parentName . "? \n";
 		echo "   - Using object argument: ";
 		try {
-			var_dump($child->implementsInterface($parent));
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($child->implementsInterface($parent));
 		} catch (Exception $e) {
 			echo $e->getMessage() . "\n";
 		}		
 		echo "   - Using string argument: ";
 		try {
-			var_dump($child->implementsInterface($parentName));
+			// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($child->implementsInterface($parentName));
 		} catch (Exception $e) {
 			echo $e->getMessage() . "\n";
 		}
@@ -40,27 +40,27 @@ foreach ($rcs as $childName => $child) {
 
 echo "\n\nTest bad arguments:\n";
 try {
-	var_dump($rcs['A']->implementsInterface());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcs['A']->implementsInterface());
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rcs['A']->implementsInterface('C', 'C'));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcs['A']->implementsInterface('C', 'C'));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rcs['A']->implementsInterface(null));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcs['A']->implementsInterface(null));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rcs['A']->implementsInterface('ThisClassDoesNotExist'));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcs['A']->implementsInterface('ThisClassDoesNotExist'));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }
 try {
-	var_dump($rcs['A']->implementsInterface(2));
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($rcs['A']->implementsInterface(2));
 } catch (Exception $e) {
 	echo $e->getMessage() . "\n";
 }

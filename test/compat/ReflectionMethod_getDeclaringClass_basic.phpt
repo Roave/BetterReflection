@@ -12,10 +12,10 @@ class B extends A {
 }
 
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('B', 'foo');
-var_dump($methodInfo->getDeclaringClass());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getDeclaringClass());
 
 $methodInfo = \BetterReflection\Reflection\ReflectionMethod::createFromName('B', 'bar');
-var_dump($methodInfo->getDeclaringClass());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($methodInfo->getDeclaringClass());
 
 ?> 
 --EXPECTF--

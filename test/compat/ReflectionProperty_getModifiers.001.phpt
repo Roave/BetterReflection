@@ -13,7 +13,7 @@ function reflectProperty($class, $property) {
 	echo "Reflecting on property $class::$property\n\n";
 	
 	echo "getModifiers():\n";
-	var_dump($propInfo->getModifiers());
+	// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($propInfo->getModifiers());
 	
 	echo "\n**********************************\n";
 }

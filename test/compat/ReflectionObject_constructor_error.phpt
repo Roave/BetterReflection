@@ -3,13 +3,13 @@ ReflectionObject::__construct - invalid arguments
 --FILE--
 <?php require 'vendor/autoload.php';
 
-var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance());
-var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance('stdClass'));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance('stdClass'));
 $myInstance = new stdClass;
-var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance($myInstance, $myInstance));
-var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance(0));
-var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance(null));
-var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance(array(1,2)));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance($myInstance, $myInstance));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance(0));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance(null));
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump(\BetterReflection\Reflection\ReflectionObject::createFromInstance(array(1,2)));
 ?>
 --EXPECTF--
 Warning: ReflectionObject::__construct() expects exactly 1 parameter, 0 given in %s on line 3

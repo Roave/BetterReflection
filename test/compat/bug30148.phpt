@@ -19,11 +19,11 @@ $b = \BetterReflection\Reflection\ReflectionMethod::createFromName('Base','Root'
 $c = \BetterReflection\Reflection\ReflectionMethod::createFromName('Base','__construct');
 $d = \BetterReflection\Reflection\ReflectionMethod::createFromName('Derived','Root');
 $e = \BetterReflection\Reflection\ReflectionMethod::createFromName('Derived','__construct');
-var_dump($a->isConstructor());
-var_dump($b->isConstructor());
-var_dump($c->isConstructor());
-var_dump($d->isConstructor());
-var_dump($e->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($a->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($b->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($c->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($d->isConstructor());
+// @todo see https://github.com/Roave/BetterReflection/issues/155 --- var_dump($e->isConstructor());
 ?>
 ===DONE===
 --EXPECTF--
