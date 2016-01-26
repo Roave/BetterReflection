@@ -31,7 +31,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromClassAndMethod()
     {
-        $parameterInfo = ReflectionParameter::createFromClassAndMethod(\ArrayObject::class, 'offsetExists', 'index');
+        $parameterInfo = ReflectionParameter::createFromClassAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
 
         $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         $this->assertSame('index', $parameterInfo->getName());
@@ -39,7 +39,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromSpecWithArray()
     {
-        $parameterInfo = ReflectionParameter::createFromSpec([\ArrayObject::class, 'offsetExists'], 'index');
+        $parameterInfo = ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
 
         $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         $this->assertSame('index', $parameterInfo->getName());
@@ -47,8 +47,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromSpecWithArrayWithInstance()
     {
-        $arrayObject = new \ArrayObject();
-        $parameterInfo = ReflectionParameter::createFromSpec([$arrayObject, 'offsetExists'], 'index');
+        $splDoublyLinkedList = new \SplDoublyLinkedList();
+        $parameterInfo = ReflectionParameter::createFromSpec([$splDoublyLinkedList, 'add'], 'index');
 
         $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         $this->assertSame('index', $parameterInfo->getName());

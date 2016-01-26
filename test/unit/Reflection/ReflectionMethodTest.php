@@ -31,10 +31,10 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromName()
     {
-        $method = ReflectionMethod::createFromName(\ArrayObject::class, 'offsetExists');
+        $method = ReflectionMethod::createFromName(\SplDoublyLinkedList::class, 'add');
 
         $this->assertInstanceOf(ReflectionMethod::class, $method);
-        $this->assertSame('offsetExists', $method->getName());
+        $this->assertSame('add', $method->getName());
     }
 
     public function testImplementsReflector()
