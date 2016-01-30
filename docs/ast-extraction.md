@@ -12,7 +12,7 @@ very few lines of code:
 
 use BetterReflection\Reflector\ReflectionClass;
 
-$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
+$classInfo = ReflectionClass::createFromName(\Foo\Bar\MyClass::class);
 
 // Retrieves the AST statements array *within* the method's curly braces
 $ast = $classInfo->getMethod('foo')->getBodyAst();
@@ -37,7 +37,7 @@ It is possible to fetch an AST representation of a class or function using the
 
 use BetterReflection\Reflector\ReflectionClass;
 
-$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
+$classInfo = ReflectionClass::createFromName(\Foo\Bar\MyClass::class);
 
 // Retrieves AST nodes for the entire class (including the class definition)
 $ast = $classInfo->getAst();

@@ -412,7 +412,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Retrieves the body of this function as AST nodes
      *
-     * @return array
+     * @return Node[]
      */
     public function getBodyAst()
     {

@@ -1121,7 +1121,7 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * Retrieve the AST node for this class
      *
-     * @return ClassNode|InterfaceNode|TraitNode|ClassLikeNode
+     * @return ClassLikeNode
      */
     public function getAst()
     {
