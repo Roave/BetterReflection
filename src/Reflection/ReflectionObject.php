@@ -494,4 +494,20 @@ class ReflectionObject extends ReflectionClass
     {
         throw Exception\Uncloneable::fromClass(__CLASS__);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setStaticPropertyValue($propertyName, $value)
+    {
+        $this->reflectionClass->setStaticPropertyValue($propertyName, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStaticPropertyValue($propertyName)
+    {
+        return $this->reflectionClass->getStaticPropertyValue($propertyName);
+    }
 }

@@ -1036,4 +1036,61 @@ class ReflectionClass implements Reflection, \Reflector
     {
         throw Exception\Uncloneable::fromClass(__CLASS__);
     }
+
+    /**
+     * Get the value of a static property, if it exists. Throws a
+     * PropertyDoesNotExist exception if it does not exist or is not static.
+     * (note, differs very slightly from internal reflection behaviour)
+     *
+     * @param string $propertyName
+     * @return mixed
+     */
+    public function getStaticPropertyValue($propertyName)
+    {
+        if (!class_exists($this->getName(), false)) {
+            throw new Exception\ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
+        }
+
+        if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
+            throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
+        }
+
+        // PHP behaviour is to simply say "property does not exist" if accessing
+        // protected or private values. Here we be a little more explicit in
+        // reasoning...
+        if (!$this->getProperty($propertyName)->isPublic()) {
+            throw new Exception\PropertyNotPublic('Property is not public');
+        }
+
+        $className = $this->getName();
+        return $className::${$propertyName};
+    }
+
+    /**
+     * Set the value of a static property
+     *
+     * @param string $propertyName
+     * @param mixed $value
+     * @return void
+     */
+    public function setStaticPropertyValue($propertyName, $value)
+    {
+        if (!class_exists($this->getName(), false)) {
+            throw new Exception\ClassDoesNotExist('Property cannot be set as the class is not loaded');
+        }
+
+        if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
+            throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
+        }
+
+        // PHP behaviour is to simply say "property does not exist" if accessing
+        // protected or private values. Here we be a little more explicit in
+        // reasoning...
+        if (!$this->getProperty($propertyName)->isPublic()) {
+            throw new Exception\PropertyNotPublic('Property is not public');
+        }
+
+        $className = $this->getName();
+        $className::${$propertyName} = $value;
+    }
 }
