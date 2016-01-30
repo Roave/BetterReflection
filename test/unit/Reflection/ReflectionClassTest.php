@@ -49,7 +49,16 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testCanReflectInstance()
     {
         $instance = new \stdClass();
-        $this->assertSame(\stdClass::class, ReflectionClass::createFromName($instance)->getName());
+        $this->assertSame(\stdClass::class, ReflectionClass::createFromInstance($instance)->getName());
+    }
+
+    public function testCreateFromInstanceThrowsExceptionWhenInvalidArgumentProvided()
+    {
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            'Instance must be an instance of an object'
+        );
+        ReflectionClass::createFromInstance('invalid argument');
     }
 
     public function testCanReflectEvaledClassWithDefaultLocator()

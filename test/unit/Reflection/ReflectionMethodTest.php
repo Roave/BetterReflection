@@ -37,6 +37,14 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('add', $method->getName());
     }
 
+    public function testCreateFromInstance()
+    {
+        $method = ReflectionMethod::createFromInstance(new \SplDoublyLinkedList(), 'add');
+
+        $this->assertInstanceOf(ReflectionMethod::class, $method);
+        $this->assertSame('add', $method->getName());
+    }
+
     public function testImplementsReflector()
     {
         $classInfo = $this->reflector->reflect('BetterReflectionTest\Fixture\Methods');

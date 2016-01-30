@@ -2,11 +2,13 @@
 
 namespace BetterReflectionTest\Reflection;
 
+use BetterReflection\Reflection\Adapter\ReflectionClass;
 use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use BetterReflectionTest\Fixture\ClassForHinting;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
@@ -34,6 +36,14 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ReflectionProperty::class, $property);
         $this->assertSame('name', $property->getName());
+    }
+
+    public function testCreateFromInstance()
+    {
+        $property = ReflectionProperty::createFromInstance(new ClassForHinting(), 'someProperty');
+
+        $this->assertInstanceOf(ReflectionProperty::class, $property);
+        $this->assertSame('someProperty', $property->getName());
     }
 
     public function testImplementsReflector()

@@ -69,16 +69,31 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
-     * Create a reflection of a parameter
+     * Create a reflection of a parameter using a class name
      *
-     * @param string|object $classNameOrInstance
+     * @param string $className
      * @param string $methodName
      * @param string $parameterName
      * @return ReflectionParameter
      */
-    public static function createFromClassAndMethod($classNameOrInstance, $methodName, $parameterName)
+    public static function createFromClassNameAndMethod($className, $methodName, $parameterName)
     {
-        return ReflectionClass::createFromName($classNameOrInstance)
+        return ReflectionClass::createFromName($className)
+            ->getMethod($methodName)
+            ->getParameter($parameterName);
+    }
+
+    /**
+     * Create a reflection of a parameter using an instance
+     *
+     * @param object $instance
+     * @param string $methodName
+     * @param string $parameterName
+     * @return ReflectionParameter
+     */
+    public static function createFromClassInstanceAndMethod($instance, $methodName, $parameterName)
+    {
+        return ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
             ->getParameter($parameterName);
     }
@@ -100,7 +115,11 @@ class ReflectionParameter implements \Reflector
     public static function createFromSpec($spec, $parameterName)
     {
         if (is_array($spec) && count($spec) === 2) {
-            return self::createFromClassAndMethod($spec[0], $spec[1], $parameterName);
+            if (is_object($spec[0])) {
+                return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
+            }
+
+            return self::createFromClassNameAndMethod($spec[0], $spec[1], $parameterName);
         }
 
         if (is_string($spec)) {

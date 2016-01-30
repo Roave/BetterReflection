@@ -34,16 +34,27 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * Create a reflection of a method by it's name
+     * Create a reflection of a method by it's name using a named class
      *
-     * @param string|object $classNameOrInstance
+     * @param string $className
      * @param string $methodName
      * @return ReflectionMethod
      */
-    public static function createFromName($classNameOrInstance, $methodName)
+    public static function createFromName($className, $methodName)
     {
-        return ReflectionClass::createFromName($classNameOrInstance)
-            ->getMethod($methodName);
+        return ReflectionClass::createFromName($className)->getMethod($methodName);
+    }
+
+    /**
+     * Create a reflection of a method by it's name using an instance
+     *
+     * @param object $instance
+     * @param string $methodName
+     * @return ReflectionMethod
+     */
+    public static function createFromInstance($instance, $methodName)
+    {
+        return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
     }
 
     /**

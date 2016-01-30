@@ -29,9 +29,17 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
-    public function testCreateFromClassAndMethod()
+    public function testCreateFromClassNameAndMethod()
     {
-        $parameterInfo = ReflectionParameter::createFromClassAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
+        $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('index', $parameterInfo->getName());
+    }
+
+    public function testCreateFromClassInstanceAndMethod()
+    {
+        $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList(), 'add', 'index');
 
         $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         $this->assertSame('index', $parameterInfo->getName());

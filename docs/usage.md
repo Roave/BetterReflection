@@ -44,19 +44,20 @@ use BetterReflection\Reflector\ReflectionParameter;
 use BetterReflection\Reflector\ReflectionProperty;
 
 ReflectionClass::createFromName(\stdClass::class);
-ReflectionClass::createFromName(new \stdClass);
+ReflectionClass::createFromInstance(new \stdClass);
 
 ReflectionMethod::createFromName(\SplDoublyLinkedList::class, 'add');
-ReflectionMethod::createFromName(new \SplDoublyLinkedList, 'add');
+ReflectionMethod::createFromInstance(new \SplDoublyLinkedList, 'add');
 
-ReflectionParameter::createFromClassAndMethod(new \SplDoublyLinkedList, 'add', 'index');
+ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
+ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList, 'add', 'index');
 ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
 ReflectionParameter::createFromSpec([new \SplDoublyLinkedList, 'add'], 'index');
 ReflectionParameter::createFromSpec('my_function', 'param1');
 // Creating a ReflectionParameter from a closure is not supported yet :(
 
 ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
-ReflectionProperty::createFromName(new \ReflectionFunctionAbstract, 'name')
+ReflectionProperty::createFromInstance(new \ReflectionFunctionAbstract, 'name')
 ```
 
 ## SourceLocators
