@@ -173,7 +173,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function stubbedClassesProvider()
     {
         $classNames = array_filter(
-            str_replace('.stub', '', scandir(__DIR__ . '/../../../stub')),
+            str_replace('.stub', '', scandir(__DIR__ . '/../../../../stub')),
             function ($fileName) {
                 return trim($fileName, '.');
             }
