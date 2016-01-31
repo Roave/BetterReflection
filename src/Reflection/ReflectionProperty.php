@@ -41,6 +41,30 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
+     * Create a reflection of a class's property by it's name
+     *
+     * @param string $className
+     * @param string $propertyName
+     * @return ReflectionMethod
+     */
+    public static function createFromName($className, $propertyName)
+    {
+        return ReflectionClass::createFromName($className)->getProperty($propertyName);
+    }
+
+    /**
+     * Create a reflection of an instance's property by it's name
+     *
+     * @param object $instance
+     * @param string $propertyName
+     * @return ReflectionMethod
+     */
+    public static function createFromInstance($instance, $propertyName)
+    {
+        return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
+    }
+
+    /**
      * Return string representation of this little old property.
      *
      * @return string

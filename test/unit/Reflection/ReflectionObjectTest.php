@@ -111,6 +111,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $ignoreMethods = [
             'createFromName',
             'createFromNode',
+            'createFromInstance',
             '__toString',
             'export',
             '__clone',

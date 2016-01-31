@@ -30,6 +30,36 @@ does not load classes from file, then you must use `SourceLocator` creation.
 *Fun fact... using `ReflectionClass::createFromName` actually uses a
 SourceLocator under the hood - it uses the `AutoloadSourceLocator`.*
 
+### Initialisers
+
+There are several static initialisers you may use based on the same concept.
+They are as follows:
+
+```php
+<?php
+
+use BetterReflection\Reflector\ReflectionClass;
+use BetterReflection\Reflector\ReflectionMethod;
+use BetterReflection\Reflector\ReflectionParameter;
+use BetterReflection\Reflector\ReflectionProperty;
+
+ReflectionClass::createFromName(\stdClass::class);
+ReflectionClass::createFromInstance(new \stdClass);
+
+ReflectionMethod::createFromName(\SplDoublyLinkedList::class, 'add');
+ReflectionMethod::createFromInstance(new \SplDoublyLinkedList, 'add');
+
+ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
+ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList, 'add', 'index');
+ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
+ReflectionParameter::createFromSpec([new \SplDoublyLinkedList, 'add'], 'index');
+ReflectionParameter::createFromSpec('my_function', 'param1');
+// Creating a ReflectionParameter from a closure is not supported yet :(
+
+ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
+ReflectionProperty::createFromInstance(new \ReflectionFunctionAbstract, 'name')
+```
+
 ## SourceLocators
 
 Source locators are helpers that identify how to load code that can be used

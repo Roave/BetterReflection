@@ -29,6 +29,60 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
+    public function testCreateFromClassNameAndMethod()
+    {
+        $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('index', $parameterInfo->getName());
+    }
+
+    public function testCreateFromClassInstanceAndMethod()
+    {
+        $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList(), 'add', 'index');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('index', $parameterInfo->getName());
+    }
+
+    public function testCreateFromSpecWithArray()
+    {
+        $parameterInfo = ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('index', $parameterInfo->getName());
+    }
+
+    public function testCreateFromSpecWithArrayWithInstance()
+    {
+        $splDoublyLinkedList = new \SplDoublyLinkedList();
+        $parameterInfo = ReflectionParameter::createFromSpec([$splDoublyLinkedList, 'add'], 'index');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('index', $parameterInfo->getName());
+    }
+
+    public function testCreateFromSpecWithFunctionName()
+    {
+        require_once __DIR__ . '/../Fixture/ClassForHinting.php';
+        $parameterInfo = ReflectionParameter::createFromSpec('BetterReflectionTest\Fixture\testFunction', 'param1');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('param1', $parameterInfo->getName());
+    }
+
+    public function testCreateFromSpecWithClosure()
+    {
+        $this->setExpectedException(\Exception::class, 'Creating by closure is not supported yet');
+        ReflectionParameter::createFromSpec(function ($a) {}, 'a');
+    }
+
+    public function testCreateFromSpecWithInvalidArgumentThrowsException()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class, 'Could not create reflection from the spec given');
+        ReflectionParameter::createFromSpec(123, 'a');
+    }
+
     public function testImplementsReflector()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
