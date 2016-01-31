@@ -510,4 +510,12 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAst()
+    {
+        return $this->reflectionClass->getAst();
+    }
 }
