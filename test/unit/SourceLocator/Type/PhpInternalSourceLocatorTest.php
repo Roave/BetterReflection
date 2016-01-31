@@ -151,6 +151,8 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      * @dataProvider stubbedClassesProvider
      *
      * @param string $className
+     *
+     * @coversNothing
      */
     public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses($className)
     {
