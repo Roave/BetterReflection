@@ -5,8 +5,13 @@ php:
   - 7.0
   - hhvm
 
+env:
+  matrix:
+    - DEPENDENCIES=""
+    - DEPENDENCIES="--prefer-lowest --prefer-stable"
+
 before_script:
-  - composer install --dev
+  - composer update --prefer-source $DEPENDENCIES
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
