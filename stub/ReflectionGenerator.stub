@@ -1,0 +1,30 @@
+class ReflectionGenerator
+{
+    public function __construct($generator)
+    {
+    }
+
+    public function getExecutingFile()
+    {
+    }
+
+    public function getExecutingGenerator()
+    {
+    }
+
+    public function getExecutingLine()
+    {
+    }
+
+    public function getFunction ()
+    {
+    }
+
+    public function getThis()
+    {
+    }
+
+    public function getTrace ($options = DEBUG_BACKTRACE_PROVIDE_OBJECT)
+    {
+    }
+}

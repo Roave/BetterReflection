@@ -1,0 +1,93 @@
+class DOMNode
+{
+
+    public function insertBefore(\DOMNode $newChild, \DOMNode $refChild = null)
+    {
+    }
+
+    public function replaceChild(\DOMNode $newChild, \DOMNode $oldChild)
+    {
+    }
+
+    public function removeChild(\DOMNode $oldChild)
+    {
+    }
+
+    public function appendChild(\DOMNode $newChild)
+    {
+    }
+
+    public function hasChildNodes()
+    {
+    }
+
+    public function cloneNode($deep)
+    {
+    }
+
+    public function normalize()
+    {
+    }
+
+    public function isSupported($feature, $version)
+    {
+    }
+
+    public function hasAttributes()
+    {
+    }
+
+    public function compareDocumentPosition(\DOMNode $other)
+    {
+    }
+
+    public function isSameNode(\DOMNode $other)
+    {
+    }
+
+    public function lookupPrefix($namespaceURI)
+    {
+    }
+
+    public function isDefaultNamespace($namespaceURI)
+    {
+    }
+
+    public function lookupNamespaceUri($prefix)
+    {
+    }
+
+    public function isEqualNode(\DOMNode $arg)
+    {
+    }
+
+    public function getFeature($feature, $version)
+    {
+    }
+
+    public function setUserData($key, $data, $handler)
+    {
+    }
+
+    public function getUserData($key)
+    {
+    }
+
+    public function getNodePath()
+    {
+    }
+
+    public function getLineNo()
+    {
+    }
+
+    public function C14N($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null)
+    {
+    }
+
+    public function C14NFile($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null)
+    {
+    }
+
+
+}

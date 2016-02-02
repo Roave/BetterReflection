@@ -1,0 +1,119 @@
+class IntlTimeZone
+{
+
+    const DISPLAY_SHORT = 1;
+
+    const DISPLAY_LONG = 2;
+
+    const DISPLAY_SHORT_GENERIC = 3;
+
+    const DISPLAY_LONG_GENERIC = 4;
+
+    const DISPLAY_SHORT_GMT = 5;
+
+    const DISPLAY_LONG_GMT = 6;
+
+    const DISPLAY_SHORT_COMMONLY_USED = 7;
+
+    const DISPLAY_GENERIC_LOCATION = 8;
+
+    const TYPE_ANY = 0;
+
+    const TYPE_CANONICAL = 1;
+
+    const TYPE_CANONICAL_LOCATION = 2;
+
+    private function __construct()
+    {
+    }
+
+    public static function createTimeZone($zoneId)
+    {
+    }
+
+    public static function fromDateTimeZone($zoneId)
+    {
+    }
+
+    public static function createDefault()
+    {
+    }
+
+    public static function getGMT()
+    {
+    }
+
+    public static function getUnknown()
+    {
+    }
+
+    public static function createEnumeration($countryOrRawOffset = null)
+    {
+    }
+
+    public static function countEquivalentIDs($zoneId)
+    {
+    }
+
+    public static function createTimeZoneIDEnumeration($zoneType, $region = null, $rawOffset = null)
+    {
+    }
+
+    public static function getCanonicalID($zoneId, &$isSystemID = null)
+    {
+    }
+
+    public static function getRegion($zoneId)
+    {
+    }
+
+    public static function getTZDataVersion()
+    {
+    }
+
+    public static function getEquivalentID($zoneId, $index)
+    {
+    }
+
+    public function getID()
+    {
+    }
+
+    public function useDaylightTime()
+    {
+    }
+
+    public function getOffset($date, $local, &$rawOffset, &$dstOffset)
+    {
+    }
+
+    public function getRawOffset()
+    {
+    }
+
+    public function hasSameRules(\IntlTimeZone $otherTimeZone)
+    {
+    }
+
+    public function getDisplayName($isDaylight = null, $style = null, $locale = null)
+    {
+    }
+
+    public function getDSTSavings()
+    {
+    }
+
+    public function toDateTimeZone()
+    {
+    }
+
+    public function getErrorCode()
+    {
+    }
+
+    public function getErrorMessage()
+    {
+    }
+
+
+}

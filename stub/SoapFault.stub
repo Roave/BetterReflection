@@ -1,0 +1,13 @@
+class SoapFault extends Exception
+{
+
+    public function SoapFault($faultcode, $faultstring, $faultactor = null, $detail = null, $faultname = null, $headerfault = null)
+    {
+    }
+
+    public function __toString()
+    {
+    }
+
+
+}

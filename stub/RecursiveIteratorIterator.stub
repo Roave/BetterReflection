@@ -1,0 +1,85 @@
+class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator
+{
+
+    const LEAVES_ONLY = 0;
+
+    const SELF_FIRST = 1;
+
+    const CHILD_FIRST = 2;
+
+    const CATCH_GET_CHILD = 16;
+
+    public function __construct(\Traversable $iterator, $mode = RecursiveIteratorIterator::LEAVES_ONLY, $flags = 0)
+    {
+    }
+
+    public function rewind()
+    {
+    }
+
+    public function valid()
+    {
+    }
+
+    public function key()
+    {
+    }
+
+    public function current()
+    {
+    }
+
+    public function next()
+    {
+    }
+
+    public function getDepth()
+    {
+    }
+
+    public function getSubIterator($level = null)
+    {
+    }
+
+    public function getInnerIterator()
+    {
+    }
+
+    public function beginIteration()
+    {
+    }
+
+    public function endIteration()
+    {
+    }
+
+    public function callHasChildren()
+    {
+    }
+
+    public function callGetChildren()
+    {
+    }
+
+    public function beginChildren()
+    {
+    }
+
+    public function endChildren()
+    {
+    }
+
+    public function nextElement()
+    {
+    }
+
+    public function setMaxDepth($max_depth = -1)
+    {
+    }
+
+    public function getMaxDepth()
+    {
+    }
+
+
+}

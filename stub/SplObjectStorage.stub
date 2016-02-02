@@ -1,0 +1,89 @@
+class SplObjectStorage implements Countable, Iterator, Traversable, Serializable, ArrayAccess
+{
+
+    public function attach($object, $inf = null)
+    {
+    }
+
+    public function detach($object)
+    {
+    }
+
+    public function contains($object)
+    {
+    }
+
+    public function addAll($object)
+    {
+    }
+
+    public function removeAll($object)
+    {
+    }
+
+    public function removeAllExcept($object)
+    {
+    }
+
+    public function getInfo()
+    {
+    }
+
+    public function setInfo($info)
+    {
+    }
+
+    public function getHash($object)
+    {
+    }
+
+    public function count()
+    {
+    }
+
+    public function rewind()
+    {
+    }
+
+    public function valid()
+    {
+    }
+
+    public function key()
+    {
+    }
+
+    public function current()
+    {
+    }
+
+    public function next()
+    {
+    }
+
+    public function unserialize($serialized)
+    {
+    }
+
+    public function serialize()
+    {
+    }
+
+    public function offsetExists($object)
+    {
+    }
+
+    public function offsetSet($object, $inf = null)
+    {
+    }
+
+    public function offsetUnset($object)
+    {
+    }
+
+    public function offsetGet($object)
+    {
+    }
+
+
+}

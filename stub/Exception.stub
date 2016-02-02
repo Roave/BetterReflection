@@ -3,7 +3,7 @@ class Exception {
     protected $code;
     protected $file;
     protected $line;
-    public function __construct($message = "", $code = 0, Exception $previous = null){}
+    public function __construct($message = "", $code = 0, $previous = null){}
     final public function getMessage(){}
     final public function getPrevious(){}
     final public function getCode(){}
@@ -12,5 +12,6 @@ class Exception {
     final public function getTrace(){}
     final public function getTraceAsString(){}
     public function __toString(){}
+    public function __wakeup(){}
     final private function __clone(){}
 }

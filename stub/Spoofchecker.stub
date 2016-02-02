@@ -1,0 +1,39 @@
+class Spoofchecker
+{
+
+    const SINGLE_SCRIPT_CONFUSABLE = 1;
+
+    const MIXED_SCRIPT_CONFUSABLE = 2;
+
+    const WHOLE_SCRIPT_CONFUSABLE = 4;
+
+    const ANY_CASE = 8;
+
+    const SINGLE_SCRIPT = 16;
+
+    const INVISIBLE = 32;
+
+    const CHAR_LIMIT = 64;
+
+    public function __construct()
+    {
+    }
+
+    public function isSuspicious($text, &$error = null)
+    {
+    }
+
+    public function areConfusable($s1, $s2, &$error = null)
+    {
+    }
+
+    public function setAllowedLocales($locale_list)
+    {
+    }
+
+    public function setChecks($checks)
+    {
+    }
+
+
+}

@@ -1,0 +1,81 @@
+class DOMElement extends DOMNode
+{
+
+    public function getAttribute($name)
+    {
+    }
+
+    public function setAttribute($name, $value)
+    {
+    }
+
+    public function removeAttribute($name)
+    {
+    }
+
+    public function getAttributeNode($name)
+    {
+    }
+
+    public function setAttributeNode(\DOMAttr $newAttr)
+    {
+    }
+
+    public function removeAttributeNode(\DOMAttr $oldAttr)
+    {
+    }
+
+    public function getElementsByTagName($name)
+    {
+    }
+
+    public function getAttributeNS($namespaceURI, $localName)
+    {
+    }
+
+    public function setAttributeNS($namespaceURI, $qualifiedName, $value)
+    {
+    }
+
+    public function removeAttributeNS($namespaceURI, $localName)
+    {
+    }
+
+    public function getAttributeNodeNS($namespaceURI, $localName)
+    {
+    }
+
+    public function setAttributeNodeNS(\DOMAttr $newAttr)
+    {
+    }
+
+    public function getElementsByTagNameNS($namespaceURI, $localName)
+    {
+    }
+
+    public function hasAttribute($name)
+    {
+    }
+
+    public function hasAttributeNS($namespaceURI, $localName)
+    {
+    }
+
+    public function setIdAttribute($name, $isId)
+    {
+    }
+
+    public function setIdAttributeNS($namespaceURI, $localName, $isId)
+    {
+    }
+
+    public function setIdAttributeNode(\DOMAttr $attr, $isId)
+    {
+    }
+
+    public function __construct($name, $value = null, $uri = null)
+    {
+    }
+
+
+}

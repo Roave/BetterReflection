@@ -1,0 +1,65 @@
+class PharFileInfo extends SplFileInfo
+{
+
+    public function __construct($filename)
+    {
+    }
+
+    public function __destruct()
+    {
+    }
+
+    public function chmod($perms)
+    {
+    }
+
+    public function compress($compression_type)
+    {
+    }
+
+    public function decompress()
+    {
+    }
+
+    public function delMetadata()
+    {
+    }
+
+    public function getCompressedSize()
+    {
+    }
+
+    public function getCRC32()
+    {
+    }
+
+    public function getContent()
+    {
+    }
+
+    public function getMetadata()
+    {
+    }
+
+    public function getPharFlags()
+    {
+    }
+
+    public function hasMetadata()
+    {
+    }
+
+    public function isCompressed($compression_type = 9021976)
+    {
+    }
+
+    public function isCRCChecked()
+    {
+    }
+
+    public function setMetadata($metadata)
+    {
+    }
+
+
+}

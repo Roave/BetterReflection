@@ -1,0 +1,19 @@
+class ReflectionObject extends ReflectionClass
+{
+
+    const IS_IMPLICIT_ABSTRACT = 16;
+
+    const IS_EXPLICIT_ABSTRACT = 32;
+
+    const IS_FINAL = 4;
+
+    public static function export($argument, $return = null)
+    {
+    }
+
+    public function __construct($argument)
+    {
+    }
+
+
+}

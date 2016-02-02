@@ -1,0 +1,91 @@
+class PDOStatement implements Traversable
+{
+
+    public $queryString = null;
+
+    public function execute($bound_input_params = null)
+    {
+    }
+
+    public function fetch($how = null, $orientation = PDO::FETCH_ORI_NEXT, $offset = 0)
+    {
+    }
+
+    public function bindParam($paramno, &$param, $type = PDO::PARAM_STR, $maxlen = null, $driverdata = null)
+    {
+    }
+
+    public function bindColumn($column, &$param, $type = null, $maxlen = null, $driverdata = null)
+    {
+    }
+
+    public function bindValue($paramno, $param, $type = PDO::PARAM_STR)
+    {
+    }
+
+    public function rowCount()
+    {
+    }
+
+    public function fetchColumn($column_number = 0)
+    {
+    }
+
+    public function fetchAll($how = null, $class_name = null, $ctor_args = array())
+    {
+    }
+
+    public function fetchObject($class_name = 'stdClass', $ctor_args = null)
+    {
+    }
+
+    public function errorCode()
+    {
+    }
+
+    public function errorInfo()
+    {
+    }
+
+    public function setAttribute($attribute, $value)
+    {
+    }
+
+    public function getAttribute($attribute)
+    {
+    }
+
+    public function columnCount()
+    {
+    }
+
+    public function getColumnMeta($column)
+    {
+    }
+
+    public function setFetchMode($mode, $params = null)
+    {
+    }
+
+    public function nextRowset()
+    {
+    }
+
+    public function closeCursor()
+    {
+    }
+
+    public function debugDumpParams()
+    {
+    }
+
+    final public function __wakeup()
+    {
+    }
+
+    final public function __sleep()
+    {
+    }
+
+
+}

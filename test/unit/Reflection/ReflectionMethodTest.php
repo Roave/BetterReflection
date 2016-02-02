@@ -261,7 +261,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function methodStringRepresentations()
     {
-        return [
+        $methods = [
             ['__construct', "Method [ <user, ctor> public method __construct ] {\n  @@ %s/test/unit/Fixture/Methods.php 11 - 13\n}"],
             ['publicMethod', "Method [ <user> public method publicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 15 - 17\n}"],
             ['privateMethod', "Method [ <user> private method privateMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 19 - 21\n}"],
@@ -279,6 +279,16 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
             ['methodWithNonOptionalDefaultValue', "Method [ <user> public method methodWithNonOptionalDefaultValue ] {\n  @@ %s/test/unit/Fixture/Methods.php 74 - 76\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$firstParameter ]\n    Parameter #1 [ <required> \$secondParameter ]\n  }\n}"],
             ['methodToCheckAllowsNull', "Method [ <user> public method methodToCheckAllowsNull ] {\n  @@ %s/test/unit/Fixture/Methods.php 78 - 80\n\n  - Parameters [3] {\n    Parameter #0 [ <required> \$allowsNull ]\n    Parameter #1 [ <required> stdClass \$hintDisallowNull ]\n    Parameter #2 [ <optional> stdClass or NULL \$hintAllowNull = NULL ]\n  }\n}"],
         ];
+
+        return array_combine(
+            array_map(
+                function (array $methodData) {
+                    return $methodData[0];
+                },
+                $methods
+            ),
+            $methods
+        );
     }
 
     /**

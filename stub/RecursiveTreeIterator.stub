@@ -1,0 +1,101 @@
+class RecursiveTreeIterator extends RecursiveIteratorIterator
+{
+
+    const LEAVES_ONLY = 0;
+
+    const SELF_FIRST = 1;
+
+    const CHILD_FIRST = 2;
+
+    const CATCH_GET_CHILD = 16;
+
+    const BYPASS_CURRENT = 4;
+
+    const BYPASS_KEY = 8;
+
+    const PREFIX_LEFT = 0;
+
+    const PREFIX_MID_HAS_NEXT = 1;
+
+    const PREFIX_MID_LAST = 2;
+
+    const PREFIX_END_HAS_NEXT = 3;
+
+    const PREFIX_END_LAST = 4;
+
+    const PREFIX_RIGHT = 5;
+
+    public function __construct(\Traversable $iterator, $flags = RecursiveTreeIterator::BYPASS_KEY, $caching_it_flags = CachingIterator::CATCH_GET_CHILD, $mode = RecursiveIteratorIterator::SELF_FIRST)
+    {
+    }
+
+    public function rewind()
+    {
+    }
+
+    public function valid()
+    {
+    }
+
+    public function key()
+    {
+    }
+
+    public function current()
+    {
+    }
+
+    public function next()
+    {
+    }
+
+    public function beginIteration()
+    {
+    }
+
+    public function endIteration()
+    {
+    }
+
+    public function callHasChildren()
+    {
+    }
+
+    public function callGetChildren()
+    {
+    }
+
+    public function beginChildren()
+    {
+    }
+
+    public function endChildren()
+    {
+    }
+
+    public function nextElement()
+    {
+    }
+
+    public function getPrefix()
+    {
+    }
+
+    public function setPrefixPart($part, $value)
+    {
+    }
+
+    public function getEntry()
+    {
+    }
+
+    public function setPostfix()
+    {
+    }
+
+    public function getPostfix()
+    {
+    }
+
+
+}

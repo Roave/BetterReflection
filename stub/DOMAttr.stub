@@ -1,0 +1,13 @@
+class DOMAttr extends DOMNode
+{
+
+    public function isId()
+    {
+    }
+
+    public function __construct($name, $value = null)
+    {
+    }
+
+
+}
