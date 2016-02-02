@@ -7,7 +7,7 @@
         "nikic/php-parser": "^2.0-beta",
         "phpdocumentor/reflection-docblock": "^2.0",
         "phpdocumentor/type-resolver": "^0.1.5",
-        "zendframework/zend-code": "^2.6|^3.0",
+        "zendframework/zend-code": "^3.0",
         "jeremeamia/superclosure": "^2.2"
     },
     "require-dev": {
