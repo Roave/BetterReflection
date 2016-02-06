@@ -492,39 +492,41 @@ abstract class ReflectionFunctionAbstract implements \Reflector
 
     /**
      * Override the method or function's body of statements with an entirely new
-     * body of statements (!) within the reflection.
-     *
-     * You may either pass a string containing statements, or a closure:
+     * body of statements within the reflection.
      *
      * @example
-     * // The following are identical...
-     * $reflectionFunction->setBody('return true');
-     * $reflectionFunction->setBody(function () { return true; });
+     * $reflectionFunction->setBodyFromClosure(function () { return true; });
      *
-     * @param string|Closure $newBody
+     * @param \Closure $newBody
      */
-    public function setBody($newBody)
+    public function setBodyFromClosure(\Closure $newBody)
     {
-        if ($newBody instanceof Closure) {
-            $closureData = (new AstAnalyzer())->analyze($newBody);
+        $closureData = (new AstAnalyzer())->analyze($newBody);
 
-            if (!isset($closureData['ast']) || !($closureData['ast'] instanceof ClosureNode)) {
-                throw new Exception\ClosureAstExtractionFailure('Failed to extract AST from closure - AST data not returned by AstAnalyzer');
-            }
-
-            $functionStatements = $closureData['ast']->stmts;
+        if (!isset($closureData['ast']) || !($closureData['ast'] instanceof ClosureNode)) {
+            throw new Exception\ClosureAstExtractionFailure('Failed to extract AST from closure - AST data not returned by AstAnalyzer');
         }
 
-        if (is_string($newBody)) {
-            $functionStatements = (new ParserFactory())
-                ->create(ParserFactory::PREFER_PHP7)
-                ->parse('<?php ' . $newBody);
+        $this->node->stmts = $closureData['ast']->stmts;
+    }
+
+    /**
+     * Override the method or function's body of statements with an entirely new
+     * body of statements within the reflection.
+     *
+     * @example
+     * $reflectionFunction->setBodyFromString('return true;');
+     *
+     * @param string $newBody
+     */
+    public function setBodyFromString($newBody)
+    {
+        if (!is_string($newBody)) {
+            throw new \InvalidArgumentException('Body parameter must be a string');
         }
 
-        if (!isset($functionStatements)) {
-            throw new \InvalidArgumentException('New body for function or method must be a Closure or string with PHP statements');
-        }
-
-        $this->node->stmts = $functionStatements;
+        $this->node->stmts = (new ParserFactory())
+            ->create(ParserFactory::PREFER_PHP7)
+            ->parse('<?php ' . $newBody);
     }
 }

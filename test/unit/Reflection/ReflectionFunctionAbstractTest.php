@@ -445,28 +445,28 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $ast->name);
     }
 
-    public function testSetBodyWithClosure()
+    public function testSetBodyFromClosure()
     {
         $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $function->setBody(function () {
+        $function->setBodyFromClosure(function () {
             echo 'Hello world!';
         });
 
         $this->assertSame("echo 'Hello world!';", $function->getBodyCode());
     }
 
-    public function testSetBodyWithString()
+    public function testSetBodyFromString()
     {
         $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $function->setBody("echo 'Hello world!';");
+        $function->setBodyFromString("echo 'Hello world!';");
 
         $this->assertSame("echo 'Hello world!';", $function->getBodyCode());
     }
@@ -479,6 +479,6 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $function = $reflector->reflect('foo');
 
         $this->setExpectedException(\InvalidArgumentException::class);
-        $function->setBody(['foo' => 'bar']);
+        $function->setBodyFromString(['foo' => 'bar']);
     }
 }
