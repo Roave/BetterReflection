@@ -529,4 +529,24 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             ->create(ParserFactory::PREFER_PHP7)
             ->parse('<?php ' . $newBody);
     }
+
+    /**
+     * Override the method or function's body of statements with an entirely new
+     * body of statements within the reflection.
+     *
+     * @example
+     * // $ast should be an array of Nodes
+     * $reflectionFunction->setBodyFromAst($ast);
+     *
+     * @param Node[] $nodes
+     */
+    public function setBodyFromAst(array $nodes)
+    {
+        // This slightly confusing code simply type-checks the $sourceLocators
+        // array by unpacking them and splatting them in the closure.
+        $validator = function (Node ...$node) {
+            return $node;
+        };
+        $this->node->stmts = $validator(...$nodes);
+    }
 }
