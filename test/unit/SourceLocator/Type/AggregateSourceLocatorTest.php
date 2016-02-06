@@ -87,4 +87,37 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('Foo', $reflection->getName());
     }
+
+    public function testLocateIdentifiersByTypeAggregatesSource()
+    {
+        $identifierType = new IdentifierType;
+
+        $locator1   = $this->getMock(SourceLocator::class);
+        $locator2   = $this->getMock(SourceLocator::class);
+        $locator3   = $this->getMock(SourceLocator::class);
+        $locator4   = $this->getMock(SourceLocator::class);
+
+        $source2     = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $source3     = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $locator1->expects($this->once())->method('locateIdentifiersByType')->willReturn([]);
+        $locator2->expects($this->once())->method('locateIdentifiersByType')->willReturn([$source2]);
+        $locator3->expects($this->once())->method('locateIdentifiersByType')->willReturn([$source3]);
+        $locator4->expects($this->once())->method('locateIdentifiersByType')->willReturn([]);
+
+        $this->assertSame(
+            [$source2, $source3],
+            (new AggregateSourceLocator([
+                $locator1,
+                $locator2,
+                $locator3,
+                $locator4,
+            ]))->locateIdentifiersByType($this->getMockReflector(), $identifierType)
+        );
+    }
 }

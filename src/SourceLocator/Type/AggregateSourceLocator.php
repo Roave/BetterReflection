@@ -48,7 +48,7 @@ class AggregateSourceLocator implements SourceLocator
         $located = [];
 
         foreach ($this->sourceLocators as $sourceLocator) {
-            $located += $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
+            $located = array_merge($located, $sourceLocator->locateIdentifiersByType($reflector, $identifierType));
         }
 
         return $located;
