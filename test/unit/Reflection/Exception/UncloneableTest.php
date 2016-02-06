@@ -12,7 +12,7 @@ class UncloneableTest extends PHPUnit_Framework_TestCase
 {
     public function testFromNonObject()
     {
-        $exception = Uncloneable::fromClass("foo");
+        $exception = Uncloneable::fromClass('foo');
 
         $this->assertInstanceOf(Uncloneable::class, $exception);
         $this->assertSame('Trying to clone an uncloneable object of class foo', $exception->getMessage());

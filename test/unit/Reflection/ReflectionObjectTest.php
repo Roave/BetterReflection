@@ -246,7 +246,7 @@ BLAH;
 
     public function testCannotClone()
     {
-        $classInfo = ReflectionObject::createFromInstance(new \stdClass);
+        $classInfo = ReflectionObject::createFromInstance(new \stdClass());
 
         $this->setExpectedException(Uncloneable::class);
         $unused = clone $classInfo;

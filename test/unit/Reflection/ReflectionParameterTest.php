@@ -134,7 +134,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException()
     {
-        $content = "<?php class Foo { public function myMethod(\$var) {} }";
+        $content = '<?php class Foo { public function myMethod($var) {} }';
 
         $reflector = new ClassReflector(new StringSourceLocator($content));
         $classInfo = $reflector->reflect('Foo');
@@ -363,7 +363,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDeclaringFunction()
     {
-        $content = "<?php class Foo { public function myMethod(\$var = 123) {} }";
+        $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
         $reflector = new ClassReflector(new StringSourceLocator($content));
         $classInfo = $reflector->reflect('Foo');
@@ -375,7 +375,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDeclaringClassForMethod()
     {
-        $content = "<?php class Foo { public function myMethod(\$var = 123) {} }";
+        $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
         $reflector = new ClassReflector(new StringSourceLocator($content));
         $classInfo = $reflector->reflect('Foo');
@@ -387,7 +387,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDeclaringClassForFunctionReturnsNull()
     {
-        $content = "<?php function myMethod(\$var = 123) {}";
+        $content = '<?php function myMethod($var = 123) {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($content));
         $functionInfo = $reflector->reflect('myMethod');

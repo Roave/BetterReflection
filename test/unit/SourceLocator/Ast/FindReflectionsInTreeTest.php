@@ -99,7 +99,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-                $mockReflection
+                $mockReflection,
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
@@ -132,7 +132,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-                $mockReflection
+                $mockReflection,
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
@@ -165,7 +165,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [
-                $mockReflection
+                $mockReflection,
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,

@@ -2,7 +2,6 @@
 
 namespace BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Adapter\ReflectionClass;
 use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionProperty;
 use BetterReflection\Reflector\ClassReflector;

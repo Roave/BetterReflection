@@ -77,7 +77,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             ['isAbstract', null, true, []],
             ['isFinal', null, true, []],
             ['getModifiers', null, 123, []],
-            ['isInstance', null, true, [new \stdClass]],
+            ['isInstance', null, true, [new \stdClass()]],
             ['newInstance', NotImplemented::class, null, ['foo']],
             ['newInstanceWithoutConstructor', NotImplemented::class, null, []],
             ['newInstanceArgs', NotImplemented::class, null, []],
@@ -128,7 +128,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testExport()
     {
-        $exported = ReflectionObjectAdapter::export(new \stdClass);
+        $exported = ReflectionObjectAdapter::export(new \stdClass());
 
         $this->assertInternalType('string', $exported);
         $this->assertContains('stdClass', $exported);

@@ -13,7 +13,7 @@ class IdentifierNotFoundTest extends \PHPUnit_Framework_TestCase
 {
     public function testFromNonObject()
     {
-        $identifier = new Identifier("myIdentifier", new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        $identifier = new Identifier('myIdentifier', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $exception = IdentifierNotFound::fromIdentifier($identifier);
 
