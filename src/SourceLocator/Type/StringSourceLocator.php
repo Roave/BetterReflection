@@ -20,6 +20,9 @@ class StringSourceLocator extends AbstractSourceLocator
      */
     private $source;
 
+    /**
+     * @param string $source
+     */
     public function __construct($source)
     {
         parent::__construct();
