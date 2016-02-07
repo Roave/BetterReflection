@@ -284,4 +284,38 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('Bar\Bat');
         $this->assertSame('Bar\Foo', $classInfo->getConstant('QUX'));
     }
+
+    public function testClassConstantClassNameOutOfScopeResolution()
+    {
+        $phpCode = '<?php
+        namespace Bar;
+
+        use My\Awesome\Foo;
+
+        class Bat {
+            const QUX = Foo::class;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Bar\Bat');
+        $this->assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
+    }
+
+    public function testClassConstantClassNameAliasedResolution()
+    {
+        $phpCode = '<?php
+        namespace Bar;
+
+        use My\Awesome\Foo as FooAlias;
+
+        class Bat {
+            const QUX = FooAlias::class;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Bar\Bat');
+        $this->assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
+    }
 }
