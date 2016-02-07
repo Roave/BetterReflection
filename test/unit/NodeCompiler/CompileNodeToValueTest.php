@@ -268,7 +268,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Foo', $classInfo->getConstant('QUX'));
     }
 
-    public function testClassConstantClassNameAliasResolution()
+    public function testClassConstantClassNameNamespaceResolution()
     {
         $phpCode = '<?php
         namespace Bar;
