@@ -11,8 +11,8 @@
         "jeremeamia/superclosure": "^2.2"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "^1.8",
-        "phpunit/phpunit": "^4.6"
+        "fabpot/php-cs-fixer": "^1.11",
+        "phpunit/phpunit": "^5.2"
     },
     "autoload": {
         "psr-4": {
