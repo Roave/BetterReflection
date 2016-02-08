@@ -332,7 +332,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getPrototype()
     {
-        return new ReflectionMethod($this->betterReflectionMethod->getPrototype());
+        return new self($this->betterReflectionMethod->getPrototype());
     }
 
     /**

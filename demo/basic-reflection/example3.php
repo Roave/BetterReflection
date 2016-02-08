@@ -18,3 +18,4 @@ var_dump($reflection->getName()); // MyClass
 var_dump($reflection->getProperty('foo')->isPrivate()); // true
 var_dump($reflection->getProperty('foo')->getDocBlockTypeStrings()[0]); // string
 var_dump($reflection->getMethod('getFoo')->getDocBlockReturnTypes()[0]->__toString()); // string
+

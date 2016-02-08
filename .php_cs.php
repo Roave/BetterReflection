@@ -38,7 +38,6 @@ $config->fixers([
     'phpdoc_no_access',
     'phpdoc_no_package',
     'phpdoc_scalar',
-    'phpdoc_short_description',
     'phpdoc_trim',
     'phpdoc_type_to_var',
     'phpdoc_var_without_name',

@@ -354,7 +354,7 @@ class ReflectionClass implements Reflection, \Reflector
     public function getImmediateMethods()
     {
         /* @var $methods \ReflectionMethod[] */
-        $methods = array_map (
+        $methods = array_map(
             function (ClassMethod $methodNode) {
                 return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
             },

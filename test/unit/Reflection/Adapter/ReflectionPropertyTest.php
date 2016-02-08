@@ -40,7 +40,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
             ['__toString', null, '', []],
             ['getName', null, '', []],
             ['getValue', NotImplemented::class, null, []],
-            ['setValue', NotImplemented::class, null, [new \stdClass]],
+            ['setValue', NotImplemented::class, null, [new \stdClass()]],
             ['isPublic', null, true, []],
             ['isPrivate', null, true, []],
             ['isProtected', null, true, []],

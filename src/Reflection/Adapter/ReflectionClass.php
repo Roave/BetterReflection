@@ -206,7 +206,7 @@ class ReflectionClass extends CoreReflectionClass
 
         $wrappedInterfaces = [];
         foreach ($interfaces as $key => $interface) {
-            $wrappedInterfaces[$key] = new ReflectionClass($interface);
+            $wrappedInterfaces[$key] = new self($interface);
         }
         return $wrappedInterfaces;
     }
@@ -236,7 +236,7 @@ class ReflectionClass extends CoreReflectionClass
 
         $wrappedTraits = [];
         foreach ($traits as $key => $trait) {
-            $wrappedTraits[$key] = new ReflectionClass($trait);
+            $wrappedTraits[$key] = new self($trait);
         }
         return $wrappedTraits;
     }
@@ -332,7 +332,7 @@ class ReflectionClass extends CoreReflectionClass
             return null;
         }
 
-        return new ReflectionClass($parentClass);
+        return new self($parentClass);
     }
 
     /**

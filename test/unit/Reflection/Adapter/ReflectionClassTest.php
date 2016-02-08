@@ -75,7 +75,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ['isAbstract', null, true, []],
             ['isFinal', null, true, []],
             ['getModifiers', null, 123, []],
-            ['isInstance', null, true, [new \stdClass]],
+            ['isInstance', null, true, [new \stdClass()]],
             ['newInstance', NotImplemented::class, null, []],
             ['newInstanceWithoutConstructor', NotImplemented::class, null, []],
             ['newInstanceArgs', NotImplemented::class, null, []],

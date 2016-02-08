@@ -25,7 +25,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testClosureSourceLocator()
     {
         $closure = function () {
-            echo "Hello world!";
+            echo 'Hello world!';
         };
 
         $locator = new ClosureSourceLocator($closure);
@@ -46,7 +46,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testLocateIdentifiersByTypeIsNotImplemented()
     {
         $closure = function () {
-            echo "Hello world!";
+            echo 'Hello world!';
         };
 
         $locator = new ClosureSourceLocator($closure);
