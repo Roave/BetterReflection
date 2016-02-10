@@ -10,7 +10,7 @@ very few lines of code:
 ```php
 <?php
 
-use BetterReflection\Reflector\ReflectionClass;
+use BetterReflection\Reflection\ReflectionClass;
 
 $classInfo = ReflectionClass::createFromName(\Foo\Bar\MyClass::class);
 
@@ -35,7 +35,7 @@ It is possible to fetch an AST representation of a class or function using the
 ```php
 <?php
 
-use BetterReflection\Reflector\ReflectionClass;
+use BetterReflection\Reflection\ReflectionClass;
 
 $classInfo = ReflectionClass::createFromName(\Foo\Bar\MyClass::class);
 
