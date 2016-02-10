@@ -19,7 +19,7 @@ work with this technique.
 ```php
 <?php
 
-use BetterReflection\Reflector\ReflectionClass;
+use BetterReflection\Reflection\ReflectionClass;
 
 $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ```
@@ -38,10 +38,10 @@ They are as follows:
 ```php
 <?php
 
-use BetterReflection\Reflector\ReflectionClass;
-use BetterReflection\Reflector\ReflectionMethod;
-use BetterReflection\Reflector\ReflectionParameter;
-use BetterReflection\Reflector\ReflectionProperty;
+use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\Reflection\ReflectionMethod;
+use BetterReflection\Reflection\ReflectionParameter;
+use BetterReflection\Reflection\ReflectionProperty;
 
 ReflectionClass::createFromName(\stdClass::class);
 ReflectionClass::createFromInstance(new \stdClass);
