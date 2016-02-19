@@ -6,7 +6,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 | Method | Supported |
 |--------|-----------|
-| getConstant | :heavy_check_mark: Yes |
+| getConstant | :heavy_check_mark: Yes (the `::class` constant is now resolved correctly) |
 | getConstants | :heavy_check_mark: Yes |
 | getConstructor | :heavy_check_mark: Yes |
 | getDefaultProperties | :heavy_check_mark: Yes |
