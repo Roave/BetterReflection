@@ -9,6 +9,7 @@ use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use phpDocumentor\Reflection\Types;
 use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -238,6 +239,47 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         if (null !== $expectedFqsenName) {
             $this->assertSame($expectedFqsenName, $type->getFqsen()->getName());
         }
+    }
+
+    public function testPhp7TypeDeclarationWithIntBuiltinType()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $method = $classInfo->getMethod('foo');
+
+        $intParamType = $method->getParameter('intParam')->getType();
+        $this->assertSame('int', (string)$intParamType);
+        $this->assertTrue($intParamType->isBuiltin());
+        $this->assertFalse($intParamType->allowsNull());
+    }
+
+    public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $method = $classInfo->getMethod('foo');
+
+        $classParamType = $method->getParameter('classParam')->getType();
+        $this->assertSame('\stdClass', (string)$classParamType);
+        $this->assertFalse($classParamType->isBuiltin());
+        $this->assertFalse($classParamType->allowsNull());
+    }
+
+    public function testPhp7TypeDeclarationWithoutType()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $method = $classInfo->getMethod('foo');
+
+        $this->assertNull($method->getParameter('noTypeParam')->getType());
+    }
+
+    public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $method = $classInfo->getMethod('foo');
+
+        $stringParamType = $method->getParameter('stringParamAllowsNull')->getType();
+        $this->assertSame('string', (string)$stringParamType);
+        $this->assertTrue($stringParamType->isBuiltin());
+        $this->assertTrue($stringParamType->allowsNull());
     }
 
     public function testIsCallable()

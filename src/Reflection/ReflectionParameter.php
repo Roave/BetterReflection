@@ -377,6 +377,18 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * @return ReflectionType
+     */
+    public function getType()
+    {
+        if (null === $this->getTypeHint()) {
+            return null;
+        }
+
+        return ReflectionType::createFromType($this->getTypeHint(), $this->allowsNull());
+    }
+
+    /**
      * Is this parameter an array?
      *
      * @return bool
