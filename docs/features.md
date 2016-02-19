@@ -21,3 +21,15 @@ See [types documentation](https://github.com/Roave/BetterReflection/tree/master/
 ## AST extraction from Reflections
 
 See [AST extraction documentation](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
+
+## PHP 7 Parameter Type Declarations and Return Type Declarations
+
+These act in the same way as the core reflection API, except they return a
+`\BetterReflection\Reflection\ReflectionType` instance (which does not
+extend `\ReflectionType`). You can fetch the phpDocumentor Reflection Type
+by using the `getTypeObject()` method:
+
+```
+$reflectionType = $parameterInfo->getType();
+$phpDocumentorReflectionType = $reflectionType->getTypeObject();
+```

@@ -382,7 +382,7 @@ class ReflectionParameter implements \Reflector
      *
      * (note: this has nothing to do with DocBlocks).
      *
-     * @return ReflectionType
+     * @return ReflectionType|null
      */
     public function getType()
     {
