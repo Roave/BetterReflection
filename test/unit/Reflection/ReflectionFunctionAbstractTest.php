@@ -7,6 +7,7 @@ use BetterReflection\Reflection\Exception\Uncloneable;
 use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflection\ReflectionFunctionAbstract;
 use BetterReflection\Reflection\ReflectionParameter;
+use BetterReflection\Reflection\ReflectionType;
 use BetterReflection\Reflector\FunctionReflector;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -336,6 +337,52 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $types);
         $this->assertCount(1, $types);
         $this->assertInstanceOf(Boolean::class, $types[0]);
+    }
+
+    public function returnTypeFunctionProvider()
+    {
+        return [
+            ['returnsInt', 'int'],
+            ['returnsString', 'string'],
+            ['returnsNull', 'null'],
+            ['returnsObject', '\stdClass'],
+        ];
+    }
+
+    /**
+     * @param string $functionToReflect
+     * @param string $expectedType
+     * @dataProvider returnTypeFunctionProvider
+     */
+    public function testGetReturnTypeWithDeclaredType($functionToReflect, $expectedType)
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect($functionToReflect);
+
+        $reflectionType = $functionInfo->getReturnType();
+        $this->assertInstanceOf(ReflectionType::class, $reflectionType);
+        $this->assertSame($expectedType, (string)$reflectionType);
+    }
+
+    public function testGetReturnTypeReturnsNullWhenTypeIsNotDeclared()
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect('returnsNothing');
+        $this->assertNull($functionInfo->getReturnType());
+    }
+
+    public function testHasReturnTypeWhenTypeDeclared()
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect('returnsString');
+        $this->assertTrue($functionInfo->hasReturnType());
+    }
+
+    public function testHasReturnTypeWhenTypeIsNotDeclared()
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect('returnsNothing');
+        $this->assertFalse($functionInfo->hasReturnType());
     }
 
     public function testCannotClone()
