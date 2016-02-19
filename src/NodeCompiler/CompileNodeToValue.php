@@ -3,6 +3,8 @@
 namespace BetterReflection\NodeCompiler;
 
 use BetterReflection\Reflection\ReflectionClass;
+use BetterReflection\TypesFinder\ResolveTypes;
+use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node;
 
 class CompileNodeToValue
@@ -107,6 +109,18 @@ class CompileNodeToValue
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
         $className = implode('\\', $node->class->parts);
+
+        if ($node->name === 'class') {
+            return substr(
+                (string)(new ResolveTypes())->__invoke(
+                    [$className],
+                    (new ContextFactory())->createForNamespace(
+                        $context->getSelf()->getNamespaceName(),
+                        $context->getSelf()->getLocatedSource()->getSource()
+                    ))[0]->getFqsen(),
+                1
+            );
+        }
 
         $classInfo = null;
         if ('self' === $className || 'static' === $className) {
