@@ -5,6 +5,7 @@ namespace BetterReflection\Reflection;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
+use BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
@@ -399,6 +400,40 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     public function getDocBlockReturnTypes()
     {
         return  (new FindReturnType())->__invoke($this);
+    }
+
+    /**
+     * Get the return type declaration (only for PHP 7+ code)
+     *
+     * @return ReflectionType|null
+     */
+    public function getReturnType()
+    {
+        $namespaceForType = $this instanceof ReflectionMethod
+            ? $this->getDeclaringClass()->getNamespaceName()
+            : $this->getNamespaceName();
+
+        $typeHint = (new FindTypeFromAst())->__invoke(
+            $this->node->getReturnType(),
+            $this->getLocatedSource(),
+            $namespaceForType
+        );
+
+        if (null === $typeHint) {
+            return null;
+        }
+
+        return ReflectionType::createFromType($typeHint, false);
+    }
+
+    /**
+     * Do we have a return type declaration (only for PHP 7+ code)
+     *
+     * @return bool
+     */
+    public function hasReturnType()
+    {
+        return null !== $this->getReturnType();
     }
 
     /**
