@@ -79,6 +79,8 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isUserDefined | :heavy_check_mark: Yes |
 | isVariadic | :heavy_check_mark: Yes |
 | returnsReference | :heavy_check_mark: Yes |
+| getReturnType | :heavy_check_mark: Yes |
+| hasReturnType | :heavy_check_mark: Yes |
 
 ## ReflectionMethod
 
@@ -121,6 +123,8 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isOptional | :heavy_check_mark: Yes |
 | isPassedByReference | :heavy_check_mark: Yes |
 | isVariadic | :heavy_check_mark: Yes |
+| getType | :heavy_check_mark: Yes |
+| hasType | :heavy_check_mark: Yes |
 
 ## ReflectionFunction
 
@@ -160,3 +164,11 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 ## ReflectionObject
 
 :x: Will not be implemented
+
+## ReflectionType
+
+| Method | Supported |
+|--------|-----------|
+| __toString | :heavy_check_mark: Yes |
+| allowsNull | :heavy_check_mark: Yes |
+| isBuiltin | :heavy_check_mark: Yes |

@@ -14,6 +14,7 @@ features than PHP's built-in [reflection API](http://php.net/manual/en/book.refl
 * Reflecting directly on closures
 * Ability to extract AST from methods and functions
 * Ability to return AST representation of a class or function
+* Fetch return type declaration and parameter type declarations in PHP 7 code (even when running PHP 5!)
 * *Moar stuff coming soon!*
 
 Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).
