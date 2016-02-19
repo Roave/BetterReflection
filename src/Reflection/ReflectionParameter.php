@@ -377,6 +377,11 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Get the ReflectionType instance representing the type declaration for
+     * this parameter
+     *
+     * (note: this has nothing to do with DocBlocks).
+     *
      * @return ReflectionType
      */
     public function getType()
@@ -386,6 +391,18 @@ class ReflectionParameter implements \Reflector
         }
 
         return ReflectionType::createFromType($this->getTypeHint(), $this->allowsNull());
+    }
+
+    /**
+     * Does this parameter have a type declaration?
+     *
+     * (note: this has nothing to do with DocBlocks).
+     *
+     * @return bool
+     */
+    public function hasType()
+    {
+        return null !== $this->getTypeHint();
     }
 
     /**

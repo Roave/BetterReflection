@@ -282,6 +282,22 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($stringParamType->allowsNull());
     }
 
+    public function testHasTypeReturnsTrueWithType()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $method = $classInfo->getMethod('foo');
+
+        $this->assertTrue($method->getParameter('intParam')->hasType());
+    }
+
+    public function testHasTypeReturnsFalseWithoutType()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $method = $classInfo->getMethod('foo');
+
+        $this->assertFalse($method->getParameter('noTypeParam')->hasType());
+    }
+
     public function testIsCallable()
     {
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
