@@ -14,6 +14,7 @@ use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
+use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
@@ -443,5 +444,73 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Function_::class, $ast);
         $this->assertSame('foo', $ast->name);
+    }
+
+    public function testSetBodyFromClosure()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $function->setBodyFromClosure(function () {
+            echo 'Hello world!';
+        });
+
+        $this->assertSame("echo 'Hello world!';", $function->getBodyCode());
+    }
+
+    public function testSetBodyFromString()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $function->setBodyFromString("echo 'Hello world!';");
+
+        $this->assertSame("echo 'Hello world!';", $function->getBodyCode());
+    }
+
+    public function testSetBodyFromAstWithInvalidArgumentsThrowsException()
+    {
+        if (version_compare(PHP_VERSION, '7.0.0') < 0) {
+            $this->markTestSkipped('Only run this test on PHP 7 and above');
+        }
+
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->setExpectedException(\TypeError::class);
+        $function->setBodyFromAst([1]);
+    }
+
+    public function testSetBodyFromAst()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $function->setBodyFromAst([
+            new Echo_([
+                new String_('Hello world!')
+            ]),
+        ]);
+        
+        $this->assertSame("echo 'Hello world!';", $function->getBodyCode());
+    }
+
+    public function testSetBodyFromStringWithInvalidArgumentThrowsException()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $function->setBodyFromString(['foo' => 'bar']);
     }
 }
