@@ -14,10 +14,12 @@ use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionFunctionAbstract
@@ -384,6 +386,28 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
         $functionInfo = $reflector->reflect('returnsNothing');
         $this->assertFalse($functionInfo->hasReturnType());
+    }
+
+    public function testSetReturnType()
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect('returnsString');
+
+        $functionInfo->setReturnType(new Integer());
+
+        $this->assertSame('int', (string)$functionInfo->getReturnType());
+        $this->assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
+    }
+
+    public function testRemoveReturnType()
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect('returnsString');
+
+        $functionInfo->removeReturnType();
+
+        $this->assertNull($functionInfo->getReturnType());
+        $this->assertNotContains(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
     }
 
     public function testCannotClone()

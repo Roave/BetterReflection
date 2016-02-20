@@ -33,3 +33,23 @@ by using the `getTypeObject()` method:
 $reflectionType = $parameterInfo->getType();
 $phpDocumentorReflectionType = $reflectionType->getTypeObject();
 ```
+
+However, Better Reflection also gives the ability to change, and remove type
+declarations. Removing these types might be useful if you want to make code
+written for PHP 7 work in PHP 5 for example, and setting new types might
+do the opposite. For instance, you might want to set the PHP 7 return type
+declaration to that defined in the PHP DocBlock.
+
+```
+// Change a function to ensure it returns an integer
+$functionInfo->setReturnType(new \phpDocumentor\Reflection\Types\Integer());
+
+// If there is only one type defined in the DocBlock, set it as the return type
+$returnTypes = $functionInfo->getDocBlockReturnTypes();
+if (count($returnTypes) === 1) {
+    $functionInfo->setReturnType($returnTypes[0]);
+}
+
+// Remove the return type declaration
+$functionInfo->removeReturnType();
+```
