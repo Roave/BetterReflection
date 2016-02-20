@@ -53,3 +53,10 @@ if (count($returnTypes) === 1) {
 // Remove the return type declaration
 $functionInfo->removeReturnType();
 ```
+
+You can do similar things with parameter types also:
+
+```
+$parameterInfo->setType(new \phpDocumentor\Reflection\Types\Integer());
+$parameterInfo->removeType();
+```

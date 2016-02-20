@@ -13,6 +13,7 @@ use BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use phpDocumentor\Reflection\Types;
 use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionParameter
@@ -296,6 +297,36 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('foo');
 
         $this->assertFalse($method->getParameter('noTypeParam')->hasType());
+    }
+
+    public function testSetType()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $methodInfo = $classInfo->getMethod('foo');
+        $parameterInfo = $methodInfo->getParameter('intParam');
+
+        $parameterInfo->setType(new Types\String_());
+
+        $this->assertSame('string', (string)$parameterInfo->getType());
+        $this->assertStringStartsWith(
+            'public function foo(string $intParam',
+            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
+        );
+    }
+
+    public function testRemoveType()
+    {
+        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $methodInfo = $classInfo->getMethod('foo');
+        $parameterInfo = $methodInfo->getParameter('intParam');
+
+        $parameterInfo->removeType();
+
+        $this->assertNull($parameterInfo->getType());
+        $this->assertStringStartsWith(
+            'public function foo($intParam',
+            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
+        );
     }
 
     public function testIsCallable()
