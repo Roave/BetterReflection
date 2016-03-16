@@ -406,6 +406,26 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Set the parameter type declaration.
+     *
+     * You must use the phpDocumentor reflection type classes as the parameter.
+     *
+     * @param Type $newParameterType
+     */
+    public function setType(Type $newParameterType)
+    {
+        $this->node->type = new Node\Name((string)$newParameterType);
+    }
+
+    /**
+     * Remove the parameter type declaration completely.
+     */
+    public function removeType()
+    {
+        $this->node->type = null;
+    }
+
+    /**
      * Is this parameter an array?
      *
      * @return bool

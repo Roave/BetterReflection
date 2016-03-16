@@ -441,6 +441,26 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     }
 
     /**
+     * Set the return type declaration.
+     *
+     * You must use the phpDocumentor reflection type classes as the parameter.
+     *
+     * @param Type $newReturnType
+     */
+    public function setReturnType(Type $newReturnType)
+    {
+        $this->node->returnType = new Node\Name((string)$newReturnType);
+    }
+
+    /**
+     * Remove the return type declaration completely.
+     */
+    public function removeReturnType()
+    {
+        $this->node->returnType = null;
+    }
+
+    /**
      * @throws Exception\Uncloneable
      */
     public function __clone()
