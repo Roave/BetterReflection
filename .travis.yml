@@ -11,7 +11,7 @@ env:
     - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
 before_script:
-  - composer update --prefer-source $DEPENDENCIES
+  - composer update --prefer-dist $DEPENDENCIES
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
