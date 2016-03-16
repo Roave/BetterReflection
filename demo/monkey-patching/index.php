@@ -7,7 +7,7 @@ use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use PhpParser\PrettyPrinter\Standard as CodePrinter;
 
 // Create the reflection first (without loading)
-$classInfo = (new ClassReflector(new SingleFileSourceLocator('MyClass.php')))->reflect('MyClass');
+$classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/MyClass.php')))->reflect('MyClass');
 
 // Override the body...!
 $classInfo->getMethod('foo')->setBodyFromClosure(function () {
@@ -19,4 +19,4 @@ $classCode = (new CodePrinter())->prettyPrint([$classInfo->getAst()]);
 eval($classCode);
 
 $c = new MyClass();
-var_dump($c->foo()); // should be 4...!?!??
+echo $c->foo() . "\n"; // should be 4...!?!??

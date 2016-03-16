@@ -7,6 +7,6 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use BetterReflection\Reflection\ReflectionClass;
 
 $reflection = ReflectionClass::createFromName('stdClass');
-var_dump($reflection->getName()); // stdClass
-var_dump($reflection->isInternal()); // true
+echo $reflection->getName() . "\n"; // stdClass
+echo ($reflection->isInternal() === true ? 'internal' : 'not internal') . "\n"; // internal
 
