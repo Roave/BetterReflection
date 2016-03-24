@@ -15,6 +15,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
+  - test/demo/check-demo.sh
   - vendor/bin/phpunit test/compat || true
   - vendor/bin/phpunit test/core || true
 

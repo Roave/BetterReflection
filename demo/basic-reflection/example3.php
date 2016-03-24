@@ -9,13 +9,13 @@ use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $reflector = new ClassReflector(new AggregateSourceLocator([
-    new SingleFileSourceLocator('assets/MyClass.php'),
+    new SingleFileSourceLocator(__DIR__ . '/assets/MyClass.php'),
 ]));
 
 $reflection = $reflector->reflect('MyClass');
 
-var_dump($reflection->getName()); // MyClass
-var_dump($reflection->getProperty('foo')->isPrivate()); // true
-var_dump($reflection->getProperty('foo')->getDocBlockTypeStrings()[0]); // string
-var_dump($reflection->getMethod('getFoo')->getDocBlockReturnTypes()[0]->__toString()); // string
+echo $reflection->getName() . "\n"; // MyClass
+echo ($reflection->getProperty('foo')->isPrivate() === true ? 'private' : 'not private') . "\n"; // private
+echo $reflection->getProperty('foo')->getDocBlockTypeStrings()[0] . "\n"; // string
+echo $reflection->getMethod('getFoo')->getDocBlockReturnTypes()[0]->__toString() . "\n"; // string
 
