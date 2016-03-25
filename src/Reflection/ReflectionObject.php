@@ -534,4 +534,12 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->removeMethod($methodName);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMethod($methodName)
+    {
+        return $this->reflectionClass->addMethod($methodName);
+    }
 }

@@ -1167,4 +1167,15 @@ class ReflectionClass implements Reflection, \Reflector
         }
         return false;
     }
+
+    /**
+     * Add a new method to the class.
+     *
+     * @param string $methodName
+     */
+    public function addMethod($methodName)
+    {
+        $this->node->stmts[] = new ClassMethod($methodName);
+        unset($this->cachedMethods);
+    }
 }

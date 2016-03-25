@@ -1093,4 +1093,20 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($reflection->hasMethod('bar'));
     }
+
+    public function testAddMethod()
+    {
+        $php = '<?php
+            class Foo {
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertFalse($reflection->hasMethod('bar'));
+
+        $reflection->addMethod('bar');
+
+        $this->assertTrue($reflection->hasMethod('bar'));
+    }
 }
