@@ -1047,4 +1047,33 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Class_::class, $ast);
         $this->assertSame('Foo', $ast->name);
     }
+
+    public function testSetIsFinal()
+    {
+        $php = '<?php
+            final class Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertTrue($reflection->isFinal());
+
+        $reflection->setFinal(false);
+        $this->assertFalse($reflection->isFinal());
+
+        $reflection->setFinal(true);
+        $this->assertTrue($reflection->isFinal());
+    }
+
+    public function testSetIsFinalThrowsExceptionForInterface()
+    {
+        $php = '<?php
+            interface Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->expectException(NotAClassReflection::class);
+        $reflection->setFinal(true);
+    }
 }

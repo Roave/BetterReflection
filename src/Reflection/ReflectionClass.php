@@ -1127,4 +1127,23 @@ class ReflectionClass implements Reflection, \Reflector
     {
         return $this->node;
     }
+
+    /**
+     * Set wether this class is final or not
+     *
+     * @param bool $shouldBeFinal
+     */
+    public function setFinal($shouldBeFinal)
+    {
+        if (!$this->node instanceof ClassNode) {
+            throw Exception\NotAClassReflection::fromReflectionClass($this);
+        }
+
+        if ($shouldBeFinal === true) {
+            $this->node->type |= ClassNode::MODIFIER_FINAL;
+            return;
+        }
+
+        $this->node->type &= ~ClassNode::MODIFIER_FINAL;
+    }
 }

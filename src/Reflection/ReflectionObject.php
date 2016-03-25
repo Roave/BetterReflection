@@ -518,4 +518,12 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->getAst();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFinal($shouldBeFinal)
+    {
+        return $this->reflectionClass->setFinal($shouldBeFinal);
+    }
 }
