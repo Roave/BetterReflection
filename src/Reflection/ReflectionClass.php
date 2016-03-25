@@ -1178,4 +1178,60 @@ class ReflectionClass implements Reflection, \Reflector
         $this->node->stmts[] = new ClassMethod($methodName);
         unset($this->cachedMethods);
     }
+
+    /**
+     * Add a new property to the class.
+     *
+     * Visibility defaults to 'public', or can be 'protected' or 'private'.
+     *
+     * @param string $propertyName
+     * @param string $visibility
+     * @param bool $static
+     */
+    public function addProperty($propertyName, $visibility = 'public', $static = false)
+    {
+        $type = 0;
+        switch($visibility) {
+            case 'private':
+                $type |= ClassNode::MODIFIER_PRIVATE;
+                break;
+            case 'protected':
+                $type |= ClassNode::MODIFIER_PROTECTED;
+                break;
+            default:
+                $type |= ClassNode::MODIFIER_PUBLIC;
+                break;
+        }
+
+        if ($static) {
+            $type |= ClassNode::MODIFIER_STATIC;
+        }
+
+        $this->node->stmts[] = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
+        $this->cachedProperties = null;
+    }
+
+    /**
+     * Remove a property from the class.
+     *
+     * @param string $propertyName
+     * @return bool
+     */
+    public function removeProperty($propertyName)
+    {
+        $lowerName = strtolower($propertyName);
+        foreach ($this->node->stmts as $key => $stmt) {
+            if ($stmt instanceof PropertyNode) {
+                $propertyNames = array_map(function ($n) {
+                    return strtolower($n->name);
+                }, $stmt->props);
+                if (in_array($lowerName, $propertyNames, true)) {
+                    $this->cachedProperties = null;
+                    unset($this->node->stmts[$key]);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

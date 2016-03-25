@@ -542,4 +542,20 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->addMethod($methodName);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeProperty($methodName)
+    {
+        return $this->reflectionClass->removeProperty($methodName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addProperty($methodName, $visibility = 'public', $static = false)
+    {
+        return $this->reflectionClass->addProperty($methodName, $visibility, $static);
+    }
 }

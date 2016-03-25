@@ -1109,4 +1109,49 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($reflection->hasMethod('bar'));
     }
+
+    public function testRemoveProperty()
+    {
+        $php = '<?php
+            class Foo {
+                public $bar;
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertTrue($reflection->hasProperty('bar'));
+
+        $reflection->removeProperty('bar');
+
+        $this->assertFalse($reflection->hasProperty('bar'));
+    }
+
+    public function testAddProperty()
+    {
+        $php = '<?php
+            class Foo {
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertFalse($reflection->hasProperty('bar'));
+
+        $reflection->addProperty('publicBar', 'public');
+        $this->assertTrue($reflection->hasProperty('publicBar'));
+        $this->assertTrue($reflection->getProperty('publicBar')->isPublic());
+
+        $reflection->addProperty('protectedBar', 'protected');
+        $this->assertTrue($reflection->hasProperty('protectedBar'));
+        $this->assertTrue($reflection->getProperty('protectedBar')->isProtected());
+
+        $reflection->addProperty('privateBar', 'private');
+        $this->assertTrue($reflection->hasProperty('privateBar'));
+        $this->assertTrue($reflection->getProperty('privateBar')->isPrivate());
+
+        $reflection->addProperty('staticBar', 'public', true);
+        $this->assertTrue($reflection->hasProperty('staticBar'));
+        $this->assertTrue($reflection->getProperty('staticBar')->isStatic());
+    }
 }
