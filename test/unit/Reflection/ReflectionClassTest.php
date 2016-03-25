@@ -1076,4 +1076,21 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->expectException(NotAClassReflection::class);
         $reflection->setFinal(true);
     }
+
+    public function testRemoveMethod()
+    {
+        $php = '<?php
+            class Foo {
+                public function bar() {}
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertTrue($reflection->hasMethod('bar'));
+
+        $reflection->removeMethod('bar');
+
+        $this->assertFalse($reflection->hasMethod('bar'));
+    }
 }

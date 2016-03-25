@@ -526,4 +526,12 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->setFinal($shouldBeFinal);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeMethod($methodName)
+    {
+        return $this->reflectionClass->removeMethod($methodName);
+    }
 }
