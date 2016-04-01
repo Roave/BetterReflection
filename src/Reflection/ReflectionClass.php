@@ -1129,17 +1129,17 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * Set wether this class is final or not
+     * Set whether this class is final or not
      *
-     * @param bool $shouldBeFinal
+     * @param bool $isFinal
      */
-    public function setFinal($shouldBeFinal)
+    public function setFinal($isFinal)
     {
         if (!$this->node instanceof ClassNode) {
             throw Exception\NotAClassReflection::fromReflectionClass($this);
         }
 
-        if ($shouldBeFinal === true) {
+        if ($isFinal === true) {
             $this->node->type |= ClassNode::MODIFIER_FINAL;
             return;
         }
@@ -1182,20 +1182,20 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * Add a new property to the class.
      *
-     * Visibility defaults to 'public', or can be 'protected' or 'private'.
+     * Visibility defaults to \ReflectionProperty::IS_PUBLIC, or can be ::IS_PROTECTED or ::IS_PRIVATE.
      *
      * @param string $propertyName
-     * @param string $visibility
+     * @param int $visibility
      * @param bool $static
      */
-    public function addProperty($propertyName, $visibility = 'public', $static = false)
+    public function addProperty($propertyName, $visibility = \ReflectionProperty::IS_PUBLIC, $static = false)
     {
         $type = 0;
         switch($visibility) {
-            case 'private':
+            case \ReflectionProperty::IS_PRIVATE:
                 $type |= ClassNode::MODIFIER_PRIVATE;
                 break;
-            case 'protected':
+            case \ReflectionProperty::IS_PROTECTED:
                 $type |= ClassNode::MODIFIER_PROTECTED;
                 break;
             default:
@@ -1220,18 +1220,22 @@ class ReflectionClass implements Reflection, \Reflector
     public function removeProperty($propertyName)
     {
         $lowerName = strtolower($propertyName);
+
         foreach ($this->node->stmts as $key => $stmt) {
             if ($stmt instanceof PropertyNode) {
-                $propertyNames = array_map(function ($n) {
-                    return strtolower($n->name);
+                $propertyNames = array_map(function (Node\Stmt\PropertyProperty $propertyProperty) {
+                    return strtolower($propertyProperty->name);
                 }, $stmt->props);
+
                 if (in_array($lowerName, $propertyNames, true)) {
                     $this->cachedProperties = null;
                     unset($this->node->stmts[$key]);
+
                     return true;
                 }
             }
         }
+
         return false;
     }
 }

@@ -1138,19 +1138,19 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($reflection->hasProperty('bar'));
 
-        $reflection->addProperty('publicBar', 'public');
+        $reflection->addProperty('publicBar', \ReflectionProperty::IS_PUBLIC);
         $this->assertTrue($reflection->hasProperty('publicBar'));
         $this->assertTrue($reflection->getProperty('publicBar')->isPublic());
 
-        $reflection->addProperty('protectedBar', 'protected');
+        $reflection->addProperty('protectedBar', \ReflectionProperty::IS_PROTECTED);
         $this->assertTrue($reflection->hasProperty('protectedBar'));
         $this->assertTrue($reflection->getProperty('protectedBar')->isProtected());
 
-        $reflection->addProperty('privateBar', 'private');
+        $reflection->addProperty('privateBar', \ReflectionProperty::IS_PRIVATE);
         $this->assertTrue($reflection->hasProperty('privateBar'));
         $this->assertTrue($reflection->getProperty('privateBar')->isPrivate());
 
-        $reflection->addProperty('staticBar', 'public', true);
+        $reflection->addProperty('staticBar', \ReflectionProperty::IS_PUBLIC, true);
         $this->assertTrue($reflection->hasProperty('staticBar'));
         $this->assertTrue($reflection->getProperty('staticBar')->isStatic());
     }

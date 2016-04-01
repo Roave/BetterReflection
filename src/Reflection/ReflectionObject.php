@@ -522,9 +522,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function setFinal($shouldBeFinal)
+    public function setFinal($isFinal)
     {
-        return $this->reflectionClass->setFinal($shouldBeFinal);
+        return $this->reflectionClass->setFinal($isFinal);
     }
 
     /**
