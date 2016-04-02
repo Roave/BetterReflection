@@ -1047,4 +1047,111 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Class_::class, $ast);
         $this->assertSame('Foo', $ast->name);
     }
+
+    public function testSetIsFinal()
+    {
+        $php = '<?php
+            final class Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertTrue($reflection->isFinal());
+
+        $reflection->setFinal(false);
+        $this->assertFalse($reflection->isFinal());
+
+        $reflection->setFinal(true);
+        $this->assertTrue($reflection->isFinal());
+    }
+
+    public function testSetIsFinalThrowsExceptionForInterface()
+    {
+        $php = '<?php
+            interface Foo {}
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->expectException(NotAClassReflection::class);
+        $reflection->setFinal(true);
+    }
+
+    public function testRemoveMethod()
+    {
+        $php = '<?php
+            class Foo {
+                public function bar() {}
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertTrue($reflection->hasMethod('bar'));
+
+        $reflection->removeMethod('bar');
+
+        $this->assertFalse($reflection->hasMethod('bar'));
+    }
+
+    public function testAddMethod()
+    {
+        $php = '<?php
+            class Foo {
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertFalse($reflection->hasMethod('bar'));
+
+        $reflection->addMethod('bar');
+
+        $this->assertTrue($reflection->hasMethod('bar'));
+    }
+
+    public function testRemoveProperty()
+    {
+        $php = '<?php
+            class Foo {
+                public $bar;
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertTrue($reflection->hasProperty('bar'));
+
+        $reflection->removeProperty('bar');
+
+        $this->assertFalse($reflection->hasProperty('bar'));
+    }
+
+    public function testAddProperty()
+    {
+        $php = '<?php
+            class Foo {
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $this->assertFalse($reflection->hasProperty('bar'));
+
+        $reflection->addProperty('publicBar', \ReflectionProperty::IS_PUBLIC);
+        $this->assertTrue($reflection->hasProperty('publicBar'));
+        $this->assertTrue($reflection->getProperty('publicBar')->isPublic());
+
+        $reflection->addProperty('protectedBar', \ReflectionProperty::IS_PROTECTED);
+        $this->assertTrue($reflection->hasProperty('protectedBar'));
+        $this->assertTrue($reflection->getProperty('protectedBar')->isProtected());
+
+        $reflection->addProperty('privateBar', \ReflectionProperty::IS_PRIVATE);
+        $this->assertTrue($reflection->hasProperty('privateBar'));
+        $this->assertTrue($reflection->getProperty('privateBar')->isPrivate());
+
+        $reflection->addProperty('staticBar', \ReflectionProperty::IS_PUBLIC, true);
+        $this->assertTrue($reflection->hasProperty('staticBar'));
+        $this->assertTrue($reflection->getProperty('staticBar')->isStatic());
+    }
 }

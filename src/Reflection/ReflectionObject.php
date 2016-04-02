@@ -518,4 +518,44 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->getAst();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFinal($isFinal)
+    {
+        return $this->reflectionClass->setFinal($isFinal);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeMethod($methodName)
+    {
+        return $this->reflectionClass->removeMethod($methodName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMethod($methodName)
+    {
+        return $this->reflectionClass->addMethod($methodName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeProperty($methodName)
+    {
+        return $this->reflectionClass->removeProperty($methodName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addProperty($methodName, $visibility = 'public', $static = false)
+    {
+        return $this->reflectionClass->addProperty($methodName, $visibility, $static);
+    }
 }
