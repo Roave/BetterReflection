@@ -4,6 +4,7 @@ namespace BetterReflectionTest\Reflector;
 
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
+use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -47,5 +48,14 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 
         $sourceLocator = $this->getObjectAttribute($defaultReflector, 'sourceLocator');
         $this->assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
+    }
+
+    public function testThrowsExceptionWhenIdentifierNotFound()
+    {
+        $defaultReflector = ClassReflector::buildDefaultReflector();
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $defaultReflector->reflect('Something\That\Should\Not\Exist');
     }
 }

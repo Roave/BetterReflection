@@ -159,9 +159,12 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsNullWhenUnableToAutoload()
     {
-        $reflector = new ClassReflector(new AutoloadSourceLocator());
+        $sourceLocator = new AutoloadSourceLocator();
 
-        $this->assertNull($reflector->reflect('Some\Class\That\Cannot\Exist'));
+        $this->assertNull($sourceLocator->locateIdentifier(
+            new ClassReflector($sourceLocator),
+            new Identifier('Some\Class\That\Cannot\Exist', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+        ));
     }
 
     public function testShouldNotConsiderEvaledSources()
