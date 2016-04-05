@@ -39,6 +39,7 @@ class Locator
      * @param LocatedSource $locatedSource
      * @param Identifier $identifier
      * @return Reflection
+     * @throws Exception\AstParse
      */
     public function findReflection(Reflector $reflector, LocatedSource $locatedSource, Identifier $identifier)
     {
@@ -59,15 +60,20 @@ class Locator
      * @param LocatedSource $locatedSource
      * @param IdentifierType $identifierType
      * @return \BetterReflection\Reflection\Reflection[]
+     * @throws Exception\AstParse
      */
     public function findReflectionsOfType(Reflector $reflector, LocatedSource $locatedSource, IdentifierType $identifierType)
     {
-        return $this->findReflectionsInTree->__invoke(
-            $reflector,
-            $this->parser->parse($locatedSource->getSource()),
-            $identifierType,
-            $locatedSource
-        );
+        try {
+            return $this->findReflectionsInTree->__invoke(
+                $reflector,
+                $this->parser->parse($locatedSource->getSource()),
+                $identifierType,
+                $locatedSource
+            );
+        } catch (\Exception $exception) {
+            throw Exception\AstParse::fromLocatedSource($locatedSource, $exception);
+        }
     }
 
     /**
