@@ -537,4 +537,28 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\InvalidArgumentException::class);
         $function->setBodyFromString(['foo' => 'bar']);
     }
+
+    public function testAddParameter()
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $function->addParameter('myNewParam');
+
+        $this->assertStringStartsWith('function foo($myNewParam)', (new \PhpParser\PrettyPrinter\Standard())->prettyPrint([$function->getAst()]));
+    }
+
+    public function testRemoveParameter()
+    {
+        $php = '<?php function foo($a, $b) {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        $function->removeParameter('a');
+
+        $this->assertStringStartsWith('function foo($b)', (new \PhpParser\PrettyPrinter\Standard())->prettyPrint([$function->getAst()]));
+    }
 }
