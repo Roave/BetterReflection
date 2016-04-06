@@ -585,7 +585,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * Remove a parameter from the method/function.
      *
      * @param string $parameterName
-     * @return bool
+     * @return void
      */
     public function removeParameter($parameterName)
     {
@@ -596,7 +596,5 @@ abstract class ReflectionFunctionAbstract implements \Reflector
                 unset($this->node->params[$key]);
             }
         }
-
-        return false;
     }
 }
