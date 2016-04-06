@@ -11,6 +11,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\Closure as ClosureNode;
+use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\Type;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
@@ -568,5 +569,32 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             return $node;
         };
         $this->node->stmts = $validator(...$nodes);
+    }
+
+    /**
+     * Add a new parameter to the method/function.
+     *
+     * @param string $parameterName
+     */
+    public function addParameter($parameterName)
+    {
+        $this->node->params[] = new ParamNode($parameterName);
+    }
+
+    /**
+     * Remove a parameter from the method/function.
+     *
+     * @param string $parameterName
+     * @return void
+     */
+    public function removeParameter($parameterName)
+    {
+        $lowerName = strtolower($parameterName);
+
+        foreach ($this->node->params as $key => $paramNode) {
+            if (strtolower($paramNode->name) === $lowerName) {
+                unset($this->node->params[$key]);
+            }
+        }
     }
 }
