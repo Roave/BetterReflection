@@ -45,10 +45,15 @@ class ClassReflector implements Reflector
      */
     public function reflect($className)
     {
-        return $this->sourceLocator->locateIdentifier(
-            $this,
-            new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
-        );
+        $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+
+        $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
+
+        if (null === $classInfo) {
+            throw Exception\IdentifierNotFound::fromIdentifier($identifier);
+        }
+
+        return $classInfo;
     }
 
     /**
