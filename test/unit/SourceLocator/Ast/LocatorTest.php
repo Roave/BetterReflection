@@ -9,6 +9,7 @@ use BetterReflection\Reflection\ReflectionFunction;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\Reflector\FunctionReflector;
+use BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use BetterReflection\SourceLocator\Ast\Locator;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -94,5 +95,21 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
+    }
+
+    public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode()
+    {
+        $locator = new Locator();
+
+        $phpCode = '<?php syntax error';
+
+        $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+        $sourceLocator = new StringSourceLocator($phpCode);
+        $reflector = new ClassReflector($sourceLocator);
+
+        $locatedSource = new LocatedSource($phpCode, null);
+
+        $this->expectException(ParseToAstFailure::class);
+        $locator->findReflectionsOfType($reflector, $locatedSource, $identifierType);
     }
 }
