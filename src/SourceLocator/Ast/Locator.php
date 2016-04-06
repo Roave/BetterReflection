@@ -39,7 +39,7 @@ class Locator
      * @param LocatedSource $locatedSource
      * @param Identifier $identifier
      * @return Reflection
-     * @throws Exception\AstParse
+     * @throws Exception\ParseToAstFailure
      */
     public function findReflection(Reflector $reflector, LocatedSource $locatedSource, Identifier $identifier)
     {
@@ -60,7 +60,7 @@ class Locator
      * @param LocatedSource $locatedSource
      * @param IdentifierType $identifierType
      * @return \BetterReflection\Reflection\Reflection[]
-     * @throws Exception\AstParse
+     * @throws Exception\ParseToAstFailure
      */
     public function findReflectionsOfType(Reflector $reflector, LocatedSource $locatedSource, IdentifierType $identifierType)
     {
@@ -72,7 +72,9 @@ class Locator
                 $locatedSource
             );
         } catch (\Exception $exception) {
-            throw Exception\AstParse::fromLocatedSource($locatedSource, $exception);
+            throw Exception\ParseToAstFailure::fromLocatedSource($locatedSource, $exception);
+        } catch (\Throwable $exception) {
+            throw Exception\ParseToAstFailure::fromLocatedSource($locatedSource, $exception);
         }
     }
 

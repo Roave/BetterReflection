@@ -2,13 +2,13 @@
 
 namespace BetterReflectionTest\Reflector\Exception;
 
-use BetterReflection\SourceLocator\Ast\Exception\AstParse;
+use BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
- * @covers \BetterReflection\SourceLocator\Ast\Exception\AstParse
+ * @covers \BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
  */
-class AstParseTest extends \PHPUnit_Framework_TestCase
+class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
 {
     public function testFromLocatedSourceWithoutFilename()
     {
@@ -16,9 +16,9 @@ class AstParseTest extends \PHPUnit_Framework_TestCase
 
         $previous = new \Exception();
 
-        $exception = AstParse::fromLocatedSource($locatedSource, $previous);
+        $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 
-        $this->assertInstanceOf(AstParse::class, $exception);
+        $this->assertInstanceOf(ParseToAstFailure::class, $exception);
         $this->assertSame('AST failed to parse in located source (first 20 characters: <?php abc)', $exception->getMessage());
         $this->assertSame($previous, $exception->getPrevious());
     }
@@ -33,9 +33,9 @@ class AstParseTest extends \PHPUnit_Framework_TestCase
 
         $previous = new \Exception();
 
-        $exception = AstParse::fromLocatedSource($locatedSource, $previous);
+        $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 
-        $this->assertInstanceOf(AstParse::class, $exception);
+        $this->assertInstanceOf(ParseToAstFailure::class, $exception);
         $this->assertSame('AST failed to parse in located source (in /foo/bar)', $exception->getMessage());
         $this->assertSame($previous, $exception->getPrevious());
     }

@@ -4,9 +4,14 @@ namespace BetterReflection\SourceLocator\Ast\Exception;
 
 use BetterReflection\SourceLocator\Located\LocatedSource;
 
-class AstParse extends \RuntimeException
+class ParseToAstFailure extends \RuntimeException
 {
-    public static function fromLocatedSource(LocatedSource $locatedSource, \Exception $previous = null)
+    /**
+     * @param LocatedSource $locatedSource
+     * @param \Exception|\Throwable $previous
+     * @return ParseToAstFailure
+     */
+    public static function fromLocatedSource(LocatedSource $locatedSource, $previous = null)
     {
         $additionalInformation = '';
         if (null !== $locatedSource->getFileName()) {
