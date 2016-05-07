@@ -244,4 +244,46 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(Uncloneable::class);
         $unused = clone $publicProp;
     }
+
+    public function testSetVisibility()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $publicProp = $classInfo->getProperty('publicStaticProperty');
+
+        $this->assertFalse($publicProp->isPrivate(), 'Should initially be public, was private');
+        $this->assertFalse($publicProp->isProtected(), 'Should initially be public, was protected');
+        $this->assertTrue($publicProp->isPublic(), 'Should initially be public, was not public');
+        $this->assertTrue($publicProp->isStatic(), 'Should initially be static');
+
+        $publicProp->setVisibility(\ReflectionProperty::IS_PRIVATE);
+
+        $this->assertTrue($publicProp->isPrivate(), 'After setting private, isPrivate is not set');
+        $this->assertFalse($publicProp->isProtected(), 'After setting private, protected is now set but should not be');
+        $this->assertFalse($publicProp->isPublic(), 'After setting private, public is still set but should not be');
+        $this->assertTrue($publicProp->isStatic(), 'Should still be static after setting private');
+
+        $publicProp->setVisibility(\ReflectionProperty::IS_PROTECTED);
+
+        $this->assertFalse($publicProp->isPrivate(), 'After setting protected, should no longer be private');
+        $this->assertTrue($publicProp->isProtected(), 'After setting protected, expect isProtected to be set');
+        $this->assertFalse($publicProp->isPublic(), 'After setting protected, public is set but should not be');
+        $this->assertTrue($publicProp->isStatic(), 'Should still be static after setting protected');
+
+        $publicProp->setVisibility(\ReflectionProperty::IS_PUBLIC);
+
+        $this->assertFalse($publicProp->isPrivate(), 'After setting public, isPrivate should not be set');
+        $this->assertFalse($publicProp->isProtected(), 'After setting public, isProtected should not be set');
+        $this->assertTrue($publicProp->isPublic(), 'After setting public, isPublic should be set but was not');
+        $this->assertTrue($publicProp->isStatic(), 'Should still be static after setting public');
+    }
+
+    public function testSetVisibilityThrowsExceptionWithInvalidArgument()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $publicProp = $classInfo->getProperty('publicProperty');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
+        $publicProp->setVisibility('foo');
+    }
 }
