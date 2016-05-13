@@ -440,11 +440,11 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBodyCode()
     {
-        $php = '<?php
+        $php = "<?php
             function foo() {
-                echo "Hello world";
+                echo 'Hello world';
             }
-        ';
+        ";
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
