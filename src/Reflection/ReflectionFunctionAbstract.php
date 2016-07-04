@@ -603,6 +603,9 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Fetch an array of all return statements found within this function.
      *
+     * Note that return statements within smaller scopes contained (e.g. anonymous classes, closures) are not returned
+     * here as they are not within the immediate scope.
+     *
      * @return Node\Stmt\Return_[]
      */
     public function getReturnStatementsAst()
