@@ -1,7 +1,5 @@
 # Compatibility with native reflection API
 
-The progress of compatibility can also be tracked in issue [#7](https://github.com/Roave/BetterReflection/issues/7).
-
 ## ReflectionClass
 
 | Method | Supported |
@@ -12,7 +10,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getDefaultProperties | :heavy_check_mark: Yes |
 | getDocComment | :heavy_check_mark: Yes |
 | getEndLine | :heavy_check_mark: Yes |
-| getExtension | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
+| getExtension | :x: No - see ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | :heavy_check_mark: Yes  |
 | getInterfaces | :heavy_check_mark: Yes  |
@@ -26,8 +24,8 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | :heavy_check_mark: Yes |
-| getStaticProperties | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| getStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getStaticProperties | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getStaticPropertyValue | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getTraitAliases | :heavy_check_mark: Yes |
 | getTraitNames | :heavy_check_mark: Yes |
 | getTraits | :heavy_check_mark: Yes |
@@ -47,21 +45,21 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isSubclassOf | :heavy_check_mark: Yes  |
 | isTrait | :heavy_check_mark: Yes |
 | isUserDefined | :heavy_check_mark: Yes |
-| newInstance | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| newInstanceArgs | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| newInstanceWithoutConstructor | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| setStaticPropertyValue | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| newInstance | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| newInstanceArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| newInstanceWithoutConstructor | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setStaticPropertyValue | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 
 ## ReflectionFunctionAbstract
 
 | Method | Supported |
 |--------|-----------|
-| getClosureScopeClass | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| getClosureThis | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getClosureScopeClass | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getClosureThis | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getDocComment | :heavy_check_mark: Yes |
 | getEndLine | :heavy_check_mark: Yes |
-| getExtension | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
-| getExtensionName | :x: No - extensions are not supported ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
+| getExtension | :x: No - see ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
+| getExtensionName | :x: No - see ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
 | getFileName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | :heavy_check_mark: Yes |
@@ -70,12 +68,12 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getParameters | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | :heavy_check_mark: Yes |
-| getStaticVariables | :x: No - would require loading ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getStaticVariables | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | inNamespace | :heavy_check_mark: Yes |
 | isClosure | :heavy_check_mark: Yes |
-| isDeprecated | :heavy_check_mark: Yes - but see issue ([#38](https://github.com/Roave/BetterReflection/issues/38)) |
+| isDeprecated | :heavy_check_mark: Yes |
 | isGenerator | :heavy_check_mark: Yes |
-| isInternal | :heavy_check_mark: Yes - but see issue ([#38](https://github.com/Roave/BetterReflection/issues/38)) |
+| isInternal | :heavy_check_mark: Yes |
 | isUserDefined | :heavy_check_mark: Yes |
 | isVariadic | :heavy_check_mark: Yes |
 | returnsReference | :heavy_check_mark: Yes |
@@ -86,12 +84,12 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getClosure | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
 | getPrototype | :heavy_check_mark: Yes |
-| invoke | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invokeArgs | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| invoke | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| invokeArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | isAbstract | :heavy_check_mark: Yes |
 | isConstructor | :heavy_check_mark: Yes |
 | isDestructor | :heavy_check_mark: Yes |
@@ -100,7 +98,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No - would require loading of the method itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setAccessible | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionParameter
@@ -130,10 +128,10 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No - would require actual compilation of the AST ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invoke | :x: No - would require loading of the function itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invokeArgs | :x: No - would require loading of the function itself ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| isDisabled | :heavy_check_mark: Yes - but see issue ([#38](https://github.com/Roave/BetterReflection/issues/38)) |
+| getClosure | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| invoke | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| invokeArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| isDisabled | :heavy_check_mark: Yes |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionProperty
@@ -144,14 +142,14 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 | getDocComment | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
-| getValue | :x: No - would require an instance of an object ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getValue | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | isDefault | :heavy_check_mark: Yes |
 | isPrivate | :heavy_check_mark: Yes |
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No - would require an instance of an object ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| setValue | :x: No - would require an instance of an object ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setAccessible | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setValue | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 
 ## ReflectionExtension
 
@@ -163,7 +161,7 @@ The progress of compatibility can also be tracked in issue [#7](https://github.c
 
 ## ReflectionObject
 
-:x: Will not be implemented
+Implemented as a wrapper around [`ReflectionClass`](#reflectionclass), so the API is the same.
 
 ## ReflectionType
 
