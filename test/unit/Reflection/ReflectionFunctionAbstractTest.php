@@ -349,6 +349,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
             ['returnsString', 'string'],
             ['returnsNull', 'null'],
             ['returnsObject', '\stdClass'],
+            ['returnsVoid', 'void'],
         ];
     }
 
@@ -523,7 +524,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
                 new String_('Hello world!')
             ]),
         ]);
-        
+
         $this->assertSame("echo 'Hello world!';", $function->getBodyCode());
     }
 

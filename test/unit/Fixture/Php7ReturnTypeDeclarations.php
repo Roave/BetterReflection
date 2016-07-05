@@ -19,3 +19,7 @@ function returnsNull(): null
 function returnsNothing()
 {
 }
+
+function returnsVoid(): void
+{
+}
