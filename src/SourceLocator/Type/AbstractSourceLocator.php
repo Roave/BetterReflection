@@ -17,13 +17,12 @@ abstract class AbstractSourceLocator implements SourceLocator
     private $astLocator;
 
     /**
-     * Children should implement this method return an array with two values.
-     * The first key should be the code itself, and the second key the filename
-     * containing the key, or null.
+     * Children should implement this method and return a LocatedSource object
+     * which contains the source and the file from which it was located.
      *
      * @example
-     *   return ['<?php class Foo {}', null];
-     *   return [file_get_contents('Foo.php'), 'Foo.php'];
+     *   return new LocatedSource(['<?php class Foo {}', null]);
+     *   return new LocatedSource([file_get_contents('Foo.php'), 'Foo.php']);
      *
      * @param Identifier $identifier
      * @return LocatedSource
