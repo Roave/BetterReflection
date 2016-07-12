@@ -4,55 +4,60 @@ namespace BetterReflectionTest\Util\Visitor;
 
 use BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use PhpParser\Node;
+use PhpParser\NodeTraverser;
 
 /**
  * @covers \BetterReflection\Util\Visitor\ReturnNodeVisitor
  */
 class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testOnlyReturnNodesAreAdded()
-    {
-        $visitor = new ReturnNodeVisitor();
-
-        $this->assertCount(0, $visitor->getReturnNodes());
-
-        $visitor->enterNode(new Node\Scalar\MagicConst\File());
-
-        $this->assertCount(0, $visitor->getReturnNodes());
-
-        $visitor->enterNode(new Node\Stmt\Return_());
-
-        $this->assertCount(1, $visitor->getReturnNodes());
-        $this->assertContainsOnlyInstancesOf(Node\Stmt\Return_::class, $visitor->getReturnNodes());
-    }
-
     public function outOfScopeNodeTypeProvider()
     {
         return [
-            'closure' => [new Node\Expr\Closure()],
-            'anonymousClass' => [new Node\Stmt\Class_('')],
+            'onlyExpectedNodesAdded' => [
+                [
+                    new Node\Scalar\MagicConst\File(),
+                    new Node\Stmt\Return_(),
+                ],
+                1
+            ],
+            'returnWithinClosureShouldNotBeReturned' => [
+                [
+                    new Node\Expr\Closure([
+                        new Node\Stmt\Return_(),
+                    ]),
+                    new Node\Stmt\Return_(),
+                ],
+                1
+            ],
+            'returnWithinAnonymousClassShouldNotBeReturned' => [
+                [
+                    new Node\Stmt\Class_('', [
+                        new Node\Stmt\Return_(),
+                    ]),
+                    new Node\Stmt\Return_(),
+                ],
+                1
+            ],
         ];
     }
 
     /**
-     * @param Node $nodeType
+     * @param Node[] $statements
+     * @param int $expectedReturns
      * @dataProvider outOfScopeNodeTypeProvider
      */
-    public function testReturnNodesWithinNodeTypesAreNotAdded(Node $nodeType)
+    public function testOnlyExpectedReturnNodesAreReturned(array $statements, $expectedReturns)
     {
         $visitor = new ReturnNodeVisitor();
 
-        $this->assertCount(0, $visitor->getReturnNodes());
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
 
-        $visitor->enterNode($nodeType);
-        $visitor->enterNode(new Node\Stmt\Return_());
+        $traverser->traverse($statements);
 
-        $this->assertCount(0, $visitor->getReturnNodes());
-
-        $visitor->leaveNode($nodeType);
-
-        $visitor->enterNode(new Node\Stmt\Return_());
-
-        $this->assertCount(1, $visitor->getReturnNodes());
+        $foundNodes = $visitor->getReturnNodes();
+        $this->assertCount($expectedReturns, $foundNodes);
+        $this->assertContainsOnlyInstancesOf(Node\Stmt\Return_::class, $foundNodes);
     }
 }

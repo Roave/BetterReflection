@@ -2,6 +2,7 @@
 
 namespace BetterReflection\Util\Visitor;
 
+use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Node;
 
@@ -12,16 +13,10 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
      */
     private $returnNodes = [];
 
-    private $scopeDepth = 1;
-
     public function enterNode(Node $node)
     {
         if ($this->isScopeChangingNode($node)) {
-            $this->scopeDepth++;
-        }
-
-        if ($this->scopeDepth !== 1) {
-            return;
+            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Node\Stmt\Return_) {
@@ -29,16 +24,9 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    public function leaveNode(Node $node)
-    {
-        if ($this->isScopeChangingNode($node)) {
-            $this->scopeDepth--;
-        }
-    }
-
     private function isScopeChangingNode(Node $node)
     {
-        return $node instanceof Node\Expr\Closure || $node instanceof Node\Stmt\Class_;
+        return $node instanceof Node\FunctionLike || $node instanceof Node\Stmt\Class_;
     }
 
     /**
