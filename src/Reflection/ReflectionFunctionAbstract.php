@@ -6,6 +6,7 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use BetterReflection\TypesFinder\FindReturnType;
 use BetterReflection\TypesFinder\FindTypeFromAst;
+use BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -13,6 +14,7 @@ use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\Closure as ClosureNode;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\Type;
+use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
@@ -596,5 +598,25 @@ abstract class ReflectionFunctionAbstract implements \Reflector
                 unset($this->node->params[$key]);
             }
         }
+    }
+
+    /**
+     * Fetch an array of all return statements found within this function.
+     *
+     * Note that return statements within smaller scopes contained (e.g. anonymous classes, closures) are not returned
+     * here as they are not within the immediate scope.
+     *
+     * @return Node\Stmt\Return_[]
+     */
+    public function getReturnStatementsAst()
+    {
+        $visitor = new ReturnNodeVisitor();
+
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
+
+        $traverser->traverse($this->node->getStmts());
+
+        return $visitor->getReturnNodes();
     }
 }
