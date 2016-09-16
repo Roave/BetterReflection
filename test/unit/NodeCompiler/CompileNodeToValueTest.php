@@ -150,43 +150,35 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionThrownWhenInvalidNodeGiven()
     {
-        $this->setExpectedException(
-            UnableToCompileNode::class,
-            'Unable to compile expression: ' . Yield_::class
-        );
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('Unable to compile expression: ' . Yield_::class);
         (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenCoalesceOperatorUsed()
     {
-        $this->setExpectedException(
-            UnableToCompileNode::class,
-            'Unable to compile binary operator'
-        );
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('Unable to compile binary operator');
         (new CompileNodeToValue())->__invoke(new Coalesce(new LNumber(5), new LNumber(3)), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenSpaceshipOperatorUsed()
     {
-        $this->setExpectedException(
-            UnableToCompileNode::class,
-            'Unable to compile binary operator'
-        );
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('Unable to compile binary operator');
         (new CompileNodeToValue())->__invoke(new Spaceship(new LNumber(5), new LNumber(3)), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenUndefinedConstUsed()
     {
-        $this->setExpectedException(
-            UnableToCompileNode::class,
-            'Constant "FOO" has not been defined'
-        );
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('Constant "FOO" has not been defined');
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
     }
 
     public function testConstantValueCompiled()
     {
-        $constName = uniqid('BETTER_REFLECTION_TEST_CONST_');
+        $constName = uniqid('BETTER_REFLECTION_TEST_CONST_', true);
         define($constName, 123);
 
         $this->assertSame(

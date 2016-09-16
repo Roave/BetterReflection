@@ -34,18 +34,14 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowsAnExceptionWhenInvalidTypeGiven()
     {
-        $this->setExpectedException(
-            InvalidArgumentException::class,
-            'foo is not a valid identifier type'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('foo is not a valid identifier type');
         new IdentifierType('foo');
     }
 
     public function testIsMatchingReflectorClass()
     {
-        $reflectionClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionClass = $this->createMock(ReflectionClass::class);
 
         $type = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -54,9 +50,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testIsMatchingReflectorFunction()
     {
-        $reflectionFunction = $this->getMockBuilder(ReflectionFunction::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionFunction = $this->createMock(ReflectionFunction::class);
 
         $type = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
 
@@ -74,9 +68,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
         $prop->setAccessible(true);
         $prop->setValue($classType, 'nonsense');
 
-        $reflectionClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionClass = $this->createMock(ReflectionClass::class);
 
         $this->assertFalse($classType->isMatchingReflector($reflectionClass));
     }

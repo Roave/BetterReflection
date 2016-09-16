@@ -74,7 +74,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
     {
         $php = '<?php';
 
-        $this->setExpectedException(IdentifierNotFound::class);
+        $this->expectException(IdentifierNotFound::class);
         (new Locator())->findReflection(
             new ClassReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),
@@ -89,7 +89,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         echo 'Hello world';
         ";
 
-        $this->setExpectedException(IdentifierNotFound::class);
+        $this->expectException(IdentifierNotFound::class);
         (new Locator())->findReflection(
             new ClassReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),

@@ -19,20 +19,16 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testLocateIdentifierCallsFindReflection()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
-        $mockReflector = $this->getMock(Reflector::class);
+        $mockReflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', null);
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $mockReflection = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockReflection = $this->createMock(ReflectionClass::class);
 
         /** @var AstLocator|\PHPUnit_Framework_MockObject_MockObject $astLocator */
-        $astLocator = $this->getMockBuilder(AstLocator::class)
-            ->setMethods(['findReflection'])
-            ->getMock();
+        $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->once())
             ->method('findReflection')
@@ -56,14 +52,12 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
-        $mockReflector = $this->getMock(Reflector::class);
+        $mockReflector = $this->createMock(Reflector::class);
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         /** @var AstLocator|\PHPUnit_Framework_MockObject_MockObject $astLocator */
-        $astLocator = $this->getMockBuilder(AstLocator::class)
-            ->setMethods(['findReflection'])
-            ->getMock();
+        $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->never())
             ->method('findReflection');
@@ -85,16 +79,14 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
-        $mockReflector = $this->getMock(Reflector::class);
+        $mockReflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', null);
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         /** @var AstLocator|\PHPUnit_Framework_MockObject_MockObject $astLocator */
-        $astLocator = $this->getMockBuilder(AstLocator::class)
-            ->setMethods(['findReflection'])
-            ->getMock();
+        $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->once())
             ->method('findReflection')
@@ -118,20 +110,16 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testLocateIdentifiersByTypeCallsFindReflectionsOfType()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
-        $mockReflector = $this->getMock(Reflector::class);
+        $mockReflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', null);
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        $mockReflection = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockReflection = $this->createMock(ReflectionClass::class);
 
         /** @var AstLocator|\PHPUnit_Framework_MockObject_MockObject $astLocator */
-        $astLocator = $this->getMockBuilder(AstLocator::class)
-            ->setMethods(['findReflectionsOfType'])
-            ->getMock();
+        $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->once())
             ->method('findReflectionsOfType')
@@ -153,20 +141,12 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
-        $mockReflector = $this->getMock(Reflector::class);
-
-        $locatedSource = new LocatedSource('<?php class Foo{}', null);
+        $mockReflector = $this->createMock(Reflector::class);
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        $mockReflection = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         /** @var AstLocator|\PHPUnit_Framework_MockObject_MockObject $astLocator */
-        $astLocator = $this->getMockBuilder(AstLocator::class)
-            ->setMethods(['findReflectionsOfType'])
-            ->getMock();
+        $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->never())
             ->method('findReflectionsOfType');

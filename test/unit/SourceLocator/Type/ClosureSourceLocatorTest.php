@@ -19,7 +19,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockReflector()
     {
-        return $this->getMock(Reflector::class);
+        return $this->createMock(Reflector::class);
     }
 
     public function testClosureSourceLocator()
@@ -51,7 +51,8 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new ClosureSourceLocator($closure);
 
-        $this->setExpectedException(\LogicException::class, 'Not implemented');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Not implemented');
         $locator->locateIdentifiersByType(
             $this->getMockReflector(),
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
@@ -64,7 +65,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new ClosureSourceLocator($closure1);
 
-        $this->setExpectedException(TwoClosuresOneLine::class);
+        $this->expectException(TwoClosuresOneLine::class);
 
         $locator->locateIdentifier(
             $this->getMockReflector(),

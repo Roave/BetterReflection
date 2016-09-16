@@ -19,10 +19,8 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($context->hasSelf());
         $this->assertSame($reflector, $context->getReflector());
 
-        $this->setExpectedException(
-            \RuntimeException::class,
-            'The current context does not have a class for self'
-        );
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The current context does not have a class for self');
         $context->getSelf();
     }
 

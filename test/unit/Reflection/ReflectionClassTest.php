@@ -55,16 +55,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromInstanceThrowsExceptionWhenInvalidArgumentProvided()
     {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            'Instance must be an instance of an object'
-        );
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Instance must be an instance of an object');
         ReflectionClass::createFromInstance('invalid argument');
     }
 
     public function testCanReflectEvaledClassWithDefaultLocator()
     {
-        $className = uniqid('foo');
+        $className = uniqid('foo', false);
 
         eval('class ' . $className . '{}');
 
@@ -629,7 +627,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($class->isInstance($this));
         $this->assertTrue($class->isInstance(new ClassForHinting()));
 
-        $this->setExpectedException(NotAnObject::class);
+        $this->expectException(NotAnObject::class);
 
         $class->isInstance('foo');
     }
@@ -661,7 +659,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             'A subclass of a parent class (considering eventual backslashes upfront)'
         );
 
-        $this->setExpectedException(NotAString::class);
+        $this->expectException(NotAString::class);
 
         $subExampleClass->isSubclassOf($this);
     }
@@ -680,7 +678,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($subExampleClass->implementsInterface(\E::class));
         $this->assertFalse($subExampleClass->implementsInterface(\Iterator::class));
 
-        $this->setExpectedException(NotAString::class);
+        $this->expectException(NotAString::class);
 
         $subExampleClass->implementsInterface($this);
     }
@@ -751,7 +749,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class = $reflector->reflect(InvalidInheritances\ClassExtendingInterface::class);
 
-        $this->setExpectedException(NotAClassReflection::class);
+        $this->expectException(NotAClassReflection::class);
 
         $class->getParentClass();
     }
@@ -763,7 +761,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class = $reflector->reflect(InvalidInheritances\ClassExtendingTrait::class);
 
-        $this->setExpectedException(NotAClassReflection::class);
+        $this->expectException(NotAClassReflection::class);
 
         $class->getParentClass();
     }
@@ -775,7 +773,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingClass::class);
 
-        $this->setExpectedException(NotAnInterfaceReflection::class);
+        $this->expectException(NotAnInterfaceReflection::class);
 
         $class->getInterfaces();
     }
@@ -787,7 +785,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingTrait::class);
 
-        $this->setExpectedException(NotAnInterfaceReflection::class);
+        $this->expectException(NotAnInterfaceReflection::class);
 
         $class->getInterfaces();
     }
@@ -849,7 +847,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $nameNode = new Name(['int']);
 
-        $this->setExpectedException(\Exception::class, 'Unable to determine FQSEN for named node');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to determine FQSEN for named node');
         $reflectionClassMethodReflection->invoke($reflection, $nameNode);
     }
 
@@ -882,7 +881,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testExportWithNoClassName()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         ReflectionClass::export();
     }
 
@@ -932,7 +931,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
 
-        $this->setExpectedException(Uncloneable::class);
+        $this->expectException(Uncloneable::class);
         $unused = clone $classInfo;
     }
 
@@ -943,7 +942,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         ';
 
         $classInfo = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
-        $this->setExpectedException(ClassDoesNotExist::class);
+        $this->expectException(ClassDoesNotExist::class);
         $classInfo->getStaticPropertyValue('foo');
     }
 
@@ -955,7 +954,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Foo::class);
 
-        $this->setExpectedException(PropertyDoesNotExist::class);
+        $this->expectException(PropertyDoesNotExist::class);
         $classInfo->getStaticPropertyValue('foo');
     }
 
@@ -967,7 +966,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Bar::class);
 
-        $this->setExpectedException(PropertyNotPublic::class);
+        $this->expectException(PropertyNotPublic::class);
         $classInfo->getStaticPropertyValue('bat');
     }
 
@@ -979,7 +978,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Bar::class);
 
-        $this->setExpectedException(PropertyNotPublic::class);
+        $this->expectException(PropertyNotPublic::class);
         $classInfo->getStaticPropertyValue('qux');
     }
 
@@ -1003,7 +1002,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         ';
 
         $classInfo = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
-        $this->setExpectedException(ClassDoesNotExist::class);
+        $this->expectException(ClassDoesNotExist::class);
         $classInfo->setStaticPropertyValue('foo', 'bar');
     }
 
@@ -1015,7 +1014,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Foo::class);
 
-        $this->setExpectedException(PropertyDoesNotExist::class);
+        $this->expectException(PropertyDoesNotExist::class);
         $classInfo->setStaticPropertyValue('foo', 'bar');
     }
 

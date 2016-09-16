@@ -32,17 +32,11 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function methodExpectationProvider()
     {
-        $mockMethod = $this->getMockBuilder(BetterReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockMethod = $this->createMock(BetterReflectionMethod::class);
 
-        $mockProperty = $this->getMockBuilder(BetterReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockProperty = $this->createMock(BetterReflectionProperty::class);
 
-        $mockClassLike = $this->getMockBuilder(BetterReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
         return [
             ['__toString', null, '', []],
@@ -105,9 +99,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testAdapterMethods($methodName, $expectedException, $returnValue, array $args)
     {
         /* @var BetterReflectionClass|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
-        $reflectionStub = $this->getMockBuilder(BetterReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionStub = $this->createMock(BetterReflectionClass::class);
 
         if (null === $expectedException) {
             $reflectionStub->expects($this->once())
@@ -117,7 +109,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         }
 
         if (null !== $expectedException) {
-            $this->setExpectedException($expectedException);
+            $this->expectException($expectedException);
         }
 
         $adapter = new ReflectionClassAdapter($reflectionStub);

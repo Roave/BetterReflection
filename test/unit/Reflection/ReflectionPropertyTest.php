@@ -154,7 +154,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testExportThrowsException()
     {
-        $this->setExpectedException(\Exception::class);
+        $this->expectException(\Exception::class);
         ReflectionProperty::export();
     }
 
@@ -241,7 +241,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
         $publicProp = $classInfo->getProperty('publicProperty');
 
-        $this->setExpectedException(Uncloneable::class);
+        $this->expectException(Uncloneable::class);
         $unused = clone $publicProp;
     }
 

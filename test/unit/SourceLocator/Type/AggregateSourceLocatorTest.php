@@ -20,13 +20,13 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockReflector()
     {
-        return $this->getMock(Reflector::class);
+        return $this->createMock(Reflector::class);
     }
 
     public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve()
     {
-        $locator1   = $this->getMock(SourceLocator::class);
-        $locator2   = $this->getMock(SourceLocator::class);
+        $locator1   = $this->createMock(SourceLocator::class);
+        $locator2   = $this->createMock(SourceLocator::class);
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $locator1->expects($this->once())->method('locateIdentifier');
@@ -39,14 +39,12 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $locator1   = $this->getMock(SourceLocator::class);
-        $locator2   = $this->getMock(SourceLocator::class);
-        $locator3   = $this->getMock(SourceLocator::class);
-        $locator4   = $this->getMock(SourceLocator::class);
+        $locator1   = $this->createMock(SourceLocator::class);
+        $locator2   = $this->createMock(SourceLocator::class);
+        $locator3   = $this->createMock(SourceLocator::class);
+        $locator4   = $this->createMock(SourceLocator::class);
 
-        $source3     = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $source3     = $this->createMock(ReflectionClass::class);
 
         $locator1->expects($this->once())->method('locateIdentifier');
         $locator2->expects($this->once())->method('locateIdentifier');
@@ -92,18 +90,14 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $identifierType = new IdentifierType;
 
-        $locator1   = $this->getMock(SourceLocator::class);
-        $locator2   = $this->getMock(SourceLocator::class);
-        $locator3   = $this->getMock(SourceLocator::class);
-        $locator4   = $this->getMock(SourceLocator::class);
+        $locator1 = $this->createMock(SourceLocator::class);
+        $locator2 = $this->createMock(SourceLocator::class);
+        $locator3 = $this->createMock(SourceLocator::class);
+        $locator4 = $this->createMock(SourceLocator::class);
 
-        $source2     = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $source2 = $this->createMock(ReflectionClass::class);
 
-        $source3     = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $source3 = $this->createMock(ReflectionClass::class);
 
         $locator1->expects($this->once())->method('locateIdentifiersByType')->willReturn([]);
         $locator2->expects($this->once())->method('locateIdentifiersByType')->willReturn([$source2]);

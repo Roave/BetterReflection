@@ -26,7 +26,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
     public function testReturnsReflectionForClassNode()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->getMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
@@ -44,7 +44,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
     public function testReturnsReflectionForTraitNode()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->getMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php trait Foo {}', null);
 
@@ -63,7 +63,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
     public function testReturnsReflectionForInterfaceNode()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->getMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php interface Foo {}', null);
 
@@ -82,7 +82,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
     public function testReturnsReflectionForFunctionNode()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->getMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php function foo(){}', null);
 
@@ -100,7 +100,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
     public function testReturnsNullWhenIncompatibleNodeFound()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->getMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 
