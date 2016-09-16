@@ -126,17 +126,17 @@ class ReflectionProperty implements \Reflector
      */
     public function setVisibility($newVisibility)
     {
-        $this->node->type &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
+        $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
 
         switch ($newVisibility) {
             case \ReflectionProperty::IS_PRIVATE:
-                $this->node->type |= Class_::MODIFIER_PRIVATE;
+                $this->node->flags |= Class_::MODIFIER_PRIVATE;
                 break;
             case \ReflectionProperty::IS_PROTECTED:
-                $this->node->type |= Class_::MODIFIER_PROTECTED;
+                $this->node->flags |= Class_::MODIFIER_PROTECTED;
                 break;
             case \ReflectionProperty::IS_PUBLIC:
-                $this->node->type |= Class_::MODIFIER_PUBLIC;
+                $this->node->flags |= Class_::MODIFIER_PUBLIC;
                 break;
             default:
                 throw new \InvalidArgumentException('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
