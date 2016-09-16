@@ -36,10 +36,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindPropertyType($docBlock, $expectedInstances)
     {
-        $class = $this->getMockBuilder(ReflectionClass::class)
-            ->setMethods(['getNamespaceName', 'getLocatedSource'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $class = $this->createMock(ReflectionClass::class);
 
         $class->expects($this->any())->method('getNamespaceName')
             ->will($this->returnValue(''));
@@ -47,10 +44,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         $class->expects($this->any())->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
-        $property = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getDeclaringClass', 'getDocComment'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDeclaringClass')
             ->will($this->returnValue($class));
@@ -93,10 +87,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound()
     {
-        $class = $this->getMockBuilder(ReflectionClass::class)
-            ->setMethods(['getNamespaceName', 'getLocatedSource'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $class = $this->createMock(ReflectionClass::class);
 
         $class->expects($this->any())->method('getNamespaceName')
             ->will($this->returnValue(''));
@@ -104,10 +95,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         $class->expects($this->any())->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
-        $property = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getDeclaringClass', 'getDocComment'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDeclaringClass')
             ->will($this->returnValue($class));

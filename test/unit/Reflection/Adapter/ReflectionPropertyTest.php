@@ -32,9 +32,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function methodExpectationProvider()
     {
-        $mockClassLike = $this->getMockBuilder(BetterReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
         return [
             ['__toString', null, '', []],
@@ -63,9 +61,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     public function testAdapterMethods($methodName, $expectedException, $returnValue, array $args)
     {
         /* @var BetterReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
-        $reflectionStub = $this->getMockBuilder(BetterReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 
         if (null === $expectedException) {
             $reflectionStub->expects($this->once())
@@ -75,7 +71,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         }
 
         if (null !== $expectedException) {
-            $this->setExpectedException($expectedException);
+            $this->expectException($expectedException);
         }
 
         $adapter = new ReflectionPropertyAdapter($reflectionStub);
@@ -84,7 +80,8 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testExport()
     {
-        $this->setExpectedException(\Exception::class, 'Unable to export statically');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to export statically');
         ReflectionPropertyAdapter::export('foo', 0);
     }
 }

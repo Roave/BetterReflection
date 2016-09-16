@@ -56,25 +56,29 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowsExceptionWhenInvalidValuesGiven($source, $file, $expectedException, $expectedMessage)
     {
-        $this->setExpectedException($expectedException, $expectedMessage);
+        $this->expectException($expectedException);
+        $this->expectExceptionMessage($expectedMessage);
         new LocatedSource($source, $file);
     }
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()
     {
-        $this->setExpectedException(InvalidFileLocation::class, 'Filename was empty');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('Filename was empty');
         new LocatedSource('<?php', '');
     }
 
     public function testConstructorThrowsExceptionIfFileDoesNotExist()
     {
-        $this->setExpectedException(InvalidFileLocation::class, 'File does not exist');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('File does not exist');
         new LocatedSource('<?php', 'sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
     public function testConstructorThrowsExceptionIfFileIsNotAFile()
     {
-        $this->setExpectedException(InvalidFileLocation::class, 'Is not a file');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('Is not a file');
         new LocatedSource('<?php', __DIR__);
     }
 
@@ -85,7 +89,8 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $originalPermission = fileperms($file);
         chmod($file, 0000);
 
-        $this->setExpectedException(InvalidFileLocation::class, 'File is not readable');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('File is not readable');
 
         try {
             new LocatedSource('<?php', $file);

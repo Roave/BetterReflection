@@ -18,7 +18,7 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockReflector()
     {
-        return $this->getMock(Reflector::class);
+        return $this->createMock(Reflector::class);
     }
 
     public function testReturnsNullWhenSourceDoesNotContainClass()
@@ -55,7 +55,7 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfEmptyStringGiven()
     {
-        $this->setExpectedException(EmptyPhpSourceCode::class);
+        $this->expectException(EmptyPhpSourceCode::class);
         new StringSourceLocator('');
     }
 }

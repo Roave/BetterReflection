@@ -66,10 +66,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
 
-        $function = $this->getMockBuilder(ReflectionFunction::class)
-            ->setMethods(['getDocComment', 'getLocatedSource'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $function = $this->createMock(ReflectionFunction::class);
 
         $function
             ->expects($this->once())
@@ -102,20 +99,14 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
 
-        $class = $this->getMockBuilder(ReflectionClass::class)
-            ->setMethods(['getLocatedSource'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $class = $this->createMock(ReflectionClass::class);
 
         $class
             ->expects($this->once())
             ->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
-        $method = $this->getMockBuilder(ReflectionMethod::class)
-            ->setMethods(['getDocComment', 'getDeclaringClass'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $method = $this->createMock(ReflectionMethod::class);
 
         $method
             ->expects($this->once())

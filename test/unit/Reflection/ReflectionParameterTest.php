@@ -75,13 +75,15 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromSpecWithClosure()
     {
-        $this->setExpectedException(\Exception::class, 'Creating by closure is not supported yet');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Creating by closure is not supported yet');
         ReflectionParameter::createFromSpec(function ($a) {}, 'a');
     }
 
     public function testCreateFromSpecWithInvalidArgumentThrowsException()
     {
-        $this->setExpectedException(\InvalidArgumentException::class, 'Could not create reflection from the spec given');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Could not create reflection from the spec given');
         ReflectionParameter::createFromSpec(123, 'a');
     }
 
@@ -96,7 +98,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testExportThrowsException()
     {
-        $this->setExpectedException(\Exception::class);
+        $this->expectException(\Exception::class);
         ReflectionParameter::export();
     }
 
@@ -143,7 +145,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
 
-        $this->setExpectedException(\LogicException::class, 'This parameter does not have a default value available');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('This parameter does not have a default value available');
         $paramInfo->getDefaultValue();
     }
 
@@ -446,7 +449,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $intDefault = $method->getParameter('intDefault');
         $this->assertFalse($intDefault->isDefaultValueConstant());
 
-        $this->setExpectedException(\LogicException::class, 'This parameter is not a constant default value, so cannot have a constant name');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('This parameter is not a constant default value, so cannot have a constant name');
         $intDefault->getDefaultValueConstantName();
     }
 
@@ -539,7 +543,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('methodWithParameters');
         $paramInfo = $methodInfo->getParameter('parameter1');
 
-        $this->setExpectedException(Uncloneable::class);
+        $this->expectException(Uncloneable::class);
         $unused = clone $paramInfo;
     }
 }

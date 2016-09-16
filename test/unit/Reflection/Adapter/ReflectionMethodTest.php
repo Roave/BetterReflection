@@ -33,17 +33,11 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function methodExpectationProvider()
     {
-        $mockParameter = $this->getMockBuilder(BetterReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockParameter = $this->createMock(BetterReflectionParameter::class);
 
-        $mockClassLike = $this->getMockBuilder(BetterReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
-        $mockMethod = $this->getMockBuilder(BetterReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockMethod = $this->createMock(BetterReflectionMethod::class);
 
         return [
             // Inherited
@@ -101,9 +95,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     public function testAdapterMethods($methodName, $expectedException, $returnValue, array $args)
     {
         /* @var BetterReflectionMethod|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
-        $reflectionStub = $this->getMockBuilder(BetterReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionStub = $this->createMock(BetterReflectionMethod::class);
 
         if (null === $expectedException) {
             $reflectionStub->expects($this->once())
@@ -113,7 +105,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         }
 
         if (null !== $expectedException) {
-            $this->setExpectedException($expectedException);
+            $this->expectException($expectedException);
         }
 
         $adapter = new ReflectionMethodAdapter($reflectionStub);
@@ -122,7 +114,8 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testExport()
     {
-        $this->setExpectedException(\Exception::class, 'Unable to export statically');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to export statically');
         ReflectionMethodAdapter::export('\stdClass', 'foo');
     }
 }

@@ -32,7 +32,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 {
     public function testExportThrowsException()
     {
-        $this->setExpectedException(\Exception::class);
+        $this->expectException(\Exception::class);
         ReflectionFunctionAbstract::export();
     }
 
@@ -51,7 +51,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $populateMethodReflection = new \ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
         $populateMethodReflection->setAccessible(true);
 
-        $this->setExpectedException(InvalidAbstractFunctionNodeType::class);
+        $this->expectException(InvalidAbstractFunctionNodeType::class);
         $populateMethodReflection->invoke($abstract, $reflector, $breakNode, $locatedSource, null);
     }
 
@@ -421,7 +421,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
         $functionInfo = (new FunctionReflector(new StringSourceLocator($php)))->reflect('foo');
 
-        $this->setExpectedException(Uncloneable::class);
+        $this->expectException(Uncloneable::class);
         $unused = clone $functionInfo;
     }
 
@@ -512,7 +512,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $this->setExpectedException(\TypeError::class);
+        $this->expectException(\TypeError::class);
         $function->setBodyFromAst([1]);
     }
 
@@ -539,7 +539,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $function->setBodyFromString(['foo' => 'bar']);
     }
 

@@ -36,7 +36,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionThrownWhenNonObjectGiven()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         ReflectionObject::createFromInstance(123);
     }
 
@@ -80,9 +80,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
-        $mockClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockClass = $this->createMock(ReflectionClass::class);
 
         $reflectionObjectReflection = new \ReflectionObject($classInfo);
 
@@ -94,7 +92,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $reflectionObjectReflectionClassReflection->setAccessible(true);
         $reflectionObjectReflectionClassReflection->setValue($classInfo, $mockClass);
 
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $classInfo->getProperties();
     }
 
@@ -185,27 +183,21 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromNodeThrowsException()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mReflector */
-        $mReflector = $this->getMockBuilder(Reflector::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mReflector = $this->createMock(Reflector::class);
 
         /** @var ClassLike|\PHPUnit_Framework_MockObject_MockObject $mClassNode */
-        $mClassNode = $this->getMockBuilder(ClassLike::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mClassNode = $this->createMock(ClassLike::class);
 
         /** @var LocatedSource|\PHPUnit_Framework_MockObject_MockObject $mLocatedSource */
-        $mLocatedSource = $this->getMockBuilder(LocatedSource::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mLocatedSource = $this->createMock(LocatedSource::class);
 
-        $this->setExpectedException(\LogicException::class);
+        $this->expectException(\LogicException::class);
         ReflectionObject::createFromNode($mReflector, $mClassNode, $mLocatedSource);
     }
 
     public function testCreateFromNameThrowsException()
     {
-        $this->setExpectedException(\LogicException::class);
+        $this->expectException(\LogicException::class);
         ReflectionObject::createFromName('foo');
     }
 
@@ -248,7 +240,7 @@ BLAH;
     {
         $classInfo = ReflectionObject::createFromInstance(new \stdClass());
 
-        $this->setExpectedException(Uncloneable::class);
+        $this->expectException(Uncloneable::class);
         $unused = clone $classInfo;
     }
 }

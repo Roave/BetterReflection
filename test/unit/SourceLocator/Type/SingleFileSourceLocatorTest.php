@@ -18,7 +18,7 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockReflector()
     {
-        return $this->getMock(Reflector::class);
+        return $this->createMock(Reflector::class);
     }
 
     public function testReturnsNullWhenSourceDoesNotContainClass()
@@ -55,19 +55,22 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()
     {
-        $this->setExpectedException(InvalidFileLocation::class, 'Filename was empty');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('Filename was empty');
         new SingleFileSourceLocator('');
     }
 
     public function testConstructorThrowsExceptionIfFileDoesNotExist()
     {
-        $this->setExpectedException(InvalidFileLocation::class, 'File does not exist');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('File does not exist');
         new SingleFileSourceLocator('sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
     public function testConstructorThrowsExceptionIfFileIsNotAFile()
     {
-        $this->setExpectedException(InvalidFileLocation::class, 'Is not a file');
+        $this->expectException(InvalidFileLocation::class);
+        $this->expectExceptionMessage('Is not a file');
         new SingleFileSourceLocator(__DIR__);
     }
 }

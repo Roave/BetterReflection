@@ -20,7 +20,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockReflector()
     {
-        return $this->getMock(Reflector::class);
+        return $this->createMock(Reflector::class);
     }
 
     public function testCanReflectEvaledClass()

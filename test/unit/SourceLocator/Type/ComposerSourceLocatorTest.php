@@ -19,7 +19,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockReflector()
     {
-        return $this->getMock(Reflector::class);
+        return $this->createMock(Reflector::class);
     }
 
     public function testInvokableLoadsSource()
@@ -27,9 +27,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $className = 'ClassWithNoNamespace';
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
-        $loader = $this->getMockBuilder(ClassLoader::class)
-            ->setMethods(['findFile'])
-            ->getMock();
+        $loader = $this->createMock(ClassLoader::class);
 
         $loader
             ->expects($this->once())
@@ -52,9 +50,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $className = ClassWithNoNamespace::class;
 
-        $loader = $this->getMockBuilder(ClassLoader::class)
-            ->setMethods(['findFile'])
-            ->getMock();
+        $loader = $this->createMock(ClassLoader::class);
 
         $loader
             ->expects($this->once())
@@ -73,7 +69,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokeThrowsExceptionWhenTryingToLocateFunction()
     {
-        $loader = $this->getMock(ClassLoader::class);
+        $loader = $this->createMock(ClassLoader::class);
 
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);

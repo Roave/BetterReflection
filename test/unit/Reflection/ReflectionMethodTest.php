@@ -237,7 +237,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
 
         if (null === $expectedPrototype) {
-            $this->setExpectedException(MethodPrototypeNotFound::class);
+            $this->expectException(MethodPrototypeNotFound::class);
         }
 
         $b = $reflector->reflect($class)->getMethod($method)->getPrototype();
@@ -255,7 +255,8 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $methodNodeProp->setAccessible(true);
         $methodNodeProp->setValue($method, new Function_('foo'));
 
-        $this->setExpectedException(\RuntimeException::class, 'Expected a ClassMethod node');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected a ClassMethod node');
         $method->isPublic();
     }
 
