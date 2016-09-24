@@ -8,7 +8,7 @@ use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Exception\InvalidDirectory;
 
 /**
- * This source locator loads all php files in an entire directories.
+ * This source locator loads all php files in an entire directory or multiple directories.
  */
 class DirectorySourceLocator implements SourceLocator
 {
@@ -18,15 +18,16 @@ class DirectorySourceLocator implements SourceLocator
     private $aggregatedSourceLocator;
 
     /**
-     * @param $directories array directories to scan
+     * @param $directories string[] directories to scan
      */
     public function __construct(array $directories)
     {
         $sourceLocators = [];
         foreach ($directories as $dir) {
-            $dir = (string) $dir;
-            if (!is_dir($dir)) {
-                throw new InvalidDirectory(sprintf('Is not a directory: %s', $dir));
+            if (!is_string($dir)) {
+                throw InvalidDirectory::fromNonStringValue($dir);
+            } elseif (!is_dir($dir)) {
+                throw InvalidDirectory::fromNonDirectory($dir);
             }
             $sourceLocators = array_merge($sourceLocators, $this->scan($dir));
         }
@@ -38,7 +39,8 @@ class DirectorySourceLocator implements SourceLocator
      * @param $dir string directory path
      * @return SourceLocator[]
      */
-    private function scan($dir) {
+    private function scan($dir)
+    {
         $sourceLocators = [];
         $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
         foreach ( new \RecursiveIteratorIterator($rdi) as $item) {
