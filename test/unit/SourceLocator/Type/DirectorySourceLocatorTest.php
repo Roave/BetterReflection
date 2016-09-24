@@ -2,7 +2,6 @@
 
 namespace BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Reflection\Adapter\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use BetterReflection\SourceLocator\Type\DirectorySourceLocator;
