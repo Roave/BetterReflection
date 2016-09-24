@@ -41,6 +41,6 @@ class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
      * @expectedException \BetterReflection\SourceLocator\Exception\InvalidDirectory
      */
     public function testInvalidDirectory(){
-        new DirectorySourceLocator([substr($this->directoryToScan,0, strlen($this->directoryToScan)-1)]);
+        new DirectorySourceLocator([substr($this->directoryToScan, 0, strlen($this->directoryToScan)-1)]);
     }
 }
