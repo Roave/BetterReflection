@@ -93,6 +93,11 @@ within the `Reflector`s. The library comes bundled with the following
 
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
     are hunted through in the given order to locate the source.
+    
+ * `DirectorySourceLocator` - scan directories and create multiple `SingleFileSourceLocator` 
+    for all found php files and wrapped into `AggregateSourceLocator`
+    
+    
 
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
