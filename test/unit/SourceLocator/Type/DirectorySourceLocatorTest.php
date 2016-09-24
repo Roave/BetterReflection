@@ -2,9 +2,11 @@
 
 namespace BetterReflectionTest\SourceLocator\Type;
 
+use BetterReflection\Reflection\Adapter\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use BetterReflection\SourceLocator\Type\DirectorySourceLocator;
+use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 /**
  * @covers \BetterReflection\SourceLocator\Type\DirectorySourceLocator
@@ -48,6 +50,33 @@ class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
         $result = $method->invokeArgs($this->sourceLocator, [$this->directoryToScan]);
         $this->assertCount(3, $result);
+
+        // test file path
+        $files = [];
+        foreach ($result as $file) {
+            $clazz = new \ReflectionClass('BetterReflection\SourceLocator\Type\SingleFileSourceLocator');
+            $property = $clazz->getProperty('filename');
+            $property->setAccessible(true);
+            $files[] = realpath($property->getValue($file));
+        }
+        sort($files);
+        $this->assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Bar/Empty.php'), $files[0]);
+        $this->assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Bar/FooBar.php'), $files[1]);
+        $this->assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Foo.php'), $files[2]);
+
+        // test class names
+        $classNames = [];
+        foreach ($result as $file) {
+            /* @var $file SingleFileSourceLocator */
+            $reflector = new ClassReflector($file);
+            foreach ($reflector->getAllClasses() as $clazz) {
+                $classNames[] = $clazz->getName();
+            }
+        }
+        sort($classNames);
+        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[0]);
+        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[1]);
+        $this->assertCount(2, $classNames);
     }
 
     public function testInvalidDirectory()
