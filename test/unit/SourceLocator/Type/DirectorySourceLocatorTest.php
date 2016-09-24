@@ -10,7 +10,9 @@ use BetterReflection\SourceLocator\Type\DirectorySourceLocator;
  */
 class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
-
+    /**
+     * @var string
+     */
     private $directoryToScan = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 
     /**

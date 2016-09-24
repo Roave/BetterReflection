@@ -12,7 +12,6 @@ use BetterReflection\SourceLocator\Exception\InvalidDirectory;
  */
 class DirectorySourceLocator implements SourceLocator
 {
-
     /**
      * @var AggregateSourceLocator
      */
