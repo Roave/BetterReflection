@@ -17,6 +17,14 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
     private $directoryToScan = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 
     /**
+     * Make sure that $directoryToScan is a valid directory
+     */
+    public function testDirectoryToScan()
+    {
+        new DirectorySourceLocator([$this->directoryToScan, $this->directoryToScan]);
+    }
+
+    /**
      * @dataProvider invalidDirectoriesProvider
      * @param array $directories
      */
@@ -29,7 +37,7 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function invalidDirectoriesProvider()
     {
         return [
-            [[substr($this->directoryToScan, 0, strlen($this->directoryToScan)-1)]],
+            [[$this->directoryToScan, substr($this->directoryToScan, 0, strlen($this->directoryToScan)-1)]],
             [[$this->directoryToScan, 1]],
             [[$this->directoryToScan, true]],
             [[$this->directoryToScan, new \stdClass()]],
