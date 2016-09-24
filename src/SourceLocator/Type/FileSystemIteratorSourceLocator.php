@@ -9,7 +9,7 @@ use BetterReflection\Reflector\Reflector;
 /**
  * This source locator loads all php files from \FileSystemIterator
  */
-class FileSystemIteratorSourceLocator implements  SourceLocator
+class FileSystemIteratorSourceLocator implements SourceLocator
 {
     /**
      * @var AggregateSourceLocator
