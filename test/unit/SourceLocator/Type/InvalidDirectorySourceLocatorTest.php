@@ -28,7 +28,7 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
         new DirectorySourceLocator([$this->directoryToScan, 1]);
     }
 
-    public function testInvalidBoleanDirectory()
+    public function testInvalidBooleanDirectory()
     {
         $this->expectException(InvalidDirectory::class);
         new DirectorySourceLocator([$this->directoryToScan, true]);

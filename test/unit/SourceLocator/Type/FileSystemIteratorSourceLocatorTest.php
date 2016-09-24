@@ -23,7 +23,10 @@ class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $fileSystemIterator = new \RecursiveDirectoryIterator($this->directoryToScan, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $fileSystemIterator = new \RecursiveDirectoryIterator(
+            $this->directoryToScan,
+            \RecursiveDirectoryIterator::SKIP_DOTS
+        );
         $this->sourceLocator = new FileSystemIteratorSourceLocator(new \RecursiveIteratorIterator($fileSystemIterator));
     }
 

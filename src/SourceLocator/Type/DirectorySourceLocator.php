@@ -26,7 +26,8 @@ class DirectorySourceLocator implements SourceLocator
         foreach ($directories as $dir) {
             if (!is_string($dir)) {
                 throw InvalidDirectory::fromNonStringValue($dir);
-            } elseif (!is_dir($dir)) {
+            }
+            if (!is_dir($dir)) {
                 throw InvalidDirectory::fromNonDirectory($dir);
             }
             $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
