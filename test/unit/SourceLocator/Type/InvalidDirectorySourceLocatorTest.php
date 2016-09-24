@@ -16,34 +16,25 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private $directoryToScan = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 
-    public function testInvalidDirectory()
+    /**
+     * @dataProvider invalidDirectoriesProvider
+     * @param array $directories
+     */
+    public function testInvalidDirectory(array $directories)
     {
         $this->expectException(InvalidDirectory::class);
-        new DirectorySourceLocator([substr($this->directoryToScan, 0, strlen($this->directoryToScan)-1)]);
+        new DirectorySourceLocator($directories);
     }
 
-    public function testInvalidIntegerDirectory()
+    public function invalidDirectoriesProvider()
     {
-        $this->expectException(InvalidDirectory::class);
-        new DirectorySourceLocator([$this->directoryToScan, 1]);
-    }
-
-    public function testInvalidBooleanDirectory()
-    {
-        $this->expectException(InvalidDirectory::class);
-        new DirectorySourceLocator([$this->directoryToScan, true]);
-    }
-
-    public function testInvalidObjectDirectory()
-    {
-        $this->expectException(InvalidDirectory::class);
-        new DirectorySourceLocator([$this->directoryToScan, new \stdClass()]);
-    }
-
-    public function testInvalidNullDirectory()
-    {
-        $this->expectException(InvalidDirectory::class);
-        new DirectorySourceLocator([$this->directoryToScan, null]);
+        return [
+            [[substr($this->directoryToScan, 0, strlen($this->directoryToScan)-1)]],
+            [[$this->directoryToScan, 1]],
+            [[$this->directoryToScan, true]],
+            [[$this->directoryToScan, new \stdClass()]],
+            [[$this->directoryToScan, null]],
+        ];
     }
 
     public function testExceptionMessage()
