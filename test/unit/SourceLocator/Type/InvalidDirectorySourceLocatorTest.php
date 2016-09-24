@@ -7,7 +7,6 @@ use BetterReflection\SourceLocator\Type\DirectorySourceLocator;
 
 /**
  * @covers \BetterReflection\SourceLocator\Type\DirectorySourceLocator
- * @covers \BetterReflection\SourceLocator\Exception\InvalidDirectory
  */
 class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,38 +42,5 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
             [[$this->directoryToScan, new \stdClass()]],
             [[$this->directoryToScan, null]],
         ];
-    }
-
-    public function testExceptionMessage()
-    {
-        $e = InvalidDirectory::fromNonDirectory('testDir');
-        $this->assertEquals(sprintf('%s is not exists', 'testDir'), $e->getMessage());
-
-        $e = InvalidDirectory::fromNonDirectory(__FILE__);
-        $this->assertEquals(sprintf('%s is must to be a directory not a file', __FILE__), $e->getMessage());
-
-        $e = InvalidDirectory::fromNonStringValue(new \stdClass());
-        $expected = 'Expected string type of directory, stdClass given';
-        $this->assertEquals($expected, $e->getMessage());
-
-        $e = InvalidDirectory::fromNonStringValue(true);
-        $expected = 'Expected string type of directory, boolean given';
-        $this->assertEquals($expected, $e->getMessage());
-
-        $e = InvalidDirectory::fromNonStringValue(null);
-        $expected = 'Expected string type of directory, NULL given';
-        $this->assertEquals($expected, $e->getMessage());
-
-        $e = InvalidDirectory::fromNonStringValue(100);
-        $expected = 'Expected string type of directory, integer given';
-        $this->assertEquals($expected, $e->getMessage());
-
-        $e = InvalidDirectory::fromNonStringValue(100.35);
-        $expected = 'Expected string type of directory, double given';
-        $this->assertEquals($expected, $e->getMessage());
-
-        $e = InvalidDirectory::fromNonStringValue([100, 200]);
-        $expected = 'Expected string type of directory, array given';
-        $this->assertEquals($expected, $e->getMessage());
     }
 }

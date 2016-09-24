@@ -15,25 +15,26 @@ class DirectorySourceLocator implements SourceLocator
     /**
      * @var AggregateSourceLocator
      */
-    private $aggregatedSourceLocator;
+    private $aggregateSourceLocator;
 
     /**
-     * @param $directories string[] directories to scan
+     * @param string[] $directories directories to scan
+     * @throws InvalidDirectory
      */
     public function __construct(array $directories)
     {
         $sourceLocators = [];
-        foreach ($directories as $dir) {
-            if (!is_string($dir)) {
-                throw InvalidDirectory::fromNonStringValue($dir);
+        foreach ($directories as $directory) {
+            if (!is_string($directory)) {
+                throw InvalidDirectory::fromNonStringValue($directory);
             }
-            if (!is_dir($dir)) {
-                throw InvalidDirectory::fromNonDirectory($dir);
+            if (!is_dir($directory)) {
+                throw InvalidDirectory::fromNonDirectory($directory);
             }
-            $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $rdi = new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS);
             $sourceLocators[] = new FileSystemIteratorSourceLocator(new \RecursiveIteratorIterator($rdi));
         }
-        $this->aggregatedSourceLocator = new AggregateSourceLocator($sourceLocators);
+        $this->aggregateSourceLocator = new AggregateSourceLocator($sourceLocators);
     }
 
     /**
@@ -41,7 +42,7 @@ class DirectorySourceLocator implements SourceLocator
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier)
     {
-        return $this->aggregatedSourceLocator->locateIdentifier($reflector, $identifier);
+        return $this->aggregateSourceLocator->locateIdentifier($reflector, $identifier);
     }
 
     /**
@@ -49,6 +50,6 @@ class DirectorySourceLocator implements SourceLocator
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
     {
-        return $this->aggregatedSourceLocator->locateIdentifiersByType($reflector, $identifierType);
+        return $this->aggregateSourceLocator->locateIdentifiersByType($reflector, $identifierType);
     }
 }

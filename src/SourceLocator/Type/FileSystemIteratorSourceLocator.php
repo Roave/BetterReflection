@@ -13,16 +13,19 @@ use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 class FileSystemIteratorSourceLocator implements SourceLocator
 {
     /**
-     * Don't touch this variable directly
-     * @var AggregateSourceLocator
+     * @var AggregateSourceLocator|null
      */
-    private $aggregatedSourceLocator;
+    private $aggregateSourceLocator;
 
     /**
      * @var \Iterator
      */
     private $fileSystemIterator;
 
+    /**
+     * @param \Iterator $fileInfoIterator
+     * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo
+     */
     public function __construct(\Iterator $fileInfoIterator)
     {
         foreach ($fileInfoIterator as $fileInfo) {
@@ -39,8 +42,8 @@ class FileSystemIteratorSourceLocator implements SourceLocator
      */
     private function getAggregatedSourceLocator()
     {
-        return $this->aggregatedSourceLocator ?
-            $this->aggregatedSourceLocator : new AggregateSourceLocator($this->scan());
+        return $this->aggregateSourceLocator ?
+            $this->aggregateSourceLocator : new AggregateSourceLocator($this->scan());
     }
 
     /**
@@ -52,7 +55,7 @@ class FileSystemIteratorSourceLocator implements SourceLocator
         $sourceLocators = [];
         foreach ($this->fileSystemIterator as $item) {
             /* @var $item \SplFileInfo */
-            if ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) == 'php') {
+            if ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php') {
                 $sourceLocators[] = new SingleFileSourceLocator($item->getRealPath());
             }
         }

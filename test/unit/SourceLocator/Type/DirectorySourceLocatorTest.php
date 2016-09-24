@@ -33,8 +33,8 @@ class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
         $classes = $reflector->getAllClasses();
         $this->assertCount(4, $classes);
         $classNames = [];
-        foreach ($classes as $clazz) {
-            $classNames[] = $clazz->getName();
+        foreach ($classes as $class) {
+            $classNames[] = $class->getName();
         }
         sort($classNames);
         $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Bar\FooBar', $classNames[0]);
