@@ -1,18 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: HP
- * Date: 09/24/2016
- * Time: 5:29 AM
- */
 
 namespace BetterReflection\SourceLocator\Type;
-
 
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Reflector;
+use BetterReflection\SourceLocator\Exception\InvalidDirectory;
 
+/**
+ * This source locator loads all php files in an entire directories.
+ */
 class DirectorySourceLocator implements SourceLocator
 {
 
@@ -21,29 +18,20 @@ class DirectorySourceLocator implements SourceLocator
      */
     private $aggregatedSourceLocator;
 
-
     /**
-     * DirectorySourceLocator constructor.
-     * @param $directory string|array directory to scan
+     * @param $directories array directories to scan
      */
-    public function __construct($directory = null)
+    public function __construct(array $directories)
     {
-        $dirs = [];
-        if ($directory) {
-            if (is_string($directory)) {
-                $dirs[] = $directory;
-            } elseif (is_array($directory)) {
-                $dirs = $directory;
-            }
-        }
-
         $sourceLocators = [];
-        foreach ( $dirs as $dir) {
+        foreach ($directories as $dir) {
+            $dir = (string) $dir;
+            if (!is_dir($dir)) {
+                throw new InvalidDirectory(sprintf('Is not a directory: %s', $dir));
+            }
             $sourceLocators = array_merge($sourceLocators, $this->scan($dir));
         }
-
         $this->aggregatedSourceLocator = new AggregateSourceLocator($sourceLocators);
-
     }
 
     /**
@@ -51,7 +39,7 @@ class DirectorySourceLocator implements SourceLocator
      * @param $dir string directory path
      * @return SourceLocator[]
      */
-    private function scan($dir){
+    private function scan($dir) {
         $sourceLocators = [];
         $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
         foreach ( new \RecursiveIteratorIterator($rdi) as $item) {
@@ -77,6 +65,4 @@ class DirectorySourceLocator implements SourceLocator
     {
         return $this->aggregatedSourceLocator->locateIdentifiersByType($reflector, $identifierType);
     }
-
-
 }
