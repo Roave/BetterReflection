@@ -24,7 +24,7 @@ class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $fileSystemIterator = new \RecursiveDirectoryIterator($this->directoryToScan, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $this->sourceLocator = new FileSystemIteratorSourceLocator($fileSystemIterator);
+        $this->sourceLocator = new FileSystemIteratorSourceLocator(new \RecursiveIteratorIterator($fileSystemIterator));
     }
 
     public function testScanDirectoryClasses()
@@ -53,8 +53,8 @@ class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
         // test file path
         $files = [];
         foreach ($result as $file) {
-            $clazz = new \ReflectionClass('BetterReflection\SourceLocator\Type\SingleFileSourceLocator');
-            $property = $clazz->getProperty('filename');
+            $class = new \ReflectionClass('BetterReflection\SourceLocator\Type\SingleFileSourceLocator');
+            $property = $class->getProperty('filename');
             $property->setAccessible(true);
             $files[] = realpath($property->getValue($file));
         }
@@ -68,8 +68,8 @@ class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
         foreach ($result as $file) {
             /* @var $file SingleFileSourceLocator */
             $reflector = new ClassReflector($file);
-            foreach ($reflector->getAllClasses() as $clazz) {
-                $classNames[] = $clazz->getName();
+            foreach ($reflector->getAllClasses() as $class) {
+                $classNames[] = $class->getName();
             }
         }
         sort($classNames);

@@ -5,6 +5,7 @@ namespace BetterReflection\SourceLocator\Type;
 use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Reflector;
+use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 
 /**
  * This source locator loads all php files from \FileSystemIterator
@@ -17,22 +18,27 @@ class FileSystemIteratorSourceLocator implements SourceLocator
     private $_aggregatedSourceLocator;
 
     /**
-     * @var \FilesystemIterator
+     * @var \Iterator
      */
     private $fileSystemIterator;
 
-    public function __construct(\FilesystemIterator $filesystemIterator)
+    public function __construct(\Iterator $fileInfoIterator)
     {
-        $this->fileSystemIterator = $filesystemIterator;
+        foreach ($fileInfoIterator as $fileInfo) {
+            if (!$fileInfo instanceof \SplFileInfo) {
+                throw InvalidFileInfo::fromNonSplFileInfo($fileInfo);
+            }
+        }
+        $this->fileSystemIterator = $fileInfoIterator;
     }
 
+    /**
+     * Get a AggregateSourceLocator, create it if null.
+     * @return AggregateSourceLocator
+     */
     private function getAggregatedSourceLocator()
     {
-        if (null==$this->_aggregatedSourceLocator) {
-            $sourceLocators = $this->scan();
-            $this->_aggregatedSourceLocator = new AggregateSourceLocator($sourceLocators);
-        }
-        return $this->_aggregatedSourceLocator;
+        return $this->_aggregatedSourceLocator ? $this->_aggregatedSourceLocator : new AggregateSourceLocator($this->scan());
     }
 
     /**
@@ -42,11 +48,12 @@ class FileSystemIteratorSourceLocator implements SourceLocator
     private function scan()
     {
         $sourceLocators = [];
-        foreach ( new \RecursiveIteratorIterator($this->fileSystemIterator) as $item ) {
+        foreach ( $this->fileSystemIterator as $item ) {
+            /* @var $item \SplFileInfo */
             if ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) == 'php') {
                 $sourceLocators[] = new SingleFileSourceLocator($item->getRealPath());
             }
-        }
+    }
         return $sourceLocators;
     }
 

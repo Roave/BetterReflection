@@ -29,7 +29,8 @@ class DirectorySourceLocator implements SourceLocator
             } elseif (!is_dir($dir)) {
                 throw InvalidDirectory::fromNonDirectory($dir);
             }
-            $sourceLocators[] = new FileSystemIteratorSourceLocator(new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS));
+            $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $sourceLocators[] = new FileSystemIteratorSourceLocator(new \RecursiveIteratorIterator($rdi));
         }
         $this->aggregatedSourceLocator = new AggregateSourceLocator($sourceLocators);
     }
