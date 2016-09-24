@@ -94,8 +94,12 @@ within the `Reflector`s. The library comes bundled with the following
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
     are hunted through in the given order to locate the source.
     
- * `DirectorySourceLocator` - scan directories and create multiple `SingleFileSourceLocator` 
-    for all found php files and wrapped into `AggregateSourceLocator`
+ * `FileSystemIteratorSourceLocator` - uses `SPL FileSystemIterator` to iterate over files
+    and create multiple `SingleFileSourceLocator` then wrapped into `AggregateSourceLocator`
+        
+ * `DirectorySourceLocator` - scan directories using `SPL RecursiveDirectoryIterator` 
+    and create multiple `FileSystemIteratorSourceLocator` 
+    then wrapped into `AggregateSourceLocator`
     
     
 

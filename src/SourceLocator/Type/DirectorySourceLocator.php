@@ -29,26 +29,9 @@ class DirectorySourceLocator implements SourceLocator
             } elseif (!is_dir($dir)) {
                 throw InvalidDirectory::fromNonDirectory($dir);
             }
-            $sourceLocators = array_merge($sourceLocators, $this->scan($dir));
+            $sourceLocators[] = new FileSystemIteratorSourceLocator(new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS));
         }
         $this->aggregatedSourceLocator = new AggregateSourceLocator($sourceLocators);
-    }
-
-    /**
-     * scan target directory and resulted as SourceLocator[]
-     * @param $dir string directory path
-     * @return SourceLocator[]
-     */
-    private function scan($dir)
-    {
-        $sourceLocators = [];
-        $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
-        foreach ( new \RecursiveIteratorIterator($rdi) as $item) {
-            if ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) == 'php') {
-                $sourceLocators[] = new SingleFileSourceLocator($item->getRealPath());
-            }
-        }
-        return $sourceLocators;
     }
 
     /**

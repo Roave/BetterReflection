@@ -36,6 +36,9 @@ class InvalidDirectory extends \RuntimeException
             case is_double($nonStringValue) :
                 $foundType = 'double';
                 break;
+            case is_array($nonStringValue) :
+                $foundType = 'array';
+                break;
             default :
                 $foundType = 'unknown type';
         }
