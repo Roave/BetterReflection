@@ -29,7 +29,7 @@ class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $reflector->getAllClasses());
     }
 
-    public function testScanDirecotryFiels(){
+    public function testScanDirecotryFiles(){
         $class = new \ReflectionClass(get_class($this->sourceLocator));
         $method = $class->getMethod('scan');
         $method->setAccessible(true);
