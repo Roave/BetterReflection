@@ -10,7 +10,7 @@ use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 /**
  * This source locator loads all php files from \FileSystemIterator
  */
-class FileSystemIteratorSourceLocator implements SourceLocator
+class SingleDirectorySourceLocator implements SourceLocator
 {
     /**
      * @var AggregateSourceLocator|null

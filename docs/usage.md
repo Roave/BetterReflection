@@ -94,15 +94,12 @@ within the `Reflector`s. The library comes bundled with the following
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
     are hunted through in the given order to locate the source.
     
- * `FileSystemIteratorSourceLocator` - uses `SPL FileSystemIterator` to iterate over files
-    and create multiple `SingleFileSourceLocator` then wrapped into `AggregateSourceLocator`
+ * `SingleDirectorySourceLocator` - iterates all files in a single directory 
+    (and descends into child directories)
         
- * `DirectorySourceLocator` - scan directories using `SPL RecursiveDirectoryIterator` 
-    and create multiple `FileSystemIteratorSourceLocator` 
-    then wrapped into `AggregateSourceLocator`
+ * `MultipleDirectoriesAggregateSourceLocator` - iterates a list of directories (and their children), 
+    basically an aggregate version of `SingleDirectorySourceLocator`
     
-    
-
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
 should be written so that it returns a `Reflection` object directly.
@@ -180,6 +177,39 @@ echo $reflectionClass->getShortName(); // Foo
 $reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php'));
 $classes = $reflector->getAllClasses();
 ```
+
+### Fetch reflections of all the classes in a directory
+
+```php
+<?php
+
+$singleDirectorySourceLocator = new SingleDirectorySourceLocator(new \FilesystemIterator('path/to/directory'));
+$reflector = new ClassReflector($singleDirectorySourceLocator);
+$classes = $reflector->getAllClasses();
+```
+
+### Fetch reflections of all the classes in a directory (including sub directories)
+
+```php
+<?php
+
+$rdi = new \RecursiveDirectoryIterator('path/to/directory');
+$singleDirectorySourceLocator = new SingleDirectorySourceLocator(new \RecursiveIteratorIterator($rdi));
+$reflector = new ClassReflector($singleDirectorySourceLocator);
+$classes = $reflector->getAllClasses();
+```
+
+### Fetch reflections of all the classes in multiple directories (including sub directories)
+
+```php
+<?php
+
+$directoriesToScan = ['path/to/directory1', 'path/to/directory2'];
+$multipleDirectoriesSourceLocator = new MultipleDirectoriesAggregateSourceLocator($directoriesToScan);
+$reflector = new ClassReflector($multipleDirectoriesSourceLocator);
+$classes = $reflector->getAllClasses();
+```
+
 
 ## Reflecting Functions
 

@@ -3,12 +3,12 @@
 namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\DirectorySourceLocator;
+use BetterReflection\SourceLocator\Type\MultipleDirectoriesAggregateSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\DirectorySourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\MultipleDirectoriesAggregateSourceLocator
  */
-class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
+class MultipleDirectoriesAggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string[]
@@ -16,7 +16,7 @@ class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
     private $directoryToScan = [];
 
     /**
-     * @var DirectorySourceLocator
+     * @var MultipleDirectoriesAggregateSourceLocator
      */
     private $sourceLocator;
 
@@ -24,7 +24,7 @@ class DirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->directoryToScan[] = __DIR__ . '/../../Assets/DirectoryScannerAssets';
         $this->directoryToScan[] = __DIR__ . '/../../Assets/DirectoryScannerAssetsFoo';
-        $this->sourceLocator = new DirectorySourceLocator($this->directoryToScan);
+        $this->sourceLocator = new MultipleDirectoriesAggregateSourceLocator($this->directoryToScan);
     }
 
     public function testScanDirectoryClasses()

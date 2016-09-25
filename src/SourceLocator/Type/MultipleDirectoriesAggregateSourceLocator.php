@@ -10,7 +10,7 @@ use BetterReflection\SourceLocator\Exception\InvalidDirectory;
 /**
  * This source locator loads all php files in an entire directory or multiple directories.
  */
-class DirectorySourceLocator implements SourceLocator
+class MultipleDirectoriesAggregateSourceLocator implements SourceLocator
 {
     /**
      * @var AggregateSourceLocator
@@ -32,7 +32,7 @@ class DirectorySourceLocator implements SourceLocator
                 throw InvalidDirectory::fromNonDirectory($directory);
             }
             $rdi = new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS);
-            $sourceLocators[] = new FileSystemIteratorSourceLocator(new \RecursiveIteratorIterator($rdi));
+            $sourceLocators[] = new SingleDirectorySourceLocator(new \RecursiveIteratorIterator($rdi));
         }
         $this->aggregateSourceLocator = new AggregateSourceLocator($sourceLocators);
     }

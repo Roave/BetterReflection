@@ -3,13 +3,13 @@
 namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\FileSystemIteratorSourceLocator;
+use BetterReflection\SourceLocator\Type\SingleDirectorySourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\FileSystemIteratorSourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\SingleDirectorySourceLocator
  */
-class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class SingleDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -17,7 +17,7 @@ class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
     private $directoryToScan = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 
     /**
-     * @var FileSystemIteratorSourceLocator
+     * @var SingleDirectorySourceLocator
      */
     private $sourceLocator;
 
@@ -27,7 +27,7 @@ class FileSystemIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
             $this->directoryToScan,
             \RecursiveDirectoryIterator::SKIP_DOTS
         );
-        $this->sourceLocator = new FileSystemIteratorSourceLocator(new \RecursiveIteratorIterator($fileSystemIterator));
+        $this->sourceLocator = new SingleDirectorySourceLocator(new \RecursiveIteratorIterator($fileSystemIterator));
     }
 
     public function testScanDirectoryClasses()

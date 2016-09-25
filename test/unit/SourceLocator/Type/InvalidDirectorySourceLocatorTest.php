@@ -3,10 +3,10 @@
 namespace BetterReflectionTest\SourceLocator\Type;
 
 use BetterReflection\SourceLocator\Exception\InvalidDirectory;
-use BetterReflection\SourceLocator\Type\DirectorySourceLocator;
+use BetterReflection\SourceLocator\Type\MultipleDirectoriesAggregateSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\DirectorySourceLocator
+ * @covers \BetterReflection\SourceLocator\Type\MultipleDirectoriesAggregateSourceLocator
  */
 class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testDirectoryToScan()
     {
-        new DirectorySourceLocator([$this->directoryToScan, $this->directoryToScan]);
+        new MultipleDirectoriesAggregateSourceLocator([$this->directoryToScan, $this->directoryToScan]);
     }
 
     /**
@@ -30,7 +30,7 @@ class InvalidDirectorySourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testInvalidDirectory(array $directories)
     {
         $this->expectException(InvalidDirectory::class);
-        new DirectorySourceLocator($directories);
+        new MultipleDirectoriesAggregateSourceLocator($directories);
     }
 
     public function invalidDirectoriesProvider()
