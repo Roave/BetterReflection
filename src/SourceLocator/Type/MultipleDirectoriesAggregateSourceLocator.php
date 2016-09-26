@@ -38,13 +38,11 @@ class MultipleDirectoriesAggregateSourceLocator implements SourceLocator
                 throw InvalidDirectory::fromNonDirectory($directory);
             }
 
-            $recursiveDirectoryIterator = new RecursiveDirectoryIterator(
-                $directory,
-                RecursiveDirectoryIterator::SKIP_DOTS
-            );
-
             $sourceLocators[] = new SingleDirectorySourceLocator(
-                new RecursiveIteratorIterator($recursiveDirectoryIterator)
+                new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                    $directory,
+                    RecursiveDirectoryIterator::SKIP_DOTS
+                ))
             );
         }
 
