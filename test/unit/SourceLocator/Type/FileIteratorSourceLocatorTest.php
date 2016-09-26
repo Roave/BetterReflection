@@ -12,11 +12,6 @@ use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string
-     */
-    private $directoryToScan = __DIR__ . '/../../Assets/DirectoryScannerAssets';
-
-    /**
      * @var FileIteratorSourceLocator
      */
     private $sourceLocator;
@@ -24,7 +19,7 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $fileSystemIterator = new \RecursiveDirectoryIterator(
-            $this->directoryToScan,
+            __DIR__ . '/../../Assets/DirectoryScannerAssets',
             \RecursiveDirectoryIterator::SKIP_DOTS
         );
         $this->sourceLocator = new FileIteratorSourceLocator(new \RecursiveIteratorIterator($fileSystemIterator));
