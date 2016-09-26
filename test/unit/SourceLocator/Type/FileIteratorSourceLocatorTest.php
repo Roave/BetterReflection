@@ -2,9 +2,12 @@
 
 namespace BetterReflectionTest\SourceLocator\Type;
 
+use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use BetterReflectionTest\Assets\DirectoryScannerAssets;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -33,16 +36,24 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testScanDirectoryClasses()
     {
-        $reflector = new ClassReflector($this->sourceLocator);
-        $classes = $reflector->getAllClasses();
+        $classes = $this->sourceLocator->locateIdentifiersByType(
+            new ClassReflector($this->sourceLocator),
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        );
+
         self::assertCount(2, $classes);
-        $classNames = [];
-        foreach ($classes as $class) {
-            $classNames[] = $class->getName();
-        }
+
+        $classNames = array_map(
+            function (ReflectionClass $reflectionClass) {
+                return $reflectionClass->getName();
+            },
+            $classes
+        );
+
         sort($classNames);
-        self::assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[0]);
-        self::assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[1]);
+
+        self::assertEquals(DirectoryScannerAssets\Bar\FooBar::class, $classNames[0]);
+        self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[1]);
     }
 
     public function testScanDirectoryFiles()
