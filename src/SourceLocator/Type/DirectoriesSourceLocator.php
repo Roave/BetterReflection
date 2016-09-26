@@ -38,7 +38,7 @@ class DirectoriesSourceLocator implements SourceLocator
                     throw InvalidDirectory::fromNonDirectory($directory);
                 }
 
-                return new SingleDirectorySourceLocator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                return new FileIteratorSourceLocator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                     $directory,
                     RecursiveDirectoryIterator::SKIP_DOTS
                 )));

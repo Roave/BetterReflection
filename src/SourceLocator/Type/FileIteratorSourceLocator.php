@@ -10,7 +10,7 @@ use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 /**
  * This source locator loads all php files from \FileSystemIterator
  */
-class SingleDirectorySourceLocator implements SourceLocator
+class FileIteratorSourceLocator implements SourceLocator
 {
     /**
      * @var AggregateSourceLocator|null
@@ -23,7 +23,8 @@ class SingleDirectorySourceLocator implements SourceLocator
     private $fileSystemIterator;
 
     /**
-     * @param \Iterator $fileInfoIterator
+     * @param \Iterator|\SplFileInfo[] $fileInfoIterator note: only \SplFileInfo allowed in this iterator
+     *
      * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo
      */
     public function __construct(\Iterator $fileInfoIterator)
