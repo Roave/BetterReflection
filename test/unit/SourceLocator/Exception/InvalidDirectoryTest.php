@@ -9,6 +9,37 @@ use BetterReflection\SourceLocator\Exception\InvalidDirectory;
  */
 class InvalidDirectoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @dataProvider nonStringValuesProvider
+     *
+     * @param string $expectedMessage
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function testFromNonStringValue($expectedMessage, $value)
+    {
+        $exception = InvalidDirectory::fromNonStringValue($value);
+
+        self::assertInstanceOf(InvalidDirectory::class, $exception);
+        self::assertSame($expectedMessage, $exception->getMessage());
+    }
+
+    /**
+     * @return string[][]|mixed[][]
+     */
+    public function nonStringValuesProvider()
+    {
+        return [
+            ['Expected string, stdClass given', new \stdClass()],
+            ['Expected string, boolean given', true],
+            ['Expected string, NULL given', null],
+            ['Expected string, integer given', 100],
+            ['Expected string, double given', 100.35],
+            ['Expected string, array given', []],
+        ];
+    }
+
     public function testExceptionMessage()
     {
         $e = InvalidDirectory::fromNonDirectory('testDir');
