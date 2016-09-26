@@ -46,8 +46,8 @@ class FileIteratorSourceLocator implements SourceLocator
         return $this->aggregateSourceLocator ?
             $this->aggregateSourceLocator : new AggregateSourceLocator(array_values(array_filter(array_map(
                 function (\SplFileInfo $item) {
-                    if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php')) {
-                        return;
+                    if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
+                        return null;
                     }
 
                     return new SingleFileSourceLocator($item->getRealPath());
