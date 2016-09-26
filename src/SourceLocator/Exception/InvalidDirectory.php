@@ -15,7 +15,7 @@ class InvalidDirectory extends \RuntimeException
             return new self(sprintf('"%s" does not exists', $nonDirectory));
         }
 
-        return new self(sprintf('"%s" is must to be a directory not a file', $nonDirectory));
+        return new self(sprintf('"%s" must be a directory, not a file', $nonDirectory));
     }
 
     /**
