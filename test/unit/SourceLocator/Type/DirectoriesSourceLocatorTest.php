@@ -2,8 +2,12 @@
 
 namespace BetterReflectionTest\SourceLocator\Type;
 
+use BetterReflection\Identifier\IdentifierType;
+use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use BetterReflectionTest\Assets\DirectoryScannerAssets;
+use BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
 
 /**
  * @covers \BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
@@ -25,17 +29,25 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testScanDirectoryClasses()
     {
-        $reflector = new ClassReflector($this->sourceLocator);
-        $classes = $reflector->getAllClasses();
+        $classes = $this->sourceLocator->locateIdentifiersByType(
+            new ClassReflector($this->sourceLocator),
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        );
+
         $this->assertCount(4, $classes);
-        $classNames = [];
-        foreach ($classes as $class) {
-            $classNames[] = $class->getName();
-        }
+
+        $classNames = array_map(
+            function (ReflectionClass $reflectionClass) {
+                return $reflectionClass->getName();
+            },
+            $classes
+        );
+
         sort($classNames);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Bar\FooBar', $classNames[0]);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Foo', $classNames[1]);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[2]);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[3]);
+
+        $this->assertEquals(DirectoryScannerAssetsFoo\Bar\FooBar::class, $classNames[0]);
+        $this->assertEquals(DirectoryScannerAssetsFoo\Foo::class, $classNames[1]);
+        $this->assertEquals(DirectoryScannerAssets\Bar\FooBar::class, $classNames[2]);
+        $this->assertEquals(DirectoryScannerAssets\Foo::class, $classNames[3]);
     }
 }
