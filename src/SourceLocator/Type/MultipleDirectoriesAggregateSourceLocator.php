@@ -7,6 +7,7 @@ use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
+use RecursiveDirectoryIterator;
 
 /**
  * This source locator loads all php files in an entire directory or multiple directories.
@@ -27,21 +28,26 @@ class MultipleDirectoriesAggregateSourceLocator implements SourceLocator
     public function __construct(array $directories)
     {
         $sourceLocators = [];
+
         foreach ($directories as $directory) {
-            if (!is_string($directory)) {
+            if (! is_string($directory)) {
                 throw InvalidDirectory::fromNonStringValue($directory);
             }
-            if (!is_dir($directory)) {
+
+            if (! is_dir($directory)) {
                 throw InvalidDirectory::fromNonDirectory($directory);
             }
-            $recursiveDirectoryIterator = new \RecursiveDirectoryIterator(
+
+            $recursiveDirectoryIterator = new RecursiveDirectoryIterator(
                 $directory,
-                \RecursiveDirectoryIterator::SKIP_DOTS
+                RecursiveDirectoryIterator::SKIP_DOTS
             );
+
             $sourceLocators[] = new SingleDirectorySourceLocator(
-                new \RecursiveIteratorIterator($recursiveDirectoryIterator)
+                new RecursiveIteratorIterator($recursiveDirectoryIterator)
             );
         }
+
         $this->aggregateSourceLocator = new AggregateSourceLocator($sourceLocators);
     }
 
