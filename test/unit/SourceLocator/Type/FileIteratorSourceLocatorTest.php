@@ -34,14 +34,14 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector($this->sourceLocator);
         $classes = $reflector->getAllClasses();
-        $this->assertCount(2, $classes);
+        self::assertCount(2, $classes);
         $classNames = [];
         foreach ($classes as $class) {
             $classNames[] = $class->getName();
         }
         sort($classNames);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[0]);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[1]);
+        self::assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[0]);
+        self::assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[1]);
     }
 
     public function testScanDirectoryFiles()
@@ -51,7 +51,7 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('scan');
         $method->setAccessible(true);
         $result = $method->invoke($fileSystemIteratorSourceLocator);
-        $this->assertCount(3, $result);
+        self::assertCount(3, $result);
 
         // test file path
         $files = [];
@@ -62,9 +62,9 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
             $files[] = realpath($property->getValue($file));
         }
         sort($files);
-        $this->assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Bar/Empty.php'), $files[0]);
-        $this->assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Bar/FooBar.php'), $files[1]);
-        $this->assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Foo.php'), $files[2]);
+        self::assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Bar/Empty.php'), $files[0]);
+        self::assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Bar/FooBar.php'), $files[1]);
+        self::assertEquals(realpath(__DIR__ . '/../../Assets/DirectoryScannerAssets/Foo.php'), $files[2]);
 
         // test class names
         $classNames = [];
@@ -76,8 +76,8 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
             }
         }
         sort($classNames);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[0]);
-        $this->assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[1]);
-        $this->assertCount(2, $classNames);
+        self::assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar', $classNames[0]);
+        self::assertEquals('BetterReflectionTest\Assets\DirectoryScannerAssets\Foo', $classNames[1]);
+        self::assertCount(2, $classNames);
     }
 }
