@@ -94,11 +94,11 @@ within the `Reflector`s. The library comes bundled with the following
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
     are hunted through in the given order to locate the source.
 
- * `SingleDirectorySourceLocator` - iterates all files in a single directory 
-    (and descends into child directories)
+ * `FileIteratorSourceLocator` - iterates all files in a given iterator
+    containing `SplFileInfo` instances.
 
- * `MultipleDirectoriesAggregateSourceLocator` - iterates a list of directories (and their children), 
-    basically an aggregate version of `SingleDirectorySourceLocator`
+ * `DirectoriesSourceLocator` - iterates over all `.php` files in a list of
+   directories, and all their descendants.
 
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
