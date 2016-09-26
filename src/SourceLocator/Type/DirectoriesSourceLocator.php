@@ -13,7 +13,7 @@ use RecursiveIteratorIterator;
 /**
  * This source locator loads all php files in an entire directory or multiple directories.
  */
-class MultipleDirectoriesAggregateSourceLocator implements SourceLocator
+class DirectoriesSourceLocator implements SourceLocator
 {
     /**
      * @var AggregateSourceLocator
