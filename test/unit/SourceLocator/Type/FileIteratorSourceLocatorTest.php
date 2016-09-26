@@ -5,6 +5,8 @@ namespace BetterReflectionTest\SourceLocator\Type;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * @covers \BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
@@ -16,13 +18,17 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private $sourceLocator;
 
+    /**
+     * {@inheritDoc}
+     */
     public function setUp()
     {
-        $fileSystemIterator = new \RecursiveDirectoryIterator(
-            __DIR__ . '/../../Assets/DirectoryScannerAssets',
-            \RecursiveDirectoryIterator::SKIP_DOTS
+        $this->sourceLocator = new FileIteratorSourceLocator(
+            new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                __DIR__ . '/../../Assets/DirectoryScannerAssets',
+                RecursiveDirectoryIterator::SKIP_DOTS
+            ))
         );
-        $this->sourceLocator = new FileIteratorSourceLocator(new \RecursiveIteratorIterator($fileSystemIterator));
     }
 
     public function testScanDirectoryClasses()
