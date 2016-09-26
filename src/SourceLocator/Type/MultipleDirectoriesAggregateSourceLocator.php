@@ -6,6 +6,7 @@ use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflector\Reflector;
 use BetterReflection\SourceLocator\Exception\InvalidDirectory;
+use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 
 /**
  * This source locator loads all php files in an entire directory or multiple directories.
@@ -19,7 +20,9 @@ class MultipleDirectoriesAggregateSourceLocator implements SourceLocator
 
     /**
      * @param string[] $directories directories to scan
+     *
      * @throws InvalidDirectory
+     * @throws InvalidFileInfo
      */
     public function __construct(array $directories)
     {
