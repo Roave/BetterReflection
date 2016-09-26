@@ -27,26 +27,25 @@ class MultipleDirectoriesAggregateSourceLocator implements SourceLocator
      */
     public function __construct(array $directories)
     {
-        $sourceLocators = [];
+        $this->aggregateSourceLocator = new AggregateSourceLocator(array_map(
+            function ($directory) {
+                if (! is_string($directory)) {
+                    throw InvalidDirectory::fromNonStringValue($directory);
+                }
 
-        foreach ($directories as $directory) {
-            if (! is_string($directory)) {
-                throw InvalidDirectory::fromNonStringValue($directory);
-            }
+                if (! is_dir($directory)) {
+                    throw InvalidDirectory::fromNonDirectory($directory);
+                }
 
-            if (! is_dir($directory)) {
-                throw InvalidDirectory::fromNonDirectory($directory);
-            }
-
-            $sourceLocators[] = new SingleDirectorySourceLocator(
-                new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
-                    $directory,
-                    RecursiveDirectoryIterator::SKIP_DOTS
-                ))
-            );
-        }
-
-        $this->aggregateSourceLocator = new AggregateSourceLocator($sourceLocators);
+                return new SingleDirectorySourceLocator(
+                    new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                        $directory,
+                        RecursiveDirectoryIterator::SKIP_DOTS
+                    ))
+                );
+            },
+            $directories
+        ));
     }
 
     /**
