@@ -18,7 +18,7 @@ class FileIteratorSourceLocator implements SourceLocator
     private $aggregateSourceLocator;
 
     /**
-     * @var \Iterator
+     * @var \Iterator|\SplFileInfo[]
      */
     private $fileSystemIterator;
 
@@ -30,10 +30,11 @@ class FileIteratorSourceLocator implements SourceLocator
     public function __construct(\Iterator $fileInfoIterator)
     {
         foreach ($fileInfoIterator as $fileInfo) {
-            if (!$fileInfo instanceof \SplFileInfo) {
+            if (! $fileInfo instanceof \SplFileInfo) {
                 throw InvalidFileInfo::fromNonSplFileInfo($fileInfo);
             }
         }
+
         $this->fileSystemIterator = $fileInfoIterator;
     }
 
@@ -53,14 +54,16 @@ class FileIteratorSourceLocator implements SourceLocator
      */
     private function scan()
     {
-        $sourceLocators = [];
-        foreach ($this->fileSystemIterator as $item) {
-            /* @var $item \SplFileInfo */
-            if ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php') {
-                $sourceLocators[] = new SingleFileSourceLocator($item->getRealPath());
-            }
-        }
-        return $sourceLocators;
+        return array_filter(array_map(
+            function (\SplFileInfo $item) {
+                if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php')) {
+                    return;
+                }
+
+                return new SingleFileSourceLocator($item->getRealPath());
+            },
+            iterator_to_array($this->fileSystemIterator)
+        ));
     }
 
     /**
