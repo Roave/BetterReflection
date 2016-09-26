@@ -54,7 +54,7 @@ class FileIteratorSourceLocator implements SourceLocator
      */
     private function scan()
     {
-        return array_filter(array_map(
+        return array_values(array_filter(array_map(
             function (\SplFileInfo $item) {
                 if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php')) {
                     return;
@@ -63,7 +63,7 @@ class FileIteratorSourceLocator implements SourceLocator
                 return new SingleFileSourceLocator($item->getRealPath());
             },
             iterator_to_array($this->fileSystemIterator)
-        ));
+        )));
     }
 
     /**
