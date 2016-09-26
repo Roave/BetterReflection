@@ -2,6 +2,7 @@
 
 namespace BetterReflectionTest\SourceLocator\Type;
 
+use BetterReflection\Identifier\Identifier;
 use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
@@ -53,5 +54,19 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals(DirectoryScannerAssets\Bar\FooBar::class, $classNames[0]);
         self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[1]);
+    }
+
+    public function testLocateIdentifier()
+    {
+        $class = $this->sourceLocator->locateIdentifier(
+            new ClassReflector($this->sourceLocator),
+            new Identifier(
+                DirectoryScannerAssets\Bar\FooBar::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            )
+        );
+
+        self::assertInstanceOf(ReflectionClass::class, $class);
+        self::assertSame(DirectoryScannerAssets\Bar\FooBar::class, $class->getName());
     }
 }
