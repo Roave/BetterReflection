@@ -34,7 +34,7 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
 
-        $this->assertCount(4, $classes);
+        self::assertCount(4, $classes);
 
         $classNames = array_map(
             function (ReflectionClass $reflectionClass) {
@@ -45,9 +45,9 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         sort($classNames);
 
-        $this->assertEquals(DirectoryScannerAssetsFoo\Bar\FooBar::class, $classNames[0]);
-        $this->assertEquals(DirectoryScannerAssetsFoo\Foo::class, $classNames[1]);
-        $this->assertEquals(DirectoryScannerAssets\Bar\FooBar::class, $classNames[2]);
-        $this->assertEquals(DirectoryScannerAssets\Foo::class, $classNames[3]);
+        self::assertEquals(DirectoryScannerAssetsFoo\Bar\FooBar::class, $classNames[0]);
+        self::assertEquals(DirectoryScannerAssetsFoo\Foo::class, $classNames[1]);
+        self::assertEquals(DirectoryScannerAssets\Bar\FooBar::class, $classNames[2]);
+        self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[3]);
     }
 }
