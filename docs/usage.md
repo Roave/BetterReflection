@@ -93,13 +93,13 @@ within the `Reflector`s. The library comes bundled with the following
 
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
     are hunted through in the given order to locate the source.
-    
+
  * `SingleDirectorySourceLocator` - iterates all files in a single directory 
     (and descends into child directories)
-        
+
  * `MultipleDirectoriesAggregateSourceLocator` - iterates a list of directories (and their children), 
     basically an aggregate version of `SingleDirectorySourceLocator`
-    
+
 A `SourceLocator` is a callable, which when invoked must be given an
 `Identifier` (which describes a class/function/etc.). The `SourceLocator`
 should be written so that it returns a `Reflection` object directly.
