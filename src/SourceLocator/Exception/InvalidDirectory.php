@@ -12,10 +12,10 @@ class InvalidDirectory extends \RuntimeException
     public static function fromNonDirectory($nonDirectory)
     {
         if (! file_exists($nonDirectory)) {
-            return new self(sprintf('%s does not exists', $nonDirectory));
+            return new self(sprintf('"%s" does not exists', $nonDirectory));
         }
 
-        return new self(sprintf('%s is must to be a directory not a file', $nonDirectory));
+        return new self(sprintf('"%s" is must to be a directory not a file', $nonDirectory));
     }
 
     /**

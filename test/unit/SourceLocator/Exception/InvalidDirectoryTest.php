@@ -40,6 +40,23 @@ class InvalidDirectoryTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testFromNonDirectoryWithNonExistingPath()
+    {
+        $directory = uniqid(sys_get_temp_dir() . 'non-existing', true);
+        $exception = InvalidDirectory::fromNonDirectory($directory);
+
+        self::assertInstanceOf(InvalidDirectory::class, $exception);
+        self::assertSame(sprintf('"%s" does not exists', $directory), $exception->getMessage());
+    }
+
+    public function testFromNonDirectoryWithFile()
+    {
+        $exception = InvalidDirectory::fromNonDirectory(__FILE__);
+
+        self::assertInstanceOf(InvalidDirectory::class, $exception);
+        self::assertSame(sprintf('"%s" must be a directory, not a file', __FILE__), $exception->getMessage());
+    }
+
     public function testExceptionMessage()
     {
         $e = InvalidDirectory::fromNonDirectory('testDir');
