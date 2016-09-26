@@ -39,31 +39,21 @@ class FileIteratorSourceLocator implements SourceLocator
     }
 
     /**
-     * Get a AggregateSourceLocator, create it if null.
      * @return AggregateSourceLocator
      */
     private function getAggregatedSourceLocator()
     {
         return $this->aggregateSourceLocator ?
-            $this->aggregateSourceLocator : new AggregateSourceLocator($this->scan());
-    }
+            $this->aggregateSourceLocator : new AggregateSourceLocator(array_values(array_filter(array_map(
+                function (\SplFileInfo $item) {
+                    if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php')) {
+                        return;
+                    }
 
-    /**
-     * scan target directory and resulted as SourceLocator[]
-     * @return SourceLocator[]
-     */
-    private function scan()
-    {
-        return array_values(array_filter(array_map(
-            function (\SplFileInfo $item) {
-                if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) == 'php')) {
-                    return;
-                }
-
-                return new SingleFileSourceLocator($item->getRealPath());
-            },
-            iterator_to_array($this->fileSystemIterator)
-        )));
+                    return new SingleFileSourceLocator($item->getRealPath());
+                },
+                iterator_to_array($this->fileSystemIterator)
+            ))));
     }
 
     /**
