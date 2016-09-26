@@ -6,7 +6,6 @@ use BetterReflection\Identifier\IdentifierType;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Reflector\ClassReflector;
 use BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflectionTest\Assets\DirectoryScannerAssets;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
