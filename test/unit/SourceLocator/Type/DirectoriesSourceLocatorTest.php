@@ -11,20 +11,16 @@ use BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string[]
-     */
-    private $directoryToScan = [];
-
-    /**
      * @var DirectoriesSourceLocator
      */
     private $sourceLocator;
 
     public function setUp()
     {
-        $this->directoryToScan[] = __DIR__ . '/../../Assets/DirectoryScannerAssets';
-        $this->directoryToScan[] = __DIR__ . '/../../Assets/DirectoryScannerAssetsFoo';
-        $this->sourceLocator = new DirectoriesSourceLocator($this->directoryToScan);
+        $this->sourceLocator = new DirectoriesSourceLocator([
+            __DIR__ . '/../../Assets/DirectoryScannerAssets',
+            __DIR__ . '/../../Assets/DirectoryScannerAssetsFoo',
+        ]);
     }
 
     public function testScanDirectoryClasses()
