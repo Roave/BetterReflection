@@ -29,16 +29,16 @@ $classInfo->getMethod('foo')->setBody(function () {
 This does not take immediate effect on execution - and in fact, if the class is
 already loaded, it is impossible to overwrite the in-memory class (this is a
 restriction in PHP itself). However, if you have reflected on this class in
-such a way that it is not in memory, it is possible to export the class and
-load it from a temporary location, for example:
+such a way that it is not already in memory, it is possible to load this class
+using Better Reflection's own autoload system (make sure this is added *after*
+any other autoloader, otherwise it may not behave correctly.
 
 ```php
-use PhpParser\PrettyPrinter\Standard;
+// Call this anywhere after all other autoloaders are registered (e.g. Composer)
+\BetterReflection\Util\Autoload::initialise();
 
-$classCode = (new Standard())->prettyPrint($classInfo->getAst());
-
-file_put_contents('/tmp/foo.php', '<?php ' . $classCode);
-require_once('/tmp/foo.php');
+// Call this any time before instantiating the class
+\BetterReflection\Util\Autoload::addClass($classInfo);
 
 $c = new MyClass();
 var_dump($c->foo()); // This will now be 4, not 5...
