@@ -35,10 +35,14 @@ any other autoloader, otherwise it may not behave correctly.
 
 ```php
 // Call this anywhere after all other autoloaders are registered (e.g. Composer)
-\BetterReflection\Util\Autoload::initialise();
+use BetterReflection\Util\Autoload\ClassLoader;
+use BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+
+$loader = new ClassLoader(new EvalLoader());
+$loader->register();
 
 // Call this any time before instantiating the class
-\BetterReflection\Util\Autoload::addClass($classInfo);
+$loader->addClass($classInfo);
 
 $c = new MyClass();
 var_dump($c->foo()); // This will now be 4, not 5...
