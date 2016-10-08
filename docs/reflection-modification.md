@@ -39,7 +39,6 @@ use BetterReflection\Util\Autoload\ClassLoader;
 use BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
 
 $loader = new ClassLoader(new EvalLoader());
-$loader->register();
 
 // Call this any time before instantiating the class
 $loader->addClass($classInfo);
