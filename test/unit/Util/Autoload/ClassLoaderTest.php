@@ -1,15 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\Util\Autoload;
+namespace Roave\BetterReflectionTest\Util\Autoload;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Util\Autoload\ClassLoader;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
-use BetterReflectionTest\Fixture\TestClassForAutoloader;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
+use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 
 /**
- * @covers \BetterReflection\Util\Autoload\ClassLoader
+ * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
  */
 class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +32,7 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
         $reflection = ReflectionClass::createFromName(TestClassForAutoloader::class);
         self::assertFalse(class_exists(TestClassForAutoloader::class, false));
 
-        $loader = new ClassLoader(new EvalLoader());
+        $loader = new ClassLoader(new EvalLoader(new PhpParserPrinter()));
         $loader->addClass($reflection);
 
         new TestClassForAutoloader();

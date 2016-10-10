@@ -3,27 +3,25 @@
 namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
-use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\PrettyPrinter\Standard as CodePrinter;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
 class EvalLoader implements LoaderMethodInterface
 {
+    /**
+     * @var ClassPrinterInterface
+     */
+    private $classPrinter;
+
+    public function __construct(ClassPrinterInterface $classPrinter)
+    {
+        $this->classPrinter = $classPrinter;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function __invoke(ReflectionClass $classInfo)
     {
-        $nodes = [];
-
-        if ($classInfo->inNamespace()) {
-            $nodes[] = new Namespace_(new Name($classInfo->getNamespaceName()));
-        }
-
-        // @todo need to work out if we need to add `use` imports too...
-
-        $nodes[] = $classInfo->getAst();
-
-        eval((new CodePrinter())->prettyPrint($nodes));
+        eval($this->classPrinter->__invoke($classInfo));
     }
 }

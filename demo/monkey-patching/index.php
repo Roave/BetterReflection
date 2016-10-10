@@ -6,8 +6,9 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\Util\Autoload\ClassLoader;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
 
-$loader = new ClassLoader(new EvalLoader());
+$loader = new ClassLoader(new EvalLoader(new PhpParserPrinter()));
 
 // Create the reflection first (without loading)
 $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/MyClass.php')))->reflect('MyClass');
