@@ -3,6 +3,7 @@
 namespace BetterReflection\TypesFinder;
 
 use BetterReflection\Reflection\ReflectionMethod;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\DocBlock;
@@ -21,17 +22,17 @@ class FindReturnType
     {
         $context = $this->createContextForFunction($function);
 
-        $returnTags = (new DocBlock(
+        $returnTags = DocBlockFactory::createInstance()->create(
             $function->getDocComment(),
-            new DocBlock\Context(
+            new Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()
             )
-        ))->getTagsByName('return');
+        )->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
-            /* @var $returnTag \phpDocumentor\Reflection\DocBlock\Tag\ReturnTag */
-            return (new ResolveTypes())->__invoke($returnTag->getTypes(), $context);
+            /* @var $returnTag \phpDocumentor\Reflection\DocBlock\Tags\Return_ */
+            return (new ResolveTypes())->__invoke(explode('|', $returnTag->getType()), $context);
         }
         return [];
     }

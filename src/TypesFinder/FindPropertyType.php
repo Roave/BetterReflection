@@ -2,8 +2,9 @@
 
 namespace BetterReflection\TypesFinder;
 
-use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use BetterReflection\Reflection\ReflectionProperty;
 
@@ -23,21 +24,21 @@ class FindPropertyType
             $reflectionProperty->getDeclaringClass()->getLocatedSource()->getSource()
         );
 
-        $docBlock = new DocBlock(
+        $docBlock = DocBlockFactory::createInstance()->create(
             $reflectionProperty->getDocComment(),
-            new DocBlock\Context(
+            new Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()
             )
         );
 
-        /* @var \phpDocumentor\Reflection\DocBlock\Tag\VarTag $varTag */
+        /* @var \phpDocumentor\Reflection\DocBlock\Tags\Var_ $varTag */
         $resolvedTypes = [];
         $varTags = $docBlock->getTagsByName('var');
         foreach ($varTags as $varTag) {
             $resolvedTypes = array_merge(
                 $resolvedTypes,
-                (new ResolveTypes())->__invoke($varTag->getTypes(), $context)
+                (new ResolveTypes())->__invoke(explode('|', $varTag->getType()), $context)
             );
         }
         return $resolvedTypes;

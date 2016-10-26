@@ -5,7 +5,7 @@
     "require": {
         "php": "^5.6|^7.0",
         "nikic/php-parser": "^2.0",
-        "phpdocumentor/reflection-docblock": "^2.0",
+        "phpdocumentor/reflection-docblock": "^3.0",
         "phpdocumentor/type-resolver": "^0.2",
         "zendframework/zend-code": "^3.0",
         "jeremeamia/superclosure": "^2.2"
