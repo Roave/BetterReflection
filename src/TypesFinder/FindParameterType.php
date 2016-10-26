@@ -3,6 +3,7 @@
 namespace BetterReflection\TypesFinder;
 
 use BetterReflection\Reflection\ReflectionMethod;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Param as ParamNode;
@@ -23,9 +24,9 @@ class FindParameterType
     {
         $context = $this->createContextForFunction($function);
 
-        $docBlock = new DocBlock(
+        $docBlock = DocBlockFactory::createInstance()->create(
             $function->getDocComment(),
-            new DocBlock\Context(
+            new Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()
             )
@@ -34,9 +35,9 @@ class FindParameterType
         $paramTags = $docBlock->getTagsByName('param');
 
         foreach ($paramTags as $paramTag) {
-            /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tag\ParamTag */
-            if ($paramTag->getVariableName() === '$' . $node->name) {
-                return (new ResolveTypes())->__invoke($paramTag->getTypes(), $context);
+            /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tags\Param */
+            if ($paramTag->getVariableName() === $node->name) {
+                return (new ResolveTypes())->__invoke(explode('|', $paramTag->getType()), $context);
             }
         }
         return [];
