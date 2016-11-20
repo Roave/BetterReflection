@@ -32,8 +32,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         $stubber = $this->stubber;
 
         return new EvaledLocatedSource(
-            "<?php\n\n" . $stubber(new ClassReflection($name)),
-            null
+            "<?php\n\n" . $stubber(new ClassReflection($name))
         );
     }
 
