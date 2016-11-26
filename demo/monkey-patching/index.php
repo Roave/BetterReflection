@@ -5,10 +5,9 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\Util\Autoload\ClassLoader;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
-use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
 
-$loader = new ClassLoader(new EvalLoader(new PhpParserPrinter()));
+$loader = new ClassLoader(FileCacheLoader::defaultFileCacheLoader(__DIR__));
 
 // Create the reflection first (without loading)
 $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/MyClass.php')))->reflect('MyClass');

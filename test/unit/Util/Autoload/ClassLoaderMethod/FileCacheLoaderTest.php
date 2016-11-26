@@ -5,6 +5,8 @@ namespace BetterReflectionTest\Util\Autoload;
 use BetterReflection\Reflection\ReflectionClass;
 use BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
 use BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Roave\Signature\CheckerInterface;
+use Roave\Signature\SignerInterface;
 
 /**
  * @covers \BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
@@ -19,16 +21,27 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->createMock(ReflectionClass::class);
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
-        $expectedContent = '<?php //' . uniqid(__METHOD__, true);
+        $generatedCode = '// ' . uniqid(__METHOD__, true);
+        $signature = uniqid('Roave/Signature: ', true);
+        $signedCode = '<?php // ' . $signature . "\n" . $generatedCode;
 
         $printer = $this->createMock(ClassPrinterInterface::class);
-        $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($expectedContent);
+        $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
 
-        (new FileCacheLoader(__DIR__, $printer))->__invoke($classInfo);
+        $signer = $this->createMock(SignerInterface::class);
+        $signer->expects(self::once())->method('sign')->with($generatedCode)->willReturn($signature);
 
-        self::assertSame($expectedContent, file_get_contents($generatedFilename));
+        $checker = $this->createMock(CheckerInterface::class);
+        $checker->expects(self::exactly(2))->method('check')->with($signedCode)->willReturn(true);
 
-        (new FileCacheLoader(__DIR__, $printer))->__invoke($classInfo);
+        (new FileCacheLoader(__DIR__, $printer, $signer, $checker))->__invoke($classInfo);
+
+        self::assertSame(
+            $signedCode,
+            file_get_contents($generatedFilename)
+        );
+
+        (new FileCacheLoader(__DIR__, $printer, $signer, $checker))->__invoke($classInfo);
 
         unlink($generatedFilename);
     }

@@ -1,9 +1,16 @@
 <?php
 
-namespace BetterReflection\Util\Autoload\ClassLoaderMethod;
+namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
+use Roave\Signature\CheckerInterface;
+use Roave\Signature\Encoder\Base64Encoder;
+use Roave\Signature\FileContentChecker;
+use Roave\Signature\FileContentSigner;
+use Roave\Signature\Hasher\Md5Hasher;
+use Roave\Signature\SignerInterface;
 
 class FileCacheLoader implements LoaderMethodInterface
 {
@@ -18,13 +25,31 @@ class FileCacheLoader implements LoaderMethodInterface
     private $classPrinter;
 
     /**
+     * @var SignerInterface
+     */
+    private $signer;
+
+    /**
+     * @var CheckerInterface
+     */
+    private $checker;
+
+    /**
      * @param string $cacheDirectory
      * @param ClassPrinterInterface $classPrinter
+     * @param SignerInterface $signer
+     * @param CheckerInterface $checker
      */
-    public function __construct($cacheDirectory, ClassPrinterInterface $classPrinter)
-    {
+    public function __construct(
+        $cacheDirectory,
+        ClassPrinterInterface $classPrinter,
+        SignerInterface $signer,
+        CheckerInterface $checker
+    ) {
         $this->cacheDirectory = $cacheDirectory;
         $this->classPrinter = $classPrinter;
+        $this->signer = $signer;
+        $this->checker = $checker;
     }
 
     /**
@@ -32,15 +57,32 @@ class FileCacheLoader implements LoaderMethodInterface
      */
     public function __invoke(ReflectionClass $classInfo)
     {
-        // @todo seems reasonable, any better approaches?
         $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
 
         if (!file_exists($filename)) {
-            file_put_contents($filename, $this->classPrinter->__invoke($classInfo));
+            $code = $this->classPrinter->__invoke($classInfo);
+            file_put_contents(
+                $filename,
+                sprintf("<?php // %s\n%s", $this->signer->sign($code), $code)
+            );
         }
 
-        // @todo we probably don't trust what's in this file, so maybe we need to verify contents are expected?
+        if (!$this->checker->check(file_get_contents($filename))) {
+            // @todo Specific exception must be thrown here
+            throw new \RuntimeException('File contents could not be verified');
+        }
+
         /** @noinspection PhpIncludeInspection */
         require_once $filename;
+    }
+
+    public static function defaultFileCacheLoader($cacheDirectory)
+    {
+        return new self(
+            $cacheDirectory,
+            new PhpParserPrinter(),
+            new FileContentSigner(new Base64Encoder(), new Md5Hasher()),
+            new FileContentChecker(new Base64Encoder(), new Md5Hasher())
+        );
     }
 }
