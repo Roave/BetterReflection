@@ -54,6 +54,7 @@ class FileCacheLoader implements LoaderMethodInterface
 
     /**
      * {@inheritdoc}
+     * @throws \BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
      */
     public function __invoke(ReflectionClass $classInfo)
     {
@@ -68,8 +69,7 @@ class FileCacheLoader implements LoaderMethodInterface
         }
 
         if (!$this->checker->check(file_get_contents($filename))) {
-            // @todo Specific exception must be thrown here
-            throw new \RuntimeException('File contents could not be verified');
+            throw Exception\SignatureCheckFailed::fromReflectionClass($classInfo);
         }
 
         /** @noinspection PhpIncludeInspection */
