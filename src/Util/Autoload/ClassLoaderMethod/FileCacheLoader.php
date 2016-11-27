@@ -64,7 +64,7 @@ class FileCacheLoader implements LoaderMethodInterface
             $code = $this->classPrinter->__invoke($classInfo);
             file_put_contents(
                 $filename,
-                sprintf("<?php // %s\n%s", $this->signer->sign($code), $code)
+                sprintf("<?php\n// %s\n%s", $this->signer->sign($code), $code)
             );
         }
 

@@ -24,7 +24,7 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 
         $generatedCode = '// ' . uniqid(__METHOD__, true);
         $signature = uniqid('Roave/Signature: ', true);
-        $signedCode = '<?php // ' . $signature . "\n" . $generatedCode;
+        $signedCode = "<?php\n// " . $signature . "\n" . $generatedCode;
 
         $printer = $this->createMock(ClassPrinterInterface::class);
         $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
@@ -57,7 +57,7 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 
         $generatedCode = '// ' . uniqid(__METHOD__, true);
         $signature = uniqid('Roave/Signature: ', true);
-        $signedCode = '<?php // ' . $signature . "\n" . $generatedCode;
+        $signedCode = "<?php\n// " . $signature . "\n" . $generatedCode;
 
         $printer = $this->createMock(ClassPrinterInterface::class);
         $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
@@ -76,5 +76,10 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         } finally {
             unlink($generatedFilename);
         }
+    }
+
+    public function testDefaultFileCacheLoader()
+    {
+        $this->markTestIncomplete(__METHOD__);
     }
 }
