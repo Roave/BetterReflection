@@ -4,6 +4,8 @@ namespace BetterReflection\Reflection;
 
 use BetterReflection\Reflector\Reflector;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use PhpParser\NodeTraverser;
+use BetterReflection\Util\Visitor\VariableCollectionVisitor;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {

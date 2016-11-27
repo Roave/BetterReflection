@@ -12,6 +12,7 @@ use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
+use BetterReflection\Reflection\ReflectionVariable;
 
 /**
  * @covers \BetterReflection\Reflection\ReflectionMethod
@@ -303,5 +304,13 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod($methodName);
 
         $this->assertStringMatchesFormat($expectedStringValue, (string)$method);
+    }
+
+    public function testGetVariables()
+    {
+        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\MethodVariables');
+        $variables = $classInfo->getMethod('methodOne')->getVariables();
+        $this->assertCount(2, $variables);
+        $this->assertContainsOnlyInstancesOf(ReflectionVariable::class, $variables);
     }
 }
