@@ -20,6 +20,7 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use SuperClosure\Analyzer\AstAnalyzer;
 use BetterReflection\Util\Visitor\VariableCollectionVisitor;
+use BetterReflection\NodeCompiler\CompilerContext;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
@@ -624,7 +625,8 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     public function getVariables()
     {
         $nodeTraverser = new NodeTraverser();
-        $nodeTraverser->addVisitor($visitor = new VariableCollectionVisitor($this->getDeclaringClass(), $this->reflector));
+        $context = new CompilerContext($this->reflector, $this->getDeclaringClass());
+        $nodeTraverser->addVisitor($visitor = new VariableCollectionVisitor($context));
         $nodeTraverser->traverse([$this->getNode()]);
 
         return $visitor->getVariables();

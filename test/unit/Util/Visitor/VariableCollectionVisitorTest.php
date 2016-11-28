@@ -17,6 +17,7 @@ use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use BetterReflection\NodeCompiler\CompilerContext;
 
 /**
  * @covers \BetterReflection\Util\Visitor\VariableCollectionVisitor
@@ -315,8 +316,9 @@ EOT
 
         $reflector = new ClassReflector($sourceLocator);
         $reflection = $reflector->reflect('BetterReflectionTest\Util\Visitor\Fixtures\Foobar');
+        $context = new CompilerContext($reflector, $reflection);
 
-        $visitor = new VariableCollectionVisitor($reflection, $reflector);
+        $visitor = new VariableCollectionVisitor($context);
 
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);

@@ -17,6 +17,7 @@ use phpDocumentor\Reflection\Types as DocType;
 use phpDocumentor\Reflection\TypeResolver;
 use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Type;
+use BetterReflection\NodeCompiler\CompilerContext;
 
 class VariableCollectionVisitor extends NodeVisitorAbstract
 {
@@ -26,14 +27,9 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
     private $typeResolver;
 
     /**
-     * @var ReflectionClass
+     * @var CompilerContext
      */
-    private $reflection;
-
-    /**
-     * @var Reflector
-     */
-    private $reflector;
+    private $context;
 
     /**
      * @var array
@@ -49,10 +45,9 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
      * Construct with the reflection class for the AST that we are traversing
      * and a reflector instance to resolve types from other classes.
      */
-    public function __construct(ReflectionClass $reflection, Reflector $reflector, TypeResolver $typeResolver = null)
+    public function __construct(CompilerContext $context, TypeResolver $typeResolver = null)
     {
-        $this->reflector = $reflector;
-        $this->reflection = $reflection;
+        $this->context = $context;
         $this->typeResolver = $typeResolver ?: new TypeResolver();
     }
 
@@ -105,7 +100,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         // reset when we enter the class method scope
         $this->methodParamTypes = [];
 
-        $reflMethod = $this->reflection->getMethod($node->name);
+        $reflMethod = $this->context->getSelf()->getMethod($node->name);
 
         foreach ($node->params as $param) {
             $reflParam = $reflMethod->getParameter($param->name);
@@ -155,7 +150,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
             $type = $this->typeFromExpression($expr->var);
 
             if ($type->getTypeObject() instanceof DocType\Object_) {
-                $reflection = $this->reflector->reflect($type);
+                $reflection = $this->context->getReflector()->reflect($type);
                 $propertyRefl = $reflection->getProperty($expr->name);
 
                 if ($propertyRefl->getDocComment()) {
@@ -172,7 +167,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
             $type = $this->typeFromExpression($expr->var);
 
             if ($type->getTypeObject() instanceof DocType\Object_) {
-                $reflection = $this->reflector->reflect($type);
+                $reflection = $this->context->getReflector()->reflect($type);
                 $method = $reflection->getMethod($expr->name);
 
                 return $method->getReturnType() ?: $this->createReflectionTypeFromString('mixed');
@@ -182,8 +177,9 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         }
 
         if ($expr instanceof Expr\Variable) {
-            if ($expr->name === 'this') {
-                $type = $this->createReflectionTypeFromString($this->reflection->getName());
+            if ($this->context->hasSelf() && $expr->name === 'this') {
+
+                $type = $this->createReflectionTypeFromString($this->context->getSelf()->getName());
 
                 return $type;
             }
@@ -259,8 +255,8 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
     {
         $docType = (new FindTypeFromAst())->__invoke(
             $name,
-            $this->reflection->getLocatedSource(),
-            $this->reflection->getNamespaceName()
+            $this->context->getSelf()->getLocatedSource(),
+            $this->context->getSelf()->getNamespaceName()
         );
 
         return $this->createReflectionTypeFromDocType($docType);
