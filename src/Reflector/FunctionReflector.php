@@ -19,7 +19,7 @@ class FunctionReflector implements Reflector
     }
 
     /**
-     * Create a ReflectionClass for the specified $className.
+     * Create a ReflectionFunction for the specified $functionName.
      *
      * @param string $functionName
      * @return \BetterReflection\Reflection\ReflectionFunction
