@@ -17,16 +17,95 @@ use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use BetterReflectionTest\Util\Visitor\Fixtures\Params;
 
 /**
  * @covers \BetterReflection\Util\Visitor\VariableCollectionVisitor
+ *
+ * TODO: 
+ *
+ *  - Closure tests
+ *  - Invalid type resolutions: what happens when trying to access an invalid chain?
+ *  - Static resolution
+ *  - (new ClassOne)->foobar(); resolution
+ *  - Function return types
+ *     
  */
 class VariableCollectionVisitorTest extends \PHPUnit_Framework_TestCase
 {
     public function variableCollectionProvider()
     {
         return [
+            'shouldResolveNewObjectAssignments' => [
+                <<<'EOT'
+public function foobar()
+{
+    $bar = new ClassOne();
+}
+EOT
+                , [
+                    [ 'bar', '\\' . Fixtures\ClassOne::class ],
+                ],
+            ],
+            'shouldAssumeMixedTypeIfMethodCannotBeResolved' => [
+                <<<'EOT'
+public function foobar()
+{
+    $bar = $this->barfoo();
+}
+
+public function barfoo()
+{
+}
+EOT
+                , [
+                    [ 'bar', 'mixed' ],
+                ],
+            ],
+            'shouldAssumeMixedTypeIfPropertyCannotBeResolved' => [
+                <<<'EOT'
+private $foobar;
+
+public function foobar()
+{
+    $string = $this->foobar;
+}
+EOT
+                , [
+                    [ 'string', 'mixed' ],
+                ],
+            ],
+            'shouldIgnorePropertyFetchOnScalarTypes' => [
+                <<<'EOT'
+/**
+ * @var string
+ */
+private $foobar;
+
+public function foobar()
+{
+    $string = $this->foobar->barfoo;
+}
+EOT
+                , [
+                    [ 'string', 'mixed' ],
+                ],
+            ],
+            'shouldAcceptScalarPropertyTypes' => [
+                <<<'EOT'
+/**
+ * @var string
+ */
+private $foobar;
+
+public function foobar()
+{
+    $string = $this->foobar;
+}
+EOT
+                , [
+                    [ 'string', 'string' ],
+                ],
+            ],
             'shouldInterpretArrayAccessesAsMixed' => [
                 <<<'EOT'
 public function foobar()
@@ -89,6 +168,48 @@ public function foobar()
 EOT
                 , [
                     [ 'name', 'mixed' ],
+                ],
+            ],
+            'shouldResolveExtendedPropertyChain' => [
+                <<<'EOT'
+/**
+ * @var ClassOne
+ */
+private $property;
+
+public function methodOne()
+{
+    $object = $this->property->classTwo->classThree->classOne;
+}
+EOT
+                , [
+                    [ 'object', '\\' . Fixtures\ClassOne::class ],
+                ],
+            ],
+            'shouldResolveExtendedMethodChain' => [
+                <<<'EOT'
+/**
+ * @var ClassOne
+ */
+private $property;
+
+public function methodOne()
+{
+    $object = $this->property->getClassTwo()->getClassThree()->getClassOne();
+}
+EOT
+                , [
+                    [ 'object', '\\' . Fixtures\ClassOne::class ],
+                ],
+            ],
+            'shouldAcceptParameterWithNoTypeOrDocblock' => [
+                <<<'EOT'
+public function methodOne($param)
+{
+}
+EOT
+                , [
+                    [ 'param', 'mixed' ],
                 ],
             ],
             'shouldResolveMethodChain' => [

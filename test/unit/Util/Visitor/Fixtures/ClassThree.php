@@ -4,7 +4,16 @@ namespace BetterReflectionTest\Util\Visitor\Fixtures;
 
 class ClassThree
 {
-    public function methodThree(int $number, ClassThree $object): ClassThree
+    /**
+     * @var ClassOne
+     */
+    public $classOne;
+
+    public function getClassThree(int $number, ClassThree $object): ClassThree
+    {
+    }
+
+    public function getClassOne(): ClassOne
     {
     }
 }

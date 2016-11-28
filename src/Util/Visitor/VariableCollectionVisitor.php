@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BetterReflection\Util\Visitor;
 
 use PhpParser\NodeVisitorAbstract;
@@ -10,12 +12,19 @@ use BetterReflection\Reflection\ReflectionClass;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use BetterReflection\Reflector\Reflector;
-use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types as DocType;
+use phpDocumentor\Reflection\TypeResolver;
+use PhpParser\Node\Name;
+use phpDocumentor\Reflection\Type;
 
 class VariableCollectionVisitor extends NodeVisitorAbstract
 {
+    /**
+     * @var TypeResolver
+     */
+    private $typeResolver;
+
     /**
      * @var ReflectionClass
      */
@@ -40,10 +49,11 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
      * Construct with the reflection class for the AST that we are traversing
      * and a reflector instance to resolve types from other classes.
      */
-    public function __construct(ReflectionClass $reflection, Reflector $reflector)
+    public function __construct(ReflectionClass $reflection, Reflector $reflector, TypeResolver $typeResolver = null)
     {
         $this->reflector = $reflector;
         $this->reflection = $reflection;
+        $this->typeResolver = $typeResolver ?: new TypeResolver();
     }
 
     /**
@@ -69,11 +79,13 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof Node\Stmt\ClassMethod) {
             $this->processClassMethod($node);
+
             return;
         }
 
         if ($node instanceof Expr\Assign) {
-            $this->processAssignation($node);
+            $this->processAssign($node);
+
             return;
         }
     }
@@ -93,63 +105,85 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         // reset when we enter the class method scope
         $this->methodParamTypes = [];
 
-        foreach ($node->params as $param) {
-            $reflParam = $this->reflection->getMethod($node->name)->getParameter($param->name);
-            $type = $reflParam->getType();
+        $reflMethod = $this->reflection->getMethod($node->name);
 
-            // if the type is null, then try and guess the type from the docblock, if
-            // multiple types are available, then return the first.
-            if (null === $type) {
+        foreach ($node->params as $param) {
+            $reflParam = $reflMethod->getParameter($param->name);
+
+            // first use any type hint provided in the method signature.
+            $type = $reflParam->getType(); /* @var ReflectionType */
+
+            // if the type is null, then try and guess the type from the docblock.
+            if ($reflMethod->getDocComment() && null === $type) {
                 $types = $reflParam->getDocBlockTypes();
-                $type = count($types) ? ReflectionType::createFromType(reset($types), false) : null;
+
+                // if multiple types are provided, then return the first.
+                $type = $this->createReflectionTypeFromDocType(reset($types));
             }
 
+            // if the type is still null, then assume it as a "mixed" type.
+            $type = $type ?: $this->createReflectionTypeFromString('mixed');
+
+            // make the parameter type available for later.
             $this->methodParamTypes[$param->name] = $type;
+
+            // parameters count as available variables.
             $this->variables[] = ReflectionVariable::createFromName($param->name, $type, $param->getAttribute('startLine'));
         }
     }
 
-    private function processAssignation(Expr\Assign $node)
+    private function processAssign(Expr\Assign $node)
     {
-        // assignment is not directly to a vaiable, so just ignore it
+        // assignment is not directly to a variable, so just ignore it
         // rather than trying to recreate state.
         if (false === $node->var instanceof Expr\Variable) {
             return;
         }
 
         $type = $this->typeFromExpression($node->expr);
+
         $this->variables[] = ReflectionVariable::createFromName($node->var->name, $type, $node->getAttribute('startLine'));
     }
 
-    private function typeFromExpression(Node $expr)
+    private function typeFromExpression(Node $expr): ReflectionType
     {
-        $type = null;
-
-        // new object, just get the type and we are good.
         if ($expr instanceof Expr\New_) {
-            return $this->createType($expr->class);
+            return $this->createTypeFromNameNode($expr->class);
         }
 
-        // if this is a property fetch we must resolve the call
-        // chain to determine the type.
         if ($expr instanceof Expr\PropertyFetch) {
-            $exprs = $this->flattenFetchChain($expr);
+            $type = $this->typeFromExpression($expr->var);
 
-            return $this->resolvePropertyFetchChain($exprs);
+            if ($type->getTypeObject() instanceof DocType\Object_) {
+                $reflection = $this->reflector->reflect($type);
+                $propertyRefl = $reflection->getProperty($expr->name);
+
+                if ($propertyRefl->getDocComment()) {
+                    $types = $propertyRefl->getDocBlockTypes();
+
+                    return $this->createReflectionTypeFromDocType(reset($types));
+                }
+            }
+
+            return $this->createReflectionTypeFromString('mixed');
         }
 
-        // if it is a method call then we recurse to resolve the type.
         if ($expr instanceof Expr\MethodCall) {
             $type = $this->typeFromExpression($expr->var);
-            $reflection = $this->reflector->reflect($type);
-            $method = $reflection->getMethod($expr->name);
 
-            return $method->getReturnType();
+            if ($type->getTypeObject() instanceof DocType\Object_) {
+                $reflection = $this->reflector->reflect($type);
+                $method = $reflection->getMethod($expr->name);
+
+                return $method->getReturnType() ?: $this->createReflectionTypeFromString('mixed');
+            }
+
+            return $this->createReflectionTypeFromString('mixed');
         }
 
         if ($expr instanceof Expr\Variable) {
             if ($expr->name === 'this') {
-                $type = ReflectionType::createFromType(new Object_(new Fqsen('\\'.$this->reflection->getName())), false);
+                $type = $this->createReflectionTypeFromString($this->reflection->getName());
 
                 return $type;
             }
@@ -177,33 +211,33 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
 
             // in the case that no return type was provided, just return
             // "mixed".
-            return $reflection->getReturnType() ?: ReflectionType::createFromType(new DocType\Mixed(), false);
+            return $reflection->getReturnType() ?: $this->createUnknownReflectionType();
         }
 
         if ($expr instanceof Expr\ArrayDimFetch) {
-            return ReflectionType::createFromType(new DocType\Mixed(), false);
+            return $this->createUnknownReflectionType();
         }
 
         if ($expr instanceof Expr\Array_) {
-            return ReflectionType::createFromType(new DocType\Array_(), false);
+            return $this->createReflectionTypeFromString('array');
         }
 
         if ($expr instanceof Node\Scalar) {
             switch (get_class($expr)) {
                 case Node\Scalar\DNumber::class:
-                    return ReflectionType::createFromType(new DocType\Float_(), false);
+                    return $this->createReflectionTypeFromString('float');
 
                 case Node\Scalar\LNumber::class:
-                    return ReflectionType::createFromType(new DocType\Integer(), false);
+                    return $this->createReflectionTypeFromString('integer');
 
                 case Node\Scalar\String_::class:
-                    return ReflectionType::createFromType(new DocType\String_(), false);
+                    return $this->createReflectionTypeFromString('string');
 
                 case Node\Scalar\Encapsed::class:
                 case Node\Scalar\MagicConst::class:
                 case Node\Scalar\EncapsedStringPart::class:
                     // TODO: ???
-                    return;
+                    return $this->createUnknownReflectionType();
                 default:
                     throw new \RuntimeException(sprintf(
                         'Do not know scalar type "%s"', get_class($expr)
@@ -217,57 +251,37 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         ));
     }
 
-    private function resolvePropertyFetchChain(array $exprs)
+    /**
+     * Create the a type relative to the current reflection class from
+     * a php-parser name-node.
+     */
+    private function createTypeFromNameNode(Name $name)
     {
-        $reflection = $this->reflection;
-
-        foreach ($exprs as $expr) {
-            // TODO: This seems very wrong ...
-            if (false === $expr instanceof Expr\PropertyFetch) {
-                continue;
-            }
-
-            // resolve the type of the property from its docblock
-            $prop = $reflection->getProperty($expr->name);
-            $types = $prop->getDocBlockTypes();
-            $type = reset($types);
-
-            // set the new reflection to the type of the property
-            $reflection = $this->reflector->reflect($type->getFqsen());
-        }
-
-        return $reflection->getName();
-    }
-
-    private function flattenFetchChain(Expr\PropertyFetch $node)
-    {
-        $exprs = [];
-
-        // if this the child of this node is also a property fetch node then
-        // recurse, otherwise just add the child to the chain and return.
-        if ($node->var instanceof Expr\PropertyFetch) {
-            $exprs = array_merge($exprs, $this->flattenFetchChain($node->var));
-        } else {
-            $exprs[] = $node->var;
-        }
-
-        $exprs[] = $node;
-
-        return $exprs;
-    }
-
-    private function createType($type)
-    {
-        $typeHint = (new FindTypeFromAst())->__invoke(
-            $type,
+        $docType = (new FindTypeFromAst())->__invoke(
+            $name,
             $this->reflection->getLocatedSource(),
             $this->reflection->getNamespaceName()
         );
 
-        if (null === $typeHint) {
-            return;
-        }
+        return $this->createReflectionTypeFromDocType($docType);
+    }
 
-        return ReflectionType::createFromType($typeHint, false);
+    private function createReflectionTypeFromString(string $type = null)
+    {
+        $type = $type ?: 'mixed';
+
+        return $this->createReflectionTypeFromDocType(
+            $this->typeResolver->resolve($type)
+        );
+    }
+
+    private function createReflectionTypeFromDocType(Type $type): ReflectionType
+    {
+        return ReflectionType::createFromType($type, false);
+    }
+
+    private function createUnknownReflectionType()
+    {
+        return $this->createReflectionTypeFromString('mixed', false);
     }
 }
