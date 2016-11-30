@@ -8,7 +8,7 @@
         "phpdocumentor/reflection-docblock": "^3.0",
         "phpdocumentor/type-resolver": "^0.2",
         "zendframework/zend-code": "^3.0",
-        "jeremeamia/superclosure": "^2.2"
+        "jeremeamia/superclosure": "^2.3"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^1.12",
