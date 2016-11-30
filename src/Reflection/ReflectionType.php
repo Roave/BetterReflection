@@ -86,7 +86,7 @@ class ReflectionType
                 return 'bool';
             case $this->type instanceof Types\Float_:
                 return 'float';
-            case $this->type instanceof Types\Void:
+            case $this->type instanceof Types\Void_:
                 return 'void';
             default:
                 return (string)$this->type;

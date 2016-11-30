@@ -38,8 +38,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         $stubber = $this->stubber;
 
         return new InternalLocatedSource(
-            "<?php\n\n" . $stubber(new ClassReflection($name)),
-            null
+            "<?php\n\n" . $stubber(new ClassReflection($name))
         );
     }
 
