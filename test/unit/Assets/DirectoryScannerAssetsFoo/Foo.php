@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
+namespace Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
 
 class Foo
 {

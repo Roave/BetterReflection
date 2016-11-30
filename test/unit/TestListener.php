@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflectionTest;
+namespace Roave\BetterReflectionTest;
 
 class TestListener extends \PHPUnit_Framework_BaseTestListener
 {
@@ -51,11 +51,11 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
             return;
         }
 
-        $this->assertClassNotLoaded(\BetterReflectionTest\Fixture\ExampleClass::class, $test);
-        $this->assertClassNotLoaded(\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
+        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\ExampleClass::class, $test);
+        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
         $this->assertClassNotLoaded(\ClassWithExplicitGlobalNamespace::class, $test);
         $this->assertClassNotLoaded(\ClassWithNoNamespace::class, $test);
-        $this->assertClassNotLoaded(\BetterReflectionTest\Fixture\Methods::class, $test);
+        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\Methods::class, $test);
     }
 
     /**

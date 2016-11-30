@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Reflection\Exception;
+namespace Roave\BetterReflection\Reflection\Exception;
 
 class ClosureAstExtractionFailure extends \RuntimeException
 {

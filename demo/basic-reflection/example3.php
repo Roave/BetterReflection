@@ -4,9 +4,9 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $reflector = new ClassReflector(new AggregateSourceLocator([
     new SingleFileSourceLocator(__DIR__ . '/assets/MyClass.php'),

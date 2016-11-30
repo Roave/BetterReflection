@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\Reflector\Exception;
+namespace Roave\BetterReflection\Reflector\Exception;
 
-use BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\Identifier;
 
 class IdentifierNotFound extends \RuntimeException
 {

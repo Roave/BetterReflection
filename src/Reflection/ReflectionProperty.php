@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\NodeCompiler\CompilerContext;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\TypesFinder\FindPropertyType;
+use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;

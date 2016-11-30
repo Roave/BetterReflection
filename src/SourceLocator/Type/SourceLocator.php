@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\Reflection;
-use BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflector\Reflector;
 
 interface SourceLocator
 {
@@ -30,7 +30,7 @@ interface SourceLocator
      *
      * @param Reflector $reflector
      * @param IdentifierType $identifierType
-     * @return \BetterReflection\Reflection\Reflection[]
+     * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType);
 }

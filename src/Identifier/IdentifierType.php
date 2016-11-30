@@ -1,10 +1,10 @@
 <?php
 
-namespace BetterReflection\Identifier;
+namespace Roave\BetterReflection\Identifier;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\Reflection;
 
 class IdentifierType
 {

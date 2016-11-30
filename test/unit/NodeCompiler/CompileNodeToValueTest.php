@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\NodeCompiler;
+namespace Roave\BetterReflectionTest\NodeCompiler;
 
-use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\NodeCompiler\CompilerContext;
-use BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use PhpParser\Lexer;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
@@ -17,7 +17,7 @@ use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
 
 /**
- * @covers \BetterReflection\NodeCompiler\CompileNodeToValue
+ * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
  */
 class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 {

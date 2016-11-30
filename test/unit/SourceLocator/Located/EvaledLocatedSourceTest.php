@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Located;
+namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
-use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 
 /**
- * @covers \BetterReflection\SourceLocator\Located\EvaledLocatedSource
+ * @covers \Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource
  */
 class EvaledLocatedSourceTest extends \PHPUnit_Framework_TestCase
 {

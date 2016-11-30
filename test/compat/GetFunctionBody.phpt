@@ -14,8 +14,8 @@ function adder(int $a, int $b)
 EOF;
 
 
-$reflector = new \BetterReflection\Reflector\FunctionReflector(
-    new BetterReflection\SourceLocator\Type\StringSourceLocator($source)
+$reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
+    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator($source)
 );
 
 $functionInfo = $reflector->reflect('adder');

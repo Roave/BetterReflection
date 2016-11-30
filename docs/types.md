@@ -51,12 +51,12 @@ This is simply a convenience wrapper to fetch the types named as strings.
 ## `ReflectionParameter->getType()`
 
 This is compatible with the PHP 7 reflection API, and will return a
-`\BetterReflection\Reflection\ReflectionType` instance.
+`\Roave\BetterReflection\Reflection\ReflectionType` instance.
 
 ## `ReflectionFunction->getReturnType()` and `ReflectionMethod->getReturnType()`
 
 This is compatible with the PHP 7 reflection API, and will return a
-`\BetterReflection\Reflection\ReflectionType` instance.
+`\Roave\BetterReflection\Reflection\ReflectionType` instance.
 
 ## The `Type` object
 

@@ -1,19 +1,19 @@
 <?php
 
-namespace BetterReflectionTest\TypesFinder;
+namespace Roave\BetterReflectionTest\TypesFinder;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
-use BetterReflection\TypesFinder\FindParameterType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\TypesFinder\FindParameterType;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\Types;
 
 /**
- * @covers \BetterReflection\TypesFinder\FindParameterType
+ * @covers \Roave\BetterReflection\TypesFinder\FindParameterType
  */
 class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
 {

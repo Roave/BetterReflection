@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Reflection\Adapter\Exception;
+namespace Roave\BetterReflection\Reflection\Adapter\Exception;
 
 class NotImplemented extends \LogicException
 {

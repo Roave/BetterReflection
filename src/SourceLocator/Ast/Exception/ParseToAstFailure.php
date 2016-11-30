@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Ast\Exception;
+namespace Roave\BetterReflection\SourceLocator\Ast\Exception;
 
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 class ParseToAstFailure extends \RuntimeException
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Reflector;
+namespace Roave\BetterReflectionTest\Reflector;
 
-use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
- * @covers \BetterReflection\Reflector\FunctionReflector
+ * @covers \Roave\BetterReflection\Reflector\FunctionReflector
  */
 class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
 {

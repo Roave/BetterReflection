@@ -1,20 +1,20 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflection\ReflectionParameter;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\InternalLocatedSource;
-use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use ReflectionClass as PhpReflectionClass;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
  */
 class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

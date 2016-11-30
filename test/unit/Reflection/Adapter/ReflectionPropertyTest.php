@@ -1,16 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\Reflection\Adapter;
+namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
-use BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
-use BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
-use BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
+use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 
 /**
- * @covers \BetterReflection\Reflection\Adapter\ReflectionProperty
+ * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
  */
 class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 {

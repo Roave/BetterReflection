@@ -1,15 +1,15 @@
 <?php
 
-namespace BetterReflectionTest\Reflection\Exception;
+namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use BetterReflectionTest\Fixture;
+use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflectionTest\Fixture;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @covers \BetterReflection\Reflection\Exception\NotAnInterfaceReflection
+ * @covers \Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection
  */
 class NotAnInterfaceReflectionTest extends PHPUnit_Framework_TestCase
 {

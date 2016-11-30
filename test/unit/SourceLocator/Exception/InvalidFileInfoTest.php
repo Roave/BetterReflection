@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Exception;
+namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
-use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 
 /**
- * @covers \BetterReflection\SourceLocator\Exception\InvalidFileInfo
+ * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo
  */
 class InvalidFileInfoTest extends \PHPUnit_Framework_TestCase
 {

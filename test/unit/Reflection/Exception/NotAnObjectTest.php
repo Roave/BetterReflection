@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Reflection\Exception;
+namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @covers \BetterReflection\Reflection\Exception\NotAnObject
+ * @covers \Roave\BetterReflection\Reflection\Exception\NotAnObject
  */
 class NotAnObjectTest extends PHPUnit_Framework_TestCase
 {

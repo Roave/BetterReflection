@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Fixture\StaticPropertyGetSet;
+namespace Roave\BetterReflection\Fixture\StaticPropertyGetSet;
 
 class Foo
 {

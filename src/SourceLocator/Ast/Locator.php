@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Ast;
+namespace Roave\BetterReflection\SourceLocator\Ast;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use BetterReflection\Reflection\Reflection;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\Reflector\Exception\IdentifierNotFound;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
@@ -59,7 +59,7 @@ class Locator
      * @param Reflector $reflector
      * @param LocatedSource $locatedSource
      * @param IdentifierType $identifierType
-     * @return \BetterReflection\Reflection\Reflection[]
+     * @return \Roave\BetterReflection\Reflection\Reflection[]
      * @throws Exception\ParseToAstFailure
      */
     public function findReflectionsOfType(Reflector $reflector, LocatedSource $locatedSource, IdentifierType $identifierType)

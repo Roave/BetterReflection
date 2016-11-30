@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\Reflector;
+namespace Roave\BetterReflection\Reflector;
 
-use BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflection\Reflection;
 
 /**
  * This interface is used to ensure a reflector implements these basic methods.

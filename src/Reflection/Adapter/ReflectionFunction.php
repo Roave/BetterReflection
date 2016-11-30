@@ -1,9 +1,9 @@
 <?php
 
-namespace BetterReflection\Reflection\Adapter;
+namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionFunction as CoreReflectionFunction;
-use BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 
 class ReflectionFunction extends CoreReflectionFunction
 {

@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflectionTest\Reflection\Adapter;
+namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
-use BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
-use BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
-use BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 
 /**
- * @covers \BetterReflection\Reflection\Adapter\ReflectionParameter
+ * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter
  */
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {

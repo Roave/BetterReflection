@@ -1,16 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\Reflector;
+namespace Roave\BetterReflectionTest\Reflector;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Exception\IdentifierNotFound;
-use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
- * @covers \BetterReflection\Reflector\ClassReflector
+ * @covers \Roave\BetterReflection\Reflector\ClassReflector
  */
 class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 {

@@ -2,7 +2,7 @@
 
 The starting point for creating a reflection class does not match the typical
 core reflection API. Instead of simply instantiating a `new \ReflectionClass`,
-you must use the appropriate helper `\BetterReflection\Reflector\ClassReflector`.
+you must use the appropriate helper `\Roave\BetterReflection\Reflector\ClassReflector`.
 
 All `*Reflector` classes require a class that implements the `SourceLocator`
 interface as a dependency.
@@ -19,7 +19,7 @@ work with this technique.
 ```php
 <?php
 
-use BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 
 $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ```
@@ -38,10 +38,10 @@ They are as follows:
 ```php
 <?php
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflection\ReflectionParameter;
-use BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
 
 ReflectionClass::createFromName(\stdClass::class);
 ReflectionClass::createFromInstance(new \stdClass);
@@ -133,7 +133,7 @@ $functionInfo = ReflectionFunction::createFromName('foo');
 
 $classLoader = require "vendor/autoload.php";
 
-use BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ClassReflector;
 
 $reflector = new ClassReflector(new ComposerSourceLocator($classLoader));
 $reflectionClass = $reflector->reflect('Foo\Bar\MyClass');

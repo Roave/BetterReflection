@@ -1,22 +1,22 @@
 <?php
 
-namespace BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Exception\Uncloneable;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionParameter;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use phpDocumentor\Reflection\Types;
-use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionParameter
+ * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
  */
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,7 +67,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromSpecWithFunctionName()
     {
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
-        $parameterInfo = ReflectionParameter::createFromSpec('BetterReflectionTest\Fixture\testFunction', 'param1');
+        $parameterInfo = ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'param1');
 
         $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         $this->assertSame('param1', $parameterInfo->getName());
@@ -89,7 +89,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testImplementsReflector()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
         $methodInfo = $classInfo->getMethod('methodWithParameters');
         $paramInfo = $methodInfo->getParameter('parameter1');
 
@@ -152,7 +152,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDocBlockTypeStrings()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
@@ -165,7 +165,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDocBlockTypes()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
@@ -183,7 +183,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testStringCast()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithOptionalParameters');
 
         $requiredParam = $method->getParameter('parameter');
@@ -195,7 +195,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPosition()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithParameters');
 
@@ -213,10 +213,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
-            ['fullyQualifiedClassParameter', Types\Object_::class, '\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
+            ['fullyQualifiedClassParameter', Types\Object_::class, '\Roave\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
             ['arrayParameter', Types\Array_::class],
             ['callableParameter', Types\Callable_::class],
-            ['namespaceClassParameter', Types\Object_::class, '\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
+            ['namespaceClassParameter', Types\Object_::class, '\Roave\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
         ];
     }
 
@@ -229,7 +229,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTypeHint($parameterToTest, $expectedType, $expectedFqsen = null, $expectedFqsenName = null)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
@@ -334,7 +334,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsCallable()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
@@ -347,7 +347,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsArray()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
@@ -360,7 +360,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsVariadic()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithVariadic');
 
@@ -373,7 +373,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsPassedByReference()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithReference');
 
@@ -388,7 +388,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultValueAndIsOptional()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithNonOptionalDefaultValue');
 
         $firstParam = $method->getParameter('firstParameter');
@@ -405,7 +405,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      */
     public function testVariadicParametersAreAlsoImplicitlyOptional()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
 
         $method = $classInfo->getMethod('methodWithVariadic');
 
@@ -420,7 +420,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testAllowsNull()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodToCheckAllowsNull');
 
         $firstParam = $method->getParameter('allowsNull');
@@ -435,7 +435,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
         $method = $classInfo->getMethod('methodWithConstAsDefault');
 
         $constDefault = $method->getParameter('constDefault');
@@ -539,7 +539,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testCannotClone()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\Methods');
         $methodInfo = $classInfo->getMethod('methodWithParameters');
         $paramInfo = $methodInfo->getParameter('parameter1');
 

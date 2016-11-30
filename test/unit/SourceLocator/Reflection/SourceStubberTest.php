@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Reflection;
+namespace Roave\BetterReflectionTest\SourceLocator\Reflection;
 
-use BetterReflection\SourceLocator\Reflection\SourceStubber;
-use BetterReflectionTest\Fixture\EmptyTrait;
+use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Zend\Code\Reflection\ClassReflection;
 
 /**
- * @covers \BetterReflection\SourceLocator\Reflection\SourceStubber
+ * @covers \Roave\BetterReflection\SourceLocator\Reflection\SourceStubber
  */
 class SourceStubberTest extends \PHPUnit_Framework_TestCase
 {

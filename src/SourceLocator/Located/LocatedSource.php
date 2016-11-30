@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Located;
+namespace Roave\BetterReflection\SourceLocator\Located;
 
-use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 
 /**
  * Value object containing source code that has been located.

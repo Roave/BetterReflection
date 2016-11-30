@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\Util\Visitor;
+namespace Roave\BetterReflectionTest\Util\Visitor;
 
-use BetterReflection\Util\Visitor\ReturnNodeVisitor;
+use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 
 /**
- * @covers \BetterReflection\Util\Visitor\ReturnNodeVisitor
+ * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor
  */
 class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
 {

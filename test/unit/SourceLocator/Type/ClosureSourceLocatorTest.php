@@ -1,16 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
-use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
+use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\ClosureSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator
  */
 class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

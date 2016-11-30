@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\TypesFinder\FindReturnType;
-use BetterReflection\TypesFinder\FindTypeFromAst;
-use BetterReflection\Util\Visitor\ReturnNodeVisitor;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\TypesFinder\FindReturnType;
+use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;

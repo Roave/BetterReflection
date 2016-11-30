@@ -1,15 +1,15 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\SingleFileSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator
  */
 class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

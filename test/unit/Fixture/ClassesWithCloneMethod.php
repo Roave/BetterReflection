@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflectionTest\ClassesWithCloneMethod {
+namespace Roave\BetterReflectionTest\ClassesWithCloneMethod {
     class WithPublicClone
     {
         public function __clone() {}

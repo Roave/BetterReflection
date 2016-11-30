@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflection\Reflector;
+namespace Roave\BetterReflection\Reflector;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use BetterReflection\SourceLocator\Type\SourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 class ClassReflector implements Reflector
 {
@@ -41,7 +41,7 @@ class ClassReflector implements Reflector
      * Create a ReflectionClass for the specified $className.
      *
      * @param string $className
-     * @return \BetterReflection\Reflection\ReflectionClass
+     * @return \Roave\BetterReflection\Reflection\ReflectionClass
      */
     public function reflect($className)
     {
@@ -59,7 +59,7 @@ class ClassReflector implements Reflector
     /**
      * Get all the classes available in the scope specified by the SourceLocator.
      *
-     * @return \BetterReflection\Reflection\ReflectionClass[]
+     * @return \Roave\BetterReflection\Reflection\ReflectionClass[]
      */
     public function getAllClasses()
     {

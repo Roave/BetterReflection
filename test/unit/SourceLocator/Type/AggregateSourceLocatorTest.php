@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use BetterReflection\SourceLocator\Type\SourceLocator;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\AggregateSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator
  */
 class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

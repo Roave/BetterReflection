@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflectionTest\Util;
+namespace Roave\BetterReflectionTest\Util;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Util\FindReflectionOnLine;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Util\FindReflectionOnLine;
 
 /**
- * @covers \BetterReflection\Util\FindReflectionOnLine
+ * @covers \Roave\BetterReflection\Util\FindReflectionOnLine
  */
 class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
 {

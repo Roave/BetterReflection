@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Identifier;
+namespace Roave\BetterReflectionTest\Identifier;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
 
 /**
- * @covers \BetterReflection\Identifier\Identifier
+ * @covers \Roave\BetterReflection\Identifier\Identifier
  */
 class IdentifierTest extends \PHPUnit_Framework_TestCase
 {

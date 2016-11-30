@@ -1,21 +1,21 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Closure;
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
-use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
+use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use SuperClosure\Analyzer\AstAnalyzer;
 use SuperClosure\Analyzer\ClosureAnalyzer;
 use PhpParser\Node\Expr\Closure as ClosureNode;
 use SuperClosure\Exception\ClosureAnalysisException;
-use BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
+use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
 
 final class ClosureSourceLocator implements SourceLocator
 {

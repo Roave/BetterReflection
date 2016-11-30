@@ -1,21 +1,21 @@
 <?php
 
-namespace BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Exception\Uncloneable;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionObject;
-use BetterReflection\Reflection\ReflectionProperty;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionObject;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionObject
+ * @covers \Roave\BetterReflection\Reflection\ReflectionObject
  */
 class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -207,7 +207,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $foo->bar = 'huzzah';
 
         $expectedExport = <<<'BLAH'
-Object of class [ <user> class BetterReflectionTest\Fixture\ClassForHinting ] {
+Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHinting ] {
   @@ %s
 
   - Constants [0] {

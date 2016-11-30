@@ -1,9 +1,9 @@
 <?php
 
-namespace BetterReflection\Reflection\Adapter;
+namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionProperty as CoreReflectionProperty;
-use BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 
 class ReflectionProperty extends CoreReflectionProperty
 {

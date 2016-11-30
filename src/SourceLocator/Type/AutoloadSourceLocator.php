@@ -1,10 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\SourceLocator\Exception\FunctionUndefined;
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Exception\FunctionUndefined;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.

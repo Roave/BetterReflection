@@ -1,10 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator loads an entire file, specified in the constructor

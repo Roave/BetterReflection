@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\NodeCompiler;
+namespace Roave\BetterReflectionTest\NodeCompiler;
 
-use BetterReflection\NodeCompiler\CompilerContext;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
- * @covers \BetterReflection\NodeCompiler\CompilerContext
+ * @covers \Roave\BetterReflection\NodeCompiler\CompilerContext
  */
 class CompilerContextTest extends \PHPUnit_Framework_TestCase
 {

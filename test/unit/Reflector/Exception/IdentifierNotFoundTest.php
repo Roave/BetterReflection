@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\Reflector\Exception;
+namespace Roave\BetterReflectionTest\Reflector\Exception;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 
 /**
- * @covers \BetterReflection\Reflector\Exception\IdentifierNotFound
+ * @covers \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
  */
 class IdentifierNotFoundTest extends \PHPUnit_Framework_TestCase
 {

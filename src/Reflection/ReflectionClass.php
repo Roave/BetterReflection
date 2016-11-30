@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\NodeCompiler\CompileNodeToValue;
-use BetterReflection\NodeCompiler\CompilerContext;
-use BetterReflection\Reflection\Exception\NotAClassReflection;
-use BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
-use BetterReflection\Reflection\Exception\NotAnObject;
-use BetterReflection\Reflection\Exception\NotAString;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
+use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\NotAString;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;

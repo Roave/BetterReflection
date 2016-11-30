@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\TypesFinder;
+namespace Roave\BetterReflectionTest\TypesFinder;
 
-use BetterReflection\TypesFinder\ResolveTypes;
+use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
 
 /**
- * @covers \BetterReflection\TypesFinder\ResolveTypes
+ * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes
  */
 class ResolveTypesTest extends \PHPUnit_Framework_TestCase
 {

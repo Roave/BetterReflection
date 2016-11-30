@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
  */
 class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

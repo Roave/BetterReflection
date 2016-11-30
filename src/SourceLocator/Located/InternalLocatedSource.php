@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Located;
+namespace Roave\BetterReflection\SourceLocator\Located;
 
 /**
  * {@inheritDoc}

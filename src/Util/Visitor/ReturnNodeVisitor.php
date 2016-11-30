@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Util\Visitor;
+namespace Roave\BetterReflection\Util\Visitor;
 
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;

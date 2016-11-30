@@ -8,10 +8,10 @@ if (!extension_loaded('reflection')) print 'skip';
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-$classInfo = \BetterReflection\Reflection\ReflectionClass::createFromName('stdClass');
+$classInfo = \Roave\BetterReflection\Reflection\ReflectionClass::createFromName('stdClass');
 $clone = clone($classInfo);
 ?>
 --EXPECTF--
-Fatal error: Uncaught %SBetterReflection\Reflection\Exception\Uncloneable%s
+Fatal error: Uncaught %SRoave\BetterReflection\Reflection\Exception\Uncloneable%s
 Stack trace:
 %a

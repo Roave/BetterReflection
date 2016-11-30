@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 
 class ReflectionMethod extends ReflectionFunctionAbstract

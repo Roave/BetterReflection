@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Located;
+namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
-use BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use InvalidArgumentException;
 
 /**
- * @covers \BetterReflection\SourceLocator\Located\LocatedSource
+ * @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource
  */
 class LocatedSourceTest extends \PHPUnit_Framework_TestCase
 {

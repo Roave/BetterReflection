@@ -1,16 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\TypesFinder;
+namespace Roave\BetterReflectionTest\TypesFinder;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\TypesFinder\FindReturnType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\TypesFinder\FindReturnType;
 use phpDocumentor\Reflection\Types;
 
 /**
- * @covers \BetterReflection\TypesFinder\FindReturnType
+ * @covers \Roave\BetterReflection\TypesFinder\FindReturnType
  */
 class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
 {

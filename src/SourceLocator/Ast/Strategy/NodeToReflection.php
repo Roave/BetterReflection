@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Ast\Strategy;
+namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
 
 /**

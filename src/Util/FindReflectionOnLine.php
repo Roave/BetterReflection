@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflection\Util;
+namespace Roave\BetterReflection\Util;
 
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\Reflection;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 final class FindReflectionOnLine
 {

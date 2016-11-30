@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\NodeCompiler\CompilerContext;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\TypesFinder\FindParameterType;
-use BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\TypesFinder\FindParameterType;
+use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
-use BetterReflection\NodeCompiler\CompileNodeToValue;
+use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 
 class ReflectionParameter implements \Reflector
 {

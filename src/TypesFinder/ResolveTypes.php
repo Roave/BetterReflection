@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\TypesFinder;
+namespace Roave\BetterReflection\TypesFinder;
 
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\TypeResolver;

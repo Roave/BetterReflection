@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Composer\Autoload\ClassLoader;
-use BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\Identifier;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.

@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Reflection\Exception;
+namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use BetterReflection\Reflection\Exception\NotAString;
+use Roave\BetterReflection\Reflection\Exception\NotAString;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @covers \BetterReflection\Reflection\Exception\NotAString
+ * @covers \Roave\BetterReflection\Reflection\Exception\NotAString
  */
 class NotAStringTest extends PHPUnit_Framework_TestCase
 {

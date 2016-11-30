@@ -13,6 +13,6 @@ $reflection = $finder('path/to/my/file.php', 10);
 
 The helper will return `null` if no reflection is found, or may return one of:
 
-* `\BetterReflection\Reflection\ReflectionClass` (for interfaces, classes, traits)
-* `\BetterReflection\Reflection\ReflectionMethod`
-* `\BetterReflection\Reflection\ReflectionFunction`
+* `\Roave\BetterReflection\Reflection\ReflectionClass` (for interfaces, classes, traits)
+* `\Roave\BetterReflection\Reflection\ReflectionMethod`
+* `\Roave\BetterReflection\Reflection\ReflectionFunction`

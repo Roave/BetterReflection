@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\NodeCompiler\Exception;
+namespace Roave\BetterReflection\NodeCompiler\Exception;
 
 class UnableToCompileNode extends \LogicException
 {
