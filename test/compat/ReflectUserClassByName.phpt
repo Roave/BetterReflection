@@ -12,5 +12,5 @@ var_dump($classInfo->getName());
 var_dump($classInfo->isInternal());
 ?>
 --EXPECT--
-string(43) "Roave\BetterReflection\Reflection\ReflectionClass"
+string(49) "Roave\BetterReflection\Reflection\ReflectionClass"
 bool(false)
