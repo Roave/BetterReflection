@@ -3,7 +3,7 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": "^5.6|^7.0",
+        "php": "^7.0|^7.1",
         "nikic/php-parser": "^3.0",
         "phpdocumentor/reflection-docblock": "^3.0",
         "phpdocumentor/type-resolver": "^0.2",
