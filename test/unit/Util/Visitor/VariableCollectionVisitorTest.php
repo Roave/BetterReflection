@@ -332,7 +332,7 @@ EOT
             $actual = $variables[$index];
             $this->assertInstanceOf(ReflectionVariable::class, $actual);
             $this->assertEquals($expectedName, $actual->getName());
-            $this->assertEquals($expectedType, (string) $actual->getTypeObject());
+            $this->assertEquals($expectedType, (string) $actual->getType());
         }
     }
 }

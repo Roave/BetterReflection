@@ -7,6 +7,8 @@ use phpDocumentor\Reflection\Types;
 use PhpParser\NodeAbstract;
 use PhpParser\Node\Param;
 use PhpParser\Node\Expr\Variable;
+use BetterReflection\Reflection\ReflectionType;
+use BetterReflection\Reflection\ReflectionVariable;
 
 class ReflectionVariable
 {
@@ -26,70 +28,68 @@ class ReflectionVariable
     private $endPos;
 
     /**
-     * @var $type
+     * @var ReflectionType $type
      */
     private $type;
 
-    public static function createFromParamAndType(Param $param, ReflectionType $type)
+    public static function createFromParamAndType(Param $param, ReflectionType $type): ReflectionVariable
     {
         return self::createFromNodeAndType($param, $type);
     }
 
-    public static function createFromVariableAndType(Variable $variable, ReflectionType $type)
+    public static function createFromVariableAndType(Variable $variable, ReflectionType $type): ReflectionVariable
     {
         return self::createFromNodeAndType($variable, $type);
     }
 
-    private static function createFromNodeAndType(NodeAbstract $node, ReflectionType $type)
-    {
-        $reflectionVariable = new self();
-        $reflectionVariable->name = $node->name;
-        $reflectionVariable->type = $type;
-        $reflectionVariable->startPos = $node->getAttribute('startPos');
-        $reflectionVariable->endPos = $node->getAttribute('endPos');
-
-        return $reflectionVariable;
-    }
-
-    public function getName() 
+    public function getName(): string
     {
         return $this->name;
     }
-
-    public function getDeclaredAt() 
-    {
-        return $this->declaredAt;
-    }
-
+    
     /**
-     * Get a PhpDocumentor type object for this type
-     *
-     * @return Type
+     * Return the reflection type for this variable.
      */
-    public function getTypeObject()
+    public function getType(): ReflectionType
     {
         return $this->type;
     }
 
     /**
-     * Checks if it is a built-in type (i.e., it's not an object...)
-     *
-     * @see http://php.net/manual/en/reflectiontype.isbuiltin.php
-     * @return bool
+     * Returns the offset into the code string of the first character that is part of the node.
      */
-    public function isBuiltin()
+    public function getStartPos(): int
     {
-        return (!$this->type instanceof Types\Object_);
+        return $this->startPos;
     }
 
     /**
-     * Convert this string type to a string
-     *
-     * @see https://github.com/php/php-src/blob/master/ext/reflection/php_reflection.c#L2993
-     * @return string
+     * Returns the offset into the code string of the last character that is part of the node.
      */
-    public function __toString()
+    public function getEndPos(): int
     {
-        return sprintf('@var $%s (%s): %s', $this->name, $this->type, $this->declaredAt);
+        return $this->endPos;
     }
+
+    /**
+     * Create a new reflection variable, 
+     *
+     * NOTE: This method is private as both `Variables` and
+     *       `Params` have the same properties but do not extend a common type.
+     *
+     * NOTE: The startFilePos and endFilePos attributes should be available on
+     *       the node, which means that the Lexer should be configured to provide
+     *       them.
+     */
+    private static function createFromNodeAndType(NodeAbstract $node, ReflectionType $type): ReflectionVariable
+    {
+        $reflectionVariable = new self();
+        $reflectionVariable->name = $node->name;
+        $reflectionVariable->type = $type;
+        $reflectionVariable->startPos = $node->getAttribute('startFilePos');
+        $reflectionVariable->endPos = $node->getAttribute('endFilePos');
+
+        return $reflectionVariable;
+    }
+
 }

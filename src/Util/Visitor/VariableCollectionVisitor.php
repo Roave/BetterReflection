@@ -46,10 +46,6 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
      */
     private $methodParamTypes = [];
 
-    /**
-     * Construct with the reflection class for the AST that we are traversing
-     * and a reflector instance to resolve types from other classes.
-     */
     public function __construct(CompilerContext $context, TypeResolver $typeResolver = null)
     {
         $this->context = $context;
@@ -173,7 +169,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         if ($expr instanceof Expr\MethodCall) {
             $type = $this->typeFromNode($expr->var);
 
-            if ($type->getTypeObject() instanceof DocType\Object_) {
+            if (false === $type->isBuiltin()) {
                 $reflection = $this->context->getReflector()->reflect($type);
                 $method = $reflection->getMethod($expr->name);
 
