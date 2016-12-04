@@ -482,9 +482,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function isIterateable()
+    public function isIterable()
     {
-        return $this->reflectionClass->isIterateable();
+        return $this->reflectionClass->isIterable();
     }
 
     /**

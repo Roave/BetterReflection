@@ -976,13 +976,13 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * Checks if iterateable
+     * Checks if Iterable
      *
-     * @link http://php.net/manual/en/reflectionclass.isiterateable.php
+     * @link http://php.net/manual/en/reflectionclass.isIterable.php
      *
      * @return bool
      */
-    public function isIterateable()
+    public function isIterable()
     {
         return $this->isInstantiable() && $this->implementsInterface(\Traversable::class);
     }

@@ -1,5 +1,5 @@
 --TEST--
-ReflectionClass::isIterateable() basic
+ReflectionClass::isIterable() basic
 --CREDITS--
 Felix De Vliegher <felix.devliegher@gmail.com>, Marc Veldman <marc@ibuildings.nl>
 --FILE--
@@ -16,19 +16,19 @@ class IteratorClass implements Iterator {
 class DerivedClass extends IteratorClass {}
 class NonIterator {}
 
-function dump_iterateable($class) {
+function dump_Iterable($class) {
 	$reflection = new ReflectionClass($class);
-	var_dump($reflection->isIterateable());
+	var_dump($reflection->isIterable());
 }
 
 $classes = array("ArrayObject", "IteratorClass", "DerivedClass", "NonIterator");
 foreach ($classes as $class) {
-	echo "Is $class iterateable? ";
-	dump_iterateable($class);
+	echo "Is $class Iterable? ";
+	dump_Iterable($class);
 }
 ?>
 --EXPECT--
-Is ArrayObject iterateable? bool(true)
-Is IteratorClass iterateable? bool(true)
-Is DerivedClass iterateable? bool(true)
-Is NonIterator iterateable? bool(false)
+Is ArrayObject Iterable? bool(true)
+Is IteratorClass Iterable? bool(true)
+Is DerivedClass Iterable? bool(true)
+Is NonIterator Iterable? bool(false)
