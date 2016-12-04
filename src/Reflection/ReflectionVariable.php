@@ -4,6 +4,9 @@ namespace BetterReflection\Reflection;
 
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types;
+use PhpParser\NodeAbstract;
+use PhpParser\Node\Param;
+use PhpParser\Node\Expr\Variable;
 
 class ReflectionVariable
 {
@@ -15,26 +18,37 @@ class ReflectionVariable
     /**
      * @var int
      */
-    private $declaredAt;
+    private $startPos;
+
+    /**
+     * @var int
+     */
+    private $endPos;
 
     /**
      * @var $type
      */
     private $type;
 
-    /**
-     * @param string $name
-     * @param int $declaredAt
-     * @param string $type
-     * @return ReflectionType
-     */
-    public static function createFromName($name, ReflectionType $type = null, $declaredAt)
+    public static function createFromParamAndType(Param $param, ReflectionType $type)
     {
-        $reflectionType = new self();
-        $reflectionType->name = $name;
-        $reflectionType->declaredAt = $declaredAt;
-        $reflectionType->type = $type;
-        return $reflectionType;
+        return self::createFromNodeAndType($param, $type);
+    }
+
+    public static function createFromVariableAndType(Variable $variable, ReflectionType $type)
+    {
+        return self::createFromNodeAndType($variable, $type);
+    }
+
+    private static function createFromNodeAndType(NodeAbstract $node, ReflectionType $type)
+    {
+        $reflectionVariable = new self();
+        $reflectionVariable->name = $node->name;
+        $reflectionVariable->type = $type;
+        $reflectionVariable->startPos = $node->getAttribute('startPos');
+        $reflectionVariable->endPos = $node->getAttribute('endPos');
+
+        return $reflectionVariable;
     }
 
     public function getName() 

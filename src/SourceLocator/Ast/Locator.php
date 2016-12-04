@@ -11,6 +11,7 @@ use BetterReflection\Reflector\Exception\IdentifierNotFound;
 use BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use PhpParser\Lexer;
 
 /**
  * @internal
@@ -31,7 +32,8 @@ class Locator
     {
         $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection());
 
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $lexer = new Lexer([ 'usedAttributes' => [ 'comments', 'startFilePos', 'endFilePos', 'startLine', 'endLine' ] ]);
+        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
     }
 
     /**

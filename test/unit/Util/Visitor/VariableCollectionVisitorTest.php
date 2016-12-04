@@ -304,7 +304,7 @@ namespace BetterReflectionTest\Util\Visitor\Fixtures;
 
 class Foobar
 {
-    :content:
+:content:
 }
 EOT
         );

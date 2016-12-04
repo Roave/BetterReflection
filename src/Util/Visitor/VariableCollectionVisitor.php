@@ -18,7 +18,12 @@ use phpDocumentor\Reflection\TypeResolver;
 use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Type;
 use BetterReflection\NodeCompiler\CompilerContext;
+use PhpParser\Node\FunctionLike;
 
+/**
+ * This collection will traverse an AST and collect all of the variables and
+ * attempt to determine their types.
+ */
 class VariableCollectionVisitor extends NodeVisitorAbstract
 {
     /**
@@ -72,8 +77,8 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
      */
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Stmt\ClassMethod) {
-            $this->processClassMethod($node);
+        if ($node instanceof FunctionLike) {
+            $this->processFunctionLike($node);
 
             return;
         }
@@ -95,14 +100,14 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         return $this->variables;
     }
 
-    private function processClassMethod(Node\Stmt\ClassMethod $node)
+    private function processFunctionLike(FunctionLike $node)
     {
         // reset when we enter the class method scope
         $this->methodParamTypes = [];
 
         $reflMethod = $this->context->getSelf()->getMethod($node->name);
 
-        foreach ($node->params as $param) {
+        foreach ($node->getParams() as $param) {
             $reflParam = $reflMethod->getParameter($param->name);
 
             // first use any type hint provided in the method signature.
@@ -123,7 +128,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
             $this->methodParamTypes[$param->name] = $type;
 
             // parameters count as available variables.
-            $this->variables[] = ReflectionVariable::createFromName($param->name, $type, $param->getAttribute('startLine'));
+            $this->variables[] = ReflectionVariable::createFromParamAndType($param, $type);
         }
     }
 
@@ -135,22 +140,24 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
             return;
         }
 
-        $type = $this->typeFromExpression($node->expr);
+        $type = $this->typeFromNode($node->expr);
 
-        $this->variables[] = ReflectionVariable::createFromName($node->var->name, $type, $node->getAttribute('startLine'));
+        $this->variables[] = ReflectionVariable::createFromVariableAndType($node->var, $type);
     }
 
-    private function typeFromExpression(Node $expr): ReflectionType
+    private function typeFromNode(Node $expr): ReflectionType
     {
         if ($expr instanceof Expr\New_) {
             return $this->createTypeFromNameNode($expr->class);
         }
 
         if ($expr instanceof Expr\PropertyFetch) {
-            $type = $this->typeFromExpression($expr->var);
+            $type = $this->typeFromNode($expr->var);
 
-            if ($type->getTypeObject() instanceof DocType\Object_) {
+            if (false === $type->isBuiltin()) {
                 $reflection = $this->context->getReflector()->reflect($type);
+
+                // TODO: what if reflection does not have property?
                 $propertyRefl = $reflection->getProperty($expr->name);
 
                 if ($propertyRefl->getDocComment()) {
@@ -160,11 +167,11 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
                 }
             }
 
-            return $this->createReflectionTypeFromString('mixed');
+            return $this->createUnknownReflectionType();
         }
 
         if ($expr instanceof Expr\MethodCall) {
-            $type = $this->typeFromExpression($expr->var);
+            $type = $this->typeFromNode($expr->var);
 
             if ($type->getTypeObject() instanceof DocType\Object_) {
                 $reflection = $this->context->getReflector()->reflect($type);
@@ -178,7 +185,6 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
 
         if ($expr instanceof Expr\Variable) {
             if ($this->context->hasSelf() && $expr->name === 'this') {
-
                 $type = $this->createReflectionTypeFromString($this->context->getSelf()->getName());
 
                 return $type;
