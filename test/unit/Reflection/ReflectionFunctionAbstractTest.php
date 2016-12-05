@@ -198,7 +198,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
 
-        $rfaRef = new \ReflectionClass('\Roave\BetterReflection\Reflection\ReflectionFunctionAbstract');
+        $rfaRef = new \ReflectionClass(ReflectionFunctionAbstract::class);
         $rfaRefNode = $rfaRef->getProperty('node');
         $rfaRefNode->setAccessible(true);
         $rfaRefNode->setValue($functionInfo, null);

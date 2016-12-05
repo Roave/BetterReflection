@@ -25,12 +25,17 @@ use Roave\BetterReflectionTest\ClassWithInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
+use Roave\BetterReflectionTest\Fixture\AbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\ExampleInterface;
+use Roave\BetterReflectionTest\Fixture\ExampleTrait;
+use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use PhpParser\Node\Name;
 use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
 use PhpParser\Node\Stmt\Class_;
+use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionClass
@@ -284,7 +289,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetDocCommentReturnsEmptyStringWithNoComment()
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\FixtureOther\AnotherClass');
+        $classInfo = $reflector->reflect(AnotherClass::class);
 
         $this->assertSame('', $classInfo->getDocComment());
     }
@@ -348,7 +353,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\AbstractClass');
+        $classInfo = $reflector->reflect(AbstractClass::class);
         $this->assertTrue($classInfo->isAbstract());
 
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -359,7 +364,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\FinalClass');
+        $classInfo = $reflector->reflect(FinalClass::class);
         $this->assertTrue($classInfo->isFinal());
 
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -397,7 +402,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleTrait');
+        $classInfo = $reflector->reflect(ExampleTrait::class);
         $this->assertTrue($classInfo->isTrait());
 
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -408,7 +413,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleInterface');
+        $classInfo = $reflector->reflect(ExampleInterface::class);
         $this->assertTrue($classInfo->isInterface());
 
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -690,10 +695,10 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($reflector->reflect(ExampleClass::class)->isInstantiable());
         $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isInstantiable());
-        $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isInstantiable());
-        $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isInstantiable());
-        $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isInstantiable());
-        $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isInstantiable());
+        $this->assertTrue($reflector->reflect(FinalClass::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(ExampleTrait::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(AbstractClass::class)->isInstantiable());
+        $this->assertFalse($reflector->reflect(ExampleInterface::class)->isInstantiable());
     }
 
     public function testIsCloneable()
@@ -702,10 +707,10 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($reflector->reflect(ExampleClass::class)->isCloneable());
         $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isCloneable());
-        $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isCloneable());
-        $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isCloneable());
-        $this->assertFalse($reflector->reflect(Fixture\AbstractClass::class)->isCloneable());
-        $this->assertFalse($reflector->reflect(Fixture\ExampleInterface::class)->isCloneable());
+        $this->assertTrue($reflector->reflect(FinalClass::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(ExampleTrait::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(AbstractClass::class)->isCloneable());
+        $this->assertFalse($reflector->reflect(ExampleInterface::class)->isCloneable());
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassesWithCloneMethod.php'

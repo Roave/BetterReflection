@@ -9,6 +9,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use phpDocumentor\Reflection\Types;
@@ -214,10 +215,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
-            ['fullyQualifiedClassParameter', Types\Object_::class, '\Roave\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
+            ['fullyQualifiedClassParameter', Types\Object_::class, '\\' . ClassForHinting::class, 'ClassForHinting'],
             ['arrayParameter', Types\Array_::class],
             ['callableParameter', Types\Callable_::class],
-            ['namespaceClassParameter', Types\Object_::class, '\Roave\BetterReflectionTest\Fixture\ClassForHinting', 'ClassForHinting'],
+            ['namespaceClassParameter', Types\Object_::class, '\\' . ClassForHinting::class, 'ClassForHinting'],
         ];
     }
 
