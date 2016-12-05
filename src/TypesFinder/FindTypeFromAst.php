@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\TypesFinder;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Name;
+use PhpParser\Node\NullableType;
 
 class FindTypeFromAst
 {
@@ -22,6 +23,12 @@ class FindTypeFromAst
             $namespace,
             $locatedSource->getSource()
         );
+
+        // @todo Nullable types are effectively ignored - to be fixed
+        /* @see https://github.com/Roave/BetterReflection/issues/202 */
+        if ($astType instanceof NullableType) {
+            $astType = $astType->type;
+        }
 
         if (is_string($astType)) {
             $typeString = $astType;
