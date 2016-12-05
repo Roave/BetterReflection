@@ -13,6 +13,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
@@ -31,10 +32,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator());
 
-        $className = 'Roave\BetterReflectionTest\Fixture\ExampleClass';
-        $this->assertFalse(class_exists($className, false));
-        $classInfo = $reflector->reflect($className);
-        $this->assertFalse(class_exists($className, false));
+        $this->assertFalse(class_exists(ExampleClass::class, false));
+        $classInfo = $reflector->reflect(ExampleClass::class);
+        $this->assertFalse(class_exists(ExampleClass::class, false));
 
         $this->assertSame('ExampleClass', $classInfo->getShortName());
     }
@@ -45,10 +45,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         // Ensure class is loaded first
         new ClassForHinting();
-        $className = 'Roave\BetterReflectionTest\Fixture\ClassForHinting';
-        $this->assertTrue(class_exists($className, false));
+        $this->assertTrue(class_exists(ClassForHinting::class, false));
 
-        $classInfo = $reflector->reflect($className);
+        $classInfo = $reflector->reflect(ClassForHinting::class);
 
         $this->assertSame('ClassForHinting', $classInfo->getShortName());
     }

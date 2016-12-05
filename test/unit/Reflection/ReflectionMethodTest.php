@@ -49,7 +49,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testImplementsReflector()
     {
-        $classInfo = $this->reflector->reflect('Roave\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('publicMethod');
 
         $this->assertInstanceOf(\Reflector::class, $methodInfo);

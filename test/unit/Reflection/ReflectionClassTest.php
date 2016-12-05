@@ -81,7 +81,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertTrue($classInfo->inNamespace());
-        $this->assertSame('Roave\BetterReflectionTest\Fixture\ExampleClass', $classInfo->getName());
+        $this->assertSame(ExampleClass::class, $classInfo->getName());
         $this->assertSame('Roave\BetterReflectionTest\Fixture', $classInfo->getNamespaceName());
         $this->assertSame('ExampleClass', $classInfo->getShortName());
     }
@@ -113,14 +113,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testReflectingAClassDoesNotLoadTheClass()
     {
-        $class = 'Roave\BetterReflectionTest\Fixture\ExampleClass';
-
-        $this->assertFalse(class_exists($class, false));
+        $this->assertFalse(class_exists(ExampleClass::class, false));
 
         $reflector = new ClassReflector($this->getComposerLocator());
-        $reflector->reflect($class);
+        $reflector->reflect(ExampleClass::class);
 
-        $this->assertFalse(class_exists($class, false));
+        $this->assertFalse(class_exists(ExampleClass::class, false));
     }
 
     public function testGetMethods()
@@ -234,14 +232,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testStaticCreation()
     {
-        $reflection = ReflectionClass::createFromName('Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $reflection = ReflectionClass::createFromName(ExampleClass::class);
         $this->assertSame('ExampleClass', $reflection->getShortName());
     }
 
     public function testGetParentClassDefault()
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
-        $childReflection = $reflector->reflect('Roave\BetterReflectionTest\Fixture\ClassWithParent');
+        $childReflection = $reflector->reflect(Fixture\ClassWithParent::class);
 
         $parentReflection = $childReflection->getParentClass();
         $this->assertSame('ExampleClass', $parentReflection->getShortName());
@@ -249,7 +247,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetParentClassThrowsExceptionWithNoParent()
     {
-        $reflection = ReflectionClass::createFromName('Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $reflection = ReflectionClass::createFromName(ExampleClass::class);
 
         $this->assertNull($reflection->getParentClass());
     }
@@ -860,7 +858,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testClassToString()
     {
-        $reflection = ReflectionClass::createFromName('Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $reflection = ReflectionClass::createFromName(ExampleClass::class);
         $this->assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             $reflection->__toString()
@@ -881,7 +879,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
-            ReflectionClass::export('Roave\BetterReflectionTest\Fixture\ExampleClass')
+            ReflectionClass::export(ExampleClass::class)
         );
     }
 
