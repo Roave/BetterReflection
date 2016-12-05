@@ -26,6 +26,7 @@ use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use PhpParser\Node\Name;
 use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
@@ -72,7 +73,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testClassNameMethodsWithNamespace()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertTrue($classInfo->inNamespace());
         $this->assertSame('Roave\BetterReflectionTest\Fixture\ExampleClass', $classInfo->getName());
@@ -120,7 +121,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetMethods()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
@@ -166,7 +167,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetConstants()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertSame([
             'MY_CONST_1' => 123,
             'MY_CONST_2' => 234,
@@ -176,7 +177,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetConstant()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertSame(123, $classInfo->getConstant('MY_CONST_1'));
         $this->assertSame(234, $classInfo->getConstant('MY_CONST_2'));
         $this->assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
@@ -185,7 +186,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testIsConstructor()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $constructor = $classInfo->getConstructor();
 
         $this->assertInstanceOf(ReflectionMethod::class, $constructor);
@@ -195,7 +196,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetProperties()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $properties = $classInfo->getProperties();
 
@@ -206,7 +207,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetProperty()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertNull($classInfo->getProperty('aNonExistentProperty'));
 
@@ -219,7 +220,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetFileName()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $detectedFilename = $classInfo->getFileName();
 
@@ -275,7 +276,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetDocComment()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertContains('Some comments here', $classInfo->getDocComment());
     }
@@ -291,7 +292,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testHasProperty()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertFalse($classInfo->hasProperty('aNonExistentProperty'));
         $this->assertTrue($classInfo->hasProperty('publicProperty'));
@@ -300,7 +301,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testHasConstant()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertFalse($classInfo->hasConstant('NON_EXISTENT_CONSTANT'));
         $this->assertTrue($classInfo->hasConstant('MY_CONST_1'));
@@ -309,7 +310,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testHasMethod()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertFalse($classInfo->hasMethod('aNonExistentMethod'));
         $this->assertTrue($classInfo->hasMethod('someMethod'));
@@ -328,7 +329,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testIsInternalWithUserDefinedClass()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->assertFalse($classInfo->isInternal());
         $this->assertTrue($classInfo->isUserDefined());
@@ -350,7 +351,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\AbstractClass');
         $this->assertTrue($classInfo->isAbstract());
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertFalse($classInfo->isAbstract());
     }
 
@@ -361,7 +362,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\FinalClass');
         $this->assertTrue($classInfo->isFinal());
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertFalse($classInfo->isFinal());
     }
 
@@ -399,7 +400,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleTrait');
         $this->assertTrue($classInfo->isTrait());
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertFalse($classInfo->isTrait());
     }
 
@@ -410,7 +411,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleInterface');
         $this->assertTrue($classInfo->isInterface());
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertFalse($classInfo->isInterface());
     }
 
@@ -687,7 +688,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
-        $this->assertTrue($reflector->reflect(Fixture\ExampleClass::class)->isInstantiable());
+        $this->assertTrue($reflector->reflect(ExampleClass::class)->isInstantiable());
         $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isInstantiable());
         $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isInstantiable());
         $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isInstantiable());
@@ -699,7 +700,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
-        $this->assertTrue($reflector->reflect(Fixture\ExampleClass::class)->isCloneable());
+        $this->assertTrue($reflector->reflect(ExampleClass::class)->isCloneable());
         $this->assertTrue($reflector->reflect(Fixture\ClassWithParent::class)->isCloneable());
         $this->assertTrue($reflector->reflect(Fixture\FinalClass::class)->isCloneable());
         $this->assertFalse($reflector->reflect(Fixture\ExampleTrait::class)->isCloneable());
@@ -929,7 +930,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testCannotClone()
     {
         $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $reflector->reflect(ExampleClass::class);
 
         $this->expectException(Uncloneable::class);
         $unused = clone $classInfo;

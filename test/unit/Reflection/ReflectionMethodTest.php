@@ -12,6 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
@@ -151,7 +152,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodNameWithNamespace()
     {
-        $classInfo = $this->reflector->reflect('\Roave\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
         $this->assertFalse($methodInfo->inNamespace());
