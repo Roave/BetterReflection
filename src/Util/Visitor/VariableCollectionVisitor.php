@@ -47,6 +47,11 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
      */
     private $methodParamTypes = [];
 
+    /**
+     * @var array
+     */
+    private $scopes = [];
+
     public function __construct(CompilerContext $context, TypeResolver $typeResolver = null)
     {
         $this->context = $context;
@@ -79,7 +84,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof FunctionLike) {
-            $this->processFunctionLike($node);
+            $this->scopes[] = $this->processFunctionLike($node);
 
             return;
         }
@@ -87,6 +92,15 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         if ($node instanceof Expr\Assign) {
             $this->processAssign($node);
 
+            return;
+        }
+    }
+
+    public function leaveNode(Node $node)
+    {
+        if ($node instanceof FunctionLike) {
+            array_pop($this->scopes);
+            
             return;
         }
     }
@@ -106,8 +120,11 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
             $this->methodParamTypes[$param->name] = $reflectionType;
 
             // parameters count as available variables.
-            $this->variables[] = ReflectionVariable::createFromParamAndType($param, $reflectionType);
+            // TODO: Test
+            $this->variables[] = ReflectionVariable::createFromParamAndType($param, $reflectionType, $methodReflection);
         }
+
+        return $methodReflection;
     }
 
     private function processAssign(Expr\Assign $node)
@@ -120,7 +137,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
 
         $type = $this->typeFromNode($node->expr);
 
-        $this->variables[] = ReflectionVariable::createFromVariableAndType($node->var, $type);
+        $this->variables[] = ReflectionVariable::createFromVariableAndType($node->var, $type, $this->getCurrentScope());
     }
 
     private function typeFromNode(Node $expr): ReflectionType
@@ -304,5 +321,14 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
     private function reflectionTypeForUnknown()
     {
         return $this->reflectionTypeFromString('mixed', false);
+    }
+
+    private function getCurrentScope()
+    {
+        if (empty($this->scopes)) {
+            return null;
+        }
+
+        return end($this->scopes);
     }
 }

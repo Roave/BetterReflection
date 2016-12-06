@@ -18,6 +18,8 @@ use BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use BetterReflection\NodeCompiler\CompilerContext;
+use BetterReflection\Reflection\ReflectionFunction;
+use BetterReflection\Reflection\ReflectionMethod;
 
 /**
  * @covers \BetterReflection\Util\Visitor\VariableCollectionVisitor
@@ -289,6 +291,63 @@ EOT
         ];
     }
 
+    public function reflectionScopeBindingProvider()
+    {
+        return [
+            [
+                <<<'EOT'
+EOT
+                , 
+            ]
+        ];
+    }
+
+    public function testMethodReflectionScopeBinding()
+    {
+        $source = <<<'EOT'
+function methodOne()
+{
+    $foobar = 'string';
+    $barfoo = 'string';
+}
+
+function methodTwo()
+{
+    $booboo = 'string';
+}
+EOT
+        ;
+
+        $expectedVariableScopeNames = [ 
+            'foobar' => 'methodOne',
+            'barfoo' => 'methodOne',
+            'booboo' => 'methodTwo',
+        ];
+
+        $variables = $this->getVariablesForSource($source);
+
+        foreach ($expectedVariableScopeNames as $expectedVariableName => $variableScopeName) {
+
+            foreach ($variables as $variable) {
+
+                if ($expectedVariableName === $variable->getName()) {
+                    $this->assertInstanceOf(ReflectionMethod::class, $variable->getScopeReflection());
+                    $this->assertEquals($variableScopeName, $variable->getScopeReflection()->getName());
+
+                    continue 2;
+                }
+            }
+
+            $this->fail(sprintf('Could not find expected variable "%s"', $expectedVariableName));
+        }
+    }
+
+    public function testFunctionReflectionScopeBinding()
+    {
+        $this->markTestIncomplete();
+    }
+
+
     /**
      * @param Node[] $statements
      * @param int $expectedReturns
@@ -296,6 +355,32 @@ EOT
      * @dataProvider variableCollectionProvider
      */
     public function testVariableCollectionProvider($source, $expectedVariables)
+    {
+        $variables = $this->getVariablesForSource($source);
+
+        foreach ($expectedVariables as $index => $expectedVariable) {
+            list($expectedName, $expectedType) = $expectedVariable;
+            $this->assertArrayHasKey($index, $variables);
+            $actual = $variables[$index];
+            $this->assertInstanceOf(ReflectionVariable::class, $actual);
+            $this->assertEquals($expectedName, $actual->getName());
+            $this->assertEquals($expectedType, (string) $actual->getType());
+        }
+    }
+
+    private function getVariablesForSource(string $source)
+    {
+        $context = $this->createCompilerContextFromSource($source);
+        $visitor = new VariableCollectionVisitor($context);
+
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
+        $traverser->traverse([ $context->getSelf()->getAst() ]);
+
+        return $visitor->getVariables();
+    }
+
+    private function createCompilerContextFromSource(string $source)
     {
         $source = str_replace(':content:', $source, <<<'EOT'
 <?php
@@ -307,7 +392,7 @@ class Foobar
 :content:
 }
 EOT
-        );
+    );
 
         $sourceLocator = new AggregateSourceLocator([
             new StringSourceLocator($source),
@@ -316,24 +401,7 @@ EOT
 
         $reflector = new ClassReflector($sourceLocator);
         $reflection = $reflector->reflect('BetterReflectionTest\Util\Visitor\Fixtures\Foobar');
-        $context = new CompilerContext($reflector, $reflection);
-
-        $visitor = new VariableCollectionVisitor($context);
-
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor($visitor);
-        $traverser->traverse([ $reflection->getAst() ]);
-
-        $variables = $visitor->getVariables();
-
-        foreach ($expectedVariables as $index => $expectedVariable) {
-            list($expectedName, $expectedType) = $expectedVariable;
-            $this->assertArrayHasKey($index, $variables);
-            $actual = $variables[$index];
-            $this->assertInstanceOf(ReflectionVariable::class, $actual);
-            $this->assertEquals($expectedName, $actual->getName());
-            $this->assertEquals($expectedType, (string) $actual->getType());
-        }
+        return new CompilerContext($reflector, $reflection);
     }
 }
 

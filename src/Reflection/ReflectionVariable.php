@@ -9,6 +9,7 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Expr\Variable;
 use BetterReflection\Reflection\ReflectionType;
 use BetterReflection\Reflection\ReflectionVariable;
+use BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 class ReflectionVariable
 {
@@ -32,14 +33,27 @@ class ReflectionVariable
      */
     private $type;
 
-    public static function createFromParamAndType(Param $param, ReflectionType $type): ReflectionVariable
+    /**
+     * @var ReflectionFunctionAbstract
+     */
+    private $scopeReflection;
+
+    public static function createFromParamAndType(
+        Param $param,
+        ReflectionType $type,
+        ReflectionFunctionAbstract $scopeReflection = null
+    ): ReflectionVariable
     {
         return self::createFromNodeAndType($param, $type);
     }
 
-    public static function createFromVariableAndType(Variable $variable, ReflectionType $type): ReflectionVariable
+    public static function createFromVariableAndType(
+        Variable $variable,
+        ReflectionType $type,
+        ReflectionFunctionAbstract $scopeReflection = null
+    ): ReflectionVariable
     {
-        return self::createFromNodeAndType($variable, $type);
+        return self::createFromNodeAndType($variable, $type, $scopeReflection);
     }
 
     public function getName(): string
@@ -71,6 +85,12 @@ class ReflectionVariable
         return $this->endPos;
     }
 
+    public function getScopeReflection(): ReflectionFunctionAbstract
+    {
+        return $this->scopeReflection;
+    }
+    
+
     /**
      * Create a new reflection variable, 
      *
@@ -81,13 +101,18 @@ class ReflectionVariable
      *       the node, which means that the Lexer should be configured to provide
      *       them.
      */
-    private static function createFromNodeAndType(NodeAbstract $node, ReflectionType $type): ReflectionVariable
+    private static function createFromNodeAndType(
+        NodeAbstract $node,
+        ReflectionType $type,
+        ReflectionFunctionAbstract $scopeReflection = null
+    ): ReflectionVariable
     {
         $reflectionVariable = new self();
         $reflectionVariable->name = $node->name;
         $reflectionVariable->type = $type;
         $reflectionVariable->startPos = $node->getAttribute('startFilePos');
         $reflectionVariable->endPos = $node->getAttribute('endFilePos');
+        $reflectionVariable->scopeReflection = $scopeReflection;
 
         return $reflectionVariable;
     }
