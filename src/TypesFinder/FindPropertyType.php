@@ -19,6 +19,7 @@ class FindPropertyType
     public function __invoke(ReflectionProperty $reflectionProperty)
     {
         $contextFactory = new ContextFactory();
+
         $context = $contextFactory->createForNamespace(
             $reflectionProperty->getDeclaringClass()->getNamespaceName(),
             $reflectionProperty->getDeclaringClass()->getLocatedSource()->getSource()

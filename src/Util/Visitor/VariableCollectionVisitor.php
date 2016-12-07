@@ -192,11 +192,6 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
                     ));
             }
         }
-
-        throw new \RuntimeException(sprintf(
-            'Could not determine type from expression for node of type "%s"',
-            get_class($expr)
-        ));
     }
 
     private function reflectionTypeFromParam(Node\Param $expr, ReflectionMethod $reflectionMethod)
@@ -222,34 +217,36 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
     {
         $type = $this->typeFromNode($expr->var);
 
-        if (false === $type->isBuiltin()) {
-            $reflection = $this->context->getReflector()->reflect($type);
-
-            // TODO: what if reflection does not have property?
-            $propertyRefl = $reflection->getProperty($expr->name);
-
-            if ($propertyRefl->getDocComment()) {
-                $types = $propertyRefl->getDocBlockTypes();
-
-                return $this->reflectionTypeFromDocType(reset($types));
-            }
+        // TODO: Good god..
+        if ((string) $type === 'mixed' || null === $type || true === $type->isBuiltin()) {
+            return $this->reflectionTypeForUnknown();
         }
 
-        return $this->reflectionTypeForUnknown();
+        $reflection = $this->context->getReflector()->reflect($type);
+
+        // TODO: what if reflection does not have property?
+        $propertyRefl = $reflection->getProperty($expr->name);
+
+        if ($propertyRefl->getDocComment()) {
+            $types = $propertyRefl->getDocBlockTypes();
+
+            return $this->reflectionTypeFromDocType(reset($types));
+        }
     }
 
     private function reflectionTypeFromMethodCall(Expr\MethodCall $expr)
     {
         $type = $this->typeFromNode($expr->var);
 
-        if (false === $type->isBuiltin()) {
-            $reflection = $this->context->getReflector()->reflect($type);
-            $method = $reflection->getMethod($expr->name);
-
-            return $method->getReturnType() ?: $this->reflectionTypeForUnknown();
+        // TODO: Good god..
+        if ((string) $type === 'mixed' || null === $type || false === $type->isBuiltin()) {
+            return $this->reflectionTypeForUnknown();
         }
 
-        return $this->reflectionTypeForUnknown();
+        $reflection = $this->context->getReflector()->reflect($type);
+        $method = $reflection->getMethod($expr->name);
+
+        return $method->getReturnType() ?: $this->reflectionTypeForUnknown();
     }
 
     private function reflectionTypeFromVariable(Expr\Variable $expr)
