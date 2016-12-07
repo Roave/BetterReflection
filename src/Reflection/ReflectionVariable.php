@@ -40,7 +40,7 @@ class ReflectionVariable
 
     public static function createFromParamAndType(
         Param $param,
-        ReflectionType $type,
+        ReflectionType $type = null,
         ReflectionFunctionAbstract $scopeReflection = null
     ): ReflectionVariable
     {
@@ -49,7 +49,7 @@ class ReflectionVariable
 
     public static function createFromVariableAndType(
         Variable $variable,
-        ReflectionType $type,
+        ReflectionType $type = null,
         ReflectionFunctionAbstract $scopeReflection = null
     ): ReflectionVariable
     {
@@ -64,7 +64,7 @@ class ReflectionVariable
     /**
      * Return the reflection type for this variable.
      */
-    public function getType(): ReflectionType
+    public function getType()
     {
         return $this->type;
     }
@@ -103,7 +103,7 @@ class ReflectionVariable
      */
     private static function createFromNodeAndType(
         NodeAbstract $node,
-        ReflectionType $type,
+        ReflectionType $type = null,
         ReflectionFunctionAbstract $scopeReflection = null
     ): ReflectionVariable
     {

@@ -140,7 +140,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         $this->variables[] = ReflectionVariable::createFromVariableAndType($node->var, $type, $this->getCurrentScope());
     }
 
-    private function typeFromNode(Node $expr): ReflectionType
+    private function typeFromNode(Node $expr)
     {
         if ($expr instanceof Expr\New_) {
             return $this->reflectionTypeFromNameNode($expr->class);
@@ -218,7 +218,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         return $reflectionType ?: $this->reflectionTypeForUnknown();
     }
 
-    private function reflectionTypeFromPropertyFetch(Expr\PropertyFetch $expr): ReflectionType
+    private function reflectionTypeFromPropertyFetch(Expr\PropertyFetch $expr)
     {
         $type = $this->typeFromNode($expr->var);
 
@@ -238,7 +238,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         return $this->reflectionTypeForUnknown();
     }
 
-    private function reflectionTypeFromMethodCall(Expr\MethodCall $expr): ReflectionType
+    private function reflectionTypeFromMethodCall(Expr\MethodCall $expr)
     {
         $type = $this->typeFromNode($expr->var);
 
@@ -252,7 +252,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         return $this->reflectionTypeForUnknown();
     }
 
-    private function reflectionTypeFromVariable(Expr\Variable $expr): ReflectionType
+    private function reflectionTypeFromVariable(Expr\Variable $expr)
     {
         if ($this->context->hasSelf() && $expr->name === 'this') {
             $type = $this->reflectionTypeFromString($this->context->getSelf()->getName());
@@ -263,6 +263,21 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         if (isset($this->methodParamTypes[$expr->name])) {
             return $this->methodParamTypes[$expr->name];
         }
+
+        // TODO: Test me
+        $reflectionType = null;
+        foreach ($this->variables as $variable) {
+
+            // assuming all the record variables came before this one, so we
+            // want the last declared variable in the case that a variable name
+            // was repeated.
+            if ($variable->getName() === $expr->name) {
+                $reflectionType = $variable->getType();
+            }
+
+        }
+
+        return $reflectionType;
     }
 
     /**
@@ -274,7 +289,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
      * TODO: This is no positive test case for this ... which PHP internal functions
      *       actually have a return type??
      */
-    private function reflectionTypeFromFunctionCall(Expr\FuncCall $expr): ReflectionType
+    private function reflectionTypeFromFunctionCall(Expr\FuncCall $expr)
     {
         $func = (string) $expr->name;
         $reflection = new \ReflectionFunction($func);
@@ -313,7 +328,7 @@ class VariableCollectionVisitor extends NodeVisitorAbstract
         );
     }
 
-    private function reflectionTypeFromDocType(Type $type): ReflectionType
+    private function reflectionTypeFromDocType(Type $type)
     {
         return ReflectionType::createFromType($type, false);
     }
