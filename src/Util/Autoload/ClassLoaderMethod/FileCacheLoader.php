@@ -54,17 +54,17 @@ class FileCacheLoader implements LoaderMethodInterface
 
     /**
      * {@inheritdoc}
-     * @throws \BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
+     * @throws \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
      */
     public function __invoke(ReflectionClass $classInfo)
     {
         $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
 
         if (!file_exists($filename)) {
-            $code = $this->classPrinter->__invoke($classInfo);
+            $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);
             file_put_contents(
                 $filename,
-                sprintf("<?php\n// %s\n%s", $this->signer->sign($code), $code)
+                str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code)
             );
         }
 
@@ -81,8 +81,8 @@ class FileCacheLoader implements LoaderMethodInterface
         return new self(
             $cacheDirectory,
             new PhpParserPrinter(),
-            new FileContentSigner(new Base64Encoder(), new Md5Hasher()),
-            new FileContentChecker(new Base64Encoder(), new Md5Hasher())
+            new FileContentSigner(new Base64Encoder()),
+            new FileContentChecker(new Base64Encoder())
         );
     }
 }

@@ -10,7 +10,7 @@ use Roave\Signature\CheckerInterface;
 use Roave\Signature\SignerInterface;
 
 /**
- * @covers \BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
+ * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
  */
 class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +30,7 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
 
         $signer = $this->createMock(SignerInterface::class);
-        $signer->expects(self::once())->method('sign')->with($generatedCode)->willReturn($signature);
+        $signer->expects(self::once())->method('sign')->with("<?php\n" . $generatedCode)->willReturn($signature);
 
         $checker = $this->createMock(CheckerInterface::class);
         $checker->expects(self::exactly(2))->method('check')->with($signedCode)->willReturn(true);
@@ -63,7 +63,7 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
 
         $signer = $this->createMock(SignerInterface::class);
-        $signer->expects(self::once())->method('sign')->with($generatedCode)->willReturn($signature);
+        $signer->expects(self::once())->method('sign')->with("<?php\n" . $generatedCode)->willReturn($signature);
 
         $checker = $this->createMock(CheckerInterface::class);
         $checker->expects(self::once())->method('check')->with($signedCode)->willReturn(false);
