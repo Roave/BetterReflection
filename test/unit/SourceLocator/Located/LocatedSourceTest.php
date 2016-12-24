@@ -35,14 +35,21 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($locatedSource->isInternal());
     }
 
+    public function testEmptyStringSourceAllowed()
+    {
+        $source = '';
+        $file = null;
+        $locatedSource = new LocatedSource($source, $file);
+        self::assertSame('', $locatedSource->getSource());
+    }
+
     /**
      * @return array
      */
     public function exceptionCasesProvider()
     {
         return [
-            ['', null, InvalidArgumentException::class, 'Source code must be a non-empty string'],
-            [123, null, InvalidArgumentException::class, 'Source code must be a non-empty string'],
+            [123, null, InvalidArgumentException::class, 'Source code must be a string'],
             ['foo', 123, InvalidArgumentException::class, 'Filename must be a string or null'],
         ];
     }
