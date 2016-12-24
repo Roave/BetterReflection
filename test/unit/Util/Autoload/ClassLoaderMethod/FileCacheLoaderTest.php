@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
+namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
-use BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 use Roave\Signature\CheckerInterface;
 use Roave\Signature\SignerInterface;
 

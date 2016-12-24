@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
+namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
 
 /**
- * @covers \BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
+ * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
  */
 class SignatureCheckFailedTest extends \PHPUnit_Framework_TestCase
 {

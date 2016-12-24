@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace BetterReflection\Util\Autoload\ClassLoaderMethod\Exception;
+namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception;
 
-use BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 
 final class SignatureCheckFailed extends \RuntimeException
 {

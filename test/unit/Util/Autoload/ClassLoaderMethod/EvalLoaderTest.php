@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
+namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
-use BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
 /**
- * @covers \BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
+ * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
  */
 class EvalLoaderTest extends \PHPUnit_Framework_TestCase
 {
