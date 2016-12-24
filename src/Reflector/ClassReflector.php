@@ -42,6 +42,7 @@ class ClassReflector implements Reflector
      *
      * @param string $className
      * @return \Roave\BetterReflection\Reflection\ReflectionClass
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public function reflect($className)
     {

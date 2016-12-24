@@ -2,7 +2,6 @@
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
-use Roave\BetterReflection\SourceLocator\Exception\FunctionUndefined;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
@@ -43,7 +42,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * Attempts to locate the specified identifier.
      *
      * @param Identifier $identifier
-     * @return string
+     * @return string|null
      */
     private function attemptAutoloadForIdentifier(Identifier $identifier)
     {
@@ -95,13 +94,12 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * nothing so throw an exception.
      *
      * @param string $functionName
-     * @return string
-     * @throws FunctionUndefined
+     * @return string|null
      */
     private function locateFunctionByName($functionName)
     {
         if (!function_exists($functionName)) {
-            throw new FunctionUndefined('Function ' . $functionName . ' was not already defined');
+            return null;
         }
 
         $reflection = new \ReflectionFunction($functionName);

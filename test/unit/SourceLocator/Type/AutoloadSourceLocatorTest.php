@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
@@ -138,7 +139,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
-        $this->expectException(FunctionUndefined::class);
+        $this->expectException(IdentifierNotFound::class);
         $reflector->reflect('this function does not exist, hopefully');
     }
 
