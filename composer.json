@@ -3,16 +3,16 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": "^5.6|^7.0",
-        "nikic/php-parser": "^3.0",
-        "phpdocumentor/reflection-docblock": "^3.0",
-        "phpdocumentor/type-resolver": "^0.2",
-        "zendframework/zend-code": "^3.0",
+        "php": "7.0.*|7.1.*",
+        "nikic/php-parser": "^3.0.2",
+        "phpdocumentor/reflection-docblock": "^3.1.1",
+        "phpdocumentor/type-resolver": "^0.2.1",
+        "zendframework/zend-code": "^3.1",
         "jeremeamia/superclosure": "^2.3"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.12",
-        "phpunit/phpunit": "^5.4"
+        "friendsofphp/php-cs-fixer": "^1.13.1",
+        "phpunit/phpunit": "^5.7.4"
     },
     "autoload": {
         "psr-4": {
