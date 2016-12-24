@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
 /**
  * This interface is used internally by the Generic reflector in order to

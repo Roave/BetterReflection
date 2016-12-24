@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Ast;
+namespace Roave\BetterReflection\SourceLocator\Ast;
 
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
 
 /**
@@ -31,7 +31,7 @@ final class FindReflectionsInTree
      * @param array $ast
      * @param IdentifierType $identifierType
      * @param LocatedSource $locatedSource
-     * @return \BetterReflection\Reflection\Reflection[]
+     * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
     public function __invoke(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
     {
@@ -57,7 +57,7 @@ final class FindReflectionsInTree
      * @param Node\Stmt\Namespace_ $namespace
      * @param IdentifierType $identifierType
      * @param LocatedSource $locatedSource
-     * @return \BetterReflection\Reflection\Reflection[]
+     * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
     private function reflectFromNamespace(
         Reflector $reflector,
@@ -84,7 +84,7 @@ final class FindReflectionsInTree
      * @param Node[] $ast
      * @param IdentifierType $identifierType
      * @param LocatedSource $locatedSource
-     * @return \BetterReflection\Reflection\Reflection[]
+     * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
     private function reflectFromTree(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
     {

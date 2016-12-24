@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\Reflection\Exception;
+namespace Roave\BetterReflection\Reflection\Exception;
 
-use BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 
 class NotAClassReflection extends \UnexpectedValueException
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace BetterReflection\NodeCompiler;
+namespace Roave\BetterReflection\NodeCompiler;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\Reflector;
 
 class CompilerContext
 {

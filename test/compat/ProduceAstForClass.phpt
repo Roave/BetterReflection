@@ -16,8 +16,8 @@ class MyClassInString extends AnotherClass
 EOF;
 
 
-$reflector = new \BetterReflection\Reflector\ClassReflector(
-    new BetterReflection\SourceLocator\Type\StringSourceLocator($source)
+$reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
+    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator($source)
 );
 
 $classInfo = $reflector->reflect(MyClassInString::class);

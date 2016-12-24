@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Exception\InvalidFileInfo;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 
 /**
  * This source locator loads all php files from \FileSystemIterator

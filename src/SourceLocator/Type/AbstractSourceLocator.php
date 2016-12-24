@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Exception\IdentifierNotFound;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Ast\Locator as AstLocator;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 abstract class AbstractSourceLocator implements SourceLocator
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Reflector\Exception;
+namespace Roave\BetterReflectionTest\Reflector\Exception;
 
-use BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
- * @covers \BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+ * @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
  */
 class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
 {

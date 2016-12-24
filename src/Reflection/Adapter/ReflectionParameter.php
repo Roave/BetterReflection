@@ -1,10 +1,10 @@
 <?php
 
-namespace BetterReflection\Reflection\Adapter;
+namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionParameter as CoreReflectionParameter;
-use BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 
 class ReflectionParameter extends CoreReflectionParameter
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Exception;
+namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
-use BetterReflection\SourceLocator\Exception\InvalidDirectory;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 
 /**
- * @covers \BetterReflection\SourceLocator\Exception\InvalidDirectory
+ * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory
  */
 class InvalidDirectoryTest extends \PHPUnit_Framework_TestCase
 {

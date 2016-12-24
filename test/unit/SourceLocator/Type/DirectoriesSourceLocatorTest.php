@@ -1,18 +1,18 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Exception\InvalidDirectory;
-use BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
-use BetterReflectionTest\Assets\DirectoryScannerAssets;
-use BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
+use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
+use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
  */
 class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

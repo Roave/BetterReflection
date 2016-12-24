@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Reflection;
+namespace Roave\BetterReflection\SourceLocator\Reflection;
 
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Interface_;

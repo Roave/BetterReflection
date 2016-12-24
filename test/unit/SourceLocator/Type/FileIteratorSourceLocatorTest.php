@@ -1,18 +1,18 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
-use BetterReflectionTest\Assets\DirectoryScannerAssets;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
+use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
  */
 class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

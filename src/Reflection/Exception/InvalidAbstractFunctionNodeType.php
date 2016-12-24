@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\Reflection\Exception;
+namespace Roave\BetterReflection\Reflection\Exception;
 
-use BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use PhpParser\Node;
 
 class InvalidAbstractFunctionNodeType extends \InvalidArgumentException

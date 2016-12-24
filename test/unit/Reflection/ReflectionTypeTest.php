@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\ReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionType;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionType
+ * @covers \Roave\BetterReflection\Reflection\ReflectionType
  */
 class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
 {

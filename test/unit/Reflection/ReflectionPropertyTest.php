@@ -1,20 +1,21 @@
 <?php
 
-namespace BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Exception\Uncloneable;
-use BetterReflection\Reflection\ReflectionProperty;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionProperty
+ * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
  */
 class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,7 +48,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testImplementsReflector()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
         $this->assertInstanceOf(\Reflector::class, $publicProp);
@@ -55,7 +56,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testVisibilityMethods()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
 
         $privateProp = $classInfo->getProperty('privateProperty');
         $this->assertTrue($privateProp->isPrivate());
@@ -69,7 +70,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsStatic()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
 
         $publicProp = $classInfo->getProperty('publicProperty');
         $this->assertFalse($publicProp->isStatic());
@@ -97,7 +98,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
 
         $property = $classInfo->getProperty($propertyName);
 
@@ -123,7 +124,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDocBlockTypes($propertyName, $expectedTypes)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
 
         $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
 
@@ -138,7 +139,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $expectedDoc = "/**\n * @var string\n */";
 
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $property = $classInfo->getProperty('publicProperty');
 
         $this->assertSame($expectedDoc, $property->getDocComment());
@@ -146,7 +147,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDocCommentReturnsEmptyStringWithNoComment()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $property = $classInfo->getProperty('publicStaticProperty');
 
         $this->assertSame('', $property->getDocComment());
@@ -176,7 +177,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetModifiers($propertyName, $expectedModifier, array $expectedModifierNames)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $property = $classInfo->getProperty($propertyName);
 
         $this->assertSame($expectedModifier, $property->getModifiers());
@@ -188,7 +189,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsDefault()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
 
         $this->assertTrue($classInfo->getProperty('publicProperty')->isDefault());
         $this->assertTrue($classInfo->getProperty('publicStaticProperty')->isDefault());
@@ -200,7 +201,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
             ReflectionProperty::createFromNode(
                 $this->reflector,
                 new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
-                $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass'),
+                $this->reflector->reflect(ExampleClass::class),
                 false
             )
             ->isDefault()
@@ -224,7 +225,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testCastingToString($propertyName, $expectedString)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $this->assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
     }
 
@@ -238,7 +239,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testCannotClone()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
         $this->expectException(Uncloneable::class);
@@ -247,7 +248,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetVisibility()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicStaticProperty');
 
         $this->assertFalse($publicProp->isPrivate(), 'Should initially be public, was private');
@@ -279,7 +280,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetVisibilityThrowsExceptionWithInvalidArgument()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
         $this->expectException(\InvalidArgumentException::class);

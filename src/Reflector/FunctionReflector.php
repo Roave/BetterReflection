@@ -1,10 +1,10 @@
 <?php
 
-namespace BetterReflection\Reflector;
+namespace Roave\BetterReflection\Reflector;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\SourceLocator\Type\SourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 class FunctionReflector implements Reflector
 {
@@ -22,7 +22,7 @@ class FunctionReflector implements Reflector
      * Create a ReflectionFunction for the specified $functionName.
      *
      * @param string $functionName
-     * @return \BetterReflection\Reflection\ReflectionFunction
+     * @return \Roave\BetterReflection\Reflection\ReflectionFunction
      */
     public function reflect($functionName)
     {

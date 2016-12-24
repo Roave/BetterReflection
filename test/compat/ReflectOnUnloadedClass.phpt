@@ -6,8 +6,8 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 var_dump(class_exists(UnloadedClass::class, false));
 
-$reflector = new \BetterReflection\Reflector\ClassReflector(
-    new BetterReflection\SourceLocator\Type\SingleFileSourceLocator(__DIR__ . '/assets/UnloadedClass.php')
+$reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
+    new Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator(__DIR__ . '/assets/UnloadedClass.php')
 );
 
 $classInfo = $reflector->reflect(UnloadedClass::class);

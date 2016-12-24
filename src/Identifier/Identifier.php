@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Identifier;
+namespace Roave\BetterReflection\Identifier;
 
 class Identifier
 {

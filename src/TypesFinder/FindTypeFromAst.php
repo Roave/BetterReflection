@@ -1,8 +1,8 @@
 <?php
 
-namespace BetterReflection\TypesFinder;
+namespace Roave\BetterReflection\TypesFinder;
 
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Name;
 

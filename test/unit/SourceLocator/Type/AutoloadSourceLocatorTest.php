@@ -1,21 +1,22 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use BetterReflection\SourceLocator\Exception\FunctionUndefined;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflectionTest\Fixture\AutoloadableInterface;
-use BetterReflectionTest\Fixture\AutoloadableTrait;
-use BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Roave\BetterReflection\SourceLocator\Exception\FunctionUndefined;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
+use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
+use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\AutoloadSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
  */
 class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,10 +32,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator());
 
-        $className = 'BetterReflectionTest\Fixture\ExampleClass';
-        $this->assertFalse(class_exists($className, false));
-        $classInfo = $reflector->reflect($className);
-        $this->assertFalse(class_exists($className, false));
+        $this->assertFalse(class_exists(ExampleClass::class, false));
+        $classInfo = $reflector->reflect(ExampleClass::class);
+        $this->assertFalse(class_exists(ExampleClass::class, false));
 
         $this->assertSame('ExampleClass', $classInfo->getShortName());
     }
@@ -45,10 +45,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         // Ensure class is loaded first
         new ClassForHinting();
-        $className = 'BetterReflectionTest\Fixture\ClassForHinting';
-        $this->assertTrue(class_exists($className, false));
+        $this->assertTrue(class_exists(ClassForHinting::class, false));
 
-        $classInfo = $reflector->reflect($className);
+        $classInfo = $reflector->reflect(ClassForHinting::class);
 
         $this->assertSame('ClassForHinting', $classInfo->getShortName());
     }
@@ -130,7 +129,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
         require_once(__DIR__ . '/../../Fixture/Functions.php');
-        $classInfo = $reflector->reflect('BetterReflectionTest\Fixture\myFunction');
+        $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
 
         $this->assertSame('myFunction', $classInfo->getShortName());
     }

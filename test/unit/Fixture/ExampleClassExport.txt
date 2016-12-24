@@ -1,4 +1,4 @@
-Class [ <user> class BetterReflectionTest\Fixture\ExampleClass ] {
+Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
   @@ %s/test/unit/Fixture/ExampleClass.php 7-36
 
   - Constants [2] {

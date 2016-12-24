@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 class ReflectionObject extends ReflectionClass
 {

@@ -44,7 +44,7 @@ your `composer.json`, and recommend that you set `"prefer-stable"`:
 ## Usage
 
 ```php
-use BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 
 $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ```

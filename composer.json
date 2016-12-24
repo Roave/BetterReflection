@@ -16,12 +16,15 @@
     },
     "autoload": {
         "psr-4": {
-            "BetterReflection\\": "src"
-        }
+            "Roave\\BetterReflection\\": "src"
+        },
+        "files": [
+            "namespace-bc-aliases.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "BetterReflectionTest\\": "test/unit"
+            "Roave\\BetterReflectionTest\\": "test/unit"
         }
     },
     "suggest": {

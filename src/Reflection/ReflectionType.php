@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection;
 
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types;

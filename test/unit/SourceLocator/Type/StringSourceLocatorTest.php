@@ -1,15 +1,15 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
-use BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\StringSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\StringSourceLocator
  */
 class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

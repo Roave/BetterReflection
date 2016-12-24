@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionFunction
+ * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
  */
 class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
 {
@@ -84,7 +84,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
     public function testStaticCreationFromName()
     {
         require_once(__DIR__ . '/../Fixture/Functions.php');
-        $reflection = ReflectionFunction::createFromName('BetterReflectionTest\Fixture\myFunction');
+        $reflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
         $this->assertSame('myFunction', $reflection->getShortName());
     }
 
@@ -111,8 +111,8 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
     public function functionStringRepresentations()
     {
         return [
-            ['BetterReflectionTest\Fixture\myFunction', "Function [ <user> function BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}"],
-            ['BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ %s/test/unit/Fixture/Functions.php 8 - 9\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
+            ['Roave\BetterReflectionTest\Fixture\myFunction', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}"],
+            ['Roave\BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ %s/test/unit/Fixture/Functions.php 8 - 9\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
         ];
     }
 

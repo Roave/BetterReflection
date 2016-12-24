@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflectionTest\Fixture;
+namespace Roave\BetterReflectionTest\Fixture;
 
 trait AutoloadableTrait
 {

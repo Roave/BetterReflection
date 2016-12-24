@@ -1,14 +1,14 @@
 <?php
 
-namespace BetterReflectionTest\TypesFinder;
+namespace Roave\BetterReflectionTest\TypesFinder;
 
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Types;
 
 /**
- * @covers \BetterReflection\TypesFinder\FindTypeFromAst
+ * @covers \Roave\BetterReflection\TypesFinder\FindTypeFromAst
  */
 class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
 {

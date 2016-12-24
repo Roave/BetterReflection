@@ -1,21 +1,21 @@
 <?php
 
-namespace BetterReflectionTest\Reflector;
+namespace Roave\BetterReflectionTest\Reflector;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflector\Exception\IdentifierNotFound;
-use BetterReflection\Reflector\FunctionReflector;
-use BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
-use BetterReflection\SourceLocator\Ast\Locator;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
- * @covers \BetterReflection\SourceLocator\Ast\Locator
+ * @covers \Roave\BetterReflection\SourceLocator\Ast\Locator
  */
 class LocatorTest extends \PHPUnit_Framework_TestCase
 {

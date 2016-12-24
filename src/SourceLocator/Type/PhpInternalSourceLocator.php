@@ -1,10 +1,10 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Type;
+namespace Roave\BetterReflection\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\SourceLocator\Located\InternalLocatedSource;
-use BetterReflection\SourceLocator\Reflection\SourceStubber;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Zend\Code\Reflection\ClassReflection;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator

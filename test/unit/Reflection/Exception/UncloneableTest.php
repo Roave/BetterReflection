@@ -1,12 +1,12 @@
 <?php
 
-namespace BetterReflectionTest\Reflection\Exception;
+namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @covers \BetterReflection\Reflection\Exception\Uncloneable
+ * @covers \Roave\BetterReflection\Reflection\Exception\Uncloneable
  */
 class UncloneableTest extends PHPUnit_Framework_TestCase
 {

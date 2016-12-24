@@ -1,17 +1,17 @@
 <?php
 
-namespace BetterReflectionTest\TypesFinder;
+namespace Roave\BetterReflectionTest\TypesFinder;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionProperty;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\SourceLocator\Located\LocatedSource;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
-use BetterReflection\TypesFinder\FindPropertyType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use phpDocumentor\Reflection\Types;
 
 /**
- * @covers \BetterReflection\TypesFinder\FindPropertyType
+ * @covers \Roave\BetterReflection\TypesFinder\FindPropertyType
  */
 class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
 {

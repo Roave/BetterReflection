@@ -1,16 +1,16 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Type;
+namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use BetterReflection\Identifier\Identifier;
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use ClassWithNoNamespace;
 use Composer\Autoload\ClassLoader;
 
 /**
- * @covers \BetterReflection\SourceLocator\Type\ComposerSourceLocator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator
  */
 class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {

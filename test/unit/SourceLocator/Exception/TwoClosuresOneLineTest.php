@@ -1,13 +1,13 @@
 <?php
 
-namespace BetterReflectionTest\SourceLocator\Exception;
+namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
-use BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
+use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
 use SuperClosure\Exception\ClosureAnalysisException;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @covers \BetterReflection\SourceLocator\Exception\TwoClosuresOneLine
+ * @covers \Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine
  */
 class TwoClosuresOneLineTest extends PHPUnit_Framework_TestCase
 {

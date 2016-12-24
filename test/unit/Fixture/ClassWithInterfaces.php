@@ -1,9 +1,9 @@
 <?php
 
-namespace BetterReflectionTest\ClassWithInterfaces {
-    use BetterReflectionTest\ClassWithInterfacesOther\B as ImportedB;
-    use BetterReflectionTest\ClassWithInterfacesOther;
-    use BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
+namespace Roave\BetterReflectionTest\ClassWithInterfaces {
+    use Roave\BetterReflectionTest\ClassWithInterfacesOther\B as ImportedB;
+    use Roave\BetterReflectionTest\ClassWithInterfacesOther;
+    use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 
     interface A {}
     interface B {}
@@ -19,7 +19,7 @@ namespace BetterReflectionTest\ClassWithInterfaces {
     class ExampleImplementingCompositeInterface implements ClassWithInterfacesExtendingInterfaces\D {}
 }
 
-namespace BetterReflectionTest\ClassWithInterfacesOther {
+namespace Roave\BetterReflectionTest\ClassWithInterfacesOther {
     interface B
     {
     }
@@ -29,7 +29,7 @@ namespace BetterReflectionTest\ClassWithInterfacesOther {
     }
 }
 
-namespace BetterReflectionTest\ClassWithInterfacesExtendingInterfaces {
+namespace Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces {
     interface A
     {
     }

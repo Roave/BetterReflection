@@ -1,6 +1,6 @@
 <?php
 
-namespace BetterReflection\SourceLocator\Exception;
+namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use SuperClosure\Exception\ClosureAnalysisException;
 

@@ -1,19 +1,19 @@
 <?php
 
-namespace BetterReflectionTest\Reflector;
+namespace Roave\BetterReflectionTest\Reflector;
 
-use BetterReflection\Identifier\IdentifierType;
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\Reflection\ReflectionFunction;
-use BetterReflection\Reflector\Reflector;
-use BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
-use BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
+use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Parser;
 use PhpParser\Lexer;
 
 /**
- * @covers \BetterReflection\SourceLocator\Ast\FindReflectionsInTree
+ * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
  */
 class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
 {

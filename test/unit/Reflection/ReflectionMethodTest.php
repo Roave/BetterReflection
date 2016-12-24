@@ -1,20 +1,22 @@
 <?php
 
-namespace BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection;
 
-use BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
-use BetterReflection\Reflection\ReflectionFunctionAbstract;
-use BetterReflection\Reflection\ReflectionMethod;
-use BetterReflection\Reflector\ClassReflector;
-use BetterReflection\Reflection\ReflectionParameter;
-use BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\Methods;
 
 /**
- * @covers \BetterReflection\Reflection\ReflectionMethod
+ * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
  */
 class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,7 +49,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testImplementsReflector()
     {
-        $classInfo = $this->reflector->reflect('BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('publicMethod');
 
         $this->assertInstanceOf(\Reflector::class, $methodInfo);
@@ -81,7 +83,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      */
     public function testVisibilityOfMethods($method, $shouldBePublic, $shouldBePrivate, $shouldBeProtected, $shouldBeFinal, $shouldBeAbstract, $shouldBeStatic)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($method);
 
         $this->assertSame($shouldBePublic, $method->isPublic());
@@ -94,7 +96,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testIsConstructorDestructor()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('__construct');
         $this->assertTrue($method->isConstructor());
@@ -105,7 +107,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetParameters()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithParameters');
         $params = $method->getParameters();
@@ -119,7 +121,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNumberOfParameters()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
 
         $method1 = $classInfo->getMethod('methodWithParameters');
         $this->assertSame(2, $method1->getNumberOfParameters(), 'Failed asserting methodWithParameters has 2 params');
@@ -130,7 +132,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNumberOfOptionalParameters()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
 
         $method1 = $classInfo->getMethod('methodWithParameters');
         $this->assertSame(2, $method1->getNumberOfRequiredParameters(), 'Failed asserting methodWithParameters has 2 required params');
@@ -141,7 +143,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileName()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodWithParameters');
 
         $detectedFilename = $method->getFileName();
@@ -151,7 +153,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodNameWithNamespace()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\ExampleClass');
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
         $this->assertFalse($methodInfo->inNamespace());
@@ -203,7 +205,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetModifiers($methodName, $expectedModifier, array $expectedModifierNames)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);
 
         $this->assertSame($expectedModifier, $method->getModifiers());
@@ -247,7 +249,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMethodNodeFailsWhenNodeIsNotClassMethod()
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('publicMethod');
 
         $methodReflection = new \ReflectionClass(ReflectionFunctionAbstract::class);
@@ -274,7 +276,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
             ['__destruct', "Method [ <user, dtor> public method __destruct ] {\n  @@ %s/test/unit/Fixture/Methods.php 41 - 43\n}"],
             ['methodWithParameters', "Method [ <user> public method methodWithParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 49 - 51\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$parameter1 ]\n    Parameter #1 [ <required> \$parameter2 ]\n  }\n}"],
             ['methodWithOptionalParameters', "Method [ <user> public method methodWithOptionalParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 53 - 55\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$parameter ]\n    Parameter #1 [ <optional> \$optionalParameter = NULL ]\n  }\n}"],
-            ['methodWithExplicitTypedParameters', "Method [ <user> public method methodWithExplicitTypedParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 57 - 64\n\n  - Parameters [5] {\n    Parameter #0 [ <required> stdClass \$stdClassParameter ]\n    Parameter #1 [ <required> BetterReflectionTest\Fixture\ClassForHinting \$namespaceClassParameter ]\n    Parameter #2 [ <required> BetterReflectionTest\Fixture\ClassForHinting \$fullyQualifiedClassParameter ]\n    Parameter #3 [ <required> array \$arrayParameter ]\n    Parameter #4 [ <required> callable \$callableParameter ]\n  }\n}"],
+            ['methodWithExplicitTypedParameters', "Method [ <user> public method methodWithExplicitTypedParameters ] {\n  @@ %s/test/unit/Fixture/Methods.php 57 - 64\n\n  - Parameters [5] {\n    Parameter #0 [ <required> stdClass \$stdClassParameter ]\n    Parameter #1 [ <required> Roave\BetterReflectionTest\Fixture\ClassForHinting \$namespaceClassParameter ]\n    Parameter #2 [ <required> Roave\BetterReflectionTest\Fixture\ClassForHinting \$fullyQualifiedClassParameter ]\n    Parameter #3 [ <required> array \$arrayParameter ]\n    Parameter #4 [ <required> callable \$callableParameter ]\n  }\n}"],
             ['methodWithVariadic', "Method [ <user> public method methodWithVariadic ] {\n  @@ %s/test/unit/Fixture/Methods.php 66 - 68\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$nonVariadicParameter ]\n    Parameter #1 [ <optional> ...\$variadicParameter ]\n  }\n}"],
             ['methodWithReference', "Method [ <user> public method methodWithReference ] {\n  @@ %s/test/unit/Fixture/Methods.php 70 - 72\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$nonRefParameter ]\n    Parameter #1 [ <required> &\$refParameter ]\n  }\n}"],
             ['methodWithNonOptionalDefaultValue', "Method [ <user> public method methodWithNonOptionalDefaultValue ] {\n  @@ %s/test/unit/Fixture/Methods.php 74 - 76\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$firstParameter ]\n    Parameter #1 [ <required> \$secondParameter ]\n  }\n}"],
@@ -299,7 +301,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      */
     public function testStringCast($methodName, $expectedStringValue)
     {
-        $classInfo = $this->reflector->reflect('\BetterReflectionTest\Fixture\Methods');
+        $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);
 
         $this->assertStringMatchesFormat($expectedStringValue, (string)$method);

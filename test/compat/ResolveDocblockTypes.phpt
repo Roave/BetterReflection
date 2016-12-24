@@ -20,8 +20,8 @@ class MyClassInString {
 EOF;
 
 
-$reflector = new \BetterReflection\Reflector\ClassReflector(
-    new BetterReflection\SourceLocator\Type\StringSourceLocator($source)
+$reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
+    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator($source)
 );
 
 $classInfo = $reflector->reflect(MyClassInString::class);
@@ -30,7 +30,7 @@ $methodInfo = $classInfo->getMethod('myMethod');
 
 var_dump($methodInfo->getDocBlockReturnTypes());
 
-array_map(function (\BetterReflection\Reflection\ReflectionParameter $param) {
+array_map(function (\Roave\BetterReflection\Reflection\ReflectionParameter $param) {
     var_dump($param->getDocBlockTypeStrings());
 }, $methodInfo->getParameters());
 

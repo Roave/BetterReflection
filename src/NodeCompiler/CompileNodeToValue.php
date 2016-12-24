@@ -1,9 +1,9 @@
 <?php
 
-namespace BetterReflection\NodeCompiler;
+namespace Roave\BetterReflection\NodeCompiler;
 
-use BetterReflection\Reflection\ReflectionClass;
-use BetterReflection\TypesFinder\ResolveTypes;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node;
 
