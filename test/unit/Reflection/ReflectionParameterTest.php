@@ -495,7 +495,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['123', '123'],
-            ['12.3', '12.300000000000001'], // Oh, yes, because PHP.
+            ['12.3', '12.3'],
             ['true', 'true'],
             ['false', 'false'],
             ['null', 'NULL'],
@@ -517,7 +517,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo = $functionInfo->getParameter('var');
 
-        $this->assertSame($expectedValue, $paramInfo->getDefaultValueAsString());
+        // Must be starts with because PHP (sometimes value is 12.300000000000001)
+        $this->assertStringStartsWith($expectedValue, $paramInfo->getDefaultValueAsString());
     }
 
     public function testGetClassForTypeHintedMethodParameters()

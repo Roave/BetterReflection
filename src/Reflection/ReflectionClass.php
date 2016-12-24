@@ -1140,11 +1140,11 @@ class ReflectionClass implements Reflection, \Reflector
         }
 
         if ($isFinal === true) {
-            $this->node->type |= ClassNode::MODIFIER_FINAL;
+            $this->node->flags |= ClassNode::MODIFIER_FINAL;
             return;
         }
 
-        $this->node->type &= ~ClassNode::MODIFIER_FINAL;
+        $this->node->flags &= ~ClassNode::MODIFIER_FINAL;
     }
 
     /**
