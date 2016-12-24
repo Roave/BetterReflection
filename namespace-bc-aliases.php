@@ -44,7 +44,6 @@ class_alias(\Roave\BetterReflection\SourceLocator\Ast\Locator::class, \BetterRef
 class_alias(\Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy::class, \BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy::class);
 class_alias(\Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection::class, \BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection::class);
 class_alias(\Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode::class, \BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode::class);
-class_alias(\Roave\BetterReflection\SourceLocator\Exception\FunctionUndefined::class, \BetterReflection\SourceLocator\Exception\FunctionUndefined::class);
 class_alias(\Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory::class, \BetterReflection\SourceLocator\Exception\InvalidDirectory::class);
 class_alias(\Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo::class, \BetterReflection\SourceLocator\Exception\InvalidFileInfo::class);
 class_alias(\Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation::class, \BetterReflection\SourceLocator\Exception\InvalidFileLocation::class);

@@ -22,13 +22,19 @@ class FunctionReflector implements Reflector
      * Create a ReflectionFunction for the specified $functionName.
      *
      * @param string $functionName
-     * @return \Roave\BetterReflection\Reflection\ReflectionFunction
+     * @return \Roave\BetterReflection\Reflection\Reflection|\Roave\BetterReflection\Reflection\ReflectionFunction
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public function reflect($functionName)
     {
-        return $this->sourceLocator->locateIdentifier(
-            ClassReflector::buildDefaultReflector(),
-            new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
-        );
+        $identifier = new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
+
+        $functionInfo = $this->sourceLocator->locateIdentifier(ClassReflector::buildDefaultReflector(), $identifier);
+
+        if (null === $functionInfo) {
+            throw Exception\IdentifierNotFound::fromIdentifier($identifier);
+        }
+
+        return $functionInfo;
     }
 }
