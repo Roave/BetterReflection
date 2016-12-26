@@ -19,10 +19,16 @@ class FindTypeFromAst
      */
     public function __invoke($astType, LocatedSource $locatedSource, $namespace = '')
     {
-        $context = (new ContextFactory())->createForNamespace(
-            $namespace,
-            $locatedSource->getSource()
-        );
+        static $contexts = [];
+
+        if (false === isset($contexts[$namespace])) {
+            $contexts[$namespace] = (new ContextFactory())->createForNamespace(
+                $namespace,
+                $locatedSource->getSource()
+            );
+        }
+
+        $context = $contexts[$namespace];
 
         // @todo Nullable types are effectively ignored - to be fixed
         /* @see https://github.com/Roave/BetterReflection/issues/202 */
