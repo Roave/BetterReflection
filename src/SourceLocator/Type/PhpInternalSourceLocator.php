@@ -14,9 +14,9 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private $stubber;
 
-    public function __construct()
+    public function __construct(Locator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->stubber = new SourceStubber();
     }
 

@@ -6,6 +6,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Zend\Code\Reflection\ClassReflection;
+use BetterReflection\SourceLocator\Ast\Locator;
 
 final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
@@ -14,9 +15,9 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      */
     private $stubber;
 
-    public function __construct()
+    public function __construct(Locator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->stubber = new SourceStubber();
     }
 
