@@ -138,6 +138,7 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame([$mockReflection], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
     }
+
     public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource()
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
