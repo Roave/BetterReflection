@@ -549,4 +549,20 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->expectException(Uncloneable::class);
         $unused = clone $paramInfo;
     }
+
+    public function testGetClassFromSelfTypeHintedProperty()
+    {
+        $content = '<?php class Foo { public function myMethod(self $param) {} }';
+
+        $reflector = new ClassReflector(new AggregateSourceLocator([
+            new PhpInternalSourceLocator(),
+            new StringSourceLocator($content),
+        ]));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+
+        $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
+        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        $this->assertSame('Foo', $hintedClassReflection->getName());
+    }
 }
