@@ -564,4 +564,20 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
         $this->assertSame('Foo', $hintedClassReflection->getName());
     }
+
+    public function testGetClassFromParentTypeHintedProperty()
+    {
+        $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
+
+        $reflector = new ClassReflector(new AggregateSourceLocator([
+            new PhpInternalSourceLocator(),
+            new StringSourceLocator($content),
+        ]));
+        $classInfo = $reflector->reflect('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+
+        $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
+        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        $this->assertSame('stdClass', $hintedClassReflection->getName());
+    }
 }
