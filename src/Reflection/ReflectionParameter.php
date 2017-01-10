@@ -512,6 +512,10 @@ class ReflectionParameter implements \Reflector
             return $this->getDeclaringClass();
         }
 
+        if ('parent' === $hint->getFqsen()->getName()) {
+            return $this->getDeclaringClass()->getParentClass();
+        }
+
         if (!$this->reflector instanceof ClassReflector) {
             throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
