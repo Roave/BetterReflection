@@ -508,12 +508,12 @@ class ReflectionParameter implements \Reflector
             return null;
         }
 
-        if (!$this->reflector instanceof ClassReflector) {
-            throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
-        }
-
         if ($hint instanceof Types\Self_) {
             return $this->getDeclaringClass();
+        }
+
+        if (!$this->reflector instanceof ClassReflector) {
+            throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
 
         return $this->reflector->reflect($hint->getFqsen()->__toString());
