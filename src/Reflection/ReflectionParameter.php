@@ -504,8 +504,16 @@ class ReflectionParameter implements \Reflector
     public function getClass()
     {
         $hint = $this->getTypeHint();
-        if (!($hint instanceof Types\Object_)) {
+        if (!($hint instanceof Types\Object_  || $hint instanceof Types\Self_)) {
             return null;
+        }
+
+        if ($hint instanceof Types\Self_) {
+            return $this->getDeclaringClass();
+        }
+
+        if ('parent' === $hint->getFqsen()->getName()) {
+            return $this->getDeclaringClass()->getParentClass();
         }
 
         if (!$this->reflector instanceof ClassReflector) {
