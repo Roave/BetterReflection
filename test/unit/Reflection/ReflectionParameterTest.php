@@ -264,7 +264,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('foo');
 
         $classParamType = $method->getParameter('classParam')->getType();
-        $this->assertSame('\stdClass', (string)$classParamType);
+        $this->assertSame(\stdClass::class, (string)$classParamType);
         $this->assertFalse($classParamType->isBuiltin());
         $this->assertFalse($classParamType->allowsNull());
     }
