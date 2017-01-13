@@ -352,7 +352,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
             ['returnsInt', 'int'],
             ['returnsString', 'string'],
             ['returnsNull', 'null'],
-            ['returnsObject', '\stdClass'],
+            ['returnsObject', \stdClass::class],
             ['returnsVoid', 'void'],
         ];
     }
