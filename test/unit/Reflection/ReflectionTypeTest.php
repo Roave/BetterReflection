@@ -52,7 +52,7 @@ class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('float', (string)ReflectionType::createFromType(new Types\Float_(), false));
         $this->assertSame('void', (string)ReflectionType::createFromType(new Types\Void_(), false));
 
-        $this->assertSame('\Foo\Bar\Baz', (string)ReflectionType::createFromType(
+        $this->assertSame('Foo\Bar\Baz', (string)ReflectionType::createFromType(
             new Types\Object_(new Fqsen('\Foo\Bar\Baz')),
             false
         ));
