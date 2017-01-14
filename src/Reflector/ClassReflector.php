@@ -9,6 +9,9 @@ use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use Roave\BetterReflection\Context\ContextFactory;
+use Roave\BetterReflection\Context\PhpDocumentorContextFactory;
+use Roave\BetterReflection\Context\CachedContextFactory;
 
 class ClassReflector implements Reflector
 {
@@ -18,11 +21,18 @@ class ClassReflector implements Reflector
     private $sourceLocator;
 
     /**
-     * @param SourceLocator $sourceLocator
+     * @var ContextFactory
      */
-    public function __construct(SourceLocator $sourceLocator)
+    private $contextFactory;
+
+    /**
+     * @param SourceLocator $sourceLocator
+     * @param ContextFactory $contextFactory
+     */
+    public function __construct(SourceLocator $sourceLocator, ContextFactory $contextFactory = null)
     {
         $this->sourceLocator = $sourceLocator;
+        $this->contextFactory = $contextFactory ?: new PhpDocumentorContextFactory(new PhpDocumentorContextFactory());
     }
 
     /**
@@ -34,7 +44,7 @@ class ClassReflector implements Reflector
             new PhpInternalSourceLocator(),
             new EvaledCodeSourceLocator(),
             new AutoloadSourceLocator(),
-        ]));
+        ]), new CachedContextFactory(new PhpDocumentorContextFactory()));
     }
 
     /**
@@ -68,5 +78,15 @@ class ClassReflector implements Reflector
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
+    }
+
+    /**
+     * Return the class context factory.
+     *
+     * @return ContextFactory
+     */
+    public function getContextFactory()
+    {
+        return $this->contextFactory;
     }
 }

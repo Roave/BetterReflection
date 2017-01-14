@@ -420,10 +420,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             ? $this->getDeclaringClass()->getNamespaceName()
             : $this->getNamespaceName();
 
-        $typeHint = (new FindTypeFromAst())->__invoke(
-            $this->node->getReturnType(),
-            $this->getLocatedSource(),
-            $namespaceForType
+        $typeHint = $this->findTypeFromAst(
+            $namespaceForType,
+            $this->getLocatedSource()->getSource(),
+            $this->node->getReturnType()
         );
 
         if (null === $typeHint) {
@@ -618,5 +618,18 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         $traverser->traverse($this->node->getStmts());
 
         return $visitor->getReturnNodes();
+    }
+
+    private function findTypeFromAst($namespace, $locatedSource, $type)
+    {
+        $objectType = (new FindTypeFromAst())->__invoke(
+            $this->reflector->getContextFactory()->createForNamespace(
+                $namespace,
+                $locatedSource
+            ),
+            $type
+        );
+
+        return $objectType;
     }
 }

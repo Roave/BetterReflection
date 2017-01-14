@@ -2,18 +2,18 @@
 
 namespace Roave\BetterReflection\Context;
 
-use phpDocumentor\Reflection\Types\ContextFactory;
+use phpDocumentor\Reflection\Types\ContextFactory as InnerFactory;
 
-class PhpDocumentorContextFactory
+class PhpDocumentorContextFactory implements ContextFactory
 {
     /**
-     * @var PhpDocumentorContextFactory
+     * @var InnerFactory
      */
     private $innerFactory;
 
-    public function __construct(ContextFactory $innerFactory)
+    public function __construct()
     {
-        $this->innerFactory = $innerFactory;
+        $this->innerFactory = new InnerFactory();
     }
 
     /**

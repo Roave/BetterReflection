@@ -6,6 +6,8 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use PhpParser\Node\Name;
 use phpDocumentor\Reflection\Types;
+use phpDocumentor\Reflection\Types\ContextFactory;
+use phpDocumentor\Reflection\Types\Context;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindTypeFromAst
@@ -37,9 +39,8 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
     public function testFindTypeFromAst($input, $expected, $toStringValue)
     {
         $resolvedType = (new FindTypeFromAst())->__invoke(
-            $input,
-            new LocatedSource('<?php', null),
-            'MyNamespace'
+            new Context('MyNamespace', []),
+            $input
         );
 
         $this->assertInstanceOf($expected, $resolvedType);
@@ -50,8 +51,8 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNull(
             (new FindTypeFromAst())->__invoke(
-                null,
-                new LocatedSource('<?php', null)
+                new Context('MyNamespace', []),
+                null
             )
         );
     }

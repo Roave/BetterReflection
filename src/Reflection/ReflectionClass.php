@@ -589,7 +589,12 @@ class ReflectionClass implements Reflection, \Reflector
             return null;
         }
 
-        $objectType = (new FindTypeFromAst())->__invoke($this->node->extends, $this->locatedSource, $this->getNamespaceName());
+        $objectType = $this->findTypeFromAst(
+            $this->getNamespaceName(),
+            $this->locatedSource->getSource(),
+            $this->node->extends
+        );
+
         if (null === $objectType || !($objectType instanceof Object_)) {
             return null;
         }
@@ -728,7 +733,8 @@ class ReflectionClass implements Reflection, \Reflector
      */
     private function getFqsenFromNamedNode(Node\Name $node)
     {
-        $objectType = (new FindTypeFromAst())->__invoke($node, $this->locatedSource, $this->getNamespaceName());
+        $objectType = $this->findTypeFromAst($this->getNamespaceName(), $this->locatedSource->getSource(), $node);
+
         if (null === $objectType || !($objectType instanceof Object_)) {
             throw new \Exception('Unable to determine FQSEN for named node');
         }
@@ -1237,5 +1243,18 @@ class ReflectionClass implements Reflection, \Reflector
         }
 
         return false;
+    }
+
+    private function findTypeFromAst($namespace, $locatedSource, $type)
+    {
+        $objectType = (new FindTypeFromAst())->__invoke(
+            $this->reflector->getContextFactory()->createForNamespace(
+                $namespace,
+                $locatedSource
+            ),
+            $type
+        );
+
+        return $objectType;
     }
 }
