@@ -32,7 +32,7 @@ class ClassReflector implements Reflector
     public function __construct(SourceLocator $sourceLocator, ContextFactory $contextFactory = null)
     {
         $this->sourceLocator = $sourceLocator;
-        $this->contextFactory = $contextFactory ?: new PhpDocumentorContextFactory(new PhpDocumentorContextFactory());
+        $this->contextFactory = $contextFactory ?: new CachedContextFactory(new PhpDocumentorContextFactory());
     }
 
     /**
@@ -44,7 +44,7 @@ class ClassReflector implements Reflector
             new PhpInternalSourceLocator(),
             new EvaledCodeSourceLocator(),
             new AutoloadSourceLocator(),
-        ]), new CachedContextFactory(new PhpDocumentorContextFactory()));
+        ]));
     }
 
     /**
