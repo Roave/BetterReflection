@@ -534,10 +534,7 @@ class ReflectionParameter implements \Reflector
     private function findTypeFromAst($namespace, $locatedSource, $type)
     {
         $objectType = (new FindTypeFromAst())->__invoke(
-            $this->reflector->getContextFactory()->createForNamespace(
-                $namespace,
-                $locatedSource
-            ),
+            $this->getDeclaringClass()->getContext(),
             $type
         );
 

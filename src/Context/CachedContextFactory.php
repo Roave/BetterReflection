@@ -8,9 +8,9 @@ class CachedContextFactory implements ContextFactory
 {
     private $contexts = [];
 
-    public function __construct(ContextFactory $innerFactory)
+    public function __construct(ContextFactory $innerFactory = null)
     {
-        $this->innerFactory = $innerFactory;
+        $this->innerFactory = $innerFactory ?: new PhpDocumentorContextFactory();
     }
 
     /**

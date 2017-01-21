@@ -9,6 +9,7 @@ use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use phpDocumentor\Reflection\Types\Context;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -59,7 +60,7 @@ class ReflectionObject extends ReflectionClass
         Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespace = null
+        Context $context
     ) {
         throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }

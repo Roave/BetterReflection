@@ -28,7 +28,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
         // Compat with core reflection means we should NOT pass namespace info
         // for ReflectionMethod
-        $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), null);
+        $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), $declaringClass->getContext());
 
         return $method;
     }
@@ -258,5 +258,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function getDeclaringClass()
     {
         return $this->declaringClass;
+    }
+
+    public function getName()
+    {
+        return $this->getShortName();
     }
 }

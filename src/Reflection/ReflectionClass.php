@@ -23,6 +23,7 @@ use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\TraitUse;
+use phpDocumentor\Reflection\Types\Context;
 
 class ReflectionClass implements Reflection, \Reflector
 {
@@ -30,11 +31,6 @@ class ReflectionClass implements Reflection, \Reflector
      * @var Reflector
      */
     private $reflector;
-
-    /**
-     * @var NamespaceNode
-     */
-    private $declaringNamespace;
 
     /**
      * @var LocatedSource
@@ -60,6 +56,11 @@ class ReflectionClass implements Reflection, \Reflector
      * @var ReflectionMethod[]|null
      */
     private $cachedMethods;
+
+    /**
+     * @var Context
+     */
+    private $context;
 
     private function __construct()
     {
@@ -214,17 +215,15 @@ class ReflectionClass implements Reflection, \Reflector
         Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespace = null
+        Context $context
     ) {
         $class = new self();
 
         $class->reflector     = $reflector;
         $class->locatedSource = $locatedSource;
         $class->node          = $node;
+        $class->context       = $context;
 
-        if (null !== $namespace) {
-            $class->declaringNamespace = $namespace;
-        }
 
         return $class;
     }
@@ -263,11 +262,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getNamespaceName()
     {
-        if (!$this->inNamespace()) {
-            return '';
-        }
-
-        return implode('\\', $this->declaringNamespace->name->parts);
+        return $this->context->getNamespace();
     }
 
     /**
@@ -278,8 +273,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function inNamespace()
     {
-        return null !== $this->declaringNamespace
-            && null !== $this->declaringNamespace->name;
+        return (bool) $this->context->getNamespace();
     }
 
     /**
@@ -1248,13 +1242,15 @@ class ReflectionClass implements Reflection, \Reflector
     private function findTypeFromAst($namespace, $locatedSource, $type)
     {
         $objectType = (new FindTypeFromAst())->__invoke(
-            $this->reflector->getContextFactory()->createForNamespace(
-                $namespace,
-                $locatedSource
-            ),
+            $this->context,
             $type
         );
 
         return $objectType;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
     }
 }

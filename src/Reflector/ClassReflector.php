@@ -29,10 +29,9 @@ class ClassReflector implements Reflector
      * @param SourceLocator $sourceLocator
      * @param ContextFactory $contextFactory
      */
-    public function __construct(SourceLocator $sourceLocator, ContextFactory $contextFactory = null)
+    public function __construct(SourceLocator $sourceLocator)
     {
         $this->sourceLocator = $sourceLocator;
-        $this->contextFactory = $contextFactory ?: new CachedContextFactory(new PhpDocumentorContextFactory());
     }
 
     /**
@@ -78,15 +77,5 @@ class ClassReflector implements Reflector
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
-    }
-
-    /**
-     * Return the class context factory.
-     *
-     * @return ContextFactory
-     */
-    public function getContextFactory()
-    {
-        return $this->contextFactory;
     }
 }
