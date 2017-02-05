@@ -310,4 +310,43 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('Bar\Bat');
         $this->assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
+
+    public function testClassConstantResolutionFromParent()
+    {
+        $phpCode = '<?php
+        namespace Bar;
+
+        class Foo {
+            const BAR = "baz";
+        }
+        class Bat extends Foo {
+            private $property = self::BAR;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Bar\Bat');
+        $this->assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
+    }
+
+
+    public function testClassConstantResolutionFromParentParent()
+    {
+        $phpCode = '<?php
+        namespace Bar;
+
+        class Foo {
+            const BAR = "baz";
+        }
+        class Bar extends Foo {}
+        class Bat extends Bar {
+            private $property = self::BAR;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Bar\Bat');
+        $this->assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
+    }
+
 }
