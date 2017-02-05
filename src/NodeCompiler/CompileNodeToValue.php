@@ -124,7 +124,7 @@ class CompileNodeToValue
 
         $classInfo = null;
         if ('self' === $className || 'static' === $className) {
-            $classInfo = $context->getSelf();
+            $classInfo = $this->getConstantDeclaringClass($node->name, $context);
         }
 
         if (null === $classInfo) {
@@ -247,4 +247,20 @@ class CompileNodeToValue
 
         throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));
     }
+
+    /**
+     * @param string $constantName
+     * @param \Roave\BetterReflection\NodeCompiler\CompilerContext $context
+     * @return \Roave\BetterReflection\Reflection\ReflectionClass|null
+     */
+    private function getConstantDeclaringClass(string $constantName, CompilerContext $context)
+    {
+        $classInfo = $context->getSelf();
+        while (!$classInfo->hasConstant($constantName) && $classInfo->getParentClass() !== null) {
+            $classInfo = $classInfo->getParentClass();
+        }
+
+        return $classInfo;
+    }
+
 }
