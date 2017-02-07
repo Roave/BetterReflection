@@ -250,12 +250,14 @@ class CompileNodeToValue
 
     /**
      * @param string $constantName
-     * @param \Roave\BetterReflection\NodeCompiler\CompilerContext $context
-     * @return \Roave\BetterReflection\Reflection\ReflectionClass|null
+     * @param CompilerContext $context
+     *
+     * @return CompilerContext|null
      */
     private function getConstantDeclaringClass(string $constantName, CompilerContext $context)
     {
         $classInfo = $context->getSelf();
+
         while (!$classInfo->hasConstant($constantName) && $classInfo->getParentClass() !== null) {
             $classInfo = $classInfo->getParentClass();
         }
