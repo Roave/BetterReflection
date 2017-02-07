@@ -124,7 +124,7 @@ class CompileNodeToValue
 
         $classInfo = null;
         if ('self' === $className || 'static' === $className) {
-            $classInfo = $this->getConstantDeclaringClass($node->name, $context);
+            $classInfo = $this->getConstantDeclaringClass($node->name, $context->getSelf());
         }
 
         if (null === $classInfo) {
@@ -249,20 +249,19 @@ class CompileNodeToValue
     }
 
     /**
-     * @param string $constantName
-     * @param CompilerContext $context
+     * @param string          $constantName
+     * @param ReflectionClass $class
      *
      * @return CompilerContext|null
      */
-    private function getConstantDeclaringClass(string $constantName, CompilerContext $context)
+    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class)
     {
-        $classInfo = $context->getSelf();
-
-        while (!$classInfo->hasConstant($constantName) && $classInfo->getParentClass() !== null) {
-            $classInfo = $classInfo->getParentClass();
+        if ($class->hasConstant($constantName)) {
+            return $class;
         }
 
-        return $classInfo;
-    }
+        $parentClass = $class->getParentClass();
 
+        return $parentClass ? $this->getConstantDeclaringClass($constantName, $parentClass) : null;
+    }
 }
