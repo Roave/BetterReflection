@@ -3,6 +3,7 @@
 namespace Roave\BetterReflection\NodeCompiler;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node;
@@ -105,6 +106,7 @@ class CompileNodeToValue
      * @param Node\Expr\ClassConstFetch $node
      * @param CompilerContext $context
      * @return string
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
@@ -128,7 +130,13 @@ class CompileNodeToValue
         }
 
         if (null === $classInfo) {
-            $classInfo = $context->getReflector()->reflect($className);
+            $classInfo = $context->getReflector()->reflect(
+                (new FindTypeFromAst())->__invoke(
+                    $className,
+                    $context->getSelf()->getLocatedSource(),
+                    $context->getSelf()->getNamespaceName()
+                )
+            );
         }
 
         /* @var ReflectionClass $classInfo */

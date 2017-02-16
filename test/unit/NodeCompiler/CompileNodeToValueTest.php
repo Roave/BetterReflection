@@ -349,4 +349,39 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
+    public function testDifferentClassConstantAsDefaultValueWhenInNamespace()
+    {
+        $phpCode = '<?php
+        namespace Foo;
+
+        class Foo {
+            const BAR = "baz";
+        }
+
+        class Bar {
+            private $property = Foo::BAR;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Foo\Bar');
+        self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
+    }
+
+    public function testDifferentClassConstantAsDefaultValueWhenNotInNamespace()
+    {
+        $phpCode = '<?php
+        class Foo {
+            const BAR = "baz";
+        }
+
+        class Bar {
+            private $property = Foo::BAR;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Bar');
+        self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
+    }
 }
