@@ -365,7 +365,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode));
         $classInfo = $reflector->reflect('Foo\Bar');
-        $this->assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
+        self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
 }
