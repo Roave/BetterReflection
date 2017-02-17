@@ -11,9 +11,6 @@ use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
  */
 class EvalLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * // testEvalExecutesEvenThoughWeProbablyDoNotWantItTo
-     */
     public function testEvalExecutes()
     {
         $reflectionClass = $this->createMock(ReflectionClass::class);
