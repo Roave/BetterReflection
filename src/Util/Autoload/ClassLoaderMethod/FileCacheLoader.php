@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 
@@ -75,7 +76,11 @@ class FileCacheLoader implements LoaderMethodInterface
         require_once $filename;
     }
 
-    public static function defaultFileCacheLoader($cacheDirectory)
+    /**
+     * @param string $cacheDirectory
+     * @return self
+     */
+    public static function defaultFileCacheLoader(string $cacheDirectory) : self
     {
         return new self(
             $cacheDirectory,

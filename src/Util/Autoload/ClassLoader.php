@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
 
-class ClassLoader
+final class ClassLoader
 {
     /**
      * @var ReflectionClass[]
@@ -26,19 +27,17 @@ class ClassLoader
     /**
      * @param ReflectionClass $reflectionClass
      * @return void
-     * @throws \RuntimeException
-     * @throws \LogicException
+     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
+     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
      */
     public function addClass(ReflectionClass $reflectionClass)
     {
         if (array_key_exists($reflectionClass->getName(), $this->reflections)) {
-            // @todo specific exception
-            throw new \LogicException(sprintf('Class %s already registered', $reflectionClass->getName()));
+            throw Exception\ClassAlreadyRegistered::fromReflectionClass($reflectionClass);
         }
 
         if (class_exists($reflectionClass->getName(), false)) {
-            // @todo specific exception
-            throw new \RuntimeException(sprintf('Class already loaded: %s', $reflectionClass->getName()));
+            throw Exception\ClassAlreadyLoaded::fromReflectionClass($reflectionClass);
         }
 
         $this->reflections[$reflectionClass->getName()] = $reflectionClass;
@@ -47,9 +46,9 @@ class ClassLoader
     /**
      * @param string $classToLoad
      * @return bool
-     * @throws \RuntimeException
+     * @throws \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
      */
-    public function __invoke($classToLoad)
+    public function __invoke(string $classToLoad) : bool
     {
         if (!array_key_exists($classToLoad, $this->reflections)) {
             return false;
@@ -60,8 +59,7 @@ class ClassLoader
         if (!class_exists($classToLoad, false)
             && !interface_exists($classToLoad, false)
             && !trait_exists($classToLoad, false)) {
-            // @todo specific exception
-            throw new \RuntimeException(sprintf('Unable to load class :( %s', $classToLoad));
+            throw Exception\FailedToLoadClass::fromClassName($classToLoad);
         }
 
         return true;

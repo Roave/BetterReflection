@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\ClassPrinter;
 
@@ -9,7 +10,7 @@ use PhpParser\PrettyPrinter\Standard as CodePrinter;
 
 class PhpParserPrinter implements ClassPrinterInterface
 {
-    public function __invoke(ReflectionClass $classInfo)
+    public function __invoke(ReflectionClass $classInfo) : string
     {
         $nodes = [];
 

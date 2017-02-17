@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception;
+namespace Roave\BetterReflection\Util\Autoload\Exception;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 
-final class SignatureCheckFailed extends \RuntimeException
+final class ClassAlreadyLoaded extends \LogicException
 {
     public static function fromReflectionClass(ReflectionClass $reflectionClass) : self
     {
         return new self(sprintf(
-            'Failed to verify the signature of the cached file for %s',
+            'Class %s has already been loaded into memory so cannot be modified',
             $reflectionClass->getName()
         ));
     }

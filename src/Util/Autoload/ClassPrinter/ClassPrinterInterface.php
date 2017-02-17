@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\ClassPrinter;
 
@@ -10,5 +11,5 @@ interface ClassPrinterInterface
      * @param ReflectionClass $classInfo
      * @return string
      */
-    public function __invoke(ReflectionClass $classInfo);
+    public function __invoke(ReflectionClass $classInfo) : string;
 }
