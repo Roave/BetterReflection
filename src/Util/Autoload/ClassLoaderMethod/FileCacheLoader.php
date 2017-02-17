@@ -6,10 +6,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
 use Roave\Signature\CheckerInterface;
-use Roave\Signature\Encoder\Base64Encoder;
+use Roave\Signature\Encoder\Sha1SumEncoder;
 use Roave\Signature\FileContentChecker;
 use Roave\Signature\FileContentSigner;
-use Roave\Signature\Hasher\Md5Hasher;
 use Roave\Signature\SignerInterface;
 
 class FileCacheLoader implements LoaderMethodInterface
@@ -81,8 +80,8 @@ class FileCacheLoader implements LoaderMethodInterface
         return new self(
             $cacheDirectory,
             new PhpParserPrinter(),
-            new FileContentSigner(new Base64Encoder()),
-            new FileContentChecker(new Base64Encoder())
+            new FileContentSigner(new Sha1SumEncoder()),
+            new FileContentChecker(new Sha1SumEncoder())
         );
     }
 }
