@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
@@ -12,7 +13,7 @@ use Roave\Signature\SignerInterface;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
  */
-class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
+final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testFileCacheWriterCreatesFileWithPrintedCode()
     {

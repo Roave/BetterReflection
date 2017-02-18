@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\Exception;
 
@@ -7,7 +8,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
  */
-class FailedToLoadClassTest extends \PHPUnit_Framework_TestCase
+final class FailedToLoadClassTest extends \PHPUnit_Framework_TestCase
 {
     public function testFromReflectionClass()
     {

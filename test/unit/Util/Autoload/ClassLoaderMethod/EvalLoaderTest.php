@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
@@ -9,7 +10,7 @@ use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
  */
-class EvalLoaderTest extends \PHPUnit_Framework_TestCase
+final class EvalLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testEvalExecutes()
     {

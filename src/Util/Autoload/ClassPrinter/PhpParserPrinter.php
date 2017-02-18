@@ -10,7 +10,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\PrettyPrinter\Standard as CodePrinter;
 
-class PhpParserPrinter implements ClassPrinterInterface
+final class PhpParserPrinter implements ClassPrinterInterface
 {
     public function __invoke(ReflectionClass $classInfo) : string
     {

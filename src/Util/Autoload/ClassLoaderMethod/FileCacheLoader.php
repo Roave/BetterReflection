@@ -12,7 +12,7 @@ use Roave\Signature\FileContentChecker;
 use Roave\Signature\FileContentSigner;
 use Roave\Signature\SignerInterface;
 
-class FileCacheLoader implements LoaderMethodInterface
+final class FileCacheLoader implements LoaderMethodInterface
 {
     /**
      * @var string
@@ -41,7 +41,7 @@ class FileCacheLoader implements LoaderMethodInterface
      * @param CheckerInterface $checker
      */
     public function __construct(
-        $cacheDirectory,
+        string $cacheDirectory,
         ClassPrinterInterface $classPrinter,
         SignerInterface $signer,
         CheckerInterface $checker

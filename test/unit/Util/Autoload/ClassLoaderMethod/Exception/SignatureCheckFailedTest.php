@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
 
@@ -8,7 +9,7 @@ use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCh
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
  */
-class SignatureCheckFailedTest extends \PHPUnit_Framework_TestCase
+final class SignatureCheckFailedTest extends \PHPUnit_Framework_TestCase
 {
     public function testFromReflectionClass()
     {

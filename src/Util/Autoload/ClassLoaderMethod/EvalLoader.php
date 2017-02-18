@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
-class EvalLoader implements LoaderMethodInterface
+final class EvalLoader implements LoaderMethodInterface
 {
     /**
      * @var ClassPrinterInterface

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassPrinter;
 
@@ -9,7 +10,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter
  */
-class PhpParserPrinterTest extends \PHPUnit_Framework_TestCase
+final class PhpParserPrinterTest extends \PHPUnit_Framework_TestCase
 {
     public function testPrinting()
     {

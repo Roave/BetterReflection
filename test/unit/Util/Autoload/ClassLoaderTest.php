@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload;
 
@@ -15,7 +16,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
  */
-class ClassLoaderTest extends \PHPUnit_Framework_TestCase
+final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testAutoloadSelfRegisters()
     {
