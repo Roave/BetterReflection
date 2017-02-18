@@ -79,7 +79,9 @@ class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         } catch (SignatureCheckFailed $signatureCheckFailed) {
             return;
         } finally {
-            unlink($generatedFilename);
+            if (file_exists($generatedFilename)) {
+                unlink($generatedFilename);
+            }
         }
     }
 

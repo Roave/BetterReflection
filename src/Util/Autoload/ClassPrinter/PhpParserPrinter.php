@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\ClassPrinter;
 
+use phpDocumentor\Reflection\Types\ContextFactory;
+use PhpParser\Node\Stmt\Use_;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
@@ -18,7 +20,14 @@ class PhpParserPrinter implements ClassPrinterInterface
             $nodes[] = new Namespace_(new Name($classInfo->getNamespaceName()));
         }
 
-        // @todo need to work out if we need to add `use` imports too...
+        $imports = (new ContextFactory())->createForNamespace(
+            $classInfo->getNamespaceName(),
+            $classInfo->getLocatedSource()->getSource()
+        )->getNamespaceAliases();
+
+        foreach ($imports as $alias => $fullyQualified) {
+            $nodes[] = (new \PhpParser\Builder\Use_($fullyQualified, Use_::TYPE_NORMAL))->as($alias)->getNode();
+        }
 
         $nodes[] = $classInfo->getAst();
 
