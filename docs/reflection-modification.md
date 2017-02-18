@@ -36,9 +36,9 @@ any other autoloader, otherwise it may not behave correctly.
 ```php
 // Call this anywhere after all other autoloaders are registered (e.g. Composer)
 use BetterReflection\Util\Autoload\ClassLoader;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+use BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
 
-$loader = new ClassLoader(new EvalLoader(new PhpParserPrinter()));
+$loader = new ClassLoader(FileCacheLoader::defaultFileCacheLoader(__DIR__));
 
 // Call this any time before instantiating the class
 $loader->addClass($classInfo);
@@ -47,4 +47,13 @@ $c = new MyClass();
 var_dump($c->foo()); // This will now be 4, not 5...
 ```
 
-But, you probably shouldn't do this.
+But, you probably shouldn't do this ;)
+
+Loader methods available are:
+
+ * `FileCacheLoader` - cache the file contents (no cache invalidation). Example
+   usage is above; it's recommended to use the `defaultFileCacheLoader` static
+   constructor to simplify creation. Pass the directory to store cached files
+   as the parameter.
+ * `EvalCacheLoader` - as the naming suggests, uses `eval` to bring the class
+   into scope. This is not ideal if you're after performance.
