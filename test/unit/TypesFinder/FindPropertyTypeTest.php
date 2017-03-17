@@ -101,7 +101,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($class));
 
         $property->expects($this->any())->method('getDocComment')
-            ->will($this->returnValue('Nothing here...'));
+            ->will($this->returnValue(''));
 
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
