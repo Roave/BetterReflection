@@ -97,4 +97,21 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
+
+    public function testFindReturnTypeForFunctionWithNoDocBlock()
+    {
+        $function = $this->createMock(ReflectionFunction::class);
+
+        $function
+            ->expects($this->once())
+            ->method('getDocComment')
+            ->will($this->returnValue(''));
+
+        $function
+            ->expects($this->once())
+            ->method('getLocatedSource')
+            ->will($this->returnValue(new LocatedSource('<?php', null)));
+
+        $this->assertEmpty((new FindReturnType())->__invoke($function));
+    }
 }
