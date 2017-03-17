@@ -22,10 +22,16 @@ class FindParameterType
      */
     public function __invoke(ReflectionFunctionAbstract $function, ParamNode $node)
     {
+        $docComment = $function->getDocComment();
+
+        if ('' === $docComment) {
+            return [];
+        }
+
         $context = $this->createContextForFunction($function);
 
         $docBlock = DocBlockFactory::createInstance()->create(
-            $function->getDocComment(),
+            $docComment,
             new Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()
