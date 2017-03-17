@@ -107,11 +107,6 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
             ->method('getDocComment')
             ->will($this->returnValue(''));
 
-        $function
-            ->expects($this->once())
-            ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
-
         $this->assertEmpty((new FindReturnType())->__invoke($function));
     }
 }
