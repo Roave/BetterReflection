@@ -101,11 +101,23 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($class));
 
         $property->expects($this->any())->method('getDocComment')
-            ->will($this->returnValue(''));
+            ->will($this->returnValue('Nothing here...'));
 
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
         $this->assertSame([], $foundTypes);
+    }
+
+    public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent()
+    {
+        $property = $this->createMock(ReflectionProperty::class);
+
+        $property->expects(self::once())->method('getDocComment')
+            ->will(self::returnValue(''));
+
+        $foundTypes = (new FindPropertyType())->__invoke($property);
+
+        self::assertEmpty($foundTypes);
     }
 }
