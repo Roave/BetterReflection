@@ -135,10 +135,10 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getDocComment')
-            ->will($this->returnValue(''));
+            ->will(self::returnValue(''));
 
-        $this->assertEmpty((new FindParameterType())->__invoke($function, $node));
+        self::assertEmpty((new FindParameterType())->__invoke($function, $node));
     }
 }
