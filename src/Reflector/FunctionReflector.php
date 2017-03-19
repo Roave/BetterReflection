@@ -37,4 +37,17 @@ class FunctionReflector implements Reflector
 
         return $functionInfo;
     }
+
+    /**
+     * Get all the functions available in the scope specified by the SourceLocator.
+     *
+     * @return \Roave\BetterReflection\Reflection\ReflectionFunction[]
+     */
+    public function getAllFunctions()
+    {
+        return $this->sourceLocator->locateIdentifiersByType(
+            $this,
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+        );
+    }
 }
