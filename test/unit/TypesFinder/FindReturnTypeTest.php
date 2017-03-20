@@ -97,4 +97,16 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
+
+    public function testFindReturnTypeForFunctionWithNoDocBlock()
+    {
+        $function = $this->createMock(ReflectionFunction::class);
+
+        $function
+            ->expects(self::once())
+            ->method('getDocComment')
+            ->will(self::returnValue(''));
+
+        self::assertEmpty((new FindReturnType())->__invoke($function));
+    }
 }

@@ -20,10 +20,16 @@ class FindReturnType
      */
     public function __invoke(ReflectionFunctionAbstract $function)
     {
+        $docComment = $function->getDocComment();
+
+        if ('' === $docComment) {
+            return [];
+        }
+
         $context = $this->createContextForFunction($function);
 
         $returnTags = DocBlockFactory::createInstance()->create(
-            $function->getDocComment(),
+            $docComment,
             new Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()

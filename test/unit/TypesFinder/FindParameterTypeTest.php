@@ -127,4 +127,18 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
+
+    public function testFindParameterTypeForFunctionWithNoDocBlock()
+    {
+        $node = new ParamNode('foo');
+
+        $function = $this->createMock(ReflectionFunction::class);
+
+        $function
+            ->expects(self::once())
+            ->method('getDocComment')
+            ->will(self::returnValue(''));
+
+        self::assertEmpty((new FindParameterType())->__invoke($function, $node));
+    }
 }

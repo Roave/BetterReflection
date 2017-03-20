@@ -18,6 +18,12 @@ class FindPropertyType
      */
     public function __invoke(ReflectionProperty $reflectionProperty)
     {
+        $docComment = $reflectionProperty->getDocComment();
+
+        if ('' === $docComment) {
+            return [];
+        }
+
         $contextFactory = new ContextFactory();
         $context = $contextFactory->createForNamespace(
             $reflectionProperty->getDeclaringClass()->getNamespaceName(),
@@ -25,7 +31,7 @@ class FindPropertyType
         );
 
         $docBlock = DocBlockFactory::createInstance()->create(
-            $reflectionProperty->getDocComment(),
+            $docComment,
             new Context(
                 $context->getNamespace(),
                 $context->getNamespaceAliases()

@@ -108,4 +108,16 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame([], $foundTypes);
     }
+
+    public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent()
+    {
+        $property = $this->createMock(ReflectionProperty::class);
+
+        $property->expects(self::once())->method('getDocComment')
+            ->will(self::returnValue(''));
+
+        $foundTypes = (new FindPropertyType())->__invoke($property);
+
+        self::assertEmpty($foundTypes);
+    }
 }
