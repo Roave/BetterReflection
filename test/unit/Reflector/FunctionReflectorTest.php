@@ -2,7 +2,9 @@
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
@@ -27,5 +29,15 @@ class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
 
         $reflector = new FunctionReflector($sourceLocator);
         $this->assertSame('foobar', $reflector->reflect('foo'));
+    }
+
+    public function testGetFunctionsFromFile()
+    {
+        $functions = (new FunctionReflector(
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php')
+        ))->getAllFunctions();
+
+        self::assertContainsOnlyInstancesOf(ReflectionFunction::class, $functions);
+        self::assertCount(2, $functions);
     }
 }
