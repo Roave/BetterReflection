@@ -1,5 +1,4 @@
 <?php
-
 class MyClass
 {
     public function foo()
