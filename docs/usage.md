@@ -188,25 +188,14 @@ $reflector = new ClassReflector($singleDirectorySourceLocator);
 $classes = $reflector->getAllClasses();
 ```
 
-### Fetch reflections of all the classes in a directory (including sub directories)
+### Fetch reflections of all the classes in one or more directories (including sub directories)
 
 ```php
 <?php
 
-$rdi = new \RecursiveDirectoryIterator('path/to/directory');
-$singleDirectorySourceLocator = new SingleDirectorySourceLocator(new \RecursiveIteratorIterator($rdi));
-$reflector = new ClassReflector($singleDirectorySourceLocator);
-$classes = $reflector->getAllClasses();
-```
-
-### Fetch reflections of all the classes in multiple directories (including sub directories)
-
-```php
-<?php
-
-$directoriesToScan = ['path/to/directory1', 'path/to/directory2'];
-$multipleDirectoriesSourceLocator = new MultipleDirectoriesAggregateSourceLocator($directoriesToScan);
-$reflector = new ClassReflector($multipleDirectoriesSourceLocator);
+$directoriesToScan = ['path/to/directory1'];
+$directoriesSourceLocator = new DirectoriesSourceLocator($directoriesToScan);
+$reflector = new ClassReflector($directoriesSourceLocator);
 $classes = $reflector->getAllClasses();
 ```
 
