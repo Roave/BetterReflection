@@ -27,14 +27,8 @@ class LocatedSource
      * @throws \InvalidArgumentException
      * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    public function __construct(string $source, $filename)
+    public function __construct(string $source, ?string $filename)
     {
-        if (!is_string($filename) && null !== $filename) {
-            throw new \InvalidArgumentException(
-                'Filename must be a string or null'
-            );
-        }
-
         if (null !== $filename) {
             if (empty($filename)) {
                 throw new InvalidFileLocation('Filename was empty');

@@ -43,29 +43,6 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         self::assertSame('', $locatedSource->getSource());
     }
 
-    /**
-     * @return array
-     */
-    public function exceptionCasesProvider() : array
-    {
-        return [
-            [123, InvalidArgumentException::class, 'Filename must be a string or null'],
-        ];
-    }
-
-    /**
-     * @param mixed $file
-     * @param string $expectedException
-     * @param string $expectedMessage
-     * @dataProvider exceptionCasesProvider
-     */
-    public function testThrowsExceptionWhenInvalidValuesGiven($file, string $expectedException, string $expectedMessage)
-    {
-        $this->expectException($expectedException);
-        $this->expectExceptionMessage($expectedMessage);
-        new LocatedSource(uniqid('source', true), $file);
-    }
-
     public function testConstructorThrowsExceptionIfEmptyFileGiven()
     {
         $this->expectException(InvalidFileLocation::class);

@@ -21,7 +21,7 @@ class CompilerContext
      * @param Reflector $reflector
      * @param ReflectionClass|null $self
      */
-    public function __construct(Reflector $reflector, ReflectionClass $self = null)
+    public function __construct(Reflector $reflector, ?ReflectionClass $self)
     {
         $this->reflector = $reflector;
         $this->self = $self;
