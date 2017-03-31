@@ -76,8 +76,11 @@ class ReflectionParameter implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter
      */
-    public static function createFromClassNameAndMethod($className, $methodName, $parameterName)
-    {
+    public static function createFromClassNameAndMethod(
+        string $className,
+        string $methodName,
+        string $parameterName
+    ) : self {
         return ReflectionClass::createFromName($className)
             ->getMethod($methodName)
             ->getParameter($parameterName);
@@ -91,8 +94,11 @@ class ReflectionParameter implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter
      */
-    public static function createFromClassInstanceAndMethod($instance, $methodName, $parameterName)
-    {
+    public static function createFromClassInstanceAndMethod(
+        $instance,
+        string $methodName,
+        string $parameterName
+    ) : self {
         return ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
             ->getParameter($parameterName);
@@ -125,7 +131,7 @@ class ReflectionParameter implements \Reflector
      * @throws \Exception
      * @throws \InvalidArgumentException
      */
-    public static function createFromSpec($spec, $parameterName)
+    public static function createFromSpec($spec, string $parameterName) : self
     {
         if (is_array($spec) && count($spec) === 2) {
             if (is_object($spec[0])) {
@@ -151,7 +157,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         $isNullableObjectParam = $this->getTypeHint() && $this->getTypeHint() instanceof Types\Object_ && $this->isOptional();
 
@@ -180,8 +186,9 @@ class ReflectionParameter implements \Reflector
     public static function createFromNode(
         Reflector $reflector,
         ParamNode $node,
-        ReflectionFunctionAbstract $function, $parameterIndex
-    ) {
+        ReflectionFunctionAbstract $function,
+        int $parameterIndex
+    ) : self {
         $param = new self();
         $param->reflector = $reflector;
         $param->node = $node;
@@ -224,7 +231,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->node->name;
     }
@@ -234,7 +241,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return ReflectionFunctionAbstract
      */
-    public function getDeclaringFunction()
+    public function getDeclaringFunction() : ReflectionFunctionAbstract
     {
         return $this->function;
     }
@@ -267,7 +274,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function isOptional()
+    public function isOptional() : bool
     {
         return ((bool)$this->node->isOptional) || $this->isVariadic();
     }
@@ -283,7 +290,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function isDefaultValueAvailable()
+    public function isDefaultValueAvailable() : bool
     {
         return (null !== $this->node->default);
     }
@@ -306,7 +313,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return string
      */
-    public function getDefaultValueAsString()
+    public function getDefaultValueAsString() : string
     {
         return var_export($this->getDefaultValue(), true);
     }
@@ -316,7 +323,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function allowsNull()
+    public function allowsNull() : bool
     {
         if (null === $this->getTypeHint()) {
             return true;
@@ -334,7 +341,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return string[]
      */
-    public function getDocBlockTypeStrings()
+    public function getDocBlockTypeStrings() : array
     {
         $stringTypes = [];
 
@@ -353,7 +360,7 @@ class ReflectionParameter implements \Reflector
      * @see getTypeHint()
      * @return Type[]
      */
-    public function getDocBlockTypes()
+    public function getDocBlockTypes() : array
     {
         return  (new FindParameterType())->__invoke($this->function, $this->node);
     }
@@ -363,7 +370,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return int
      */
-    public function getPosition()
+    public function getPosition() : int
     {
         return $this->parameterIndex;
     }
@@ -374,7 +381,7 @@ class ReflectionParameter implements \Reflector
      * method itself, and is separate from the DocBlock type hints.
      *
      * @see getDocBlockTypes()
-     * @return Type
+     * @return Type|null
      */
     public function getTypeHint()
     {
@@ -413,7 +420,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function hasType()
+    public function hasType() : bool
     {
         return null !== $this->getTypeHint();
     }
@@ -443,7 +450,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function isArray()
+    public function isArray() : bool
     {
         return ($this->getTypeHint() instanceof Types\Array_);
     }
@@ -453,7 +460,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function isCallable()
+    public function isCallable() : bool
     {
         return ($this->getTypeHint() instanceof Types\Callable_);
     }
@@ -463,7 +470,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function isVariadic()
+    public function isVariadic() : bool
     {
         return (bool)$this->node->variadic;
     }
@@ -473,7 +480,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return bool
      */
-    public function isPassedByReference()
+    public function isPassedByReference() : bool
     {
         return (bool)$this->node->byRef;
     }
@@ -481,7 +488,7 @@ class ReflectionParameter implements \Reflector
     /**
      * @return bool
      */
-    public function canBePassedByValue()
+    public function canBePassedByValue() : bool
     {
         return !$this->isPassedByReference();
     }
@@ -489,7 +496,7 @@ class ReflectionParameter implements \Reflector
     /**
      * @return bool
      */
-    public function isDefaultValueConstant()
+    public function isDefaultValueConstant() : bool
     {
         $this->parseDefaultValueNode();
         return $this->isDefaultValueConstant;
@@ -499,7 +506,7 @@ class ReflectionParameter implements \Reflector
      * @throws \LogicException
      * @return string
      */
-    public function getDefaultValueConstantName()
+    public function getDefaultValueConstantName() : string
     {
         $this->parseDefaultValueNode();
         if (!$this->isDefaultValueConstant()) {

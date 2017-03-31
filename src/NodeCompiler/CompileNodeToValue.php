@@ -57,7 +57,7 @@ class CompileNodeToValue
      * @param CompilerContext $context
      * @return array
      */
-    private function compileArray(Node\Expr\Array_ $arrayNode, CompilerContext $context)
+    private function compileArray(Node\Expr\Array_ $arrayNode, CompilerContext $context) : array
     {
         $compiledArray = [];
         foreach ($arrayNode->items as $arrayItem) {
@@ -105,7 +105,7 @@ class CompileNodeToValue
      *
      * @param Node\Expr\ClassConstFetch $node
      * @param CompilerContext $context
-     * @return string
+     * @return string|null
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)

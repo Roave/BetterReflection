@@ -86,7 +86,7 @@ final class ClosureSourceLocator implements SourceLocator
         );
     }
 
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         // @todo https://github.com/Roave/BetterReflection/issues/152
         throw new \LogicException('Not implemented - Unable to reflect closures in this way currently');

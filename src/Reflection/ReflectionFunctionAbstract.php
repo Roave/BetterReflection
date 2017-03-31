@@ -59,8 +59,12 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
-    protected function populateFunctionAbstract(Reflector $reflector, Node $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
-    {
+    protected function populateFunctionAbstract(
+        Reflector $reflector,
+        Node $node,
+        LocatedSource $locatedSource,
+        NamespaceNode $declaringNamespace = null
+    ) {
         if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
@@ -78,7 +82,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return Node\Stmt\ClassMethod|Node\Stmt\Function_
      */
-    protected function getNode()
+    protected function getNode() : Node\FunctionLike
     {
         return $this->node;
     }
@@ -111,7 +115,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         if (!$this->inNamespace()) {
             return $this->getShortName();
@@ -126,7 +130,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return string
      */
-    public function getShortName()
+    public function getShortName() : string
     {
         if ($this->node instanceof Node\Expr\Closure) {
             return '{closure}';
@@ -141,7 +145,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return string
      */
-    public function getNamespaceName()
+    public function getNamespaceName() : string
     {
         if (!$this->inNamespace()) {
             return '';
@@ -156,7 +160,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function inNamespace()
+    public function inNamespace() : bool
     {
         return null !== $this->declaringNamespace
             && null !== $this->declaringNamespace->name;
@@ -167,7 +171,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return int
      */
-    public function getNumberOfParameters()
+    public function getNumberOfParameters() : int
     {
         return count($this->getParameters());
     }
@@ -177,7 +181,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return int
      */
-    public function getNumberOfRequiredParameters()
+    public function getNumberOfRequiredParameters() : int
     {
         return count(array_filter(
             $this->getParameters(),
@@ -193,7 +197,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return ReflectionParameter[]
      */
-    public function getParameters()
+    public function getParameters() : array
     {
         $parameters = [];
         foreach ($this->node->params as $paramIndex => $paramNode) {
@@ -214,7 +218,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter|null
      */
-    public function getParameter($parameterName)
+    public function getParameter(string $parameterName)
     {
         foreach ($this->getParameters() as $parameter) {
             if ($parameter->getName() === $parameterName) {
@@ -227,7 +231,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * @return string
      */
-    public function getDocComment()
+    public function getDocComment() : string
     {
         if (!$this->node->hasAttribute('comments')) {
             return '';
@@ -240,7 +244,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * @return string
      */
-    public function getFileName()
+    public function getFileName() : string
     {
         return $this->locatedSource->getFileName();
     }
@@ -248,7 +252,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * @return LocatedSource
      */
-    public function getLocatedSource()
+    public function getLocatedSource() : LocatedSource
     {
         return $this->locatedSource;
     }
@@ -258,7 +262,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function isClosure()
+    public function isClosure() : bool
     {
         return $this->node instanceof Node\Expr\Closure;
     }
@@ -273,7 +277,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @see https://github.com/Roave/BetterReflection/issues/38
      * @return bool
      */
-    public function isDeprecated()
+    public function isDeprecated() : bool
     {
         return false;
     }
@@ -288,7 +292,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @see https://github.com/Roave/BetterReflection/issues/38
      * @return bool
      */
-    public function isInternal()
+    public function isInternal() : bool
     {
         return false;
     }
@@ -299,7 +303,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function isUserDefined()
+    public function isUserDefined() : bool
     {
         return !$this->isInternal();
     }
@@ -309,7 +313,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function isVariadic()
+    public function isVariadic() : bool
     {
         $parameters = $this->getParameters();
 
@@ -329,7 +333,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param \PhpParser\Node $node
      * @return bool
      */
-    private function nodeIsOrContainsYield(Node $node)
+    private function nodeIsOrContainsYield(Node $node) : bool
     {
         if ($node instanceof YieldNode) {
             return true;
@@ -358,7 +362,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function isGenerator()
+    public function isGenerator() : bool
     {
         if (!isset($this->node)) {
             return false;
@@ -371,7 +375,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return int
      */
-    public function getStartLine()
+    public function getStartLine() : int
     {
         return (int)$this->node->getAttribute('startLine', -1);
     }
@@ -381,7 +385,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return int
      */
-    public function getEndLine()
+    public function getEndLine() : int
     {
         return (int)$this->node->getAttribute('endLine', -1);
     }
@@ -391,7 +395,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function returnsReference()
+    public function returnsReference() : bool
     {
         return (bool)$this->node->byRef;
     }
@@ -404,7 +408,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return Type[]
      */
-    public function getDocBlockReturnTypes()
+    public function getDocBlockReturnTypes() : array
     {
         return  (new FindReturnType())->__invoke($this);
     }
@@ -438,7 +442,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return bool
      */
-    public function hasReturnType()
+    public function hasReturnType() : bool
     {
         return null !== $this->getReturnType();
     }
@@ -476,7 +480,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return Node[]
      */
-    public function getBodyAst()
+    public function getBodyAst() : array
     {
         return $this->node->stmts;
     }
@@ -494,7 +498,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param PrettyPrinterAbstract|null $printer
      * @return string
      */
-    public function getBodyCode(PrettyPrinterAbstract $printer = null)
+    public function getBodyCode(PrettyPrinterAbstract $printer = null) : string
     {
         if (null === $printer) {
             $printer = new StandardPrettyPrinter();
@@ -508,7 +512,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return Node\Stmt\ClassMethod|Node\Stmt\Function_
      */
-    public function getAst()
+    public function getAst() : Node\FunctionLike
     {
         return $this->node;
     }
@@ -542,12 +546,8 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param string $newBody
      */
-    public function setBodyFromString($newBody)
+    public function setBodyFromString(string $newBody)
     {
-        if (!is_string($newBody)) {
-            throw new \InvalidArgumentException('Body parameter must be a string');
-        }
-
         $this->node->stmts = (new ParserFactory())
             ->create(ParserFactory::PREFER_PHP7)
             ->parse('<?php ' . $newBody);
@@ -578,7 +578,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param string $parameterName
      */
-    public function addParameter($parameterName)
+    public function addParameter(string $parameterName)
     {
         $this->node->params[] = new ParamNode($parameterName);
     }
@@ -589,7 +589,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param string $parameterName
      * @return void
      */
-    public function removeParameter($parameterName)
+    public function removeParameter(string $parameterName)
     {
         $lowerName = strtolower($parameterName);
 
@@ -608,7 +608,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return Node\Stmt\Return_[]
      */
-    public function getReturnStatementsAst()
+    public function getReturnStatementsAst() : array
     {
         $visitor = new ReturnNodeVisitor();
 

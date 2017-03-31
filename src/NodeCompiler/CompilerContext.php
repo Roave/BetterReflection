@@ -34,7 +34,7 @@ class CompilerContext
      *
      * @return bool
      */
-    public function hasSelf()
+    public function hasSelf() : bool
     {
         return null !== $this->self;
     }
@@ -58,7 +58,7 @@ class CompilerContext
      *
      * @return Reflector
      */
-    public function getReflector()
+    public function getReflector() : Reflector
     {
         return $this->reflector;
     }

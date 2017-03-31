@@ -22,7 +22,7 @@ final class FindReflectionOnLine
      * @return ReflectionMethod|ReflectionClass|ReflectionFunction|null
      * @throws \InvalidArgumentException
      */
-    public function __invoke($filename, $lineNumber)
+    public function __invoke(string $filename, int $lineNumber)
     {
         $lineNumber = (int)$lineNumber;
         $reflections = $this->computeReflections($filename);
@@ -51,7 +51,7 @@ final class FindReflectionOnLine
      * @param string $filename
      * @return Reflection[]
      */
-    private function computeReflections($filename)
+    private function computeReflections(string $filename)
     {
         $sourceLocator = new SingleFileSourceLocator($filename);
         $reflector = new ClassReflector($sourceLocator);
@@ -70,7 +70,7 @@ final class FindReflectionOnLine
      * @return bool
      * @throws \InvalidArgumentException
      */
-    private function containsLine($reflection, $lineNumber)
+    private function containsLine($reflection, int $lineNumber) : bool
     {
         if (!method_exists($reflection, 'getStartLine')) {
             throw new \InvalidArgumentException('Reflection does not have getStartLine method');

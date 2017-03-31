@@ -12,7 +12,7 @@ class ResolveTypes
      * @param Context $context
      * @return \phpDocumentor\Reflection\Type[]
      */
-    public function __invoke($stringTypes, Context $context)
+    public function __invoke(array $stringTypes, Context $context) : array
     {
         $resolvedTypes = [];
         $resolver = new TypeResolver();

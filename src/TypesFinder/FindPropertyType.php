@@ -16,7 +16,7 @@ class FindPropertyType
      * @param ReflectionProperty $reflectionProperty
      * @return Type[]
      */
-    public function __invoke(ReflectionProperty $reflectionProperty)
+    public function __invoke(ReflectionProperty $reflectionProperty) : array
     {
         $docComment = $reflectionProperty->getDocComment();
 

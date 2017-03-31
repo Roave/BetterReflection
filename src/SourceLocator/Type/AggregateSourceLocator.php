@@ -43,7 +43,7 @@ class AggregateSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         $located = [];
 

@@ -24,10 +24,10 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     /**
      * @param string $filename
      */
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
         parent::__construct();
-        $this->filename = (string)$filename;
+        $this->filename = $filename;
 
         if (empty($this->filename)) {
             throw new InvalidFileLocation('Filename was empty');

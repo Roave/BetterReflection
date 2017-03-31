@@ -26,7 +26,7 @@ class ReflectionType
      * @param bool $allowsNull
      * @return ReflectionType
      */
-    public static function createFromType(Type $type, $allowsNull)
+    public static function createFromType(Type $type, bool $allowsNull) : self
     {
         $reflectionType = new self();
         $reflectionType->type = $type;
@@ -39,7 +39,7 @@ class ReflectionType
      *
      * @return Type
      */
-    public function getTypeObject()
+    public function getTypeObject() : Type
     {
         return $this->type;
     }
@@ -49,7 +49,7 @@ class ReflectionType
      *
      * @return bool
      */
-    public function allowsNull()
+    public function allowsNull() : bool
     {
         return $this->allowsNull;
     }
@@ -60,7 +60,7 @@ class ReflectionType
      * @see http://php.net/manual/en/reflectiontype.isbuiltin.php
      * @return bool
      */
-    public function isBuiltin()
+    public function isBuiltin() : bool
     {
         return (!$this->type instanceof Types\Object_);
     }
@@ -71,7 +71,7 @@ class ReflectionType
      * @see https://github.com/php/php-src/blob/master/ext/reflection/php_reflection.c#L2993
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         switch (true) {
             case $this->type instanceof Types\Integer:

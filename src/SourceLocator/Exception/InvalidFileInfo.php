@@ -9,7 +9,7 @@ class InvalidFileInfo extends \RuntimeException
      *
      * @return InvalidFileInfo
      */
-    public static function fromNonSplFileInfo($nonSplFileInfo)
+    public static function fromNonSplFileInfo($nonSplFileInfo) : self
     {
         return new self(sprintf(
             'Expected an iterator of SplFileInfo instances, %s given instead',

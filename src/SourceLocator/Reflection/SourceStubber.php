@@ -38,7 +38,7 @@ final class SourceStubber
      *
      * @return string
      */
-    public function __invoke(ClassReflection $reflection)
+    public function __invoke(ClassReflection $reflection) : string
     {
         $stubCode    = ClassGenerator::fromReflection($reflection)->generate();
         $isInterface = $reflection->isInterface();
@@ -58,7 +58,7 @@ final class SourceStubber
      *
      * @return \PhpParser\Node[]
      */
-    private function replaceNodesRecursively(array $statements, $isInterfaceOrTrait)
+    private function replaceNodesRecursively(array $statements, bool $isInterfaceOrTrait) : array
     {
         foreach ($statements as $key => $statement) {
             if ($statement instanceof Class_) {

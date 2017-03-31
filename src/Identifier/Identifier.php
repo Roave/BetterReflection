@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\Identifier;
 
@@ -14,7 +15,7 @@ class Identifier
      */
     private $type;
 
-    public function __construct($name, IdentifierType $type)
+    public function __construct(string $name, IdentifierType $type)
     {
         $this->type = $type;
 
@@ -23,34 +24,22 @@ class Identifier
         $this->name = (string)$name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return IdentifierType
-     */
-    public function getType()
+    public function getType() : IdentifierType
     {
         return $this->type;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClass()
+    public function isClass() : bool
     {
         return $this->type->isClass();
     }
 
-    /**
-     * @return bool
-     */
-    public function isFunction()
+    public function isFunction() : bool
     {
         return $this->type->isFunction();
     }

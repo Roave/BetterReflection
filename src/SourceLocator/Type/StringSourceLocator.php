@@ -23,10 +23,10 @@ class StringSourceLocator extends AbstractSourceLocator
     /**
      * @param string $source
      */
-    public function __construct($source)
+    public function __construct(string $source)
     {
         parent::__construct();
-        $this->source = (string)$source;
+        $this->source = $source;
 
         if (empty($this->source)) {
             // Whilst an empty string is still "valid" PHP code, there is no

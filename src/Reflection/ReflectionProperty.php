@@ -46,9 +46,9 @@ class ReflectionProperty implements \Reflector
      *
      * @param string $className
      * @param string $propertyName
-     * @return ReflectionMethod
+     * @return self
      */
-    public static function createFromName($className, $propertyName)
+    public static function createFromName(string $className, string $propertyName) : self
     {
         return ReflectionClass::createFromName($className)->getProperty($propertyName);
     }
@@ -58,9 +58,9 @@ class ReflectionProperty implements \Reflector
      *
      * @param object $instance
      * @param string $propertyName
-     * @return ReflectionMethod
+     * @return self
      */
-    public static function createFromInstance($instance, $propertyName)
+    public static function createFromInstance($instance, string $propertyName) : self
     {
         return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
     }
@@ -70,7 +70,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return sprintf(
             'Property [%s %s%s $%s ]',
@@ -92,8 +92,8 @@ class ReflectionProperty implements \Reflector
         Reflector $reflector,
         PropertyNode $node,
         ReflectionClass $declaringClass,
-        $declaredAtCompileTime = true
-    ) {
+        bool $declaredAtCompileTime = true
+    ) : self {
         $prop = new self();
         $prop->reflector = $reflector;
         $prop->node = $node;
@@ -105,7 +105,7 @@ class ReflectionProperty implements \Reflector
     /**
      * @return string
      */
-    private function getVisibilityAsString()
+    private function getVisibilityAsString() : string
     {
         if ($this->isProtected()) {
             return 'protected';
@@ -124,7 +124,7 @@ class ReflectionProperty implements \Reflector
      * @param int $newVisibility
      * @throws \InvalidArgumentException
      */
-    public function setVisibility($newVisibility)
+    public function setVisibility(int $newVisibility)
     {
         $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
 
@@ -152,7 +152,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return bool
      */
-    public function isDefault()
+    public function isDefault() : bool
     {
         return $this->declaredAtCompileTime;
     }
@@ -162,7 +162,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return int
      */
-    public function getModifiers()
+    public function getModifiers() : int
     {
         $val = 0;
         $val += $this->isStatic() ? \ReflectionProperty::IS_STATIC : 0;
@@ -177,7 +177,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->node->props[0]->name;
     }
@@ -187,7 +187,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return bool
      */
-    public function isPrivate()
+    public function isPrivate() : bool
     {
         return $this->node->isPrivate();
     }
@@ -197,7 +197,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return bool
      */
-    public function isProtected()
+    public function isProtected() : bool
     {
         return $this->node->isProtected();
     }
@@ -207,7 +207,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return bool
      */
-    public function isPublic()
+    public function isPublic() : bool
     {
         return $this->node->isPublic();
     }
@@ -217,7 +217,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return bool
      */
-    public function isStatic()
+    public function isStatic() : bool
     {
         return $this->node->isStatic();
     }
@@ -227,7 +227,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return string[]
      */
-    public function getDocBlockTypeStrings()
+    public function getDocBlockTypeStrings() : array
     {
         $stringTypes = [];
 
@@ -245,7 +245,7 @@ class ReflectionProperty implements \Reflector
      *
      * @return Type[]
      */
-    public function getDocBlockTypes()
+    public function getDocBlockTypes() : array
     {
         return (new FindPropertyType())->__invoke($this);
     }
@@ -253,7 +253,7 @@ class ReflectionProperty implements \Reflector
     /**
      * @return ReflectionClass
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass() : ReflectionClass
     {
         return $this->declaringClass;
     }
@@ -261,7 +261,7 @@ class ReflectionProperty implements \Reflector
     /**
      * @return string
      */
-    public function getDocComment()
+    public function getDocComment() : string
     {
         if (!$this->node->hasAttribute('comments')) {
             return '';

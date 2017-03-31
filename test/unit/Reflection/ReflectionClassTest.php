@@ -662,10 +662,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             $subExampleClass->isSubclassOf('\\' . ClassWithInterfaces\ExampleClass::class),
             'A subclass of a parent class (considering eventual backslashes upfront)'
         );
-
-        $this->expectException(NotAString::class);
-
-        $subExampleClass->isSubclassOf($this);
     }
 
     public function testImplementsInterface()
@@ -681,10 +677,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\D::class));
         $this->assertTrue($subExampleClass->implementsInterface(\E::class));
         $this->assertFalse($subExampleClass->implementsInterface(\Iterator::class));
-
-        $this->expectException(NotAString::class);
-
-        $subExampleClass->implementsInterface($this);
     }
 
     public function testIsInstantiable()

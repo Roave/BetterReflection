@@ -285,6 +285,6 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
-        $publicProp->setVisibility('foo');
+        $publicProp->setVisibility(0);
     }
 }

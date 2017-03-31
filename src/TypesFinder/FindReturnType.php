@@ -18,7 +18,7 @@ class FindReturnType
      * @param ReflectionFunctionAbstract $function
      * @return Type[]
      */
-    public function __invoke(ReflectionFunctionAbstract $function)
+    public function __invoke(ReflectionFunctionAbstract $function) : array
     {
         $docComment = $function->getDocComment();
 
@@ -47,7 +47,7 @@ class FindReturnType
      * @param ReflectionFunctionAbstract $function
      * @return Context
      */
-    private function createContextForFunction(ReflectionFunctionAbstract $function)
+    private function createContextForFunction(ReflectionFunctionAbstract $function) : Context
     {
         if ($function instanceof ReflectionMethod) {
             $function = $function->getDeclaringClass();

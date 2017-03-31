@@ -174,10 +174,27 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $reflectionObjectReflectionClassPropertyReflection->setAccessible(true);
         $reflectionObjectReflectionClassPropertyReflection->setValue($reflectionObject, $mockReflectionClass);
 
+        $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
+        $fakeParams = array_map(
+            function (\ReflectionParameter $parameter) {
+                switch((string)$parameter->getType()) {
+                    case 'int':
+                        return random_int(1, 1000);
+                    case 'null':
+                        return null;
+                    case 'bool':
+                        return (bool)random_int(0, 1);
+                    default:
+                        return uniqid('stringParam', true);
+                }
+            },
+            $reflectionObjectReflectionMethod->getParameters()
+        );
+
         // Finally, call the method name with some dummy parameters. This should
         // ensure that the method of the same name gets called on the
         // $mockReflectionClass mock (as we expect $methodName to be called)
-        $reflectionObject->{$methodName}('foo', 'bar', 'baz');
+        $reflectionObject->{$methodName}(...$fakeParams);
     }
 
     public function testCreateFromNodeThrowsException()

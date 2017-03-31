@@ -72,7 +72,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @param string $className Should only contain [A-Za-z]
      * @return string|null
      */
-    private function getStub($className)
+    private function getStub(string $className)
     {
         if (!$this->hasStub($className)) {
             return null;
@@ -87,7 +87,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @param string $className
      * @return string|null
      */
-    private function buildStubName($className)
+    private function buildStubName(string $className)
     {
         if (!preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
             return null;
@@ -102,7 +102,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @param string $className
      * @return bool
      */
-    public function hasStub($className)
+    public function hasStub(string $className) : bool
     {
         $expectedStubName = $this->buildStubName($className);
 

@@ -20,7 +20,7 @@ class FindParameterType
      * @param ParamNode $node
      * @return Type[]
      */
-    public function __invoke(ReflectionFunctionAbstract $function, ParamNode $node)
+    public function __invoke(ReflectionFunctionAbstract $function, ParamNode $node) : array
     {
         $docComment = $function->getDocComment();
 
@@ -53,7 +53,7 @@ class FindParameterType
      * @param ReflectionFunctionAbstract $function
      * @return Context
      */
-    private function createContextForFunction(ReflectionFunctionAbstract $function)
+    private function createContextForFunction(ReflectionFunctionAbstract $function) : Context
     {
         if ($function instanceof ReflectionMethod) {
             $function = $function->getDeclaringClass();

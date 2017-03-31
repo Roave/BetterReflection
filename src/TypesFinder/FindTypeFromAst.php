@@ -17,7 +17,7 @@ class FindTypeFromAst
      * @param string $namespace
      * @return \phpDocumentor\Reflection\Type|null
      */
-    public function __invoke($astType, LocatedSource $locatedSource, $namespace = '')
+    public function __invoke($astType, LocatedSource $locatedSource, string $namespace = '')
     {
         $context = (new ContextFactory())->createForNamespace(
             $namespace,

@@ -19,7 +19,6 @@ class_alias(\Roave\BetterReflection\Reflection\Exception\InvalidDefaultValueType
 class_alias(\Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound::class, \BetterReflection\Reflection\Exception\MethodPrototypeNotFound::class);
 class_alias(\Roave\BetterReflection\Reflection\Exception\NoParent::class, \BetterReflection\Reflection\Exception\NoParent::class);
 class_alias(\Roave\BetterReflection\Reflection\Exception\NotAClassReflection::class, \BetterReflection\Reflection\Exception\NotAClassReflection::class);
-class_alias(\Roave\BetterReflection\Reflection\Exception\NotAString::class, \BetterReflection\Reflection\Exception\NotAString::class);
 class_alias(\Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection::class, \BetterReflection\Reflection\Exception\NotAnInterfaceReflection::class);
 class_alias(\Roave\BetterReflection\Reflection\Exception\NotAnObject::class, \BetterReflection\Reflection\Exception\NotAnObject::class);
 class_alias(\Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist::class, \BetterReflection\Reflection\Exception\PropertyDoesNotExist::class);

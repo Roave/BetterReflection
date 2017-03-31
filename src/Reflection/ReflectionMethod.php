@@ -22,7 +22,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         Reflector $reflector,
         MethodNode $node,
         ReflectionClass $declaringClass
-    ) {
+    ) : self {
         $method = new self();
         $method->declaringClass = $declaringClass;
 
@@ -40,7 +40,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param string $methodName
      * @return ReflectionMethod
      */
-    public static function createFromName($className, $methodName)
+    public static function createFromName(string $className, string $methodName) : self
     {
         return ReflectionClass::createFromName($className)->getMethod($methodName);
     }
@@ -52,7 +52,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param string $methodName
      * @return ReflectionMethod
      */
-    public static function createFromInstance($instance, $methodName)
+    public static function createFromInstance($instance, string $methodName) : self
     {
         return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
     }
@@ -64,7 +64,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @return ReflectionMethod
      * @throws Exception\MethodPrototypeNotFound
      */
-    public function getPrototype()
+    public function getPrototype() : self
     {
         $i = $this->getDeclaringClass();
 
@@ -98,7 +98,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return int
      */
-    public function getModifiers()
+    public function getModifiers() : int
     {
         $val = 0;
         $val += $this->isStatic() ? \ReflectionMethod::IS_STATIC : 0;
@@ -115,7 +115,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
@@ -143,7 +143,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return string
      */
-    private function getVisibilityAsString()
+    private function getVisibilityAsString() : string
     {
         if ($this->isPrivate()) {
             return 'private';
@@ -162,7 +162,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @throws \RuntimeException
      * @return MethodNode
      */
-    private function getMethodNode()
+    private function getMethodNode() : MethodNode
     {
         if (!($this->getNode() instanceof MethodNode)) {
             throw new \RuntimeException('Expected a ClassMethod node');
@@ -175,7 +175,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isAbstract()
+    public function isAbstract() : bool
     {
         return $this->getMethodNode()->isAbstract();
     }
@@ -185,7 +185,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isFinal()
+    public function isFinal() : bool
     {
         return $this->getMethodNode()->isFinal();
     }
@@ -195,7 +195,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isPrivate()
+    public function isPrivate() : bool
     {
         return $this->getMethodNode()->isPrivate();
     }
@@ -205,7 +205,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isProtected()
+    public function isProtected() : bool
     {
         return $this->getMethodNode()->isProtected();
     }
@@ -215,7 +215,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isPublic()
+    public function isPublic() : bool
     {
         return $this->getMethodNode()->isPublic();
     }
@@ -225,7 +225,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isStatic()
+    public function isStatic() : bool
     {
         return $this->getMethodNode()->isStatic();
     }
@@ -235,7 +235,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isConstructor()
+    public function isConstructor() : bool
     {
         return $this->getName() === '__construct';
     }
@@ -245,7 +245,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return bool
      */
-    public function isDestructor()
+    public function isDestructor() : bool
     {
         return $this->getName() === '__destruct';
     }
@@ -255,7 +255,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @return ReflectionClass
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass() : ReflectionClass
     {
         return $this->declaringClass;
     }

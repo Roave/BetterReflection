@@ -26,6 +26,8 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 
     public function testReflectProxiesToSourceLocator()
     {
+        $reflection = $this->createMock(ReflectionClass::class);
+
         /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
             ->setConstructorArgs(['<?php'])
@@ -35,11 +37,11 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         $sourceLocator
             ->expects($this->once())
             ->method('locateIdentifier')
-            ->will($this->returnValue('foo'));
+            ->will($this->returnValue($reflection));
 
         $reflector = new ClassReflector($sourceLocator);
 
-        $this->assertSame('foo', $reflector->reflect('MyClass'));
+        $this->assertSame($reflection, $reflector->reflect('MyClass'));
     }
 
     public function testBuildDefaultReflector()

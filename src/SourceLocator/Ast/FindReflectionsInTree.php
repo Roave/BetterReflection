@@ -33,7 +33,7 @@ final class FindReflectionsInTree
      * @param LocatedSource $locatedSource
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
-    public function __invoke(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
+    public function __invoke(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource) : array
     {
         return $this->reflectFromTree($reflector, $ast, $identifierType, $locatedSource);
     }
@@ -64,7 +64,7 @@ final class FindReflectionsInTree
         Node\Stmt\Namespace_ $namespace,
         IdentifierType $identifierType,
         LocatedSource $locatedSource
-    ) {
+    ) : array {
         $reflections = [];
         foreach ($namespace->stmts as $node) {
             $reflection = $this->reflectNode($reflector, $node, $locatedSource, $namespace);
@@ -86,7 +86,7 @@ final class FindReflectionsInTree
      * @param LocatedSource $locatedSource
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
-    private function reflectFromTree(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
+    private function reflectFromTree(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource) : array
     {
         $reflections = [];
         foreach ($ast as $node) {

@@ -41,7 +41,7 @@ class FileIteratorSourceLocator implements SourceLocator
     /**
      * @return AggregateSourceLocator
      */
-    private function getAggregatedSourceLocator()
+    private function getAggregatedSourceLocator() : AggregateSourceLocator
     {
         return $this->aggregateSourceLocator ?
             $this->aggregateSourceLocator : new AggregateSourceLocator(array_values(array_filter(array_map(
@@ -67,7 +67,7 @@ class FileIteratorSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         return $this->getAggregatedSourceLocator()->locateIdentifiersByType($reflector, $identifierType);
     }

@@ -4,6 +4,7 @@ namespace Roave\BetterReflection\Reflector;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
@@ -28,7 +29,7 @@ class ClassReflector implements Reflector
     /**
      * @return self
      */
-    public static function buildDefaultReflector()
+    public static function buildDefaultReflector() : self
     {
         return new self(new AggregateSourceLocator([
             new PhpInternalSourceLocator(),
@@ -41,10 +42,10 @@ class ClassReflector implements Reflector
      * Create a ReflectionClass for the specified $className.
      *
      * @param string $className
-     * @return \Roave\BetterReflection\Reflection\ReflectionClass
+     * @return \Roave\BetterReflection\Reflection\ReflectionClass|Reflection
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    public function reflect($className)
+    public function reflect(string $className) : Reflection
     {
         $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -62,7 +63,7 @@ class ClassReflector implements Reflector
      *
      * @return \Roave\BetterReflection\Reflection\ReflectionClass[]
      */
-    public function getAllClasses()
+    public function getAllClasses() : array
     {
         return $this->sourceLocator->locateIdentifiersByType(
             $this,

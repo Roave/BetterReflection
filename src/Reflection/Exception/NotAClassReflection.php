@@ -11,7 +11,7 @@ class NotAClassReflection extends \UnexpectedValueException
      *
      * @return self
      */
-    public static function fromReflectionClass(ReflectionClass $class)
+    public static function fromReflectionClass(ReflectionClass $class) : self
     {
         $type = 'interface';
 

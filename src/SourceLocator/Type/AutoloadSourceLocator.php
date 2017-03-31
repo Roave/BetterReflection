@@ -23,6 +23,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier)
     {
@@ -69,9 +71,9 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * error handler temporarily.
      *
      * @param string $className
-     * @return string
+     * @return string|null
      */
-    private function locateClassByName($className)
+    private function locateClassByName(string $className)
     {
         if (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false)) {
             return (new \ReflectionClass($className))->getFileName();
@@ -96,7 +98,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @param string $functionName
      * @return string|null
      */
-    private function locateFunctionByName($functionName)
+    private function locateFunctionByName(string $functionName)
     {
         if (!function_exists($functionName)) {
             return null;

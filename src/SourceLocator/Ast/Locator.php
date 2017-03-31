@@ -41,7 +41,7 @@ class Locator
      * @return Reflection
      * @throws Exception\ParseToAstFailure
      */
-    public function findReflection(Reflector $reflector, LocatedSource $locatedSource, Identifier $identifier)
+    public function findReflection(Reflector $reflector, LocatedSource $locatedSource, Identifier $identifier) : Reflection
     {
         return $this->findInArray(
             $this->findReflectionsOfType(
@@ -62,7 +62,7 @@ class Locator
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      * @throws Exception\ParseToAstFailure
      */
-    public function findReflectionsOfType(Reflector $reflector, LocatedSource $locatedSource, IdentifierType $identifierType)
+    public function findReflectionsOfType(Reflector $reflector, LocatedSource $locatedSource, IdentifierType $identifierType) : array
     {
         try {
             return $this->findReflectionsInTree->__invoke(
@@ -85,7 +85,7 @@ class Locator
      * @param Identifier $identifier
      * @return Reflection
      */
-    private function findInArray($reflections, Identifier $identifier)
+    private function findInArray(array $reflections, Identifier $identifier) : Reflection
     {
         foreach ($reflections as $reflection) {
             if ($reflection->getName() === $identifier->getName()) {

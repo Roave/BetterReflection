@@ -49,23 +49,21 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     public function exceptionCasesProvider()
     {
         return [
-            [123, null, InvalidArgumentException::class, 'Source code must be a string'],
-            ['foo', 123, InvalidArgumentException::class, 'Filename must be a string or null'],
+            [123, InvalidArgumentException::class, 'Filename must be a string or null'],
         ];
     }
 
     /**
-     * @param string $source
-     * @param string $file
+     * @param mixed $file
      * @param string $expectedException
      * @param string $expectedMessage
      * @dataProvider exceptionCasesProvider
      */
-    public function testThrowsExceptionWhenInvalidValuesGiven($source, $file, $expectedException, $expectedMessage)
+    public function testThrowsExceptionWhenInvalidValuesGiven($file, string $expectedException, string $expectedMessage)
     {
         $this->expectException($expectedException);
         $this->expectExceptionMessage($expectedMessage);
-        new LocatedSource($source, $file);
+        new LocatedSource(uniqid('source', true), $file);
     }
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()

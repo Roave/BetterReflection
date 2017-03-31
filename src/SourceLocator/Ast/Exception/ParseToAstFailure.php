@@ -11,7 +11,7 @@ class ParseToAstFailure extends \RuntimeException
      * @param \Exception|\Throwable $previous
      * @return ParseToAstFailure
      */
-    public static function fromLocatedSource(LocatedSource $locatedSource, $previous = null)
+    public static function fromLocatedSource(LocatedSource $locatedSource, \Throwable $previous = null) : self
     {
         $additionalInformation = '';
         if (null !== $locatedSource->getFileName()) {
