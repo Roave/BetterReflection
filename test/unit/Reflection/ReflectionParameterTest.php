@@ -49,6 +49,14 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('index', $parameterInfo->getName());
     }
 
+    public function testCreateFromCallable()
+    {
+        $parameterInfo = ReflectionParameter::createFormClosure(function ($a) {}, 'a');
+
+        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        $this->assertSame('a', $parameterInfo->getName());
+    }
+
     public function testCreateFromSpecWithArray()
     {
         $parameterInfo = ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
@@ -77,9 +85,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromSpecWithClosure()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Creating by closure is not supported yet');
-        ReflectionParameter::createFromSpec(function ($a) {}, 'a');
+        $parameterInfo = ReflectionParameter::createFromSpec(function ($a) {}, 'a');
+
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('a', $parameterInfo->getName());
     }
 
     public function testCreateFromSpecWithInvalidArgumentThrowsException()
