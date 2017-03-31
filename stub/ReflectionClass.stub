@@ -185,7 +185,7 @@ class ReflectionClass implements Reflector
     {
     }
 
-    public function isIterateable()
+    public function isIterable()
     {
     }
 

@@ -719,7 +719,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($reflector->reflect(ClassesWithCloneMethod\WithPrivateClone::class)->isCloneable());
     }
 
-    public function testIsIterateable()
+    public function testIsIterable()
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesImplementingIterators.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -727,22 +727,22 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             $reflector
                 ->reflect(ClassesImplementingIterators\TraversableImplementation::class)
-                ->isIterateable()
+                ->isIterable()
         );
         $this->assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\NonTraversableImplementation::class)
-                ->isIterateable()
+                ->isIterable()
         );
         $this->assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\AbstractTraversableImplementation::class)
-                ->isIterateable()
+                ->isIterable()
         );
         $this->assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\TraversableExtension::class)
-                ->isIterateable()
+                ->isIterable()
         );
     }
 

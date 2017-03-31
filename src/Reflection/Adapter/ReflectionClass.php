@@ -378,9 +378,9 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isIterateable()
+    public function isIterable()
     {
-        return $this->betterReflectionClass->isIterateable();
+        return $this->betterReflectionClass->isIterable();
     }
 
     /**

@@ -310,7 +310,7 @@ Class [ <internal:Reflection> class ReflectionClass implements Reflector ] {
       }
     }
 
-    Method [ <internal:Reflection> public method isIterateable ] {
+    Method [ <internal:Reflection> public method isIterable ] {
 
       - Parameters [0] {
       }

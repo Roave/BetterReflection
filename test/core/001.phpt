@@ -51,7 +51,7 @@ $exp = array (
   'UMLClass::isSubclassOf',
   'UMLClass::getStaticProperties',
   'UMLClass::getDefaultProperties',
-  'UMLClass::isIterateable',
+  'UMLClass::isIterable',
   'UMLClass::implementsInterface',
   'UMLClass::getExtension',
   'UMLClass::getExtensionName');

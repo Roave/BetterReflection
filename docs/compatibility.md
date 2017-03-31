@@ -41,7 +41,7 @@
 | isInstantiable | :heavy_check_mark: Yes  |
 | isInterface | :heavy_check_mark: Yes |
 | isInternal | :heavy_check_mark: Yes |
-| isIterateable | :heavy_check_mark: Yes  |
+| isIterable | :heavy_check_mark: Yes  |
 | isSubclassOf | :heavy_check_mark: Yes  |
 | isTrait | :heavy_check_mark: Yes |
 | isUserDefined | :heavy_check_mark: Yes |

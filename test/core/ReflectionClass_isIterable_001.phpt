@@ -1,5 +1,5 @@
 --TEST--
-ReflectionClass::isIterateable()
+ReflectionClass::isIterable()
 --CREDITS--
 Robin Fernandes <robinf@php.net>
 Steve Seear <stevseea@php.net>
@@ -32,21 +32,21 @@ $classes = array('Traversable', 'Iterator', 'IteratorAggregate', 'ExtendsIterato
 foreach($classes as $class) {
 	$rc = new ReflectionClass($class);
 	echo "Is $class iterable? ";
-	var_dump($rc->isIterateable());
+	var_dump($rc->isIterable());
 }
 
 echo "\nTest invalid params:\n";
 $rc = new ReflectionClass('IteratorImpl');
-var_dump($rc->isIterateable(null));
-var_dump($rc->isIterateable(null, null));
-var_dump($rc->isIterateable(1));
-var_dump($rc->isIterateable(1.5));
-var_dump($rc->isIterateable(true));
-var_dump($rc->isIterateable('X'));
-var_dump($rc->isIterateable(null));
+var_dump($rc->isIterable(null));
+var_dump($rc->isIterable(null, null));
+var_dump($rc->isIterable(1));
+var_dump($rc->isIterable(1.5));
+var_dump($rc->isIterable(true));
+var_dump($rc->isIterable('X'));
+var_dump($rc->isIterable(null));
 
 echo "\nTest static invocation:\n";
-ReflectionClass::isIterateable();
+ReflectionClass::isIterable();
 
 ?>
 --EXPECTF--
@@ -63,30 +63,30 @@ Is A iterable? bool(false)
 
 Test invalid params:
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 1 given in %s on line 34
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 1 given in %s on line 34
 NULL
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 2 given in %s on line 35
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 2 given in %s on line 35
 NULL
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 1 given in %s on line 36
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 1 given in %s on line 36
 NULL
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 1 given in %s on line 37
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 1 given in %s on line 37
 NULL
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 1 given in %s on line 38
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 1 given in %s on line 38
 NULL
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 1 given in %s on line 39
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 1 given in %s on line 39
 NULL
 
-Warning: ReflectionClass::isIterateable() expects exactly 0 parameters, 1 given in %s on line 40
+Warning: ReflectionClass::isIterable() expects exactly 0 parameters, 1 given in %s on line 40
 NULL
 
 Test static invocation:
 
-Fatal error: Uncaught Error: Non-static method ReflectionClass::isIterateable() cannot be called statically in %s:43
+Fatal error: Uncaught Error: Non-static method ReflectionClass::isIterable() cannot be called statically in %s:43
 Stack trace:
 #0 {main}
   thrown in %s on line 43
