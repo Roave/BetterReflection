@@ -99,6 +99,19 @@ class ReflectionParameter implements \Reflector
     }
 
     /**
+     * Create a reflection of a parameter using a closure
+     *
+     * @param \Closure $closure
+     * @param string $parameterName
+     * @return ReflectionParameter
+     */
+    public static function createFromClosure(\Closure $closure, string $parameterName): ReflectionParameter
+    {
+        return ReflectionFunction::createFromClosure($closure)
+            ->getParameter($parameterName);
+    }
+
+    /**
      * Create the parameter from the given spec. Possible $spec parameters are:
      *
      *  - [$instance, 'method']
@@ -127,7 +140,7 @@ class ReflectionParameter implements \Reflector
         }
 
         if ($spec instanceof \Closure) {
-            throw new \Exception('Creating by closure is not supported yet');
+            return self::createFromClosure($spec, $parameterName);
         }
 
         throw new \InvalidArgumentException('Could not create reflection from the spec given');
