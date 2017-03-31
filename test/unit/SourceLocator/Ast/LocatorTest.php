@@ -37,7 +37,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
             $this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS)
         );
 
-        $this->assertInstanceOf(ReflectionClass::class, $classInfo);
+        self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
     public function testReflectingTopLevelClass()
@@ -52,7 +52,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
 
-        $this->assertInstanceOf(ReflectionClass::class, $classInfo);
+        self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
     public function testReflectingTopLevelFunction()
@@ -67,7 +67,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION)
         );
 
-        $this->assertInstanceOf(ReflectionFunction::class, $functionInfo);
+        self::assertInstanceOf(ReflectionFunction::class, $functionInfo);
     }
 
     public function testReflectThrowsExeptionWhenClassNotFoundAndNoNodesExist()

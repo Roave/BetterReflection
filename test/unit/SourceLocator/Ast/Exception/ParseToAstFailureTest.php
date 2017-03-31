@@ -18,9 +18,9 @@ class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
 
         $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 
-        $this->assertInstanceOf(ParseToAstFailure::class, $exception);
-        $this->assertSame('AST failed to parse in located source (first 20 characters: <?php abc)', $exception->getMessage());
-        $this->assertSame($previous, $exception->getPrevious());
+        self::assertInstanceOf(ParseToAstFailure::class, $exception);
+        self::assertSame('AST failed to parse in located source (first 20 characters: <?php abc)', $exception->getMessage());
+        self::assertSame($previous, $exception->getPrevious());
     }
 
     public function testFromLocatedSourceWithFilename()
@@ -35,8 +35,8 @@ class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
 
         $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 
-        $this->assertInstanceOf(ParseToAstFailure::class, $exception);
-        $this->assertSame('AST failed to parse in located source (in /foo/bar)', $exception->getMessage());
-        $this->assertSame($previous, $exception->getPrevious());
+        self::assertInstanceOf(ParseToAstFailure::class, $exception);
+        self::assertSame('AST failed to parse in located source (in /foo/bar)', $exception->getMessage());
+        self::assertSame($previous, $exception->getPrevious());
     }
 }

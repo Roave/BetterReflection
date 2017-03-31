@@ -57,7 +57,7 @@ class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
         $traverser->traverse($statements);
 
         $foundNodes = $visitor->getReturnNodes();
-        $this->assertCount($expectedReturns, $foundNodes);
-        $this->assertContainsOnlyInstancesOf(Node\Stmt\Return_::class, $foundNodes);
+        self::assertCount($expectedReturns, $foundNodes);
+        self::assertContainsOnlyInstancesOf(Node\Stmt\Return_::class, $foundNodes);
     }
 }

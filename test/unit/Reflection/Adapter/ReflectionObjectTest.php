@@ -29,7 +29,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     public function testCoreReflectionMethods($methodName)
     {
         $reflectionObjectAdapterReflection = new CoreReflectionClass(ReflectionObjectAdapter::class);
-        $this->assertTrue($reflectionObjectAdapterReflection->hasMethod($methodName));
+        self::assertTrue($reflectionObjectAdapterReflection->hasMethod($methodName));
     }
 
     public function methodExpectationProvider()
@@ -122,7 +122,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     {
         $exported = ReflectionObjectAdapter::export(new \stdClass());
 
-        $this->assertInternalType('string', $exported);
-        $this->assertContains('stdClass', $exported);
+        self::assertInternalType('string', $exported);
+        self::assertContains('stdClass', $exported);
     }
 }

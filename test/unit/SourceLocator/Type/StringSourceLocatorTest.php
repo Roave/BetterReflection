@@ -27,7 +27,7 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new StringSourceLocator($sourceCode);
 
-        $this->assertNull($locator->locateIdentifier(
+        self::assertNull($locator->locateIdentifier(
             $this->getMockReflector(),
             new Identifier(
                 'does not matter what the class name is',
@@ -50,7 +50,7 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame('Foo', $reflectionClass->getName());
+        self::assertSame('Foo', $reflectionClass->getName());
     }
 
     public function testConstructorThrowsExceptionIfEmptyStringGiven()

@@ -55,10 +55,10 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
@@ -82,7 +82,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
             ->reflect('MyNamespace\ThingThatLogs')
             ->getProperty('logger');
 
-        $this->assertSame(['\Psr\Log\LoggerInterface'], $prop->getDocBlockTypeStrings());
+        self::assertSame(['\Psr\Log\LoggerInterface'], $prop->getDocBlockTypeStrings());
     }
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound()
@@ -106,7 +106,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
-        $this->assertSame([], $foundTypes);
+        self::assertSame([], $foundTypes);
     }
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent()

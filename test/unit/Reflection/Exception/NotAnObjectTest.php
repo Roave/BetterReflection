@@ -14,7 +14,7 @@ class NotAnObjectTest extends PHPUnit_Framework_TestCase
     {
         $exception = NotAnObject::fromNonObject(123);
 
-        $this->assertInstanceOf(NotAnObject::class, $exception);
-        $this->assertSame('Provided "integer" is not an object', $exception->getMessage());
+        self::assertInstanceOf(NotAnObject::class, $exception);
+        self::assertSame('Provided "integer" is not an object', $exception->getMessage());
     }
 }

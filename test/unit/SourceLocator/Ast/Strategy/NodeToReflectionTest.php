@@ -37,8 +37,8 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
             null
         );
 
-        $this->assertInstanceOf(ReflectionClass::class, $reflection);
-        $this->assertSame('Foo', $reflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('Foo', $reflection->getName());
     }
 
     public function testReturnsReflectionForTraitNode()
@@ -55,9 +55,9 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
             null
         );
 
-        $this->assertInstanceOf(ReflectionClass::class, $reflection);
-        $this->assertSame('Foo', $reflection->getName());
-        $this->assertTrue($reflection->isTrait());
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('Foo', $reflection->getName());
+        self::assertTrue($reflection->isTrait());
     }
 
     public function testReturnsReflectionForInterfaceNode()
@@ -74,9 +74,9 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
             null
         );
 
-        $this->assertInstanceOf(ReflectionClass::class, $reflection);
-        $this->assertSame('Foo', $reflection->getName());
-        $this->assertTrue($reflection->isInterface());
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('Foo', $reflection->getName());
+        self::assertTrue($reflection->isInterface());
     }
 
     public function testReturnsReflectionForFunctionNode()
@@ -93,8 +93,8 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
             null
         );
 
-        $this->assertInstanceOf(ReflectionFunction::class, $reflection);
-        $this->assertSame('foo', $reflection->getName());
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
+        self::assertSame('foo', $reflection->getName());
     }
 
     public function testReturnsNullWhenIncompatibleNodeFound()
@@ -104,7 +104,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
 
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 
-        $this->assertNull((new NodeToReflection())->__invoke(
+        self::assertNull((new NodeToReflection())->__invoke(
             $reflector,
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,

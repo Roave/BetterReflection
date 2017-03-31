@@ -43,8 +43,8 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             );
             $source = $reflection->getLocatedSource();
 
-            $this->assertInstanceOf(InternalLocatedSource::class, $source);
-            $this->assertNotEmpty($source->getSource());
+            self::assertInstanceOf(InternalLocatedSource::class, $source);
+            self::assertNotEmpty($source->getSource());
         } catch (\ReflectionException $e) {
             $this->markTestIncomplete(sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
@@ -80,15 +80,15 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             ));
         }
 
-        $this->assertInstanceOf(ReflectionClass::class, $class);
-        $this->assertSame($className, $class->getName());
-        $this->assertTrue($class->isInternal());
-        $this->assertFalse($class->isUserDefined());
+        self::assertInstanceOf(ReflectionClass::class, $class);
+        self::assertSame($className, $class->getName());
+        self::assertTrue($class->isInternal());
+        self::assertFalse($class->isUserDefined());
 
         $internalReflection = new \ReflectionClass($className);
 
-        $this->assertSame($internalReflection->isInterface(), $class->isInterface());
-        $this->assertSame($internalReflection->isTrait(), $class->isTrait());
+        self::assertSame($internalReflection->isInterface(), $class->isInterface());
+        self::assertSame($internalReflection->isTrait(), $class->isTrait());
     }
 
     /**
@@ -122,7 +122,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testReturnsNullForNonExistentCode()
     {
         $locator = new PhpInternalSourceLocator();
-        $this->assertNull(
+        self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier(
@@ -136,7 +136,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testReturnsNullForFunctions()
     {
         $locator = new PhpInternalSourceLocator();
-        $this->assertNull(
+        self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier(
@@ -166,7 +166,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $reflector = new ClassReflector(new PhpInternalSourceLocator());
 
-        $this->assertSameClassAttributes(new \ReflectionClass($className), $reflector->reflect($className));
+        self::assertSameClassAttributes(new \ReflectionClass($className), $reflector->reflect($className));
     }
 
     /**
@@ -194,14 +194,14 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     private function assertSameClassAttributes(\ReflectionClass $original, ReflectionClass $stubbed)
     {
-        $this->assertSame($original->getName(), $stubbed->getName());
+        self::assertSame($original->getName(), $stubbed->getName());
 
         $internalParent     = $original->getParentClass();
         $betterParent       = $stubbed->getParentClass();
         $internalParentName = $internalParent ? $internalParent->getName() : null;
         $betterParentName   = $betterParent ? $betterParent->getName() : null;
 
-        $this->assertSame($internalParentName, $betterParentName);
+        self::assertSame($internalParentName, $betterParentName);
 
         $originalMethods = $original->getMethods();
 
@@ -222,17 +222,17 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         sort($originalMethodNames);
         sort($stubbedMethodNames);
 
-        $this->assertSame($originalMethodNames, $stubbedMethodNames);
-        $this->assertEquals($original->getConstants(), $stubbed->getConstants());
+        self::assertSame($originalMethodNames, $stubbedMethodNames);
+        self::assertEquals($original->getConstants(), $stubbed->getConstants());
 
         foreach ($originalMethods as $method) {
-            $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
+            self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
     }
 
     private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed)
     {
-        $this->assertSame(
+        self::assertSame(
             array_map(
                 function (\ReflectionParameter $parameter) {
                     return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
@@ -248,35 +248,35 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($original->getParameters() as $parameter) {
-            $this->assertSameParameterAttributes($parameter, $stubbed->getParameter($parameter->getName()));
+            self::assertSameParameterAttributes($parameter, $stubbed->getParameter($parameter->getName()));
         }
 
-        $this->assertSame($original->isPublic(), $stubbed->isPublic());
-        $this->assertSame($original->isPrivate(), $stubbed->isPrivate());
-        $this->assertSame($original->isProtected(), $stubbed->isProtected());
-        $this->assertSame($original->returnsReference(), $stubbed->returnsReference());
-        $this->assertSame($original->isStatic(), $stubbed->isStatic());
-        $this->assertSame($original->isFinal(), $stubbed->isFinal());
+        self::assertSame($original->isPublic(), $stubbed->isPublic());
+        self::assertSame($original->isPrivate(), $stubbed->isPrivate());
+        self::assertSame($original->isProtected(), $stubbed->isProtected());
+        self::assertSame($original->returnsReference(), $stubbed->returnsReference());
+        self::assertSame($original->isStatic(), $stubbed->isStatic());
+        self::assertSame($original->isFinal(), $stubbed->isFinal());
     }
 
     private function assertSameParameterAttributes(\ReflectionParameter $original, ReflectionParameter $stubbed)
     {
-        $this->assertSame($original->getName(), $stubbed->getName());
-        $this->assertSame($original->isArray(), $stubbed->isArray());
-        $this->assertSame($original->isCallable(), $stubbed->isCallable());
-        //$this->assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
-        $this->assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue());
-        $this->assertSame($original->isOptional(), $stubbed->isOptional());
-        $this->assertSame($original->isPassedByReference(), $stubbed->isPassedByReference());
-        $this->assertSame($original->isVariadic(), $stubbed->isVariadic());
+        self::assertSame($original->getName(), $stubbed->getName());
+        self::assertSame($original->isArray(), $stubbed->isArray());
+        self::assertSame($original->isCallable(), $stubbed->isCallable());
+        //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
+        self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue());
+        self::assertSame($original->isOptional(), $stubbed->isOptional());
+        self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference());
+        self::assertSame($original->isVariadic(), $stubbed->isVariadic());
 
         if ($class = $original->getClass()) {
             $stubbedClass = $stubbed->getClass();
 
-            $this->assertInstanceOf(ReflectionClass::class, $stubbedClass);
-            $this->assertSame($class->getName(), $stubbedClass->getName());
+            self::assertInstanceOf(ReflectionClass::class, $stubbedClass);
+            self::assertSame($class->getName(), $stubbedClass->getName());
         } else {
-            $this->assertNull($stubbed->getClass());
+            self::assertNull($stubbed->getClass());
         }
     }
 }

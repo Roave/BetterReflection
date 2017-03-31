@@ -17,8 +17,8 @@ class InvalidAbstractFunctionNodeTypeTest extends PHPUnit_Framework_TestCase
         $node = new Node\Scalar\LNumber(5);
         $exception = InvalidAbstractFunctionNodeType::fromNode($node);
 
-        $this->assertInstanceOf(InvalidAbstractFunctionNodeType::class, $exception);
-        $this->assertSame(sprintf(
+        self::assertInstanceOf(InvalidAbstractFunctionNodeType::class, $exception);
+        self::assertSame(sprintf(
             'Node for "%s" must be "%s" or "%s", was a "%s"',
             ReflectionFunctionAbstract::class,
             Node\Stmt\ClassMethod::class,

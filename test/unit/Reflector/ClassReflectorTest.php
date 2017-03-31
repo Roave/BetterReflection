@@ -20,8 +20,8 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php')
         ))->getAllClasses();
 
-        $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        $this->assertCount(8, $classes);
+        self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
+        self::assertCount(8, $classes);
     }
 
     public function testReflectProxiesToSourceLocator()
@@ -41,7 +41,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 
         $reflector = new ClassReflector($sourceLocator);
 
-        $this->assertSame($reflection, $reflector->reflect('MyClass'));
+        self::assertSame($reflection, $reflector->reflect('MyClass'));
     }
 
     public function testBuildDefaultReflector()
@@ -49,7 +49,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         $defaultReflector = ClassReflector::buildDefaultReflector();
 
         $sourceLocator = $this->getObjectAttribute($defaultReflector, 'sourceLocator');
-        $this->assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
+        self::assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
     }
 
     public function testThrowsExceptionWhenIdentifierNotFound()

@@ -27,7 +27,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     public function testCoreReflectionPropertys($methodName)
     {
         $reflectionPropertyAdapterReflection = new CoreReflectionClass(ReflectionPropertyAdapter::class);
-        $this->assertTrue($reflectionPropertyAdapterReflection->hasMethod($methodName));
+        self::assertTrue($reflectionPropertyAdapterReflection->hasMethod($methodName));
     }
 
     public function methodExpectationProvider()

@@ -26,7 +26,7 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
 
     public function testCanStubClass()
     {
-        $this->assertStringMatchesFormat(
+        self::assertStringMatchesFormat(
             '%Aclass stdClass%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection('stdClass'))
         );
@@ -34,7 +34,7 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
 
     public function testCanStubInterface()
     {
-        $this->assertStringMatchesFormat(
+        self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection(\Traversable::class))
         );
@@ -42,7 +42,7 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
 
     public function testCanStubTraits()
     {
-        $this->assertStringMatchesFormat(
+        self::assertStringMatchesFormat(
             '%Atrait EmptyTrait%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection(EmptyTrait::class))
         );

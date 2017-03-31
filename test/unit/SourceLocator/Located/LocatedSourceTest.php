@@ -17,10 +17,10 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $file = __DIR__ . '/../../Fixture/NoNamespace.php';
         $locatedSource = new LocatedSource($source, $file);
 
-        $this->assertSame($source, $locatedSource->getSource());
-        $this->assertSame($file, $locatedSource->getFileName());
-        $this->assertFalse($locatedSource->isEvaled());
-        $this->assertFalse($locatedSource->isInternal());
+        self::assertSame($source, $locatedSource->getSource());
+        self::assertSame($file, $locatedSource->getFileName());
+        self::assertFalse($locatedSource->isEvaled());
+        self::assertFalse($locatedSource->isInternal());
     }
 
     public function testValuesWithNullFilename()
@@ -29,10 +29,10 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $file = null;
         $locatedSource = new LocatedSource($source, $file);
 
-        $this->assertSame($source, $locatedSource->getSource());
-        $this->assertNull($locatedSource->getFileName());
-        $this->assertFalse($locatedSource->isEvaled());
-        $this->assertFalse($locatedSource->isInternal());
+        self::assertSame($source, $locatedSource->getSource());
+        self::assertNull($locatedSource->getFileName());
+        self::assertFalse($locatedSource->isEvaled());
+        self::assertFalse($locatedSource->isInternal());
     }
 
     public function testEmptyStringSourceAllowed()

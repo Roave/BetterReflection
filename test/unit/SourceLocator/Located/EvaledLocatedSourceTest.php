@@ -13,9 +13,9 @@ class EvaledLocatedSourceTest extends \PHPUnit_Framework_TestCase
     {
         $locatedSource = new EvaledLocatedSource('foo');
 
-        $this->assertSame('foo', $locatedSource->getSource());
-        $this->assertNull($locatedSource->getFileName());
-        $this->assertFalse($locatedSource->isInternal());
-        $this->assertTrue($locatedSource->isEvaled());
+        self::assertSame('foo', $locatedSource->getSource());
+        self::assertNull($locatedSource->getFileName());
+        self::assertFalse($locatedSource->isInternal());
+        self::assertTrue($locatedSource->isEvaled());
     }
 }

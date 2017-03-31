@@ -30,7 +30,7 @@ class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($reflection));
 
         $reflector = new FunctionReflector($sourceLocator);
-        $this->assertSame($reflection, $reflector->reflect('foo'));
+        self::assertSame($reflection, $reflector->reflect('foo'));
     }
 
     public function testGetFunctionsFromFile()

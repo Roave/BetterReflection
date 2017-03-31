@@ -29,7 +29,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
     public function testPossibleIdentifierTypes($full)
     {
         $type = new IdentifierType($full);
-        $this->assertSame($full, $type->getName());
+        self::assertSame($full, $type->getName());
     }
 
     public function testThrowsAnExceptionWhenInvalidTypeGiven()
@@ -45,7 +45,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
 
         $type = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        $this->assertTrue($type->isMatchingReflector($reflectionClass));
+        self::assertTrue($type->isMatchingReflector($reflectionClass));
     }
 
     public function testIsMatchingReflectorFunction()
@@ -54,7 +54,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
 
         $type = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
 
-        $this->assertTrue($type->isMatchingReflector($reflectionFunction));
+        self::assertTrue($type->isMatchingReflector($reflectionFunction));
     }
 
     public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid()
@@ -70,22 +70,22 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
 
         $reflectionClass = $this->createMock(ReflectionClass::class);
 
-        $this->assertFalse($classType->isMatchingReflector($reflectionClass));
+        self::assertFalse($classType->isMatchingReflector($reflectionClass));
     }
 
     public function testIsTypesForClass()
     {
         $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        $this->assertTrue($classType->isClass());
-        $this->assertFalse($classType->isFunction());
+        self::assertTrue($classType->isClass());
+        self::assertFalse($classType->isFunction());
     }
 
     public function testIsTypesForFunction()
     {
         $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
 
-        $this->assertFalse($functionType->isClass());
-        $this->assertTrue($functionType->isFunction());
+        self::assertFalse($functionType->isClass());
+        self::assertTrue($functionType->isFunction());
     }
 }

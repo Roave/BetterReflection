@@ -27,7 +27,7 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $locator = new SingleFileSourceLocator($fileName);
 
-        $this->assertNull($locator->locateIdentifier(
+        self::assertNull($locator->locateIdentifier(
             $this->getMockReflector(),
             new Identifier(
                 'does not matter what the class name is',
@@ -50,7 +50,7 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame('ClassWithNoNamespace', $reflectionClass->getName());
+        self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
     }
 
     public function testConstructorThrowsExceptionIfEmptyFileGiven()

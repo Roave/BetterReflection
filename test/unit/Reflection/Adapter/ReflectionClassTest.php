@@ -27,7 +27,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testCoreReflectionMethods($methodName)
     {
         $reflectionClassAdapterReflection = new CoreReflectionClass(ReflectionClassAdapter::class);
-        $this->assertTrue($reflectionClassAdapterReflection->hasMethod($methodName));
+        self::assertTrue($reflectionClassAdapterReflection->hasMethod($methodName));
     }
 
     public function methodExpectationProvider()
@@ -120,7 +120,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $exported = ReflectionClassAdapter::export('\stdClass');
 
-        $this->assertInternalType('string', $exported);
-        $this->assertContains('stdClass', $exported);
+        self::assertInternalType('string', $exported);
+        self::assertContains('stdClass', $exported);
     }
 }

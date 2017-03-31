@@ -19,7 +19,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
 
-        $this->assertInstanceOf(\Reflector::class, $functionInfo);
+        self::assertInstanceOf(\Reflector::class, $functionInfo);
     }
 
     public function testNameMethodsWithNoNamespace()
@@ -29,10 +29,10 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $this->assertFalse($function->inNamespace());
-        $this->assertSame('foo', $function->getName());
-        $this->assertSame('', $function->getNamespaceName());
-        $this->assertSame('foo', $function->getShortName());
+        self::assertFalse($function->inNamespace());
+        self::assertSame('foo', $function->getName());
+        self::assertSame('', $function->getNamespaceName());
+        self::assertSame('foo', $function->getShortName());
     }
 
     public function testNameMethodsInNamespace()
@@ -42,10 +42,10 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('A\B\foo');
 
-        $this->assertTrue($function->inNamespace());
-        $this->assertSame('A\B\foo', $function->getName());
-        $this->assertSame('A\B', $function->getNamespaceName());
-        $this->assertSame('foo', $function->getShortName());
+        self::assertTrue($function->inNamespace());
+        self::assertSame('A\B\foo', $function->getName());
+        self::assertSame('A\B', $function->getNamespaceName());
+        self::assertSame('foo', $function->getShortName());
     }
 
     public function testNameMethodsInExplicitGlobalNamespace()
@@ -55,10 +55,10 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $this->assertFalse($function->inNamespace());
-        $this->assertSame('foo', $function->getName());
-        $this->assertSame('', $function->getNamespaceName());
-        $this->assertSame('foo', $function->getShortName());
+        self::assertFalse($function->inNamespace());
+        self::assertSame('foo', $function->getName());
+        self::assertSame('', $function->getNamespaceName());
+        self::assertSame('foo', $function->getShortName());
     }
 
     public function testIsDisabled()
@@ -68,7 +68,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $this->assertFalse($function->isDisabled());
+        self::assertFalse($function->isDisabled());
     }
 
     public function testIsUserDefined()
@@ -78,14 +78,14 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
 
-        $this->assertTrue($function->isUserDefined());
+        self::assertTrue($function->isUserDefined());
     }
 
     public function testStaticCreationFromName()
     {
         require_once(__DIR__ . '/../Fixture/Functions.php');
         $reflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
-        $this->assertSame('myFunction', $reflection->getShortName());
+        self::assertSame('myFunction', $reflection->getShortName());
     }
 
     public function testCreateFromClosure()
@@ -94,7 +94,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
-        $this->assertSame('{closure}', $reflection->getShortName());
+        self::assertSame('{closure}', $reflection->getShortName());
     }
 
     public function testCreateFromClosureCanReflectTypeHints()
@@ -105,7 +105,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
         $theParam = $reflection->getParameter('theParam')->getClass();
-        $this->assertSame('stdClass', $theParam->getName());
+        self::assertSame('stdClass', $theParam->getName());
     }
 
     public function functionStringRepresentations()
@@ -126,7 +126,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         require_once(__DIR__ . '/../Fixture/Functions.php');
         $functionInfo = ReflectionFunction::createFromName($functionName);
 
-        $this->assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);
+        self::assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);
     }
 
     public function testGetDocBlockReturnTypes()
@@ -142,8 +142,8 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
 
         $types = $function->getDocBlockReturnTypes();
 
-        $this->assertInternalType('array', $types);
-        $this->assertCount(1, $types);
-        $this->assertInstanceOf(Boolean::class, $types[0]);
+        self::assertInternalType('array', $types);
+        self::assertCount(1, $types);
+        self::assertInstanceOf(Boolean::class, $types[0]);
     }
 }

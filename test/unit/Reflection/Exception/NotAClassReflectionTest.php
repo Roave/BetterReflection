@@ -20,8 +20,8 @@ class NotAClassReflectionTest extends PHPUnit_Framework_TestCase
 
         $exception = NotAClassReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleInterface::class));
 
-        $this->assertInstanceOf(NotAClassReflection::class, $exception);
-        $this->assertSame(
+        self::assertInstanceOf(NotAClassReflection::class, $exception);
+        self::assertSame(
             'Provided node "' . Fixture\ExampleInterface::class . '" is not class, but "interface"',
             $exception->getMessage()
         );
@@ -34,8 +34,8 @@ class NotAClassReflectionTest extends PHPUnit_Framework_TestCase
 
         $exception = NotAClassReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleTrait::class));
 
-        $this->assertInstanceOf(NotAClassReflection::class, $exception);
-        $this->assertSame(
+        self::assertInstanceOf(NotAClassReflection::class, $exception);
+        self::assertSame(
             'Provided node "' . Fixture\ExampleTrait::class . '" is not class, but "trait"',
             $exception->getMessage()
         );

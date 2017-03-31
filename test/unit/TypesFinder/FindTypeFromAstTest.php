@@ -42,13 +42,13 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
             'MyNamespace'
         );
 
-        $this->assertInstanceOf($expected, $resolvedType);
-        $this->assertSame($toStringValue, (string)$resolvedType);
+        self::assertInstanceOf($expected, $resolvedType);
+        self::assertSame($toStringValue, (string)$resolvedType);
     }
 
     public function testFindTypeFromAstReturnsNull()
     {
-        $this->assertNull(
+        self::assertNull(
             (new FindTypeFromAst())->__invoke(
                 null,
                 new LocatedSource('<?php', null)

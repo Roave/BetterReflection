@@ -51,11 +51,11 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
             return;
         }
 
-        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\ExampleClass::class, $test);
-        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
-        $this->assertClassNotLoaded(\ClassWithExplicitGlobalNamespace::class, $test);
-        $this->assertClassNotLoaded(\ClassWithNoNamespace::class, $test);
-        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\Methods::class, $test);
+        self::assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\ExampleClass::class, $test);
+        self::assertClassNotLoaded(\Roave\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
+        self::assertClassNotLoaded(\ClassWithExplicitGlobalNamespace::class, $test);
+        self::assertClassNotLoaded(\ClassWithNoNamespace::class, $test);
+        self::assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\Methods::class, $test);
     }
 
     /**

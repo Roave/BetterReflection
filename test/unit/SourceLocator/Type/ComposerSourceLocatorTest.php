@@ -43,7 +43,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         ));
 
-        $this->assertSame('ClassWithNoNamespace', $reflectionClass->getName());
+        self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
     }
 
     public function testInvokableThrowsExceptionWhenClassNotResolved()
@@ -61,7 +61,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
+        self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             $className,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         )));
@@ -74,7 +74,7 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
+        self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             'foo',
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         )));

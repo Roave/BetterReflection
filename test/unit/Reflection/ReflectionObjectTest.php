@@ -45,9 +45,9 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $foo = new \stdClass();
 
         $classInfo = ReflectionObject::createFromInstance($foo);
-        $this->assertInstanceOf(ReflectionObject::class, $classInfo);
-        $this->assertSame('stdClass', $classInfo->getName());
-        $this->assertTrue($classInfo->isInternal());
+        self::assertInstanceOf(ReflectionObject::class, $classInfo);
+        self::assertSame('stdClass', $classInfo->getName());
+        self::assertTrue($classInfo->isInternal());
     }
 
     public function testReflectionWorksWithEvaledClasses()
@@ -55,9 +55,9 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $foo = new ClassForHinting();
 
         $classInfo = ReflectionObject::createFromInstance($foo);
-        $this->assertInstanceOf(ReflectionObject::class, $classInfo);
-        $this->assertSame(ClassForHinting::class, $classInfo->getName());
-        $this->assertFalse($classInfo->isInternal());
+        self::assertInstanceOf(ReflectionObject::class, $classInfo);
+        self::assertSame(ClassForHinting::class, $classInfo->getName());
+        self::assertFalse($classInfo->isInternal());
     }
 
     public function testReflectionWorksWithDynamicallyDeclaredMembers()
@@ -68,9 +68,9 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $classInfo = ReflectionObject::createFromInstance($foo);
         $propInfo = $classInfo->getProperty('bar');
 
-        $this->assertInstanceOf(ReflectionProperty::class, $propInfo);
-        $this->assertSame('bar', $propInfo->getName());
-        $this->assertFalse($propInfo->isDefault());
+        self::assertInstanceOf(ReflectionProperty::class, $propInfo);
+        self::assertSame('bar', $propInfo->getName());
+        self::assertFalse($propInfo->isDefault());
     }
 
     public function testExceptionThrownWhenInvalidInstanceGiven()
@@ -138,7 +138,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     {
         // First, ensure the expected method even exists
         $publicObjectMethods = get_class_methods(ReflectionObject::class);
-        $this->assertContains($methodName, $publicObjectMethods);
+        self::assertContains($methodName, $publicObjectMethods);
 
         // Create a mock that will be used to assert that the named method will
         // be called when we call the same method on ReflectionObject
@@ -250,7 +250,7 @@ Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHintin
 BLAH;
         $actualExport = ReflectionObject::export($foo);
 
-        $this->assertStringMatchesFormat($expectedExport, $actualExport);
+        self::assertStringMatchesFormat($expectedExport, $actualExport);
     }
 
     public function testCannotClone()

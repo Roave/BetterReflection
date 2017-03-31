@@ -37,16 +37,16 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
     public function testCreateFromClassInstanceAndMethod()
     {
         $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList(), 'add', 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
     public function testCreateFromCallable()
@@ -61,8 +61,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     {
         $parameterInfo = ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
     public function testCreateFromSpecWithArrayWithInstance()
@@ -70,8 +70,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $splDoublyLinkedList = new \SplDoublyLinkedList();
         $parameterInfo = ReflectionParameter::createFromSpec([$splDoublyLinkedList, 'add'], 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
     public function testCreateFromSpecWithFunctionName()
@@ -79,8 +79,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
         $parameterInfo = ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'param1');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('param1', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('param1', $parameterInfo->getName());
     }
 
     public function testCreateFromSpecWithClosure()
@@ -104,7 +104,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('methodWithParameters');
         $paramInfo = $methodInfo->getParameter('parameter1');
 
-        $this->assertInstanceOf(\Reflector::class, $paramInfo);
+        self::assertInstanceOf(\Reflector::class, $paramInfo);
     }
 
     public function testExportThrowsException()
@@ -144,7 +144,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $paramInfo = $methodInfo->getParameter('var');
         $actualValue = $paramInfo->getDefaultValue();
 
-        $this->assertSame($expectedValue, $actualValue);
+        self::assertSame($expectedValue, $actualValue);
     }
 
     public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException()
@@ -168,10 +168,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithParameters');
 
         $param1 = $method->getParameter('parameter1');
-        $this->assertSame(['string'], $param1->getDocBlockTypeStrings());
+        self::assertSame(['string'], $param1->getDocBlockTypeStrings());
 
         $param2 = $method->getParameter('parameter2');
-        $this->assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
+        self::assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
     }
 
     public function testGetDocBlockTypes()
@@ -182,14 +182,14 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $param1 = $method->getParameter('parameter1');
         $param1Types = $param1->getDocBlockTypes();
-        $this->assertCount(1, $param1Types);
-        $this->assertInstanceOf(Types\String_::class, $param1Types[0]);
+        self::assertCount(1, $param1Types);
+        self::assertInstanceOf(Types\String_::class, $param1Types[0]);
 
         $param2 = $method->getParameter('parameter2');
         $param2Types = $param2->getDocBlockTypes();
-        $this->assertCount(2, $param2Types);
-        $this->assertInstanceOf(Types\Integer::class, $param2Types[0]);
-        $this->assertInstanceOf(Types\Float_::class, $param2Types[1]);
+        self::assertCount(2, $param2Types);
+        self::assertInstanceOf(Types\Integer::class, $param2Types[0]);
+        self::assertInstanceOf(Types\Float_::class, $param2Types[1]);
     }
 
     public function testStringCast()
@@ -198,10 +198,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithOptionalParameters');
 
         $requiredParam = $method->getParameter('parameter');
-        $this->assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
+        self::assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
 
         $optionalParam = $method->getParameter('optionalParameter');
-        $this->assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string)$optionalParam);
+        self::assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string)$optionalParam);
     }
 
     public function testGetPosition()
@@ -211,10 +211,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithParameters');
 
         $param1 = $method->getParameter('parameter1');
-        $this->assertSame(0, $param1->getPosition());
+        self::assertSame(0, $param1->getPosition());
 
         $param2 = $method->getParameter('parameter2');
-        $this->assertSame(1, $param2->getPosition());
+        self::assertSame(1, $param2->getPosition());
     }
 
     /**
@@ -245,14 +245,14 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
         $type = $method->getParameter($parameterToTest)->getTypeHint();
-        $this->assertInstanceOf($expectedType, $type);
+        self::assertInstanceOf($expectedType, $type);
 
         if (null !== $expectedFqsen) {
-            $this->assertSame($expectedFqsen, (string)$type->getFqsen());
+            self::assertSame($expectedFqsen, (string)$type->getFqsen());
         }
 
         if (null !== $expectedFqsenName) {
-            $this->assertSame($expectedFqsenName, $type->getFqsen()->getName());
+            self::assertSame($expectedFqsenName, $type->getFqsen()->getName());
         }
     }
 
@@ -262,9 +262,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('foo');
 
         $intParamType = $method->getParameter('intParam')->getType();
-        $this->assertSame('int', (string)$intParamType);
-        $this->assertTrue($intParamType->isBuiltin());
-        $this->assertFalse($intParamType->allowsNull());
+        self::assertSame('int', (string)$intParamType);
+        self::assertTrue($intParamType->isBuiltin());
+        self::assertFalse($intParamType->allowsNull());
     }
 
     public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin()
@@ -273,9 +273,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('foo');
 
         $classParamType = $method->getParameter('classParam')->getType();
-        $this->assertSame(\stdClass::class, (string)$classParamType);
-        $this->assertFalse($classParamType->isBuiltin());
-        $this->assertFalse($classParamType->allowsNull());
+        self::assertSame(\stdClass::class, (string)$classParamType);
+        self::assertFalse($classParamType->isBuiltin());
+        self::assertFalse($classParamType->allowsNull());
     }
 
     public function testPhp7TypeDeclarationWithoutType()
@@ -283,7 +283,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
-        $this->assertNull($method->getParameter('noTypeParam')->getType());
+        self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
     public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull()
@@ -292,9 +292,9 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('foo');
 
         $stringParamType = $method->getParameter('stringParamAllowsNull')->getType();
-        $this->assertSame('string', (string)$stringParamType);
-        $this->assertTrue($stringParamType->isBuiltin());
-        $this->assertTrue($stringParamType->allowsNull());
+        self::assertSame('string', (string)$stringParamType);
+        self::assertTrue($stringParamType->isBuiltin());
+        self::assertTrue($stringParamType->allowsNull());
     }
 
     public function testHasTypeReturnsTrueWithType()
@@ -302,7 +302,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
-        $this->assertTrue($method->getParameter('intParam')->hasType());
+        self::assertTrue($method->getParameter('intParam')->hasType());
     }
 
     public function testHasTypeReturnsFalseWithoutType()
@@ -310,7 +310,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
-        $this->assertFalse($method->getParameter('noTypeParam')->hasType());
+        self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
     public function testSetType()
@@ -321,8 +321,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $parameterInfo->setType(new Types\String_());
 
-        $this->assertSame('string', (string)$parameterInfo->getType());
-        $this->assertStringStartsWith(
+        self::assertSame('string', (string)$parameterInfo->getType());
+        self::assertStringStartsWith(
             'public function foo(string $intParam',
             (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
         );
@@ -336,8 +336,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $parameterInfo->removeType();
 
-        $this->assertNull($parameterInfo->getType());
-        $this->assertStringStartsWith(
+        self::assertNull($parameterInfo->getType());
+        self::assertStringStartsWith(
             'public function foo($intParam',
             (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
         );
@@ -350,10 +350,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
         $nonCallableParam = $method->getParameter('stdClassParameter');
-        $this->assertFalse($nonCallableParam->isCallable());
+        self::assertFalse($nonCallableParam->isCallable());
 
         $callableParam = $method->getParameter('callableParameter');
-        $this->assertTrue($callableParam->isCallable());
+        self::assertTrue($callableParam->isCallable());
     }
 
     public function testIsArray()
@@ -363,10 +363,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
         $nonArrayParam = $method->getParameter('stdClassParameter');
-        $this->assertFalse($nonArrayParam->isArray());
+        self::assertFalse($nonArrayParam->isArray());
 
         $arrayParam = $method->getParameter('arrayParameter');
-        $this->assertTrue($arrayParam->isArray());
+        self::assertTrue($arrayParam->isArray());
     }
 
     public function testIsVariadic()
@@ -376,10 +376,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithVariadic');
 
         $nonVariadicParam = $method->getParameter('nonVariadicParameter');
-        $this->assertFalse($nonVariadicParam->isVariadic());
+        self::assertFalse($nonVariadicParam->isVariadic());
 
         $variadicParam = $method->getParameter('variadicParameter');
-        $this->assertTrue($variadicParam->isVariadic());
+        self::assertTrue($variadicParam->isVariadic());
     }
 
     public function testIsPassedByReference()
@@ -389,12 +389,12 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithReference');
 
         $nonRefParam = $method->getParameter('nonRefParameter');
-        $this->assertFalse($nonRefParam->isPassedByReference());
-        $this->assertTrue($nonRefParam->canBePassedByValue());
+        self::assertFalse($nonRefParam->isPassedByReference());
+        self::assertTrue($nonRefParam->canBePassedByValue());
 
         $refParam = $method->getParameter('refParameter');
-        $this->assertTrue($refParam->isPassedByReference());
-        $this->assertFalse($refParam->canBePassedByValue());
+        self::assertTrue($refParam->isPassedByReference());
+        self::assertFalse($refParam->canBePassedByValue());
     }
 
     public function testGetDefaultValueAndIsOptional()
@@ -403,12 +403,12 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithNonOptionalDefaultValue');
 
         $firstParam = $method->getParameter('firstParameter');
-        $this->assertFalse($firstParam->isOptional());
-        $this->assertTrue($firstParam->isDefaultValueAvailable());
+        self::assertFalse($firstParam->isOptional());
+        self::assertTrue($firstParam->isDefaultValueAvailable());
 
         $secondParam = $method->getParameter('secondParameter');
-        $this->assertFalse($secondParam->isOptional());
-        $this->assertFalse($secondParam->isDefaultValueAvailable());
+        self::assertFalse($secondParam->isOptional());
+        self::assertFalse($secondParam->isDefaultValueAvailable());
     }
 
     /**
@@ -421,12 +421,12 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithVariadic');
 
         $nonVariadicParam = $method->getParameter('nonVariadicParameter');
-        $this->assertFalse($nonVariadicParam->isVariadic());
-        $this->assertFalse($nonVariadicParam->isOptional());
+        self::assertFalse($nonVariadicParam->isVariadic());
+        self::assertFalse($nonVariadicParam->isOptional());
 
         $variadicParam = $method->getParameter('variadicParameter');
-        $this->assertTrue($variadicParam->isVariadic());
-        $this->assertTrue($variadicParam->isOptional());
+        self::assertTrue($variadicParam->isVariadic());
+        self::assertTrue($variadicParam->isOptional());
     }
 
     public function testAllowsNull()
@@ -435,13 +435,13 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodToCheckAllowsNull');
 
         $firstParam = $method->getParameter('allowsNull');
-        $this->assertTrue($firstParam->allowsNull());
+        self::assertTrue($firstParam->allowsNull());
 
         $secondParam = $method->getParameter('hintDisallowNull');
-        $this->assertFalse($secondParam->allowsNull());
+        self::assertFalse($secondParam->allowsNull());
 
         $thirdParam = $method->getParameter('hintAllowNull');
-        $this->assertTrue($thirdParam->allowsNull());
+        self::assertTrue($thirdParam->allowsNull());
     }
 
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName()
@@ -450,15 +450,15 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithConstAsDefault');
 
         $constDefault = $method->getParameter('constDefault');
-        $this->assertTrue($constDefault->isDefaultValueConstant());
-        $this->assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
+        self::assertTrue($constDefault->isDefaultValueConstant());
+        self::assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
 
         $definedDefault = $method->getParameter('definedDefault');
-        $this->assertTrue($definedDefault->isDefaultValueConstant());
-        $this->assertSame('SOME_DEFINED_VALUE', $definedDefault->getDefaultValueConstantName());
+        self::assertTrue($definedDefault->isDefaultValueConstant());
+        self::assertSame('SOME_DEFINED_VALUE', $definedDefault->getDefaultValueConstantName());
 
         $intDefault = $method->getParameter('intDefault');
-        $this->assertFalse($intDefault->isDefaultValueConstant());
+        self::assertFalse($intDefault->isDefaultValueConstant());
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('This parameter is not a constant default value, so cannot have a constant name');
@@ -474,7 +474,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
 
-        $this->assertSame($methodInfo, $paramInfo->getDeclaringFunction());
+        self::assertSame($methodInfo, $paramInfo->getDeclaringFunction());
     }
 
     public function testGetDeclaringClassForMethod()
@@ -486,7 +486,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
 
-        $this->assertSame($classInfo, $paramInfo->getDeclaringClass());
+        self::assertSame($classInfo, $paramInfo->getDeclaringClass());
     }
 
     public function testGetDeclaringClassForFunctionReturnsNull()
@@ -497,7 +497,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo = $functionInfo->getParameter('var');
 
-        $this->assertNull($paramInfo->getDeclaringClass());
+        self::assertNull($paramInfo->getDeclaringClass());
     }
 
     public function defaultValueStringProvider()
@@ -527,7 +527,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $paramInfo = $functionInfo->getParameter('var');
 
         // Must be starts with because PHP (sometimes value is 12.300000000000001)
-        $this->assertStringStartsWith($expectedValue, $paramInfo->getDefaultValueAsString());
+        self::assertStringStartsWith($expectedValue, $paramInfo->getDefaultValueAsString());
     }
 
     public function testGetClassForTypeHintedMethodParameters()
@@ -541,12 +541,12 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
 
-        $this->assertNull($methodInfo->getParameter('untyped')->getClass());
-        $this->assertNull($methodInfo->getParameter('array')->getClass());
+        self::assertNull($methodInfo->getParameter('untyped')->getClass());
+        self::assertNull($methodInfo->getParameter('array')->getClass());
 
         $hintedClassReflection = $methodInfo->getParameter('object')->getClass();
-        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        $this->assertSame('stdClass', $hintedClassReflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        self::assertSame('stdClass', $hintedClassReflection->getName());
     }
 
     public function testCannotClone()
@@ -570,8 +570,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
 
         $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        $this->assertSame('Foo', $hintedClassReflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        self::assertSame('Foo', $hintedClassReflection->getName());
     }
 
     public function testGetClassFromParentTypeHintedProperty()
@@ -586,7 +586,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
 
         $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        $this->assertSame('stdClass', $hintedClassReflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        self::assertSame('stdClass', $hintedClassReflection->getName());
     }
 }

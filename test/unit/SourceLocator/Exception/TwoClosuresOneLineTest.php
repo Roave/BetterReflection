@@ -17,7 +17,7 @@ class TwoClosuresOneLineTest extends PHPUnit_Framework_TestCase
 
         $exception = TwoClosuresOneLine::fromClosureAnalysisException($previous);
 
-        $this->assertInstanceOf(TwoClosuresOneLine::class, $exception);
-        $this->assertSame('Two closures were declared on the same line', $exception->getMessage());
+        self::assertInstanceOf(TwoClosuresOneLine::class, $exception);
+        self::assertSame('Two closures were declared on the same line', $exception->getMessage());
     }
 }

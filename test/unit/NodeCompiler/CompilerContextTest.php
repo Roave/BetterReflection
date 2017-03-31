@@ -16,8 +16,8 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector(new StringSourceLocator('<?php'));
         $context = new CompilerContext($reflector, null);
 
-        $this->assertFalse($context->hasSelf());
-        $this->assertSame($reflector, $context->getReflector());
+        self::assertFalse($context->hasSelf());
+        self::assertSame($reflector, $context->getReflector());
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The current context does not have a class for self');
@@ -31,8 +31,8 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
 
         $context = new CompilerContext($reflector, $self);
 
-        $this->assertTrue($context->hasSelf());
-        $this->assertSame($reflector, $context->getReflector());
-        $this->assertSame($self, $context->getSelf());
+        self::assertTrue($context->hasSelf());
+        self::assertSame($reflector, $context->getReflector());
+        self::assertSame($self, $context->getSelf());
     }
 }

@@ -28,7 +28,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     public function testCoreReflectionParameters($methodName)
     {
         $reflectionParameterAdapterReflection = new CoreReflectionClass(ReflectionParameterAdapter::class);
-        $this->assertTrue($reflectionParameterAdapterReflection->hasMethod($methodName));
+        self::assertTrue($reflectionParameterAdapterReflection->hasMethod($methodName));
     }
 
     public function methodExpectationProvider()

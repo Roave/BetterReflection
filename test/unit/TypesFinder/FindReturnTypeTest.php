@@ -53,10 +53,10 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindReturnType())->__invoke($function);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
@@ -91,10 +91,10 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionMethod $method */
         $foundTypes = (new FindReturnType())->__invoke($method);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
