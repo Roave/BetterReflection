@@ -18,7 +18,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function propertyTypeProvider()
+    public function propertyTypeProvider() : array
     {
         return [
             ['@var int|string $foo', [Types\Integer::class, Types\String_::class]],
@@ -34,7 +34,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider propertyTypeProvider
      */
-    public function testFindPropertyType($docBlock, $expectedInstances)
+    public function testFindPropertyType(string $docBlock, array $expectedInstances)
     {
         $class = $this->createMock(ReflectionClass::class);
 

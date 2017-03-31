@@ -79,7 +79,7 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
         new DirectoriesSourceLocator($directories);
     }
 
-    public function invalidDirectoriesProvider()
+    public function invalidDirectoriesProvider() : array
     {
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 

@@ -58,7 +58,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function visibilityProvider()
+    public function visibilityProvider() : array
     {
         return [
             'publicMethod' => ['publicMethod', true, false, false, false, false, false],
@@ -72,7 +72,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $method
+     * @param string $methodName
      * @param bool $shouldBePublic
      * @param bool $shouldBePrivate
      * @param bool $shouldBeProtected
@@ -81,17 +81,24 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param bool $shouldBeStatic
      * @dataProvider visibilityProvider
      */
-    public function testVisibilityOfMethods($method, $shouldBePublic, $shouldBePrivate, $shouldBeProtected, $shouldBeFinal, $shouldBeAbstract, $shouldBeStatic)
-    {
+    public function testVisibilityOfMethods(
+        string $methodName,
+        bool $shouldBePublic,
+        bool $shouldBePrivate,
+        bool $shouldBeProtected,
+        bool $shouldBeFinal,
+        bool $shouldBeAbstract,
+        bool $shouldBeStatic
+    ) {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod($method);
+        $reflectionMethod = $classInfo->getMethod($methodName);
 
-        self::assertSame($shouldBePublic, $method->isPublic());
-        self::assertSame($shouldBePrivate, $method->isPrivate());
-        self::assertSame($shouldBeProtected, $method->isProtected());
-        self::assertSame($shouldBeFinal, $method->isFinal());
-        self::assertSame($shouldBeAbstract, $method->isAbstract());
-        self::assertSame($shouldBeStatic, $method->isStatic());
+        self::assertSame($shouldBePublic, $reflectionMethod->isPublic());
+        self::assertSame($shouldBePrivate, $reflectionMethod->isPrivate());
+        self::assertSame($shouldBeProtected, $reflectionMethod->isProtected());
+        self::assertSame($shouldBeFinal, $reflectionMethod->isFinal());
+        self::assertSame($shouldBeAbstract, $reflectionMethod->isAbstract());
+        self::assertSame($shouldBeStatic, $reflectionMethod->isStatic());
     }
 
     public function testIsConstructorDestructor()
@@ -184,7 +191,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(Integer::class, $types[0]);
     }
 
-    public function modifierProvider()
+    public function modifierProvider() : array
     {
         return [
             ['publicMethod', \ReflectionMethod::IS_PUBLIC, ['public']],
@@ -203,7 +210,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers($methodName, $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames)
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);
@@ -215,7 +222,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function prototypeProvider()
+    public function prototypeProvider() : array
     {
         return [
             ['Zoom\B', 'foo', 'Zoom\FooInterface'],
@@ -233,7 +240,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string|null $expectedPrototype
      * @dataProvider prototypeProvider
      */
-    public function testGetPrototype($class, $method, $expectedPrototype)
+    public function testGetPrototype(string $class, string $method, $expectedPrototype)
     {
         $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
@@ -262,7 +269,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $method->isPublic();
     }
 
-    public function methodStringRepresentations()
+    public function methodStringRepresentations() : array
     {
         $methods = [
             ['__construct', "Method [ <user, ctor> public method __construct ] {\n  @@ %s/test/unit/Fixture/Methods.php 11 - 13\n}"],
@@ -299,7 +306,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedStringValue
      * @dataProvider methodStringRepresentations
      */
-    public function testStringCast($methodName, $expectedStringValue)
+    public function testStringCast(string $methodName, string $expectedStringValue)
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);

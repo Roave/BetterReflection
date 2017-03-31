@@ -252,7 +252,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertNull($reflection->getParentClass());
     }
 
-    public function startEndLineProvider()
+    public function startEndLineProvider() : array
     {
         return [
             ["<?php\n\nclass Foo {\n}\n", 3, 4],
@@ -267,7 +267,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      * @param int $expectedEnd
      * @dataProvider startEndLineProvider
      */
-    public function testStartEndLine($php, $expectedStart, $expectedEnd)
+    public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd)
     {
         $reflector = new ClassReflector(new StringSourceLocator($php));
         $classInfo = $reflector->reflect('Foo');
@@ -369,7 +369,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classInfo->isFinal());
     }
 
-    public function modifierProvider()
+    public function modifierProvider() : array
     {
         return [
             ['ExampleClass', 0, []],
@@ -384,7 +384,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers($className, $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $className, int $expectedModifier, array $expectedModifierNames)
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\\' . $className);

@@ -82,7 +82,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function stringTypesDataProvider()
+    public function stringTypesDataProvider() : array
     {
         return [
             ['privateProperty', ['int', 'float', '\stdClass']],
@@ -96,7 +96,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedTypes
      * @dataProvider stringTypesDataProvider
      */
-    public function testGetDocBlockTypeStrings($propertyName, $expectedTypes)
+    public function testGetDocBlockTypeStrings(string $propertyName, array $expectedTypes)
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -108,7 +108,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function typesDataProvider()
+    public function typesDataProvider() : array
     {
         return [
             ['privateProperty', [Types\Integer::class, Types\Float_::class, Types\Object_::class]],
@@ -122,7 +122,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedTypes
      * @dataProvider typesDataProvider
      */
-    public function testGetDocBlockTypes($propertyName, $expectedTypes)
+    public function testGetDocBlockTypes(string $propertyName, array $expectedTypes)
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -159,7 +159,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         ReflectionProperty::export();
     }
 
-    public function modifierProvider()
+    public function modifierProvider() : array
     {
         return [
             ['publicProperty', \ReflectionProperty::IS_PUBLIC, ['public']],
@@ -175,7 +175,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers($propertyName, $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames)
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $property = $classInfo->getProperty($propertyName);
@@ -208,7 +208,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function castToStringProvider()
+    public function castToStringProvider() : array
     {
         return [
             ['publicProperty', 'Property [ <default> public $publicProperty ]'],
@@ -223,7 +223,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedString
      * @dataProvider castToStringProvider
      */
-    public function testCastingToString($propertyName, $expectedString)
+    public function testCastingToString(string $propertyName, string $expectedString)
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         self::assertSame($expectedString, (string)$classInfo->getProperty($propertyName));

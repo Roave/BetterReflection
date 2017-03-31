@@ -46,7 +46,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function exceptionCasesProvider()
+    public function exceptionCasesProvider() : array
     {
         return [
             [123, InvalidArgumentException::class, 'Filename must be a string or null'],

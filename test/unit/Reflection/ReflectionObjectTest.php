@@ -102,7 +102,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function reflectionClassMethodProvider()
+    public function reflectionClassMethodProvider() : array
     {
         $publicClassMethods = get_class_methods(ReflectionClass::class);
 
@@ -134,7 +134,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      * @param string $methodName
      * @dataProvider reflectionClassMethodProvider
      */
-    public function testReflectionObjectOverridesAllMethodsInReflectionClass($methodName)
+    public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName)
     {
         // First, ensure the expected method even exists
         $publicObjectMethods = get_class_methods(ReflectionObject::class);

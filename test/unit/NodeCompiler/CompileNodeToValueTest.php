@@ -2,6 +2,7 @@
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
+use PhpParser\Node;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -25,7 +26,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
      * @param string $phpCode
      * @return \PhpParser\Node
      */
-    private function parseCode($phpCode)
+    private function parseCode(string $phpCode) : Node
     {
         return (new Parser\Php7(new Lexer()))->parse('<?php ' . $phpCode . ';')[0];
     }
@@ -35,10 +36,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
         return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php')), null);
     }
 
-    /**
-     * @return array
-     */
-    public function nodeProvider()
+    public function nodeProvider() : array
     {
         return [
             ['1', 1],
@@ -139,7 +137,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
      * @param mixed $expectedValue
      * @dataProvider nodeProvider
      */
-    public function testVariousNodeCompilations($phpCode, $expectedValue)
+    public function testVariousNodeCompilations(string $phpCode, $expectedValue)
     {
         $node = $this->parseCode($phpCode);
 

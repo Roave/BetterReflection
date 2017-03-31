@@ -17,7 +17,7 @@ class InvalidDirectoryTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFromNonStringValue($expectedMessage, $value)
+    public function testFromNonStringValue(string $expectedMessage, $value)
     {
         $exception = InvalidDirectory::fromNonStringValue($value);
 
@@ -28,7 +28,7 @@ class InvalidDirectoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @return string[][]|mixed[][]
      */
-    public function nonStringValuesProvider()
+    public function nonStringValuesProvider() : array
     {
         return [
             ['Expected string, stdClass given', new \stdClass()],

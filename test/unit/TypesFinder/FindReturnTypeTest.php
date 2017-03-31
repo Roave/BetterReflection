@@ -17,7 +17,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function returnTypeProvider()
+    public function returnTypeProvider() : array
     {
         return [
             ['@return int|string', [Types\Integer::class, Types\String_::class]],
@@ -34,7 +34,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForFunction($docBlock, $expectedInstances)
+    public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances)
     {
         $docBlock = "/**\n * $docBlock\n */";
 
@@ -65,7 +65,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForMethod($docBlock, $expectedInstances)
+    public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances)
     {
         $docBlock = "/**\n * $docBlock\n */";
 

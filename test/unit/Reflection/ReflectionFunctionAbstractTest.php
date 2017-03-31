@@ -128,7 +128,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($function->isUserDefined());
     }
 
-    public function variadicProvider()
+    public function variadicProvider() : array
     {
         return [
             ['<?php function foo($notVariadic) {}', false],
@@ -142,7 +142,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
      * @param bool $expectingVariadic
      * @dataProvider variadicProvider
      */
-    public function testIsVariadic($php, $expectingVariadic)
+    public function testIsVariadic(string $php, bool $expectingVariadic)
     {
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
@@ -157,7 +157,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
      * @see https://github.com/nikic/PHP-Parser/blob/1.x/test/code/parser/stmt/function/generator.test
      * @return array
      */
-    public function generatorProvider()
+    public function generatorProvider() : array
     {
         return [
             ['<?php function foo() { return [1, 2, 3]; }', false],
@@ -184,7 +184,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
      * @param bool $expectingGenerator
      * @dataProvider generatorProvider
      */
-    public function testIsGenerator($php, $expectingGenerator)
+    public function testIsGenerator(string $php, bool $expectingGenerator)
     {
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
@@ -206,7 +206,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($functionInfo->isGenerator());
     }
 
-    public function startEndLineProvider()
+    public function startEndLineProvider() : array
     {
         return [
             ["<?php\n\nfunction foo() {\n}\n", 3, 4],
@@ -221,7 +221,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
      * @param int $expectedEnd
      * @dataProvider startEndLineProvider
      */
-    public function testStartEndLine($php, $expectedStart, $expectedEnd)
+    public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd)
     {
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
@@ -230,7 +230,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         self::assertSame($expectedEnd, $function->getEndLine());
     }
 
-    public function returnsReferenceProvider()
+    public function returnsReferenceProvider() : array
     {
         return [
             ['<?php function foo() {}', false],
@@ -243,7 +243,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
      * @param bool $expectingReturnsReference
      * @dataProvider returnsReferenceProvider
      */
-    public function testReturnsReference($php, $expectingReturnsReference)
+    public function testReturnsReference(string $php, bool $expectingReturnsReference)
     {
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function = $reflector->reflect('foo');
@@ -346,7 +346,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(Boolean::class, $types[0]);
     }
 
-    public function returnTypeFunctionProvider()
+    public function returnTypeFunctionProvider() : array
     {
         return [
             ['returnsInt', 'int'],
@@ -362,7 +362,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedType
      * @dataProvider returnTypeFunctionProvider
      */
-    public function testGetReturnTypeWithDeclaredType($functionToReflect, $expectedType)
+    public function testGetReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType)
     {
         $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
         $functionInfo = $reflector->reflect($functionToReflect);

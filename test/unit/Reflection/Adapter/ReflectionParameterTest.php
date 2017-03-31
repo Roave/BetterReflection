@@ -15,7 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
  */
 class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 {
-    public function coreReflectionParameterNamesProvider()
+    public function coreReflectionParameterNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionParameter::class);
         return array_combine($methods, array_map(function ($i) { return [$i]; }, $methods));
@@ -25,13 +25,13 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param string $methodName
      * @dataProvider coreReflectionParameterNamesProvider
      */
-    public function testCoreReflectionParameters($methodName)
+    public function testCoreReflectionParameters(string $methodName)
     {
         $reflectionParameterAdapterReflection = new CoreReflectionClass(ReflectionParameterAdapter::class);
         self::assertTrue($reflectionParameterAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider()
+    public function methodExpectationProvider() : array
     {
         $mockFunction = $this->createMock(BetterReflectionFunction::class);
 
@@ -69,7 +69,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods($methodName, $expectedException, $returnValue, array $args)
+    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args)
     {
         /* @var BetterReflectionParameter|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);

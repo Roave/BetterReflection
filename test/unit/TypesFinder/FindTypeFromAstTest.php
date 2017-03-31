@@ -15,7 +15,7 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function findTypeFromAstTypeProvider()
+    public function findTypeFromAstTypeProvider() : array
     {
         return [
             ['int', Types\Integer::class, 'int'],
@@ -32,9 +32,10 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $input
      * @param string $expected
+     * @param string $toStringValue
      * @dataProvider findTypeFromAstTypeProvider
      */
-    public function testFindTypeFromAst($input, $expected, $toStringValue)
+    public function testFindTypeFromAst($input, string $expected, string $toStringValue)
     {
         $resolvedType = (new FindTypeFromAst())->__invoke(
             $input,

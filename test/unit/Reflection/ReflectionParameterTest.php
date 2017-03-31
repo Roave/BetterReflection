@@ -116,7 +116,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function defaultParameterProvider()
+    public function defaultParameterProvider() : array
     {
         return [
             ['1', 1],
@@ -134,7 +134,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param mixed $expectedValue
      * @dataProvider defaultParameterProvider
      */
-    public function testDefaultParametersTypes($defaultExpression, $expectedValue)
+    public function testDefaultParametersTypes(string $defaultExpression, $expectedValue)
     {
         $content = "<?php class Foo { public function myMethod(\$var = $defaultExpression) {} }";
 
@@ -220,7 +220,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function typeHintProvider()
+    public function typeHintProvider() : array
     {
         return [
             ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
@@ -238,8 +238,12 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param string|null $expectedFqsen
      * @param string|null $expectedFqsenName
      */
-    public function testGetTypeHint($parameterToTest, $expectedType, $expectedFqsen = null, $expectedFqsenName = null)
-    {
+    public function testGetTypeHint(
+        string $parameterToTest,
+        string $expectedType,
+        string $expectedFqsen = null,
+        string $expectedFqsenName = null
+    ) {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
@@ -500,7 +504,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    public function defaultValueStringProvider()
+    public function defaultValueStringProvider() : array
     {
         return [
             ['123', '123'],
@@ -516,9 +520,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $defaultValue
+     * @param string $expectedValue
      * @dataProvider defaultValueStringProvider
      */
-    public function testGetDefaultValueAsString($defaultValue, $expectedValue)
+    public function testGetDefaultValueAsString(string $defaultValue, string $expectedValue)
     {
         $content = "<?php function myMethod(\$var = $defaultValue) {}";
 

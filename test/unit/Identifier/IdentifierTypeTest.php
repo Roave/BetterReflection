@@ -26,7 +26,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
      * @param string $full
      * @dataProvider possibleIdentifierTypesProvider
      */
-    public function testPossibleIdentifierTypes($full)
+    public function testPossibleIdentifierTypes(string $full)
     {
         $type = new IdentifierType($full);
         self::assertSame($full, $type->getName());

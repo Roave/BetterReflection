@@ -31,7 +31,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $className
      */
-    public function testCanFetchInternalLocatedSource($className)
+    public function testCanFetchInternalLocatedSource(string $className)
     {
         $locator = new PhpInternalSourceLocator();
 
@@ -46,7 +46,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
         } catch (\ReflectionException $e) {
-            $this->markTestIncomplete(sprintf(
+            self::markTestIncomplete(sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
                 $className,
                 $e->getMessage()
@@ -60,11 +60,11 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      * @param string $className
      * @throws \ReflectionException
      */
-    public function testCanReflectInternalClasses($className)
+    public function testCanReflectInternalClasses(string $className)
     {
         /* @var $class */
         $phpInternalSourceLocator = new PhpInternalSourceLocator();
-        $reflector = (new ClassReflector($phpInternalSourceLocator));
+        $reflector = new ClassReflector($phpInternalSourceLocator);
 
         try {
             $class = $reflector->reflect($className);
@@ -73,7 +73,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 throw $e;
             }
 
-            $this->markTestIncomplete(sprintf(
+            self::markTestIncomplete(sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
                 $className,
                 $e->getMessage()
@@ -94,7 +94,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @return string[] internal symbols
      */
-    public function internalSymbolsProvider()
+    public function internalSymbolsProvider() : array
     {
         $allSymbols = array_merge(
             get_declared_classes(),
@@ -154,7 +154,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      *
      * @coversNothing
      */
-    public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses($className)
+    public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className)
     {
         if (! (
             class_exists($className, false)
@@ -172,7 +172,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @return string[][]
      */
-    public function stubbedClassesProvider()
+    public function stubbedClassesProvider() : array
     {
         $classNames = array_filter(
             str_replace('.stub', '', scandir(__DIR__ . '/../../../../stub')),

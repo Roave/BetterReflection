@@ -108,7 +108,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('stdClass', $theParam->getName());
     }
 
-    public function functionStringRepresentations()
+    public function functionStringRepresentations() : array
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\myFunction', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}"],
@@ -121,9 +121,9 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedStringValue
      * @dataProvider functionStringRepresentations
      */
-    public function testStringCast($functionName, $expectedStringValue)
+    public function testStringCast(string $functionName, string $expectedStringValue)
     {
-        require_once(__DIR__ . '/../Fixture/Functions.php');
+        require_once __DIR__ . '/../Fixture/Functions.php';
         $functionInfo = ReflectionFunction::createFromName($functionName);
 
         self::assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);

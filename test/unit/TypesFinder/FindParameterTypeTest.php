@@ -20,7 +20,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function parameterTypeProvider()
+    public function parameterTypeProvider() : array
     {
         return [
             ['@param int|string $foo', 'foo', [Types\Integer::class, Types\String_::class]],
@@ -61,7 +61,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForFunction($docBlock, $nodeName, $expectedInstances)
+    public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances)
     {
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
@@ -94,7 +94,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForMethod($docBlock, $nodeName, $expectedInstances)
+    public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances)
     {
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";

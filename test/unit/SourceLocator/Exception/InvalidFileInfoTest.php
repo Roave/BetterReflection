@@ -17,7 +17,7 @@ class InvalidFileInfoTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFromNonSplFileInfo($expectedMessage, $value)
+    public function testFromNonSplFileInfo(string $expectedMessage, $value)
     {
         $exception = InvalidFileInfo::fromNonSplFileInfo($value);
 
@@ -28,7 +28,7 @@ class InvalidFileInfoTest extends \PHPUnit_Framework_TestCase
     /**
      * @return string[][]|mixed[][]
      */
-    public function nonSplFileInfoProvider()
+    public function nonSplFileInfoProvider() : array
     {
         return [
             ['Expected an iterator of SplFileInfo instances, stdClass given instead', new \stdClass()],
