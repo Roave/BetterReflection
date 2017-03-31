@@ -105,7 +105,7 @@ class ReflectionParameter implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter
      */
-    public static function createFormClosure(\Closure $closure, $parameterName)
+    public static function createFromClosure(\Closure $closure, string $parameterName): ReflectionParameter
     {
         return ReflectionFunction::createFromClosure($closure)
             ->getParameter($parameterName);
@@ -140,7 +140,7 @@ class ReflectionParameter implements \Reflector
         }
 
         if ($spec instanceof \Closure) {
-            return self::createFormClosure($spec, $parameterName);
+            return self::createFromClosure($spec, $parameterName);
         }
 
         throw new \InvalidArgumentException('Could not create reflection from the spec given');
