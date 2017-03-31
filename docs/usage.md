@@ -178,17 +178,7 @@ $reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php'))
 $classes = $reflector->getAllClasses();
 ```
 
-### Fetch reflections of all the classes in a directory
-
-```php
-<?php
-
-$singleDirectorySourceLocator = new SingleDirectorySourceLocator(new \FilesystemIterator('path/to/directory'));
-$reflector = new ClassReflector($singleDirectorySourceLocator);
-$classes = $reflector->getAllClasses();
-```
-
-### Fetch reflections of all the classes in one or more directories (including sub directories)
+### Fetch reflections of all the classes in one or more directories
 
 ```php
 <?php
