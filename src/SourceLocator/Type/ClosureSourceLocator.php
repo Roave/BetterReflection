@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 use Closure;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
@@ -34,8 +35,11 @@ final class ClosureSourceLocator implements SourceLocator
      */
     private $conversionStrategy;
 
-    public function __construct(Closure $closure, ClosureAnalyzer $closureAnalyzer = null, AstConversionStrategy $conversionStrategy = null)
-    {
+    public function __construct(
+        Closure $closure,
+        ClosureAnalyzer $closureAnalyzer = null,
+        AstConversionStrategy $conversionStrategy = null
+    ) {
         $this->closure = $closure;
 
         if (null === $closureAnalyzer) {
@@ -51,8 +55,12 @@ final class ClosureSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine
+     * @throws \SuperClosure\Exception\ClosureAnalysisException
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier)
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         try {
             $closureData = $this->closureAnalyzer->analyze($this->closure);

@@ -14,6 +14,10 @@ class TwoClosuresOneLine extends \LogicException
      */
     public static function fromClosureAnalysisException(ClosureAnalysisException $closureAnalysisException) : self
     {
-        return new self($closureAnalysisException->getMessage(), $closureAnalysisException->getCode(), $closureAnalysisException);
+        return new self(
+            $closureAnalysisException->getMessage(),
+            $closureAnalysisException->getCode(),
+            $closureAnalysisException
+        );
     }
 }

@@ -20,7 +20,7 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\Stmt\Return_) {
-            array_push($this->returnNodes, $node);
+            $this->returnNodes[] = $node;
         }
     }
 

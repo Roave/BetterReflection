@@ -77,7 +77,8 @@ class CompileNodeToValue
      * Compile constant expressions
      *
      * @param Node\Expr\ConstFetch $constNode
-     * @return bool|null
+     * @return bool|mixed|null
+     * @throws \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode)
     {
@@ -108,7 +109,7 @@ class CompileNodeToValue
      * @return string|null
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
+    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context) : ?string
     {
         $className = implode('\\', $node->class->parts);
 
@@ -260,9 +261,9 @@ class CompileNodeToValue
      * @param string          $constantName
      * @param ReflectionClass $class
      *
-     * @return CompilerContext|null
+     * @return ReflectionClass|null
      */
-    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class)
+    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
     {
         if ($class->hasConstant($constantName)) {
             return $class;

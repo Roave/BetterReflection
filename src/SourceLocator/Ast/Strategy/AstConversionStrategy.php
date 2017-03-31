@@ -2,6 +2,7 @@
 
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node;
@@ -19,7 +20,12 @@ interface AstConversionStrategy
      * @param Node $node
      * @param LocatedSource $locatedSource
      * @param Node\Stmt\Namespace_|null $namespace
-     * @return mixed
+     * @return Reflection|null
      */
-    public function __invoke(Reflector $reflector, Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null);
+    public function __invoke(
+        Reflector $reflector,
+        Node $node,
+        LocatedSource $locatedSource,
+        ?Node\Stmt\Namespace_ $namespace
+    ) : ?Reflection;
 }

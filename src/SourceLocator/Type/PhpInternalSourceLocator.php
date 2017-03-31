@@ -4,6 +4,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Zend\Code\Reflection\ClassReflection;
 
@@ -22,14 +23,20 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         if (! $name = $this->getInternalReflectionClassName($identifier)) {
             return null;
         }
 
         if ($stub = $this->getStub($name)) {
+            /**
+             * @todo this code path looks never used, and disagrees with the contract anyway...?
+             * @see https://github.com/Roave/BetterReflection/issues/257
+             */
             return [
                 "<?php\n\n" . $stub,
             ];
@@ -47,7 +54,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      *
      * @return null|string
      */
-    private function getInternalReflectionClassName(Identifier $identifier)
+    private function getInternalReflectionClassName(Identifier $identifier) : ?string
     {
         if (! $identifier->isClass()) {
             return null;
@@ -72,7 +79,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @param string $className Should only contain [A-Za-z]
      * @return string|null
      */
-    private function getStub(string $className)
+    private function getStub(string $className) : ?string
     {
         if (!$this->hasStub($className)) {
             return null;
@@ -87,7 +94,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @param string $className
      * @return string|null
      */
-    private function buildStubName(string $className)
+    private function buildStubName(string $className) : ?string
     {
         if (!preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
             return null;

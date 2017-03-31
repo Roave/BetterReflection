@@ -64,7 +64,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         Node $node,
         LocatedSource $locatedSource,
         NamespaceNode $declaringNamespace = null
-    ) {
+    ) : void {
         if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
@@ -80,7 +80,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Get the AST node from which this function was created
      *
-     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_
+     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\FunctionLike
      */
     protected function getNode() : Node\FunctionLike
     {
@@ -91,7 +91,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * We must determine if params are optional or not ahead of time, but we
      * must do it in reverse...
      */
-    private function setNodeOptionalFlag()
+    private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
         $lastParamIndex = (count($this->node->params) - 1);
@@ -418,7 +418,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @return ReflectionType|null
      */
-    public function getReturnType()
+    public function getReturnType() : ?ReflectionType
     {
         $namespaceForType = $this instanceof ReflectionMethod
             ? $this->getDeclaringClass()->getNamespaceName()
@@ -454,7 +454,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param Type $newReturnType
      */
-    public function setReturnType(Type $newReturnType)
+    public function setReturnType(Type $newReturnType) : void
     {
         $this->node->returnType = new Node\Name((string)$newReturnType);
     }
@@ -462,7 +462,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Remove the return type declaration completely.
      */
-    public function removeReturnType()
+    public function removeReturnType() : void
     {
         $this->node->returnType = null;
     }
@@ -510,7 +510,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     /**
      * Fetch the AST for this method or function.
      *
-     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_
+     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\FunctionLike
      */
     public function getAst() : Node\FunctionLike
     {
@@ -525,8 +525,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * $reflectionFunction->setBodyFromClosure(function () { return true; });
      *
      * @param \Closure $newBody
+     * @throws \Roave\BetterReflection\Reflection\Exception\ClosureAstExtractionFailure
+     * @throws \SuperClosure\Exception\ClosureAnalysisException
      */
-    public function setBodyFromClosure(\Closure $newBody)
+    public function setBodyFromClosure(\Closure $newBody) : void
     {
         $closureData = (new AstAnalyzer())->analyze($newBody);
 
@@ -546,7 +548,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param string $newBody
      */
-    public function setBodyFromString(string $newBody)
+    public function setBodyFromString(string $newBody) : void
     {
         $this->node->stmts = (new ParserFactory())
             ->create(ParserFactory::PREFER_PHP7)
@@ -563,7 +565,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param Node[] $nodes
      */
-    public function setBodyFromAst(array $nodes)
+    public function setBodyFromAst(array $nodes) : void
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
@@ -578,7 +580,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      *
      * @param string $parameterName
      */
-    public function addParameter(string $parameterName)
+    public function addParameter(string $parameterName) : void
     {
         $this->node->params[] = new ParamNode($parameterName);
     }
@@ -589,7 +591,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param string $parameterName
      * @return void
      */
-    public function removeParameter(string $parameterName)
+    public function removeParameter(string $parameterName) : void
     {
         $lowerName = strtolower($parameterName);
 

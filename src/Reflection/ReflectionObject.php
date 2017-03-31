@@ -258,7 +258,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getProperty(string $name)
+    public function getProperty(string $name) : ?ReflectionProperty
     {
         $runtimeProperties = $this->getRuntimeProperties();
 
@@ -290,7 +290,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getFileName()
+    public function getFileName() : ?string
     {
         return $this->reflectionClass->getFileName();
     }
@@ -498,7 +498,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function setStaticPropertyValue(string $propertyName, $value)
+    public function setStaticPropertyValue(string $propertyName, $value) : void
     {
         $this->reflectionClass->setStaticPropertyValue($propertyName, $value);
     }
@@ -522,9 +522,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function setFinal(bool $isFinal)
+    public function setFinal(bool $isFinal) : void
     {
-        return $this->reflectionClass->setFinal($isFinal);
+        $this->reflectionClass->setFinal($isFinal);
     }
 
     /**
@@ -538,9 +538,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function addMethod(string $methodName)
+    public function addMethod(string $methodName) : void
     {
-        return $this->reflectionClass->addMethod($methodName);
+        $this->reflectionClass->addMethod($methodName);
     }
 
     /**
@@ -558,7 +558,7 @@ class ReflectionObject extends ReflectionClass
         string $methodName,
         int $visibility = \ReflectionProperty::IS_PUBLIC,
         bool $static = false
-    ) {
-        return $this->reflectionClass->addProperty($methodName, $visibility, $static);
+    ) : void {
+        $this->reflectionClass->addProperty($methodName, $visibility, $static);
     }
 }

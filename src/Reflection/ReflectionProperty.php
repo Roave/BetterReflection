@@ -59,6 +59,7 @@ class ReflectionProperty implements \Reflector
      * @param object $instance
      * @param string $propertyName
      * @return self
+     * @throws \InvalidArgumentException
      */
     public static function createFromInstance($instance, string $propertyName) : self
     {
@@ -124,7 +125,7 @@ class ReflectionProperty implements \Reflector
      * @param int $newVisibility
      * @throws \InvalidArgumentException
      */
-    public function setVisibility(int $newVisibility)
+    public function setVisibility(int $newVisibility) : void
     {
         $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
 
@@ -294,6 +295,7 @@ class ReflectionProperty implements \Reflector
 
     /**
      * {@inheritdoc}
+     * @throws \Roave\BetterReflection\Reflection\Exception\Uncloneable
      */
     public function __clone()
     {

@@ -75,6 +75,7 @@ class ReflectionParameter implements \Reflector
      * @param string $methodName
      * @param string $parameterName
      * @return ReflectionParameter
+     * @throws \OutOfBoundsException
      */
     public static function createFromClassNameAndMethod(
         string $className,
@@ -93,6 +94,7 @@ class ReflectionParameter implements \Reflector
      * @param string $methodName
      * @param string $parameterName
      * @return ReflectionParameter
+     * @throws \OutOfBoundsException
      */
     public static function createFromClassInstanceAndMethod(
         $instance,
@@ -111,7 +113,7 @@ class ReflectionParameter implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter
      */
-    public static function createFromClosure(\Closure $closure, string $parameterName): ReflectionParameter
+    public static function createFromClosure(\Closure $closure, string $parameterName) : ReflectionParameter
     {
         return ReflectionFunction::createFromClosure($closure)
             ->getParameter($parameterName);
@@ -197,7 +199,7 @@ class ReflectionParameter implements \Reflector
         return $param;
     }
 
-    private function parseDefaultValueNode()
+    private function parseDefaultValueNode() : void
     {
         if (!$this->isDefaultValueAvailable()) {
             throw new \LogicException('This parameter does not have a default value available');
@@ -383,7 +385,7 @@ class ReflectionParameter implements \Reflector
      * @see getDocBlockTypes()
      * @return Type|null
      */
-    public function getTypeHint()
+    public function getTypeHint() : ?Type
     {
         $namespaceForType = $this->function instanceof ReflectionMethod
             ? $this->function->getDeclaringClass()->getNamespaceName()
@@ -404,7 +406,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return ReflectionType|null
      */
-    public function getType()
+    public function getType() : ?ReflectionType
     {
         if (null === $this->getTypeHint()) {
             return null;
@@ -432,7 +434,7 @@ class ReflectionParameter implements \Reflector
      *
      * @param Type $newParameterType
      */
-    public function setType(Type $newParameterType)
+    public function setType(Type $newParameterType) : void
     {
         $this->node->type = new Node\Name((string)$newParameterType);
     }
@@ -440,7 +442,7 @@ class ReflectionParameter implements \Reflector
     /**
      * Remove the parameter type declaration completely.
      */
-    public function removeType()
+    public function removeType() : void
     {
         $this->node->type = null;
     }
@@ -520,8 +522,9 @@ class ReflectionParameter implements \Reflector
      * Gets a ReflectionClass for the type hint (returns null if not a class)
      *
      * @return ReflectionClass|null
+     * @throws \RuntimeException
      */
-    public function getClass()
+    public function getClass() : ?ReflectionClass
     {
         $hint = $this->getTypeHint();
         if (!($hint instanceof Types\Object_  || $hint instanceof Types\Self_)) {
@@ -545,6 +548,7 @@ class ReflectionParameter implements \Reflector
 
     /**
      * {@inheritdoc}
+     * @throws \Roave\BetterReflection\Reflection\Exception\Uncloneable
      */
     public function __clone()
     {

@@ -23,6 +23,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
 
     /**
      * @param string $filename
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     public function __construct(string $filename)
     {
@@ -44,8 +45,10 @@ class SingleFileSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         return new LocatedSource(
             file_get_contents($this->filename),

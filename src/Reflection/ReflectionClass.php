@@ -7,7 +7,6 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\NotAString;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -190,10 +189,11 @@ class ReflectionClass implements Reflection, \Reflector
      * @see ReflectionObject::createFromInstance
      * @param object $instance
      * @return ReflectionClass
+     * @throws \InvalidArgumentException
      */
     public static function createFromInstance($instance)
     {
-        if (gettype($instance) !== 'object') {
+        if (!is_object($instance)) {
             throw new \InvalidArgumentException('Instance must be an instance of an object');
         }
 
@@ -504,7 +504,7 @@ class ReflectionClass implements Reflection, \Reflector
      * @param string $name
      * @return ReflectionProperty|null
      */
-    public function getProperty(string $name)
+    public function getProperty(string $name) : ?ReflectionProperty
     {
         $properties = $this->getProperties();
 
@@ -541,7 +541,7 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * @return string|null
      */
-    public function getFileName()
+    public function getFileName() : ?string
     {
         return $this->locatedSource->getFileName();
     }
@@ -1089,7 +1089,7 @@ class ReflectionClass implements Reflection, \Reflector
      * @param mixed $value
      * @return void
      */
-    public function setStaticPropertyValue(string $propertyName, $value)
+    public function setStaticPropertyValue(string $propertyName, $value) : void
     {
         if (!class_exists($this->getName(), false)) {
             throw new Exception\ClassDoesNotExist('Property cannot be set as the class is not loaded');
@@ -1124,8 +1124,9 @@ class ReflectionClass implements Reflection, \Reflector
      * Set whether this class is final or not
      *
      * @param bool $isFinal
+     * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
      */
-    public function setFinal(bool $isFinal)
+    public function setFinal(bool $isFinal) : void
     {
         if (!$this->node instanceof ClassNode) {
             throw Exception\NotAClassReflection::fromReflectionClass($this);
@@ -1165,7 +1166,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @param string $methodName
      */
-    public function addMethod(string $methodName)
+    public function addMethod(string $methodName) : void
     {
         $this->node->stmts[] = new ClassMethod($methodName);
         unset($this->cachedMethods);
@@ -1184,7 +1185,7 @@ class ReflectionClass implements Reflection, \Reflector
         string $propertyName,
         int $visibility = \ReflectionProperty::IS_PUBLIC,
         bool $static = false
-    ) {
+    ) : void {
         $type = 0;
         switch($visibility) {
             case \ReflectionProperty::IS_PRIVATE:

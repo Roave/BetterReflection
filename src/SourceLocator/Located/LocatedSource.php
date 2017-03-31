@@ -68,7 +68,7 @@ class LocatedSource
     /**
      * @return null|string
      */
-    public function getFileName()
+    public function getFileName() : ?string
     {
         return $this->filename;
     }

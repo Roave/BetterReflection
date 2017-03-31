@@ -2,6 +2,7 @@
 
 namespace Roave\BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\Type;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Name;
@@ -17,7 +18,7 @@ class FindTypeFromAst
      * @param string $namespace
      * @return \phpDocumentor\Reflection\Type|null
      */
-    public function __invoke($astType, LocatedSource $locatedSource, string $namespace = '')
+    public function __invoke($astType, LocatedSource $locatedSource, string $namespace = '') : ?Type
     {
         $context = (new ContextFactory())->createForNamespace(
             $namespace,
@@ -36,11 +37,11 @@ class FindTypeFromAst
 
         if ($astType instanceof Name) {
             $typeString = $astType->toString();
-        }
 
-        // If the AST determined this is a "fully qualified" name, prepend \
-        if ($astType instanceof Name\FullyQualified) {
-            $typeString = '\\' . $typeString;
+            // If the AST determined this is a "fully qualified" name, prepend \
+            if ($astType instanceof Name\FullyQualified) {
+                $typeString = '\\' . $typeString;
+            }
         }
 
         if (!isset($typeString)) {

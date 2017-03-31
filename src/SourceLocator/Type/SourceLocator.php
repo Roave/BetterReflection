@@ -23,7 +23,7 @@ interface SourceLocator
      * @param Identifier $identifier
      * @return Reflection|null
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier);
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection;
 
     /**
      * Find all identifiers of a type

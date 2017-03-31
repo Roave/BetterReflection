@@ -56,7 +56,7 @@ final class FileCacheLoader implements LoaderMethodInterface
      * {@inheritdoc}
      * @throws \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
      */
-    public function __invoke(ReflectionClass $classInfo)
+    public function __invoke(ReflectionClass $classInfo) : void
     {
         $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
 

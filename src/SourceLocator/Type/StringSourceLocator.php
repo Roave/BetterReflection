@@ -22,6 +22,7 @@ class StringSourceLocator extends AbstractSourceLocator
 
     /**
      * @param string $source
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode
      */
     public function __construct(string $source)
     {
@@ -40,8 +41,10 @@ class StringSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         return new LocatedSource(
             $this->source,

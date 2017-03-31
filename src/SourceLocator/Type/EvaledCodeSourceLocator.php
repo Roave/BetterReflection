@@ -4,6 +4,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Zend\Code\Reflection\ClassReflection;
 
@@ -22,8 +23,10 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         if (! $name = $this->getInternalReflectionClassName($identifier)) {
             return null;
@@ -41,7 +44,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      *
      * @return null|string
      */
-    private function getInternalReflectionClassName(Identifier $identifier)
+    private function getInternalReflectionClassName(Identifier $identifier) : ?string
     {
         if (! $identifier->isClass()) {
             return null;
