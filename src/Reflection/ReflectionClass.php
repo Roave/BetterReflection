@@ -61,6 +61,8 @@ class ReflectionClass implements Reflection, \Reflector
      */
     private $cachedMethods;
 
+    private $hierarchy;
+
     private function __construct()
     {
     }
@@ -1014,10 +1016,22 @@ class ReflectionClass implements Reflection, \Reflector
             : [];
     }
 
+
+    private function getInheritanceClassHierarchy()
+    {
+        if ($this->hierarchy) {
+            return $this->hierarchy;
+        }
+
+        $this->hierarchy = $this->doGetInheritanceClassHierarchy();
+
+        return $this->hierarchy;
+    }
+
     /**
      * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
      */
-    private function getInheritanceClassHierarchy()
+    private function doGetInheritanceClassHierarchy()
     {
         $parentClass = $this->getParentClass();
 
