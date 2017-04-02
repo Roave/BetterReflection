@@ -200,6 +200,17 @@ can be located using the given `SourceLocator`.
 
 See example in "Reflecting Classes" section on the same subheading.
 
+### Fetch reflections of all the functions
+
+```php
+<?php
+
+$directoriesToScan = ['path/to/directory1'];
+$directoriesSourceLocator = new DirectoriesSourceLocator($directoriesToScan);
+$reflector = new FunctionReflector($directoriesSourceLocator);
+$functions = $reflector->getAllFunctions();
+```
+
 ### Reflecting a Closure
 
 The `ReflectionFunction` class has a static constructor which you can reflect
