@@ -31,7 +31,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     public function __construct(AstLocator $astLocator = null)
     {
-        $this->astLocator = (null !== $astLocator) ? $astLocator : new AstLocator();
+        $this->astLocator = $astLocator ?: new AstLocator();
     }
 
     /**

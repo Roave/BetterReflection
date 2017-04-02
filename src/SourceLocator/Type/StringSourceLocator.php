@@ -23,9 +23,9 @@ class StringSourceLocator extends AbstractSourceLocator
     /**
      * @param string $source
      */
-    public function __construct($source)
+    public function __construct($source, Locator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->source = (string)$source;
 
         if (empty($this->source)) {

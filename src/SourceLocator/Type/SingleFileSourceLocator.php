@@ -24,9 +24,9 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     /**
      * @param string $filename
      */
-    public function __construct($filename)
+    public function __construct($filename, Locator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->filename = (string)$filename;
 
         if (empty($this->filename)) {
