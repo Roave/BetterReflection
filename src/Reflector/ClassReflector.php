@@ -9,6 +9,9 @@ use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use Roave\BetterReflection\Context\ContextFactory;
+use Roave\BetterReflection\Context\PhpDocumentorContextFactory;
+use Roave\BetterReflection\Context\CachedContextFactory;
 
 class ClassReflector implements Reflector
 {
@@ -18,7 +21,13 @@ class ClassReflector implements Reflector
     private $sourceLocator;
 
     /**
+     * @var ContextFactory
+     */
+    private $contextFactory;
+
+    /**
      * @param SourceLocator $sourceLocator
+     * @param ContextFactory $contextFactory
      */
     public function __construct(SourceLocator $sourceLocator)
     {

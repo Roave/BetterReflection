@@ -9,6 +9,7 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use phpDocumentor\Reflection\Types\Context;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
@@ -64,11 +65,11 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         Reflector $reflector,
         FunctionNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespaceNode = null
+        Context $context
     ) {
         $function = new self();
 
-        $function->populateFunctionAbstract($reflector, $node, $locatedSource, $namespaceNode);
+        $function->populateFunctionAbstract($reflector, $node, $locatedSource, $context);
 
         return $function;
     }

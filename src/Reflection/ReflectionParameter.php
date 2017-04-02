@@ -382,10 +382,10 @@ class ReflectionParameter implements \Reflector
             ? $this->function->getDeclaringClass()->getNamespaceName()
             : $this->function->getNamespaceName();
 
-        return (new FindTypeFromAst())->__invoke(
-            $this->node->type,
-            $this->function->getLocatedSource(),
-            $namespaceForType
+        return $this->findTypeFromAst(
+            $namespaceForType,
+            $this->function->getLocatedSource()->getSource(),
+            $this->node->type
         );
     }
 
@@ -542,5 +542,15 @@ class ReflectionParameter implements \Reflector
     public function __clone()
     {
         throw Exception\Uncloneable::fromClass(__CLASS__);
+    }
+
+    private function findTypeFromAst($namespace, $locatedSource, $type)
+    {
+        $objectType = (new FindTypeFromAst())->__invoke(
+            $this->getDeclaringClass()->getContext(),
+            $type
+        );
+
+        return $objectType;
     }
 }

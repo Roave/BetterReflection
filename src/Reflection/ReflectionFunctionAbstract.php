@@ -19,6 +19,7 @@ use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use SuperClosure\Analyzer\AstAnalyzer;
+use phpDocumentor\Reflection\Types\Context;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
@@ -59,7 +60,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
-    protected function populateFunctionAbstract(Reflector $reflector, Node $node, LocatedSource $locatedSource, NamespaceNode $declaringNamespace = null)
+    protected function populateFunctionAbstract(Reflector $reflector, Node $node, LocatedSource $locatedSource, Context $context)
     {
         if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
@@ -68,7 +69,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         $this->reflector = $reflector;
         $this->node = $node;
         $this->locatedSource = $locatedSource;
-        $this->declaringNamespace = $declaringNamespace;
+        $this->context = $context;
 
         $this->setNodeOptionalFlag();
     }
@@ -143,11 +144,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getNamespaceName()
     {
-        if (!$this->inNamespace()) {
-            return '';
-        }
-
-        return implode('\\', $this->declaringNamespace->name->parts);
+        return $this->context->getNamespace();
     }
 
     /**
@@ -158,8 +155,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function inNamespace()
     {
-        return null !== $this->declaringNamespace
-            && null !== $this->declaringNamespace->name;
+        return (bool) $this->context->getNamespace();
     }
 
     /**
@@ -420,10 +416,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             ? $this->getDeclaringClass()->getNamespaceName()
             : $this->getNamespaceName();
 
-        $typeHint = (new FindTypeFromAst())->__invoke(
-            $this->node->getReturnType(),
-            $this->getLocatedSource(),
-            $namespaceForType
+        $typeHint = $this->findTypeFromAst(
+            $namespaceForType,
+            $this->getLocatedSource()->getSource(),
+            $this->node->getReturnType()
         );
 
         if (null === $typeHint) {
@@ -618,5 +614,15 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         $traverser->traverse($this->node->getStmts());
 
         return $visitor->getReturnNodes();
+    }
+
+    private function findTypeFromAst($namespace, $locatedSource, $type)
+    {
+        $objectType = (new FindTypeFromAst())->__invoke(
+            $this->context,
+            $type
+        );
+
+        return $objectType;
     }
 }

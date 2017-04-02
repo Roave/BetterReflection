@@ -6,6 +6,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
+use phpDocumentor\Reflection\Types\Context;
 
 class FindTypeFromAst
 {
@@ -17,13 +18,8 @@ class FindTypeFromAst
      * @param string $namespace
      * @return \phpDocumentor\Reflection\Type|null
      */
-    public function __invoke($astType, LocatedSource $locatedSource, $namespace = '')
+    public function __invoke(Context $context, $astType)
     {
-        $context = (new ContextFactory())->createForNamespace(
-            $namespace,
-            $locatedSource->getSource()
-        );
-
         // @todo Nullable types are effectively ignored - to be fixed
         /* @see https://github.com/Roave/BetterReflection/issues/202 */
         if ($astType instanceof NullableType) {
