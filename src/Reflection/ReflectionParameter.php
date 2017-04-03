@@ -548,7 +548,7 @@ class ReflectionParameter implements \Reflector
 
     /**
      * {@inheritdoc}
-     * @throws \Roave\BetterReflection\Reflection\Exception\Uncloneable
+     * @throws Exception\Uncloneable
      */
     public function __clone()
     {

@@ -875,12 +875,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExportWithNoClassName()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        ReflectionClass::export();
-    }
-
     public function testToStringWhenImplementingInterface()
     {
         $php = '<?php

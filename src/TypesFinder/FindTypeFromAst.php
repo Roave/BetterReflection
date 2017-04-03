@@ -13,7 +13,7 @@ class FindTypeFromAst
     /**
      * Given an AST type, attempt to find a resolved type.
      *
-     * @param $astType
+     * @param string|Name|NullableType $astType
      * @param LocatedSource $locatedSource
      * @param string $namespace
      * @return \phpDocumentor\Reflection\Type|null

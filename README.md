@@ -43,6 +43,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `NotAString` exception class is now gone
  * `Identifier` class requires string for `$name` parameter
  * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
+ * `Reflector` now requires a `string` for `$identiferName` parameter
 
 ## More documentation
 

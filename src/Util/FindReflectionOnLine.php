@@ -69,7 +69,7 @@ final class FindReflectionOnLine
     /**
      * Check to see if the line is within the boundaries of the reflection specified.
      *
-     * @param mixed $reflection
+     * @param ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection
      * @param int $lineNumber
      * @return bool
      * @throws \InvalidArgumentException

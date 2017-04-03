@@ -78,7 +78,13 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     private function locateClassByName(string $className)  : ?string
     {
         if (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false)) {
-            return (new \ReflectionClass($className))->getFileName();
+            $filename = (new \ReflectionClass($className))->getFileName();
+
+            if (! is_string($filename)) {
+                return null;
+            }
+
+            return $filename;
         }
 
         self::$autoloadLocatedFile = null;

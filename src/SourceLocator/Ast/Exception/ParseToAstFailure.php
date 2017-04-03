@@ -8,7 +8,7 @@ class ParseToAstFailure extends \RuntimeException
 {
     /**
      * @param LocatedSource $locatedSource
-     * @param \Exception|\Throwable $previous
+     * @param \Throwable|null $previous
      * @return ParseToAstFailure
      */
     public static function fromLocatedSource(LocatedSource $locatedSource, \Throwable $previous = null) : self

@@ -70,7 +70,7 @@ class ReflectionClass implements Reflection, \Reflector
      * @param string $className
      * @return string
      */
-    public static function export(string $className = null) : string
+    public static function export(?string $className) : string
     {
         if (null === $className) {
             throw new \InvalidArgumentException('Class name must be provided');
@@ -193,7 +193,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public static function createFromInstance($instance)
     {
-        if (!is_object($instance)) {
+        if (! is_object($instance)) {
             throw new \InvalidArgumentException('Instance must be an instance of an object');
         }
 
@@ -467,6 +467,7 @@ class ReflectionClass implements Reflection, \Reflector
      * Get the constructor method for this class.
      *
      * @return ReflectionMethod
+     * @throws \OutOfBoundsException
      */
     public function getConstructor() : ReflectionMethod
     {

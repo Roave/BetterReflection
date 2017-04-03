@@ -17,10 +17,6 @@ class CompilerContext
      */
     private $self;
 
-    /**
-     * @param Reflector $reflector
-     * @param ReflectionClass|null $self
-     */
     public function __construct(Reflector $reflector, ?ReflectionClass $self)
     {
         $this->reflector = $reflector;
@@ -39,11 +35,6 @@ class CompilerContext
         return null !== $this->self;
     }
 
-    /**
-     * Get the
-     *
-     * @return ReflectionClass|null
-     */
     public function getSelf() : ?ReflectionClass
     {
         if (!$this->hasSelf()) {
@@ -53,11 +44,6 @@ class CompilerContext
         return $this->self;
     }
 
-    /**
-     * Get the reflector
-     *
-     * @return Reflector
-     */
     public function getReflector() : Reflector
     {
         return $this->reflector;
