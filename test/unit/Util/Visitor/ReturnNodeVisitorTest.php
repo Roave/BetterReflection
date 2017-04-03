@@ -47,7 +47,7 @@ class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
      * @param int $expectedReturns
      * @dataProvider outOfScopeNodeTypeProvider
      */
-    public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns)
+    public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns) : void
     {
         $visitor = new ReturnNodeVisitor();
 

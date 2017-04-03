@@ -11,7 +11,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class CompilerContextTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreatingContextWithoutSelf()
+    public function testCreatingContextWithoutSelf() : void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php'));
         $context = new CompilerContext($reflector, null);
@@ -24,7 +24,7 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
         $context->getSelf();
     }
 
-    public function testCreatingContextWithSelf()
+    public function testCreatingContextWithSelf() : void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}'));
         $self = $reflector->reflect('Foo');

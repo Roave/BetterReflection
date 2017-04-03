@@ -12,7 +12,7 @@ use phpDocumentor\Reflection\Types\Boolean;
  */
 class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testImplementsReflector()
+    public function testImplementsReflector() : void
     {
         $php = '<?php function foo() {}';
 
@@ -22,7 +22,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(\Reflector::class, $functionInfo);
     }
 
-    public function testNameMethodsWithNoNamespace()
+    public function testNameMethodsWithNoNamespace() : void
     {
         $php = '<?php function foo() {}';
 
@@ -35,7 +35,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('foo', $function->getShortName());
     }
 
-    public function testNameMethodsInNamespace()
+    public function testNameMethodsInNamespace() : void
     {
         $php = '<?php namespace A\B { function foo() {} }';
 
@@ -48,7 +48,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('foo', $function->getShortName());
     }
 
-    public function testNameMethodsInExplicitGlobalNamespace()
+    public function testNameMethodsInExplicitGlobalNamespace() : void
     {
         $php = '<?php namespace { function foo() {} }';
 
@@ -61,7 +61,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('foo', $function->getShortName());
     }
 
-    public function testIsDisabled()
+    public function testIsDisabled() : void
     {
         $php = '<?php function foo() {}';
 
@@ -71,7 +71,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($function->isDisabled());
     }
 
-    public function testIsUserDefined()
+    public function testIsUserDefined() : void
     {
         $php = '<?php function foo() {}';
 
@@ -81,14 +81,14 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($function->isUserDefined());
     }
 
-    public function testStaticCreationFromName()
+    public function testStaticCreationFromName() : void
     {
         require_once(__DIR__ . '/../Fixture/Functions.php');
         $reflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
         self::assertSame('myFunction', $reflection->getShortName());
     }
 
-    public function testCreateFromClosure()
+    public function testCreateFromClosure() : void
     {
         $myClosure = function () {
             return 5;
@@ -97,7 +97,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('{closure}', $reflection->getShortName());
     }
 
-    public function testCreateFromClosureCanReflectTypeHints()
+    public function testCreateFromClosureCanReflectTypeHints() : void
     {
         $myClosure = function (\stdClass $theParam) {
             return 5;
@@ -121,7 +121,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedStringValue
      * @dataProvider functionStringRepresentations
      */
-    public function testStringCast(string $functionName, string $expectedStringValue)
+    public function testStringCast(string $functionName, string $expectedStringValue) : void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
         $functionInfo = ReflectionFunction::createFromName($functionName);
@@ -129,7 +129,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         self::assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);
     }
 
-    public function testGetDocBlockReturnTypes()
+    public function testGetDocBlockReturnTypes() : void
     {
         $php = '<?php
             /**

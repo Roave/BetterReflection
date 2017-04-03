@@ -19,12 +19,12 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->stubber = new SourceStubber();
     }
 
-    public function testCanStubClass()
+    public function testCanStubClass() : void
     {
         self::assertStringMatchesFormat(
             '%Aclass stdClass%A{%A}%A',
@@ -32,7 +32,7 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCanStubInterface()
+    public function testCanStubInterface() : void
     {
         self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
@@ -40,7 +40,7 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCanStubTraits()
+    public function testCanStubTraits() : void
     {
         self::assertStringMatchesFormat(
             '%Atrait EmptyTrait%A{%A}%A',

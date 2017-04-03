@@ -10,7 +10,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
  */
 class IdentifierTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetName()
+    public function testGetName() : void
     {
         $beforeName = '\Some\Thing\Here';
         $afterName = 'Some\Thing\Here';
@@ -19,7 +19,7 @@ class IdentifierTest extends \PHPUnit_Framework_TestCase
         self::assertSame($afterName, $identifier->getName());
     }
 
-    public function testGetType()
+    public function testGetType() : void
     {
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -27,7 +27,7 @@ class IdentifierTest extends \PHPUnit_Framework_TestCase
         self::assertSame($identifierType, $identifier->getType());
     }
 
-    public function testIsTypesForClass()
+    public function testIsTypesForClass() : void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -35,7 +35,7 @@ class IdentifierTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($identifier->isFunction());
     }
 
-    public function testIsTypesForFunction()
+    public function testIsTypesForFunction() : void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 

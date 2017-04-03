@@ -12,7 +12,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
  */
 final class PhpParserPrinterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPrinting()
+    public function testPrinting() : void
     {
         self::assertSame(
             <<<'PHP'

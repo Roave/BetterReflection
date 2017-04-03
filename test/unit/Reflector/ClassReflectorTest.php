@@ -14,7 +14,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetClassesFromFile()
+    public function testGetClassesFromFile() : void
     {
         $classes = (new ClassReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php')
@@ -24,7 +24,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         self::assertCount(8, $classes);
     }
 
-    public function testReflectProxiesToSourceLocator()
+    public function testReflectProxiesToSourceLocator() : void
     {
         $reflection = $this->createMock(ReflectionClass::class);
 
@@ -44,7 +44,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         self::assertSame($reflection, $reflector->reflect('MyClass'));
     }
 
-    public function testBuildDefaultReflector()
+    public function testBuildDefaultReflector() : void
     {
         $defaultReflector = ClassReflector::buildDefaultReflector();
 
@@ -52,7 +52,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
     }
 
-    public function testThrowsExceptionWhenIdentifierNotFound()
+    public function testThrowsExceptionWhenIdentifierNotFound() : void
     {
         $defaultReflector = ClassReflector::buildDefaultReflector();
 

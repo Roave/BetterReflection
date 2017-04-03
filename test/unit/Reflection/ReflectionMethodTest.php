@@ -25,13 +25,13 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      */
     private $reflector;
 
-    public function setUp()
+    public function setUp() : void
     {
         global $loader;
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
-    public function testCreateFromName()
+    public function testCreateFromName() : void
     {
         $method = ReflectionMethod::createFromName(\SplDoublyLinkedList::class, 'add');
 
@@ -39,7 +39,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame('add', $method->getName());
     }
 
-    public function testCreateFromInstance()
+    public function testCreateFromInstance() : void
     {
         $method = ReflectionMethod::createFromInstance(new \SplDoublyLinkedList(), 'add');
 
@@ -47,7 +47,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame('add', $method->getName());
     }
 
-    public function testImplementsReflector()
+    public function testImplementsReflector() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('publicMethod');
@@ -89,7 +89,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         bool $shouldBeFinal,
         bool $shouldBeAbstract,
         bool $shouldBeStatic
-    ) {
+    ) : void {
         $classInfo = $this->reflector->reflect(Methods::class);
         $reflectionMethod = $classInfo->getMethod($methodName);
 
@@ -101,7 +101,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame($shouldBeStatic, $reflectionMethod->isStatic());
     }
 
-    public function testIsConstructorDestructor()
+    public function testIsConstructorDestructor() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -112,7 +112,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($method->isDestructor());
     }
 
-    public function testGetParameters()
+    public function testGetParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -126,7 +126,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame('parameter2', $params[1]->getName());
     }
 
-    public function testGetNumberOfParameters()
+    public function testGetNumberOfParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -137,7 +137,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame(2, $method2->getNumberOfParameters(), 'Failed asserting methodWithOptionalParameters has 2 params');
     }
 
-    public function testGetNumberOfOptionalParameters()
+    public function testGetNumberOfOptionalParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -148,7 +148,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
     }
 
-    public function testGetFileName()
+    public function testGetFileName() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodWithParameters');
@@ -158,7 +158,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Methods.php', basename($detectedFilename));
     }
 
-    public function testMethodNameWithNamespace()
+    public function testMethodNameWithNamespace() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
@@ -169,7 +169,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame('someMethod', $methodInfo->getShortName());
     }
 
-    public function testGetDocBlockReturnTypes()
+    public function testGetDocBlockReturnTypes() : void
     {
         $php = '<?php
         class Foo {
@@ -210,7 +210,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames) : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);
@@ -240,7 +240,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string|null $expectedPrototype
      * @dataProvider prototypeProvider
      */
-    public function testGetPrototype(string $class, string $method, $expectedPrototype)
+    public function testGetPrototype(string $class, string $method, $expectedPrototype) : void
     {
         $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
@@ -254,7 +254,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
 
-    public function testGetMethodNodeFailsWhenNodeIsNotClassMethod()
+    public function testGetMethodNodeFailsWhenNodeIsNotClassMethod() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('publicMethod');
@@ -306,7 +306,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedStringValue
      * @dataProvider methodStringRepresentations
      */
-    public function testStringCast(string $methodName, string $expectedStringValue)
+    public function testStringCast(string $methodName, string $expectedStringValue) : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);

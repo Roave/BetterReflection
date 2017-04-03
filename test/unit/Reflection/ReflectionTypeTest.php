@@ -11,21 +11,21 @@ use phpDocumentor\Reflection\Types;
  */
 class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateFromType()
+    public function testCreateFromType() : void
     {
         $type = new Types\String_();
         $typeInfo = ReflectionType::createFromType($type, false);
         self::assertInstanceOf(ReflectionType::class, $typeInfo);
     }
 
-    public function testGetTypeObject()
+    public function testGetTypeObject() : void
     {
         $type = new Types\String_();
         $typeInfo = ReflectionType::createFromType($type, false);
         self::assertSame($type, $typeInfo->getTypeObject());
     }
 
-    public function testAllowsNull()
+    public function testAllowsNull() : void
     {
         $noNullType = ReflectionType::createFromType(new Types\String_(), false);
         self::assertFalse($noNullType->allowsNull());
@@ -34,7 +34,7 @@ class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($allowsNullType->allowsNull());
     }
 
-    public function testIsBuiltin()
+    public function testIsBuiltin() : void
     {
         self::assertTrue(ReflectionType::createFromType(new Types\String_(), false)->isBuiltin());
         self::assertTrue(ReflectionType::createFromType(new Types\Integer(), false)->isBuiltin());
@@ -42,7 +42,7 @@ class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
         self::assertFalse(ReflectionType::createFromType(new Types\Object_(), false)->isBuiltin());
     }
 
-    public function testImplicitCastToString()
+    public function testImplicitCastToString() : void
     {
         self::assertSame('int', (string)ReflectionType::createFromType(new Types\Integer(), false));
         self::assertSame('string', (string)ReflectionType::createFromType(new Types\String_(), false));

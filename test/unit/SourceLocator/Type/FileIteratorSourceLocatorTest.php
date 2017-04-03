@@ -24,7 +24,7 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp() : void
     {
         $this->sourceLocator = new FileIteratorSourceLocator(
             new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
@@ -34,7 +34,7 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testScanDirectoryClasses()
+    public function testScanDirectoryClasses() : void
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new ClassReflector($this->sourceLocator),
@@ -56,7 +56,7 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[1]);
     }
 
-    public function testLocateIdentifier()
+    public function testLocateIdentifier() : void
     {
         $class = $this->sourceLocator->locateIdentifier(
             new ClassReflector($this->sourceLocator),

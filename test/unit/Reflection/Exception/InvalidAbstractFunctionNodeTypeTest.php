@@ -12,7 +12,7 @@ use PHPUnit_Framework_TestCase;
  */
 class InvalidAbstractFunctionNodeTypeTest extends PHPUnit_Framework_TestCase
 {
-    public function testFromNode()
+    public function testFromNode() : void
     {
         $node = new Node\Scalar\LNumber(5);
         $exception = InvalidAbstractFunctionNodeType::fromNode($node);

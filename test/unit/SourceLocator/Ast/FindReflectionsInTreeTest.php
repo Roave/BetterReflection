@@ -17,7 +17,7 @@ use PhpParser\Lexer;
  */
 class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
 {
-    private function getAstForString($php)
+    private function getAstForString($php) : array
     {
         return (new Parser\Multiple([
             new Parser\Php7(new Lexer()),
@@ -25,7 +25,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         ]))->parse($php);
     }
 
-    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst()
+    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -48,7 +48,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst()
+    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -71,7 +71,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForClassWithoutNamespace()
+    public function testInvokeCallsReflectNodesForClassWithoutNamespace() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -99,7 +99,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForNamespacedClass()
+    public function testInvokeCallsReflectNodesForNamespacedClass() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -127,7 +127,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForFunction()
+    public function testInvokeCallsReflectNodesForFunction() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);

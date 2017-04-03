@@ -15,7 +15,7 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
      * @param \PHPUnit_Framework_TestCase $test
      * @return string
      */
-    private function getCurrentTestName(\PHPUnit_Framework_TestCase $test)
+    private function getCurrentTestName(\PHPUnit_Framework_TestCase $test) : string
     {
         if (null === $this->currentSuite) {
             return $test->getName(true);
@@ -29,10 +29,11 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
      *
      * @param string $className
      * @param \PHPUnit_Framework_TestCase $test
+     * @throws \PHPUnit_Framework_AssertionFailedError
      */
-    private function assertClassNotLoaded($className, \PHPUnit_Framework_TestCase $test)
+    private function assertClassNotLoaded(string $className, \PHPUnit_Framework_TestCase $test) : void
     {
-        $test->assertFalse(
+        \PHPUnit_Framework_TestCase::assertFalse(
             class_exists($className, false),
             'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test)
         );
@@ -43,19 +44,20 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
      *
      * @param \PHPUnit_Framework_Test $test
      * @param float $time
+     * @throws \PHPUnit_Framework_AssertionFailedError
      */
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit_Framework_Test $test, $time) : void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
         if (!($test instanceof \PHPUnit_Framework_TestCase)) {
             return;
         }
 
-        self::assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\ExampleClass::class, $test);
-        self::assertClassNotLoaded(\Roave\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
-        self::assertClassNotLoaded(\ClassWithExplicitGlobalNamespace::class, $test);
-        self::assertClassNotLoaded(\ClassWithNoNamespace::class, $test);
-        self::assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\Methods::class, $test);
+        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\ExampleClass::class, $test);
+        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
+        $this->assertClassNotLoaded(\ClassWithExplicitGlobalNamespace::class, $test);
+        $this->assertClassNotLoaded(\ClassWithNoNamespace::class, $test);
+        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\Methods::class, $test);
     }
 
     /**
@@ -64,7 +66,7 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
      *
      * @param \PHPUnit_Framework_TestSuite $suite
      */
-    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite) : void
     {
         $this->currentSuite = $suite;
     }
@@ -75,7 +77,7 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
      *
      * @param \PHPUnit_Framework_TestSuite $suite
      */
-    public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(\PHPUnit_Framework_TestSuite $suite) : void
     {
         $this->currentSuite = null;
     }

@@ -34,7 +34,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances)
+    public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances) : void
     {
         $docBlock = "/**\n * $docBlock\n */";
 
@@ -65,7 +65,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances)
+    public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances) : void
     {
         $docBlock = "/**\n * $docBlock\n */";
 
@@ -98,7 +98,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testFindReturnTypeForFunctionWithNoDocBlock()
+    public function testFindReturnTypeForFunctionWithNoDocBlock() : void
     {
         $function = $this->createMock(ReflectionFunction::class);
 

@@ -11,7 +11,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
  */
 class IdentifierNotFoundTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFromNonObject()
+    public function testFromNonObject() : void
     {
         $identifier = new Identifier('myIdentifier', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 

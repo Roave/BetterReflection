@@ -12,7 +12,7 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
  */
 class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInvokeFindsClass()
+    public function testInvokeFindsClass() : void
     {
         $finder = new FindReflectionOnLine();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 10);
@@ -21,7 +21,7 @@ class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
         self::assertSame('SomeFooClass', $reflection->getName());
     }
 
-    public function testInvokeFindsTrait()
+    public function testInvokeFindsTrait() : void
     {
         $finder = new FindReflectionOnLine();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 19);
@@ -30,7 +30,7 @@ class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
         self::assertSame('SomeFooTrait', $reflection->getName());
     }
 
-    public function testInvokeFindsInterface()
+    public function testInvokeFindsInterface() : void
     {
         $finder = new FindReflectionOnLine();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 24);
@@ -39,7 +39,7 @@ class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
         self::assertSame('SomeFooInterface', $reflection->getName());
     }
 
-    public function testInvokeFindsMethod()
+    public function testInvokeFindsMethod() : void
     {
         $finder = new FindReflectionOnLine();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 14);
@@ -48,7 +48,7 @@ class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
         self::assertSame('someMethod', $reflection->getName());
     }
 
-    public function testInvokeFindsFunction()
+    public function testInvokeFindsFunction() : void
     {
         $finder = new FindReflectionOnLine();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 5);
@@ -57,7 +57,7 @@ class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
         self::assertSame('fooFunc', $reflection->getName());
     }
 
-    public function testInvokeReturnsNullWhenNothingFound()
+    public function testInvokeReturnsNullWhenNothingFound() : void
     {
         $finder = new FindReflectionOnLine();
         self::assertNull($finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 1));

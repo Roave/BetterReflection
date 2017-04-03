@@ -41,7 +41,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider basicTypesToResolveProvider
      */
-    public function testResolveTypesWithBasicTypes(array $inputTypes, array $expectedInstances)
+    public function testResolveTypesWithBasicTypes(array $inputTypes, array $expectedInstances) : void
     {
         $resolvedTypes = (new ResolveTypes())->__invoke($inputTypes, new Context(''));
 
@@ -69,7 +69,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedType
      * @dataProvider contextualTypesToResolveProvider
      */
-    public function testResolveTypesWithContextualTypes(string $inputType, string $expectedType)
+    public function testResolveTypesWithContextualTypes(string $inputType, string $expectedType) : void
     {
         $context = new Context(
             'Foo\Awesome',

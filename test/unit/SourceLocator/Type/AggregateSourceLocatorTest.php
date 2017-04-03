@@ -23,7 +23,7 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve()
+    public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve() : void
     {
         $locator1   = $this->createMock(SourceLocator::class);
         $locator2   = $this->createMock(SourceLocator::class);
@@ -35,7 +35,7 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertNull((new AggregateSourceLocator([$locator1, $locator2]))->locateIdentifier($this->getMockReflector(), $identifier));
     }
 
-    public function testInvokeWillTraverseAllGivenLocatorsAndSucceed()
+    public function testInvokeWillTraverseAllGivenLocatorsAndSucceed() : void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -62,7 +62,7 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testWillNotResolveWithEmptyLocatorsList()
+    public function testWillNotResolveWithEmptyLocatorsList() : void
     {
         self::assertNull(
             (new AggregateSourceLocator([]))->locateIdentifier(
@@ -72,7 +72,7 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testTwoStringSourceLocatorsResolveCorrectly()
+    public function testTwoStringSourceLocatorsResolveCorrectly() : void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -86,7 +86,7 @@ class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Foo', $reflection->getName());
     }
 
-    public function testLocateIdentifiersByTypeAggregatesSource()
+    public function testLocateIdentifiersByTypeAggregatesSource() : void
     {
         $identifierType = new IdentifierType;
 

@@ -17,7 +17,7 @@ class InvalidFileInfoTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFromNonSplFileInfo(string $expectedMessage, $value)
+    public function testFromNonSplFileInfo(string $expectedMessage, $value) : void
     {
         $exception = InvalidFileInfo::fromNonSplFileInfo($value);
 

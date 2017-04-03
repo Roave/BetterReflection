@@ -8,7 +8,6 @@ use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\NotAString;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
@@ -42,31 +41,31 @@ use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
  */
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
-    private function getComposerLocator()
+    private function getComposerLocator() : ComposerSourceLocator
     {
         global $loader;
         return new ComposerSourceLocator($loader);
     }
 
-    public function testCanReflectInternalClassWithDefaultLocator()
+    public function testCanReflectInternalClassWithDefaultLocator() : void
     {
         self::assertSame(\stdClass::class, ReflectionClass::createFromName(\stdClass::class)->getName());
     }
 
-    public function testCanReflectInstance()
+    public function testCanReflectInstance() : void
     {
         $instance = new \stdClass();
         self::assertSame(\stdClass::class, ReflectionClass::createFromInstance($instance)->getName());
     }
 
-    public function testCreateFromInstanceThrowsExceptionWhenInvalidArgumentProvided()
+    public function testCreateFromInstanceThrowsExceptionWhenInvalidArgumentProvided() : void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Instance must be an instance of an object');
         ReflectionClass::createFromInstance('invalid argument');
     }
 
-    public function testCanReflectEvaledClassWithDefaultLocator()
+    public function testCanReflectEvaledClassWithDefaultLocator() : void
     {
         $className = uniqid('foo', false);
 
@@ -75,7 +74,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame($className, ReflectionClass::createFromName($className)->getName());
     }
 
-    public function testClassNameMethodsWithNamespace()
+    public function testClassNameMethodsWithNamespace() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -86,7 +85,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('ExampleClass', $classInfo->getShortName());
     }
 
-    public function testClassNameMethodsWithoutNamespace()
+    public function testClassNameMethodsWithoutNamespace() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/NoNamespace.php'));
         $classInfo = $reflector->reflect('ClassWithNoNamespace');
@@ -97,7 +96,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('ClassWithNoNamespace', $classInfo->getShortName());
     }
 
-    public function testClassNameMethodsWithExplicitGlobalNamespace()
+    public function testClassNameMethodsWithExplicitGlobalNamespace() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
         $classInfo = $reflector->reflect('ClassWithExplicitGlobalNamespace');
@@ -111,7 +110,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     /**
      * @coversNothing
      */
-    public function testReflectingAClassDoesNotLoadTheClass()
+    public function testReflectingAClassDoesNotLoadTheClass() : void
     {
         self::assertFalse(class_exists(ExampleClass::class, false));
 
@@ -121,14 +120,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse(class_exists(ExampleClass::class, false));
     }
 
-    public function testGetMethods()
+    public function testGetMethods() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
         self::assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
-    public function testGetMethodsReturnsInheritedMethods()
+    public function testGetMethodsReturnsInheritedMethods() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassMethods.php'));
         $classInfo = $reflector->reflect('Qux');
@@ -156,7 +155,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Qux', $classInfo->getMethod('f')->getDeclaringClass()->getName());
     }
 
-    public function testGetImmediateMethods()
+    public function testGetImmediateMethods() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassMethods.php'));
 
@@ -167,7 +166,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('f', $methods['f']->getName());
     }
 
-    public function testGetConstants()
+    public function testGetConstants() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -177,7 +176,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         ], $classInfo->getConstants());
     }
 
-    public function testGetConstant()
+    public function testGetConstant() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -186,7 +185,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 
-    public function testIsConstructor()
+    public function testIsConstructor() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -196,7 +195,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($constructor->isConstructor());
     }
 
-    public function testGetProperties()
+    public function testGetProperties() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -207,7 +206,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertCount(4, $properties);
     }
 
-    public function testGetProperty()
+    public function testGetProperty() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -220,7 +219,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('publicProperty', $property->getName());
     }
 
-    public function testGetFileName()
+    public function testGetFileName() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -230,13 +229,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('ExampleClass.php', basename($detectedFilename));
     }
 
-    public function testStaticCreation()
+    public function testStaticCreation() : void
     {
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertSame('ExampleClass', $reflection->getShortName());
     }
 
-    public function testGetParentClassDefault()
+    public function testGetParentClassDefault() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
         $childReflection = $reflector->reflect(Fixture\ClassWithParent::class);
@@ -245,7 +244,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('ExampleClass', $parentReflection->getShortName());
     }
 
-    public function testGetParentClassThrowsExceptionWithNoParent()
+    public function testGetParentClassThrowsExceptionWithNoParent() : void
     {
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
 
@@ -267,7 +266,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      * @param int $expectedEnd
      * @dataProvider startEndLineProvider
      */
-    public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd)
+    public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd) : void
     {
         $reflector = new ClassReflector(new StringSourceLocator($php));
         $classInfo = $reflector->reflect('Foo');
@@ -276,7 +275,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame($expectedEnd, $classInfo->getEndLine());
     }
 
-    public function testGetDocComment()
+    public function testGetDocComment() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -284,7 +283,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertContains('Some comments here', $classInfo->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment()
+    public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
         $classInfo = $reflector->reflect(AnotherClass::class);
@@ -292,7 +291,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('', $classInfo->getDocComment());
     }
 
-    public function testHasProperty()
+    public function testHasProperty() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -301,7 +300,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($classInfo->hasProperty('publicProperty'));
     }
 
-    public function testHasConstant()
+    public function testHasConstant() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -310,7 +309,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($classInfo->hasConstant('MY_CONST_1'));
     }
 
-    public function testHasMethod()
+    public function testHasMethod() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -319,7 +318,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($classInfo->hasMethod('someMethod'));
     }
 
-    public function testGetDefaultProperties()
+    public function testGetDefaultProperties() : void
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php')))->reflect('Foo');
 
@@ -329,7 +328,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         ], $classInfo->getDefaultProperties());
     }
 
-    public function testIsInternalWithUserDefinedClass()
+    public function testIsInternalWithUserDefinedClass() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -338,7 +337,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($classInfo->isUserDefined());
     }
 
-    public function testIsInternalWithInternalClass()
+    public function testIsInternalWithInternalClass() : void
     {
         $reflector = ClassReflector::buildDefaultReflector();
         $classInfo = $reflector->reflect('stdClass');
@@ -347,7 +346,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classInfo->isUserDefined());
     }
 
-    public function testIsAbstract()
+    public function testIsAbstract() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -358,7 +357,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classInfo->isAbstract());
     }
 
-    public function testIsFinal()
+    public function testIsFinal() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -384,7 +383,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers(string $className, int $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $className, int $expectedModifier, array $expectedModifierNames) : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\\' . $className);
@@ -396,7 +395,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testIsTrait()
+    public function testIsTrait() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -407,7 +406,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classInfo->isTrait());
     }
 
-    public function testIsInterface()
+    public function testIsInterface() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -418,7 +417,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classInfo->isInterface());
     }
 
-    public function testGetTraits()
+    public function testGetTraits() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
         $reflector = new ClassReflector($sourceLocator);
@@ -431,7 +430,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($traits[0]->isTrait());
     }
 
-    public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed()
+    public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
         $reflector = new ClassReflector($sourceLocator);
@@ -442,7 +441,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertCount(0, $traits);
     }
 
-    public function testGetTraitNames()
+    public function testGetTraitNames() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
 
@@ -454,7 +453,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetTraitAliases()
+    public function testGetTraitAliases() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
         $reflector = new ClassReflector($sourceLocator);
@@ -467,7 +466,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         ], $classInfo->getTraitAliases());
     }
 
-    public function testGetInterfaceNames()
+    public function testGetInterfaceNames() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
 
@@ -486,7 +485,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetInterfaces()
+    public function testGetInterfaces() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
@@ -510,7 +509,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetInterfaceNamesWillReturnAllInheritedInterfaceImplementationsOnASubclass()
+    public function testGetInterfaceNamesWillReturnAllInheritedInterfaceImplementationsOnASubclass() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
 
@@ -529,7 +528,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetInterfacesWillReturnAllInheritedInterfaceImplementationsOnASubclass()
+    public function testGetInterfacesWillReturnAllInheritedInterfaceImplementationsOnASubclass() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
@@ -553,7 +552,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetInterfaceNamesWillConsiderMultipleInheritanceLevelsAndImplementsOrderOverrides()
+    public function testGetInterfaceNamesWillConsiderMultipleInheritanceLevelsAndImplementsOrderOverrides() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
 
@@ -573,7 +572,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetInterfacesWillConsiderMultipleInheritanceLevels()
+    public function testGetInterfacesWillConsiderMultipleInheritanceLevels() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
@@ -598,7 +597,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetInterfacesWillConsiderInterfaceInheritanceLevels()
+    public function testGetInterfacesWillConsiderInterfaceInheritanceLevels() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $interfaces    = (new ClassReflector($sourceLocator))
@@ -621,7 +620,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testIsInstance()
+    public function testIsInstance() : void
     {
         // note: ClassForHinting is safe to type-check against, as it will actually be loaded at runtime
         $class = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassForHinting.php')))
@@ -636,7 +635,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $class->isInstance('foo');
     }
 
-    public function testIsSubclassOf()
+    public function testIsSubclassOf() : void
     {
         $sourceLocator   = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $subExampleClass = (new ClassReflector($sourceLocator))
@@ -664,7 +663,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testImplementsInterface()
+    public function testImplementsInterface() : void
     {
         $sourceLocator   = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php');
         $subExampleClass = (new ClassReflector($sourceLocator))
@@ -679,7 +678,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($subExampleClass->implementsInterface(\Iterator::class));
     }
 
-    public function testIsInstantiable()
+    public function testIsInstantiable() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -691,7 +690,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($reflector->reflect(ExampleInterface::class)->isInstantiable());
     }
 
-    public function testIsCloneable()
+    public function testIsCloneable() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -711,7 +710,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($reflector->reflect(ClassesWithCloneMethod\WithPrivateClone::class)->isCloneable());
     }
 
-    public function testIsIterateable()
+    public function testIsIterateable() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesImplementingIterators.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -738,7 +737,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetParentClassesFailsWithClassExtendingFromInterface()
+    public function testGetParentClassesFailsWithClassExtendingFromInterface() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -750,7 +749,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $class->getParentClass();
     }
 
-    public function testGetParentClassesFailsWithClassExtendingFromTrait()
+    public function testGetParentClassesFailsWithClassExtendingFromTrait() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -762,7 +761,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $class->getParentClass();
     }
 
-    public function testGetInterfacesFailsWithInterfaceExtendingFromClass()
+    public function testGetInterfacesFailsWithInterfaceExtendingFromClass() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -774,7 +773,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $class->getInterfaces();
     }
 
-    public function testGetInterfacesFailsWithInterfaceExtendingFromTrait()
+    public function testGetInterfacesFailsWithInterfaceExtendingFromTrait() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/InvalidInheritances.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -786,7 +785,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $class->getInterfaces();
     }
 
-    public function testGetImmediateInterfaces()
+    public function testGetImmediateInterfaces() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PrototypeTree.php'));
 
@@ -797,7 +796,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Boom\Bar', $interfaces['Boom\Bar']->getName());
     }
 
-    public function testGetImmediateInterfacesDoesNotIncludeCurrentInterface()
+    public function testGetImmediateInterfacesDoesNotIncludeCurrentInterface() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php'));
 
@@ -821,7 +820,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame(['A', 'B', 'C'], $dInterfaces);
     }
 
-    public function testReflectedTraitHasNoInterfaces()
+    public function testReflectedTraitHasNoInterfaces() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
         $reflector = new ClassReflector($sourceLocator);
@@ -830,7 +829,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame([], $traitReflection->getInterfaces());
     }
 
-    public function testFetchingFqsenThrowsExceptionWithNonObjectName()
+    public function testFetchingFqsenThrowsExceptionWithNonObjectName() : void
     {
         $sourceLocator = new StringSourceLocator('<?php class Foo {}');
         $reflector = new ClassReflector($sourceLocator);
@@ -848,7 +847,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflectionClassMethodReflection->invoke($reflection, $nameNode);
     }
 
-    public function testClassToString()
+    public function testClassToString() : void
     {
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertStringMatchesFormat(
@@ -857,7 +856,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testImplementsReflector()
+    public function testImplementsReflector() : void
     {
         $php = '<?php class Foo {}';
 
@@ -867,7 +866,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(\Reflector::class, $classInfo);
     }
 
-    public function testExportMatchesFormat()
+    public function testExportMatchesFormat() : void
     {
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
@@ -875,7 +874,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testToStringWhenImplementingInterface()
+    public function testToStringWhenImplementingInterface() : void
     {
         $php = '<?php
             namespace Qux;
@@ -888,7 +887,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertStringStartsWith('Class [ <user> class Qux\Bar implements Qux\Foo ] {', $reflection->__toString());
     }
 
-    public function testToStringWhenExtending()
+    public function testToStringWhenExtending() : void
     {
         $php = '<?php
             namespace Qux;
@@ -901,7 +900,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertStringStartsWith('Class [ <user> class Qux\Bar extends Qux\Foo ] {', $reflection->__toString());
     }
 
-    public function testToStringWhenExtendingAndImplementing()
+    public function testToStringWhenExtendingAndImplementing() : void
     {
         $php = '<?php
             namespace Qux;
@@ -916,7 +915,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertStringStartsWith('Class [ <user> class Qux\Baz extends Qux\Bat implements Qux\Foo, Qux\Bar ] {', $reflection->__toString());
     }
 
-    public function testCannotClone()
+    public function testCannotClone() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -925,7 +924,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $unused = clone $classInfo;
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenClassDoesNotExist()
+    public function testGetStaticPropertyValueThrowsExceptionWhenClassDoesNotExist() : void
     {
         $php = '<?php
             class Foo {}
@@ -936,7 +935,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->getStaticPropertyValue('foo');
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist()
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
         require_once($staticPropertyGetSetFixture);
@@ -948,7 +947,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->getStaticPropertyValue('foo');
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsProtected()
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsProtected() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
         require_once($staticPropertyGetSetFixture);
@@ -960,7 +959,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->getStaticPropertyValue('bat');
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsPrivate()
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsPrivate() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
         require_once($staticPropertyGetSetFixture);
@@ -972,7 +971,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->getStaticPropertyValue('qux');
     }
 
-    public function testGetStaticPropertyValueGetsValue()
+    public function testGetStaticPropertyValueGetsValue() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
         require_once($staticPropertyGetSetFixture);
@@ -985,7 +984,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('test value', $classInfo->getStaticPropertyValue('baz'));
     }
 
-    public function testSetStaticPropertyValueThrowsExceptionWhenClassDoesNotExist()
+    public function testSetStaticPropertyValueThrowsExceptionWhenClassDoesNotExist() : void
     {
         $php = '<?php
             class Foo {}
@@ -996,7 +995,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->setStaticPropertyValue('foo', 'bar');
     }
 
-    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist()
+    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
         require_once($staticPropertyGetSetFixture);
@@ -1008,7 +1007,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo->setStaticPropertyValue('foo', 'bar');
     }
 
-    public function testSetStaticPropertyValueSetsValue()
+    public function testSetStaticPropertyValueSetsValue() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
         require_once($staticPropertyGetSetFixture);
@@ -1023,7 +1022,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('value after', StaticPropertyGetSet\Bar::$baz);
     }
 
-    public function testGetAst()
+    public function testGetAst() : void
     {
         $php = '<?php
             class Foo {}
@@ -1037,7 +1036,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Foo', $ast->name);
     }
 
-    public function testSetIsFinal()
+    public function testSetIsFinal() : void
     {
         $php = '<?php
             final class Foo {}
@@ -1054,7 +1053,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($reflection->isFinal());
     }
 
-    public function testSetIsFinalThrowsExceptionForInterface()
+    public function testSetIsFinalThrowsExceptionForInterface() : void
     {
         $php = '<?php
             interface Foo {}
@@ -1066,7 +1065,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflection->setFinal(true);
     }
 
-    public function testRemoveMethod()
+    public function testRemoveMethod() : void
     {
         $php = '<?php
             class Foo {
@@ -1083,7 +1082,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($reflection->hasMethod('bar'));
     }
 
-    public function testAddMethod()
+    public function testAddMethod() : void
     {
         $php = '<?php
             class Foo {
@@ -1099,7 +1098,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($reflection->hasMethod('bar'));
     }
 
-    public function testRemoveProperty()
+    public function testRemoveProperty() : void
     {
         $php = '<?php
             class Foo {
@@ -1116,7 +1115,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($reflection->hasProperty('bar'));
     }
 
-    public function testAddProperty()
+    public function testAddProperty() : void
     {
         $php = '<?php
             class Foo {

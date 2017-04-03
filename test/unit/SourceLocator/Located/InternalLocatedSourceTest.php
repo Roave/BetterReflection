@@ -9,7 +9,7 @@ use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
  */
 class InternalLocatedSourceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInternalsLocatedSource()
+    public function testInternalsLocatedSource() : void
     {
         $locatedSource = new InternalLocatedSource('foo');
 

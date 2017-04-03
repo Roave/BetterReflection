@@ -23,9 +23,9 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testCanReflectEvaledClass()
+    public function testCanReflectEvaledClass() : void
     {
-        $className = uniqid('foo');
+        $className = uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo(){}}');
 
@@ -42,9 +42,9 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());
     }
 
-    public function testCanReflectEvaledInterface()
+    public function testCanReflectEvaledInterface() : void
     {
-        $interfaceName = uniqid('foo');
+        $interfaceName = uniqid('foo', false);
 
         eval('interface ' . $interfaceName . ' {function foo();}');
 
@@ -59,9 +59,9 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertStringMatchesFormat('%Ainterface%A' . $interfaceName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
-    public function testCanReflectEvaledTrait()
+    public function testCanReflectEvaledTrait() : void
     {
-        $traitName = uniqid('foo');
+        $traitName = uniqid('foo', false);
 
         eval('trait ' . $traitName . ' {function foo(){}}');
 
@@ -76,11 +76,11 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
-    public function testCanReflectEvaledLocatedSourceClass()
+    public function testCanReflectEvaledLocatedSourceClass() : void
     {
         /* @var $class */
         $reflector = (new ClassReflector(new EvaledCodeSourceLocator()));
-        $className = uniqid('foo');
+        $className = uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo($bar = "baz") {}}');
 
@@ -94,7 +94,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertCount(1, $class->getMethods());
     }
 
-    public function testCannotReflectRequiredClass()
+    public function testCannotReflectRequiredClass() : void
     {
         self::assertNull(
             (new EvaledCodeSourceLocator())
@@ -102,7 +102,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentCode()
+    public function testReturnsNullForNonExistentCode() : void
     {
         $locator = new EvaledCodeSourceLocator();
         self::assertNull(
@@ -116,7 +116,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReturnsNullForFunctions()
+    public function testReturnsNullForFunctions() : void
     {
         $locator = new EvaledCodeSourceLocator();
         self::assertNull(

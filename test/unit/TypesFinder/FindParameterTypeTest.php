@@ -31,7 +31,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testNamespaceResolutionForProperty()
+    public function testNamespaceResolutionForProperty() : void
     {
         $php = '<?php
             namespace MyNamespace;
@@ -61,7 +61,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances)
+    public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
@@ -94,7 +94,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances)
+    public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
@@ -128,7 +128,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testFindParameterTypeForFunctionWithNoDocBlock()
+    public function testFindParameterTypeForFunctionWithNoDocBlock() : void
     {
         $node = new ParamNode('foo');
 

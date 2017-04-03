@@ -2,6 +2,7 @@
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -15,15 +16,16 @@ use PhpParser\Lexer;
  */
 class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
 {
-    private function getFirstAstNodeInString($php)
+    private function getFirstAstNodeInString($php) : Node
     {
-        return reset((new Parser\Multiple([
+        $nodes = (new Parser\Multiple([
             new Parser\Php7(new Lexer()),
             new Parser\Php5(new Lexer()),
-        ]))->parse($php));
+        ]))->parse($php);
+        return reset($nodes);
     }
 
-    public function testReturnsReflectionForClassNode()
+    public function testReturnsReflectionForClassNode() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
@@ -41,7 +43,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Foo', $reflection->getName());
     }
 
-    public function testReturnsReflectionForTraitNode()
+    public function testReturnsReflectionForTraitNode() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
@@ -60,7 +62,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($reflection->isTrait());
     }
 
-    public function testReturnsReflectionForInterfaceNode()
+    public function testReturnsReflectionForInterfaceNode() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
@@ -79,7 +81,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($reflection->isInterface());
     }
 
-    public function testReturnsReflectionForFunctionNode()
+    public function testReturnsReflectionForFunctionNode() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
@@ -97,7 +99,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
         self::assertSame('foo', $reflection->getName());
     }
 
-    public function testReturnsNullWhenIncompatibleNodeFound()
+    public function testReturnsNullWhenIncompatibleNodeFound() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);

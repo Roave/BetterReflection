@@ -21,10 +21,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
     private $parser;
 
-    /**
-     * @return Parser
-     */
-    private function getPhpParser()
+    private function getPhpParser() : Parser
     {
         if (isset($this->parser)) {
             return $this->parser;
@@ -34,13 +31,13 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         return $this->parser;
     }
 
-    public function testExceptionThrownWhenNonObjectGiven()
+    public function testExceptionThrownWhenNonObjectGiven() : void
     {
         $this->expectException(\InvalidArgumentException::class);
         ReflectionObject::createFromInstance(123);
     }
 
-    public function testReflectionWorksWithInternalClasses()
+    public function testReflectionWorksWithInternalClasses() : void
     {
         $foo = new \stdClass();
 
@@ -50,7 +47,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($classInfo->isInternal());
     }
 
-    public function testReflectionWorksWithEvaledClasses()
+    public function testReflectionWorksWithEvaledClasses() : void
     {
         $foo = new ClassForHinting();
 
@@ -60,7 +57,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classInfo->isInternal());
     }
 
-    public function testReflectionWorksWithDynamicallyDeclaredMembers()
+    public function testReflectionWorksWithDynamicallyDeclaredMembers() : void
     {
         $foo = new ClassForHinting();
         $foo->bar = 'huzzah';
@@ -73,7 +70,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($propInfo->isDefault());
     }
 
-    public function testExceptionThrownWhenInvalidInstanceGiven()
+    public function testExceptionThrownWhenInvalidInstanceGiven() : void
     {
         $foo = new ClassForHinting();
         $foo->bar = 'huzzah';
@@ -134,7 +131,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      * @param string $methodName
      * @dataProvider reflectionClassMethodProvider
      */
-    public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName)
+    public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName) : void
     {
         // First, ensure the expected method even exists
         $publicObjectMethods = get_class_methods(ReflectionObject::class);
@@ -197,7 +194,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $reflectionObject->{$methodName}(...$fakeParams);
     }
 
-    public function testCreateFromNodeThrowsException()
+    public function testCreateFromNodeThrowsException() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mReflector */
         $mReflector = $this->createMock(Reflector::class);
@@ -212,13 +209,13 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         ReflectionObject::createFromNode($mReflector, $mClassNode, $mLocatedSource);
     }
 
-    public function testCreateFromNameThrowsException()
+    public function testCreateFromNameThrowsException() : void
     {
         $this->expectException(\LogicException::class);
         ReflectionObject::createFromName('foo');
     }
 
-    public function testReflectionObjectExportMatchesExpectation()
+    public function testReflectionObjectExportMatchesExpectation() : void
     {
         $foo = new ClassForHinting();
         $foo->bar = 'huzzah';
@@ -253,7 +250,7 @@ BLAH;
         self::assertStringMatchesFormat($expectedExport, $actualExport);
     }
 
-    public function testCannotClone()
+    public function testCannotClone() : void
     {
         $classInfo = ReflectionObject::createFromInstance(new \stdClass());
 

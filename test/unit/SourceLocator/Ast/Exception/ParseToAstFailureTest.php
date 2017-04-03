@@ -10,7 +10,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFromLocatedSourceWithoutFilename()
+    public function testFromLocatedSourceWithoutFilename() : void
     {
         $locatedSource = new LocatedSource('<?php abc', null);
 
@@ -23,7 +23,7 @@ class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
         self::assertSame($previous, $exception->getPrevious());
     }
 
-    public function testFromLocatedSourceWithFilename()
+    public function testFromLocatedSourceWithFilename() : void
     {
         $locatedSource = new LocatedSource('<?php abc', null);
 

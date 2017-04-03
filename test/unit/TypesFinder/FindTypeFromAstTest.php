@@ -35,7 +35,7 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
      * @param string $toStringValue
      * @dataProvider findTypeFromAstTypeProvider
      */
-    public function testFindTypeFromAst($input, string $expected, string $toStringValue)
+    public function testFindTypeFromAst($input, string $expected, string $toStringValue) : void
     {
         $resolvedType = (new FindTypeFromAst())->__invoke(
             $input,
@@ -47,7 +47,7 @@ class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
         self::assertSame($toStringValue, (string)$resolvedType);
     }
 
-    public function testFindTypeFromAstReturnsNull()
+    public function testFindTypeFromAstReturnsNull() : void
     {
         self::assertNull(
             (new FindTypeFromAst())->__invoke(

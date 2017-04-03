@@ -19,12 +19,12 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class LocatorTest extends \PHPUnit_Framework_TestCase
 {
-    private function getIdentifier($name, $type)
+    private function getIdentifier($name, $type) : Identifier
     {
         return new Identifier($name, new IdentifierType($type));
     }
 
-    public function testReflectingWithinNamespace()
+    public function testReflectingWithinNamespace() : void
     {
         $php = '<?php
         namespace Foo;
@@ -40,7 +40,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
-    public function testReflectingTopLevelClass()
+    public function testReflectingTopLevelClass() : void
     {
         $php = '<?php
         class Foo {}
@@ -55,7 +55,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
-    public function testReflectingTopLevelFunction()
+    public function testReflectingTopLevelFunction() : void
     {
         $php = '<?php
         function foo() {}
@@ -70,7 +70,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(ReflectionFunction::class, $functionInfo);
     }
 
-    public function testReflectThrowsExeptionWhenClassNotFoundAndNoNodesExist()
+    public function testReflectThrowsExeptionWhenClassNotFoundAndNoNodesExist() : void
     {
         $php = '<?php';
 
@@ -82,7 +82,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReflectThrowsExeptionWhenClassNotFoundButNodesExist()
+    public function testReflectThrowsExeptionWhenClassNotFoundButNodesExist() : void
     {
         $php = "<?php
         namespace Foo;
@@ -97,7 +97,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode()
+    public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode() : void
     {
         $locator = new Locator();
 

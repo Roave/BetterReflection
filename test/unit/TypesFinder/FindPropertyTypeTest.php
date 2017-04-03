@@ -34,7 +34,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider propertyTypeProvider
      */
-    public function testFindPropertyType(string $docBlock, array $expectedInstances)
+    public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
     {
         $class = $this->createMock(ReflectionClass::class);
 
@@ -62,7 +62,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testNamespaceResolutionForProperty()
+    public function testNamespaceResolutionForProperty() : void
     {
         $php = '<?php
             namespace MyNamespace;
@@ -85,7 +85,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         self::assertSame(['\Psr\Log\LoggerInterface'], $prop->getDocBlockTypeStrings());
     }
 
-    public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound()
+    public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
     {
         $class = $this->createMock(ReflectionClass::class);
 
@@ -109,7 +109,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         self::assertSame([], $foundTypes);
     }
 
-    public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent()
+    public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent() : void
     {
         $property = $this->createMock(ReflectionProperty::class);
 

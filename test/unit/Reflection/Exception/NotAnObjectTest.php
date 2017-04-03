@@ -10,7 +10,7 @@ use PHPUnit_Framework_TestCase;
  */
 class NotAnObjectTest extends PHPUnit_Framework_TestCase
 {
-    public function testFromNonObject()
+    public function testFromNonObject() : void
     {
         $exception = NotAnObject::fromNonObject(123);
 

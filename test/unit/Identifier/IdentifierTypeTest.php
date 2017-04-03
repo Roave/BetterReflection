@@ -15,7 +15,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return string[][]
      */
-    public function possibleIdentifierTypesProvider()
+    public function possibleIdentifierTypesProvider() : array
     {
         return [
             [IdentifierType::IDENTIFIER_CLASS],
@@ -26,20 +26,20 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
      * @param string $full
      * @dataProvider possibleIdentifierTypesProvider
      */
-    public function testPossibleIdentifierTypes(string $full)
+    public function testPossibleIdentifierTypes(string $full) : void
     {
         $type = new IdentifierType($full);
         self::assertSame($full, $type->getName());
     }
 
-    public function testThrowsAnExceptionWhenInvalidTypeGiven()
+    public function testThrowsAnExceptionWhenInvalidTypeGiven() : void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('foo is not a valid identifier type');
         new IdentifierType('foo');
     }
 
-    public function testIsMatchingReflectorClass()
+    public function testIsMatchingReflectorClass() : void
     {
         $reflectionClass = $this->createMock(ReflectionClass::class);
 
@@ -48,7 +48,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($type->isMatchingReflector($reflectionClass));
     }
 
-    public function testIsMatchingReflectorFunction()
+    public function testIsMatchingReflectorFunction() : void
     {
         $reflectionFunction = $this->createMock(ReflectionFunction::class);
 
@@ -57,7 +57,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($type->isMatchingReflector($reflectionFunction));
     }
 
-    public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid()
+    public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid() : void
     {
         $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -73,7 +73,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classType->isMatchingReflector($reflectionClass));
     }
 
-    public function testIsTypesForClass()
+    public function testIsTypesForClass() : void
     {
         $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -81,7 +81,7 @@ class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($classType->isFunction());
     }
 
-    public function testIsTypesForFunction()
+    public function testIsTypesForFunction() : void
     {
         $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
 

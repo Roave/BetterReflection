@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testReflectProxiesToGenericReflectMethod()
+    public function testReflectProxiesToGenericReflectMethod() : void
     {
         $php = '<?php function foo() {}';
 
@@ -33,7 +33,7 @@ class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
         self::assertSame($reflection, $reflector->reflect('foo'));
     }
 
-    public function testGetFunctionsFromFile()
+    public function testGetFunctionsFromFile() : void
     {
         $functions = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php')

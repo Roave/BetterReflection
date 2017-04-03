@@ -10,7 +10,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
  */
 final class FailedToLoadClassTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFromReflectionClass()
+    public function testFromReflectionClass() : void
     {
         $className = uniqid('class name', true);
 

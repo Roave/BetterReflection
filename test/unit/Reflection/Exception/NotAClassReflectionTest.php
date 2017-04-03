@@ -13,7 +13,7 @@ use PHPUnit_Framework_TestCase;
  */
 class NotAClassReflectionTest extends PHPUnit_Framework_TestCase
 {
-    public function testFromInterface()
+    public function testFromInterface() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php');
         $reflector     = new ClassReflector($sourceLocator);
@@ -27,7 +27,7 @@ class NotAClassReflectionTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFromTrait()
+    public function testFromTrait() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php');
         $reflector     = new ClassReflector($sourceLocator);

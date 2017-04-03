@@ -9,7 +9,6 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Exception\FunctionUndefined;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
@@ -29,7 +28,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testClassLoads()
+    public function testClassLoads() : void
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator());
 
@@ -40,7 +39,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertSame('ExampleClass', $classInfo->getShortName());
     }
 
-    public function testClassLoadsWorksWithExistingClass()
+    public function testClassLoadsWorksWithExistingClass() : void
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator());
 
@@ -56,7 +55,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadableInterface()
+    public function testCanLocateAutoloadableInterface() : void
     {
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
 
@@ -75,7 +74,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadedInterface()
+    public function testCanLocateAutoloadedInterface() : void
     {
         self::assertTrue(interface_exists(AutoloadableInterface::class));
 
@@ -92,7 +91,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadableTrait()
+    public function testCanLocateAutoloadableTrait() : void
     {
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
 
@@ -111,7 +110,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadedTrait()
+    public function testCanLocateAutoloadedTrait() : void
     {
         self::assertTrue(trait_exists(AutoloadableTrait::class));
 
@@ -125,7 +124,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFunctionLoads()
+    public function testFunctionLoads() : void
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
@@ -135,7 +134,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertSame('myFunction', $classInfo->getShortName());
     }
 
-    public function testFunctionReflectionFailsWhenFunctionNotDefined()
+    public function testFunctionReflectionFailsWhenFunctionNotDefined() : void
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
@@ -143,7 +142,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $reflector->reflect('this function does not exist, hopefully');
     }
 
-    public function testNullReturnedWhenInvalidTypeGiven()
+    public function testNullReturnedWhenInvalidTypeGiven() : void
     {
         $locator = new AutoloadSourceLocator();
 
@@ -157,7 +156,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertNull($locator->locateIdentifier($this->getMockReflector(), $identifier));
     }
 
-    public function testReturnsNullWhenUnableToAutoload()
+    public function testReturnsNullWhenUnableToAutoload() : void
     {
         $sourceLocator = new AutoloadSourceLocator();
 
@@ -167,9 +166,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testShouldNotConsiderEvaledSources()
+    public function testShouldNotConsiderEvaledSources() : void
     {
-        $className = uniqid('generatedClassName');
+        $className = uniqid('generatedClassName', false);
 
         eval('class ' . $className . '{}');
 

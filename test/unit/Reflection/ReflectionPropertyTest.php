@@ -24,13 +24,13 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      */
     private $reflector;
 
-    public function setUp()
+    public function setUp() : void
     {
         global $loader;
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
-    public function testCreateFromName()
+    public function testCreateFromName() : void
     {
         $property = ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
 
@@ -38,7 +38,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertSame('name', $property->getName());
     }
 
-    public function testCreateFromInstance()
+    public function testCreateFromInstance() : void
     {
         $property = ReflectionProperty::createFromInstance(new ClassForHinting(), 'someProperty');
 
@@ -46,7 +46,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertSame('someProperty', $property->getName());
     }
 
-    public function testImplementsReflector()
+    public function testImplementsReflector() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
@@ -54,7 +54,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(\Reflector::class, $publicProp);
     }
 
-    public function testVisibilityMethods()
+    public function testVisibilityMethods() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -68,7 +68,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($publicProp->isPublic());
     }
 
-    public function testIsStatic()
+    public function testIsStatic() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -96,7 +96,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedTypes
      * @dataProvider stringTypesDataProvider
      */
-    public function testGetDocBlockTypeStrings(string $propertyName, array $expectedTypes)
+    public function testGetDocBlockTypeStrings(string $propertyName, array $expectedTypes) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -122,7 +122,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedTypes
      * @dataProvider typesDataProvider
      */
-    public function testGetDocBlockTypes(string $propertyName, array $expectedTypes)
+    public function testGetDocBlockTypes(string $propertyName, array $expectedTypes) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -135,7 +135,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetDocComment()
+    public function testGetDocComment() : void
     {
         $expectedDoc = "/**\n * @var string\n */";
 
@@ -145,7 +145,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertSame($expectedDoc, $property->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment()
+    public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $property = $classInfo->getProperty('publicStaticProperty');
@@ -153,7 +153,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertSame('', $property->getDocComment());
     }
 
-    public function testExportThrowsException()
+    public function testExportThrowsException() : void
     {
         $this->expectException(\Exception::class);
         ReflectionProperty::export();
@@ -175,7 +175,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $property = $classInfo->getProperty($propertyName);
@@ -187,7 +187,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testIsDefault()
+    public function testIsDefault() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
 
@@ -195,7 +195,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($classInfo->getProperty('publicStaticProperty')->isDefault());
     }
 
-    public function testIsDefaultWithRuntimeDeclaredProperty()
+    public function testIsDefaultWithRuntimeDeclaredProperty() : void
     {
         self::assertFalse(
             ReflectionProperty::createFromNode(
@@ -223,13 +223,13 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedString
      * @dataProvider castToStringProvider
      */
-    public function testCastingToString(string $propertyName, string $expectedString)
+    public function testCastingToString(string $propertyName, string $expectedString) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         self::assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
     }
 
-    public function testGetDefaultProperty()
+    public function testGetDefaultProperty() : void
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php')))->reflect('Foo');
 
@@ -237,7 +237,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertNull($classInfo->getProperty('noDefault')->getDefaultValue());
     }
 
-    public function testCannotClone()
+    public function testCannotClone() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
@@ -246,7 +246,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $unused = clone $publicProp;
     }
 
-    public function testSetVisibility()
+    public function testSetVisibility() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicStaticProperty');
@@ -278,7 +278,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($publicProp->isStatic(), 'Should still be static after setting public');
     }
 
-    public function testSetVisibilityThrowsExceptionWithInvalidArgument()
+    public function testSetVisibilityThrowsExceptionWithInvalidArgument() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');

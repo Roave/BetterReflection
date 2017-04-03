@@ -31,7 +31,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $className
      */
-    public function testCanFetchInternalLocatedSource(string $className)
+    public function testCanFetchInternalLocatedSource(string $className) : void
     {
         $locator = new PhpInternalSourceLocator();
 
@@ -60,7 +60,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      * @param string $className
      * @throws \ReflectionException
      */
-    public function testCanReflectInternalClasses(string $className)
+    public function testCanReflectInternalClasses(string $className) : void
     {
         /* @var $class */
         $phpInternalSourceLocator = new PhpInternalSourceLocator();
@@ -119,7 +119,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentCode()
+    public function testReturnsNullForNonExistentCode() : void
     {
         $locator = new PhpInternalSourceLocator();
         self::assertNull(
@@ -133,7 +133,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReturnsNullForFunctions()
+    public function testReturnsNullForFunctions() : void
     {
         $locator = new PhpInternalSourceLocator();
         self::assertNull(
@@ -154,7 +154,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      *
      * @coversNothing
      */
-    public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className)
+    public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
     {
         if (! (
             class_exists($className, false)
@@ -192,7 +192,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function assertSameClassAttributes(\ReflectionClass $original, ReflectionClass $stubbed)
+    private function assertSameClassAttributes(\ReflectionClass $original, ReflectionClass $stubbed) : void
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
@@ -230,7 +230,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed)
+    private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed) : void
     {
         self::assertSame(
             array_map(
@@ -259,7 +259,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertSame($original->isFinal(), $stubbed->isFinal());
     }
 
-    private function assertSameParameterAttributes(\ReflectionParameter $original, ReflectionParameter $stubbed)
+    private function assertSameParameterAttributes(\ReflectionParameter $original, ReflectionParameter $stubbed) : void
     {
         self::assertSame($original->getName(), $stubbed->getName());
         self::assertSame($original->isArray(), $stubbed->isArray());

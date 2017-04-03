@@ -24,7 +24,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
      * @param string $methodName
      * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionMethods(string $methodName)
+    public function testCoreReflectionMethods(string $methodName) : void
     {
         $reflectionFunctionAdapterReflection = new CoreReflectionClass(ReflectionFunctionAdapter::class);
         self::assertTrue($reflectionFunctionAdapterReflection->hasMethod($methodName));
@@ -76,7 +76,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args)
+    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
     {
         /* @var BetterReflectionFunction|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
@@ -96,7 +96,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testExport()
+    public function testExport() : void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Unable to export statically');

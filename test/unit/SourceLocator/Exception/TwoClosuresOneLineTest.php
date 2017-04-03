@@ -11,7 +11,7 @@ use PHPUnit_Framework_TestCase;
  */
 class TwoClosuresOneLineTest extends PHPUnit_Framework_TestCase
 {
-    public function testFromReflection()
+    public function testFromReflection() : void
     {
         $previous = new ClosureAnalysisException('Two closures were declared on the same line');
 
