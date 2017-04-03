@@ -25,40 +25,40 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      */
     private $reflector;
 
-    public function setUp()
+    public function setUp() : void
     {
         global $loader;
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
-    public function testCreateFromName()
+    public function testCreateFromName() : void
     {
         $method = ReflectionMethod::createFromName(\SplDoublyLinkedList::class, 'add');
 
-        $this->assertInstanceOf(ReflectionMethod::class, $method);
-        $this->assertSame('add', $method->getName());
+        self::assertInstanceOf(ReflectionMethod::class, $method);
+        self::assertSame('add', $method->getName());
     }
 
-    public function testCreateFromInstance()
+    public function testCreateFromInstance() : void
     {
         $method = ReflectionMethod::createFromInstance(new \SplDoublyLinkedList(), 'add');
 
-        $this->assertInstanceOf(ReflectionMethod::class, $method);
-        $this->assertSame('add', $method->getName());
+        self::assertInstanceOf(ReflectionMethod::class, $method);
+        self::assertSame('add', $method->getName());
     }
 
-    public function testImplementsReflector()
+    public function testImplementsReflector() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('publicMethod');
 
-        $this->assertInstanceOf(\Reflector::class, $methodInfo);
+        self::assertInstanceOf(\Reflector::class, $methodInfo);
     }
 
     /**
      * @return array
      */
-    public function visibilityProvider()
+    public function visibilityProvider() : array
     {
         return [
             'publicMethod' => ['publicMethod', true, false, false, false, false, false],
@@ -72,7 +72,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $method
+     * @param string $methodName
      * @param bool $shouldBePublic
      * @param bool $shouldBePrivate
      * @param bool $shouldBeProtected
@@ -81,88 +81,95 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param bool $shouldBeStatic
      * @dataProvider visibilityProvider
      */
-    public function testVisibilityOfMethods($method, $shouldBePublic, $shouldBePrivate, $shouldBeProtected, $shouldBeFinal, $shouldBeAbstract, $shouldBeStatic)
-    {
+    public function testVisibilityOfMethods(
+        string $methodName,
+        bool $shouldBePublic,
+        bool $shouldBePrivate,
+        bool $shouldBeProtected,
+        bool $shouldBeFinal,
+        bool $shouldBeAbstract,
+        bool $shouldBeStatic
+    ) : void {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod($method);
+        $reflectionMethod = $classInfo->getMethod($methodName);
 
-        $this->assertSame($shouldBePublic, $method->isPublic());
-        $this->assertSame($shouldBePrivate, $method->isPrivate());
-        $this->assertSame($shouldBeProtected, $method->isProtected());
-        $this->assertSame($shouldBeFinal, $method->isFinal());
-        $this->assertSame($shouldBeAbstract, $method->isAbstract());
-        $this->assertSame($shouldBeStatic, $method->isStatic());
+        self::assertSame($shouldBePublic, $reflectionMethod->isPublic());
+        self::assertSame($shouldBePrivate, $reflectionMethod->isPrivate());
+        self::assertSame($shouldBeProtected, $reflectionMethod->isProtected());
+        self::assertSame($shouldBeFinal, $reflectionMethod->isFinal());
+        self::assertSame($shouldBeAbstract, $reflectionMethod->isAbstract());
+        self::assertSame($shouldBeStatic, $reflectionMethod->isStatic());
     }
 
-    public function testIsConstructorDestructor()
+    public function testIsConstructorDestructor() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('__construct');
-        $this->assertTrue($method->isConstructor());
+        self::assertTrue($method->isConstructor());
 
         $method = $classInfo->getMethod('__destruct');
-        $this->assertTrue($method->isDestructor());
+        self::assertTrue($method->isDestructor());
     }
 
-    public function testGetParameters()
+    public function testGetParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithParameters');
         $params = $method->getParameters();
 
-        $this->assertCount(2, $params);
-        $this->assertContainsOnlyInstancesOf(ReflectionParameter::class, $params);
+        self::assertCount(2, $params);
+        self::assertContainsOnlyInstancesOf(ReflectionParameter::class, $params);
 
-        $this->assertSame('parameter1', $params[0]->getName());
-        $this->assertSame('parameter2', $params[1]->getName());
+        self::assertSame('parameter1', $params[0]->getName());
+        self::assertSame('parameter2', $params[1]->getName());
     }
 
-    public function testGetNumberOfParameters()
+    public function testGetNumberOfParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method1 = $classInfo->getMethod('methodWithParameters');
-        $this->assertSame(2, $method1->getNumberOfParameters(), 'Failed asserting methodWithParameters has 2 params');
+        self::assertSame(2, $method1->getNumberOfParameters(), 'Failed asserting methodWithParameters has 2 params');
 
         $method2 = $classInfo->getMethod('methodWithOptionalParameters');
-        $this->assertSame(2, $method2->getNumberOfParameters(), 'Failed asserting methodWithOptionalParameters has 2 params');
+        self::assertSame(2, $method2->getNumberOfParameters(), 'Failed asserting methodWithOptionalParameters has 2 params');
     }
 
-    public function testGetNumberOfOptionalParameters()
+    public function testGetNumberOfOptionalParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method1 = $classInfo->getMethod('methodWithParameters');
-        $this->assertSame(2, $method1->getNumberOfRequiredParameters(), 'Failed asserting methodWithParameters has 2 required params');
+        self::assertSame(2, $method1->getNumberOfRequiredParameters(), 'Failed asserting methodWithParameters has 2 required params');
 
         $method2 = $classInfo->getMethod('methodWithOptionalParameters');
-        $this->assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
+        self::assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
     }
 
-    public function testGetFileName()
+    public function testGetFileName() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodWithParameters');
 
         $detectedFilename = $method->getFileName();
 
-        $this->assertSame('Methods.php', basename($detectedFilename));
+        self::assertSame('Methods.php', basename($detectedFilename));
     }
 
-    public function testMethodNameWithNamespace()
+    public function testMethodNameWithNamespace() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
-        $this->assertFalse($methodInfo->inNamespace());
-        $this->assertSame('someMethod', $methodInfo->getName());
-        $this->assertSame('', $methodInfo->getNamespaceName());
-        $this->assertSame('someMethod', $methodInfo->getShortName());
+        self::assertFalse($methodInfo->inNamespace());
+        self::assertSame('someMethod', $methodInfo->getName());
+        self::assertSame('', $methodInfo->getNamespaceName());
+        self::assertSame('someMethod', $methodInfo->getShortName());
     }
 
-    public function testGetDocBlockReturnTypes()
+    public function testGetDocBlockReturnTypes() : void
     {
         $php = '<?php
         class Foo {
@@ -179,12 +186,12 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
         $types = $methodInfo->getDocBlockReturnTypes();
 
-        $this->assertInternalType('array', $types);
-        $this->assertCount(1, $types);
-        $this->assertInstanceOf(Integer::class, $types[0]);
+        self::assertInternalType('array', $types);
+        self::assertCount(1, $types);
+        self::assertInstanceOf(Integer::class, $types[0]);
     }
 
-    public function modifierProvider()
+    public function modifierProvider() : array
     {
         return [
             ['publicMethod', \ReflectionMethod::IS_PUBLIC, ['public']],
@@ -203,19 +210,19 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers($methodName, $expectedModifier, array $expectedModifierNames)
+    public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames) : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);
 
-        $this->assertSame($expectedModifier, $method->getModifiers());
-        $this->assertSame(
+        self::assertSame($expectedModifier, $method->getModifiers());
+        self::assertSame(
             $expectedModifierNames,
             \Reflection::getModifierNames($method->getModifiers())
         );
     }
 
-    public function prototypeProvider()
+    public function prototypeProvider() : array
     {
         return [
             ['Zoom\B', 'foo', 'Zoom\FooInterface'],
@@ -233,7 +240,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string|null $expectedPrototype
      * @dataProvider prototypeProvider
      */
-    public function testGetPrototype($class, $method, $expectedPrototype)
+    public function testGetPrototype(string $class, string $method, $expectedPrototype) : void
     {
         $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
@@ -243,11 +250,11 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         }
 
         $b = $reflector->reflect($class)->getMethod($method)->getPrototype();
-        $this->assertInstanceOf(ReflectionMethod::class, $b);
-        $this->assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
+        self::assertInstanceOf(ReflectionMethod::class, $b);
+        self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
 
-    public function testGetMethodNodeFailsWhenNodeIsNotClassMethod()
+    public function testGetMethodNodeFailsWhenNodeIsNotClassMethod() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('publicMethod');
@@ -262,7 +269,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         $method->isPublic();
     }
 
-    public function methodStringRepresentations()
+    public function methodStringRepresentations() : array
     {
         $methods = [
             ['__construct', "Method [ <user, ctor> public method __construct ] {\n  @@ %s/test/unit/Fixture/Methods.php 11 - 13\n}"],
@@ -299,11 +306,11 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedStringValue
      * @dataProvider methodStringRepresentations
      */
-    public function testStringCast($methodName, $expectedStringValue)
+    public function testStringCast(string $methodName, string $expectedStringValue) : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod($methodName);
 
-        $this->assertStringMatchesFormat($expectedStringValue, (string)$method);
+        self::assertStringMatchesFormat($expectedStringValue, (string)$method);
     }
 }

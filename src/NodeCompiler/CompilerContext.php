@@ -17,11 +17,7 @@ class CompilerContext
      */
     private $self;
 
-    /**
-     * @param Reflector $reflector
-     * @param ReflectionClass|null $self
-     */
-    public function __construct(Reflector $reflector, ReflectionClass $self = null)
+    public function __construct(Reflector $reflector, ?ReflectionClass $self)
     {
         $this->reflector = $reflector;
         $this->self = $self;
@@ -34,17 +30,12 @@ class CompilerContext
      *
      * @return bool
      */
-    public function hasSelf()
+    public function hasSelf() : bool
     {
         return null !== $this->self;
     }
 
-    /**
-     * Get the
-     *
-     * @return ReflectionClass|null
-     */
-    public function getSelf()
+    public function getSelf() : ?ReflectionClass
     {
         if (!$this->hasSelf()) {
             throw new \RuntimeException('The current context does not have a class for self');
@@ -53,12 +44,7 @@ class CompilerContext
         return $this->self;
     }
 
-    /**
-     * Get the reflector
-     *
-     * @return Reflector
-     */
-    public function getReflector()
+    public function getReflector() : Reflector
     {
         return $this->reflector;
     }

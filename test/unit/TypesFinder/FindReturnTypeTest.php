@@ -17,7 +17,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function returnTypeProvider()
+    public function returnTypeProvider() : array
     {
         return [
             ['@return int|string', [Types\Integer::class, Types\String_::class]],
@@ -34,7 +34,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForFunction($docBlock, $expectedInstances)
+    public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances) : void
     {
         $docBlock = "/**\n * $docBlock\n */";
 
@@ -53,10 +53,10 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindReturnType())->__invoke($function);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
@@ -65,7 +65,7 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForMethod($docBlock, $expectedInstances)
+    public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances) : void
     {
         $docBlock = "/**\n * $docBlock\n */";
 
@@ -91,14 +91,14 @@ class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionMethod $method */
         $foundTypes = (new FindReturnType())->__invoke($method);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
-    public function testFindReturnTypeForFunctionWithNoDocBlock()
+    public function testFindReturnTypeForFunctionWithNoDocBlock() : void
     {
         $function = $this->createMock(ReflectionFunction::class);
 

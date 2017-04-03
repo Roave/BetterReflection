@@ -17,7 +17,7 @@ use PhpParser\Lexer;
  */
 class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
 {
-    private function getAstForString($php)
+    private function getAstForString($php) : array
     {
         return (new Parser\Multiple([
             new Parser\Php7(new Lexer()),
@@ -25,7 +25,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         ]))->parse($php);
     }
 
-    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst()
+    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -37,7 +37,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         $reflector = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php', null);
 
-        $this->assertSame(
+        self::assertSame(
             [],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
@@ -48,7 +48,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst()
+    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -60,7 +60,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         $reflector = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 
-        $this->assertSame(
+        self::assertSame(
             [],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
@@ -71,7 +71,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForClassWithoutNamespace()
+    public function testInvokeCallsReflectNodesForClassWithoutNamespace() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -86,7 +86,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         $reflector = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $mockReflection,
             ],
@@ -99,7 +99,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForNamespacedClass()
+    public function testInvokeCallsReflectNodesForNamespacedClass() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -114,7 +114,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         $reflector = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', null);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $mockReflection,
             ],
@@ -127,7 +127,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForFunction()
+    public function testInvokeCallsReflectNodesForFunction() : void
     {
         /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
@@ -142,7 +142,7 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
         $reflector = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 $mockReflection,
             ],

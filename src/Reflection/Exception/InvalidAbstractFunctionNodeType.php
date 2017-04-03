@@ -12,7 +12,7 @@ class InvalidAbstractFunctionNodeType extends \InvalidArgumentException
      *
      * @return self
      */
-    public static function fromNode(Node $node)
+    public static function fromNode(Node $node) : self
     {
         return new self(sprintf(
             'Node for "%s" must be "%s" or "%s", was a "%s"',

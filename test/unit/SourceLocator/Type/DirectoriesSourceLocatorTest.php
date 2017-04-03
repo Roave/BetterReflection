@@ -21,7 +21,7 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     private $sourceLocator;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->sourceLocator = new DirectoriesSourceLocator([
             __DIR__ . '/../../Assets/DirectoryScannerAssets',
@@ -29,7 +29,7 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function testScanDirectoryClasses()
+    public function testScanDirectoryClasses() : void
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new ClassReflector($this->sourceLocator),
@@ -53,7 +53,7 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[3]);
     }
 
-    public function testLocateIdentifier()
+    public function testLocateIdentifier() : void
     {
         $class = $this->sourceLocator->locateIdentifier(
             new ClassReflector($this->sourceLocator),
@@ -72,14 +72,14 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
      *
      * @param array $directories
      */
-    public function testInvalidDirectory(array $directories)
+    public function testInvalidDirectory(array $directories) : void
     {
         $this->expectException(InvalidDirectory::class);
 
         new DirectoriesSourceLocator($directories);
     }
 
-    public function invalidDirectoriesProvider()
+    public function invalidDirectoriesProvider() : array
     {
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 

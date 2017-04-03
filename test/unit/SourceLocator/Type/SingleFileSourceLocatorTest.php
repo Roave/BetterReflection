@@ -21,13 +21,13 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testReturnsNullWhenSourceDoesNotContainClass()
+    public function testReturnsNullWhenSourceDoesNotContainClass() : void
     {
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
         $locator = new SingleFileSourceLocator($fileName);
 
-        $this->assertNull($locator->locateIdentifier(
+        self::assertNull($locator->locateIdentifier(
             $this->getMockReflector(),
             new Identifier(
                 'does not matter what the class name is',
@@ -36,7 +36,7 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testReturnsReflectionWhenSourceHasClass()
+    public function testReturnsReflectionWhenSourceHasClass() : void
     {
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
@@ -50,24 +50,24 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame('ClassWithNoNamespace', $reflectionClass->getName());
+        self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
     }
 
-    public function testConstructorThrowsExceptionIfEmptyFileGiven()
+    public function testConstructorThrowsExceptionIfEmptyFileGiven() : void
     {
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('Filename was empty');
         new SingleFileSourceLocator('');
     }
 
-    public function testConstructorThrowsExceptionIfFileDoesNotExist()
+    public function testConstructorThrowsExceptionIfFileDoesNotExist() : void
     {
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('File does not exist');
         new SingleFileSourceLocator('sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
-    public function testConstructorThrowsExceptionIfFileIsNotAFile()
+    public function testConstructorThrowsExceptionIfFileIsNotAFile() : void
     {
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('Is not a file');

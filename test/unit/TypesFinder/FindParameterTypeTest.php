@@ -20,7 +20,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function parameterTypeProvider()
+    public function parameterTypeProvider() : array
     {
         return [
             ['@param int|string $foo', 'foo', [Types\Integer::class, Types\String_::class]],
@@ -31,7 +31,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testNamespaceResolutionForProperty()
+    public function testNamespaceResolutionForProperty() : void
     {
         $php = '<?php
             namespace MyNamespace;
@@ -52,7 +52,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ->getMethod('foo')
             ->getParameter('bar');
 
-        $this->assertSame(['\Psr\Log\LoggerInterface'], $param->getDocBlockTypeStrings());
+        self::assertSame(['\Psr\Log\LoggerInterface'], $param->getDocBlockTypeStrings());
     }
 
     /**
@@ -61,7 +61,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForFunction($docBlock, $nodeName, $expectedInstances)
+    public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
@@ -81,10 +81,10 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindParameterType())->__invoke($function, $node);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
@@ -94,7 +94,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForMethod($docBlock, $nodeName, $expectedInstances)
+    public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
@@ -121,14 +121,14 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionMethod $method */
         $foundTypes = (new FindParameterType())->__invoke($method, $node);
 
-        $this->assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $foundTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
         }
     }
 
-    public function testFindParameterTypeForFunctionWithNoDocBlock()
+    public function testFindParameterTypeForFunctionWithNoDocBlock() : void
     {
         $node = new ParamNode('foo');
 

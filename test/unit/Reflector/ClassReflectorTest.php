@@ -14,18 +14,20 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class ClassReflectorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetClassesFromFile()
+    public function testGetClassesFromFile() : void
     {
         $classes = (new ClassReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php')
         ))->getAllClasses();
 
-        $this->assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        $this->assertCount(8, $classes);
+        self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
+        self::assertCount(8, $classes);
     }
 
-    public function testReflectProxiesToSourceLocator()
+    public function testReflectProxiesToSourceLocator() : void
     {
+        $reflection = $this->createMock(ReflectionClass::class);
+
         /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
             ->setConstructorArgs(['<?php'])
@@ -35,22 +37,22 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         $sourceLocator
             ->expects($this->once())
             ->method('locateIdentifier')
-            ->will($this->returnValue('foo'));
+            ->will($this->returnValue($reflection));
 
         $reflector = new ClassReflector($sourceLocator);
 
-        $this->assertSame('foo', $reflector->reflect('MyClass'));
+        self::assertSame($reflection, $reflector->reflect('MyClass'));
     }
 
-    public function testBuildDefaultReflector()
+    public function testBuildDefaultReflector() : void
     {
         $defaultReflector = ClassReflector::buildDefaultReflector();
 
         $sourceLocator = $this->getObjectAttribute($defaultReflector, 'sourceLocator');
-        $this->assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
+        self::assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
     }
 
-    public function testThrowsExceptionWhenIdentifierNotFound()
+    public function testThrowsExceptionWhenIdentifierNotFound() : void
     {
         $defaultReflector = ClassReflector::buildDefaultReflector();
 

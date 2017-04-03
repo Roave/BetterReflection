@@ -17,5 +17,5 @@ interface Reflector
      * @return Reflection
      * @throws IdentifierNotFound
      */
-    public function reflect($identifierName);
+    public function reflect(string $identifierName) : Reflection;
 }

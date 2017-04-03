@@ -35,26 +35,17 @@ class IdentifierType
         $this->name = $type;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClass()
+    public function isClass() : bool
     {
         return $this->name === self::IDENTIFIER_CLASS;
     }
 
-    /**
-     * @return bool
-     */
-    public function isFunction()
+    public function isFunction() : bool
     {
         return $this->name === self::IDENTIFIER_FUNCTION;
     }
@@ -65,7 +56,7 @@ class IdentifierType
      * @param Reflection $reflector
      * @return bool
      */
-    public function isMatchingReflector(Reflection $reflector)
+    public function isMatchingReflector(Reflection $reflector) : bool
     {
         if ($this->name === self::IDENTIFIER_CLASS) {
             return $reflector instanceof ReflectionClass;

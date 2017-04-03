@@ -10,36 +10,36 @@ use Roave\BetterReflection\Identifier\IdentifierType;
  */
 class IdentifierTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetName()
+    public function testGetName() : void
     {
         $beforeName = '\Some\Thing\Here';
         $afterName = 'Some\Thing\Here';
 
         $identifier = new Identifier($beforeName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
-        $this->assertSame($afterName, $identifier->getName());
+        self::assertSame($afterName, $identifier->getName());
     }
 
-    public function testGetType()
+    public function testGetType() : void
     {
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
         $identifier = new Identifier('Foo', $identifierType);
-        $this->assertSame($identifierType, $identifier->getType());
+        self::assertSame($identifierType, $identifier->getType());
     }
 
-    public function testIsTypesForClass()
+    public function testIsTypesForClass() : void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $this->assertTrue($identifier->isClass());
-        $this->assertFalse($identifier->isFunction());
+        self::assertTrue($identifier->isClass());
+        self::assertFalse($identifier->isFunction());
     }
 
-    public function testIsTypesForFunction()
+    public function testIsTypesForFunction() : void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
-        $this->assertFalse($identifier->isClass());
-        $this->assertTrue($identifier->isFunction());
+        self::assertFalse($identifier->isClass());
+        self::assertTrue($identifier->isFunction());
     }
 }

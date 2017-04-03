@@ -13,29 +13,29 @@ use PHPUnit_Framework_TestCase;
  */
 class NotAClassReflectionTest extends PHPUnit_Framework_TestCase
 {
-    public function testFromInterface()
+    public function testFromInterface() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php');
         $reflector     = new ClassReflector($sourceLocator);
 
         $exception = NotAClassReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleInterface::class));
 
-        $this->assertInstanceOf(NotAClassReflection::class, $exception);
-        $this->assertSame(
+        self::assertInstanceOf(NotAClassReflection::class, $exception);
+        self::assertSame(
             'Provided node "' . Fixture\ExampleInterface::class . '" is not class, but "interface"',
             $exception->getMessage()
         );
     }
 
-    public function testFromTrait()
+    public function testFromTrait() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php');
         $reflector     = new ClassReflector($sourceLocator);
 
         $exception = NotAClassReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleTrait::class));
 
-        $this->assertInstanceOf(NotAClassReflection::class, $exception);
-        $this->assertSame(
+        self::assertInstanceOf(NotAClassReflection::class, $exception);
+        self::assertSame(
             'Provided node "' . Fixture\ExampleTrait::class . '" is not class, but "trait"',
             $exception->getMessage()
         );

@@ -21,13 +21,13 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testReturnsNullWhenSourceDoesNotContainClass()
+    public function testReturnsNullWhenSourceDoesNotContainClass() : void
     {
         $sourceCode = '<?php echo "Hello world!";';
 
         $locator = new StringSourceLocator($sourceCode);
 
-        $this->assertNull($locator->locateIdentifier(
+        self::assertNull($locator->locateIdentifier(
             $this->getMockReflector(),
             new Identifier(
                 'does not matter what the class name is',
@@ -36,7 +36,7 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testReturnsReflectionWhenSourceHasClass()
+    public function testReturnsReflectionWhenSourceHasClass() : void
     {
         $sourceCode = '<?php class Foo {}';
 
@@ -50,10 +50,10 @@ class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame('Foo', $reflectionClass->getName());
+        self::assertSame('Foo', $reflectionClass->getName());
     }
 
-    public function testConstructorThrowsExceptionIfEmptyStringGiven()
+    public function testConstructorThrowsExceptionIfEmptyStringGiven() : void
     {
         $this->expectException(EmptyPhpSourceCode::class);
         new StringSourceLocator('');

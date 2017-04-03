@@ -9,7 +9,7 @@ class InvalidDirectory extends \RuntimeException
      *
      * @return InvalidDirectory
      */
-    public static function fromNonDirectory($nonDirectory)
+    public static function fromNonDirectory(string $nonDirectory) : self
     {
         if (! file_exists($nonDirectory)) {
             return new self(sprintf('"%s" does not exists', $nonDirectory));
@@ -23,7 +23,7 @@ class InvalidDirectory extends \RuntimeException
      *
      * @return InvalidDirectory
      */
-    public static function fromNonStringValue($nonStringValue)
+    public static function fromNonStringValue($nonStringValue) : self
     {
         return new self(sprintf(
             'Expected string, %s given',

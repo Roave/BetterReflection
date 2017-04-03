@@ -18,7 +18,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
  */
 final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAutoloadSelfRegisters()
+    public function testAutoloadSelfRegisters() : void
     {
         $initialAutoloaderCount = count(spl_autoload_functions());
 
@@ -33,7 +33,7 @@ final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
         self::assertCount($initialAutoloaderCount, spl_autoload_functions());
     }
 
-    public function testAutoloadTriggersLoaderMethod()
+    public function testAutoloadTriggersLoaderMethod() : void
     {
         $reflection = ReflectionClass::createFromName(TestClassForAutoloader::class);
         self::assertFalse(class_exists(TestClassForAutoloader::class, false));
@@ -55,7 +55,7 @@ final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
         spl_autoload_unregister($loader);
     }
 
-    public function testAddClassThrowsExceptionWhenClassAlreadyRegisteredInAutoload()
+    public function testAddClassThrowsExceptionWhenClassAlreadyRegisteredInAutoload() : void
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
 
@@ -71,7 +71,7 @@ final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
         spl_autoload_unregister($loader);
     }
 
-    public function testAddClassThrowsExceptionWhenClassAlreadyLoaded()
+    public function testAddClassThrowsExceptionWhenClassAlreadyLoaded() : void
     {
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
@@ -87,7 +87,7 @@ final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
      * @todo I'd like to figure out a better way of doing this; weird interactions with other tests here, but it works
      * @runInSeparateProcess
      */
-    public function testAutoloadThrowsExceptionWhenClassIsNotLoadedCorrectlyAfterAttemptingToLoad()
+    public function testAutoloadThrowsExceptionWhenClassIsNotLoadedCorrectlyAfterAttemptingToLoad() : void
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
         self::assertFalse(class_exists(AnotherTestClassForAutoloader::class, false));

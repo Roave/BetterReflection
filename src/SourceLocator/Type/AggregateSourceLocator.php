@@ -4,6 +4,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 
 class AggregateSourceLocator implements SourceLocator
@@ -29,7 +30,7 @@ class AggregateSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier)
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         foreach ($this->sourceLocators as $sourceLocator) {
             if ($located = $sourceLocator->locateIdentifier($reflector, $identifier)) {
@@ -43,7 +44,7 @@ class AggregateSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         $located = [];
 

@@ -16,7 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProp
  */
 class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
-    public function coreReflectionMethodNamesProvider()
+    public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionObject::class);
         return array_combine($methods, array_map(function ($i) { return [$i]; }, $methods));
@@ -26,13 +26,13 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      * @param string $methodName
      * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionMethods($methodName)
+    public function testCoreReflectionMethods(string $methodName) : void
     {
         $reflectionObjectAdapterReflection = new CoreReflectionClass(ReflectionObjectAdapter::class);
-        $this->assertTrue($reflectionObjectAdapterReflection->hasMethod($methodName));
+        self::assertTrue($reflectionObjectAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider()
+    public function methodExpectationProvider() : array
     {
         $mockMethod = $this->createMock(BetterReflectionMethod::class);
 
@@ -98,7 +98,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods($methodName, $expectedException, $returnValue, array $args)
+    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
     {
         /* @var BetterReflectionObject|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
@@ -118,11 +118,11 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testExport()
+    public function testExport() : void
     {
         $exported = ReflectionObjectAdapter::export(new \stdClass());
 
-        $this->assertInternalType('string', $exported);
-        $this->assertContains('stdClass', $exported);
+        self::assertInternalType('string', $exported);
+        self::assertContains('stdClass', $exported);
     }
 }

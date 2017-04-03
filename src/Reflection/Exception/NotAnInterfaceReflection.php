@@ -6,12 +6,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 
 class NotAnInterfaceReflection extends \UnexpectedValueException
 {
-    /**
-     * @param ReflectionClass $class
-     *
-     * @return self
-     */
-    public static function fromReflectionClass(ReflectionClass $class)
+    public static function fromReflectionClass(ReflectionClass $class) : self
     {
         $type = 'class';
 

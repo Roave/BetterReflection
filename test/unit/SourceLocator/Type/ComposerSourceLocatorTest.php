@@ -22,9 +22,9 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testInvokableLoadsSource()
+    public function testInvokableLoadsSource() : void
     {
-        $className = 'ClassWithNoNamespace';
+        $className = ClassWithNoNamespace::class;
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
         $loader = $this->createMock(ClassLoader::class);
@@ -43,10 +43,10 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         ));
 
-        $this->assertSame('ClassWithNoNamespace', $reflectionClass->getName());
+        self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
     }
 
-    public function testInvokableThrowsExceptionWhenClassNotResolved()
+    public function testInvokableThrowsExceptionWhenClassNotResolved() : void
     {
         $className = ClassWithNoNamespace::class;
 
@@ -61,20 +61,20 @@ class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
+        self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             $className,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         )));
     }
 
-    public function testInvokeThrowsExceptionWhenTryingToLocateFunction()
+    public function testInvokeThrowsExceptionWhenTryingToLocateFunction() : void
     {
         $loader = $this->createMock(ClassLoader::class);
 
         /** @var ClassLoader $loader */
         $locator = new ComposerSourceLocator($loader);
 
-        $this->assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
+        self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             'foo',
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         )));

@@ -4,6 +4,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
@@ -25,9 +26,9 @@ abstract class AbstractSourceLocator implements SourceLocator
      *   return new LocatedSource([file_get_contents('Foo.php'), 'Foo.php']);
      *
      * @param Identifier $identifier
-     * @return LocatedSource
+     * @return LocatedSource|null
      */
-    abstract protected function createLocatedSource(Identifier $identifier);
+    abstract protected function createLocatedSource(Identifier $identifier) : ?LocatedSource;
 
     public function __construct(AstLocator $astLocator = null)
     {
@@ -36,8 +37,9 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier)
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         if (!($locatedSource = $this->createLocatedSource($identifier))) {
             return null;
@@ -52,8 +54,9 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
-    final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         if (!($locatedSource = $this->createLocatedSource(new Identifier('*', $identifierType)))) {
             return [];

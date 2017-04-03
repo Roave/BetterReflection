@@ -11,28 +11,28 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class CompilerContextTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreatingContextWithoutSelf()
+    public function testCreatingContextWithoutSelf() : void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php'));
         $context = new CompilerContext($reflector, null);
 
-        $this->assertFalse($context->hasSelf());
-        $this->assertSame($reflector, $context->getReflector());
+        self::assertFalse($context->hasSelf());
+        self::assertSame($reflector, $context->getReflector());
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The current context does not have a class for self');
         $context->getSelf();
     }
 
-    public function testCreatingContextWithSelf()
+    public function testCreatingContextWithSelf() : void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}'));
         $self = $reflector->reflect('Foo');
 
         $context = new CompilerContext($reflector, $self);
 
-        $this->assertTrue($context->hasSelf());
-        $this->assertSame($reflector, $context->getReflector());
-        $this->assertSame($self, $context->getSelf());
+        self::assertTrue($context->hasSelf());
+        self::assertSame($reflector, $context->getReflector());
+        self::assertSame($self, $context->getSelf());
     }
 }

@@ -19,30 +19,30 @@ class SourceStubberTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->stubber = new SourceStubber();
     }
 
-    public function testCanStubClass()
+    public function testCanStubClass() : void
     {
-        $this->assertStringMatchesFormat(
+        self::assertStringMatchesFormat(
             '%Aclass stdClass%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection('stdClass'))
         );
     }
 
-    public function testCanStubInterface()
+    public function testCanStubInterface() : void
     {
-        $this->assertStringMatchesFormat(
+        self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection(\Traversable::class))
         );
     }
 
-    public function testCanStubTraits()
+    public function testCanStubTraits() : void
     {
-        $this->assertStringMatchesFormat(
+        self::assertStringMatchesFormat(
             '%Atrait EmptyTrait%A{%A}%A',
             $this->stubber->__invoke(new ClassReflection(EmptyTrait::class))
         );

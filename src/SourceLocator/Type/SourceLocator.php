@@ -23,7 +23,7 @@ interface SourceLocator
      * @param Identifier $identifier
      * @return Reflection|null
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier);
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection;
 
     /**
      * Find all identifiers of a type
@@ -32,5 +32,5 @@ interface SourceLocator
      * @param IdentifierType $identifierType
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType);
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array;
 }

@@ -11,5 +11,5 @@ interface LoaderMethodInterface
      * @param ReflectionClass $classInfo
      * @return void
      */
-    public function __invoke(ReflectionClass $classInfo);
+    public function __invoke(ReflectionClass $classInfo) : void;
 }

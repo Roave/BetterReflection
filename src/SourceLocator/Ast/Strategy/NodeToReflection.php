@@ -24,8 +24,12 @@ class NodeToReflection implements AstConversionStrategy
      * @param Node\Stmt\Namespace_|null $namespace
      * @return Reflection|null
      */
-    public function __invoke(Reflector $reflector, Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
-    {
+    public function __invoke(
+        Reflector $reflector,
+        Node $node,
+        LocatedSource $locatedSource,
+        ?Node\Stmt\Namespace_ $namespace
+    ) : ?Reflection {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
                 $reflector,

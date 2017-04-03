@@ -4,8 +4,10 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 
 /**
  * This source locator loads all php files from \FileSystemIterator
@@ -40,34 +42,36 @@ class FileIteratorSourceLocator implements SourceLocator
 
     /**
      * @return AggregateSourceLocator
+     * @throws InvalidFileLocation
      */
-    private function getAggregatedSourceLocator()
+    private function getAggregatedSourceLocator() : AggregateSourceLocator
     {
-        return $this->aggregateSourceLocator ?
-            $this->aggregateSourceLocator : new AggregateSourceLocator(array_values(array_filter(array_map(
-                function (\SplFileInfo $item) {
-                    if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
-                        return null;
-                    }
+        return $this->aggregateSourceLocator ?: new AggregateSourceLocator(array_values(array_filter(array_map(
+            function (\SplFileInfo $item) : ?SingleFileSourceLocator {
+                if (! ($item->isFile() && pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
+                    return null;
+                }
 
-                    return new SingleFileSourceLocator($item->getRealPath());
-                },
-                iterator_to_array($this->fileSystemIterator)
-            ))));
+                return new SingleFileSourceLocator($item->getRealPath());
+            },
+            iterator_to_array($this->fileSystemIterator)
+        ))));
     }
 
     /**
      * {@inheritDoc}
+     * @throws InvalidFileLocation
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier)
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         return $this->getAggregatedSourceLocator()->locateIdentifier($reflector, $identifier);
     }
 
     /**
      * {@inheritDoc}
+     * @throws InvalidFileLocation
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType)
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         return $this->getAggregatedSourceLocator()->locateIdentifiersByType($reflector, $identifierType);
     }

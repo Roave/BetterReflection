@@ -12,8 +12,12 @@ class TwoClosuresOneLine extends \LogicException
      * @param ClosureAnalysisException $closureAnalysisException
      * @return TwoClosuresOneLine
      */
-    public static function fromClosureAnalysisException(ClosureAnalysisException $closureAnalysisException)
+    public static function fromClosureAnalysisException(ClosureAnalysisException $closureAnalysisException) : self
     {
-        return new self($closureAnalysisException->getMessage(), $closureAnalysisException->getCode(), $closureAnalysisException);
+        return new self(
+            $closureAnalysisException->getMessage(),
+            $closureAnalysisException->getCode(),
+            $closureAnalysisException
+        );
     }
 }

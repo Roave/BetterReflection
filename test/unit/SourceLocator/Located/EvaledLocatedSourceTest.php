@@ -9,13 +9,13 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
  */
 class EvaledLocatedSourceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInternalsLocatedSource()
+    public function testInternalsLocatedSource() : void
     {
         $locatedSource = new EvaledLocatedSource('foo');
 
-        $this->assertSame('foo', $locatedSource->getSource());
-        $this->assertNull($locatedSource->getFileName());
-        $this->assertFalse($locatedSource->isInternal());
-        $this->assertTrue($locatedSource->isEvaled());
+        self::assertSame('foo', $locatedSource->getSource());
+        self::assertNull($locatedSource->getFileName());
+        self::assertFalse($locatedSource->isInternal());
+        self::assertTrue($locatedSource->isEvaled());
     }
 }

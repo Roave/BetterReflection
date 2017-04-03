@@ -10,7 +10,7 @@ class EvaledLocatedSource extends LocatedSource
     /**
      * {@inheritDoc}
      */
-    public function __construct($source)
+    public function __construct(string $source)
     {
         parent::__construct($source, null);
     }
@@ -18,7 +18,7 @@ class EvaledLocatedSource extends LocatedSource
     /**
      * {@inheritDoc}
      */
-    public function isEvaled()
+    public function isEvaled() : bool
     {
         return true;
     }

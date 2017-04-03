@@ -11,7 +11,7 @@ use PhpParser\NodeTraverser;
  */
 class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
 {
-    public function outOfScopeNodeTypeProvider()
+    public function outOfScopeNodeTypeProvider() : array
     {
         return [
             'onlyExpectedNodesAdded' => [
@@ -47,7 +47,7 @@ class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
      * @param int $expectedReturns
      * @dataProvider outOfScopeNodeTypeProvider
      */
-    public function testOnlyExpectedReturnNodesAreReturned(array $statements, $expectedReturns)
+    public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns) : void
     {
         $visitor = new ReturnNodeVisitor();
 
@@ -57,7 +57,7 @@ class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
         $traverser->traverse($statements);
 
         $foundNodes = $visitor->getReturnNodes();
-        $this->assertCount($expectedReturns, $foundNodes);
-        $this->assertContainsOnlyInstancesOf(Node\Stmt\Return_::class, $foundNodes);
+        self::assertCount($expectedReturns, $foundNodes);
+        self::assertContainsOnlyInstancesOf(Node\Stmt\Return_::class, $foundNodes);
     }
 }

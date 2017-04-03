@@ -27,29 +27,29 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      */
     private $reflector;
 
-    public function setUp()
+    public function setUp() : void
     {
         global $loader;
         $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
     }
 
-    public function testCreateFromClassNameAndMethod()
+    public function testCreateFromClassNameAndMethod() : void
     {
         $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromClassInstanceAndMethod()
+    public function testCreateFromClassInstanceAndMethod() : void
     {
         $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList(), 'add', 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromCallable()
+    public function testCreateFromCallable() : void
     {
         $parameterInfo = ReflectionParameter::createFromClosure(function ($a) {}, 'a');
 
@@ -57,33 +57,33 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         self::assertSame('a', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithArray()
+    public function testCreateFromSpecWithArray() : void
     {
         $parameterInfo = ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithArrayWithInstance()
+    public function testCreateFromSpecWithArrayWithInstance() : void
     {
         $splDoublyLinkedList = new \SplDoublyLinkedList();
         $parameterInfo = ReflectionParameter::createFromSpec([$splDoublyLinkedList, 'add'], 'index');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('index', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithFunctionName()
+    public function testCreateFromSpecWithFunctionName() : void
     {
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
         $parameterInfo = ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'param1');
 
-        $this->assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        $this->assertSame('param1', $parameterInfo->getName());
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame('param1', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithClosure()
+    public function testCreateFromSpecWithClosure() : void
     {
         $parameterInfo = ReflectionParameter::createFromSpec(function ($a) {}, 'a');
 
@@ -91,23 +91,23 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         self::assertSame('a', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithInvalidArgumentThrowsException()
+    public function testCreateFromSpecWithInvalidArgumentThrowsException() : void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Could not create reflection from the spec given');
         ReflectionParameter::createFromSpec(123, 'a');
     }
 
-    public function testImplementsReflector()
+    public function testImplementsReflector() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('methodWithParameters');
         $paramInfo = $methodInfo->getParameter('parameter1');
 
-        $this->assertInstanceOf(\Reflector::class, $paramInfo);
+        self::assertInstanceOf(\Reflector::class, $paramInfo);
     }
 
-    public function testExportThrowsException()
+    public function testExportThrowsException() : void
     {
         $this->expectException(\Exception::class);
         ReflectionParameter::export();
@@ -116,7 +116,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function defaultParameterProvider()
+    public function defaultParameterProvider() : array
     {
         return [
             ['1', 1],
@@ -134,7 +134,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param mixed $expectedValue
      * @dataProvider defaultParameterProvider
      */
-    public function testDefaultParametersTypes($defaultExpression, $expectedValue)
+    public function testDefaultParametersTypes(string $defaultExpression, $expectedValue) : void
     {
         $content = "<?php class Foo { public function myMethod(\$var = $defaultExpression) {} }";
 
@@ -144,10 +144,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $paramInfo = $methodInfo->getParameter('var');
         $actualValue = $paramInfo->getDefaultValue();
 
-        $this->assertSame($expectedValue, $actualValue);
+        self::assertSame($expectedValue, $actualValue);
     }
 
-    public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException()
+    public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException() : void
     {
         $content = '<?php class Foo { public function myMethod($var) {} }';
 
@@ -161,20 +161,20 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $paramInfo->getDefaultValue();
     }
 
-    public function testGetDocBlockTypeStrings()
+    public function testGetDocBlockTypeStrings() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithParameters');
 
         $param1 = $method->getParameter('parameter1');
-        $this->assertSame(['string'], $param1->getDocBlockTypeStrings());
+        self::assertSame(['string'], $param1->getDocBlockTypeStrings());
 
         $param2 = $method->getParameter('parameter2');
-        $this->assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
+        self::assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
     }
 
-    public function testGetDocBlockTypes()
+    public function testGetDocBlockTypes() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -182,45 +182,45 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $param1 = $method->getParameter('parameter1');
         $param1Types = $param1->getDocBlockTypes();
-        $this->assertCount(1, $param1Types);
-        $this->assertInstanceOf(Types\String_::class, $param1Types[0]);
+        self::assertCount(1, $param1Types);
+        self::assertInstanceOf(Types\String_::class, $param1Types[0]);
 
         $param2 = $method->getParameter('parameter2');
         $param2Types = $param2->getDocBlockTypes();
-        $this->assertCount(2, $param2Types);
-        $this->assertInstanceOf(Types\Integer::class, $param2Types[0]);
-        $this->assertInstanceOf(Types\Float_::class, $param2Types[1]);
+        self::assertCount(2, $param2Types);
+        self::assertInstanceOf(Types\Integer::class, $param2Types[0]);
+        self::assertInstanceOf(Types\Float_::class, $param2Types[1]);
     }
 
-    public function testStringCast()
+    public function testStringCast() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodWithOptionalParameters');
 
         $requiredParam = $method->getParameter('parameter');
-        $this->assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
+        self::assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
 
         $optionalParam = $method->getParameter('optionalParameter');
-        $this->assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string)$optionalParam);
+        self::assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string)$optionalParam);
     }
 
-    public function testGetPosition()
+    public function testGetPosition() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithParameters');
 
         $param1 = $method->getParameter('parameter1');
-        $this->assertSame(0, $param1->getPosition());
+        self::assertSame(0, $param1->getPosition());
 
         $param2 = $method->getParameter('parameter2');
-        $this->assertSame(1, $param2->getPosition());
+        self::assertSame(1, $param2->getPosition());
     }
 
     /**
      * @return array
      */
-    public function typeHintProvider()
+    public function typeHintProvider() : array
     {
         return [
             ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
@@ -238,82 +238,86 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param string|null $expectedFqsen
      * @param string|null $expectedFqsenName
      */
-    public function testGetTypeHint($parameterToTest, $expectedType, $expectedFqsen = null, $expectedFqsenName = null)
-    {
+    public function testGetTypeHint(
+        string $parameterToTest,
+        string $expectedType,
+        string $expectedFqsen = null,
+        string $expectedFqsenName = null
+    ) : void {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
         $type = $method->getParameter($parameterToTest)->getTypeHint();
-        $this->assertInstanceOf($expectedType, $type);
+        self::assertInstanceOf($expectedType, $type);
 
         if (null !== $expectedFqsen) {
-            $this->assertSame($expectedFqsen, (string)$type->getFqsen());
+            self::assertSame($expectedFqsen, (string)$type->getFqsen());
         }
 
         if (null !== $expectedFqsenName) {
-            $this->assertSame($expectedFqsenName, $type->getFqsen()->getName());
+            self::assertSame($expectedFqsenName, $type->getFqsen()->getName());
         }
     }
 
-    public function testPhp7TypeDeclarationWithIntBuiltinType()
+    public function testPhp7TypeDeclarationWithIntBuiltinType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
         $intParamType = $method->getParameter('intParam')->getType();
-        $this->assertSame('int', (string)$intParamType);
-        $this->assertTrue($intParamType->isBuiltin());
-        $this->assertFalse($intParamType->allowsNull());
+        self::assertSame('int', (string)$intParamType);
+        self::assertTrue($intParamType->isBuiltin());
+        self::assertFalse($intParamType->allowsNull());
     }
 
-    public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin()
+    public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
         $classParamType = $method->getParameter('classParam')->getType();
-        $this->assertSame(\stdClass::class, (string)$classParamType);
-        $this->assertFalse($classParamType->isBuiltin());
-        $this->assertFalse($classParamType->allowsNull());
+        self::assertSame(\stdClass::class, (string)$classParamType);
+        self::assertFalse($classParamType->isBuiltin());
+        self::assertFalse($classParamType->allowsNull());
     }
 
-    public function testPhp7TypeDeclarationWithoutType()
+    public function testPhp7TypeDeclarationWithoutType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
-        $this->assertNull($method->getParameter('noTypeParam')->getType());
+        self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull()
+    public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
         $stringParamType = $method->getParameter('stringParamAllowsNull')->getType();
-        $this->assertSame('string', (string)$stringParamType);
-        $this->assertTrue($stringParamType->isBuiltin());
-        $this->assertTrue($stringParamType->allowsNull());
+        self::assertSame('string', (string)$stringParamType);
+        self::assertTrue($stringParamType->isBuiltin());
+        self::assertTrue($stringParamType->allowsNull());
     }
 
-    public function testHasTypeReturnsTrueWithType()
+    public function testHasTypeReturnsTrueWithType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
-        $this->assertTrue($method->getParameter('intParam')->hasType());
+        self::assertTrue($method->getParameter('intParam')->hasType());
     }
 
-    public function testHasTypeReturnsFalseWithoutType()
+    public function testHasTypeReturnsFalseWithoutType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method = $classInfo->getMethod('foo');
 
-        $this->assertFalse($method->getParameter('noTypeParam')->hasType());
+        self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
-    public function testSetType()
+    public function testSetType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $methodInfo = $classInfo->getMethod('foo');
@@ -321,14 +325,14 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $parameterInfo->setType(new Types\String_());
 
-        $this->assertSame('string', (string)$parameterInfo->getType());
-        $this->assertStringStartsWith(
+        self::assertSame('string', (string)$parameterInfo->getType());
+        self::assertStringStartsWith(
             'public function foo(string $intParam',
             (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
         );
     }
 
-    public function testRemoveType()
+    public function testRemoveType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $methodInfo = $classInfo->getMethod('foo');
@@ -336,136 +340,136 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $parameterInfo->removeType();
 
-        $this->assertNull($parameterInfo->getType());
-        $this->assertStringStartsWith(
+        self::assertNull($parameterInfo->getType());
+        self::assertStringStartsWith(
             'public function foo($intParam',
             (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
         );
     }
 
-    public function testIsCallable()
+    public function testIsCallable() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
         $nonCallableParam = $method->getParameter('stdClassParameter');
-        $this->assertFalse($nonCallableParam->isCallable());
+        self::assertFalse($nonCallableParam->isCallable());
 
         $callableParam = $method->getParameter('callableParameter');
-        $this->assertTrue($callableParam->isCallable());
+        self::assertTrue($callableParam->isCallable());
     }
 
-    public function testIsArray()
+    public function testIsArray() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
         $nonArrayParam = $method->getParameter('stdClassParameter');
-        $this->assertFalse($nonArrayParam->isArray());
+        self::assertFalse($nonArrayParam->isArray());
 
         $arrayParam = $method->getParameter('arrayParameter');
-        $this->assertTrue($arrayParam->isArray());
+        self::assertTrue($arrayParam->isArray());
     }
 
-    public function testIsVariadic()
+    public function testIsVariadic() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithVariadic');
 
         $nonVariadicParam = $method->getParameter('nonVariadicParameter');
-        $this->assertFalse($nonVariadicParam->isVariadic());
+        self::assertFalse($nonVariadicParam->isVariadic());
 
         $variadicParam = $method->getParameter('variadicParameter');
-        $this->assertTrue($variadicParam->isVariadic());
+        self::assertTrue($variadicParam->isVariadic());
     }
 
-    public function testIsPassedByReference()
+    public function testIsPassedByReference() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithReference');
 
         $nonRefParam = $method->getParameter('nonRefParameter');
-        $this->assertFalse($nonRefParam->isPassedByReference());
-        $this->assertTrue($nonRefParam->canBePassedByValue());
+        self::assertFalse($nonRefParam->isPassedByReference());
+        self::assertTrue($nonRefParam->canBePassedByValue());
 
         $refParam = $method->getParameter('refParameter');
-        $this->assertTrue($refParam->isPassedByReference());
-        $this->assertFalse($refParam->canBePassedByValue());
+        self::assertTrue($refParam->isPassedByReference());
+        self::assertFalse($refParam->canBePassedByValue());
     }
 
-    public function testGetDefaultValueAndIsOptional()
+    public function testGetDefaultValueAndIsOptional() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodWithNonOptionalDefaultValue');
 
         $firstParam = $method->getParameter('firstParameter');
-        $this->assertFalse($firstParam->isOptional());
-        $this->assertTrue($firstParam->isDefaultValueAvailable());
+        self::assertFalse($firstParam->isOptional());
+        self::assertTrue($firstParam->isDefaultValueAvailable());
 
         $secondParam = $method->getParameter('secondParameter');
-        $this->assertFalse($secondParam->isOptional());
-        $this->assertFalse($secondParam->isDefaultValueAvailable());
+        self::assertFalse($secondParam->isOptional());
+        self::assertFalse($secondParam->isDefaultValueAvailable());
     }
 
     /**
      * @group 109
      */
-    public function testVariadicParametersAreAlsoImplicitlyOptional()
+    public function testVariadicParametersAreAlsoImplicitlyOptional() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithVariadic');
 
         $nonVariadicParam = $method->getParameter('nonVariadicParameter');
-        $this->assertFalse($nonVariadicParam->isVariadic());
-        $this->assertFalse($nonVariadicParam->isOptional());
+        self::assertFalse($nonVariadicParam->isVariadic());
+        self::assertFalse($nonVariadicParam->isOptional());
 
         $variadicParam = $method->getParameter('variadicParameter');
-        $this->assertTrue($variadicParam->isVariadic());
-        $this->assertTrue($variadicParam->isOptional());
+        self::assertTrue($variadicParam->isVariadic());
+        self::assertTrue($variadicParam->isOptional());
     }
 
-    public function testAllowsNull()
+    public function testAllowsNull() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodToCheckAllowsNull');
 
         $firstParam = $method->getParameter('allowsNull');
-        $this->assertTrue($firstParam->allowsNull());
+        self::assertTrue($firstParam->allowsNull());
 
         $secondParam = $method->getParameter('hintDisallowNull');
-        $this->assertFalse($secondParam->allowsNull());
+        self::assertFalse($secondParam->allowsNull());
 
         $thirdParam = $method->getParameter('hintAllowNull');
-        $this->assertTrue($thirdParam->allowsNull());
+        self::assertTrue($thirdParam->allowsNull());
     }
 
-    public function testIsDefaultValueConstantAndGetDefaultValueConstantName()
+    public function testIsDefaultValueConstantAndGetDefaultValueConstantName() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method = $classInfo->getMethod('methodWithConstAsDefault');
 
         $constDefault = $method->getParameter('constDefault');
-        $this->assertTrue($constDefault->isDefaultValueConstant());
-        $this->assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
+        self::assertTrue($constDefault->isDefaultValueConstant());
+        self::assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
 
         $definedDefault = $method->getParameter('definedDefault');
-        $this->assertTrue($definedDefault->isDefaultValueConstant());
-        $this->assertSame('SOME_DEFINED_VALUE', $definedDefault->getDefaultValueConstantName());
+        self::assertTrue($definedDefault->isDefaultValueConstant());
+        self::assertSame('SOME_DEFINED_VALUE', $definedDefault->getDefaultValueConstantName());
 
         $intDefault = $method->getParameter('intDefault');
-        $this->assertFalse($intDefault->isDefaultValueConstant());
+        self::assertFalse($intDefault->isDefaultValueConstant());
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('This parameter is not a constant default value, so cannot have a constant name');
         $intDefault->getDefaultValueConstantName();
     }
 
-    public function testGetDeclaringFunction()
+    public function testGetDeclaringFunction() : void
     {
         $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
@@ -474,10 +478,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
 
-        $this->assertSame($methodInfo, $paramInfo->getDeclaringFunction());
+        self::assertSame($methodInfo, $paramInfo->getDeclaringFunction());
     }
 
-    public function testGetDeclaringClassForMethod()
+    public function testGetDeclaringClassForMethod() : void
     {
         $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
@@ -486,10 +490,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo = $methodInfo->getParameter('var');
 
-        $this->assertSame($classInfo, $paramInfo->getDeclaringClass());
+        self::assertSame($classInfo, $paramInfo->getDeclaringClass());
     }
 
-    public function testGetDeclaringClassForFunctionReturnsNull()
+    public function testGetDeclaringClassForFunctionReturnsNull() : void
     {
         $content = '<?php function myMethod($var = 123) {}';
 
@@ -497,10 +501,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo = $functionInfo->getParameter('var');
 
-        $this->assertNull($paramInfo->getDeclaringClass());
+        self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    public function defaultValueStringProvider()
+    public function defaultValueStringProvider() : array
     {
         return [
             ['123', '123'],
@@ -516,9 +520,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $defaultValue
+     * @param string $expectedValue
      * @dataProvider defaultValueStringProvider
      */
-    public function testGetDefaultValueAsString($defaultValue, $expectedValue)
+    public function testGetDefaultValueAsString(string $defaultValue, string $expectedValue) : void
     {
         $content = "<?php function myMethod(\$var = $defaultValue) {}";
 
@@ -527,10 +532,10 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $paramInfo = $functionInfo->getParameter('var');
 
         // Must be starts with because PHP (sometimes value is 12.300000000000001)
-        $this->assertStringStartsWith($expectedValue, $paramInfo->getDefaultValueAsString());
+        self::assertStringStartsWith($expectedValue, $paramInfo->getDefaultValueAsString());
     }
 
-    public function testGetClassForTypeHintedMethodParameters()
+    public function testGetClassForTypeHintedMethodParameters() : void
     {
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
 
@@ -541,15 +546,15 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
 
-        $this->assertNull($methodInfo->getParameter('untyped')->getClass());
-        $this->assertNull($methodInfo->getParameter('array')->getClass());
+        self::assertNull($methodInfo->getParameter('untyped')->getClass());
+        self::assertNull($methodInfo->getParameter('array')->getClass());
 
         $hintedClassReflection = $methodInfo->getParameter('object')->getClass();
-        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        $this->assertSame('stdClass', $hintedClassReflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        self::assertSame('stdClass', $hintedClassReflection->getName());
     }
 
-    public function testCannotClone()
+    public function testCannotClone() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('methodWithParameters');
@@ -559,7 +564,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $unused = clone $paramInfo;
     }
 
-    public function testGetClassFromSelfTypeHintedProperty()
+    public function testGetClassFromSelfTypeHintedProperty() : void
     {
         $content = '<?php class Foo { public function myMethod(self $param) {} }';
 
@@ -570,11 +575,11 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
 
         $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        $this->assertSame('Foo', $hintedClassReflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        self::assertSame('Foo', $hintedClassReflection->getName());
     }
 
-    public function testGetClassFromParentTypeHintedProperty()
+    public function testGetClassFromParentTypeHintedProperty() : void
     {
         $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
 
@@ -586,7 +591,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
 
         $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        $this->assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        $this->assertSame('stdClass', $hintedClassReflection->getName());
+        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
+        self::assertSame('stdClass', $hintedClassReflection->getName());
     }
 }

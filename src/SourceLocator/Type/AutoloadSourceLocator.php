@@ -23,8 +23,10 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier)
+    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
@@ -44,7 +46,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @param Identifier $identifier
      * @return string|null
      */
-    private function attemptAutoloadForIdentifier(Identifier $identifier)
+    private function attemptAutoloadForIdentifier(Identifier $identifier) : ?string
     {
         if ($identifier->isClass()) {
             return $this->locateClassByName($identifier->getName());
@@ -53,6 +55,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         if ($identifier->isFunction()) {
             return $this->locateFunctionByName($identifier->getName());
         }
+
+        return null;
     }
 
     /**
@@ -69,12 +73,18 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * error handler temporarily.
      *
      * @param string $className
-     * @return string
+     * @return string|null
      */
-    private function locateClassByName($className)
+    private function locateClassByName(string $className)  : ?string
     {
         if (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false)) {
-            return (new \ReflectionClass($className))->getFileName();
+            $filename = (new \ReflectionClass($className))->getFileName();
+
+            if (! is_string($filename)) {
+                return null;
+            }
+
+            return $filename;
         }
 
         self::$autoloadLocatedFile = null;
@@ -96,7 +106,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @param string $functionName
      * @return string|null
      */
-    private function locateFunctionByName($functionName)
+    private function locateFunctionByName(string $functionName) : ?string
     {
         if (!function_exists($functionName)) {
             return null;

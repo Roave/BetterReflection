@@ -4,6 +4,7 @@ namespace Roave\BetterReflection\Reflector;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 class FunctionReflector implements Reflector
@@ -25,7 +26,7 @@ class FunctionReflector implements Reflector
      * @return \Roave\BetterReflection\Reflection\Reflection|\Roave\BetterReflection\Reflection\ReflectionFunction
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    public function reflect($functionName)
+    public function reflect(string $functionName) : Reflection
     {
         $identifier = new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
@@ -43,7 +44,7 @@ class FunctionReflector implements Reflector
      *
      * @return \Roave\BetterReflection\Reflection\ReflectionFunction[]
      */
-    public function getAllFunctions()
+    public function getAllFunctions() : array
     {
         return $this->sourceLocator->locateIdentifiersByType(
             $this,

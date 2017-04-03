@@ -25,21 +25,10 @@ class LocatedSource
      * @param string $source
      * @param string|null $filename
      * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    public function __construct($source, $filename)
+    public function __construct(string $source, ?string $filename)
     {
-        if (!is_string($source)) {
-            throw new \InvalidArgumentException(
-                'Source code must be a string'
-            );
-        }
-
-        if (!is_string($filename) && null !== $filename) {
-            throw new \InvalidArgumentException(
-                'Filename must be a string or null'
-            );
-        }
-
         if (null !== $filename) {
             if (empty($filename)) {
                 throw new InvalidFileLocation('Filename was empty');
@@ -65,7 +54,7 @@ class LocatedSource
     /**
      * @return string
      */
-    public function getSource()
+    public function getSource() : string
     {
         return $this->source;
     }
@@ -73,7 +62,7 @@ class LocatedSource
     /**
      * @return null|string
      */
-    public function getFileName()
+    public function getFileName() : ?string
     {
         return $this->filename;
     }
@@ -83,7 +72,7 @@ class LocatedSource
      *
      * @return bool
      */
-    public function isInternal()
+    public function isInternal() : bool
     {
         return false;
     }
@@ -93,7 +82,7 @@ class LocatedSource
      *
      * @return bool
      */
-    public function isEvaled()
+    public function isEvaled() : bool
     {
         return false;
     }

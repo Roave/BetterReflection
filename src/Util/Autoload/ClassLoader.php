@@ -30,7 +30,7 @@ final class ClassLoader
      * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
      * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
      */
-    public function addClass(ReflectionClass $reflectionClass)
+    public function addClass(ReflectionClass $reflectionClass) : void
     {
         if (array_key_exists($reflectionClass->getName(), $this->reflections)) {
             throw Exception\ClassAlreadyRegistered::fromReflectionClass($reflectionClass);

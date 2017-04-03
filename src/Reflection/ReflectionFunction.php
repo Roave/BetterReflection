@@ -16,7 +16,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * @param string $functionName
      * @return ReflectionFunction
      */
-    public static function createFromName($functionName)
+    public static function createFromName(string $functionName) : self
     {
         return (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
     }
@@ -25,7 +25,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * @param \Closure $closure
      * @return ReflectionFunction
      */
-    public static function createFromClosure(\Closure $closure)
+    public static function createFromClosure(\Closure $closure) : self
     {
         return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect('{closure}');
     }
@@ -36,7 +36,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
@@ -65,7 +65,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         FunctionNode $node,
         LocatedSource $locatedSource,
         NamespaceNode $namespaceNode = null
-    ) {
+    ) : self {
         $function = new self();
 
         $function->populateFunctionAbstract($reflector, $node, $locatedSource, $namespaceNode);
@@ -85,7 +85,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * @see http://php.net/manual/en/ini.core.php#ini.disable-functions
      * @return bool
      */
-    public function isDisabled()
+    public function isDisabled() : bool
     {
         return false;
     }

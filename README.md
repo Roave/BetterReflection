@@ -37,6 +37,14 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ```
 
+## Changes in BR 2.0
+
+ * Minimum PHP 7.1
+ * `NotAString` exception class is now gone
+ * `Identifier` class requires string for `$name` parameter
+ * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
+ * `Reflector` now requires a `string` for `$identiferName` parameter
+
 ## More documentation
 
 * [Compatibility with core Reflection API](https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md)

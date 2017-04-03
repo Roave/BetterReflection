@@ -4,38 +4,37 @@ namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use InvalidArgumentException;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource
  */
 class LocatedSourceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testValuesHappyPath()
+    public function testValuesHappyPath() : void
     {
         $source = '<?php echo "Hello world";';
         $file = __DIR__ . '/../../Fixture/NoNamespace.php';
         $locatedSource = new LocatedSource($source, $file);
 
-        $this->assertSame($source, $locatedSource->getSource());
-        $this->assertSame($file, $locatedSource->getFileName());
-        $this->assertFalse($locatedSource->isEvaled());
-        $this->assertFalse($locatedSource->isInternal());
+        self::assertSame($source, $locatedSource->getSource());
+        self::assertSame($file, $locatedSource->getFileName());
+        self::assertFalse($locatedSource->isEvaled());
+        self::assertFalse($locatedSource->isInternal());
     }
 
-    public function testValuesWithNullFilename()
+    public function testValuesWithNullFilename() : void
     {
         $source = '<?php echo "Hello world";';
         $file = null;
         $locatedSource = new LocatedSource($source, $file);
 
-        $this->assertSame($source, $locatedSource->getSource());
-        $this->assertNull($locatedSource->getFileName());
-        $this->assertFalse($locatedSource->isEvaled());
-        $this->assertFalse($locatedSource->isInternal());
+        self::assertSame($source, $locatedSource->getSource());
+        self::assertNull($locatedSource->getFileName());
+        self::assertFalse($locatedSource->isEvaled());
+        self::assertFalse($locatedSource->isInternal());
     }
 
-    public function testEmptyStringSourceAllowed()
+    public function testEmptyStringSourceAllowed() : void
     {
         $source = '';
         $file = null;
@@ -43,53 +42,28 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         self::assertSame('', $locatedSource->getSource());
     }
 
-    /**
-     * @return array
-     */
-    public function exceptionCasesProvider()
-    {
-        return [
-            [123, null, InvalidArgumentException::class, 'Source code must be a string'],
-            ['foo', 123, InvalidArgumentException::class, 'Filename must be a string or null'],
-        ];
-    }
-
-    /**
-     * @param string $source
-     * @param string $file
-     * @param string $expectedException
-     * @param string $expectedMessage
-     * @dataProvider exceptionCasesProvider
-     */
-    public function testThrowsExceptionWhenInvalidValuesGiven($source, $file, $expectedException, $expectedMessage)
-    {
-        $this->expectException($expectedException);
-        $this->expectExceptionMessage($expectedMessage);
-        new LocatedSource($source, $file);
-    }
-
-    public function testConstructorThrowsExceptionIfEmptyFileGiven()
+    public function testConstructorThrowsExceptionIfEmptyFileGiven() : void
     {
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('Filename was empty');
         new LocatedSource('<?php', '');
     }
 
-    public function testConstructorThrowsExceptionIfFileDoesNotExist()
+    public function testConstructorThrowsExceptionIfFileDoesNotExist() : void
     {
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('File does not exist');
         new LocatedSource('<?php', 'sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
-    public function testConstructorThrowsExceptionIfFileIsNotAFile()
+    public function testConstructorThrowsExceptionIfFileIsNotAFile() : void
     {
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('Is not a file');
         new LocatedSource('<?php', __DIR__);
     }
 
-    public function testConstructorThrowsExceptionIfFileIsNotReadable()
+    public function testConstructorThrowsExceptionIfFileIsNotReadable() : void
     {
         $file = __DIR__ . '/../../Fixture/NoNamespace.php';
 

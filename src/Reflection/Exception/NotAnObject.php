@@ -9,7 +9,7 @@ class NotAnObject extends \InvalidArgumentException
      *
      * @return self
      */
-    public static function fromNonObject($nonObject)
+    public static function fromNonObject($nonObject) : self
     {
         return new self(sprintf('Provided "%s" is not an object', gettype($nonObject)));
     }

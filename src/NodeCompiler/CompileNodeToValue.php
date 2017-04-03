@@ -57,7 +57,7 @@ class CompileNodeToValue
      * @param CompilerContext $context
      * @return array
      */
-    private function compileArray(Node\Expr\Array_ $arrayNode, CompilerContext $context)
+    private function compileArray(Node\Expr\Array_ $arrayNode, CompilerContext $context) : array
     {
         $compiledArray = [];
         foreach ($arrayNode->items as $arrayItem) {
@@ -77,7 +77,8 @@ class CompileNodeToValue
      * Compile constant expressions
      *
      * @param Node\Expr\ConstFetch $constNode
-     * @return bool|null
+     * @return bool|mixed|null
+     * @throws \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode)
     {
@@ -105,10 +106,10 @@ class CompileNodeToValue
      *
      * @param Node\Expr\ClassConstFetch $node
      * @param CompilerContext $context
-     * @return string
+     * @return string|null
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
+    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context) : ?string
     {
         $className = implode('\\', $node->class->parts);
 
@@ -256,13 +257,7 @@ class CompileNodeToValue
         throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));
     }
 
-    /**
-     * @param string          $constantName
-     * @param ReflectionClass $class
-     *
-     * @return CompilerContext|null
-     */
-    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class)
+    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
     {
         if ($class->hasConstant($constantName)) {
             return $class;

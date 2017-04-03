@@ -19,10 +19,12 @@ final class FindReflectionOnLine
      *
      * @param string $filename
      * @param int $lineNumber
-     * @return ReflectionMethod|ReflectionClass|ReflectionFunction|null
+     * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      * @throws \InvalidArgumentException
      */
-    public function __invoke($filename, $lineNumber)
+    public function __invoke(string $filename, int $lineNumber)
     {
         $lineNumber = (int)$lineNumber;
         $reflections = $this->computeReflections($filename);
@@ -50,8 +52,10 @@ final class FindReflectionOnLine
      *
      * @param string $filename
      * @return Reflection[]
+     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    private function computeReflections($filename)
+    private function computeReflections(string $filename) : array
     {
         $sourceLocator = new SingleFileSourceLocator($filename);
         $reflector = new ClassReflector($sourceLocator);
@@ -65,12 +69,12 @@ final class FindReflectionOnLine
     /**
      * Check to see if the line is within the boundaries of the reflection specified.
      *
-     * @param mixed $reflection
+     * @param ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection
      * @param int $lineNumber
      * @return bool
      * @throws \InvalidArgumentException
      */
-    private function containsLine($reflection, $lineNumber)
+    private function containsLine($reflection, int $lineNumber) : bool
     {
         if (!method_exists($reflection, 'getStartLine')) {
             throw new \InvalidArgumentException('Reflection does not have getStartLine method');

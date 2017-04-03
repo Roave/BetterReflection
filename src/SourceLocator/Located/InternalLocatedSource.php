@@ -10,7 +10,7 @@ class InternalLocatedSource extends LocatedSource
     /**
      * {@inheritDoc}
      */
-    public function __construct($source)
+    public function __construct(string $source)
     {
         parent::__construct($source, null);
     }
@@ -18,7 +18,7 @@ class InternalLocatedSource extends LocatedSource
     /**
      * {@inheritDoc}
      */
-    public function isInternal()
+    public function isInternal() : bool
     {
         return true;
     }

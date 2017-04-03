@@ -22,7 +22,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testClosureSourceLocator()
+    public function testClosureSourceLocator() : void
     {
         $closure = function () {
             echo 'Hello world!';
@@ -39,11 +39,11 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame('{closure}', $reflection->getShortName());
-        $this->assertContains('Hello world!', $reflection->getLocatedSource()->getSource());
+        self::assertSame('{closure}', $reflection->getShortName());
+        self::assertContains('Hello world!', $reflection->getLocatedSource()->getSource());
     }
 
-    public function testLocateIdentifiersByTypeIsNotImplemented()
+    public function testLocateIdentifiersByTypeIsNotImplemented() : void
     {
         $closure = function () {
             echo 'Hello world!';
@@ -59,7 +59,7 @@ class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testTwoClosuresSameLineFails()
+    public function testTwoClosuresSameLineFails() : void
     {
         $closure1 = function () {}; $closure2 = function () {};
 

@@ -12,9 +12,11 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testReflectProxiesToGenericReflectMethod()
+    public function testReflectProxiesToGenericReflectMethod() : void
     {
         $php = '<?php function foo() {}';
+
+        $reflection = $this->createMock(ReflectionFunction::class);
 
         /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
@@ -25,13 +27,13 @@ class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
         $sourceLocator
             ->expects($this->once())
             ->method('locateIdentifier')
-            ->will($this->returnValue('foobar'));
+            ->will($this->returnValue($reflection));
 
         $reflector = new FunctionReflector($sourceLocator);
-        $this->assertSame('foobar', $reflector->reflect('foo'));
+        self::assertSame($reflection, $reflector->reflect('foo'));
     }
 
-    public function testGetFunctionsFromFile()
+    public function testGetFunctionsFromFile() : void
     {
         $functions = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php')

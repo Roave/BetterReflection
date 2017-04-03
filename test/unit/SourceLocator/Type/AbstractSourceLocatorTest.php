@@ -16,7 +16,7 @@ use Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator;
  */
 class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLocateIdentifierCallsFindReflection()
+    public function testLocateIdentifierCallsFindReflection() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
@@ -46,10 +46,10 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
             ->with($identifier)
             ->will($this->returnValue($locatedSource));
 
-        $this->assertSame($mockReflection, $sourceLocator->locateIdentifier($mockReflector, $identifier));
+        self::assertSame($mockReflection, $sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
 
-    public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource()
+    public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
@@ -73,10 +73,10 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
             ->with($identifier)
             ->will($this->returnValue(null));
 
-        $this->assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
+        self::assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
 
-    public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException()
+    public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
@@ -104,10 +104,10 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
             ->with($identifier)
             ->will($this->returnValue($locatedSource));
 
-        $this->assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
+        self::assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
 
-    public function testLocateIdentifiersByTypeCallsFindReflectionsOfType()
+    public function testLocateIdentifiersByTypeCallsFindReflectionsOfType() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
@@ -136,9 +136,10 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
             ->method('createLocatedSource')
             ->will($this->returnValue($locatedSource));
 
-        $this->assertSame([$mockReflection], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
+        self::assertSame([$mockReflection], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
     }
-    public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource()
+
+    public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource() : void
     {
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
@@ -161,6 +162,6 @@ class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
             ->method('createLocatedSource')
             ->will($this->returnValue(null));
 
-        $this->assertSame([], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
+        self::assertSame([], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
     }
 }

@@ -10,11 +10,11 @@ use PHPUnit_Framework_TestCase;
  */
 class NotAnObjectTest extends PHPUnit_Framework_TestCase
 {
-    public function testFromNonObject()
+    public function testFromNonObject() : void
     {
         $exception = NotAnObject::fromNonObject(123);
 
-        $this->assertInstanceOf(NotAnObject::class, $exception);
-        $this->assertSame('Provided "integer" is not an object', $exception->getMessage());
+        self::assertInstanceOf(NotAnObject::class, $exception);
+        self::assertSame('Provided "integer" is not an object', $exception->getMessage());
     }
 }

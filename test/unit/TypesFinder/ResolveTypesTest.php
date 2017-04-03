@@ -14,7 +14,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function basicTypesToResolveProvider()
+    public function basicTypesToResolveProvider() : array
     {
         $context = new Context(
             'My\Space',
@@ -38,24 +38,24 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string[] $inputTypes
-     * @param $expectedInstances
+     * @param string[] $expectedInstances
      * @dataProvider basicTypesToResolveProvider
      */
-    public function testResolveTypesWithBasicTypes($inputTypes, $expectedInstances)
+    public function testResolveTypesWithBasicTypes(array $inputTypes, array $expectedInstances) : void
     {
         $resolvedTypes = (new ResolveTypes())->__invoke($inputTypes, new Context(''));
 
-        $this->assertCount(count($expectedInstances), $resolvedTypes);
+        self::assertCount(count($expectedInstances), $resolvedTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
-            $this->assertInstanceOf($expectedInstance, $resolvedTypes[$i]);
+            self::assertInstanceOf($expectedInstance, $resolvedTypes[$i]);
         }
     }
 
     /**
      * @return array
      */
-    public function contextualTypesToResolveProvider()
+    public function contextualTypesToResolveProvider() : array
     {
         return [
             ['Zap', '\Foo\Awesome\Zap'],
@@ -69,7 +69,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedType
      * @dataProvider contextualTypesToResolveProvider
      */
-    public function testResolveTypesWithContextualTypes($inputType, $expectedType)
+    public function testResolveTypesWithContextualTypes(string $inputType, string $expectedType) : void
     {
         $context = new Context(
             'Foo\Awesome',
@@ -80,12 +80,12 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
         );
 
         $resolvedTypes = (new ResolveTypes())->__invoke([$inputType], $context);
-        $this->assertCount(1, $resolvedTypes);
+        self::assertCount(1, $resolvedTypes);
 
         $resolvedType = reset($resolvedTypes);
-        $this->assertInstanceOf(Types\Object_::class, $resolvedType);
+        self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
         /* @var $resolvedType Types\Object_ */
-        $this->assertSame($expectedType, (string)$resolvedType->getFqsen());
+        self::assertSame($expectedType, (string)$resolvedType->getFqsen());
     }
 }

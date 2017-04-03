@@ -11,14 +11,14 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
  */
 class IdentifierNotFoundTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFromNonObject()
+    public function testFromNonObject() : void
     {
         $identifier = new Identifier('myIdentifier', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $exception = IdentifierNotFound::fromIdentifier($identifier);
 
-        $this->assertInstanceOf(IdentifierNotFound::class, $exception);
-        $this->assertSame(IdentifierType::IDENTIFIER_CLASS . ' "myIdentifier" could not be found in the located source', $exception->getMessage());
-        $this->assertSame($identifier, $exception->getIdentifier());
+        self::assertInstanceOf(IdentifierNotFound::class, $exception);
+        self::assertSame(IdentifierType::IDENTIFIER_CLASS . ' "myIdentifier" could not be found in the located source', $exception->getMessage());
+        self::assertSame($identifier, $exception->getIdentifier());
     }
 }

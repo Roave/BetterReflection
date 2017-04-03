@@ -15,7 +15,7 @@ use Roave\Signature\SignerInterface;
  */
 final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFileCacheWriterCreatesFileWithPrintedCode()
+    public function testFileCacheWriterCreatesFileWithPrintedCode() : void
     {
         $className = uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
@@ -49,7 +49,7 @@ final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         unlink($generatedFilename);
     }
 
-    public function testExceptionThrownWhenSignatureFailedToVerify()
+    public function testExceptionThrownWhenSignatureFailedToVerify() : void
     {
         $className = uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
@@ -86,7 +86,7 @@ final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testDefaultFileCacheLoader()
+    public function testDefaultFileCacheLoader() : void
     {
         $default = FileCacheLoader::defaultFileCacheLoader(__DIR__);
         self::assertInstanceOf(FileCacheLoader::class, $default);

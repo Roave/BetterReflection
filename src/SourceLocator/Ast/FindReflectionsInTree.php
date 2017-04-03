@@ -33,8 +33,12 @@ final class FindReflectionsInTree
      * @param LocatedSource $locatedSource
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
-    public function __invoke(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
-    {
+    public function __invoke(
+        Reflector $reflector,
+        array $ast,
+        IdentifierType $identifierType,
+        LocatedSource $locatedSource
+    ) : array {
         return $this->reflectFromTree($reflector, $ast, $identifierType, $locatedSource);
     }
 
@@ -45,8 +49,12 @@ final class FindReflectionsInTree
      * @param Node\Stmt\Namespace_|null $namespace
      * @return Reflection|null
      */
-    private function reflectNode(Reflector $reflector, Node $node, LocatedSource $locatedSource, Node\Stmt\Namespace_ $namespace = null)
-    {
+    private function reflectNode(
+        Reflector $reflector,
+        Node $node,
+        LocatedSource $locatedSource,
+        ?Node\Stmt\Namespace_ $namespace
+    ) : ?Reflection {
         return $this->astConversionStrategy->__invoke($reflector, $node, $locatedSource, $namespace);
     }
 
@@ -64,7 +72,7 @@ final class FindReflectionsInTree
         Node\Stmt\Namespace_ $namespace,
         IdentifierType $identifierType,
         LocatedSource $locatedSource
-    ) {
+    ) : array {
         $reflections = [];
         foreach ($namespace->stmts as $node) {
             $reflection = $this->reflectNode($reflector, $node, $locatedSource, $namespace);
@@ -86,8 +94,12 @@ final class FindReflectionsInTree
      * @param LocatedSource $locatedSource
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
-    private function reflectFromTree(Reflector $reflector, array $ast, IdentifierType $identifierType, LocatedSource $locatedSource)
-    {
+    private function reflectFromTree(
+        Reflector $reflector,
+        array $ast,
+        IdentifierType $identifierType,
+        LocatedSource $locatedSource
+    ) : array {
         $reflections = [];
         foreach ($ast as $node) {
             if ($node instanceof Node\Stmt\Namespace_) {

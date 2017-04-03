@@ -20,11 +20,11 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\Stmt\Return_) {
-            array_push($this->returnNodes, $node);
+            $this->returnNodes[] = $node;
         }
     }
 
-    private function isScopeChangingNode(Node $node)
+    private function isScopeChangingNode(Node $node) : bool
     {
         return $node instanceof Node\FunctionLike || $node instanceof Node\Stmt\Class_;
     }
@@ -32,7 +32,7 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
     /**
      * @return Node\Stmt\Return_[]
      */
-    public function getReturnNodes()
+    public function getReturnNodes() : array
     {
         return $this->returnNodes;
     }
