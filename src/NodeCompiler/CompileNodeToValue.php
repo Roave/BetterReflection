@@ -257,12 +257,6 @@ class CompileNodeToValue
         throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));
     }
 
-    /**
-     * @param string          $constantName
-     * @param ReflectionClass $class
-     *
-     * @return ReflectionClass|null
-     */
     private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
     {
         if ($class->hasConstant($constantName)) {
