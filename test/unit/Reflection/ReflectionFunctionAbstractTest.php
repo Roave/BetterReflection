@@ -318,6 +318,16 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
         self::assertContains('Fixture/Functions.php', $functionInfo->getFileName());
     }
 
+    public function testGetFileNameOfUnlocatedSource() : void
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $functionInfo = $reflector->reflect('foo');
+
+        self::assertNull($functionInfo->getFileName());
+    }
+
     public function testGetLocatedSource() : void
     {
         $node = new Function_('foo');
