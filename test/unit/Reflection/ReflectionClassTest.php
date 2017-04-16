@@ -1142,4 +1142,39 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($reflection->hasProperty('staticBar'));
         self::assertTrue($reflection->getProperty('staticBar')->isStatic());
     }
+
+    public function testGetConstantsReturnsAllConstantsRegardlessOfVisibility()
+    {
+        $php = '<?php
+            class Foo {
+                private const BAR_PRIVATE = 1;
+                protected const BAR_PROTECTED = 2;
+                public const BAR_PUBLIC = 3;
+                const BAR_DEFAULT = 4;
+            }
+        ';
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+
+        $expectedConstants = [
+            'BAR_PRIVATE' => 1,
+            'BAR_PROTECTED' => 2,
+            'BAR_PUBLIC' => 3,
+            'BAR_DEFAULT' => 4,
+        ];
+
+        self::assertSame($expectedConstants, $reflection->getConstants());
+
+        array_walk(
+            $expectedConstants,
+            function ($constantValue, $constantName) use ($reflection) {
+                self::assertTrue($reflection->hasConstant($constantName), 'Constant ' . $constantName . ' not set');
+                self::assertSame(
+                    $constantValue,
+                    $reflection->getConstant($constantName),
+                    'Constant value for ' . $constantName . ' does not match'
+                );
+            }
+        );
+    }
 }
