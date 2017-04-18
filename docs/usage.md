@@ -228,3 +228,29 @@ $functionInfo = ReflectionFunction::createFromClosure($myClosure);
 
 Note that when you reflect on a closure, in order to match the core reflection
 API, the function "short" name will be just `{closure}`.
+
+## The `CombinedReflector`
+
+Purely an ease-of-use API, the `CombinedReflector` simplifies usage when you
+need to reflect both functions and classes. The usage is similar to standalone
+`ClassReflector` or `FunctionReflector`:
+
+```php
+<?php
+
+$reflector = new CombinedReflector($sourceLocator);
+
+$class = $reflector->reflect('MyClassName'); // returns a ReflectionClass
+$function = $reflector->reflect('myFunctionName'); // returns a ReflectionFunction
+```
+
+There is also a utility method to reflect something on a specific line number:
+
+```php
+
+$reflector = new CombinedReflector(new SingleFileSourceLocator($file));
+
+// Will return a ReflectionFunction, ReflectionClass or null, depending on
+// what is on line 7 in $file
+$item = $reflector->reflectOnLine(7);
+```
