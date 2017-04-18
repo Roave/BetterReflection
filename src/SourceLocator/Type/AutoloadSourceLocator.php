@@ -45,6 +45,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      *
      * @param Identifier $identifier
      * @return string|null
+     * @throws \ReflectionException
      */
     private function attemptAutoloadForIdentifier(Identifier $identifier) : ?string
     {
@@ -74,6 +75,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      *
      * @param string $className
      * @return string|null
+     * @throws \ReflectionException
      */
     private function locateClassByName(string $className)  : ?string
     {
@@ -105,6 +107,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      *
      * @param string $functionName
      * @return string|null
+     * @throws \ReflectionException
      */
     private function locateFunctionByName(string $functionName) : ?string
     {
@@ -113,7 +116,13 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         $reflection = new \ReflectionFunction($functionName);
-        return $reflection->getFileName();
+        $reflectionFileName = $reflection->getFileName();
+
+        if (! is_string($reflectionFileName)) {
+            return null;
+        }
+
+        return $reflectionFileName;
     }
 
     /**

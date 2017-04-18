@@ -177,4 +177,15 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 ->locateIdentifier($this->getMockReflector(), new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
         );
     }
+
+    public function testReturnsNullWithInternalFunctions() : void
+    {
+        self::assertNull(
+            (new AutoloadSourceLocator())
+                ->locateIdentifier(
+                    $this->getMockReflector(),
+                    new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+                )
+        );
+    }
 }
