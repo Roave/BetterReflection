@@ -14,6 +14,7 @@ use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
@@ -109,6 +110,17 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($method->isConstructor());
 
         $method = $classInfo->getMethod('__destruct');
+        self::assertTrue($method->isDestructor());
+    }
+
+    public function testIsConstructorDestructorIsCaseInsensitive() : void
+    {
+        $classInfo = $this->reflector->reflect(UpperCaseConstructDestruct::class);
+
+        $method = $classInfo->getMethod('__CONSTRUCT');
+        self::assertTrue($method->isConstructor());
+
+        $method = $classInfo->getMethod('__DESTRUCT');
         self::assertTrue($method->isDestructor());
     }
 
