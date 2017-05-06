@@ -255,6 +255,11 @@ class ReflectionObject extends ReflectionClass
         );
     }
 
+    public function getImmediateProperties(): array
+    {
+        return $this->reflectionClass->getImmediateProperties();
+    }
+
     /**
      * {@inheritdoc}
      */

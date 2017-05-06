@@ -475,11 +475,12 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * Get the properties for this class.
+     * Get only the properties for this specific class (i.e. do not search
+     * up parent classes etc.)
      *
      * @return ReflectionProperty[]
      */
-    public function getProperties() : array
+    public function getImmediateProperties() : array
     {
         if (null !== $this->cachedProperties) {
             return $this->cachedProperties;
@@ -493,8 +494,40 @@ class ReflectionClass implements Reflection, \Reflector
             }
         }
 
-        $this->cachedProperties = $properties;
-        return $properties;
+        return $this->cachedProperties = $properties;
+    }
+
+    /**
+     * Get the properties for this class.
+     *
+     * @return ReflectionProperty[]
+     */
+    public function getProperties() : array
+    {
+        // merging together properties from parent class, traits, current class (in this precise order)
+        return array_merge(
+            array_merge(
+                [],
+                ...array_map(
+                    function (ReflectionClass $ancestor) {
+                        return array_filter(
+                            $ancestor->getProperties(),
+                            function (ReflectionProperty $property) {
+                                return !$property->isPrivate();
+                            }
+                        );
+                    },
+                    array_filter([$this->getParentClass()])
+                ),
+                ...array_map(
+                    function (ReflectionClass $trait) {
+                        return $trait->getProperties();
+                    },
+                    $this->getTraits()
+                )
+            ),
+            $this->getImmediateProperties()
+        );
     }
 
     /**
