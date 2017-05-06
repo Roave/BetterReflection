@@ -209,39 +209,39 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testGetPropertiesReturnsInheritedProperties() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassProperties.php'));
-        $classInfo = $reflector->reflect('Qux');
+        $classInfo = $reflector->reflect(\Qux::class);
 
         $properties = $classInfo->getProperties();
         self::assertCount(5, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
         self::assertSame('a', $classInfo->getProperty('a')->getName(), 'Failed asserting that property a from trait Bar was returned');
-        self::assertSame('Bar', $classInfo->getProperty('a')->getDeclaringClass()->getName());
+        self::assertSame(\Bar::class, $classInfo->getProperty('a')->getDeclaringClass()->getName());
 
         self::assertSame('b', $classInfo->getProperty('b')->getName(), 'Failed asserting that private property b from trait Bar was returned');
-        self::assertSame('Bar', $classInfo->getProperty('b')->getDeclaringClass()->getName());
+        self::assertSame(\Bar::class, $classInfo->getProperty('b')->getDeclaringClass()->getName());
 
         self::assertSame('c', $classInfo->getProperty('c')->getName(), 'Failed asserting that public property c from parent class Baz was returned');
-        self::assertSame('Baz', $classInfo->getProperty('c')->getDeclaringClass()->getName());
+        self::assertSame(\Baz::class, $classInfo->getProperty('c')->getDeclaringClass()->getName());
 
         self::assertSame('d', $classInfo->getProperty('d')->getName(), 'Failed asserting that protected property d from parent class Baz was returned');
-        self::assertSame('Baz', $classInfo->getProperty('d')->getDeclaringClass()->getName());
+        self::assertSame(\Baz::class, $classInfo->getProperty('d')->getDeclaringClass()->getName());
 
         self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from SUT was returned');
-        self::assertSame('Qux', $classInfo->getProperty('f')->getDeclaringClass()->getName());
+        self::assertSame(\Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
     }
 
     public function testGetImmediateProperties() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassProperties.php'));
-        $classInfo = $reflector->reflect('Qux');
+        $classInfo = $reflector->reflect(\Qux::class);
 
         $properties = $classInfo->getImmediateProperties();
         self::assertCount(1, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
         self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from SUT was returned');
-        self::assertSame('Qux', $classInfo->getProperty('f')->getDeclaringClass()->getName());
+        self::assertSame(\Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
     }
 
     public function testGetProperty() : void
