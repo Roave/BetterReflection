@@ -482,6 +482,10 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getImmediateProperties() : array
     {
+        if (null !== $this->cachedProperties) {
+            return $this->cachedProperties;
+        }
+
         $properties = [];
         foreach ($this->node->stmts as $stmt) {
             if ($stmt instanceof PropertyNode) {
@@ -490,7 +494,7 @@ class ReflectionClass implements Reflection, \Reflector
             }
         }
 
-        return $properties;
+        return $this->cachedProperties = $properties;
     }
 
     /**
@@ -500,13 +504,8 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getProperties() : array
     {
-        if (null !== $this->cachedProperties) {
-            return $this->cachedProperties;
-        }
-
         // merging together properties from parent class, traits, current class (in this precise order)
-        /* @var $inheritedProperties \ReflectionProperty[] */
-        $inheritedProperties = array_merge(
+        return array_merge(
             array_merge(
                 [],
                 ...array_map(
@@ -529,9 +528,6 @@ class ReflectionClass implements Reflection, \Reflector
             ),
             $this->getImmediateProperties()
         );
-
-        $this->cachedProperties = $inheritedProperties;
-        return $inheritedProperties;
     }
 
     /**
