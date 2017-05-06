@@ -475,6 +475,25 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Get only the properties for this specific class (i.e. do not search
+     * up parent classes etc.)
+     *
+     * @return ReflectionProperty[]
+     */
+    public function getImmediateProperties() : array
+    {
+        $properties = [];
+        foreach ($this->node->stmts as $stmt) {
+            if ($stmt instanceof PropertyNode) {
+                $prop = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
+                $properties[$prop->getName()] = $prop;
+            }
+        }
+
+        return $properties;
+    }
+
+    /**
      * Get the properties for this class.
      *
      * @return ReflectionProperty[]
@@ -485,16 +504,34 @@ class ReflectionClass implements Reflection, \Reflector
             return $this->cachedProperties;
         }
 
-        $properties = [];
-        foreach ($this->node->stmts as $stmt) {
-            if ($stmt instanceof PropertyNode) {
-                $prop = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
-                $properties[$prop->getName()] = $prop;
-            }
-        }
+        // merging together properties from parent class, traits, current class (in this precise order)
+        /* @var $inheritedProperties \ReflectionProperty[] */
+        $inheritedProperties = array_merge(
+            array_merge(
+                [],
+                ...array_map(
+                    function (ReflectionClass $ancestor) {
+                        return array_filter(
+                            $ancestor->getProperties(),
+                            function (ReflectionProperty $property) {
+                                return !$property->isPrivate();
+                            }
+                        );
+                    },
+                    array_filter([$this->getParentClass()])
+                ),
+                ...array_map(
+                    function (ReflectionClass $trait) {
+                        return $trait->getProperties();
+                    },
+                    $this->getTraits()
+                )
+            ),
+            $this->getImmediateProperties()
+        );
 
-        $this->cachedProperties = $properties;
-        return $properties;
+        $this->cachedProperties = $inheritedProperties;
+        return $inheritedProperties;
     }
 
     /**
