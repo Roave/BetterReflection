@@ -16,14 +16,6 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
      */
     public function basicTypesToResolveProvider() : array
     {
-        $context = new Context(
-            'My\Space',
-            [
-                'Foo\Bar',
-                'Bat\Baz',
-            ]
-        );
-
         return [
             [['array'], [Types\Array_::class]],
             [['int[]'], [Types\Array_::class]],
@@ -33,6 +25,8 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
             [['bool'], [Types\Boolean::class]],
             [['boolean'], [Types\Boolean::class]],
             [['int', 'string', 'bool'], [Types\Integer::class, Types\String_::class, Types\Boolean::class]],
+            [['?string'], [Types\Nullable::class]],
+            [['iterable'], [Types\Iterable_::class]],
         ];
     }
 
