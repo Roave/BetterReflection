@@ -35,7 +35,6 @@ use PhpParser\Node\Name;
 use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
 use PhpParser\Node\Stmt\Class_;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
-use TraitFixtureTraitA;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionClass
@@ -479,9 +478,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $traits = $traitInfo->getTraits();
         self::assertCount(1, $traits);
-        self::assertInstanceOf(ReflectionClass::class, $traits[0]);
-        self::assertTrue($traits[0]->isTrait());
-        self::assertSame(TraitFixtureTraitA::class, $traits[0]->getName());
+    }
+
+    public function testGetTraitsInANamespace() : void
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/NamespacedTraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $traitInfo = $reflector->reflect('Namespaced\ClassFixture');
+
+        $traits = $traitInfo->getTraits();
+        self::assertCount(1, $traits);
     }
 
     public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed() : void
