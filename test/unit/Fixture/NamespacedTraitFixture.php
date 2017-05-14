@@ -1,17 +1,20 @@
 <?php
 
-namespace Namespaced
+namespace Namespaced;
+
+trait TraitFixtureTraitA
 {
-    trait TraitFixtureTraitA {
 
-    }
+}
 
-    class ClassFixture {
-        use TraitFixtureTraitA;
-    }
+// Trait in a Class
+class ClassFixture
+{
+    use TraitFixtureTraitA;
+}
 
-    trait TraitFixtureTraitB
-    {
-        use TraitFixtureTraitA;
-    }
+// Trait in a Trait
+trait TraitFixtureTraitB
+{
+    use TraitFixtureTraitA;
 }
