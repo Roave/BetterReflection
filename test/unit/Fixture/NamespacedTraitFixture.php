@@ -2,11 +2,16 @@
 
 namespace Namespaced
 {
-    trait TraitFixtureTrait {
+    trait TraitFixtureTraitA {
 
     }
 
     class ClassFixture {
-        use TraitFixtureTrait;
+        use TraitFixtureTraitA;
+    }
+
+    trait TraitFixtureTraitB
+    {
+        use TraitFixtureTraitA;
     }
 }

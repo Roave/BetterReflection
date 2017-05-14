@@ -491,6 +491,17 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertCount(1, $traits);
     }
 
+    public function testGetTraitsOfATraitInANamespace() : void
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/NamespacedTraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $traitInfo = $reflector->reflect('Namespaced\TraitFixtureTraitB');
+
+        $traits = $traitInfo->getTraits();
+        self::assertCount(1, $traits);
+    }
+
     public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed() : void
     {
         $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
