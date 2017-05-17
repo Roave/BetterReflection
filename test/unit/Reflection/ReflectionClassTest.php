@@ -157,6 +157,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect(Fixture\Methods::class);
 
         self::assertCount($count, $classInfo->getMethods($filter));
+        self::assertCount($count, $classInfo->getImmediateMethods($filter));
     }
 
     public function testGetMethodsReturnsInheritedMethods() : void

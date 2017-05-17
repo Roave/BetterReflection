@@ -191,9 +191,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateMethods() : array
+    public function getImmediateMethods(?int $filter = null) : array
     {
-        return $this->reflectionClass->getImmediateMethods();
+        return $this->reflectionClass->getImmediateMethods($filter);
     }
 
     /**

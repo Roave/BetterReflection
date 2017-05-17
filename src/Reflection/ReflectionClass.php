@@ -363,7 +363,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @return ReflectionMethod[]
      */
-    public function getImmediateMethods() : array
+    public function getImmediateMethods(?int $filter = null) : array
     {
         /* @var $methods \ReflectionMethod[] */
         $methods = array_map(
@@ -376,7 +376,9 @@ class ReflectionClass implements Reflection, \Reflector
         $methodsByName = [];
 
         foreach ($methods as $method) {
-            $methodsByName[$method->getName()] = $method;
+            if (null === $filter || $filter & $method->getModifiers()) {
+                $methodsByName[$method->getName()] = $method;
+            }
         }
 
         return $methodsByName;
