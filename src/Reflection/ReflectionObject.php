@@ -95,9 +95,10 @@ class ReflectionObject extends ReflectionClass
     /**
      * Reflect on runtime properties for the current instance
      *
+     * @param ?int $filter
      * @return ReflectionProperty[]
      */
-    private function getRuntimeProperties() : array
+    private function getRuntimeProperties(?int $filter = null) : array
     {
         if (!$this->reflectionClass->isInstance($this->object)) {
             throw new \InvalidArgumentException('Cannot reflect runtime properties of a separate class');
@@ -121,7 +122,10 @@ class ReflectionObject extends ReflectionClass
                 $this,
                 false
             );
-            $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
+
+            if (null === $filter || $filter & $runtimeProperty->getModifiers()) {
+                $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
+            }
         }
         return $runtimeProperties;
     }
@@ -247,17 +251,17 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getProperties() : array
+    public function getProperties(?int $filter = null) : array
     {
         return array_merge(
-            $this->reflectionClass->getProperties(),
-            $this->getRuntimeProperties()
+            $this->reflectionClass->getProperties($filter),
+            $this->getRuntimeProperties($filter)
         );
     }
 
-    public function getImmediateProperties(): array
+    public function getImmediateProperties(?int $filter = null): array
     {
-        return $this->reflectionClass->getImmediateProperties();
+        return $this->reflectionClass->getImmediateProperties($filter);
     }
 
     /**

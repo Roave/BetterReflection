@@ -338,7 +338,7 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * Fetch an array of all methods for this class.
      *
-     * @param ?int
+     * @param ?int $filter
      * @return ReflectionMethod[]
      */
     public function getMethods(?int $filter = null) : array
@@ -361,6 +361,7 @@ class ReflectionClass implements Reflection, \Reflector
      * Get only the methods that this class implements (i.e. do not search
      * up parent classes etc.)
      *
+     * @param ?int $filter
      * @return ReflectionMethod[]
      */
     public function getImmediateMethods(?int $filter = null) : array
@@ -492,40 +493,47 @@ class ReflectionClass implements Reflection, \Reflector
      * Get only the properties for this specific class (i.e. do not search
      * up parent classes etc.)
      *
+     * @param ?int $filter
      * @return ReflectionProperty[]
      */
-    public function getImmediateProperties() : array
+    public function getImmediateProperties(?int $filter = null) : array
     {
-        if (null !== $this->cachedProperties) {
-            return $this->cachedProperties;
-        }
-
-        $properties = [];
-        foreach ($this->node->stmts as $stmt) {
-            if ($stmt instanceof PropertyNode) {
-                $prop = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
-                $properties[$prop->getName()] = $prop;
+        if (null === $this->cachedProperties) {
+            $properties = [];
+            foreach ($this->node->stmts as $stmt) {
+                if ($stmt instanceof PropertyNode) {
+                    $prop = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
+                    $properties[$prop->getName()] = $prop;
+                }
             }
+
+            $this->cachedProperties = $properties;
         }
 
-        return $this->cachedProperties = $properties;
+        return array_filter(
+            $this->cachedProperties,
+            function (ReflectionProperty $property) use ($filter) {
+                return null === $filter || $filter & $property->getModifiers();
+            }
+        );
     }
 
     /**
      * Get the properties for this class.
      *
+     * @param ?int $filter
      * @return ReflectionProperty[]
      */
-    public function getProperties() : array
+    public function getProperties(?int $filter = null) : array
     {
         // merging together properties from parent class, traits, current class (in this precise order)
         return array_merge(
             array_merge(
                 [],
                 ...array_map(
-                    function (ReflectionClass $ancestor) {
+                    function (ReflectionClass $ancestor) use ($filter) {
                         return array_filter(
-                            $ancestor->getProperties(),
+                            $ancestor->getProperties($filter),
                             function (ReflectionProperty $property) {
                                 return !$property->isPrivate();
                             }
@@ -534,13 +542,13 @@ class ReflectionClass implements Reflection, \Reflector
                     array_filter([$this->getParentClass()])
                 ),
                 ...array_map(
-                    function (ReflectionClass $trait) {
-                        return $trait->getProperties();
+                    function (ReflectionClass $trait) use ($filter) {
+                        return $trait->getProperties($filter);
                     },
                     $this->getTraits()
                 )
             ),
-            $this->getImmediateProperties()
+            $this->getImmediateProperties($filter)
         );
     }
 

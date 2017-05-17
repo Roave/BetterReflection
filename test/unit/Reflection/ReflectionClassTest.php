@@ -239,6 +239,35 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertCount(4, $properties);
     }
 
+    public function getPropertiesWithFilterDataProvider() : array
+    {
+        return [
+            [\ReflectionProperty::IS_STATIC, 1],
+            [\ReflectionProperty::IS_PUBLIC, 2],
+            [\ReflectionProperty::IS_PROTECTED, 1],
+            [\ReflectionProperty::IS_PRIVATE, 1],
+            [
+                \ReflectionProperty::IS_STATIC |
+                \ReflectionProperty::IS_PUBLIC |
+                \ReflectionProperty::IS_PROTECTED |
+                \ReflectionProperty::IS_PRIVATE,
+                4
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider getPropertiesWithFilterDataProvider
+     */
+    public function testGetPropertiesWithFilter(int $filter, int $count) : void
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+
+        self::assertCount($count, $classInfo->getProperties($filter));
+        self::assertCount($count, $classInfo->getImmediateProperties($filter));
+    }
+
     public function testGetPropertiesReturnsInheritedProperties() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassProperties.php'));
