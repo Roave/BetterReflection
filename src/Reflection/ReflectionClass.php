@@ -338,11 +338,23 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * Fetch an array of all methods for this class.
      *
+     * @param ?int
      * @return ReflectionMethod[]
      */
-    public function getMethods() : array
+    public function getMethods(?int $filter = null) : array
     {
-        return array_values($this->getMethodsIndexedByName());
+        if (null === $filter) {
+            return array_values($this->getMethodsIndexedByName());
+        }
+
+        return array_values(
+            array_filter(
+                $this->getMethodsIndexedByName(),
+                function (ReflectionMethod $method) use ($filter) {
+                    return $filter & $method->getModifiers();
+                }
+            )
+        );
     }
 
     /**

@@ -127,6 +127,38 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
+    public function getMethodsWithFilterDataProvider() : array
+    {
+        return [
+            [\ReflectionMethod::IS_STATIC, 1],
+            [\ReflectionMethod::IS_ABSTRACT, 1],
+            [\ReflectionMethod::IS_FINAL, 1],
+            [\ReflectionMethod::IS_PUBLIC, 15],
+            [\ReflectionMethod::IS_PROTECTED, 1],
+            [\ReflectionMethod::IS_PRIVATE, 1],
+            [
+                \ReflectionMethod::IS_STATIC |
+                \ReflectionMethod::IS_ABSTRACT |
+                \ReflectionMethod::IS_FINAL |
+                \ReflectionMethod::IS_PUBLIC |
+                \ReflectionMethod::IS_PROTECTED |
+                \ReflectionMethod::IS_PRIVATE,
+                17
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider getMethodsWithFilterDataProvider
+     */
+    public function testGetMethodsWithFilter(int $filter, int $count) : void
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(Fixture\Methods::class);
+
+        self::assertCount($count, $classInfo->getMethods($filter));
+    }
+
     public function testGetMethodsReturnsInheritedMethods() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassMethods.php'));

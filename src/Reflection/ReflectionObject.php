@@ -183,9 +183,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getMethods() : array
+    public function getMethods(?int $filter = null) : array
     {
-        return $this->reflectionClass->getMethods();
+        return $this->reflectionClass->getMethods($filter);
     }
 
     /**
