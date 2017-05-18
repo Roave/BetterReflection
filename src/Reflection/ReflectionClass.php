@@ -338,7 +338,17 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * Fetch an array of all methods for this class.
      *
-     * @param ?int $filter
+     * @param int|null $filter
+     * Filter the results to include only methods with certain attributes. Defaults
+     * to no filtering.
+     * Any combination of \ReflectionMethod::IS_STATIC,
+     * \ReflectionMethod::IS_PUBLIC,
+     * \ReflectionMethod::IS_PROTECTED,
+     * \ReflectionMethod::IS_PRIVATE,
+     * \ReflectionMethod::IS_ABSTRACT,
+     * \ReflectionMethod::IS_FINAL.
+     * For example if $filter = \ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_FINAL
+     * the only the final public methods will be returned
      * @return ReflectionMethod[]
      */
     public function getMethods(?int $filter = null) : array
@@ -361,7 +371,8 @@ class ReflectionClass implements Reflection, \Reflector
      * Get only the methods that this class implements (i.e. do not search
      * up parent classes etc.)
      *
-     * @param ?int $filter
+     * @param int|null $filter
+     * @see ReflectionClass::getMethods for the usage of $filter
      * @return ReflectionMethod[]
      */
     public function getImmediateMethods(?int $filter = null) : array
@@ -493,7 +504,8 @@ class ReflectionClass implements Reflection, \Reflector
      * Get only the properties for this specific class (i.e. do not search
      * up parent classes etc.)
      *
-     * @param ?int $filter
+     * @param int|null $filter
+     * @see ReflectionClass::getProperties() for the usage of filter
      * @return ReflectionProperty[]
      */
     public function getImmediateProperties(?int $filter = null) : array
@@ -510,10 +522,14 @@ class ReflectionClass implements Reflection, \Reflector
             $this->cachedProperties = $properties;
         }
 
+        if (null === $filter) {
+            return $this->cachedProperties;
+        }
+
         return array_filter(
             $this->cachedProperties,
             function (ReflectionProperty $property) use ($filter) {
-                return null === $filter || $filter & $property->getModifiers();
+                return $filter & $property->getModifiers();
             }
         );
     }
@@ -521,7 +537,15 @@ class ReflectionClass implements Reflection, \Reflector
     /**
      * Get the properties for this class.
      *
-     * @param ?int $filter
+     * @param int|null $filter
+     * Filter the results to include only properties with certain attributes. Defaults
+     * to no filtering.
+     * Any combination of \ReflectionProperty::IS_STATIC,
+     * \ReflectionProperty::IS_PUBLIC,
+     * \ReflectionProperty::IS_PROTECTED,
+     * \ReflectionProperty::IS_PRIVATE.
+     * For example if $filter = \ReflectionProperty::IS_STATIC | \ReflectionProperty::IS_PUBLIC
+     * only the static public properties will be returned
      * @return ReflectionProperty[]
      */
     public function getProperties(?int $filter = null) : array

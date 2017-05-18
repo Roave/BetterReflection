@@ -95,7 +95,8 @@ class ReflectionObject extends ReflectionClass
     /**
      * Reflect on runtime properties for the current instance
      *
-     * @param ?int $filter
+     * @param int|null $filter
+     * @see ReflectionClass::getProperties() for the usage of $filter
      * @return ReflectionProperty[]
      */
     private function getRuntimeProperties(?int $filter = null) : array
@@ -259,6 +260,9 @@ class ReflectionObject extends ReflectionClass
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getImmediateProperties(?int $filter = null): array
     {
         return $this->reflectionClass->getImmediateProperties($filter);
