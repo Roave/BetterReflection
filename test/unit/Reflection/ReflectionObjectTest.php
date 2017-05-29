@@ -106,6 +106,19 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         self::assertEmpty($classInfo->getProperties(\ReflectionProperty::IS_PRIVATE));
     }
 
+    public function testGetRuntimeImmediatePropertiesWithFilter() : void
+    {
+        $foo = new \StdClass();
+        $foo->bar = 'huzzah';
+
+        $classInfo = ReflectionObject::createFromInstance($foo);
+
+        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_STATIC));
+        self::assertCount(1, $classInfo->getImmediateProperties(\ReflectionProperty::IS_PUBLIC));
+        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_PROTECTED));
+        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_PRIVATE));
+    }
+
     /**
      * This data provider gets all the public methods from ReflectionClass, but
      * filters out a few methods we want to test manually
