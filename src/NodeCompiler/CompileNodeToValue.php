@@ -270,8 +270,7 @@ class CompileNodeToValue
      */
     private function compileDirConstant(Node\Scalar\MagicConst\Dir $node, CompilerContext $context): string
     {
-        $fileName = $context->getSelf()->getLocatedSource()->getFileName();
-        return dirname(realpath($fileName));
+        return dirname(realpath($context->getFileName()));
     }
 
     private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
