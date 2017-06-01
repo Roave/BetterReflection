@@ -255,6 +255,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(ReflectionProperty::class, $property);
         self::assertSame('publicProperty', $property->getName());
+        self::assertStringEndsWith('test/unit/Fixture', $property->getDefaultValue());
     }
 
     public function testGetFileName() : void

@@ -48,7 +48,7 @@ class CompileNodeToValue
         }
 
         if ($node instanceof Node\Scalar\MagicConst\Dir) {
-            return '__DIR__';
+            return $this->compileDirConstant($node, $context);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
@@ -259,6 +259,19 @@ class CompileNodeToValue
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));
+    }
+
+    /**
+     * Compile a __DIR__ node
+     *
+     * @param Node\Scalar\MagicConst\Dir $node
+     * @param CompilerContext $context
+     * @return string
+     */
+    private function compileDirConstant(Node\Scalar\MagicConst\Dir $node, CompilerContext $context): string
+    {
+        $fileName = $context->getSelf()->getLocatedSource()->getFileName();
+        return dirname(realpath($fileName));
     }
 
     private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
