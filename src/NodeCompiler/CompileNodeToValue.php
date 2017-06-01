@@ -47,6 +47,10 @@ class CompileNodeToValue
             return $this->compileBinaryOperator($node, $context);
         }
 
+        if ($node instanceof Node\Scalar\MagicConst\Dir) {
+            return '__DIR__';
+        }
+
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
     }
 

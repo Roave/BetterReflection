@@ -129,6 +129,7 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
             ['3 <= 2', false],
             ['PHP_INT_MAX', PHP_INT_MAX],
             ['PHP_EOL', PHP_EOL],
+            ['__DIR__', '__DIR__'],
         ];
     }
 
