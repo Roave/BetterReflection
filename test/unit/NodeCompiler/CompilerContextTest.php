@@ -4,6 +4,7 @@ namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
@@ -34,5 +35,29 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($context->hasSelf());
         self::assertSame($reflector, $context->getReflector());
         self::assertSame($self, $context->getSelf());
+    }
+
+    public function testGetFileName() : void
+    {
+        $filename = __DIR__ . '/CompilerContextTest.php';
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
+        $self = $reflector->reflect(CompilerContextTest::class);
+
+        $context = new CompilerContext($reflector, $self);
+
+        self::assertSame($filename, $context->getFileName());
+    }
+
+    public function testGetFileNameWithoutSelf() : void
+    {
+        $filename = __DIR__ . '/CompilerContextTest.php';
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
+        $context = new CompilerContext($reflector, null);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The current context does not have a class for self');
+        $context->getFileName();
     }
 }

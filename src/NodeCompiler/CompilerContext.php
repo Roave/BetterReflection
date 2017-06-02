@@ -48,4 +48,9 @@ class CompilerContext
     {
         return $this->reflector;
     }
+
+    public function getFileName() : string
+    {
+        return $this->getSelf()->getFileName();
+    }
 }

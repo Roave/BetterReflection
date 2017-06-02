@@ -22,7 +22,7 @@ namespace Roave\BetterReflectionTest\Fixture {
         /**
          * @var string
          */
-        public $publicProperty;
+        public $publicProperty = __DIR__;
 
         public static $publicStaticProperty;
 
