@@ -6,11 +6,19 @@ use PhpParser\Node\Stmt\Class_;
 
 class ReflectionClassConstant implements \Reflector
 {
-
+    /**
+     * @var string Name of constant
+     */
     private $name;
 
+    /**
+     * @var mixed Value of constant
+     */
     private $value;
 
+    /**
+     * @var int Constant visibility flags
+     */
     private $flags;
 
     private function __construct()
@@ -22,10 +30,10 @@ class ReflectionClassConstant implements \Reflector
      *
      * @param int $flags
      * @param string $name
-     * @param null $value
+     * @param mixed $value
      * @return ReflectionClassConstant
      */
-    public static function createFromConstFlagsNameAndValue(int $flags, string $name, $value = null)
+    public static function createFromConstFlagsNameAndValue(int $flags, string $name, $value) : self
     {
         $ref = new self();
         $ref->flags = $flags === 0 ? Class_::MODIFIER_PUBLIC : $flags;
@@ -40,7 +48,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return string
      */
-    public function getName(): string
+    public function getName() : string
     {
         return $this->name;
     }
@@ -60,7 +68,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return bool
      */
-    public function isPublic()
+    public function isPublic() : bool
     {
         return (bool)($this->flags & Class_::MODIFIER_PUBLIC);
     }
@@ -70,7 +78,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return bool
      */
-    public function isPrivate()
+    public function isPrivate() : bool
     {
         return (bool)($this->flags & Class_::MODIFIER_PRIVATE);
     }
@@ -80,7 +88,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return bool
      */
-    public function isProtected()
+    public function isProtected() : bool
     {
         return (bool)($this->flags & Class_::MODIFIER_PROTECTED);
     }
@@ -89,9 +97,11 @@ class ReflectionClassConstant implements \Reflector
     {
         if ($this->isPublic()) {
             return '<public>';
-        } elseif ($this->isPrivate()) {
+        }
+        if ($this->isPrivate()) {
             return '<private>';
-        } elseif ($this->isProtected()) {
+        }
+        if ($this->isProtected()) {
             return '<protected>';
         }
         return '<unknown>';

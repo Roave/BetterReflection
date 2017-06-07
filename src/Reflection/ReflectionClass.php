@@ -2,6 +2,18 @@
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Types\Object_;
+use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\ClassConst;
+use PhpParser\Node\Stmt\ClassConst as ConstNode;
+use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Stmt\Property as PropertyNode;
+use PhpParser\Node\Stmt\Trait_ as TraitNode;
+use PhpParser\Node\Stmt\TraitUse;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -12,17 +24,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\GetFirstDocComment;
-use phpDocumentor\Reflection\Types\Object_;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
-use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\Trait_ as TraitNode;
-use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
-use PhpParser\Node\Stmt\ClassConst as ConstNode;
-use PhpParser\Node\Stmt\Property as PropertyNode;
-use PhpParser\Node\Stmt\TraitUse;
 
 class ReflectionClass implements Reflection, \Reflector
 {
@@ -503,11 +504,11 @@ class ReflectionClass implements Reflection, \Reflector
      * @param string $name
      * @return ReflectionClassConstant|null
      */
-    public function getReflectionConstant(string $name): ?ReflectionClassConstant
+    public function getReflectionConstant(string $name) : ?ReflectionClassConstant
     {
         $constants = $this->getReflectionConstants();
 
-        if (!isset($constants[$name])) {
+        if (!array_key_exists($name, $constants)) {
             return null;
         }
 
@@ -515,34 +516,45 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Returns array of constants for this class
+     *
+     * @param array $accumulator
+     * @param Node\Stmt $stmt
+     * @return array
+     */
+    private function processReflectionConstants(array $accumulator, Node\Stmt $stmt) : array
+    {
+        if ($stmt instanceof ClassConst) {
+            $const = ReflectionClassConstant::createFromConstFlagsNameAndValue(
+                $stmt->flags,
+                $stmt->consts[0]->name,
+                (new CompileNodeToValue())->__invoke(
+                    $stmt->consts[0]->value,
+                    new CompilerContext($this->reflector, $this)
+                )
+            );
+            $accumulator[$const->getName()] = $const;
+        }
+
+        return $accumulator;
+    }
+
+    /**
      * Get an array reflection object of the defined constants in this class.
      *
      * @return ReflectionClassConstant[]
      */
-    public function getReflectionConstants(): array
+    public function getReflectionConstants() : array
     {
-        if (null !== $this->cachedReflectionConstants) {
-            return $this->cachedReflectionConstants;
+        if (null === $this->cachedReflectionConstants) {
+            $this->cachedReflectionConstants = array_reduce(
+                $this->node->stmts,
+                [$this, 'processReflectionConstants'],
+                []
+            );
         }
 
-        $constants = [];
-
-        foreach ($this->node->stmts as $stmt) {
-            if ($stmt instanceof ConstNode) {
-                $const = ReflectionClassConstant::createFromConstFlagsNameAndValue(
-                    $stmt->flags,
-                    $stmt->consts[0]->name,
-                    (new CompileNodeToValue())->__invoke(
-                        $stmt->consts[0]->value,
-                        new CompilerContext($this->reflector, $this)
-                    )
-                );
-                $constants[$const->getName()] = $const;
-            }
-        }
-
-        $this->cachedReflectionConstants = $constants;
-        return $constants;
+        return $this->cachedReflectionConstants;
     }
 
     /**
