@@ -244,6 +244,22 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getReflectionConstant(string $name) : ?ReflectionClassConstant
+    {
+        return $this->reflectionClass->getReflectionConstant($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReflectionConstants() : array
+    {
+        return $this->reflectionClass->getReflectionConstants();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getConstructor() : ReflectionMethod
     {
         return $this->reflectionClass->getConstructor();
