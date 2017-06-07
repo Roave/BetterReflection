@@ -10,8 +10,9 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
 {
     private function getComposerLocator() : ComposerSourceLocator
     {
-        global $loader;
-        return new ComposerSourceLocator($loader);
+        return new ComposerSourceLocator(
+            require __DIR__ . '/../../../vendor/autoload.php'
+        );
     }
 
     public function testDefaultVisibility()
