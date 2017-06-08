@@ -2,6 +2,7 @@
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PhpParser\Node\Stmt\Class_;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -15,35 +16,34 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDefaultVisibility()
+    private function getExampleConstant(string $name)
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        $const = $classInfo->getReflectionConstant('MY_CONST_1');
+        return $classInfo->getReflectionConstant($name);
+    }
+
+    public function testDefaultVisibility()
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
         $this->assertTrue($const->isPublic());
     }
 
     public function testPublicVisibility()
     {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect(ExampleClass::class);
-        $const = $classInfo->getReflectionConstant('MY_CONST_3');
+        $const = $this->getExampleConstant('MY_CONST_3');
         $this->assertTrue($const->isPublic());
     }
 
     public function testProtectedVisibility()
     {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect(ExampleClass::class);
-        $const = $classInfo->getReflectionConstant('MY_CONST_4');
+        $const = $this->getExampleConstant('MY_CONST_4');
         $this->assertTrue($const->isProtected());
     }
 
     public function testPrivateVisibility()
     {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect(ExampleClass::class);
-        $const = $classInfo->getReflectionConstant('MY_CONST_5');
+        $const = $this->getExampleConstant('MY_CONST_5');
         $this->assertTrue($const->isPrivate());
     }
 
@@ -54,9 +54,7 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString(string $const, string $expected)
     {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect(ExampleClass::class);
-        $const = $classInfo->getReflectionConstant($const);
+        $const = $this->getExampleConstant($const);
         $this->assertEquals($expected, (string)$const);
     }
 
@@ -69,4 +67,46 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
             ['MY_CONST_5', 'Constant [ private MY_CONST_5 ] { 567 }' . PHP_EOL],
         ];
     }
+
+    /**
+     * @param string $const
+     * @param int $expected
+     * @dataProvider getModifiersProvider
+     */
+    public function testGetModifiers(string $const, int $expected)
+    {
+        $const = $this->getExampleConstant($const);
+        $this->assertEquals($expected, $const->getModifiers());
+    }
+
+    public function getModifiersProvider()
+    {
+        return [
+            ['MY_CONST_1', Class_::MODIFIER_PUBLIC],
+            ['MY_CONST_3', Class_::MODIFIER_PUBLIC],
+            ['MY_CONST_4', Class_::MODIFIER_PROTECTED],
+            ['MY_CONST_5', Class_::MODIFIER_PRIVATE],
+        ];
+    }
+
+    public function testGetDocComment()
+    {
+        $const = $this->getExampleConstant('MY_CONST_2');
+        $this->assertContains('Documentation for constant', $const->getDocComment());
+    }
+
+    public function testGetDocCommentReturnsEmptyStringWithNoComment()
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
+        $this->assertEquals('', $const->getDocComment());
+    }
+
+    public function testGetDeclaringClass()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+        $const = $classInfo->getReflectionConstant('MY_CONST_1');
+        $this->assertEquals($classInfo, $const->getDeclaringClass());
+    }
+
 }

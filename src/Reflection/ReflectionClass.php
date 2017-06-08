@@ -525,14 +525,7 @@ class ReflectionClass implements Reflection, \Reflector
     private function processReflectionConstants(array $accumulator, Node\Stmt $stmt) : array
     {
         if ($stmt instanceof ClassConst) {
-            $const = ReflectionClassConstant::createFromConstFlagsNameAndValue(
-                $stmt->flags,
-                $stmt->consts[0]->name,
-                (new CompileNodeToValue())->__invoke(
-                    $stmt->consts[0]->value,
-                    new CompilerContext($this->reflector, $this)
-                )
-            );
+            $const = ReflectionClassConstant::createFromNode($this->reflector, $stmt, $this);
             $accumulator[$const->getName()] = $const;
         }
 

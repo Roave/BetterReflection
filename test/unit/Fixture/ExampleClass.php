@@ -7,6 +7,10 @@ namespace Roave\BetterReflectionTest\Fixture {
     class ExampleClass
     {
         const MY_CONST_1 = 123;
+
+        /**
+         * Documentation for constant
+         */
         const MY_CONST_2 = 234;
         public const MY_CONST_3 = 345;
         protected const MY_CONST_4 = 456;
