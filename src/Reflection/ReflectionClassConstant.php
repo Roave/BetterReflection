@@ -82,6 +82,7 @@ class ReflectionClassConstant implements \Reflector
                 $this->node->consts[0]->value,
                 new CompilerContext($this->reflector, $this->getDeclaringClass())
             );
+            $this->valueCached = true;
         }
 
         return $this->value;
