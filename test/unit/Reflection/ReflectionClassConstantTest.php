@@ -61,10 +61,10 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
     public function toStringProvider()
     {
         return [
-            ['MY_CONST_1', 'Constant [ public MY_CONST_1 ] { 123 }' . PHP_EOL],
-            ['MY_CONST_3', 'Constant [ public MY_CONST_3 ] { 345 }' . PHP_EOL],
-            ['MY_CONST_4', 'Constant [ protected MY_CONST_4 ] { 456 }' . PHP_EOL],
-            ['MY_CONST_5', 'Constant [ private MY_CONST_5 ] { 567 }' . PHP_EOL],
+            ['MY_CONST_1', 'Constant [ public integer MY_CONST_1 ] { 123 }' . PHP_EOL],
+            ['MY_CONST_3', 'Constant [ public integer MY_CONST_3 ] { 345 }' . PHP_EOL],
+            ['MY_CONST_4', 'Constant [ protected integer MY_CONST_4 ] { 456 }' . PHP_EOL],
+            ['MY_CONST_5', 'Constant [ private integer MY_CONST_5 ] { 567 }' . PHP_EOL],
         ];
     }
 

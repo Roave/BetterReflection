@@ -176,11 +176,14 @@ class ReflectionClassConstant implements \Reflector
      */
     public function __toString()
     {
+        $value = $this->getValue();
+
         return sprintf(
-            'Constant [ %s %s ] { %s }' . PHP_EOL,
+            'Constant [ %s %s %s ] { %s }' . PHP_EOL,
             $this->getVisibility(),
+            gettype($value),
             $this->getName(),
-            $this->getValue()
+            $value
         );
     }
 
