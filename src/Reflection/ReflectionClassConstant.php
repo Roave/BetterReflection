@@ -96,15 +96,15 @@ class ReflectionClassConstant implements \Reflector
     private function getVisibility()
     {
         if ($this->isPublic()) {
-            return '<public>';
+            return 'public';
         }
         if ($this->isPrivate()) {
-            return '<private>';
+            return 'private';
         }
         if ($this->isProtected()) {
-            return '<protected>';
+            return 'protected';
         }
-        return '<unknown>';
+        return '';
     }
 
     /**
@@ -117,7 +117,7 @@ class ReflectionClassConstant implements \Reflector
     public function __toString()
     {
         return sprintf(
-            '%s const %s = %s',
+            'Constant [ %s %s ] { %s }' . PHP_EOL,
             $this->getVisibility(),
             $this->getName(),
             $this->getValue()
