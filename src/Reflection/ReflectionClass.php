@@ -136,14 +136,13 @@ class ReflectionClass implements Reflection, \Reflector
         $buildConstants = function (array $items, $indentLevel = 4) {
             $str = '';
 
-            foreach ($items as $name => $value) {
+            /**
+             * @var string $name
+             * @var ReflectionClassConstant $const
+             */
+            foreach ($items as $name => $const) {
                 $str .= "\n" . str_repeat(' ', $indentLevel);
-                $str .= sprintf(
-                    'Constant [ %s %s ] { %s }',
-                    gettype($value),
-                    $name,
-                    $value
-                );
+                $str .= trim((string)$const);
             }
 
             return $str;
@@ -160,8 +159,8 @@ class ReflectionClass implements Reflection, \Reflector
             $this->getFileName(),
             $this->getStartLine(),
             $this->getEndLine(),
-            count($this->getConstants()),
-            $buildConstants($this->getConstants()),
+            count($this->getReflectionConstants()),
+            $buildConstants($this->getReflectionConstants()),
             count($staticProperties),
             $buildString($staticProperties),
             count($staticMethods),
