@@ -55,7 +55,7 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
     public function testToString(string $const, string $expected)
     {
         $const = $this->getExampleConstant($const);
-        $this->assertEquals($expected, (string)$const);
+        $this->assertSame($expected, (string)$const);
     }
 
     public function toStringProvider()
@@ -76,7 +76,7 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
     public function testGetModifiers(string $const, int $expected)
     {
         $const = $this->getExampleConstant($const);
-        $this->assertEquals($expected, $const->getModifiers());
+        $this->assertSame($expected, $const->getModifiers());
     }
 
     public function getModifiersProvider()
@@ -98,7 +98,7 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
     public function testGetDocCommentReturnsEmptyStringWithNoComment()
     {
         $const = $this->getExampleConstant('MY_CONST_1');
-        $this->assertEquals('', $const->getDocComment());
+        $this->assertSame('', $const->getDocComment());
     }
 
     public function testGetDeclaringClass()
@@ -106,7 +106,7 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
         $const = $classInfo->getReflectionConstant('MY_CONST_1');
-        $this->assertEquals($classInfo, $const->getDeclaringClass());
+        $this->assertSame($classInfo, $const->getDeclaringClass());
     }
 
 }
