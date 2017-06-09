@@ -8,6 +8,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClass
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClass
@@ -38,6 +39,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
+        $mockConstant = $this->createMock(BetterReflectionClassConstant::class);
+
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
@@ -59,6 +62,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ['hasConstant', null, true, ['foo']],
             ['getConstant', null, 'a', ['foo']],
             ['getConstants', null, ['a', 'b'], []],
+            ['getReflectionConstant', null, $mockConstant, ['foo']],
+            ['getReflectionConstants', null, [$mockConstant], []],
             ['getInterfaces', null, [$mockClassLike], []],
             ['getInterfaceNames', null, ['a', 'b'], []],
             ['isInterface', null, true, []],
