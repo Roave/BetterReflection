@@ -5,7 +5,6 @@ namespace Roave\BetterReflection\Reflection;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -523,7 +522,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     private function processReflectionConstants(array $accumulator, Node\Stmt $stmt) : array
     {
-        if ($stmt instanceof ClassConst) {
+        if ($stmt instanceof ConstNode) {
             $const = ReflectionClassConstant::createFromNode($this->reflector, $stmt, $this);
             $accumulator[$const->getName()] = $const;
         }
