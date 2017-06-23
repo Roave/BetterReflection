@@ -7,6 +7,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
@@ -143,6 +144,22 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $property = $classInfo->getProperty('publicProperty');
 
         self::assertSame($expectedDoc, $property->getDocComment());
+    }
+
+    public function testGetDocCommentBetweeenComments() : void
+    {
+        $php = '<?php
+            class Bar implements Foo {
+                /* A comment  */
+                /** Property description */
+                /* An another comment */
+                public $prop;
+            }
+        ';
+        $reflector = (new ClassReflector(new StringSourceLocator($php)))->reflect('Bar');
+        $property = $reflector->getProperty('prop');
+
+        self::assertContains('Property description', $property->getDocComment());
     }
 
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void

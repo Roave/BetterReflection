@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\Util\GetFirstDocComment;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -690,13 +691,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getDocComment() : string
     {
-        if (!$this->node->hasAttribute('comments')) {
-            return '';
-        }
-
-        /* @var \PhpParser\Comment\Doc $comment */
-        $comment = $this->node->getAttribute('comments')[0];
-        return $comment->getReformattedText();
+        return GetFirstDocComment::forNode($this->node);
     }
 
     /**

@@ -384,6 +384,19 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertContains('Some comments here', $classInfo->getDocComment());
     }
 
+    public function testGetDocCommentBetweeenComments() : void
+    {
+        $php = '<?php
+            /* A comment */
+            /** Class description */
+            /* An another comment */
+            class Bar implements Foo {}
+        ';
+        $reflector = (new ClassReflector(new StringSourceLocator($php)))->reflect('Bar');
+
+        self::assertContains('Class description', $reflector->getDocComment());
+    }
+
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));

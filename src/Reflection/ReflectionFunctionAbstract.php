@@ -7,6 +7,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
+use Roave\BetterReflection\Util\GetFirstDocComment;
 use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -233,12 +234,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getDocComment() : string
     {
-        if (!$this->node->hasAttribute('comments')) {
-            return '';
-        }
-        /* @var \PhpParser\Comment\Doc $comment */
-        $comment = $this->node->getAttribute('comments')[0];
-        return $comment->getReformattedText();
+        return GetFirstDocComment::forNode($this->node);
     }
 
     /**
