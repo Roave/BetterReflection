@@ -6,6 +6,7 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
+use Roave\BetterReflection\Util\GetFirstDocComment;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use phpDocumentor\Reflection\Type;
@@ -264,13 +265,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getDocComment() : string
     {
-        if (!$this->node->hasAttribute('comments')) {
-            return '';
-        }
-
-        /* @var \PhpParser\Comment\Doc $comment */
-        $comment = $this->node->getAttribute('comments')[0];
-        return $comment->getReformattedText();
+        return GetFirstDocComment::forNode($this->node);
     }
 
     /**

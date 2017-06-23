@@ -254,6 +254,8 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
     public function testGetDocCommentWithComment() : void
     {
         $php = '<?php
+        /* --- This is a separator --------------- */
+
         /**
          * Some function comment
          */
