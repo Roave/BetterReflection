@@ -206,6 +206,9 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertSame([
             'MY_CONST_1' => 123,
             'MY_CONST_2' => 234,
+            'MY_CONST_3' => 345,
+            'MY_CONST_4' => 456,
+            'MY_CONST_5' => 567,
         ], $classInfo->getConstants());
     }
 
@@ -215,6 +218,28 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect(ExampleClass::class);
         self::assertSame(123, $classInfo->getConstant('MY_CONST_1'));
         self::assertSame(234, $classInfo->getConstant('MY_CONST_2'));
+        self::assertSame(345, $classInfo->getConstant('MY_CONST_3'));
+        self::assertSame(456, $classInfo->getConstant('MY_CONST_4'));
+        self::assertSame(567, $classInfo->getConstant('MY_CONST_5'));
+        self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
+    }
+
+    public function testGetReflectionConstants()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+        $this->assertCount(5, $classInfo->getReflectionConstants());
+    }
+
+    public function testGetReflectionConstant()
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+        self::assertSame(123, $classInfo->getReflectionConstant('MY_CONST_1')->getValue());
+        self::assertSame(234, $classInfo->getReflectionConstant('MY_CONST_2')->getValue());
+        self::assertSame(345, $classInfo->getReflectionConstant('MY_CONST_3')->getValue());
+        self::assertSame(456, $classInfo->getReflectionConstant('MY_CONST_4')->getValue());
+        self::assertSame(567, $classInfo->getReflectionConstant('MY_CONST_5')->getValue());
         self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 

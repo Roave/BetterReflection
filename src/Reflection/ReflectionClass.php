@@ -52,6 +52,11 @@ class ReflectionClass implements Reflection, \Reflector
     private $cachedConstants;
 
     /**
+     * @var ReflectionClassConstant[]|null
+     */
+    private $cachedReflectionConstants;
+
+    /**
      * @var ReflectionProperty[]|null
      */
     private $cachedProperties;
@@ -488,6 +493,56 @@ class ReflectionClass implements Reflection, \Reflector
     public function hasConstant(string $name) : bool
     {
         return null !== $this->getConstant($name);
+    }
+
+    /**
+     * Get the reflection object of the specified class constant.
+     *
+     * Returns null if not specified.
+     *
+     * @param string $name
+     * @return ReflectionClassConstant|null
+     */
+    public function getReflectionConstant(string $name): ?ReflectionClassConstant
+    {
+        $constants = $this->getReflectionConstants();
+
+        if (!isset($constants[$name])) {
+            return null;
+        }
+
+        return $constants[$name];
+    }
+
+    /**
+     * Get an array reflection object of the defined constants in this class.
+     *
+     * @return ReflectionClassConstant[]
+     */
+    public function getReflectionConstants(): array
+    {
+        if (null !== $this->cachedReflectionConstants) {
+            return $this->cachedReflectionConstants;
+        }
+
+        $constants = [];
+
+        foreach ($this->node->stmts as $stmt) {
+            if ($stmt instanceof ConstNode) {
+                $const = ReflectionClassConstant::createFromConstFlagsNameAndValue(
+                    $stmt->flags,
+                    $stmt->consts[0]->name,
+                    (new CompileNodeToValue())->__invoke(
+                        $stmt->consts[0]->value,
+                        new CompilerContext($this->reflector, $this)
+                    )
+                );
+                $constants[$const->getName()] = $const;
+            }
+        }
+
+        $this->cachedReflectionConstants = $constants;
+        return $constants;
     }
 
     /**

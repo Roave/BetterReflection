@@ -123,6 +123,8 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             '__toString',
             'export',
             '__clone',
+            'getReflectionConstant',
+            'getReflectionConstants',
         ];
 
         $filteredMethods = [];
