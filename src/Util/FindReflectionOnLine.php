@@ -22,7 +22,7 @@ final class FindReflectionOnLine
      */
     private $sourceLocator;
 
-    public function __construct(SourceLocator $sourceLocator = null)
+    public function __construct(SourceLocator $sourceLocator)
     {
         $this->sourceLocator = $sourceLocator;
     }
@@ -84,16 +84,12 @@ final class FindReflectionOnLine
      */
     private function computeReflections(string $filename) : array
     {
-        $sourceLocator = new SingleFileSourceLocator($filename);
-        if ($this->sourceLocator !== null) {
-            $reflector = new ClassReflector(new AggregateSourceLocator([$this->sourceLocator, $sourceLocator]));
-        } else {
-            $reflector = new ClassReflector($sourceLocator);
-        }
+        $singleFileSourceLocator = new SingleFileSourceLocator($filename);
+        $reflector = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return array_merge(
-            $sourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
-            $sourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
     }
 
