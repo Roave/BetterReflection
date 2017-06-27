@@ -22,3 +22,7 @@ trait SomeFooTrait
 interface SomeFooInterface
 {
 }
+
+class SomeFooClassWithImplementedInterface implements \Roave\BetterReflectionTest\Fixture\AutoloadableInterface
+{
+}

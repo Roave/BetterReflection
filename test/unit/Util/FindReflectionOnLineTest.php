@@ -62,4 +62,13 @@ class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
         $finder = new FindReflectionOnLine();
         self::assertNull($finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 1));
     }
+
+    public function testInvokeFindsClassWithImplementedInterface() : void
+    {
+        $finder = new FindReflectionOnLine();
+        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 26);
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('SomeFooClassWithImplementedInterface', $reflection->getName());
+    }
 }
