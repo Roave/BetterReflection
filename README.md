@@ -37,6 +37,10 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ```
 
+## Changes in BR 3.0
+
+ * Changed instantiation of `FindReflectionOnLine` utility from `new FindReflectionOnLine()` to `FindReflectionOnLine::buildDefaultFinder()`. `FindReflectionOnLine` constructor now requires a `SourceLocator` parameter.
+
 ## Changes in BR 2.0
 
  * Minimum PHP 7.1
