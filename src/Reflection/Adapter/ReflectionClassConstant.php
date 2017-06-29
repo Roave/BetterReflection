@@ -7,13 +7,16 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {
+
+    /**
+     * @var BetterReflectionClassConstant
+     */
     private $betterClassConstant;
 
     public function __construct(BetterReflectionClassConstant $betterClassConstant)
     {
         $this->betterClassConstant = $betterClassConstant;
     }
-
 
     /**
      * Get the name of the reflection (e.g. if this is a ReflectionClass this

@@ -7,24 +7,25 @@ use PhpParser\Node\Stmt\ClassConst;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant implements \Reflector
 {
-
     /**
-     * @var bool value of const was cached?
+     * @var bool
      */
-    private $valueCached = false;
+    private $valueWasCached = false;
 
     /**
-     * @var mixed const value
+     * @var int|float|array|string|bool|null const value
      */
     private $value;
 
     /**
-     * @var
+     * @var Reflector
      */
     private $reflector;
+
     /**
      * @var ReflectionClass Constant owner
      */
@@ -77,14 +78,15 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getValue()
     {
-        if (false === $this->valueCached) {
-            $this->value = (new CompileNodeToValue())->__invoke(
-                $this->node->consts[0]->value,
-                new CompilerContext($this->reflector, $this->getDeclaringClass())
-            );
-            $this->valueCached = true;
+        if (false !== $this->valueWasCached) {
+            return $this->value;
         }
 
+        $this->value = (new CompileNodeToValue())->__invoke(
+            $this->node->consts[0]->value,
+            new CompilerContext($this->reflector, $this->getDeclaringClass())
+        );
+        $this->valueWasCached = true;
         return $this->value;
     }
 
@@ -145,13 +147,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getDocComment() : string
     {
-        if (!$this->node->hasAttribute('comments')) {
-            return '';
-        }
-
-        /* @var \PhpParser\Comment\Doc $comment */
-        $comment = $this->node->getAttribute('comments')[0];
-        return $comment->getReformattedText();
+        return GetFirstDocComment::forNode($this->node);
     }
 
     private function getVisibility()

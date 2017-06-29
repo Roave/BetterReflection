@@ -504,13 +504,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getReflectionConstant(string $name) : ?ReflectionClassConstant
     {
-        $constants = $this->getReflectionConstants();
-
-        if (!array_key_exists($name, $constants)) {
-            return null;
-        }
-
-        return $constants[$name];
+        return $this->getReflectionConstants()[$name] ?? null;
     }
 
     /**
@@ -518,7 +512,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @param array $accumulator
      * @param Node\Stmt $stmt
-     * @return array
+     * @return ReflectionClassConstant[]
      */
     private function processReflectionConstants(array $accumulator, Node\Stmt $stmt) : array
     {
@@ -537,15 +531,15 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getReflectionConstants() : array
     {
-        if (null === $this->cachedReflectionConstants) {
-            $this->cachedReflectionConstants = array_reduce(
-                $this->node->stmts,
-                [$this, 'processReflectionConstants'],
-                []
-            );
+        if (null !== $this->cachedReflectionConstants) {
+            return $this->cachedReflectionConstants;
         }
 
-        return $this->cachedReflectionConstants;
+        return $this->cachedReflectionConstants = array_reduce(
+            $this->node->stmts,
+            [$this, 'processReflectionConstants'],
+            []
+        );
     }
 
     /**
