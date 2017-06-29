@@ -8,10 +8,37 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 final class FindReflectionOnLine
 {
+    /**
+     * @var SourceLocator
+     */
+    private $sourceLocator;
+
+    public function __construct(SourceLocator $sourceLocator)
+    {
+        $this->sourceLocator = $sourceLocator;
+    }
+
+    /**
+     * @return self
+     */
+    public static function buildDefaultFinder() : self
+    {
+        return new self(new AggregateSourceLocator([
+            new PhpInternalSourceLocator(),
+            new EvaledCodeSourceLocator(),
+            new AutoloadSourceLocator(),
+        ]));
+    }
+
     /**
      * Find a reflection on the specified line number.
      *
@@ -57,12 +84,12 @@ final class FindReflectionOnLine
      */
     private function computeReflections(string $filename) : array
     {
-        $sourceLocator = new SingleFileSourceLocator($filename);
-        $reflector = new ClassReflector($sourceLocator);
+        $singleFileSourceLocator = new SingleFileSourceLocator($filename);
+        $reflector = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return array_merge(
-            $sourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
-            $sourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
     }
 

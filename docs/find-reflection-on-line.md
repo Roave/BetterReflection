@@ -7,7 +7,7 @@ the class is an invokable class:
 ```php
 <?php
 
-$finder = new FindReflectionOnLine();
+$finder = FindReflectionOnLine::buildDefaultFinder();
 $reflection = $finder('path/to/my/file.php', 10);
 ```
 

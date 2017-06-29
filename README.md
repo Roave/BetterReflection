@@ -39,6 +39,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
+ * Changed instantiation of `FindReflectionOnLine` utility from `new FindReflectionOnLine()` to `FindReflectionOnLine::buildDefaultFinder()`. `FindReflectionOnLine` constructor now requires a `SourceLocator` parameter.
  * Minimum PHP 7.1
  * `NotAString` exception class is now gone
  * `Identifier` class requires string for `$name` parameter
