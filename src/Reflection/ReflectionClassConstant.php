@@ -97,7 +97,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function isPublic() : bool
     {
-        return (bool)($this->getModifiers() & Class_::MODIFIER_PUBLIC);
+        return $this->node->isPublic();
     }
 
     /**
@@ -107,7 +107,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function isPrivate() : bool
     {
-        return (bool)($this->getModifiers() & Class_::MODIFIER_PRIVATE);
+        return $this->node->isPrivate();
     }
 
     /**
@@ -117,7 +117,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function isProtected() : bool
     {
-        return (bool)($this->getModifiers() & Class_::MODIFIER_PROTECTED);
+        return $this->node->isProtected();
     }
 
     /**
@@ -127,7 +127,11 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getModifiers() : int
     {
-        return $this->node->flags === 0 ? Class_::MODIFIER_PUBLIC : $this->node->flags;
+        $val = 0;
+        $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? \ReflectionProperty::IS_PRIVATE : 0;
+        return $val;
     }
 
     /**

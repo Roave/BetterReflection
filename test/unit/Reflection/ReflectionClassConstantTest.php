@@ -82,10 +82,10 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
     public function getModifiersProvider()
     {
         return [
-            ['MY_CONST_1', Class_::MODIFIER_PUBLIC],
-            ['MY_CONST_3', Class_::MODIFIER_PUBLIC],
-            ['MY_CONST_4', Class_::MODIFIER_PROTECTED],
-            ['MY_CONST_5', Class_::MODIFIER_PRIVATE],
+            ['MY_CONST_1', \ReflectionProperty::IS_PUBLIC],
+            ['MY_CONST_3', \ReflectionProperty::IS_PUBLIC],
+            ['MY_CONST_4', \ReflectionProperty::IS_PROTECTED],
+            ['MY_CONST_5', \ReflectionProperty::IS_PRIVATE],
         ];
     }
 
