@@ -154,18 +154,21 @@ class ReflectionClassConstant implements \Reflector
         return GetFirstDocComment::forNode($this->node);
     }
 
-    private function getVisibility()
+    /**
+     * Returns the constant visibility
+     *
+     * @return string
+     */
+    private function getVisibility() : string
     {
-        if ($this->isPublic()) {
-            return 'public';
-        }
         if ($this->isPrivate()) {
             return 'private';
         }
         if ($this->isProtected()) {
             return 'protected';
         }
-        return '';
+        // default visibility always is public
+        return 'public';
     }
 
     /**
