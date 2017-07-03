@@ -254,6 +254,25 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         self::assertNull($classInfo->getProperty('noDefault')->getDefaultValue());
     }
 
+    public function testGetDefaultAsStringProperty() : void
+    {
+        $php = '<?php
+            class Bar {
+                public $none;
+                public $integer = 11;
+                public $array = [\'cat\', \'dog\'];
+            }
+        ';
+        $reflector = (new ClassReflector(new StringSourceLocator($php)))->reflect('Bar');
+
+        self::assertSame('NULL', $reflector->getProperty('none')->getDefaultValueAsString());
+        self::assertSame('11', $reflector->getProperty('integer')->getDefaultValueAsString());
+        self::assertSame("array (\n"
+            . "  0 => 'cat',\n"
+            . "  1 => 'dog',\n"
+            . ")", $reflector->getProperty('array')->getDefaultValueAsString());
+    }
+
     public function testCannotClone() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
