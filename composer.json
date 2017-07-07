@@ -19,10 +19,7 @@
     "autoload": {
         "psr-4": {
             "Roave\\BetterReflection\\": "src"
-        },
-        "files": [
-            "namespace-bc-aliases.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

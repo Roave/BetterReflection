@@ -45,6 +45,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `Identifier` class requires string for `$name` parameter
  * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
  * `Reflector` now requires a `string` for `$identiferName` parameter
+ * Namespace moved to `\Roave\BetterReflection` instead of just `\BetterReflection`
 
 ## More documentation
 
