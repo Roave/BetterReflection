@@ -35,8 +35,8 @@ any other autoloader, otherwise it may not behave correctly.
 
 ```php
 // Call this anywhere after all other autoloaders are registered (e.g. Composer)
-use BetterReflection\Util\Autoload\ClassLoader;
-use BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
 
 $loader = new ClassLoader(FileCacheLoader::defaultFileCacheLoader(__DIR__));
 
