@@ -518,17 +518,26 @@ class ReflectionClass implements Reflection, \Reflector
             return $this->cachedReflectionConstants;
         }
 
-        return $this->cachedReflectionConstants = array_reduce(
-            $this->node->stmts,
-            function (array $accumulator, Node\Stmt $stmt) : array {
-                if ($stmt instanceof ConstNode) {
-                    $const = ReflectionClassConstant::createFromNode($this->reflector, $stmt, $this);
-                    $accumulator[$const->getName()] = $const;
-                }
-
-                return $accumulator;
+        $constants = array_map(
+            function (ConstNode $constantNode) : ReflectionClassConstant {
+                return ReflectionClassConstant::createFromNode($this->reflector, $constantNode, $this);
             },
-            []
+            array_filter(
+                $this->node->stmts,
+                function (Node\Stmt $stmt) : bool {
+                    return $stmt instanceof ConstNode;
+                }
+            )
+        );
+
+        return $this->cachedReflectionConstants = array_combine(
+            array_map(
+                function (ReflectionClassConstant $constant) : string {
+                    return $constant->getName();
+                },
+                $constants
+            ),
+            $constants
         );
     }
 
