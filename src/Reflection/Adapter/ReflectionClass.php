@@ -198,6 +198,26 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getReflectionConstant($name)
+    {
+        return new ReflectionClassConstant(
+            $this->betterReflectionClass->getReflectionConstant($name)
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReflectionConstants()
+    {
+        return array_map(function ($betterConstant) {
+            return new ReflectionClassConstant($betterConstant);
+        }, $this->betterReflectionClass->getReflectionConstants());
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getInterfaces()
