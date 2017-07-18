@@ -32,40 +32,33 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
     public function methodExpectationProvider() : array
     {
         return [
-            ['__toString', null, '', []],
-            ['getName', null, '', []],
-            ['getValue', null, null, []],
-            ['isPublic', null, true, []],
-            ['isPrivate', null, true, []],
-            ['isProtected', null, true, []],
-            ['getModifiers', null, 123, []],
-            ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
-            ['getDocComment', null, '', []],
+            ['__toString', '', []],
+            ['getName', '', []],
+            ['getValue', null, []],
+            ['isPublic', true, []],
+            ['isPrivate', true, []],
+            ['isProtected', true, []],
+            ['getModifiers', 123, []],
+            ['getDeclaringClass', $this->createMock(BetterReflectionClass::class), []],
+            ['getDocComment', '', []],
         ];
     }
 
     /**
      * @param string $methodName
-     * @param string|null $expectedException
      * @param mixed $returnValue
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
     {
         /* @var BetterReflectionClassConstant|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
-        if (null === $expectedException) {
-            $reflectionStub->expects($this->once())
-                ->method($methodName)
-                ->with(...$args)
-                ->will($this->returnValue($returnValue));
-        }
-
-        if (null !== $expectedException) {
-            $this->expectException($expectedException);
-        }
+        $reflectionStub->expects($this->once())
+            ->method($methodName)
+            ->with(...$args)
+            ->will($this->returnValue($returnValue));
 
         $adapter = new ReflectionClassConstantAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
