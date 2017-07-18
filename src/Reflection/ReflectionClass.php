@@ -508,23 +508,6 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * Returns array of constants for this class
-     *
-     * @param array $accumulator
-     * @param Node\Stmt $stmt
-     * @return ReflectionClassConstant[]
-     */
-    private function processReflectionConstants(array $accumulator, Node\Stmt $stmt) : array
-    {
-        if ($stmt instanceof ConstNode) {
-            $const = ReflectionClassConstant::createFromNode($this->reflector, $stmt, $this);
-            $accumulator[$const->getName()] = $const;
-        }
-
-        return $accumulator;
-    }
-
-    /**
      * Get an array reflection object of the defined constants in this class.
      *
      * @return ReflectionClassConstant[]
@@ -537,7 +520,14 @@ class ReflectionClass implements Reflection, \Reflector
 
         return $this->cachedReflectionConstants = array_reduce(
             $this->node->stmts,
-            [$this, 'processReflectionConstants'],
+            function (array $accumulator, Node\Stmt $stmt) : array {
+                if ($stmt instanceof ConstNode) {
+                    $const = ReflectionClassConstant::createFromNode($this->reflector, $stmt, $this);
+                    $accumulator[$const->getName()] = $const;
+                }
+
+                return $accumulator;
+            },
             []
         );
     }
