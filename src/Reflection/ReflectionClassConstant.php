@@ -172,11 +172,7 @@ class ReflectionClassConstant implements \Reflector
     }
 
     /**
-     * To string
-     *
-     * @link http://php.net/manual/en/reflector.tostring.php
-     * @return string
-     * @since 5.0
+     * {@inheritDoc}
      */
     public function __toString()
     {
@@ -192,11 +188,7 @@ class ReflectionClassConstant implements \Reflector
     }
 
     /**
-     * Exports
-     *
-     * @link http://php.net/manual/en/reflector.export.php
-     * @return string
-     * @since 5.0
+     * {@inheritDoc}
      */
     public static function export()
     {
