@@ -31,8 +31,6 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
 
     public function methodExpectationProvider() : array
     {
-        $mockClassLike = $this->createMock(BetterReflectionClass::class);
-
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
@@ -41,7 +39,7 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
             ['isPrivate', null, true, []],
             ['isProtected', null, true, []],
             ['getModifiers', null, 123, []],
-            ['getDeclaringClass', null, $mockClassLike, []],
+            ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
             ['getDocComment', null, '', []],
         ];
     }
