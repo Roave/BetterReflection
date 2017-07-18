@@ -2,7 +2,6 @@
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use PhpParser\Node\Stmt\Class_;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -108,5 +107,4 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
         $const = $classInfo->getReflectionConstant('MY_CONST_1');
         $this->assertSame($classInfo, $const->getDeclaringClass());
     }
-
 }
