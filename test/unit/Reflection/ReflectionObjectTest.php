@@ -95,7 +95,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRuntimePropertiesWithFilter() : void
     {
-        $foo = new \StdClass();
+        $foo = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -104,6 +104,19 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         self::assertCount(1, $classInfo->getProperties(\ReflectionProperty::IS_PUBLIC));
         self::assertEmpty($classInfo->getProperties(\ReflectionProperty::IS_PROTECTED));
         self::assertEmpty($classInfo->getProperties(\ReflectionProperty::IS_PRIVATE));
+    }
+
+    public function testGetRuntimeImmediatePropertiesWithFilter() : void
+    {
+        $foo = new \stdClass();
+        $foo->bar = 'huzzah';
+
+        $classInfo = ReflectionObject::createFromInstance($foo);
+
+        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_STATIC));
+        self::assertCount(1, $classInfo->getImmediateProperties(\ReflectionProperty::IS_PUBLIC));
+        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_PROTECTED));
+        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_PRIVATE));
     }
 
     /**

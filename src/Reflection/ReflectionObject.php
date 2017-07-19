@@ -281,7 +281,10 @@ class ReflectionObject extends ReflectionClass
      */
     public function getImmediateProperties(?int $filter = null): array
     {
-        return $this->reflectionClass->getImmediateProperties($filter);
+        return array_merge(
+            $this->reflectionClass->getImmediateProperties($filter),
+            $this->getRuntimeProperties($filter)
+        );
     }
 
     /**
