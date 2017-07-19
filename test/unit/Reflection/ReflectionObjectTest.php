@@ -95,7 +95,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRuntimePropertiesWithFilter() : void
     {
-        $foo = new \StdClass();
+        $foo = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -108,7 +108,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRuntimeImmediatePropertiesWithFilter() : void
     {
-        $foo = new \StdClass();
+        $foo = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
