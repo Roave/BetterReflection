@@ -323,4 +323,29 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionMessage('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
         $publicProp->setVisibility(0);
     }
+
+    /**
+     * @param string $php
+     * @param int $startLine
+     * @param int $endLine
+     * @dataProvider startEndLineProvider
+     */
+    public function testStartEndLine(string $php, int $startLine, int $endLine) : void
+    {
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classReflection = $reflector->reflect('\T');
+        $constReflection = $classReflection->getProperty('test');
+        $this->assertEquals($startLine, $constReflection->getStartLine());
+        $this->assertEquals($endLine, $constReflection->getEndLine());
+    }
+
+    public function startEndLineProvider() : array
+    {
+        return [
+            ["<?php\nclass T {\npublic \$test = 1; }", 3, 3],
+            ["<?php\n\nclass T {\npublic \$test = 1; }", 4, 4],
+            ["<?php\nclass T {\npublic \$test = \n1; }", 3, 4],
+            ["<?php\nclass T {\npublic \n\$test = 1; }", 3, 4],
+        ];
+    }
 }

@@ -289,6 +289,26 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
+     * Get the line number that this property starts on.
+     *
+     * @return int
+     */
+    public function getStartLine() : int
+    {
+        return (int)$this->node->getAttribute('startLine', -1);
+    }
+
+    /**
+     * Get the line number that this property ends on.
+     *
+     * @return int
+     */
+    public function getEndLine() : int
+    {
+        return (int)$this->node->getAttribute('endLine', -1);
+    }
+
+    /**
      * Get the default value represented as a string.
      *
      * @return string
