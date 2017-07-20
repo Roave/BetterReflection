@@ -135,6 +135,26 @@ class ReflectionClassConstant implements \Reflector
     }
 
     /**
+     * Get the line number that this constant starts on.
+     *
+     * @return int
+     */
+    public function getStartLine() : int
+    {
+        return (int)$this->node->getAttribute('startLine', -1);
+    }
+
+    /**
+     * Get the line number that this constant ends on.
+     *
+     * @return int
+     */
+    public function getEndLine() : int
+    {
+        return (int)$this->node->getAttribute('endLine', -1);
+    }
+
+    /**
      * Get the declaring class
      *
      * @return ReflectionClass

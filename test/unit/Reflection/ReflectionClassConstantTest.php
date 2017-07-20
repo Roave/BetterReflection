@@ -4,6 +4,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
@@ -106,5 +107,30 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
         $classInfo = $reflector->reflect(ExampleClass::class);
         $const = $classInfo->getReflectionConstant('MY_CONST_1');
         $this->assertSame($classInfo, $const->getDeclaringClass());
+    }
+
+    /**
+     * @param string $php
+     * @param int $startLine
+     * @param int $endLine
+     * @dataProvider startEndLineProvider
+     */
+    public function testStartEndLine(string $php, int $startLine, int $endLine)
+    {
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classReflection = $reflector->reflect('\T');
+        $constReflection = $classReflection->getReflectionConstant('TEST');
+        $this->assertEquals($startLine, $constReflection->getStartLine());
+        $this->assertEquals($endLine, $constReflection->getEndLine());
+    }
+
+    public function startEndLineProvider()
+    {
+        return [
+            ["<?php\nclass T {\nconst TEST = 1; }", 3, 3],
+            ["<?php\n\nclass T {\nconst TEST = 1; }", 4, 4],
+            ["<?php\nclass T {\nconst TEST = \n1; }", 3, 4],
+            ["<?php\nclass T {\nconst \nTEST = 1; }", 3, 4],
+        ];
     }
 }
