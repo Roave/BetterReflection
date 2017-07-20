@@ -330,7 +330,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
      * @param int $endLine
      * @dataProvider startEndLineProvider
      */
-    public function testStartEndLine(string $php, int $startLine, int $endLine)
+    public function testStartEndLine(string $php, int $startLine, int $endLine) : void
     {
         $reflector = new ClassReflector(new StringSourceLocator($php));
         $classReflection = $reflector->reflect('\T');
@@ -339,7 +339,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($endLine, $constReflection->getEndLine());
     }
 
-    public function startEndLineProvider()
+    public function startEndLineProvider() : array
     {
         return [
             ["<?php\nclass T {\npublic \$test = 1; }", 3, 3],
