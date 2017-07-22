@@ -47,6 +47,18 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($const->isPrivate());
     }
 
+    public function testGetValue()
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
+        $this->assertSame(123, $const->getValue());
+    }
+
+    public function testGetValueAsString()
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
+        $this->assertSame('123', $const->getValueAsString());
+    }
+
     /**
      * @param string $const
      * @param string $expected

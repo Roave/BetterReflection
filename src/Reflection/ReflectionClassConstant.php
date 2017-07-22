@@ -91,6 +91,16 @@ class ReflectionClassConstant implements \Reflector
     }
 
     /**
+     * Get the value represented as a string.
+     *
+     * @return string
+     */
+    public function getValueAsString() : string
+    {
+        return var_export($this->getValue(), true);
+    }
+
+    /**
      * Constant is public
      *
      * @return bool
