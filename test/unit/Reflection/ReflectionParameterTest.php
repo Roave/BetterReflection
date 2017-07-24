@@ -595,4 +595,23 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
         self::assertSame('stdClass', $hintedClassReflection->getName());
     }
+
+    public function testGetClassFromObjectTypeHintedProperty() : void
+    {
+        $content = '<?php class Foo { public function myMethod(object $param) {} }';
+
+        $parameter = (new ClassReflector(new StringSourceLocator($content)))
+            ->reflect('Foo')
+            ->getMethod('myMethod')
+            ->getParameter('param');
+
+        self::assertInstanceOf(ReflectionParameter::class, $parameter);
+
+        self::assertNull($parameter->getClass());
+
+        $type = $parameter->getType();
+
+        self::assertTrue($type->isBuiltin());
+        self::assertSame('object', $type->__toString());
+    }
 }
