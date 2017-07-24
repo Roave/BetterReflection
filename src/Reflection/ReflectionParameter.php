@@ -173,7 +173,7 @@ class ReflectionParameter implements \Reflector
             $this->isPassedByReference() ? '&' : '',
             $this->getName(),
             ($this->isOptional() && $this->isDefaultValueAvailable())
-                ? (' = ' . $this->getDefaultValueAsString())
+                ? (' = ' . var_export($this->getDefaultValue(), true))
                 : ''
         );
     }
@@ -314,6 +314,7 @@ class ReflectionParameter implements \Reflector
      * Get the default value represented as a string.
      *
      * @return string
+     * @deprecated Use `var_export($reflection->getDefaultValue(), true)` instead
      */
     public function getDefaultValueAsString() : string
     {

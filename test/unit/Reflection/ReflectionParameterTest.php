@@ -522,6 +522,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
      * @param string $defaultValue
      * @param string $expectedValue
      * @dataProvider defaultValueStringProvider
+     * @deprecated
      */
     public function testGetDefaultValueAsString(string $defaultValue, string $expectedValue) : void
     {

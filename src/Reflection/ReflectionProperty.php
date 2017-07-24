@@ -309,16 +309,6 @@ class ReflectionProperty implements \Reflector
     }
 
     /**
-     * Get the default value represented as a string.
-     *
-     * @return string
-     */
-    public function getDefaultValueAsString() : string
-    {
-        return var_export($this->getDefaultValue(), true);
-    }
-
-    /**
      * {@inheritdoc}
      * @throws Exception\Uncloneable
      */
