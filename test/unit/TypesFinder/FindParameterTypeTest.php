@@ -30,6 +30,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ['', 'foo', []],
             ['@param ?string $foo', 'foo', [Types\Nullable::class]],
             ['@param iterable $foo', 'foo', [Types\Iterable_::class]],
+            ['@param ?iterable $foo', 'foo', [Types\Nullable::class]],
             ['@param object $foo', 'foo', [Types\Object_::class]],
             ['@param ?object $foo', 'foo', [Types\Nullable::class]],
         ];
