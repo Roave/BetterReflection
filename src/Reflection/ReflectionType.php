@@ -62,7 +62,7 @@ class ReflectionType
      */
     public function isBuiltin() : bool
     {
-        return (!$this->type instanceof Types\Object_);
+        return ! ($this->type instanceof Types\Object_ && $this->type->getFqsen());
     }
 
     /**
