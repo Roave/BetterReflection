@@ -27,6 +27,8 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
             [['int', 'string', 'bool'], [Types\Integer::class, Types\String_::class, Types\Boolean::class]],
             [['?string'], [Types\Nullable::class]],
             [['iterable'], [Types\Iterable_::class]],
+            [['object'], [Types\Object_::class]],
+            [['?object'], [Types\Nullable::class]],
         ];
     }
 
