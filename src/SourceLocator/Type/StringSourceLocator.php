@@ -3,6 +3,7 @@
 namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
@@ -22,11 +23,11 @@ class StringSourceLocator extends AbstractSourceLocator
 
     /**
      * @param string $source
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode
+     * @param AstLocator|null $locator
      */
-    public function __construct(string $source)
+    public function __construct(string $source, AstLocator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->source = $source;
 
         if (empty($this->source)) {

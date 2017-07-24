@@ -20,17 +20,12 @@ class Locator
     /**
      * @var FindReflectionsInTree
      */
-    private $findReflectionsInTree;
+    protected $findReflectionsInTree;
 
     /**
      * @var Parser
      */
-    private $parser;
-
-    /**
-     * @var array|string[]
-     */
-    private static $cache = [];
+    protected $parser;
 
     public function __construct()
     {
@@ -77,19 +72,9 @@ class Locator
         IdentifierType $identifierType
     ) : array {
         try {
-            $id = $locatedSource->getFileName();
-            if ($id === null) {
-                // if source is native stub
-                $id = sha1($locatedSource->getSource());
-            }
-
-            if (!array_key_exists($id, self::$cache)) {
-                self::$cache[$id] = $this->parser->parse($locatedSource->getSource());
-            }
-
             return $this->findReflectionsInTree->__invoke(
                 $reflector,
-                self::$cache[$id],
+                $this->parser->parse($locatedSource->getSource()),
                 $identifierType,
                 $locatedSource
             );
