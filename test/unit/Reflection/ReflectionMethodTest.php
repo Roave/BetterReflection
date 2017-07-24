@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
@@ -201,6 +202,25 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         self::assertInternalType('array', $types);
         self::assertCount(1, $types);
         self::assertInstanceOf(Integer::class, $types[0]);
+    }
+
+    public function testGetObjectReturnTypes() : void
+    {
+        $php = '<?php
+        namespace A;
+        class Foo {
+            public function someMethod() : object {}
+        }
+        ';
+
+        $returnType = (new ClassReflector(new StringSourceLocator($php)))
+            ->reflect('A\Foo')
+            ->getMethod('someMethod')
+            ->getReturnType();
+
+        self::assertInstanceOf(ReflectionType::class, $returnType);
+        self::assertTrue($returnType->isBuiltin());
+        self::assertSame('object', (string) $returnType);
     }
 
     public function modifierProvider() : array
