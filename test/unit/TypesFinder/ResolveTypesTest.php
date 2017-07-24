@@ -27,7 +27,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
             [['int', 'string', 'bool'], [Types\Integer::class, Types\String_::class, Types\Boolean::class]],
             [['?string'], [Types\Nullable::class]],
             [['iterable'], [Types\Iterable_::class]],
-            [['?iterable'], [Types\Iterable_::class]],
+            [['?iterable'], [Types\Nullable::class]],
             [['object'], [Types\Object_::class]],
             [['?object'], [Types\Nullable::class]],
         ];
@@ -58,6 +58,8 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
             ['Zap', '\Foo\Awesome\Zap'],
             ['Bar', '\Foo\Bar'],
             ['Baz\Zoom', '\Bat\Baz\Zoom'],
+            ['object', 'object'],
+            ['Object', 'object'],
         ];
     }
 
@@ -83,6 +85,6 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
         /* @var $resolvedType Types\Object_ */
-        self::assertSame($expectedType, (string)$resolvedType->getFqsen());
+        self::assertSame($expectedType, (string)$resolvedType);
     }
 }
