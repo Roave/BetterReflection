@@ -451,8 +451,18 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod('methodWithConstAsDefault');
+        $method = $classInfo->getMethod('methodWithUpperCasedDefaults');
 
+        $boolUpper = $method->getParameter('boolUpper');
+        self::assertFalse($boolUpper->isDefaultValueConstant());
+
+        $boolLower = $method->getParameter('boolLower');
+        self::assertFalse($boolLower->isDefaultValueConstant());
+
+        $nullUpper = $method->getParameter('nullUpper');
+        self::assertFalse($nullUpper->isDefaultValueConstant());
+
+        $method = $classInfo->getMethod('methodWithConstAsDefault');
         $constDefault = $method->getParameter('constDefault');
         self::assertTrue($constDefault->isDefaultValueConstant());
         self::assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());

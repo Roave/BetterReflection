@@ -133,7 +133,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             [\ReflectionMethod::IS_STATIC, 1],
             [\ReflectionMethod::IS_ABSTRACT, 1],
             [\ReflectionMethod::IS_FINAL, 1],
-            [\ReflectionMethod::IS_PUBLIC, 15],
+            [\ReflectionMethod::IS_PUBLIC, 16],
             [\ReflectionMethod::IS_PROTECTED, 1],
             [\ReflectionMethod::IS_PRIVATE, 1],
             [
@@ -143,7 +143,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
                 \ReflectionMethod::IS_PUBLIC |
                 \ReflectionMethod::IS_PROTECTED |
                 \ReflectionMethod::IS_PRIVATE,
-                17
+                18
             ]
         ];
     }
