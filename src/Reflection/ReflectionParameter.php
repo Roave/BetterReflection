@@ -214,7 +214,7 @@ class ReflectionParameter implements \Reflector
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
-            && !in_array($defaultValueNode->name->parts[0], ['true', 'false', 'null'])) {
+            && !in_array(strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'])) {
             $this->isDefaultValueConstant = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
