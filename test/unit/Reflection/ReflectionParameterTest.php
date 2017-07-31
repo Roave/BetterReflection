@@ -601,7 +601,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $content = '<?php class Foo { public function myMethod(object $param) {} }';
 
         $parameter = (new ClassReflector(new StringSourceLocator($content)))
-            ->reflect('Foo')
+            ->reflect(\Foo::class)
             ->getMethod('myMethod')
             ->getParameter('param');
 
