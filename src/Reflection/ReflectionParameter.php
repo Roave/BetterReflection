@@ -541,11 +541,17 @@ class ReflectionParameter implements \Reflector
             return null;
         }
 
+        $fqsen = $hint->getFqsen();
+
+        if (! $fqsen) {
+            return null;
+        }
+
         if (!$this->reflector instanceof ClassReflector) {
             throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
 
-        return $this->reflector->reflect($hint->getFqsen()->__toString());
+        return $this->reflector->reflect($fqsen->__toString());
     }
 
     /**
