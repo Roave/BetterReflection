@@ -214,7 +214,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
         ';
 
         $returnType = (new ClassReflector(new StringSourceLocator($php)))
-            ->reflect('A\Foo')
+            ->reflect(\A\Foo::class)
             ->getMethod('someMethod')
             ->getReturnType();
 
