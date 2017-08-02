@@ -3,6 +3,9 @@
 namespace Roave\BetterReflectionTest\Fixture {
 
     use Roave\BetterReflectionTest\FixtureOther\OtherClass;
+    use Roave\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST;
+
+    const THIS_NAMESPACE_CONST = 'this_namespace';
 
     class ParentClassWithConstant
     {
@@ -13,13 +16,18 @@ namespace Roave\BetterReflectionTest\Fixture {
     {
         public const MY_CONST = 'my';
 
-        public function method($param1 = self::MY_CONST, $param2 = self::PARENT_CONST, $param3 = OtherClass::MY_CONST)
+        public function method($param1 = self::MY_CONST, $param2 = self::PARENT_CONST,
+            $param3 = OtherClass::MY_CONST, $param4 = THIS_NAMESPACE_CONST,
+            $param5 = OTHER_NAMESPACE_CONST)
         {
         }
     }
 }
 
 namespace Roave\BetterReflectionTest\FixtureOther {
+
+    const OTHER_NAMESPACE_CONST = 'other_namespace';
+
     class OtherClass
     {
         public const MY_CONST = 'other';

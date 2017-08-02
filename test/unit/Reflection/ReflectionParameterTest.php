@@ -483,7 +483,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $intDefault->getDefaultValueConstantName();
     }
 
-    public function testGetDefaultValueConstantNameAcrossClasses() : void
+    public function testGetDefaultValueConstantNameClassConstants() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php')
@@ -499,6 +499,23 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $param3 = $method->getParameter('param3');
         self::assertSame(OtherClass::class . '::MY_CONST', $param3->getDefaultValueConstantName());
+    }
+
+    public function testGetDefaultValueConstantNameNamespacedConstants() : void
+    {
+        $this->markTestSkipped('@todo - implement reflection of constants outside a class');
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php')
+        );
+        $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
+        $method = $classInfo->getMethod('method');
+
+        $param4 = $method->getParameter('param4');
+        self::assertSame('Roave\BetterReflectionTest\Fixture\THIS_NAMESPACE_CONST', $param4->getDefaultValueConstantName());
+
+        $param5 = $method->getParameter('param5');
+        self::assertSame('Roave\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST', $param5->getDefaultValueConstantName());
     }
 
     public function testGetDeclaringFunction() : void
