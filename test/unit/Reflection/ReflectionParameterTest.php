@@ -9,9 +9,13 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\Fixture\ParentClassWithConstant;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
+use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use phpDocumentor\Reflection\Types;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -465,7 +469,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $method = $classInfo->getMethod('methodWithConstAsDefault');
         $constDefault = $method->getParameter('constDefault');
         self::assertTrue($constDefault->isDefaultValueConstant());
-        self::assertSame('SOME_CONST', $constDefault->getDefaultValueConstantName());
+        self::assertSame(Methods::class . '::SOME_CONST', $constDefault->getDefaultValueConstantName());
 
         $definedDefault = $method->getParameter('definedDefault');
         self::assertTrue($definedDefault->isDefaultValueConstant());
@@ -477,6 +481,24 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('This parameter is not a constant default value, so cannot have a constant name');
         $intDefault->getDefaultValueConstantName();
+    }
+
+    public function testGetDefaultValueConstantNameAcrossClasses() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php')
+        );
+        $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
+        $method = $classInfo->getMethod('method');
+
+        $param1 = $method->getParameter('param1');
+        self::assertSame(ClassWithConstantsAsDefaultValues::class . '::MY_CONST', $param1->getDefaultValueConstantName());
+
+        $param2 = $method->getParameter('param2');
+        self::assertSame(ParentClassWithConstant::class . '::PARENT_CONST', $param2->getDefaultValueConstantName());
+
+        $param3 = $method->getParameter('param3');
+        self::assertSame(OtherClass::class . '::MY_CONST', $param3->getDefaultValueConstantName());
     }
 
     public function testGetDeclaringFunction() : void
