@@ -8,6 +8,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use phpDocumentor\Reflection\Types;
+use phpDocumentor\Reflection\Types\Self_;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
@@ -208,8 +209,14 @@ class ReflectionParameter implements \Reflector
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
+            $className = $this->getRealClassName(implode('\\', $defaultValueNode->class->parts));
+
+            if ($className instanceof Self_) {
+                $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
+            }
+
             $this->isDefaultValueConstant = true;
-            $this->defaultValueConstantName = $defaultValueNode->name;
+            $this->defaultValueConstantName = ltrim($className, '\\') . '::' . $defaultValueNode->name;
             $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 
@@ -226,6 +233,16 @@ class ReflectionParameter implements \Reflector
             $defaultValueNode,
             new CompilerContext($this->reflector, $this->getDeclaringClass())
         );
+    }
+
+    private function findParentClassDeclaringConstant(string $constantName): string
+    {
+        $class = $this->function->getDeclaringClass();
+        do {
+            if ($class->hasConstant($constantName)) {
+                return $class->getName();
+            }
+        } while ($class = $class->getParentClass());
     }
 
     /**
@@ -388,12 +405,20 @@ class ReflectionParameter implements \Reflector
      */
     public function getTypeHint() : ?Type
     {
+        return $this->getRealClassName($this->node->type);
+    }
+
+    /**
+     * @param string|null|Node
+     */
+    private function getRealClassName($className) : ?Type
+    {
         $namespaceForType = $this->function instanceof ReflectionMethod
             ? $this->function->getDeclaringClass()->getNamespaceName()
             : $this->function->getNamespaceName();
 
         return (new FindTypeFromAst())->__invoke(
-            $this->node->type,
+            $className,
             $this->function->getLocatedSource(),
             $namespaceForType
         );
