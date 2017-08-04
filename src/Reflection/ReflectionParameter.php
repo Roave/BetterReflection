@@ -235,6 +235,9 @@ class ReflectionParameter implements \Reflector
         );
     }
 
+    /**
+     * @throws \LogicException
+     */
     private function findParentClassDeclaringConstant(string $constantName): string
     {
         $class = $this->function->getDeclaringClass();
@@ -243,6 +246,8 @@ class ReflectionParameter implements \Reflector
                 return $class->getName();
             }
         } while ($class = $class->getParentClass());
+
+        throw new LogicException("Failed to find parent class of constant '$constantName'.");
     }
 
     /**
