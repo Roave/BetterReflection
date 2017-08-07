@@ -4,6 +4,7 @@ namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
@@ -59,5 +60,35 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The current context does not have a class for self');
         $context->getFileName();
+    }
+
+    public function testClassMagicConstantAsDefaultValueFromClass() : void
+    {
+        $phpCode = '<?php
+        namespace Foo;
+        
+        class Bar {
+            public $property = __CLASS__;
+        }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo = $reflector->reflect('Foo\Bar');
+        self::assertSame('Foo\Bar', $classInfo->getProperty('property')->getDefaultValue());
+    }
+
+    public function testClassMagicConstantAsDefaultValueFromFunction() : void
+    {
+        $phpCode = '<?php
+        namespace Foo;
+        
+        function baz($parameter = __CLASS__)
+        {
+        }
+        ';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($phpCode));
+        $functionInfo = $reflector->reflect('Foo\baz');
+        self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());
     }
 }
