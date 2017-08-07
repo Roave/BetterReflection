@@ -51,6 +51,10 @@ class CompileNodeToValue
             return $this->compileDirConstant($node, $context);
         }
 
+        if ($node instanceof Node\Scalar\MagicConst\Class_) {
+            return $this->compileClassConstant($node, $context);
+        }
+
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
     }
 
@@ -271,6 +275,18 @@ class CompileNodeToValue
     private function compileDirConstant(Node\Scalar\MagicConst\Dir $node, CompilerContext $context): string
     {
         return dirname(realpath($context->getFileName()));
+    }
+
+    /**
+     * Compiles magic constant __CLASS__
+     *
+     * @param Node\Scalar\MagicConst\Class_ $node
+     * @param CompilerContext $context
+     * @return string
+     */
+    private function compileClassConstant(Node\Scalar\MagicConst\Class_ $node, CompilerContext $context): string
+    {
+        return $context->hasSelf() ? $context->getSelf()->getName() : '';
     }
 
     private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
