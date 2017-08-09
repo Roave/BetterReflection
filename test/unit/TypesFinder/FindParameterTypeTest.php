@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\TypesFinder;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -33,6 +34,8 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ['@param ?iterable $foo', 'foo', [Types\Nullable::class]],
             ['@param object $foo', 'foo', [Types\Object_::class]],
             ['@param ?object $foo', 'foo', [Types\Nullable::class]],
+            ['@param int|string', 'foo', [Types\Integer::class, Types\String_::class]],
+            ['@param ?string', 'foo', [Types\Nullable::class]],
         ];
     }
 
@@ -71,6 +74,12 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         $node = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
 
+        $parameter = $this->createMock(ReflectionParameter::class);
+
+        $parameter
+            ->method('getName')
+            ->will($this->returnValue('foo'));
+
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -82,6 +91,10 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
+
+        $function
+            ->method('getParameters')
+            ->will($this->returnValue([$parameter]));
 
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindParameterType())->__invoke($function, $node);
@@ -111,6 +124,12 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
+        $parameter = $this->createMock(ReflectionParameter::class);
+
+        $parameter
+            ->method('getName')
+            ->will($this->returnValue('foo'));
+
         $method = $this->createMock(ReflectionMethod::class);
 
         $method
@@ -122,6 +141,10 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getDeclaringClass')
             ->will($this->returnValue($class));
+
+        $method
+            ->method('getParameters')
+            ->will($this->returnValue([$parameter]));
 
         /* @var ReflectionMethod $method */
         $foundTypes = (new FindParameterType())->__invoke($method, $node);
