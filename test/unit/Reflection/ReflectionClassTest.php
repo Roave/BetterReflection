@@ -469,6 +469,79 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         ], $classInfo->getDefaultProperties());
     }
 
+    public function testIsAnonymousWithNotAnonymousClass(): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+
+        $classInfo = $reflector->reflect(ExampleClass::class);
+        self::assertFalse($classInfo->isAnonymous());
+    }
+
+    public function testIsAnonymousWithAnonymousClassNoNamespace(): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AnonymousClassNoNamespace.php'));
+
+        $allClassesInfo = $reflector->getAllClasses();
+        self::assertCount(1, $allClassesInfo);
+
+        $classInfo = $allClassesInfo[0];
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
+        self::assertStringEndsWith('Fixture/AnonymousClassNoNamespace.php(3)', $classInfo->getName());
+    }
+
+    public function testIsAnonymousWithAnonymousClassInNamespace(): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AnonymousClassInNamespace.php'));
+
+        $allClassesInfo = $reflector->getAllClasses();
+        self::assertCount(2, $allClassesInfo);
+
+        foreach ($allClassesInfo as $classInfo) {
+            self::assertTrue($classInfo->isAnonymous());
+            self::assertFalse($classInfo->inNamespace());
+            self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
+            self::assertStringMatchesFormat('%sFixture/AnonymousClassInNamespace.php(%d)', $classInfo->getName());
+        }
+    }
+
+    public function testIsAnonymousWithNestedAnonymousClasses(): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/NestedAnonymousClassInstances.php'));
+
+        $allClassesInfo = $reflector->getAllClasses();
+        self::assertCount(3, $allClassesInfo);
+
+        foreach ($allClassesInfo as $classInfo) {
+            self::assertTrue($classInfo->isAnonymous());
+            self::assertFalse($classInfo->inNamespace());
+            self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
+            self::assertStringMatchesFormat('%sFixture/NestedAnonymousClassInstances.php(%d)', $classInfo->getName());
+        }
+    }
+
+    public function testIsAnonymousWithAnonymousClassInString(): void
+    {
+        $php = '<?php
+            function createAnonymous()
+            {
+                return new class {};
+            }
+        ';
+
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+
+        $allClassesInfo = $reflector->getAllClasses();
+        self::assertCount(1, $allClassesInfo);
+
+        $classInfo = $allClassesInfo[0];
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
+        self::assertStringEndsWith('(4)', $classInfo->getName());
+    }
+
     public function testIsInternalWithUserDefinedClass() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());

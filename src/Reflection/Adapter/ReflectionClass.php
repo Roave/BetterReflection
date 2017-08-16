@@ -45,6 +45,14 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritDoc}
      */
+    public function isAnonymous()
+    {
+        return $this->betterReflectionClass->isAnonymous();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isInternal()
     {
         return $this->betterReflectionClass->isInternal();

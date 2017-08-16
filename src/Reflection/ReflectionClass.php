@@ -25,6 +25,8 @@ use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClass implements Reflection, \Reflector
 {
+    public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
+
     /**
      * @var Reflector
      */
@@ -236,7 +238,16 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getShortName() : string
     {
-        return $this->node->name;
+        if (!$this->isAnonymous()) {
+            return $this->node->name;
+        }
+
+        $fileName = $this->getFileName();
+        if ($fileName === null) {
+            $fileName = sha1($this->locatedSource->getSource());
+        }
+
+        return sprintf('%s%c%s(%d)', self::ANONYMOUS_CLASS_NAME_PREFIX, "\0", $fileName, $this->getStartLine());
     }
 
     /**
@@ -782,6 +793,11 @@ class ReflectionClass implements Reflection, \Reflector
     public function getDocComment() : string
     {
         return GetFirstDocComment::forNode($this->node);
+    }
+
+    public function isAnonymous() : bool
+    {
+        return $this->node->name === null;
     }
 
     /**

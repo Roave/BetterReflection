@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
@@ -36,6 +37,17 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         ReflectionObject::createFromInstance(123);
+    }
+
+    public function testReflectionForAnonymousClass() : void
+    {
+        $classInfo = ReflectionObject::createFromInstance(new class {});
+
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
+        self::assertSame(FileHelper::normalizeWindowsPath(__FILE__), $classInfo->getFileName());
+        self::assertSame(44, $classInfo->getStartLine());
     }
 
     public function testReflectionWorksWithInternalClasses() : void

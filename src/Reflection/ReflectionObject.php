@@ -10,6 +10,7 @@ use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -87,8 +88,15 @@ class ReflectionObject extends ReflectionClass
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
-        $reflector = ClassReflector::buildDefaultReflector();
-        $reflectionClass = $reflector->reflect(get_class($object));
+        $className = get_class($object);
+
+        if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
+            $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator($object));
+        } else {
+            $reflector = ClassReflector::buildDefaultReflector();
+        }
+
+        $reflectionClass = $reflector->reflect($className);
 
         return new self($reflector, $reflectionClass, $object);
     }
@@ -382,6 +390,14 @@ class ReflectionObject extends ReflectionClass
     public function getDocComment() : string
     {
         return $this->reflectionClass->getDocComment();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAnonymous() : bool
+    {
+        return $this->reflectionClass->isAnonymous();
     }
 
     /**
