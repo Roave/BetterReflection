@@ -224,7 +224,12 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         sort($stubbedMethodNames);
 
         self::assertSame($originalMethodNames, $stubbedMethodNames);
-        self::assertEquals($original->getConstants(), $stubbed->getConstants());
+
+        // See https://bugs.php.net/bug.php?id=75090
+        if ($original->getName() !== \IntlGregorianCalendar::class) {
+            self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        }
+
 
         foreach ($originalMethods as $method) {
             self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));

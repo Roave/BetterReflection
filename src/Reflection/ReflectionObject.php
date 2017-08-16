@@ -221,6 +221,14 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getImmediateConstants() : array
+    {
+        return $this->reflectionClass->getImmediateConstants();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getConstants() : array
     {
         return $this->reflectionClass->getConstants();
@@ -248,6 +256,14 @@ class ReflectionObject extends ReflectionClass
     public function getReflectionConstant(string $name) : ?ReflectionClassConstant
     {
         return $this->reflectionClass->getReflectionConstant($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImmediateReflectionConstants() : array
+    {
+        return $this->reflectionClass->getImmediateReflectionConstants();
     }
 
     /**
