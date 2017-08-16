@@ -496,7 +496,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
         self::assertSame(ClassWithConstantsAsDefaultValues::class . '::MY_CONST', $param1->getDefaultValueConstantName());
 
         $param2 = $method->getParameter('param2');
-        self::assertSame(ParentClassWithConstant::class . '::PARENT_CONST', $param2->getDefaultValueConstantName());
+        self::assertSame(ClassWithConstantsAsDefaultValues::class . '::PARENT_CONST', $param2->getDefaultValueConstantName());
 
         $param3 = $method->getParameter('param3');
         self::assertSame(OtherClass::class . '::MY_CONST', $param3->getDefaultValueConstantName());

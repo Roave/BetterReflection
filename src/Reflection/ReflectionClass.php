@@ -14,8 +14,6 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
-use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -46,11 +44,6 @@ class ReflectionClass implements Reflection, \Reflector
      * @var ClassLikeNode
      */
     private $node;
-
-    /**
-     * @var mixed[]|null
-     */
-    private $cachedConstants;
 
     /**
      * @var ReflectionClassConstant[]|null
@@ -439,30 +432,29 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * Get an array of the defined constants in this class.
+     * Get an associative array of only the constants for this specific class (i.e. do not search
+     * up parent classes etc.), with keys as constant names and values as constant values.
      *
-     * @return mixed[]
+     * @return string[]|int[]|float[]|array[]|bool[]|null[]
+     */
+    public function getImmediateConstants() : array
+    {
+        return array_map(function (ReflectionClassConstant $classConstant) {
+            return $classConstant->getValue();
+        }, $this->getImmediateReflectionConstants());
+    }
+
+    /**
+     * Get an associative array of the defined constants in this class,
+     * with keys as constant names and values as constant values.
+     *
+     * @return string[]|int[]|float[]|array[]|bool[]|null[]
      */
     public function getConstants() : array
     {
-        if (null !== $this->cachedConstants) {
-            return $this->cachedConstants;
-        }
-
-        $constants = [];
-        foreach ($this->node->stmts as $stmt) {
-            if ($stmt instanceof ConstNode) {
-                $constName = $stmt->consts[0]->name;
-                $constValue = (new CompileNodeToValue())->__invoke(
-                    $stmt->consts[0]->value,
-                    new CompilerContext($this->reflector, $this)
-                );
-                $constants[$constName] = $constValue;
-            }
-        }
-
-        $this->cachedConstants = $constants;
-        return $constants;
+        return array_map(function (ReflectionClassConstant $classConstant) {
+            return $classConstant->getValue();
+        }, $this->getReflectionConstants());
     }
 
     /**
@@ -509,11 +501,12 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * Get an array reflection object of the defined constants in this class.
+     * Get an associative array of only the constants for this specific class (i.e. do not search
+     * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
      * @return ReflectionClassConstant[]
      */
-    public function getReflectionConstants() : array
+    public function getImmediateReflectionConstants() : array
     {
         if (null !== $this->cachedReflectionConstants) {
             return $this->cachedReflectionConstants;
@@ -540,6 +533,45 @@ class ReflectionClass implements Reflection, \Reflector
             ),
             $constants
         );
+    }
+
+    /**
+     * Get an associative array of the defined constants in this class,
+     * with keys as constant names and values as {@see ReflectionClassConstant} objects.
+     *
+     * @return ReflectionClassConstant[]
+     */
+    public function getReflectionConstants() : array
+    {
+        $allReflectionConstants = array_merge(
+            array_values($this->getImmediateReflectionConstants()),
+            ...array_map(
+                function (ReflectionClass $ancestor) {
+                    return array_filter(
+                        array_values($ancestor->getReflectionConstants()),
+                        function (ReflectionClassConstant $classConstant) {
+                            return !$classConstant->isPrivate();
+                        }
+                    );
+                },
+                array_filter([$this->getParentClass()])
+            ),
+            ...array_map(
+                function (ReflectionClass $interface) {
+                    return array_values($interface->getReflectionConstants());
+                },
+                array_values($this->getInterfaces())
+            )
+        );
+
+        $reflectionConstants = [];
+        foreach ($allReflectionConstants as $classConstant) {
+            if (!array_key_exists($classConstant->getName(), $reflectionConstants)) {
+                $reflectionConstants[$classConstant->getName()] = $classConstant;
+            }
+        }
+
+        return $reflectionConstants;
     }
 
     /**
