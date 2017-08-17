@@ -21,4 +21,4 @@ install:
 
 test_script:
   - cd C:\projects\better-reflection
-- vendor\bin\phpunit.bat
+  - vendor\bin\phpunit.bat
