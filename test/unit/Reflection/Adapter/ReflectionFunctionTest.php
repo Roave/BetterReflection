@@ -8,6 +8,7 @@ use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunctionAdapter;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction
@@ -34,6 +35,8 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
     {
         $mockParameter = $this->createMock(BetterReflectionParameter::class);
 
+        $mockType = $this->createMock(BetterReflectionType::class);
+
         return [
             // Inherited
             ['__toString', null, '', []],
@@ -55,6 +58,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
             ['getNumberOfParameters', null, 123, []],
             ['getNumberOfRequiredParameters', null, 123, []],
             ['getParameters', null, [$mockParameter], []],
+            ['getReturnType', null, $mockType, []],
             ['getShortName', null, '', []],
             ['getStaticVariables', NotImplemented::class, null, []],
             ['returnsReference', null, true, []],

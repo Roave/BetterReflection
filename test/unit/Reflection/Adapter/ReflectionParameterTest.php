@@ -9,6 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter
@@ -39,6 +40,8 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
 
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
+        $mockType = $this->createMock(BetterReflectionType::class);
+
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
@@ -55,10 +58,13 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
             ['allowsNull', null, true, []],
             ['getPosition', null, 123, []],
             ['isOptional', null, true, []],
+            ['isVariadic', null, true, []],
             ['isDefaultValueAvailable', null, true, []],
             ['getDefaultValue', null, true, []],
             ['isDefaultValueConstant', null, true, []],
             ['getDefaultValueConstantName', null, 'foo', []],
+            ['hasType', null, true, []],
+            ['getType', null, $mockType, []],
         ];
     }
 

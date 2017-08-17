@@ -143,6 +143,14 @@ class ReflectionParameter extends CoreReflectionParameter
     /**
      * {@inheritDoc}
      */
+    public function isVariadic()
+    {
+        return $this->betterReflectionParameter->isVariadic();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isDefaultValueAvailable()
     {
         return $this->betterReflectionParameter->isDefaultValueAvailable();
@@ -171,4 +179,21 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         return $this->betterReflectionParameter->getDefaultValueConstantName();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasType()
+    {
+        return $this->betterReflectionParameter->hasType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+        return ReflectionType::fromReturnTypeOrNull($this->betterReflectionParameter->getType());
+    }
+
 }
