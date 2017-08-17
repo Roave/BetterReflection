@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\NodeCompiler;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
+use Roave\BetterReflection\Util\FileHelper;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node;
 
@@ -274,7 +275,7 @@ class CompileNodeToValue
      */
     private function compileDirConstant(Node\Scalar\MagicConst\Dir $node, CompilerContext $context): string
     {
-        return dirname(realpath($context->getFileName()));
+        return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
     }
 
     /**

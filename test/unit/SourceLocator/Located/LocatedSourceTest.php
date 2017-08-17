@@ -4,6 +4,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Util\FileHelper;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource
@@ -13,7 +14,7 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
     public function testValuesHappyPath() : void
     {
         $source = '<?php echo "Hello world";';
-        $file = __DIR__ . '/../../Fixture/NoNamespace.php';
+        $file = FileHelper::normalizeWindowsPath(__DIR__ . '/../../Fixture/NoNamespace.php');
         $locatedSource = new LocatedSource($source, $file);
 
         self::assertSame($source, $locatedSource->getSource());
@@ -65,6 +66,10 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsExceptionIfFileIsNotReadable() : void
     {
+        if (strpos(PHP_OS, 'WIN') === 0) {
+            self::markTestSkipped('It\'s not possible to change file mode on Windows');
+        }
+
         $file = __DIR__ . '/../../Fixture/NoNamespace.php';
 
         $originalPermission = fileperms($file);
