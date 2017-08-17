@@ -7,6 +7,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Util\FileHelper;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompilerContext
@@ -40,7 +41,7 @@ class CompilerContextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileName() : void
     {
-        $filename = __DIR__ . '/CompilerContextTest.php';
+        $filename = FileHelper::normalizeWindowsPath(__DIR__ . '/CompilerContextTest.php');
 
         $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
         $self = $reflector->reflect(CompilerContextTest::class);

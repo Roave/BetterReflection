@@ -3,6 +3,7 @@
 namespace Roave\BetterReflection\SourceLocator\Located;
 
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\Util\FileHelper;
 
 /**
  * Value object containing source code that has been located.
@@ -45,6 +46,8 @@ class LocatedSource
             if (!is_file($filename)) {
                 throw new InvalidFileLocation('Is not a file: ' . $filename);
             }
+
+            $filename = FileHelper::normalizeWindowsPath($filename);
         }
 
         $this->source = $source;
