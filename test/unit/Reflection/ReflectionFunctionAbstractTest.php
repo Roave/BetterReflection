@@ -515,10 +515,6 @@ class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBodyFromAstWithInvalidArgumentsThrowsException() : void
     {
-        if (version_compare(PHP_VERSION, '7.0.0') < 0) {
-            $this->markTestSkipped('Only run this test on PHP 7 and above');
-        }
-
         $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
