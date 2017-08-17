@@ -178,6 +178,14 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * {@inheritDoc}
      */
+    public function getReturnType()
+    {
+        return ReflectionType::fromReturnTypeOrNull($this->betterReflectionMethod->getReturnType());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getShortName()
     {
         return $this->betterReflectionMethod->getShortName();
