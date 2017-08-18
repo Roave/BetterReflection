@@ -543,6 +543,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getReflectionConstants() : array
     {
+        /* @var $allReflectionConstants ReflectionClassConstant[] */
         $allReflectionConstants = array_merge(
             array_values($this->getImmediateReflectionConstants()),
             ...array_map(
@@ -565,9 +566,12 @@ class ReflectionClass implements Reflection, \Reflector
         );
 
         $reflectionConstants = [];
-        foreach ($allReflectionConstants as $classConstant) {
-            if (!array_key_exists($classConstant->getName(), $reflectionConstants)) {
-                $reflectionConstants[$classConstant->getName()] = $classConstant;
+
+        foreach ($allReflectionConstants as $constant) {
+            $constantName = $constant->getName();
+
+            if (! isset($reflectionConstants[$constantName])) {
+                $reflectionConstants[$constantName] = $constant;
             }
         }
 
