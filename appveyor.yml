@@ -1,26 +1,63 @@
 build: false
-shallow_clone: false
-platform: 'x86'
-clone_folder: C:\projects\better-reflection
+clone_depth: 50
+platform:
+  - x64
+environment:
+  matrix:
+    - dependencies: lowest
+      php_version: 7.1
+    - dependencies: highest
+      php_version: 7.1
 
+  project_directory: c:\projects\better-reflection
+  composer_directory: c:\tools\composer
+  composer_executable: c:\tools\composer\composer.phar
+  composer_installer: c:\tools\composer\installer.php
+  php_directory: c:\tools\php71
+matrix:
+  fast_finish: true
+clone_folder: c:\projects\better-reflection
+cache:
+  - c:\tools\composer
+  - '%LOCALAPPDATA%\Composer'
+  - c:\tools\php71
+init:
+  - ps: $Env:PATH = $Env:php_directory + ';' + $Env:composer_directory + ';' + $Env:PATH
+  - ps: $Env:ANSICON = '121x90 (121x90)'
 install:
-  - cinst -y OpenSSL.Light
-  - SET PATH=C:\Program Files\OpenSSL;%PATH%
-  - sc config wuauserv start= auto
-  - net start wuauserv
-  - cinst -y php
-  - cd c:\tools\php71
-  - copy php.ini-production php.ini
-  - echo date.timezone="UTC" >> php.ini
-  - echo extension_dir=ext >> php.ini
-  - echo extension=php_openssl.dll >> php.ini
-  - echo extension=php_mbstring.dll >> php.ini
-  - cd C:\projects\better-reflection
-  - SET PATH=C:\tools\php71;%PATH%
-  - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar install --prefer-source --no-interaction
+  # Install PHP
+  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y OpenSSL.Light }
+  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y php }
 
+  # Prepare PHP
+  - ps: cd $Env:php_directory
+  - ps: Copy-Item php.ini-production -Destination php.ini
+  - ps: Add-Content -Path php.ini -Value 'date.timezone="UTC"'
+  - ps: Add-Content -Path php.ini -Value 'extension_dir=ext'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_curl.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_intl.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_openssl.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_mbstring.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_mysqli.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_pdo_mysql.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_soap.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_sqlite3.dll'
+  - ps: Add-Content -Path php.ini -Value 'extension=php_xsl.dll'
+  - ps: php --version
+
+  # Prepare composer
+  - ps: If ((Test-Path $Env:composer_directory) -eq $False) { New-Item -Path $Env:composer_directory -ItemType 'directory' }
+  - ps: If ((Test-Path $Env:composer_installer) -eq $False) { appveyor-retry appveyor DownloadFile https://getcomposer.org/installer -FileName $Env:composer_installer }
+  - ps: If ((Test-Path $Env:composer_executable) -eq $False) { php $Env:composer_installer --install-dir=$Env:composer_directory }
+  - ps: Set-Content -Path ($Env:composer_directory + '\composer.bat') -Value ('@php ' + $Env:composer_executable + ' %*')
+  - composer self-update
+
+  # Install dependencies
+  - ps: cd $Env:project_directory
+  - IF %dependencies%==lowest composer update --prefer-dist --prefer-lowest --prefer-stable --no-interaction --no-progress
+  - IF %dependencies%==highest composer update --prefer-dist --no-interaction --no-progress
 test_script:
-  - cd C:\projects\better-reflection
-  - vendor\bin\phpunit.bat
+  - ps: cd $Env:project_directory
+  - vendor\bin\phpunit
+
 
