@@ -543,6 +543,8 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getReflectionConstants() : array
     {
+        // Note: constants are not merged via their name as array index, since internal PHP constant
+        //       sorting does not follow `array_merge()` semantics
         /* @var $allReflectionConstants ReflectionClassConstant[] */
         $allReflectionConstants = array_merge(
             array_values($this->getImmediateReflectionConstants()),
