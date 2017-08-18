@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
@@ -216,7 +217,7 @@ class ReflectionParameter implements \Reflector
             }
 
             $this->isDefaultValueConstant = true;
-            $this->defaultValueConstantName = ltrim($className, '\\') . '::' . $defaultValueNode->name;
+            $this->defaultValueConstantName = ltrim((string) $className, '\\') . '::' . $defaultValueNode->name;
             $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 

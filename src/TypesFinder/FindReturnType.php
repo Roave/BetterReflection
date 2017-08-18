@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
@@ -37,7 +38,7 @@ class FindReturnType
 
         foreach ($returnTags as $returnTag) {
             /* @var $returnTag \phpDocumentor\Reflection\DocBlock\Tags\Return_ */
-            return (new ResolveTypes())->__invoke(explode('|', $returnTag->getType()), $context);
+            return (new ResolveTypes())->__invoke(explode('|', (string) $returnTag->getType()), $context);
         }
         return [];
     }
