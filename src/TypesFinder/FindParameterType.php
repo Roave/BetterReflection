@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
@@ -43,7 +44,7 @@ class FindParameterType
         foreach ($paramTags as $paramTag) {
             /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tags\Param */
             if ($paramTag->getVariableName() === $node->name) {
-                return (new ResolveTypes())->__invoke(explode('|', $paramTag->getType()), $context);
+                return (new ResolveTypes())->__invoke(explode('|', (string) $paramTag->getType()), $context);
             }
         }
         return [];

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
@@ -44,7 +45,7 @@ class FindPropertyType
         foreach ($varTags as $varTag) {
             $resolvedTypes = array_merge(
                 $resolvedTypes,
-                (new ResolveTypes())->__invoke(explode('|', $varTag->getType()), $context)
+                (new ResolveTypes())->__invoke(explode('|', (string) $varTag->getType()), $context)
             );
         }
         return $resolvedTypes;

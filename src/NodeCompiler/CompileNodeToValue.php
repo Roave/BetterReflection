@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
 
@@ -115,10 +116,10 @@ class CompileNodeToValue
      *
      * @param Node\Expr\ClassConstFetch $node
      * @param CompilerContext $context
-     * @return string|null
+     * @return string|int|float|bool|array|null
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context) : ?string
+    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
         $className = implode('\\', $node->class->parts);
 
@@ -141,7 +142,7 @@ class CompileNodeToValue
 
         if (null === $classInfo) {
             $classInfo = $context->getReflector()->reflect(
-                (new FindTypeFromAst())->__invoke(
+                (string) (new FindTypeFromAst())->__invoke(
                     $className,
                     $context->getSelf()->getLocatedSource(),
                     $context->getSelf()->getNamespaceName()
