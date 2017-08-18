@@ -89,12 +89,20 @@ final class FindReflectionsInTree
             {
                 if ($node instanceof Node\Stmt\Namespace_) {
                     $this->currentNamespace = $node;
-                } elseif ($node instanceof Node\Stmt\ClassLike) {
+
+                    return;
+                }
+
+                if ($node instanceof Node\Stmt\ClassLike) {
                     $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
                     if ($this->identifierType->isMatchingReflector($reflection)) {
                         $this->reflections[] = $reflection;
                     }
-                } elseif ($node instanceof Node\Stmt\Function_) {
+
+                    return;
+                }
+
+                if ($node instanceof Node\Stmt\Function_) {
                     $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
                     if ($this->identifierType->isMatchingReflector($reflection)) {
                         $this->reflections[] = $reflection;
