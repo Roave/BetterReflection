@@ -230,7 +230,6 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             self::assertEquals($original->getConstants(), $stubbed->getConstants());
         }
 
-
         foreach ($originalMethods as $method) {
             self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
