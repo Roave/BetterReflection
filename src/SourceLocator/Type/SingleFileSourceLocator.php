@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
@@ -24,11 +25,11 @@ class SingleFileSourceLocator extends AbstractSourceLocator
 
     /**
      * @param string $filename
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @param AstLocator|null $locator
      */
-    public function __construct(string $filename)
+    public function __construct(string $filename, AstLocator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->filename = $filename;
 
         if (empty($this->filename)) {

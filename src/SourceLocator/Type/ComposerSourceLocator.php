@@ -7,6 +7,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Composer\Autoload\ClassLoader;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.
@@ -22,9 +23,9 @@ class ComposerSourceLocator extends AbstractSourceLocator
      */
     private $classLoader;
 
-    public function __construct(ClassLoader $classLoader)
+    public function __construct(ClassLoader $classLoader, AstLocator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->classLoader = $classLoader;
     }
 

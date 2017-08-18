@@ -21,12 +21,12 @@ class Locator
     /**
      * @var FindReflectionsInTree
      */
-    private $findReflectionsInTree;
+    protected $findReflectionsInTree;
 
     /**
      * @var Parser
      */
-    private $parser;
+    protected $parser;
 
     public function __construct()
     {
