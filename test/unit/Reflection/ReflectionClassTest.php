@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -1316,5 +1317,74 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
                 );
             }
         );
+    }
+
+    public function testGetConstantsReturnsInheritedConstants() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassConstants.php'));
+        $classInfo = $reflector->reflect('Next');
+
+        $expectedConstants = [
+            'F' => 'ff',
+            'D' => 'dd',
+            'C' => 'c',
+            'A' => 'a',
+            'B' => 'b',
+        ];
+
+        self::assertSame($expectedConstants, $classInfo->getConstants());
+    }
+
+    public function testGetImmediateConstants() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassConstants.php'));
+        $classInfo = $reflector->reflect('Next');
+
+        self::assertSame(['F' => 'ff'], $classInfo->getImmediateConstants());
+    }
+
+    public function testGetReflectionConstantsReturnsInheritedConstants() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassConstants.php'));
+        $classInfo = $reflector->reflect('Next');
+
+        $expectedConstants = [
+            'F' => 'ff',
+            'D' => 'dd',
+            'C' => 'c',
+            'A' => 'a',
+            'B' => 'b',
+        ];
+
+        $reflectionConstants = $classInfo->getReflectionConstants();
+
+        self::assertCount(5, $reflectionConstants);
+        self::assertContainsOnlyInstancesOf(ReflectionClassConstant::class, $reflectionConstants);
+        self::assertSame(array_keys($expectedConstants), array_keys($reflectionConstants));
+
+        array_walk(
+            $expectedConstants,
+            function ($constantValue, $constantName) use ($reflectionConstants) {
+                self::assertArrayHasKey($constantName, $reflectionConstants, 'Constant ' . $constantName . ' not set');
+                self::assertSame(
+                    $constantValue,
+                    $reflectionConstants[$constantName]->getValue(),
+                    'Constant value for ' . $constantName . ' does not match'
+                );
+            }
+        );
+    }
+
+    public function testGetImmediateReflectionConstants() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/InheritedClassConstants.php'));
+        $classInfo = $reflector->reflect('Next');
+
+        $reflectionConstants = $classInfo->getImmediateReflectionConstants();
+
+        self::assertCount(1, $reflectionConstants);
+        self::assertArrayHasKey('F', $reflectionConstants);
+        self::assertInstanceOf(ReflectionClassConstant::class, $reflectionConstants['F']);
+        self::assertSame('ff', $reflectionConstants['F']->getValue());
     }
 }
