@@ -41,14 +41,12 @@ final class FindReflectionsInTree
         IdentifierType $identifierType,
         LocatedSource $locatedSource
     ) : array {
-        $reflections = [];
-
-        $nodeVisitor = new class($reflections, $reflector, $identifierType, $locatedSource, $this->astConversionStrategy) extends NodeVisitorAbstract
+        $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy) extends NodeVisitorAbstract
         {
             /**
              * @var \Roave\BetterReflection\Reflection\Reflection[]
              */
-            private $reflections;
+            private $reflections = [];
 
             /**
              * @var \Roave\BetterReflection\Reflector\Reflector
@@ -76,14 +74,11 @@ final class FindReflectionsInTree
             private $currentNamespace;
 
             public function __construct(
-                array &$reflections,
                 Reflector $reflector,
                 IdentifierType $identifierType,
                 LocatedSource $locatedSource,
                 AstConversionStrategy $astConversionStrategy
-            )
-            {
-                $this->reflections = &$reflections;
+            ) {
                 $this->reflector = $reflector;
                 $this->identifierType = $identifierType;
                 $this->locatedSource = $locatedSource;
@@ -113,12 +108,20 @@ final class FindReflectionsInTree
                     $this->currentNamespace = null;
                 }
             }
+
+            /**
+             * @return \Roave\BetterReflection\Reflection\Reflection[]
+             */
+            public function getReflections() : array
+            {
+                return $this->reflections;
+            }
         };
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        return $reflections;
+        return $nodeVisitor->getReflections();
     }
 }
