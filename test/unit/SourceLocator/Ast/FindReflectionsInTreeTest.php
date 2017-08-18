@@ -151,4 +151,33 @@ class FindReflectionsInTreeTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    public function testAnonymousClassCreatedInFunction() : void
+    {
+        /** @var NodeToReflection|\PHPUnit_Framework_MockObject_MockObject $strategy */
+        $strategy = $this->createMock(NodeToReflection::class);
+
+        $mockReflectionFunction = $this->createMock(ReflectionFunction::class);
+        $mockReflectionClass = $this->createMock(ReflectionClass::class);
+
+        $strategy->expects($this->exactly(2))
+            ->method('__invoke')
+            ->willReturnOnConsecutiveCalls($mockReflectionFunction, $mockReflectionClass);
+
+        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
+        $reflector = $this->createMock(Reflector::class);
+        $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);
+
+        self::assertSame(
+            [
+                $mockReflectionClass
+            ],
+            (new FindReflectionsInTree($strategy))->__invoke(
+                $reflector,
+                $this->getAstForString($locatedSource->getSource()),
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                $locatedSource
+            )
+        );
+    }
 }

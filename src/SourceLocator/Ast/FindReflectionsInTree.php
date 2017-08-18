@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\Reflection\Reflection;
 use PhpParser\Node;
 
 /**
@@ -26,12 +28,13 @@ final class FindReflectionsInTree
     }
 
     /**
-     * Find all reflections of type in an Abstract Syntax Tree
+     * Find all reflections of a given type in an Abstract Syntax Tree
      *
-     * @param Reflector $reflector
-     * @param array $ast
+     * @param Reflector      $reflector
+     * @param Node[]         $ast
      * @param IdentifierType $identifierType
-     * @param LocatedSource $locatedSource
+     * @param LocatedSource  $locatedSource
+     *
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
     public function __invoke(
@@ -40,86 +43,98 @@ final class FindReflectionsInTree
         IdentifierType $identifierType,
         LocatedSource $locatedSource
     ) : array {
-        return $this->reflectFromTree($reflector, $ast, $identifierType, $locatedSource);
-    }
+        $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy)
+            extends NodeVisitorAbstract
+        {
+            /**
+             * @var \Roave\BetterReflection\Reflection\Reflection[]
+             */
+            private $reflections = [];
 
-    /**
-     * @param Reflector $reflector
-     * @param Node $node
-     * @param LocatedSource $locatedSource
-     * @param Node\Stmt\Namespace_|null $namespace
-     * @return Reflection|null
-     */
-    private function reflectNode(
-        Reflector $reflector,
-        Node $node,
-        LocatedSource $locatedSource,
-        ?Node\Stmt\Namespace_ $namespace
-    ) : ?Reflection {
-        return $this->astConversionStrategy->__invoke($reflector, $node, $locatedSource, $namespace);
-    }
+            /**
+             * @var Reflector
+             */
+            private $reflector;
 
-    /**
-     * Process and reflect all the matching identifiers found inside a namespace node.
-     *
-     * @param Reflector $reflector
-     * @param Node\Stmt\Namespace_ $namespace
-     * @param IdentifierType $identifierType
-     * @param LocatedSource $locatedSource
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
-     */
-    private function reflectFromNamespace(
-        Reflector $reflector,
-        Node\Stmt\Namespace_ $namespace,
-        IdentifierType $identifierType,
-        LocatedSource $locatedSource
-    ) : array {
-        $reflections = [];
-        foreach ($namespace->stmts as $node) {
-            $reflection = $this->reflectNode($reflector, $node, $locatedSource, $namespace);
+            /**
+             * @var IdentifierType
+             */
+            private $identifierType;
 
-            if (null !== $reflection && $identifierType->isMatchingReflector($reflection)) {
-                $reflections[] = $reflection;
+            /**
+             * @var LocatedSource
+             */
+            private $locatedSource;
+
+            /**
+             * @var AstConversionStrategy
+             */
+            private $astConversionStrategy;
+
+            /**
+             * @var Namespace_|null
+             */
+            private $currentNamespace;
+
+            public function __construct(
+                Reflector $reflector,
+                IdentifierType $identifierType,
+                LocatedSource $locatedSource,
+                AstConversionStrategy $astConversionStrategy
+            ) {
+                $this->reflector             = $reflector;
+                $this->identifierType        = $identifierType;
+                $this->locatedSource         = $locatedSource;
+                $this->astConversionStrategy = $astConversionStrategy;
             }
-        }
-        return $reflections;
-    }
 
-    /**
-     * Reflect identifiers from an AST. If a namespace is found, also load all the
-     * matching identifiers found in the namespace.
-     *
-     * @param Reflector $reflector
-     * @param Node[] $ast
-     * @param IdentifierType $identifierType
-     * @param LocatedSource $locatedSource
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
-     */
-    private function reflectFromTree(
-        Reflector $reflector,
-        array $ast,
-        IdentifierType $identifierType,
-        LocatedSource $locatedSource
-    ) : array {
-        $reflections = [];
-        foreach ($ast as $node) {
-            if ($node instanceof Node\Stmt\Namespace_) {
-                $reflections = array_merge(
-                    $reflections,
-                    $this->reflectFromNamespace($reflector, $node, $identifierType, $locatedSource)
-                );
-            } elseif ($node instanceof Node\Stmt\ClassLike) {
-                $reflection = $this->reflectNode($reflector, $node, $locatedSource, null);
-                if ($identifierType->isMatchingReflector($reflection)) {
-                    $reflections[] = $reflection;
+            public function enterNode(Node $node)
+            {
+                if ($node instanceof Namespace_) {
+                    $this->currentNamespace = $node;
+
+                    return;
                 }
-            } elseif ($node instanceof Node\Stmt\Function_) {
-                $reflection = $this->reflectNode($reflector, $node, $locatedSource, null);
-                if ($identifierType->isMatchingReflector($reflection)) {
-                    $reflections[] = $reflection;
+
+                if ($node instanceof Node\Stmt\ClassLike) {
+                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
+
+                    if ($this->identifierType->isMatchingReflector($reflection)) {
+                        $this->reflections[] = $reflection;
+                    }
+
+                    return;
+                }
+
+                if ($node instanceof Node\Stmt\Function_) {
+                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
+
+                    if ($this->identifierType->isMatchingReflector($reflection)) {
+                        $this->reflections[] = $reflection;
+                    }
                 }
             }
-        }
-        return $reflections;
+
+            public function leaveNode(Node $node)
+            {
+                if ($node instanceof Namespace_) {
+                    $this->currentNamespace = null;
+                }
+            }
+
+            /**
+             * @return \Roave\BetterReflection\Reflection\Reflection[]
+             */
+            public function getReflections() : array
+            {
+                return $this->reflections;
+            }
+        };
+
+        $nodeTraverser = new NodeTraverser();
+        $nodeTraverser->addVisitor($nodeVisitor);
+        $nodeTraverser->traverse($ast);
+
+        return $nodeVisitor->getReflections();
     }
 }
