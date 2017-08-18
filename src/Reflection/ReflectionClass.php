@@ -46,7 +46,7 @@ class ReflectionClass implements Reflection, \Reflector
     private $node;
 
     /**
-     * @var ReflectionClassConstant[]|null
+     * @var ReflectionClassConstant[]|null indexed by name, when present
      */
     private $cachedReflectionConstants;
 
@@ -504,7 +504,7 @@ class ReflectionClass implements Reflection, \Reflector
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return ReflectionClassConstant[]
+     * @return ReflectionClassConstant[] indexed by name
      */
     public function getImmediateReflectionConstants() : array
     {
@@ -539,7 +539,7 @@ class ReflectionClass implements Reflection, \Reflector
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return ReflectionClassConstant[]
+     * @return ReflectionClassConstant[] indexed by name
      */
     public function getReflectionConstants() : array
     {
