@@ -786,6 +786,18 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
+     * Gets the parent class names.
+     *
+     * @return string[] A numerical array with parent class names as the values.
+     */
+    public function getParentClassNames() : array
+    {
+        return \array_map(function (self $parentClass): string {
+            return $parentClass->getName();
+        }, \array_slice(\array_reverse($this->getInheritanceClassHierarchy()), 1));
+    }
+
+    /**
      * @return string
      */
     public function getDocComment() : string

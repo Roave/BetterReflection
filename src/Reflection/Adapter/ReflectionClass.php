@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 
 class ReflectionClass extends CoreReflectionClass
 {
@@ -111,7 +112,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getDocComment()
     {
-        return $this->betterReflectionClass->getDocComment();
+        return $this->betterReflectionClass->getDocComment() ?: false;
     }
 
     /**
@@ -127,7 +128,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function hasMethod($name)
     {
-        return $this->betterReflectionClass->hasMethod($name);
+        return $this->betterReflectionClass->hasMethod($this->getMethodRealName($name));
     }
 
     /**
@@ -135,7 +136,20 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethod($name)
     {
-        return new ReflectionMethod($this->betterReflectionClass->getMethod($name));
+        return new ReflectionMethod($this->betterReflectionClass->getMethod($this->getMethodRealName($name)));
+    }
+
+    private function getMethodRealName(string $name) : string
+    {
+        $realMethodNames = \array_map(function (BetterReflectionMethod $method) : string {
+            return $method->getName();
+        }, $this->betterReflectionClass->getMethods());
+
+        $methodNames = \array_combine(\array_map(function (string $methodName) : string {
+            return \strtolower($methodName);
+        }, $realMethodNames), $realMethodNames);
+
+        return $methodNames[\strtolower($name)] ?? $name;
     }
 
     /**
@@ -358,7 +372,7 @@ class ReflectionClass extends CoreReflectionClass
         $parentClass = $this->betterReflectionClass->getParentClass();
 
         if (null === $parentClass) {
-            return null;
+            return false;
         }
 
         return new self($parentClass);
@@ -369,7 +383,15 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isSubclassOf($class)
     {
-        return $this->betterReflectionClass->isSubclassOf($class);
+        $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
+
+        $parentClassNames = \array_combine(\array_map(function (string $parentClassName) : string {
+            return \strtolower($parentClassName);
+        }, $realParentClassNames), $realParentClassNames);
+
+        $realParentClassName = $parentClassNames[\strtolower($class)] ?? $class;
+
+        return $this->betterReflectionClass->isSubclassOf($realParentClassName);
     }
 
     /**
@@ -417,7 +439,15 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function implementsInterface($interface)
     {
-        return $this->betterReflectionClass->implementsInterface($interface);
+        $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
+
+        $interfaceNames = \array_combine(\array_map(function (string $interfaceName) : string {
+            return \strtolower($interfaceName);
+        }, $realInterfaceNames), $realInterfaceNames);
+
+        $realInterfaceName = $interfaceNames[\strtolower($interface)] ?? $interface;
+
+        return $this->betterReflectionClass->implementsInterface($realInterfaceName);
     }
 
     /**

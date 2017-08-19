@@ -64,4 +64,16 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
         $adapter = new ReflectionClassConstantAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
     }
+
+    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getDocComment')
+            ->willReturn('');
+
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+
+        self::assertFalse($reflectionClassConstantAdapter->getDocComment());
+    }
 }

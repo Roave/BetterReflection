@@ -95,7 +95,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getDocComment()
     {
-        return $this->betterReflectionFunction->getDocComment();
+        return $this->betterReflectionFunction->getDocComment() ?: false;
     }
 
     /**

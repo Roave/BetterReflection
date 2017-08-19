@@ -22,7 +22,7 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
         ))->getAllClasses();
 
         self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        self::assertCount(8, $classes);
+        self::assertCount(9, $classes);
     }
 
     public function testReflectProxiesToSourceLocator() : void

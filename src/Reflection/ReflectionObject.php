@@ -391,6 +391,14 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getParentClassNames() : array
+    {
+        return $this->reflectionClass->getParentClassNames();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDocComment() : string
     {
         return $this->reflectionClass->getDocComment();

@@ -119,7 +119,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function getDocComment()
     {
-        return $this->betterReflectionProperty->getDocComment();
+        return $this->betterReflectionProperty->getDocComment() ?: false;
     }
 
     /**

@@ -95,7 +95,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getDocComment()
     {
-        return $this->betterReflectionMethod->getDocComment();
+        return $this->betterReflectionMethod->getDocComment() ?: false;
     }
 
     /**

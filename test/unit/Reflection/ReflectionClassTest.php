@@ -379,6 +379,14 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         self::assertNull($reflection->getParentClass());
     }
 
+    public function testGetParentClassNames() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
+        $childReflection = $reflector->reflect(Fixture\ClassWithTwoParents::class);
+
+        self::assertSame(['Roave\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Roave\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
+    }
+
     public function startEndLineProvider() : array
     {
         return [
