@@ -7,6 +7,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use RecursiveDirectoryIterator;
@@ -28,10 +29,10 @@ class DirectoriesSourceLocator implements SourceLocator
      * @throws InvalidDirectory
      * @throws InvalidFileInfo
      */
-    public function __construct(array $directories)
+    public function __construct(array $directories, ?Locator $locator = null)
     {
         $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_map(
-            function ($directory) {
+            function ($directory) use ($locator) {
                 if (! is_string($directory)) {
                     throw InvalidDirectory::fromNonStringValue($directory);
                 }
@@ -40,10 +41,13 @@ class DirectoriesSourceLocator implements SourceLocator
                     throw InvalidDirectory::fromNonDirectory($directory);
                 }
 
-                return new FileIteratorSourceLocator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
-                    $directory,
-                    RecursiveDirectoryIterator::SKIP_DOTS
-                )));
+                return new FileIteratorSourceLocator(
+                    new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                        $directory,
+                        RecursiveDirectoryIterator::SKIP_DOTS
+                    )),
+                    $locator
+                );
             },
             $directories
         )));
