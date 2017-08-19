@@ -46,6 +46,10 @@ namespace Roave\BetterReflectionTest\Fixture {
     {
     }
 
+    class ClassWithTwoParents extends ClassWithParent
+    {
+    }
+
     abstract class AbstractClass
     {
     }

@@ -93,11 +93,11 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Returns the doc comment for this constant
      *
-     * @return string
+     * @return string|false
      */
-    public function getDocComment() : string
+    public function getDocComment()
     {
-        return $this->betterClassConstant->getDocComment();
+        return $this->betterClassConstant->getDocComment() ?: false;
     }
 
     /**

@@ -107,4 +107,16 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionFunctionAdapter::export('str_replace');
     }
+
+    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getDocComment')
+            ->willReturn('');
+
+        $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertFalse($reflectionFunctionAdapter->getDocComment());
+    }
 }

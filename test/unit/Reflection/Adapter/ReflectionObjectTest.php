@@ -126,4 +126,110 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         self::assertInternalType('string', $exported);
         self::assertContains('stdClass', $exported);
     }
+
+    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getDocComment')
+            ->willReturn('');
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getDocComment());
+    }
+
+    public function testGetParentObjectReturnsFalseWhenNoParent() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getParentClass')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getParentClass());
+    }
+
+    public function testHasMethodIsCaseInsensitive() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getName')
+            ->willReturn('foo');
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getMethods')
+            ->willReturn([
+                $betterReflectionMethod
+            ]);
+        $betterReflectionObject
+            ->method('hasMethod')
+            ->with('foo')
+            ->willReturn(true);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertTrue($reflectionObjectAdapter->hasMethod('foo'));
+        self::assertTrue($reflectionObjectAdapter->hasMethod('FOO'));
+    }
+
+    public function testGetMethodIsCaseInsensitive() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getName')
+            ->willReturn('foo');
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getMethods')
+            ->willReturn([
+                $betterReflectionMethod
+            ]);
+        $betterReflectionObject
+            ->method('getMethod')
+            ->with('foo')
+            ->willReturn($betterReflectionMethod);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertSame('foo', $reflectionObjectAdapter->getMethod('foo')->getName());
+        self::assertSame('foo', $reflectionObjectAdapter->getMethod('FOO')->getName());
+    }
+
+    public function testIsSubclassOfIsCaseInsensitive() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getParentClassNames')
+            ->willReturn(['Foo']);
+        $betterReflectionObject
+            ->method('isSubclassOf')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertTrue($reflectionObjectAdapter->isSubclassOf('Foo'));
+        self::assertTrue($reflectionObjectAdapter->isSubclassOf('foo'));
+    }
+
+    public function testImplementsInterfaceIsCaseInsensitive() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getInterfaceNames')
+            ->willReturn(['Foo']);
+        $betterReflectionObject
+            ->method('implementsInterface')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertTrue($reflectionObjectAdapter->implementsInterface('Foo'));
+        self::assertTrue($reflectionObjectAdapter->implementsInterface('foo'));
+    }
 }
