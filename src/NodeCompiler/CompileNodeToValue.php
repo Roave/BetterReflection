@@ -73,7 +73,7 @@ class CompileNodeToValue
         foreach ($arrayNode->items as $arrayItem) {
             $compiledValue = $this($arrayItem->value, $context);
 
-            if (null == $arrayItem->key) {
+            if (null === $arrayItem->key) {
                 $compiledArray[] = $compiledValue;
                 continue;
             }
