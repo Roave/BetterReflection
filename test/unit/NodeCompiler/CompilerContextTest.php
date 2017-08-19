@@ -12,7 +12,7 @@ use Roave\BetterReflection\Util\FileHelper;
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompilerContext
  */
-class CompilerContextTest extends \PHPUnit_Framework_TestCase
+class CompilerContextTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreatingContextWithoutSelf() : void
     {

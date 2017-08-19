@@ -10,7 +10,7 @@ use InvalidArgumentException;
 /**
  * @covers \Roave\BetterReflection\Identifier\IdentifierType
  */
-class IdentifierTypeTest extends \PHPUnit_Framework_TestCase
+class IdentifierTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return string[][]

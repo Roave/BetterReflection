@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\NotAnObject
  */
-class NotAnObjectTest extends PHPUnit_Framework_TestCase
+class NotAnObjectTest extends TestCase
 {
     public function testFromNonObject() : void
     {

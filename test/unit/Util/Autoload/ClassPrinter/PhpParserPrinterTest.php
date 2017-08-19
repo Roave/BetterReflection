@@ -10,7 +10,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter
  */
-final class PhpParserPrinterTest extends \PHPUnit_Framework_TestCase
+final class PhpParserPrinterTest extends \PHPUnit\Framework\TestCase
 {
     public function testPrinting() : void
     {

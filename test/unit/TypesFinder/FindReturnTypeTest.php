@@ -13,7 +13,7 @@ use phpDocumentor\Reflection\Types;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindReturnType
  */
-class FindReturnTypeTest extends \PHPUnit_Framework_TestCase
+class FindReturnTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return array

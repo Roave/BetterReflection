@@ -10,7 +10,7 @@ use phpDocumentor\Reflection\Types;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionType
  */
-class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
+class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateFromType() : void
     {

@@ -13,7 +13,7 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator
  */
-class ClosureSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

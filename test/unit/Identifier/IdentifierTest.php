@@ -8,7 +8,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 /**
  * @covers \Roave\BetterReflection\Identifier\Identifier
  */
-class IdentifierTest extends \PHPUnit_Framework_TestCase
+class IdentifierTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetName() : void
     {

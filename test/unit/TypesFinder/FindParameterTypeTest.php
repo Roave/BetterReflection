@@ -16,7 +16,7 @@ use phpDocumentor\Reflection\Types;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindParameterType
  */
-class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
+class FindParameterTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return array

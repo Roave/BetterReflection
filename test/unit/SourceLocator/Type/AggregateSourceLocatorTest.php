@@ -14,7 +14,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator
  */
-class AggregateSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class AggregateSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

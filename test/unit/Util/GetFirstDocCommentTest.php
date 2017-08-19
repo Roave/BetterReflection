@@ -11,7 +11,7 @@ use PhpParser\Comment\Doc;
 /**
  * @covers \Roave\BetterReflection\Util\GetFirstDocComment
  */
-class GetFirstDocCommentTest extends \PHPUnit_Framework_TestCase
+class GetFirstDocCommentTest extends \PHPUnit\Framework\TestCase
 {
     public function testWithComment() : void
     {

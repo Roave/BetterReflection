@@ -9,7 +9,7 @@ use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCh
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
  */
-final class SignatureCheckFailedTest extends \PHPUnit_Framework_TestCase
+final class SignatureCheckFailedTest extends \PHPUnit\Framework\TestCase
 {
     public function testFromReflectionClass() : void
     {

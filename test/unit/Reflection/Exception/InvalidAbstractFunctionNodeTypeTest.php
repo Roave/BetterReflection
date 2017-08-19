@@ -6,12 +6,12 @@ namespace Roave\BetterReflectionTest\Reflection\Exception;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use PhpParser\Node;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
  */
-class InvalidAbstractFunctionNodeTypeTest extends PHPUnit_Framework_TestCase
+class InvalidAbstractFunctionNodeTypeTest extends TestCase
 {
     public function testFromNode() : void
     {

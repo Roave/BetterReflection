@@ -8,7 +8,7 @@ use Roave\BetterReflection\Util\FileHelper;
 /**
  * @covers \Roave\BetterReflection\Util\FileHelper
  */
-class FindHelperTest extends \PHPUnit_Framework_TestCase
+class FindHelperTest extends \PHPUnit\Framework\TestCase
 {
     public function testNormalizeWindowsPath() : void
     {

@@ -10,7 +10,7 @@ use phpDocumentor\Reflection\Types\Context;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes
  */
-class ResolveTypesTest extends \PHPUnit_Framework_TestCase
+class ResolveTypesTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return array

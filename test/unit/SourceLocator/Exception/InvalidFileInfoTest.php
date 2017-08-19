@@ -8,7 +8,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo
  */
-class InvalidFileInfoTest extends \PHPUnit_Framework_TestCase
+class InvalidFileInfoTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider nonSplFileInfoProvider

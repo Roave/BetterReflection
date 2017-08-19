@@ -20,7 +20,7 @@ use PhpParser\Parser;
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
  */
-class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
+class CompileNodeToValueTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param string $phpCode

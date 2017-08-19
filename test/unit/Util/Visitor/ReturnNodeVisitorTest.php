@@ -10,7 +10,7 @@ use PhpParser\NodeTraverser;
 /**
  * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor
  */
-class ReturnNodeVisitorTest extends \PHPUnit_Framework_TestCase
+class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
 {
     public function outOfScopeNodeTypeProvider() : array
     {

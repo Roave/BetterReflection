@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType
  */
-class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
+class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
 {
     public function coreReflectionTypeNamesProvider() : array
     {

@@ -15,7 +15,7 @@ use Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator
  */
-class AbstractSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class AbstractSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     public function testLocateIdentifierCallsFindReflection() : void
     {

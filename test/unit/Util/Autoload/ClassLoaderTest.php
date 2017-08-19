@@ -16,7 +16,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
  */
-final class ClassLoaderTest extends \PHPUnit_Framework_TestCase
+final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testAutoloadSelfRegisters() : void
     {

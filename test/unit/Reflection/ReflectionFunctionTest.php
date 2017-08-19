@@ -11,7 +11,7 @@ use phpDocumentor\Reflection\Types\Boolean;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
  */
-class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
+class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
 {
     public function testImplementsReflector() : void
     {

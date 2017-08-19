@@ -29,7 +29,7 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
  */
-class ReflectionFunctionAbstractTest extends \PHPUnit_Framework_TestCase
+class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 {
     public function testExportThrowsException() : void
     {

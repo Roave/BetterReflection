@@ -25,7 +25,7 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
  */
-class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
+class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ClassReflector

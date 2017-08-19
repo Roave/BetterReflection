@@ -10,7 +10,7 @@ use Zend\Code\Reflection\ClassReflection;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Reflection\SourceStubber
  */
-class SourceStubberTest extends \PHPUnit_Framework_TestCase
+class SourceStubberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SourceStubber

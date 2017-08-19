@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
  */
-class TwoAnonymousClassesOnSameLineTest extends PHPUnit_Framework_TestCase
+class TwoAnonymousClassesOnSameLineTest extends TestCase
 {
     public function testCreate() : void
     {

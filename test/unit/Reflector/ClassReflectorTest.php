@@ -13,7 +13,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\Reflector\ClassReflector
  */
-class ClassReflectorTest extends \PHPUnit_Framework_TestCase
+class ClassReflectorTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetClassesFromFile() : void
     {

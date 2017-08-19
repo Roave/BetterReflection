@@ -13,7 +13,7 @@ use Roave\Signature\SignerInterface;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
  */
-final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
+final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testFileCacheWriterCreatesFileWithPrintedCode() : void
     {

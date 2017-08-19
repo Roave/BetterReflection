@@ -11,7 +11,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\Reflector\FunctionReflector
  */
-class FunctionReflectorTest extends \PHPUnit_Framework_TestCase
+class FunctionReflectorTest extends \PHPUnit\Framework\TestCase
 {
     public function testReflectProxiesToGenericReflectMethod() : void
     {

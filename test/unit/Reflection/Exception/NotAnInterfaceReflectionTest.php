@@ -7,12 +7,12 @@ use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\Fixture;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection
  */
-class NotAnInterfaceReflectionTest extends PHPUnit_Framework_TestCase
+class NotAnInterfaceReflectionTest extends TestCase
 {
     public function testFromClass() : void
     {
