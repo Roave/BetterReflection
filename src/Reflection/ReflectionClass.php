@@ -883,18 +883,22 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getTraits() : array
     {
-        $traitUsages = array_filter($this->node->stmts, function (Node $node) {
-            return $node instanceof TraitUse;
-        });
-
-        $traitNameNodes = [];
-        foreach ($traitUsages as $traitUsage) {
-            $traitNameNodes = array_merge($traitNameNodes, $traitUsage->traits);
-        }
-
-        return array_map(function (Node\Name $importedTrait) {
-            return $this->reflectClassForNamedNode($importedTrait);
-        }, $traitNameNodes);
+        return \array_map(
+            function (Node\Name $importedTrait) {
+                return $this->reflectClassForNamedNode($importedTrait);
+            },
+            \array_merge(
+                [],
+                ...\array_map(
+                    function (TraitUse $traitUse) : array {
+                        return $traitUse->traits;
+                    },
+                    \array_filter($this->node->stmts, function (Node $node) : bool {
+                        return $node instanceof TraitUse;
+                    })
+                )
+            )
+        );
     }
 
     /**
