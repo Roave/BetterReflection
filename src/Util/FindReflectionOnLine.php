@@ -54,7 +54,6 @@ final class FindReflectionOnLine
      */
     public function __invoke(string $filename, int $lineNumber)
     {
-        $lineNumber = (int)$lineNumber;
         $reflections = $this->computeReflections($filename);
 
         foreach ($reflections as $reflection) {

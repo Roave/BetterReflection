@@ -197,7 +197,7 @@ class ReflectionParameter implements \Reflector
         $param->reflector = $reflector;
         $param->node = $node;
         $param->function = $function;
-        $param->parameterIndex = (int)$parameterIndex;
+        $param->parameterIndex = $parameterIndex;
         return $param;
     }
 
