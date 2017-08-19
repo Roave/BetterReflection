@@ -50,7 +50,12 @@ class FindReturnType
     private function createContextForFunction(ReflectionFunctionAbstract $function) : Context
     {
         if ($function instanceof ReflectionMethod) {
-            $function = $function->getDeclaringClass();
+            $declaringClass = $function->getDeclaringClass();
+
+            return (new ContextFactory())->createForNamespace(
+                $declaringClass->getNamespaceName(),
+                $declaringClass->getLocatedSource()->getSource()
+            );
         }
 
         return (new ContextFactory())->createForNamespace(
