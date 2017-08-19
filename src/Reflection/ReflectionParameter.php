@@ -241,14 +241,18 @@ class ReflectionParameter implements \Reflector
      */
     private function findParentClassDeclaringConstant(string $constantName): string
     {
-        $class = $this->function->getDeclaringClass();
+        /* @var $method ReflectionMethod */
+        $method = $this->function;
+        $class  = $method->getDeclaringClass();
+
         do {
             if ($class->hasConstant($constantName)) {
                 return $class->getName();
             }
         } while ($class = $class->getParentClass());
 
-        throw new LogicException("Failed to find parent class of constant '$constantName'.");
+        // note: this code is theoretically unreachable, so don't expect any coverage on it
+        throw new \LogicException("Failed to find parent class of constant '$constantName'.");
     }
 
     /**
