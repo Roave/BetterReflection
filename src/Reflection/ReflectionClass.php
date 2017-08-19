@@ -1283,19 +1283,20 @@ class ReflectionClass implements Reflection, \Reflector
             throw new Exception\ClassDoesNotExist('Property cannot be set as the class is not loaded');
         }
 
-        if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
+        $property = $this->getProperty($propertyName);
+
+        if (! $property || ! $property->isStatic()) {
             throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         // PHP behaviour is to simply say "property does not exist" if accessing
         // protected or private values. Here we be a little more explicit in
         // reasoning...
-        if (!$this->getProperty($propertyName)->isPublic()) {
+        if (! $property->isPublic()) {
             throw new Exception\PropertyNotPublic('Property is not public');
         }
 
-        $className = $this->getName();
-        $className::${$propertyName} = $value;
+        $this->getName()::${$propertyName} = $value;
     }
 
     /**
