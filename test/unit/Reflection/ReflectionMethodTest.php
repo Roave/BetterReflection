@@ -325,7 +325,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
         return \array_combine(
             \array_map(
-                function (array $methodData) {
+                function (array $methodData) : string {
                     return $methodData[0];
                 },
                 $methods

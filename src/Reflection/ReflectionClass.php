@@ -104,23 +104,23 @@ class ReflectionClass implements Reflection, \Reflector
         $format .= "  - Methods [%d] {%s\n  }\n";
         $format .= "}\n";
 
-        $staticProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) {
+        $staticProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
             return $property->isStatic();
         });
-        $staticMethods = \array_filter($this->getMethods(), function (ReflectionMethod $method) {
+        $staticMethods = \array_filter($this->getMethods(), function (ReflectionMethod $method) : bool {
             return $method->isStatic();
         });
-        $defaultProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) {
+        $defaultProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
             return !$property->isStatic() && $property->isDefault();
         });
-        $dynamicProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) {
+        $dynamicProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
             return !$property->isStatic() && !$property->isDefault();
         });
-        $methods = \array_filter($this->getMethods(), function (ReflectionMethod $method) {
+        $methods = \array_filter($this->getMethods(), function (ReflectionMethod $method) : bool {
             return !$method->isStatic();
         });
 
-        $buildString = function (array $items, $indentLevel = 4) {
+        $buildString = function (array $items, int $indentLevel = 4) : string {
             if (!\count($items)) {
                 return '';
             }
@@ -128,7 +128,7 @@ class ReflectionClass implements Reflection, \Reflector
             return $indent . \implode($indent, \explode("\n", \implode("\n", $items)));
         };
 
-        $buildConstants = function (array $items, $indentLevel = 4) {
+        $buildConstants = function (array $items, int $indentLevel = 4) : string {
             $str = '';
 
             /**
@@ -304,7 +304,7 @@ class ReflectionClass implements Reflection, \Reflector
             \array_merge(
                 [],
                 ...\array_map(
-                    function (ReflectionClass $ancestor) {
+                    function (ReflectionClass $ancestor) : array {
                         return $ancestor->getMethods();
                     },
                     \array_values(\array_merge(
@@ -315,7 +315,7 @@ class ReflectionClass implements Reflection, \Reflector
                 )
             ),
             \array_map(
-                function (ClassMethod $methodNode) {
+                function (ClassMethod $methodNode) : ReflectionMethod {
                     return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
                 },
                 $this->node->getMethods()
@@ -387,7 +387,7 @@ class ReflectionClass implements Reflection, \Reflector
     {
         /* @var $methods \ReflectionMethod[] */
         $methods = \array_map(
-            function (ClassMethod $methodNode) {
+            function (ClassMethod $methodNode) : ReflectionMethod {
                 return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
             },
             $this->node->getMethods()
@@ -558,10 +558,10 @@ class ReflectionClass implements Reflection, \Reflector
         $allReflectionConstants = \array_merge(
             \array_values($this->getImmediateReflectionConstants()),
             ...\array_map(
-                function (ReflectionClass $ancestor) {
+                function (ReflectionClass $ancestor) : array {
                     return \array_filter(
                         \array_values($ancestor->getReflectionConstants()),
-                        function (ReflectionClassConstant $classConstant) {
+                        function (ReflectionClassConstant $classConstant) : bool {
                             return !$classConstant->isPrivate();
                         }
                     );
@@ -569,7 +569,7 @@ class ReflectionClass implements Reflection, \Reflector
                 \array_filter([$this->getParentClass()])
             ),
             ...\array_map(
-                function (ReflectionClass $interface) {
+                function (ReflectionClass $interface) : array {
                     return \array_values($interface->getReflectionConstants());
                 },
                 \array_values($this->getInterfaces())
@@ -655,10 +655,10 @@ class ReflectionClass implements Reflection, \Reflector
             \array_merge(
                 [],
                 ...\array_map(
-                    function (ReflectionClass $ancestor) use ($filter) {
+                    function (ReflectionClass $ancestor) use ($filter) : array {
                         return \array_filter(
                             $ancestor->getProperties($filter),
-                            function (ReflectionProperty $property) {
+                            function (ReflectionProperty $property) : bool {
                                 return !$property->isPrivate();
                             }
                         );
@@ -712,7 +712,7 @@ class ReflectionClass implements Reflection, \Reflector
             function (ReflectionProperty $property) {
                 return $property->getDefaultValue();
             },
-            \array_filter($this->getProperties(), function (ReflectionProperty $property) {
+            \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
                 return $property->isDefault();
             })
         );
@@ -896,7 +896,7 @@ class ReflectionClass implements Reflection, \Reflector
     public function getTraits() : array
     {
         return \array_map(
-            function (Node\Name $importedTrait) {
+            function (Node\Name $importedTrait) : ReflectionClass {
                 return $this->reflectClassForNamedNode($importedTrait);
             },
             \array_merge(
@@ -965,7 +965,7 @@ class ReflectionClass implements Reflection, \Reflector
     public function getTraitNames() : array
     {
         return \array_map(
-            function (ReflectionClass $trait) {
+            function (ReflectionClass $trait) : string {
                 return $trait->getName();
             },
             $this->getTraits()
@@ -993,7 +993,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getTraitAliases() : array
     {
-        $traitUsages = \array_filter($this->node->stmts, function (Node $node) {
+        $traitUsages = \array_filter($this->node->stmts, function (Node $node) : bool {
             return $node instanceof TraitUse;
         });
 
@@ -1037,7 +1037,7 @@ class ReflectionClass implements Reflection, \Reflector
     public function getInterfaces() : array
     {
         return \array_merge(...\array_map(
-            function (self $reflectionClass) {
+            function (self $reflectionClass) : array {
                 return $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName();
             },
             $this->getInheritanceClassHierarchy()
@@ -1065,7 +1065,7 @@ class ReflectionClass implements Reflection, \Reflector
     public function getInterfaceNames() : array
     {
         return \array_values(\array_map(
-            function (self $interface) {
+            function (self $interface) : string {
                 return $interface->getName();
             },
             $this->getInterfaces()
@@ -1110,7 +1110,7 @@ class ReflectionClass implements Reflection, \Reflector
         return \in_array(
             \ltrim($className, '\\'),
             \array_map(
-                function (self $reflectionClass) {
+                function (self $reflectionClass) : string {
                     return $reflectionClass->getName();
                 },
                 \array_slice(\array_reverse($this->getInheritanceClassHierarchy()), 1)
@@ -1189,7 +1189,7 @@ class ReflectionClass implements Reflection, \Reflector
             return \array_merge(
                 [],
                 ...\array_map(
-                    function (Node\Name $interfaceName) {
+                    function (Node\Name $interfaceName) : array {
                         return $this
                             ->reflectClassForNamedNode($interfaceName)
                             ->getInterfacesHierarchy();
@@ -1234,7 +1234,7 @@ class ReflectionClass implements Reflection, \Reflector
         return \array_merge(
             [$this->getName() => $this],
             ...\array_map(
-                function (Node\Name $interfaceName) {
+                function (Node\Name $interfaceName) : array {
                     return $this
                         ->reflectClassForNamedNode($interfaceName)
                         ->getInterfacesHierarchy();
@@ -1420,7 +1420,7 @@ class ReflectionClass implements Reflection, \Reflector
 
         foreach ($this->node->stmts as $key => $stmt) {
             if ($stmt instanceof PropertyNode) {
-                $propertyNames = \array_map(function (Node\Stmt\PropertyProperty $propertyProperty) {
+                $propertyNames = \array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
                     return \strtolower($propertyProperty->name);
                 }, $stmt->props);
 

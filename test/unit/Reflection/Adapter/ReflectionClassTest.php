@@ -19,7 +19,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = \get_class_methods(CoreReflectionClass::class);
-        return \array_combine($methods, \array_map(function ($i) { return [$i]; }, $methods));
+        return \array_combine($methods, \array_map(function (string $i) : array { return [$i]; }, $methods));
     }
 
     /**

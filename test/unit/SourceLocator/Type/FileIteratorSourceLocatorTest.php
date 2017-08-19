@@ -45,7 +45,7 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertCount(2, $classes);
 
         $classNames = \array_map(
-            function (ReflectionClass $reflectionClass) {
+            function (ReflectionClass $reflectionClass) : string {
                 return $reflectionClass->getName();
             },
             $classes

@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 
 class ReflectionClass extends CoreReflectionClass
@@ -235,7 +236,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants()
     {
-        return \array_map(function ($betterConstant) {
+        return \array_map(function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
         }, $this->betterReflectionClass->getReflectionConstants());
     }

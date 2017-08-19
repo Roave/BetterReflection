@@ -40,7 +40,7 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
         self::assertCount(4, $classes);
 
         $classNames = \array_map(
-            function (ReflectionClass $reflectionClass) {
+            function (ReflectionClass $reflectionClass) : string {
                 return $reflectionClass->getName();
             },
             $classes

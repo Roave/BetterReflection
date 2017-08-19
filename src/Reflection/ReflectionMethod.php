@@ -133,7 +133,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             $this->getStartLine(),
             $this->getEndLine(),
             \count($this->getParameters()),
-            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
+            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) : string {
                 return $str . "\n    " . $param;
             }, '')
         );
