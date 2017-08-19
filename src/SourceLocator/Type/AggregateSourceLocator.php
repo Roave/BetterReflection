@@ -47,12 +47,11 @@ class AggregateSourceLocator implements SourceLocator
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        $located = [];
-
-        foreach ($this->sourceLocators as $sourceLocator) {
-            $located = array_merge($located, $sourceLocator->locateIdentifiersByType($reflector, $identifierType));
-        }
-
-        return $located;
+        return \array_merge(
+            [],
+            ...\array_map(function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
+                return $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
+            }, $this->sourceLocators)
+        );
     }
 }
