@@ -21,11 +21,6 @@ class FindTypeFromAst
      */
     public function __invoke($astType, LocatedSource $locatedSource, string $namespace = '') : ?Type
     {
-        $context = (new ContextFactory())->createForNamespace(
-            $namespace,
-            $locatedSource->getSource()
-        );
-
         // @todo Nullable types are effectively ignored - to be fixed
         /* @see https://github.com/Roave/BetterReflection/issues/202 */
         if ($astType instanceof NullableType) {
@@ -33,24 +28,34 @@ class FindTypeFromAst
         }
 
         if (is_string($astType)) {
-            $typeString = $astType;
+            return $this->typeStringToType($astType, $locatedSource, $namespace);
+        }
+
+        if ($astType instanceof Name\FullyQualified) {
+            // If the AST determined this is a "fully qualified" name, prepend \
+            return $this->typeStringToType('\\' . $astType->toString(), $locatedSource, $namespace);
         }
 
         if ($astType instanceof Name) {
-            $typeString = $astType->toString();
-
-            // If the AST determined this is a "fully qualified" name, prepend \
-            if ($astType instanceof Name\FullyQualified) {
-                $typeString = '\\' . $typeString;
-            }
+            return $this->typeStringToType($astType->toString(), $locatedSource, $namespace);
         }
 
-        if (!isset($typeString)) {
-            return null;
-        }
+        return null;
+    }
 
-        $types = (new ResolveTypes())->__invoke([$typeString], $context);
+    private function typeStringToType(string $typeString, LocatedSource $locatedSource, string $namespace) : ?Type
+    {
+        $types = (new ResolveTypes())
+            ->__invoke(
+                [$typeString],
+                (new ContextFactory())->createForNamespace(
+                    $namespace,
+                    $locatedSource->getSource()
+                )
+            );
 
-        return reset($types);
+        $firstType = reset($types);
+
+        return $firstType ?: null;
     }
 }
