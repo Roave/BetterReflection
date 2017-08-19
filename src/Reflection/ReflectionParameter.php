@@ -47,9 +47,9 @@ class ReflectionParameter implements \Reflector
     private $isDefaultValueConstant = false;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $defaultValueConstantName = null;
+    private $defaultValueConstantName;
 
     /**
      * @var int
