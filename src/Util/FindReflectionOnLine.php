@@ -3,15 +3,21 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
 
+use PhpParser\Parser;
+use PhpParser\ParserFactory;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserLocator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
@@ -23,9 +29,17 @@ final class FindReflectionOnLine
      */
     private $sourceLocator;
 
-    public function __construct(SourceLocator $sourceLocator)
+    /**
+     * @var Locator
+     */
+    private $locator;
+
+    public function __construct(SourceLocator $sourceLocator, ?Locator $locator = null)
     {
         $this->sourceLocator = $sourceLocator;
+        $this->locator       = $locator ?? new PhpParserLocator(
+            new MemoizingParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7))
+        );
     }
 
     /**
@@ -33,11 +47,15 @@ final class FindReflectionOnLine
      */
     public static function buildDefaultFinder() : self
     {
-        return new self(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new EvaledCodeSourceLocator(),
-            new AutoloadSourceLocator(),
-        ]));
+        $locator = new PhpParserLocator(
+            new MemoizingParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7))
+        );
+
+        return new self(new MemoizingSourceLocator(new AggregateSourceLocator([
+            new PhpInternalSourceLocator($locator),
+            new EvaledCodeSourceLocator($locator),
+            new AutoloadSourceLocator($locator),
+        ])));
     }
 
     /**
@@ -85,7 +103,7 @@ final class FindReflectionOnLine
      */
     private function computeReflections(string $filename) : array
     {
-        $singleFileSourceLocator = new SingleFileSourceLocator($filename);
+        $singleFileSourceLocator = new SingleFileSourceLocator($filename, $this->locator);
         $reflector = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return array_merge(

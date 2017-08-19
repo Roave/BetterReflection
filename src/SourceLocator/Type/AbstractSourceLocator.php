@@ -9,6 +9,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 abstract class AbstractSourceLocator implements SourceLocator
@@ -33,7 +34,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     public function __construct(AstLocator $astLocator = null)
     {
-        $this->astLocator = (null !== $astLocator) ? $astLocator : new AstLocator();
+        $this->astLocator = $astLocator ?? new PhpParserLocator();
     }
 
     /**

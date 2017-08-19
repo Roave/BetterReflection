@@ -12,13 +12,14 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Locator
+ * @covers \Roave\BetterReflection\SourceLocator\Ast\PhpParserLocator
  */
-class LocatorTest extends \PHPUnit_Framework_TestCase
+class PhpParserLocatorTest extends \PHPUnit_Framework_TestCase
 {
     private function getIdentifier($name, $type) : Identifier
     {
@@ -32,7 +33,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         class Bar {}
         ';
 
-        $classInfo = (new Locator())->findReflection(
+        $classInfo = (new PhpParserLocator())->findReflection(
             new ClassReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS)
@@ -47,7 +48,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         class Foo {}
         ';
 
-        $classInfo = (new Locator())->findReflection(
+        $classInfo = (new PhpParserLocator())->findReflection(
             new ClassReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
@@ -62,7 +63,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         function foo() {}
         ';
 
-        $functionInfo = (new Locator())->findReflection(
+        $functionInfo = (new PhpParserLocator())->findReflection(
             new FunctionReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION)
@@ -76,7 +77,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         $php = '<?php';
 
         $this->expectException(IdentifierNotFound::class);
-        (new Locator())->findReflection(
+        (new PhpParserLocator())->findReflection(
             new ClassReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
@@ -91,7 +92,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
         ";
 
         $this->expectException(IdentifierNotFound::class);
-        (new Locator())->findReflection(
+        (new PhpParserLocator())->findReflection(
             new ClassReflector(new StringSourceLocator($php)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
@@ -100,7 +101,7 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode() : void
     {
-        $locator = new Locator();
+        $locator = new PhpParserLocator();
 
         $phpCode = '<?php syntax error';
 
