@@ -12,7 +12,6 @@
         "roave/signature": "^1.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.13.1",
         "phpunit/phpunit": "^5.7.19",
         "phpunit/phpunit-mock-objects": "^3.4.3"
     },
