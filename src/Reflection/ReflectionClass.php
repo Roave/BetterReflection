@@ -993,16 +993,15 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getTraitAliases() : array
     {
+        /* @var Node\Stmt\TraitUse[] $traitUsages */
         $traitUsages = \array_filter($this->node->stmts, function (Node $node) : bool {
             return $node instanceof TraitUse;
         });
 
         $resolvedAliases = [];
 
-        /* @var Node\Stmt\TraitUse[] $traitUsages */
         foreach ($traitUsages as $traitUsage) {
             $traitNames = $traitUsage->traits;
-
             $adaptations = $traitUsage->adaptations;
 
             foreach ($adaptations as $adaptation) {
