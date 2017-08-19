@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
@@ -29,19 +30,10 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     public function __construct(string $filename)
     {
         parent::__construct();
+
+        FileChecker::checkFile($filename);
+
         $this->filename = $filename;
-
-        if (empty($this->filename)) {
-            throw new InvalidFileLocation('Filename was empty');
-        }
-
-        if (!file_exists($this->filename)) {
-            throw new InvalidFileLocation('File does not exist');
-        }
-
-        if (!is_file($this->filename)) {
-            throw new InvalidFileLocation('Is not a file: ' . $this->filename);
-        }
     }
 
     /**

@@ -45,6 +45,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
+            ['isAnonymous', null, true, []],
             ['isInternal', null, true, []],
             ['isUserDefined', null, true, []],
             ['isInstantiable', null, true, []],

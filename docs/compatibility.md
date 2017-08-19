@@ -35,6 +35,7 @@
 | implementsInterface | :heavy_check_mark: Yes |
 | inNamespace | :heavy_check_mark: Yes |
 | isAbstract | :heavy_check_mark: Yes |
+| isAnonymous | :heavy_check_mark: Yes |
 | isCloneable | :heavy_check_mark: Yes |
 | isFinal | :heavy_check_mark: Yes |
 | isInstance | :heavy_check_mark: Yes  |

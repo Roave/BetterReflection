@@ -43,48 +43,4 @@ class LocatedSourceTest extends \PHPUnit_Framework_TestCase
         $locatedSource = new LocatedSource($source, $file);
         self::assertSame('', $locatedSource->getSource());
     }
-
-    public function testConstructorThrowsExceptionIfEmptyFileGiven() : void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('Filename was empty');
-        new LocatedSource('<?php', '');
-    }
-
-    public function testConstructorThrowsExceptionIfFileDoesNotExist() : void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('File does not exist');
-        new LocatedSource('<?php', 'sdklfjdfslsdfhlkjsdglkjsdflgkj');
-    }
-
-    public function testConstructorThrowsExceptionIfFileIsNotAFile() : void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('Is not a file');
-        new LocatedSource('<?php', __DIR__);
-    }
-
-    public function testConstructorThrowsExceptionIfFileIsNotReadable() : void
-    {
-        if (strpos(PHP_OS, 'WIN') === 0) {
-            self::markTestSkipped('It\'s not possible to change file mode on Windows');
-        }
-
-        $file = __DIR__ . '/../../Fixture/NoNamespace.php';
-
-        $originalPermission = fileperms($file);
-        chmod($file, 0000);
-
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('File is not readable');
-
-        try {
-            new LocatedSource('<?php', $file);
-        } catch (\Exception $e) {
-            throw $e;
-        } finally {
-            chmod($file, $originalPermission);
-        }
-    }
 }

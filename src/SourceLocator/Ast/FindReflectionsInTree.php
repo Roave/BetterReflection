@@ -97,7 +97,8 @@ final class FindReflectionsInTree
                 }
 
                 if ($node instanceof Node\Stmt\ClassLike) {
-                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
+                    $classNamespace = null === $node->name ? null : $this->currentNamespace;
+                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
 
                     if ($this->identifierType->isMatchingReflector($reflection)) {
                         $this->reflections[] = $reflection;
