@@ -7,7 +7,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
@@ -49,8 +51,10 @@ class ClassReflectorTest extends \PHPUnit_Framework_TestCase
     {
         $defaultReflector = ClassReflector::buildDefaultReflector();
 
-        $sourceLocator = $this->getObjectAttribute($defaultReflector, 'sourceLocator');
-        self::assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
+        self::assertInstanceOf(
+            SourceLocator::class,
+            $this->getObjectAttribute($defaultReflector, 'sourceLocator')
+        );
     }
 
     public function testThrowsExceptionWhenIdentifierNotFound() : void

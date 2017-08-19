@@ -9,6 +9,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
@@ -32,11 +33,11 @@ class ClassReflector implements Reflector
      */
     public static function buildDefaultReflector() : self
     {
-        return new self(new AggregateSourceLocator([
+        return new self(new MemoizingSourceLocator(new AggregateSourceLocator([
             new PhpInternalSourceLocator(),
             new EvaledCodeSourceLocator(),
             new AutoloadSourceLocator(),
-        ]));
+        ])));
     }
 
     /**
