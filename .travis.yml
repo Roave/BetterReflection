@@ -15,12 +15,7 @@ before_script:
 jobs:
   include:
     - stage: Test
-      php: 7.1
       script: vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
-
-    - stage: Test
-      php: 7.2
-      script: vendor/bin/phpunit --colors
 
     - stage: Test Compatibility
       php: 7.1
@@ -42,3 +37,6 @@ jobs:
       php: 7.1
       before_script: wget https://scrutinizer-ci.com/ocular.phar
       script: php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+  allow_failures:
+    - php: 7.2
