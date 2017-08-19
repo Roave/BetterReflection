@@ -16,7 +16,7 @@ use PhpParser\ParserFactory;
 /**
  * @internal
  */
-class PhpParserLocator implements Locator
+final class PhpParserLocator implements Locator
 {
     /**
      * @var FindReflectionsInTree
