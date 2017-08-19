@@ -361,9 +361,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function isGenerator() : bool
     {
-        if (!isset($this->node)) {
+        if (null === $this->node) {
             return false;
         }
+
         return $this->nodeIsOrContainsYield($this->node);
     }
 

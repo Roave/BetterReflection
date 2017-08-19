@@ -339,7 +339,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     private function getMethodsIndexedByName() : array
     {
-        if (! isset($this->cachedMethods)) {
+        if (null === $this->cachedMethods) {
             $this->cachedMethods = $this->scanMethods();
         }
 
