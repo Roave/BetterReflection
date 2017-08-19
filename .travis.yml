@@ -65,6 +65,13 @@ jobs:
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 
+    - stage: Static Analysis
+      php: 7.1
+      env: DEPENDENCIES=""
+      before_script:
+        - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.8.3
+      script: vendor/bin/phpstan analyse -l 5 -c phpstan.neon lib
+
     - stage: Upload Coverage
       php: 7.1
       env: DEPENDENCIES=""
