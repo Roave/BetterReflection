@@ -136,12 +136,15 @@ class CompileNodeToValue
             return \substr((string) $resolvedType->getFqsen(), 1);
         }
 
+        /* @var $classInfo ReflectionClass|null */
         $classInfo = null;
+
         if ('self' === $className || 'static' === $className) {
             $classInfo = $this->getConstantDeclaringClass($node->name, $context->getSelf());
         }
 
         if (null === $classInfo) {
+            /* @var $classInfo ReflectionClass */
             $classInfo = $context->getReflector()->reflect(
                 (string) (new FindTypeFromAst())->__invoke(
                     $className,
@@ -151,9 +154,7 @@ class CompileNodeToValue
             );
         }
 
-        /* @var ReflectionClass $classInfo */
-        $constName = $node->name;
-        return $classInfo->getConstant($constName);
+        return $classInfo->getConstant($node->name);
     }
 
     /**
