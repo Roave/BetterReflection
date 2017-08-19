@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 /**
@@ -52,26 +51,5 @@ class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
         );
 
         self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
-    }
-
-    public function testConstructorThrowsExceptionIfEmptyFileGiven() : void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('Filename was empty');
-        new SingleFileSourceLocator('');
-    }
-
-    public function testConstructorThrowsExceptionIfFileDoesNotExist() : void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('File does not exist');
-        new SingleFileSourceLocator('sdklfjdfslsdfhlkjsdglkjsdflgkj');
-    }
-
-    public function testConstructorThrowsExceptionIfFileIsNotAFile() : void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('Is not a file');
-        new SingleFileSourceLocator(__DIR__);
     }
 }
