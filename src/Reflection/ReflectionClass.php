@@ -1237,7 +1237,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function __clone()
     {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
+        throw Exception\Uncloneable::fromClass(\get_class($this));
     }
 
     /**

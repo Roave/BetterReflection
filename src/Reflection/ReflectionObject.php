@@ -559,14 +559,6 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function __clone()
-    {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setStaticPropertyValue(string $propertyName, $value) : void
     {
         $this->reflectionClass->setStaticPropertyValue($propertyName, $value);
