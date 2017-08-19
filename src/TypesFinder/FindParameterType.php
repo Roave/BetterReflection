@@ -8,7 +8,6 @@ use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Param as ParamNode;
-use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
