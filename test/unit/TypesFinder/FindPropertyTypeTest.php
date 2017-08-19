@@ -56,7 +56,7 @@ class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
-        self::assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(\count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $foundTypes[$i]);

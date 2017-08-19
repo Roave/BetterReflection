@@ -2,7 +2,7 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-define('SOME_DEFINED_VALUE', 1);
+\define('SOME_DEFINED_VALUE', 1);
 
 abstract class Methods
 {

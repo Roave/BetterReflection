@@ -169,7 +169,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 
         $detectedFilename = $method->getFileName();
 
-        self::assertSame('Methods.php', basename($detectedFilename));
+        self::assertSame('Methods.php', \basename($detectedFilename));
     }
 
     public function testMethodNameWithNamespace() : void
@@ -323,8 +323,8 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
             ['methodToCheckAllowsNull', "Method [ <user> public method methodToCheckAllowsNull ] {\n  @@ %s/test/unit/Fixture/Methods.php 78 - 80\n\n  - Parameters [3] {\n    Parameter #0 [ <required> \$allowsNull ]\n    Parameter #1 [ <required> stdClass \$hintDisallowNull ]\n    Parameter #2 [ <optional> stdClass or NULL \$hintAllowNull = NULL ]\n  }\n}"],
         ];
 
-        return array_combine(
-            array_map(
+        return \array_combine(
+            \array_map(
                 function (array $methodData) {
                     return $methodData[0];
                 },

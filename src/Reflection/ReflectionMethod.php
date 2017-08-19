@@ -87,7 +87,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             }
         }
 
-        throw new Exception\MethodPrototypeNotFound(sprintf(
+        throw new Exception\MethodPrototypeNotFound(\sprintf(
             'Method %s::%s does not have a prototype',
             $this->getDeclaringClass()->getName(),
             $this->getName()
@@ -120,7 +120,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     {
         $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
-        return sprintf(
+        return \sprintf(
             "Method [ <user%s%s>%s%s%s %s method %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
             $this->isConstructor() ? ', ctor' : '',
             $this->isDestructor() ? ', dtor' : '',
@@ -132,8 +132,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             $this->getFileName(),
             $this->getStartLine(),
             $this->getEndLine(),
-            count($this->getParameters()),
-            array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
+            \count($this->getParameters()),
+            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
                 return $str . "\n    " . $param;
             }, '')
         );
@@ -238,7 +238,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isConstructor() : bool
     {
-        return strtolower($this->getName()) === '__construct';
+        return \strtolower($this->getName()) === '__construct';
     }
 
     /**
@@ -248,7 +248,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isDestructor() : bool
     {
-        return strtolower($this->getName()) === '__destruct';
+        return \strtolower($this->getName()) === '__destruct';
     }
 
     /**

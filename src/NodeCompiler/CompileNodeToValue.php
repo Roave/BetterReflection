@@ -57,7 +57,7 @@ class CompileNodeToValue
             return $this->compileClassConstant($context);
         }
 
-        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
+        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . \get_class($node));
     }
 
     /**
@@ -92,7 +92,7 @@ class CompileNodeToValue
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode)
     {
-        $firstName = reset($constNode->name->parts);
+        $firstName = \reset($constNode->name->parts);
         switch ($firstName) {
             case 'null':
                 return null;
@@ -101,13 +101,13 @@ class CompileNodeToValue
             case 'true':
                 return true;
             default:
-                if (!defined($firstName)) {
+                if (!\defined($firstName)) {
                     throw new Exception\UnableToCompileNode(
-                        sprintf('Constant "%s" has not been defined', $firstName)
+                        \sprintf('Constant "%s" has not been defined', $firstName)
                     );
                 }
 
-                return constant($firstName);
+                return \constant($firstName);
         }
     }
 
@@ -121,10 +121,10 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        $className = implode('\\', $node->class->parts);
+        $className = \implode('\\', $node->class->parts);
 
         if ($node->name === 'class') {
-            return substr(
+            return \substr(
                 (string)(new ResolveTypes())->__invoke(
                     [$className],
                     (new ContextFactory())->createForNamespace(
@@ -264,7 +264,7 @@ class CompileNodeToValue
             return $this($node->left, $context) <= $this($node->right, $context);
         }
 
-        throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . get_class($node));
+        throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . \get_class($node));
     }
 
     /**
@@ -272,7 +272,7 @@ class CompileNodeToValue
      */
     private function compileDirConstant(CompilerContext $context): string
     {
-        return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
+        return FileHelper::normalizeWindowsPath(\dirname(\realpath($context->getFileName())));
     }
 
     /**

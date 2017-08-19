@@ -76,7 +76,7 @@ final class SourceStubber
                 continue;
             }
 
-            if (property_exists($statement, 'stmts')) {
+            if (\property_exists($statement, 'stmts')) {
                 $statement->stmts = $this->replaceNodesRecursively($statement->stmts, $isInterfaceOrTrait);
             }
         }

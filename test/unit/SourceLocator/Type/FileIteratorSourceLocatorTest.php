@@ -44,14 +44,14 @@ class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         self::assertCount(2, $classes);
 
-        $classNames = array_map(
+        $classNames = \array_map(
             function (ReflectionClass $reflectionClass) {
                 return $reflectionClass->getName();
             },
             $classes
         );
 
-        sort($classNames);
+        \sort($classNames);
 
         self::assertEquals(DirectoryScannerAssets\Bar\FooBar::class, $classNames[0]);
         self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[1]);

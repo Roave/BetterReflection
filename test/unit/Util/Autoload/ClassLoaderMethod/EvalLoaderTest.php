@@ -21,10 +21,10 @@ final class EvalLoaderTest extends \PHPUnit_Framework_TestCase
 
         $evalLoader = new EvalLoader($printer);
 
-        ob_start();
+        \ob_start();
         $evalLoader->__invoke($reflectionClass);
-        $obContent = ob_get_contents();
-        ob_end_clean();
+        $obContent = \ob_get_contents();
+        \ob_end_clean();
 
         self::assertSame('hello world', $obContent);
     }

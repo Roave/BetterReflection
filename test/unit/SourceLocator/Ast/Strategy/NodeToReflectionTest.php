@@ -23,7 +23,7 @@ class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
             new Parser\Php7(new Lexer()),
             new Parser\Php5(new Lexer()),
         ]))->parse($php);
-        return reset($nodes);
+        return \reset($nodes);
     }
 
     public function testReturnsReflectionForClassNode() : void

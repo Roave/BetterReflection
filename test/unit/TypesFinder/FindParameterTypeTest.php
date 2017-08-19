@@ -87,7 +87,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionFunction $function */
         $foundTypes = (new FindParameterType())->__invoke($function, $node);
 
-        self::assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(\count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
@@ -127,7 +127,7 @@ class FindParameterTypeTest extends \PHPUnit_Framework_TestCase
         /* @var ReflectionMethod $method */
         $foundTypes = (new FindParameterType())->__invoke($method, $node);
 
-        self::assertCount(count($expectedInstances), $foundTypes);
+        self::assertCount(\count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $foundTypes[$i]);

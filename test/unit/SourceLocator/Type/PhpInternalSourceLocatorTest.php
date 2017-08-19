@@ -47,7 +47,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
         } catch (\ReflectionException $e) {
-            self::markTestIncomplete(sprintf(
+            self::markTestIncomplete(\sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
                 $className,
                 $e->getMessage()
@@ -74,7 +74,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 throw $e;
             }
 
-            self::markTestIncomplete(sprintf(
+            self::markTestIncomplete(\sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
                 $className,
                 $e->getMessage()
@@ -97,19 +97,19 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function internalSymbolsProvider() : array
     {
-        $allSymbols = array_merge(
-            get_declared_classes(),
-            get_declared_interfaces(),
-            get_declared_traits()
+        $allSymbols = \array_merge(
+            \get_declared_classes(),
+            \get_declared_interfaces(),
+            \get_declared_traits()
         );
 
-        $indexedSymbols = array_combine($allSymbols, $allSymbols);
+        $indexedSymbols = \array_combine($allSymbols, $allSymbols);
 
-        return array_map(
+        return \array_map(
             function ($symbol) {
                 return [$symbol];
             },
-            array_filter(
+            \array_filter(
                 $indexedSymbols,
                 function ($symbol) {
                     $reflection = new PhpReflectionClass($symbol);
@@ -158,11 +158,11 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
     {
         if (! (
-            class_exists($className, false)
-            || interface_exists($className, false)
-            || trait_exists($className, false)
+            \class_exists($className, false)
+            || \interface_exists($className, false)
+            || \trait_exists($className, false)
         )) {
-            $this->markTestSkipped(sprintf('Class "%s" is not available in this environment', $className));
+            $this->markTestSkipped(\sprintf('Class "%s" is not available in this environment', $className));
         }
 
         $reflector = new ClassReflector(new PhpInternalSourceLocator());
@@ -175,16 +175,16 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function stubbedClassesProvider() : array
     {
-        $classNames = array_filter(
-            str_replace('.stub', '', scandir(__DIR__ . '/../../../../stub')),
+        $classNames = \array_filter(
+            \str_replace('.stub', '', \scandir(__DIR__ . '/../../../../stub')),
             function ($fileName) {
-                return trim($fileName, '.');
+                return \trim($fileName, '.');
             }
         );
 
-        return array_combine(
+        return \array_combine(
             $classNames,
-            array_map(
+            \array_map(
                 function ($fileName) {
                     return [$fileName];
                 },
@@ -206,22 +206,22 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         $originalMethods = $original->getMethods();
 
-        $originalMethodNames = array_map(
+        $originalMethodNames = \array_map(
             function (\ReflectionMethod $method) {
                 return $method->getName();
             },
             $originalMethods
         );
 
-        $stubbedMethodNames = array_map(
+        $stubbedMethodNames = \array_map(
             function (ReflectionMethod $method) {
                 return $method->getName();
             },
             $stubbed->getMethods() // @TODO see #107
         );
 
-        sort($originalMethodNames);
-        sort($stubbedMethodNames);
+        \sort($originalMethodNames);
+        \sort($stubbedMethodNames);
 
         self::assertSame($originalMethodNames, $stubbedMethodNames);
 
@@ -238,13 +238,13 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed) : void
     {
         self::assertSame(
-            array_map(
+            \array_map(
                 function (\ReflectionParameter $parameter) {
                     return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },
                 $original->getParameters()
             ),
-            array_map(
+            \array_map(
                 function (ReflectionParameter $parameter) {
                     return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },

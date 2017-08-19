@@ -95,7 +95,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
-        $lastParamIndex = (count($this->node->params) - 1);
+        $lastParamIndex = (\count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
             $hasDefault = ($this->node->params[$i]->default !== null);
 
@@ -152,7 +152,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             return '';
         }
 
-        return implode('\\', $this->declaringNamespace->name->parts);
+        return \implode('\\', $this->declaringNamespace->name->parts);
     }
 
     /**
@@ -174,7 +174,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getNumberOfParameters() : int
     {
-        return count($this->getParameters());
+        return \count($this->getParameters());
     }
 
     /**
@@ -184,7 +184,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getNumberOfRequiredParameters() : int
     {
-        return count(array_filter(
+        return \count(\array_filter(
             $this->getParameters(),
             function (ReflectionParameter $p) {
                 return !$p->isOptional();
@@ -340,7 +340,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
                 return true;
             }
 
-            if (is_array($nodeProperty)) {
+            if (\is_array($nodeProperty)) {
                 foreach ($nodeProperty as $nodePropertyArrayItem) {
                     if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
                         return true;
@@ -590,10 +590,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function removeParameter(string $parameterName) : void
     {
-        $lowerName = strtolower($parameterName);
+        $lowerName = \strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
-            if (strtolower($paramNode->name) === $lowerName) {
+            if (\strtolower($paramNode->name) === $lowerName) {
                 unset($this->node->params[$key]);
             }
         }

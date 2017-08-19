@@ -33,14 +33,14 @@ class FileCheckerTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckFileThrowsExceptionIfFileIsNotReadable() : void
     {
-        if (strpos(PHP_OS, 'WIN') === 0) {
+        if (\strpos(PHP_OS, 'WIN') === 0) {
             self::markTestSkipped('It\'s not possible to change file mode on Windows');
         }
 
         $file = __DIR__ . '/../Fixture/NoNamespace.php';
 
-        $originalPermission = fileperms($file);
-        chmod($file, 0000);
+        $originalPermission = \fileperms($file);
+        \chmod($file, 0000);
 
         $this->expectException(InvalidFileLocation::class);
         $this->expectExceptionMessage('File is not readable');
@@ -50,7 +50,7 @@ class FileCheckerTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             throw $e;
         } finally {
-            chmod($file, $originalPermission);
+            \chmod($file, $originalPermission);
         }
     }
 }

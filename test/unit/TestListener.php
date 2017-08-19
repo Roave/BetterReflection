@@ -35,7 +35,7 @@ class TestListener extends \PHPUnit_Framework_BaseTestListener
     private function assertClassNotLoaded(string $className, \PHPUnit_Framework_TestCase $test) : void
     {
         \PHPUnit_Framework_TestCase::assertFalse(
-            class_exists($className, false),
+            \class_exists($className, false),
             'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test)
         );
     }

@@ -176,8 +176,8 @@ class CompileNodeToValueTest extends \PHPUnit_Framework_TestCase
 
     public function testConstantValueCompiled() : void
     {
-        $constName = uniqid('BETTER_REFLECTION_TEST_CONST_', true);
-        define($constName, 123);
+        $constName = \uniqid('BETTER_REFLECTION_TEST_CONST_', true);
+        \define($constName, 123);
 
         self::assertSame(
             123,

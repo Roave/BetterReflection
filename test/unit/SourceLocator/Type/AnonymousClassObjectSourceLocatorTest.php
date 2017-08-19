@@ -25,8 +25,8 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function anonymousClassInstancesProvider() : array
     {
-        $fileWithClasses = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
-        $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
+        $fileWithClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
+        $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
 
         $classes = require $fileWithClasses;
         $classWithNestedClasses = require $fileWithClassWithNestedClasses;
@@ -53,7 +53,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $reflection = (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
-                get_class($class),
+                \get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );
@@ -117,7 +117,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider() : array
     {
-        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+        $file = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
 
         return [
@@ -134,12 +134,12 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void
     {
         self::expectException(TwoAnonymousClassesOnSameLine::class);
-        self::expectExceptionMessage(sprintf('Two anonymous classes on line 3 in %s', $file));
+        self::expectExceptionMessage(\sprintf('Two anonymous classes on line 3 in %s', $file));
 
         (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
-                get_class($class),
+                \get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );
@@ -166,7 +166,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit_Framework_TestCase
        (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
-                get_class($class),
+                \get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );

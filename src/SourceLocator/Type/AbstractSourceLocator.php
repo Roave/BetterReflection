@@ -24,7 +24,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      *
      * @example
      *   return new LocatedSource(['<?php class Foo {}', null]);
-     *   return new LocatedSource([file_get_contents('Foo.php'), 'Foo.php']);
+     *   return new LocatedSource([\file_get_contents('Foo.php'), 'Foo.php']);
      *
      * @param Identifier $identifier
      * @return LocatedSource|null

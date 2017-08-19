@@ -69,7 +69,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testCanReflectEvaledClassWithDefaultLocator() : void
     {
-        $className = uniqid('foo', false);
+        $className = \uniqid('foo', false);
 
         eval('class ' . $className . '{}');
 
@@ -114,12 +114,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testReflectingAClassDoesNotLoadTheClass() : void
     {
-        self::assertFalse(class_exists(ExampleClass::class, false));
+        self::assertFalse(\class_exists(ExampleClass::class, false));
 
         $reflector = new ClassReflector($this->getComposerLocator());
         $reflector->reflect(ExampleClass::class);
 
-        self::assertFalse(class_exists(ExampleClass::class, false));
+        self::assertFalse(\class_exists(ExampleClass::class, false));
     }
 
     public function testGetMethods() : void
@@ -354,7 +354,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $detectedFilename = $classInfo->getFileName();
 
-        self::assertSame('ExampleClass.php', basename($detectedFilename));
+        self::assertSame('ExampleClass.php', \basename($detectedFilename));
     }
 
     public function testStaticCreation() : void
@@ -714,7 +714,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             \E::class,
         ];
 
-        self::assertCount(count($expectedInterfaces), $interfaces);
+        self::assertCount(\count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -757,7 +757,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             \E::class,
         ];
 
-        self::assertCount(count($expectedInterfaces), $interfaces);
+        self::assertCount(\count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -802,7 +802,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ClassWithInterfaces\B::class,
         ];
 
-        self::assertCount(count($expectedInterfaces), $interfaces);
+        self::assertCount(\count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -825,7 +825,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
             ClassWithInterfacesExtendingInterfaces\A::class,
         ];
 
-        self::assertCount(count($expectedInterfaces), $interfaces);
+        self::assertCount(\count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -1014,21 +1014,21 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php'));
 
-        $cInterfaces = array_map(
+        $cInterfaces = \array_map(
             function (ReflectionClass $interface) {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces()
         );
-        $dInterfaces = array_map(
+        $dInterfaces = \array_map(
             function (ReflectionClass $interface) {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces()
         );
 
-        sort($cInterfaces);
-        sort($dInterfaces);
+        \sort($cInterfaces);
+        \sort($dInterfaces);
 
         self::assertSame(['B'], $cInterfaces);
         self::assertSame(['A', 'B', 'C'], $dInterfaces);
@@ -1065,7 +1065,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertStringMatchesFormat(
-            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             $reflection->__toString()
         );
     }
@@ -1083,7 +1083,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     public function testExportMatchesFormat() : void
     {
         self::assertStringMatchesFormat(
-            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             ReflectionClass::export(ExampleClass::class)
         );
     }
@@ -1379,7 +1379,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame($expectedConstants, $reflection->getConstants());
 
-        array_walk(
+        \array_walk(
             $expectedConstants,
             function ($constantValue, $constantName) use ($reflection) {
                 self::assertTrue($reflection->hasConstant($constantName), 'Constant ' . $constantName . ' not set');
@@ -1433,9 +1433,9 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         self::assertCount(5, $reflectionConstants);
         self::assertContainsOnlyInstancesOf(ReflectionClassConstant::class, $reflectionConstants);
-        self::assertSame(array_keys($expectedConstants), array_keys($reflectionConstants));
+        self::assertSame(\array_keys($expectedConstants), \array_keys($reflectionConstants));
 
-        array_walk(
+        \array_walk(
             $expectedConstants,
             function ($constantValue, $constantName) use ($reflectionConstants) {
                 self::assertArrayHasKey($constantName, $reflectionConstants, 'Constant ' . $constantName . ' not set');

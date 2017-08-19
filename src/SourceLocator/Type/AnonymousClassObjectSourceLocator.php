@@ -71,7 +71,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $fileName = $this->coreClassReflection->getFileName();
 
-        if (strpos($fileName, 'eval()\'d code') !== false) {
+        if (\strpos($fileName, 'eval()\'d code') !== false) {
             throw EvaledAnonymousClassCannotBeLocated::create();
         }
 
@@ -112,7 +112,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             public function getAnonymousClassNode() : ?Class_
             {
                 /** @var Class_[] $anonymousClassNodesOnSameLine */
-                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, function (Class_ $node) : bool {
+                $anonymousClassNodesOnSameLine = \array_values(\array_filter($this->anonymousClassNodes, function (Class_ $node) : bool {
                     return $node->getLine() === $this->startLine;
                 }));
 

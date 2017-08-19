@@ -7,6 +7,6 @@ final class FailedToLoadClass extends \LogicException
 {
     public static function fromClassName(string $className) : self
     {
-        return new self(sprintf('Unable to load class %s', $className));
+        return new self(\sprintf('Unable to load class %s', $className));
     }
 }

@@ -25,7 +25,7 @@ class IdentifierType
     public function __construct($type = self::IDENTIFIER_CLASS)
     {
         if (! \array_key_exists($type, self::VALID_TYPES)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 '%s is not a valid identifier type',
                 $type
             ));

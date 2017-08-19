@@ -39,14 +39,14 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         self::assertCount(4, $classes);
 
-        $classNames = array_map(
+        $classNames = \array_map(
             function (ReflectionClass $reflectionClass) {
                 return $reflectionClass->getName();
             },
             $classes
         );
 
-        sort($classNames);
+        \sort($classNames);
 
         self::assertEquals(DirectoryScannerAssetsFoo\Bar\FooBar::class, $classNames[0]);
         self::assertEquals(DirectoryScannerAssetsFoo\Foo::class, $classNames[1]);
@@ -85,14 +85,14 @@ class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 
         return [
-            [[__DIR__ . '/' . uniqid('nonExisting', true)]],
+            [[__DIR__ . '/' . \uniqid('nonExisting', true)]],
             [[__FILE__]],
             [[1]],
             [[1.23]],
             [[true]],
             [[new \stdClass()]],
             [[null]],
-            [[$validDir, __DIR__ . '/' . uniqid('nonExisting', true)]],
+            [[$validDir, __DIR__ . '/' . \uniqid('nonExisting', true)]],
             [[$validDir, __FILE__]],
             [[$validDir, 1]],
             [[$validDir, 1.23]],

@@ -66,7 +66,7 @@ final class ClosureSourceLocator implements SourceLocator
         try {
             $closureData = $this->closureAnalyzer->analyze($this->closure);
         } catch (ClosureAnalysisException $closureAnalysisException) {
-            if (stripos($closureAnalysisException->getMessage(), 'Two closures were declared on the same line') !== false) {
+            if (\stripos($closureAnalysisException->getMessage(), 'Two closures were declared on the same line') !== false) {
                 throw TwoClosuresOneLine::fromClosureAnalysisException($closureAnalysisException);
             }
 

@@ -20,6 +20,6 @@ class NotAClassReflection extends \UnexpectedValueException
             $type = 'trait';
         }
 
-        return new self(sprintf('Provided node "%s" is not class, but "%s"', $class->getName(), $type));
+        return new self(\sprintf('Provided node "%s" is not class, but "%s"', $class->getName(), $type));
     }
 }
