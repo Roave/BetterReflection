@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\SourceLocator\Ast;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -28,11 +29,11 @@ final class PhpParserLocator implements Locator
      */
     private $parser;
 
-    public function __construct()
+    public function __construct(?Parser $parser = null)
     {
         $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection());
 
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = $parser ?: new MemoizingParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
     }
 
     public function findReflection(
