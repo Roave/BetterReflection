@@ -1,41 +1,74 @@
 language: php
 
-php:
-  - 7.1
-  - 7.2
-
-env:
-  matrix:
-    - DEPENDENCIES=""
-    - DEPENDENCIES="--prefer-lowest --prefer-stable"
-
 before_script:
   - travis_retry composer update --prefer-dist $DEPENDENCIES
 
 jobs:
   include:
     - stage: Test
+      php: 7.1
+      env: DEPENDENCIES=""
       script: vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
+
+    - stage: Test
+      php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit --colors
+
+    - stage: Test
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit --colors
+
+    - stage: Test
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit --colors
 
     - stage: Test Compatibility
       php: 7.1
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
       php: 7.2
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit test/compat
 
     - stage: Check Demo Scripts
       php: 7.1
+      env: DEPENDENCIES=""
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 
     - stage: Check Demo Scripts
       php: 7.2
+      env: DEPENDENCIES=""
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 
     - stage: Upload Coverage
       php: 7.1
-      before_script: wget https://scrutinizer-ci.com/ocular.phar
+      env: DEPENDENCIES=""
+      before_script: travis_retry composer update --prefer-dist $DEPENDENCIES && wget https://scrutinizer-ci.com/ocular.phar
       script: php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
   allow_failures:
