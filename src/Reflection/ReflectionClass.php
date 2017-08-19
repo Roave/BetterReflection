@@ -1260,8 +1260,7 @@ class ReflectionClass implements Reflection, \Reflector
             throw new Exception\PropertyNotPublic('Property is not public');
         }
 
-        $className = $this->getName();
-        return $className::${$propertyName};
+        return $this->getName()::${$propertyName};
     }
 
     /**
