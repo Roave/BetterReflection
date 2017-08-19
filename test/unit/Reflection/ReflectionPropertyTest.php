@@ -130,7 +130,7 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 
         $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
 
-        self::assertCount(count($expectedTypes), $foundTypes);
+        self::assertCount(\count($expectedTypes), $foundTypes);
 
         foreach ($expectedTypes as $i => $expectedType) {
             self::assertInstanceOf($expectedType, $foundTypes[$i]);

@@ -198,10 +198,10 @@ class ReflectionClassConstant implements \Reflector
     {
         $value = $this->getValue();
 
-        return sprintf(
+        return \sprintf(
             'Constant [ %s %s %s ] { %s }' . PHP_EOL,
             $this->getVisibility(),
-            gettype($value),
+            \gettype($value),
             $this->getName(),
             $value
         );

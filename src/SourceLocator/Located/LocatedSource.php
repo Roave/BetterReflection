@@ -68,7 +68,7 @@ class LocatedSource
     }
 
     /**
-     * Is the located source produced by eval() or function_create()?
+     * Is the located source produced by eval() or \function_create()?
      *
      * @return bool
      */

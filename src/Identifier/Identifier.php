@@ -19,7 +19,7 @@ class Identifier
     {
         $this->type = $type;
 
-        $name = ltrim($name, '\\');
+        $name = \ltrim($name, '\\');
         // @todo validate the name somehow (see issue #20)
         $this->name = (string)$name;
     }

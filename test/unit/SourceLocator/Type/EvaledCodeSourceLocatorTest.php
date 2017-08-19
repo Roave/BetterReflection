@@ -26,7 +26,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testCanReflectEvaledClass() : void
     {
-        $className = uniqid('foo', false);
+        $className = \uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo(){}}');
 
@@ -45,7 +45,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testCanReflectEvaledInterface() : void
     {
-        $interfaceName = uniqid('foo', false);
+        $interfaceName = \uniqid('foo', false);
 
         eval('interface ' . $interfaceName . ' {function foo();}');
 
@@ -62,7 +62,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testCanReflectEvaledTrait() : void
     {
-        $traitName = uniqid('foo', false);
+        $traitName = \uniqid('foo', false);
 
         eval('trait ' . $traitName . ' {function foo(){}}');
 
@@ -81,7 +81,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         /* @var $class */
         $reflector = (new ClassReflector(new EvaledCodeSourceLocator()));
-        $className = uniqid('foo', false);
+        $className = \uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo($bar = "baz") {}}');
 

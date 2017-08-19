@@ -43,7 +43,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         return new LocatedSource(
-            file_get_contents($this->filename),
+            \file_get_contents($this->filename),
             $this->filename
         );
     }

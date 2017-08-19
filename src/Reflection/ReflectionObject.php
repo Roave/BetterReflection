@@ -92,7 +92,7 @@ class ReflectionObject extends ReflectionClass
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
-        $className = get_class($object);
+        $className = \get_class($object);
 
         if (\strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator($object));
@@ -299,7 +299,7 @@ class ReflectionObject extends ReflectionClass
      */
     public function getProperties(?int $filter = null) : array
     {
-        return array_merge(
+        return \array_merge(
             $this->reflectionClass->getProperties($filter),
             $this->getRuntimeProperties($filter)
         );
@@ -310,7 +310,7 @@ class ReflectionObject extends ReflectionClass
      */
     public function getImmediateProperties(?int $filter = null): array
     {
-        return array_merge(
+        return \array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
             $this->getRuntimeProperties($filter)
         );

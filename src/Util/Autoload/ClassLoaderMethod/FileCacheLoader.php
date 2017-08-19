@@ -60,15 +60,15 @@ final class FileCacheLoader implements LoaderMethodInterface
     {
         $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
 
-        if (!file_exists($filename)) {
+        if (!\file_exists($filename)) {
             $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);
-            file_put_contents(
+            \file_put_contents(
                 $filename,
-                str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code)
+                \str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code)
             );
         }
 
-        if (!$this->checker->check(file_get_contents($filename))) {
+        if (!$this->checker->check(\file_get_contents($filename))) {
             throw Exception\SignatureCheckFailed::fromReflectionClass($classInfo);
         }
 

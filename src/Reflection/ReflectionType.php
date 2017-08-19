@@ -90,7 +90,7 @@ class ReflectionType
             case $this->type instanceof Types\Void_:
                 return 'void';
             default:
-                return ltrim((string) $this->type, '\\');
+                return \ltrim((string) $this->type, '\\');
         }
     }
 }

@@ -41,14 +41,14 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     {
         $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
-        return sprintf(
+        return \sprintf(
             "Function [ <user> function %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
             $this->getName(),
             $this->getFileName(),
             $this->getStartLine(),
             $this->getEndLine(),
-            count($this->getParameters()),
-            array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
+            \count($this->getParameters()),
+            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) {
                 return $str . "\n    " . $param;
             }, '')
         );

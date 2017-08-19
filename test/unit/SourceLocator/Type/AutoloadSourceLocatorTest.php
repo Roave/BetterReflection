@@ -33,9 +33,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator());
 
-        self::assertFalse(class_exists(ExampleClass::class, false));
+        self::assertFalse(\class_exists(ExampleClass::class, false));
         $classInfo = $reflector->reflect(ExampleClass::class);
-        self::assertFalse(class_exists(ExampleClass::class, false));
+        self::assertFalse(\class_exists(ExampleClass::class, false));
 
         self::assertSame('ExampleClass', $classInfo->getShortName());
     }
@@ -46,7 +46,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
         // Ensure class is loaded first
         new ClassForHinting();
-        self::assertTrue(class_exists(ClassForHinting::class, false));
+        self::assertTrue(\class_exists(ClassForHinting::class, false));
 
         $classInfo = $reflector->reflect(ClassForHinting::class);
 
@@ -58,7 +58,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanLocateAutoloadableInterface() : void
     {
-        self::assertFalse(interface_exists(AutoloadableInterface::class, false));
+        self::assertFalse(\interface_exists(AutoloadableInterface::class, false));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -69,7 +69,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 ))->getLocatedSource()
         );
 
-        self::assertFalse(interface_exists(AutoloadableInterface::class, false));
+        self::assertFalse(\interface_exists(AutoloadableInterface::class, false));
     }
 
     /**
@@ -77,7 +77,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanLocateAutoloadedInterface() : void
     {
-        self::assertTrue(interface_exists(AutoloadableInterface::class));
+        self::assertTrue(\interface_exists(AutoloadableInterface::class));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -94,7 +94,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanLocateAutoloadableTrait() : void
     {
-        self::assertFalse(trait_exists(AutoloadableTrait::class, false));
+        self::assertFalse(\trait_exists(AutoloadableTrait::class, false));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -105,7 +105,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
                 ))->getLocatedSource()
         );
 
-        self::assertFalse(trait_exists(AutoloadableTrait::class, false));
+        self::assertFalse(\trait_exists(AutoloadableTrait::class, false));
     }
 
     /**
@@ -113,7 +113,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanLocateAutoloadedTrait() : void
     {
-        self::assertTrue(trait_exists(AutoloadableTrait::class));
+        self::assertTrue(\trait_exists(AutoloadableTrait::class));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -169,7 +169,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldNotConsiderEvaledSources() : void
     {
-        $className = uniqid('generatedClassName', false);
+        $className = \uniqid('generatedClassName', false);
 
         eval('class ' . $className . '{}');
 

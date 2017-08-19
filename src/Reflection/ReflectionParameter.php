@@ -137,15 +137,15 @@ class ReflectionParameter implements \Reflector
      */
     public static function createFromSpec($spec, string $parameterName) : self
     {
-        if (is_array($spec) && count($spec) === 2) {
-            if (is_object($spec[0])) {
+        if (\is_array($spec) && \count($spec) === 2) {
+            if (\is_object($spec[0])) {
                 return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
             }
 
             return self::createFromClassNameAndMethod($spec[0], $spec[1], $parameterName);
         }
 
-        if (is_string($spec)) {
+        if (\is_string($spec)) {
             return ReflectionFunction::createFromName($spec)->getParameter($parameterName);
         }
 
@@ -165,17 +165,17 @@ class ReflectionParameter implements \Reflector
     {
         $isNullableObjectParam = $this->getTypeHint() && $this->getTypeHint() instanceof Types\Object_ && $this->isOptional();
 
-        return sprintf(
+        return \sprintf(
             'Parameter #%d [ %s %s%s%s%s$%s%s ]',
             $this->parameterIndex,
             ($this->isVariadic() || $this->isOptional()) ? '<optional>' : '<required>',
-            $this->getTypeHint() ? ltrim($this->getTypeHint()->__toString(), '\\') . ' ' : '',
+            $this->getTypeHint() ? \ltrim($this->getTypeHint()->__toString(), '\\') . ' ' : '',
             $isNullableObjectParam ? 'or NULL ' : '',
             $this->isVariadic() ? '...' : '',
             $this->isPassedByReference() ? '&' : '',
             $this->getName(),
             ($this->isOptional() && $this->isDefaultValueAvailable())
-                ? (' = ' . var_export($this->getDefaultValue(), true))
+                ? (' = ' . \var_export($this->getDefaultValue(), true))
                 : ''
         );
     }
@@ -210,19 +210,19 @@ class ReflectionParameter implements \Reflector
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
-            $className = $this->getRealClassName(implode('\\', $defaultValueNode->class->parts));
+            $className = $this->getRealClassName(\implode('\\', $defaultValueNode->class->parts));
 
             if ($className instanceof Self_) {
                 $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
             }
 
             $this->isDefaultValueConstant = true;
-            $this->defaultValueConstantName = ltrim((string) $className, '\\') . '::' . $defaultValueNode->name;
+            $this->defaultValueConstantName = \ltrim((string) $className, '\\') . '::' . $defaultValueNode->name;
             $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
-            && ! \in_array(strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
+            && ! \in_array(\strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
             $this->isDefaultValueConstant = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
@@ -341,11 +341,11 @@ class ReflectionParameter implements \Reflector
      * Get the default value represented as a string.
      *
      * @return string
-     * @deprecated Use `var_export($reflection->getDefaultValue(), true)` instead
+     * @deprecated Use `\var_export($reflection->getDefaultValue(), true)` instead
      */
     public function getDefaultValueAsString() : string
     {
-        return var_export($this->getDefaultValue(), true);
+        return \var_export($this->getDefaultValue(), true);
     }
 
     /**

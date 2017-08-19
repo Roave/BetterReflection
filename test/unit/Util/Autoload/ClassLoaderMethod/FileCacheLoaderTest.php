@@ -17,15 +17,15 @@ final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testFileCacheWriterCreatesFileWithPrintedCode() : void
     {
-        $className = uniqid(__METHOD__, true);
+        $className = \uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $classInfo */
         $classInfo = $this->createMock(ReflectionClass::class);
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
-        $generatedCode = '// ' . uniqid(__METHOD__, true);
-        $signature = uniqid('Roave/Signature: ', true);
+        $generatedCode = '// ' . \uniqid(__METHOD__, true);
+        $signature = \uniqid('Roave/Signature: ', true);
         $signedCode = "<?php\n// " . $signature . "\n" . $generatedCode;
 
         /** @var ClassPrinterInterface|\PHPUnit_Framework_MockObject_MockObject $printer */
@@ -46,20 +46,20 @@ final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
 
         (new FileCacheLoader(__DIR__, $printer, $signer, $checker))->__invoke($classInfo);
 
-        unlink($generatedFilename);
+        \unlink($generatedFilename);
     }
 
     public function testExceptionThrownWhenSignatureFailedToVerify() : void
     {
-        $className = uniqid(__METHOD__, true);
+        $className = \uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $classInfo */
         $classInfo = $this->createMock(ReflectionClass::class);
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
-        $generatedCode = '// ' . uniqid(__METHOD__, true);
-        $signature = uniqid('Roave/Signature: ', true);
+        $generatedCode = '// ' . \uniqid(__METHOD__, true);
+        $signature = \uniqid('Roave/Signature: ', true);
         $signedCode = "<?php\n// " . $signature . "\n" . $generatedCode;
 
         /** @var ClassPrinterInterface|\PHPUnit_Framework_MockObject_MockObject $printer */
@@ -80,8 +80,8 @@ final class FileCacheLoaderTest extends \PHPUnit_Framework_TestCase
         } catch (SignatureCheckFailed $signatureCheckFailed) {
             return;
         } finally {
-            if (file_exists($generatedFilename)) {
-                unlink($generatedFilename);
+            if (\file_exists($generatedFilename)) {
+                \unlink($generatedFilename);
             }
         }
     }

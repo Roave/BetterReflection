@@ -12,13 +12,13 @@ final class FailedToLoadClassTest extends \PHPUnit_Framework_TestCase
 {
     public function testFromReflectionClass() : void
     {
-        $className = uniqid('class name', true);
+        $className = \uniqid('class name', true);
 
         $exception = FailedToLoadClass::fromClassName($className);
 
         self::assertInstanceOf(FailedToLoadClass::class, $exception);
         self::assertSame(
-            sprintf('Unable to load class %s', $className),
+            \sprintf('Unable to load class %s', $className),
             $exception->getMessage()
         );
     }

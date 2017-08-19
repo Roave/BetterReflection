@@ -43,7 +43,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
     {
         $resolvedTypes = (new ResolveTypes())->__invoke($inputTypes, new Context(''));
 
-        self::assertCount(count($expectedInstances), $resolvedTypes);
+        self::assertCount(\count($expectedInstances), $resolvedTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $resolvedTypes[$i]);
@@ -82,7 +82,7 @@ class ResolveTypesTest extends \PHPUnit_Framework_TestCase
         $resolvedTypes = (new ResolveTypes())->__invoke([$inputType], $context);
         self::assertCount(1, $resolvedTypes);
 
-        $resolvedType = reset($resolvedTypes);
+        $resolvedType = \reset($resolvedTypes);
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
         /* @var $resolvedType Types\Object_ */

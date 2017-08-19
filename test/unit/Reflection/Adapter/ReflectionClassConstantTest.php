@@ -16,8 +16,8 @@ class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
-        $methods = get_class_methods(CoreReflectionClassConstant::class);
-        return array_combine($methods, array_map(function ($i) { return [$i]; }, $methods));
+        $methods = \get_class_methods(CoreReflectionClassConstant::class);
+        return \array_combine($methods, \array_map(function ($i) { return [$i]; }, $methods));
     }
 
     /**

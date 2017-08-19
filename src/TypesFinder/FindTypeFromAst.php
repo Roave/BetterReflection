@@ -27,7 +27,7 @@ class FindTypeFromAst
             $astType = $astType->type;
         }
 
-        if (is_string($astType)) {
+        if (\is_string($astType)) {
             return $this->typeStringToType($astType, $locatedSource, $namespace);
         }
 
@@ -54,7 +54,7 @@ class FindTypeFromAst
                 )
             );
 
-        $firstType = reset($types);
+        $firstType = \reset($types);
 
         return $firstType ?: null;
     }

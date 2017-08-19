@@ -29,7 +29,7 @@ class IdentifierNotFound extends \RuntimeException
 
     public static function fromIdentifier(Identifier $identifier) : self
     {
-        return new self(sprintf(
+        return new self(\sprintf(
             '%s "%s" could not be found in the located source',
             $identifier->getType()->getName(),
             $identifier->getName()

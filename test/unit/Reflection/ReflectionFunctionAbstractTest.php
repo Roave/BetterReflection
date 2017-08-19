@@ -585,11 +585,11 @@ PHP;
         self::assertCount(2, $nodes);
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
 
-        reset($nodes);
+        \reset($nodes);
         /** @var Return_ $first */
-        $first = current($nodes);
+        $first = \current($nodes);
         /** @var Return_ $second */
-        $second = next($nodes);
+        $second = \next($nodes);
 
         self::assertInstanceOf(LNumber::class, $first->expr);
         self::assertInstanceOf(BinaryOp\Plus::class, $second->expr);
@@ -619,9 +619,9 @@ PHP;
         self::assertCount(1, $nodes);
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
 
-        reset($nodes);
+        \reset($nodes);
         /** @var Return_ $first */
-        $first = current($nodes);
+        $first = \current($nodes);
 
         self::assertInstanceOf(Closure::class, $first->expr);
         self::assertSame(8, $first->getAttribute('startLine'));

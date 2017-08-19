@@ -81,7 +81,7 @@ class ReflectionProperty implements \Reflector
             $stateModifier = $this->isDefault() ? ' <default>' : ' <dynamic>';
         }
 
-        return sprintf(
+        return \sprintf(
             'Property [%s %s%s $%s ]',
             $stateModifier,
             $this->getVisibilityAsString(),

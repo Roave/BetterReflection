@@ -24,7 +24,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public static function export($argument, $return = false)
     {
-        return BetterReflectionClass::export(...func_get_args());
+        return BetterReflectionClass::export(...\func_get_args());
     }
 
     /**
@@ -235,7 +235,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants()
     {
-        return array_map(function ($betterConstant) {
+        return \array_map(function ($betterConstant) {
             return new ReflectionClassConstant($betterConstant);
         }, $this->betterReflectionClass->getReflectionConstants());
     }

@@ -53,14 +53,14 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
 
         $name = $identifier->getName();
 
-        if (! (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false))) {
+        if (! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
             return null; // not an available internal class
         }
 
         $reflection = new \ReflectionClass($name);
         $sourceFile = $reflection->getFileName();
 
-        return ($sourceFile && file_exists($sourceFile))
+        return ($sourceFile && \file_exists($sourceFile))
             ? null : $reflection->getName();
     }
 }

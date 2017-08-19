@@ -140,7 +140,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      */
     public function reflectionClassMethodProvider() : array
     {
-        $publicClassMethods = get_class_methods(ReflectionClass::class);
+        $publicClassMethods = \get_class_methods(ReflectionClass::class);
 
         $ignoreMethods = [
             'createFromName',
@@ -153,7 +153,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
         $filteredMethods = [];
         foreach ($publicClassMethods as $method) {
-            if (!in_array($method, $ignoreMethods, true)) {
+            if (!\in_array($method, $ignoreMethods, true)) {
                 $filteredMethods[$method] = [$method];
             }
         }
@@ -173,7 +173,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName) : void
     {
         // First, ensure the expected method even exists
-        $publicObjectMethods = get_class_methods(ReflectionObject::class);
+        $publicObjectMethods = \get_class_methods(ReflectionObject::class);
         self::assertContains($methodName, $publicObjectMethods);
 
         // Create a mock that will be used to assert that the named method will
@@ -211,17 +211,17 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $reflectionObjectReflectionClassPropertyReflection->setValue($reflectionObject, $mockReflectionClass);
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
-        $fakeParams = array_map(
+        $fakeParams = \array_map(
             function (\ReflectionParameter $parameter) {
                 switch((string)$parameter->getType()) {
                     case 'int':
-                        return random_int(1, 1000);
+                        return \random_int(1, 1000);
                     case 'null':
                         return null;
                     case 'bool':
-                        return (bool)random_int(0, 1);
+                        return (bool)\random_int(0, 1);
                     default:
-                        return uniqid('stringParam', true);
+                        return \uniqid('stringParam', true);
                 }
             },
             $reflectionObjectReflectionMethod->getParameters()

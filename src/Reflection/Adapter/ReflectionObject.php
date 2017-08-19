@@ -24,7 +24,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public static function export($argument, $return = null)
     {
-        return BetterReflectionObject::export(...func_get_args());
+        return BetterReflectionObject::export(...\func_get_args());
     }
 
     /**

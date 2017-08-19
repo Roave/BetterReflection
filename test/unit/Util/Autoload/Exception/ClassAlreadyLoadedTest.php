@@ -13,7 +13,7 @@ final class ClassAlreadyLoadedTest extends \PHPUnit_Framework_TestCase
 {
     public function testFromReflectionClass() : void
     {
-        $className = uniqid('class name', true);
+        $className = \uniqid('class name', true);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $reflection */
         $reflection = $this->createMock(ReflectionClass::class);
@@ -23,7 +23,7 @@ final class ClassAlreadyLoadedTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(ClassAlreadyLoaded::class, $exception);
         self::assertSame(
-            sprintf('Class %s has already been loaded into memory so cannot be modified', $className),
+            \sprintf('Class %s has already been loaded into memory so cannot be modified', $className),
             $exception->getMessage()
         );
     }

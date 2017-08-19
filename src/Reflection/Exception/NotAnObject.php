@@ -12,6 +12,6 @@ class NotAnObject extends \InvalidArgumentException
      */
     public static function fromNonObject($nonObject) : self
     {
-        return new self(sprintf('Provided "%s" is not an object', gettype($nonObject)));
+        return new self(\sprintf('Provided "%s" is not an object', \gettype($nonObject)));
     }
 }
