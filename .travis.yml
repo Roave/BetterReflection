@@ -2,6 +2,8 @@ language: php
 
 php:
   - 7.1
+  - 7.2
+  - nightly
 
 env:
   matrix:
@@ -9,12 +11,22 @@ env:
     - DEPENDENCIES="--prefer-lowest --prefer-stable"
 
 before_script:
-  - composer update --prefer-dist $DEPENDENCIES
+  - travis_retry composer update --prefer-dist $DEPENDENCIES
 
-script:
-  - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
-  - test/demo/check-demo.sh
-  - vendor/bin/phpunit test/compat
+jobs:
+  include:
+    - stage: Test
+      script: vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
 
-after_script:
-  - if [ $TRAVIS_PHP_VERSION = '7.1' ]; then wget https://scrutinizer-ci.com/ocular.phar; php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
+    - stage: Test Compatibility
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Check Demo Scripts
+      script: test/demo/check-demo.sh
+
+    - stage: Upload Coverage
+      before_script: if [ $TRAVIS_PHP_VERSION = '7.1' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+      script: if [ $TRAVIS_PHP_VERSION = '7.1' ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
+
+  allow_failures:
+    - php: nightly
