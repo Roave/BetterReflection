@@ -949,7 +949,10 @@ class ReflectionClass implements Reflection, \Reflector
     private function reflectClassForNamedNode(Node\Name $node) : self
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        return $this->reflector->reflect($this->getFqsenFromNamedNode($node));
+        /* @var $class self */
+        $class = $this->reflector->reflect($this->getFqsenFromNamedNode($node));
+
+        return $class;
     }
 
     /**
