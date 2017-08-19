@@ -238,12 +238,13 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getShortName() : string
     {
-        if (!$this->isAnonymous()) {
+        if (! $this->isAnonymous()) {
             return $this->node->name;
         }
 
         $fileName = $this->getFileName();
-        if ($fileName === null) {
+
+        if (null === $fileName) {
             $fileName = sha1($this->locatedSource->getSource());
         }
 
@@ -797,7 +798,7 @@ class ReflectionClass implements Reflection, \Reflector
 
     public function isAnonymous() : bool
     {
-        return $this->node->name === null;
+        return null === $this->node->name;
     }
 
     /**

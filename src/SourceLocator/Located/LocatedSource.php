@@ -34,6 +34,7 @@ class LocatedSource
     {
         if (null !== $filename) {
             FileChecker::checkFile($filename);
+
             $filename = FileHelper::normalizeWindowsPath($filename);
         }
 

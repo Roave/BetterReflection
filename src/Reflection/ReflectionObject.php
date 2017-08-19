@@ -80,17 +80,21 @@ class ReflectionObject extends ReflectionClass
      * Pass an instance of an object to this method to reflect it
      *
      * @param object $object
-     * @return ReflectionClass
+     *
+     * @return self
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    public static function createFromInstance($object)
+    public static function createFromInstance($object) : self
     {
-        if (gettype($object) !== 'object') {
+        if (! \is_object($object)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
         $className = get_class($object);
 
-        if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
+        if (\strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator($object));
         } else {
             $reflector = ClassReflector::buildDefaultReflector();

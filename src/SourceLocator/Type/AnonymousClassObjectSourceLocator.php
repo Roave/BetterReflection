@@ -31,17 +31,22 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     /**
      * @param object $anonymousClassObject
+     *
+     * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      */
     public function __construct($anonymousClassObject)
     {
-        if (gettype($anonymousClassObject) !== 'object') {
+        if (! \is_object($anonymousClassObject)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
+
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
     }
 
     /**
      * {@inheritDoc}
+     *
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
@@ -51,16 +56,17 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     *
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        return array_filter([$this->getReflectionClass($reflector, $identifierType)]);
+        return \array_filter([$this->getReflectionClass($reflector, $identifierType)]);
     }
 
     private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionClass
     {
-        if (!$identifierType->isClass()) {
+        if (! $identifierType->isClass()) {
             return null;
         }
 
@@ -123,12 +129,18 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             }
         };
 
-        $ast = (new ParserFactory())->create(ParserFactory::PREFER_PHP7)->parse(file_get_contents($fileName));
+        $fileContents = \file_get_contents($fileName);
+        $ast          = (new ParserFactory())->create(ParserFactory::PREFER_PHP7)->parse($fileContents);
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        return (new NodeToReflection())->__invoke($reflector, $nodeVisitor->getAnonymousClassNode(), new LocatedSource(file_get_contents($fileName), $fileName), null);
+        return (new NodeToReflection())->__invoke(
+            $reflector,
+            $nodeVisitor->getAnonymousClassNode(),
+            new LocatedSource($fileContents, $fileName),
+            null
+        );
     }
 }

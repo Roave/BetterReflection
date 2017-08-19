@@ -32,6 +32,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
         parent::__construct();
 
         FileChecker::checkFile($filename);
+
         $this->filename = $filename;
     }
 
