@@ -35,14 +35,6 @@ final class PhpParserLocator implements Locator
         $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
     }
 
-    /**
-     * @param Reflector $reflector
-     * @param LocatedSource $locatedSource
-     * @param Identifier $identifier
-     * @return Reflection
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
-     * @throws Exception\ParseToAstFailure
-     */
     public function findReflection(
         Reflector $reflector,
         LocatedSource $locatedSource,
@@ -58,15 +50,6 @@ final class PhpParserLocator implements Locator
         );
     }
 
-    /**
-     * Get an array of reflections found in some code.
-     *
-     * @param Reflector $reflector
-     * @param LocatedSource $locatedSource
-     * @param IdentifierType $identifierType
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
-     * @throws Exception\ParseToAstFailure
-     */
     public function findReflectionsOfType(
         Reflector $reflector,
         LocatedSource $locatedSource,
@@ -91,8 +74,10 @@ final class PhpParserLocator implements Locator
      *
      * @param Reflection[] $reflections
      * @param Identifier $identifier
+     *
      * @return Reflection
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     *
+     * @throws IdentifierNotFound
      */
     private function findInArray(array $reflections, Identifier $identifier) : Reflection
     {
