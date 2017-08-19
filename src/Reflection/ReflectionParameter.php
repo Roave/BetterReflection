@@ -279,7 +279,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return ReflectionClass|null
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass() : ?ReflectionClass
     {
         if ($this->function instanceof ReflectionMethod) {
             return $this->function->getDeclaringClass();

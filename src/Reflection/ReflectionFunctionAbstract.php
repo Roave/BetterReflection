@@ -220,7 +220,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter|null
      */
-    public function getParameter(string $parameterName)
+    public function getParameter(string $parameterName) : ?ReflectionParameter
     {
         foreach ($this->getParameters() as $parameter) {
             if ($parameter->getName() === $parameterName) {

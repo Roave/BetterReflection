@@ -173,11 +173,8 @@ class ReflectionClass implements Reflection, \Reflector
 
     /**
      * Create a ReflectionClass by name, using default reflectors etc.
-     *
-     * @param string $className
-     * @return ReflectionClass
      */
-    public static function createFromName(string $className)
+    public static function createFromName(string $className) : self
     {
         return ClassReflector::buildDefaultReflector()->reflect($className);
     }
@@ -192,9 +189,9 @@ class ReflectionClass implements Reflection, \Reflector
      * @return ReflectionClass
      * @throws \InvalidArgumentException
      */
-    public static function createFromInstance($instance)
+    public static function createFromInstance($instance) : self
     {
-        if (! is_object($instance)) {
+        if (! \is_object($instance)) {
             throw new \InvalidArgumentException('Instance must be an instance of an object');
         }
 
@@ -216,7 +213,7 @@ class ReflectionClass implements Reflection, \Reflector
         ClassLikeNode $node,
         LocatedSource $locatedSource,
         NamespaceNode $namespace = null
-    ) {
+    ) : self {
         $class = new self();
 
         $class->reflector     = $reflector;
@@ -766,7 +763,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @return ReflectionClass|null
      */
-    public function getParentClass()
+    public function getParentClass() : ?ReflectionClass
     {
         if (!($this->node instanceof ClassNode) || null === $this->node->extends) {
             return null;
