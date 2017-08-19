@@ -20,7 +20,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
     public function coreReflectionParameterNamesProvider() : array
     {
         $methods = \get_class_methods(CoreReflectionParameter::class);
-        return \array_combine($methods, \array_map(function ($i) { return [$i]; }, $methods));
+        return \array_combine($methods, \array_map(function (string $i) : array { return [$i]; }, $methods));
     }
 
     /**

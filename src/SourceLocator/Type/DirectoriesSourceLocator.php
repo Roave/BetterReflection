@@ -31,7 +31,7 @@ class DirectoriesSourceLocator implements SourceLocator
     public function __construct(array $directories)
     {
         $this->aggregateSourceLocator = new AggregateSourceLocator(\array_values(\array_map(
-            function ($directory) {
+            function ($directory) : FileIteratorSourceLocator {
                 if (! \is_string($directory)) {
                     throw InvalidDirectory::fromNonStringValue($directory);
                 }

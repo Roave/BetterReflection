@@ -186,7 +186,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     {
         return \count(\array_filter(
             $this->getParameters(),
-            function (ReflectionParameter $p) {
+            function (ReflectionParameter $p) : bool {
                 return !$p->isOptional();
             }
         ));
@@ -566,7 +566,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator = function (Node ...$node) {
+        $validator = function (Node ...$node) : array {
             return $node;
         };
         $this->node->stmts = $validator(...$nodes);

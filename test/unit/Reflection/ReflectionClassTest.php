@@ -1023,13 +1023,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithInterfaces.php'));
 
         $cInterfaces = \array_map(
-            function (ReflectionClass $interface) {
+            function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces()
         );
         $dInterfaces = \array_map(
-            function (ReflectionClass $interface) {
+            function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces()
@@ -1389,7 +1389,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         \array_walk(
             $expectedConstants,
-            function ($constantValue, $constantName) use ($reflection) {
+            function ($constantValue, string $constantName) use ($reflection) : void {
                 self::assertTrue($reflection->hasConstant($constantName), 'Constant ' . $constantName . ' not set');
                 self::assertSame(
                     $constantValue,
@@ -1445,7 +1445,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         \array_walk(
             $expectedConstants,
-            function ($constantValue, $constantName) use ($reflectionConstants) {
+            function ($constantValue, string $constantName) use ($reflectionConstants) : void {
                 self::assertArrayHasKey($constantName, $reflectionConstants, 'Constant ' . $constantName . ' not set');
                 self::assertSame(
                     $constantValue,

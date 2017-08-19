@@ -100,7 +100,7 @@ class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFromClosureCanReflectTypeHints() : void
     {
-        $myClosure = function (\stdClass $theParam) {
+        $myClosure = function (\stdClass $theParam) : int {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);

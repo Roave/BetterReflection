@@ -106,12 +106,12 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $indexedSymbols = \array_combine($allSymbols, $allSymbols);
 
         return \array_map(
-            function ($symbol) {
+            function (string $symbol) : array {
                 return [$symbol];
             },
             \array_filter(
                 $indexedSymbols,
-                function ($symbol) {
+                function (string $symbol) : bool {
                     $reflection = new PhpReflectionClass($symbol);
 
                     return $reflection->isInternal();
@@ -177,7 +177,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $classNames = \array_filter(
             \str_replace('.stub', '', \scandir(__DIR__ . '/../../../../stub')),
-            function ($fileName) {
+            function (string $fileName) : string {
                 return \trim($fileName, '.');
             }
         );
@@ -185,7 +185,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         return \array_combine(
             $classNames,
             \array_map(
-                function ($fileName) {
+                function (string $fileName) : array {
                     return [$fileName];
                 },
                 $classNames
@@ -207,14 +207,14 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
         $originalMethods = $original->getMethods();
 
         $originalMethodNames = \array_map(
-            function (\ReflectionMethod $method) {
+            function (\ReflectionMethod $method) : string {
                 return $method->getName();
             },
             $originalMethods
         );
 
         $stubbedMethodNames = \array_map(
-            function (ReflectionMethod $method) {
+            function (ReflectionMethod $method) : string {
                 return $method->getName();
             },
             $stubbed->getMethods() // @TODO see #107
@@ -239,13 +239,13 @@ class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
     {
         self::assertSame(
             \array_map(
-                function (\ReflectionParameter $parameter) {
+                function (\ReflectionParameter $parameter) : string {
                     return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },
                 $original->getParameters()
             ),
             \array_map(
-                function (ReflectionParameter $parameter) {
+                function (ReflectionParameter $parameter) : string {
                     return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },
                 $stubbed->getParameters()
