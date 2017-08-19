@@ -38,9 +38,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
              * @todo this code path looks never used, and disagrees with the contract anyway...?
              * @see https://github.com/Roave/BetterReflection/issues/257
              */
-            return [
-                "<?php\n\n" . $stub,
-            ];
+            return new InternalLocatedSource("<?php\n\n" . $stub);
         }
 
         $stubber = $this->stubber;
