@@ -62,7 +62,7 @@ class ReflectionObject extends ReflectionClass
         ClassLikeNode $node,
         LocatedSource $locatedSource,
         NamespaceNode $namespace = null
-    ) {
+    ) : ReflectionClass {
         throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }
 
@@ -71,7 +71,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @throws \LogicException
      */
-    public static function createFromName(string $className)
+    public static function createFromName(string $className) : ReflectionClass
     {
         throw new \LogicException('Cannot create a ReflectionObject from name - use ReflectionObject::createFromInstance');
     }
@@ -86,7 +86,7 @@ class ReflectionObject extends ReflectionClass
      * @throws \InvalidArgumentException
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
-    public static function createFromInstance($object) : self
+    public static function createFromInstance($object) : ReflectionClass
     {
         if (! \is_object($object)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
@@ -383,7 +383,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getParentClass()
+    public function getParentClass() : ?ReflectionClass
     {
         return $this->reflectionClass->getParentClass();
     }
@@ -554,14 +554,6 @@ class ReflectionObject extends ReflectionClass
     public function isIterateable() : bool
     {
         return $this->reflectionClass->isIterateable();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __clone()
-    {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
     }
 
     /**

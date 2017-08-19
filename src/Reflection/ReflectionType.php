@@ -31,7 +31,7 @@ class ReflectionType
     {
         $reflectionType = new self();
         $reflectionType->type = $type;
-        $reflectionType->allowsNull = (bool)$allowsNull;
+        $reflectionType->allowsNull = $allowsNull;
         return $reflectionType;
     }
 

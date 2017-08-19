@@ -8,7 +8,6 @@ use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Param as ParamNode;
-use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
@@ -57,7 +56,12 @@ class FindParameterType
     private function createContextForFunction(ReflectionFunctionAbstract $function) : Context
     {
         if ($function instanceof ReflectionMethod) {
-            $function = $function->getDeclaringClass();
+            $declaringClass = $function->getDeclaringClass();
+
+            return (new ContextFactory())->createForNamespace(
+                $declaringClass->getNamespaceName(),
+                $declaringClass->getLocatedSource()->getSource()
+            );
         }
 
         return (new ContextFactory())->createForNamespace(

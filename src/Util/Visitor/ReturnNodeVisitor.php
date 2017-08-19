@@ -14,7 +14,7 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
      */
     private $returnNodes = [];
 
-    public function enterNode(Node $node)
+    public function enterNode(Node $node) : ?int
     {
         if ($this->isScopeChangingNode($node)) {
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -23,6 +23,8 @@ class ReturnNodeVisitor extends NodeVisitorAbstract
         if ($node instanceof Node\Stmt\Return_) {
             $this->returnNodes[] = $node;
         }
+
+        return null;
     }
 
     private function isScopeChangingNode(Node $node) : bool

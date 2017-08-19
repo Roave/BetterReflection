@@ -138,7 +138,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @see http://php.net/manual/en/class.streamwrapper.php
      * @see http://php.net/manual/en/streamwrapper.stream-open.php
      */
-    public function stream_open($path, $mode, $options, &$opened_path)
+    public function stream_open($path, $mode, $options, &$opened_path) : bool
     {
         self::$autoloadLocatedFile = $path;
         return false;
@@ -153,7 +153,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @see http://php.net/manual/en/class.streamwrapper.php
      * @see http://php.net/manual/en/streamwrapper.url-stat.php
      */
-    public function url_stat($path, $flags)
+    public function url_stat($path, $flags) : array
     {
         // This is just dummy file stat data to fool stat calls
         $assoc = [

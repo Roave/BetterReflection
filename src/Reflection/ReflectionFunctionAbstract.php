@@ -9,7 +9,6 @@ use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use Roave\BetterReflection\Util\GetFirstDocComment;
-use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
@@ -220,7 +219,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter|null
      */
-    public function getParameter(string $parameterName)
+    public function getParameter(string $parameterName) : ?ReflectionParameter
     {
         foreach ($this->getParameters() as $parameter) {
             if ($parameter->getName() === $parameterName) {
@@ -361,9 +360,10 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function isGenerator() : bool
     {
-        if (!isset($this->node)) {
+        if (null === $this->node) {
             return false;
         }
+
         return $this->nodeIsOrContainsYield($this->node);
     }
 

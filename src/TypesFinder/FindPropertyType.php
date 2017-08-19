@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Context;
@@ -39,15 +40,15 @@ class FindPropertyType
             )
         );
 
-        /* @var \phpDocumentor\Reflection\DocBlock\Tags\Var_ $varTag */
-        $resolvedTypes = [];
+        /* @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
         $varTags = $docBlock->getTagsByName('var');
-        foreach ($varTags as $varTag) {
-            $resolvedTypes = array_merge(
-                $resolvedTypes,
-                (new ResolveTypes())->__invoke(explode('|', (string) $varTag->getType()), $context)
-            );
-        }
-        return $resolvedTypes;
+        $typeResolver = new ResolveTypes();
+
+        return \array_merge(
+            [],
+            ...\array_map(function (Var_ $varTag) use ($typeResolver, $context) {
+                return $typeResolver->__invoke(\explode('|', (string) $varTag->getType()), $context);
+            }, $varTags)
+        );
     }
 }

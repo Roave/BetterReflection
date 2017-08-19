@@ -173,11 +173,8 @@ class ReflectionClass implements Reflection, \Reflector
 
     /**
      * Create a ReflectionClass by name, using default reflectors etc.
-     *
-     * @param string $className
-     * @return ReflectionClass
      */
-    public static function createFromName(string $className)
+    public static function createFromName(string $className) : self
     {
         return ClassReflector::buildDefaultReflector()->reflect($className);
     }
@@ -192,9 +189,9 @@ class ReflectionClass implements Reflection, \Reflector
      * @return ReflectionClass
      * @throws \InvalidArgumentException
      */
-    public static function createFromInstance($instance)
+    public static function createFromInstance($instance) : self
     {
-        if (! is_object($instance)) {
+        if (! \is_object($instance)) {
             throw new \InvalidArgumentException('Instance must be an instance of an object');
         }
 
@@ -216,7 +213,7 @@ class ReflectionClass implements Reflection, \Reflector
         ClassLikeNode $node,
         LocatedSource $locatedSource,
         NamespaceNode $namespace = null
-    ) {
+    ) : self {
         $class = new self();
 
         $class->reflector     = $reflector;
@@ -339,7 +336,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     private function getMethodsIndexedByName() : array
     {
-        if (! isset($this->cachedMethods)) {
+        if (null === $this->cachedMethods) {
             $this->cachedMethods = $this->scanMethods();
         }
 
@@ -766,7 +763,7 @@ class ReflectionClass implements Reflection, \Reflector
      *
      * @return ReflectionClass|null
      */
-    public function getParentClass()
+    public function getParentClass() : ?ReflectionClass
     {
         if (!($this->node instanceof ClassNode) || null === $this->node->extends) {
             return null;
@@ -886,18 +883,22 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getTraits() : array
     {
-        $traitUsages = array_filter($this->node->stmts, function (Node $node) {
-            return $node instanceof TraitUse;
-        });
-
-        $traitNameNodes = [];
-        foreach ($traitUsages as $traitUsage) {
-            $traitNameNodes = array_merge($traitNameNodes, $traitUsage->traits);
-        }
-
-        return array_map(function (Node\Name $importedTrait) {
-            return $this->reflectClassForNamedNode($importedTrait);
-        }, $traitNameNodes);
+        return \array_map(
+            function (Node\Name $importedTrait) {
+                return $this->reflectClassForNamedNode($importedTrait);
+            },
+            \array_merge(
+                [],
+                ...\array_map(
+                    function (TraitUse $traitUse) : array {
+                        return $traitUse->traits;
+                    },
+                    \array_filter($this->node->stmts, function (Node $node) : bool {
+                        return $node instanceof TraitUse;
+                    })
+                )
+            )
+        );
     }
 
     /**
@@ -911,11 +912,15 @@ class ReflectionClass implements Reflection, \Reflector
     private function getFqsenFromNamedNode(Node\Name $node) : string
     {
         $objectType = (new FindTypeFromAst())->__invoke($node, $this->locatedSource, $this->getNamespaceName());
-        if (null === $objectType || !($objectType instanceof Object_)) {
+
+        if (null === $objectType
+            || ! $objectType instanceof Object_
+            || ! $fqsen = $objectType->getFqsen()
+        ) {
             throw new \Exception('Unable to determine FQSEN for named node');
         }
 
-        return $objectType->getFqsen()->__toString();
+        return $fqsen->__toString();
     }
 
     /**
@@ -1232,7 +1237,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function __clone()
     {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
+        throw Exception\Uncloneable::fromClass(\get_class($this));
     }
 
     /**
@@ -1249,19 +1254,20 @@ class ReflectionClass implements Reflection, \Reflector
             throw new Exception\ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
 
-        if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
+        $property = $this->getProperty($propertyName);
+
+        if (! $property || ! $property->isStatic()) {
             throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         // PHP behaviour is to simply say "property does not exist" if accessing
         // protected or private values. Here we be a little more explicit in
         // reasoning...
-        if (!$this->getProperty($propertyName)->isPublic()) {
+        if (! $property->isPublic()) {
             throw new Exception\PropertyNotPublic('Property is not public');
         }
 
-        $className = $this->getName();
-        return $className::${$propertyName};
+        return $this->getName()::${$propertyName};
     }
 
     /**
@@ -1277,19 +1283,20 @@ class ReflectionClass implements Reflection, \Reflector
             throw new Exception\ClassDoesNotExist('Property cannot be set as the class is not loaded');
         }
 
-        if (!$this->hasProperty($propertyName) || !$this->getProperty($propertyName)->isStatic()) {
+        $property = $this->getProperty($propertyName);
+
+        if (! $property || ! $property->isStatic()) {
             throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         // PHP behaviour is to simply say "property does not exist" if accessing
         // protected or private values. Here we be a little more explicit in
         // reasoning...
-        if (!$this->getProperty($propertyName)->isPublic()) {
+        if (! $property->isPublic()) {
             throw new Exception\PropertyNotPublic('Property is not public');
         }
 
-        $className = $this->getName();
-        $className::${$propertyName} = $value;
+        $this->getName()::${$propertyName} = $value;
     }
 
     /**

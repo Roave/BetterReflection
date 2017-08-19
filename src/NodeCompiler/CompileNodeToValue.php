@@ -50,11 +50,11 @@ class CompileNodeToValue
         }
 
         if ($node instanceof Node\Scalar\MagicConst\Dir) {
-            return $this->compileDirConstant($node, $context);
+            return $this->compileDirConstant($context);
         }
 
         if ($node instanceof Node\Scalar\MagicConst\Class_) {
-            return $this->compileClassConstant($node, $context);
+            return $this->compileClassConstant($context);
         }
 
         throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
@@ -73,7 +73,7 @@ class CompileNodeToValue
         foreach ($arrayNode->items as $arrayItem) {
             $compiledValue = $this($arrayItem->value, $context);
 
-            if (null == $arrayItem->key) {
+            if (null === $arrayItem->key) {
                 $compiledArray[] = $compiledValue;
                 continue;
             }
@@ -269,24 +269,16 @@ class CompileNodeToValue
 
     /**
      * Compile a __DIR__ node
-     *
-     * @param Node\Scalar\MagicConst\Dir $node
-     * @param CompilerContext $context
-     * @return string
      */
-    private function compileDirConstant(Node\Scalar\MagicConst\Dir $node, CompilerContext $context): string
+    private function compileDirConstant(CompilerContext $context): string
     {
         return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
     }
 
     /**
      * Compiles magic constant __CLASS__
-     *
-     * @param Node\Scalar\MagicConst\Class_ $node
-     * @param CompilerContext $context
-     * @return string
      */
-    private function compileClassConstant(Node\Scalar\MagicConst\Class_ $node, CompilerContext $context): string
+    private function compileClassConstant(CompilerContext $context): string
     {
         return $context->hasSelf() ? $context->getSelf()->getName() : '';
     }

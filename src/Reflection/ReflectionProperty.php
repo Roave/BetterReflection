@@ -75,9 +75,15 @@ class ReflectionProperty implements \Reflector
      */
     public function __toString() : string
     {
+        $stateModifier = '';
+
+        if (! $this->isStatic()) {
+            $stateModifier = $this->isDefault() ? ' <default>' : ' <dynamic>';
+        }
+
         return sprintf(
             'Property [%s %s%s $%s ]',
-            $this->isStatic() ? '' : ($this->isDefault() ? ' <default>' : ' <dynamic>'),
+            $stateModifier,
             $this->getVisibilityAsString(),
             $this->isStatic() ? ' static' : '',
             $this->getName()

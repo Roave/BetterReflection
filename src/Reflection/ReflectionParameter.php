@@ -47,9 +47,9 @@ class ReflectionParameter implements \Reflector
     private $isDefaultValueConstant = false;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $defaultValueConstantName = null;
+    private $defaultValueConstantName;
 
     /**
      * @var int
@@ -197,7 +197,7 @@ class ReflectionParameter implements \Reflector
         $param->reflector = $reflector;
         $param->node = $node;
         $param->function = $function;
-        $param->parameterIndex = (int)$parameterIndex;
+        $param->parameterIndex = $parameterIndex;
         return $param;
     }
 
@@ -222,7 +222,7 @@ class ReflectionParameter implements \Reflector
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
-            && !in_array(strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'])) {
+            && ! \in_array(strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
             $this->isDefaultValueConstant = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
@@ -241,14 +241,18 @@ class ReflectionParameter implements \Reflector
      */
     private function findParentClassDeclaringConstant(string $constantName): string
     {
-        $class = $this->function->getDeclaringClass();
+        /* @var $method ReflectionMethod */
+        $method = $this->function;
+        $class  = $method->getDeclaringClass();
+
         do {
             if ($class->hasConstant($constantName)) {
                 return $class->getName();
             }
         } while ($class = $class->getParentClass());
 
-        throw new LogicException("Failed to find parent class of constant '$constantName'.");
+        // note: this code is theoretically unreachable, so don't expect any coverage on it
+        throw new \LogicException("Failed to find parent class of constant '$constantName'.");
     }
 
     /**
@@ -279,7 +283,7 @@ class ReflectionParameter implements \Reflector
      *
      * @return ReflectionClass|null
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass() : ?ReflectionClass
     {
         if ($this->function instanceof ReflectionMethod) {
             return $this->function->getDeclaringClass();

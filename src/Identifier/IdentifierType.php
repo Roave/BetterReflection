@@ -12,12 +12,9 @@ class IdentifierType
     const IDENTIFIER_CLASS = ReflectionClass::class;
     const IDENTIFIER_FUNCTION = ReflectionFunction::class;
 
-    /**
-     * @var string[]
-     */
-    private $validTypes = [
-        self::IDENTIFIER_CLASS,
-        self::IDENTIFIER_FUNCTION,
+    private const VALID_TYPES = [
+        self::IDENTIFIER_CLASS    => null,
+        self::IDENTIFIER_FUNCTION => null,
     ];
 
     /**
@@ -27,7 +24,7 @@ class IdentifierType
 
     public function __construct($type = self::IDENTIFIER_CLASS)
     {
-        if (!in_array($type, $this->validTypes, true)) {
+        if (! \array_key_exists($type, self::VALID_TYPES)) {
             throw new \InvalidArgumentException(sprintf(
                 '%s is not a valid identifier type',
                 $type
