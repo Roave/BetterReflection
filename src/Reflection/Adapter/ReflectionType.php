@@ -30,7 +30,7 @@ class ReflectionType extends CoreReflectionType
     /**
      * {@inheritDoc}
      */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->betterReflectionType->__toString();
     }
@@ -38,7 +38,7 @@ class ReflectionType extends CoreReflectionType
     /**
      * {@inheritDoc}
      */
-    public function allowsNull()
+    public function allowsNull() : bool
     {
         return $this->betterReflectionType->allowsNull();
     }
@@ -46,7 +46,7 @@ class ReflectionType extends CoreReflectionType
     /**
      * {@inheritDoc}
      */
-    public function isBuiltin()
+    public function isBuiltin() : bool
     {
         return $this->betterReflectionType->isBuiltin();
     }
