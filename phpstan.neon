@@ -1,0 +1,4 @@
+parameters:
+    ignoreErrors:
+        # Some parent constructors are explicitly to be ignored
+        - '#does not call parent constructor#'
