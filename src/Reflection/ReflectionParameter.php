@@ -511,7 +511,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isVariadic() : bool
     {
-        return (bool)$this->node->variadic;
+        return $this->node->variadic;
     }
 
     /**
@@ -521,7 +521,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isPassedByReference() : bool
     {
-        return (bool)$this->node->byRef;
+        return $this->node->byRef;
     }
 
     /**
