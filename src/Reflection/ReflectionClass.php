@@ -912,11 +912,15 @@ class ReflectionClass implements Reflection, \Reflector
     private function getFqsenFromNamedNode(Node\Name $node) : string
     {
         $objectType = (new FindTypeFromAst())->__invoke($node, $this->locatedSource, $this->getNamespaceName());
-        if (null === $objectType || !($objectType instanceof Object_)) {
+
+        if (null === $objectType
+            || ! $objectType instanceof Object_
+            || ! $fqsen = $objectType->getFqsen()
+        ) {
             throw new \Exception('Unable to determine FQSEN for named node');
         }
 
-        return $objectType->getFqsen()->__toString();
+        return $fqsen->__toString();
     }
 
     /**
