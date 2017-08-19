@@ -210,14 +210,15 @@ class ReflectionParameter implements \Reflector
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
-            $className = $this->getRealClassName(\implode('\\', $defaultValueNode->class->parts));
+            $classNameType = $this->getRealClassName(\implode('\\', $defaultValueNode->class->parts));
+            $className     = (string) $classNameType;
 
-            if ($className instanceof Self_) {
+            if ($classNameType instanceof Self_) {
                 $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
             }
 
             $this->isDefaultValueConstant = true;
-            $this->defaultValueConstantName = \ltrim((string) $className, '\\') . '::' . $defaultValueNode->name;
+            $this->defaultValueConstantName = \ltrim($className, '\\') . '::' . $defaultValueNode->name;
             $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 
