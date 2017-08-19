@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use PhpParser\Parser;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
@@ -25,9 +27,9 @@ class StringSourceLocator extends AbstractSourceLocator
      * @param string $source
      * @throws \Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode
      */
-    public function __construct(string $source)
+    public function __construct(string $source, ?Locator $locator = null)
     {
-        parent::__construct();
+        parent::__construct($locator);
         $this->source = $source;
 
         if (empty($this->source)) {
