@@ -23,6 +23,8 @@ use SuperClosure\Analyzer\AstAnalyzer;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
+    public const CLOSURE_NAME = '{closure}';
+
     /**
      * @var NamespaceNode
      */
@@ -134,7 +136,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     public function getShortName() : string
     {
         if ($this->node instanceof Node\Expr\Closure) {
-            return '{closure}';
+            return self::CLOSURE_NAME;
         }
 
         return $this->node->name;

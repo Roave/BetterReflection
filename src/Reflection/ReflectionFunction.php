@@ -28,7 +28,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public static function createFromClosure(\Closure $closure) : self
     {
-        return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect('{closure}');
+        return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect(self::CLOSURE_NAME);
     }
 
     /**

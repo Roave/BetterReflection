@@ -95,7 +95,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
-        self::assertSame('{closure}', $reflection->getShortName());
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
     }
 
     public function testCreateFromClosureCanReflectTypeHints() : void
