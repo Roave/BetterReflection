@@ -36,6 +36,7 @@ use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use PhpParser\Node\Name;
 use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
 use PhpParser\Node\Stmt\Class_;
+use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 
 /**
@@ -245,10 +246,49 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 
-    public function testIsConstructor() : void
+    public function testGetConstructor() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
+        $constructor = $classInfo->getConstructor();
+
+        self::assertInstanceOf(ReflectionMethod::class, $constructor);
+        self::assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetCaseInsensitiveConstructor() : void
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(UpperCaseConstructDestruct::class);
+        $constructor = $classInfo->getConstructor();
+
+        self::assertInstanceOf(ReflectionMethod::class, $constructor);
+        self::assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetConstructorWhenPhp4Style() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php'));
+        $classInfo = $reflector->reflect(\Php4StyleConstruct::class);
+        $constructor = $classInfo->getConstructor();
+
+        self::assertInstanceOf(ReflectionMethod::class, $constructor);
+        self::assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetConstructorWhenPhp4StyleInNamespace() : void
+    {
+        self::expectException(\OutOfBoundsException::class);
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php'));
+        $classInfo = $reflector->reflect(Fixture\Php4StyleConstructInNamespace::class);
+        $classInfo->getConstructor();
+    }
+
+    public function testGetConstructorWhenPhp4StyleCaseInsensitive() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php'));
+        $classInfo = $reflector->reflect(\Php4StyleCaseInsensitiveConstruct::class);
         $constructor = $classInfo->getConstructor();
 
         self::assertInstanceOf(ReflectionMethod::class, $constructor);
