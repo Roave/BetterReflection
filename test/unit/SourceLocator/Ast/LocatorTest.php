@@ -18,7 +18,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Locator
  */
-class LocatorTest extends \PHPUnit_Framework_TestCase
+class LocatorTest extends \PHPUnit\Framework\TestCase
 {
     private function getIdentifier($name, $type) : Identifier
     {

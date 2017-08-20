@@ -38,14 +38,15 @@ class FindParameterType
             )
         );
 
+        /* @var $paramTags \phpDocumentor\Reflection\DocBlock\Tags\Param[] */
         $paramTags = $docBlock->getTagsByName('param');
 
         foreach ($paramTags as $paramTag) {
-            /* @var $paramTag \phpDocumentor\Reflection\DocBlock\Tags\Param */
             if ($paramTag->getVariableName() === $node->name) {
                 return (new ResolveTypes())->__invoke(\explode('|', (string) $paramTag->getType()), $context);
             }
         }
+
         return [];
     }
 

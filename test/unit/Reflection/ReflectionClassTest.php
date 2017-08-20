@@ -41,7 +41,7 @@ use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionClass
  */
-class ReflectionClassTest extends \PHPUnit_Framework_TestCase
+class ReflectionClassTest extends \PHPUnit\Framework\TestCase
 {
     private function getComposerLocator() : ComposerSourceLocator
     {

@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
  */
-class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
+class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 {
     public function coreReflectionPropertyNamesProvider() : array
     {

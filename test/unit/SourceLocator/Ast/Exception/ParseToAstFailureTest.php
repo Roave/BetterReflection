@@ -9,7 +9,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
  */
-class ParseToAstFailureTest extends \PHPUnit_Framework_TestCase
+class ParseToAstFailureTest extends \PHPUnit\Framework\TestCase
 {
     public function testFromLocatedSourceWithoutFilename() : void
     {

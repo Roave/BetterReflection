@@ -14,7 +14,7 @@ use phpDocumentor\Reflection\Types;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindPropertyType
  */
-class FindPropertyTypeTest extends \PHPUnit_Framework_TestCase
+class FindPropertyTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return array

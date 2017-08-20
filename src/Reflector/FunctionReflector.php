@@ -47,9 +47,12 @@ class FunctionReflector implements Reflector
      */
     public function getAllFunctions() : array
     {
-        return $this->sourceLocator->locateIdentifiersByType(
+        /* @var $allFunctions \Roave\BetterReflection\Reflection\ReflectionFunction[] */
+        $allFunctions = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         );
+
+        return $allFunctions;
     }
 }

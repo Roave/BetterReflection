@@ -10,7 +10,7 @@ use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
  */
-final class EvalLoaderTest extends \PHPUnit_Framework_TestCase
+final class EvalLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testEvalExecutes() : void
     {

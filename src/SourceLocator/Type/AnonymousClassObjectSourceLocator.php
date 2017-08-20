@@ -135,11 +135,14 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        return (new NodeToReflection())->__invoke(
+        /* @var $reflectionClass ReflectionClass|null */
+        $reflectionClass = (new NodeToReflection())->__invoke(
             $reflector,
             $nodeVisitor->getAnonymousClassNode(),
             new LocatedSource($fileContents, $fileName),
             null
         );
+
+        return $reflectionClass;
     }
 }

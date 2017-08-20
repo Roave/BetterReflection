@@ -9,7 +9,7 @@ use Roave\BetterReflection\Util\FileHelper;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource
  */
-class LocatedSourceTest extends \PHPUnit_Framework_TestCase
+class LocatedSourceTest extends \PHPUnit\Framework\TestCase
 {
     public function testValuesHappyPath() : void
     {

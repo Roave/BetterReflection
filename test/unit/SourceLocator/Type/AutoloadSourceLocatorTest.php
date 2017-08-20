@@ -19,7 +19,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
  */
-class AutoloadSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

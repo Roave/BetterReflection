@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
 
+use phpDocumentor\Reflection\Types\Object_;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
@@ -124,23 +125,26 @@ class CompileNodeToValue
         $className = \implode('\\', $node->class->parts);
 
         if ($node->name === 'class') {
-            return \substr(
-                (string)(new ResolveTypes())->__invoke(
-                    [$className],
-                    (new ContextFactory())->createForNamespace(
-                        $context->getSelf()->getNamespaceName(),
-                        $context->getSelf()->getLocatedSource()->getSource()
-                    ))[0]->getFqsen(),
-                1
-            );
+            /* @var $resolvedType Object_ */
+            $resolvedType = (new ResolveTypes())->__invoke(
+                [$className],
+                (new ContextFactory())->createForNamespace(
+                    $context->getSelf()->getNamespaceName(),
+                    $context->getSelf()->getLocatedSource()->getSource()
+                ))[0];
+
+            return \substr((string) $resolvedType->getFqsen(), 1);
         }
 
+        /* @var $classInfo ReflectionClass|null */
         $classInfo = null;
+
         if ('self' === $className || 'static' === $className) {
             $classInfo = $this->getConstantDeclaringClass($node->name, $context->getSelf());
         }
 
         if (null === $classInfo) {
+            /* @var $classInfo ReflectionClass */
             $classInfo = $context->getReflector()->reflect(
                 (string) (new FindTypeFromAst())->__invoke(
                     $className,
@@ -150,9 +154,7 @@ class CompileNodeToValue
             );
         }
 
-        /* @var ReflectionClass $classInfo */
-        $constName = $node->name;
-        return $classInfo->getConstant($constName);
+        return $classInfo->getConstant($node->name);
     }
 
     /**

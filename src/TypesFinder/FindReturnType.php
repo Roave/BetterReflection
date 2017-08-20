@@ -28,6 +28,7 @@ class FindReturnType
 
         $context = $this->createContextForFunction($function);
 
+        /* @var $returnTags \phpDocumentor\Reflection\DocBlock\Tags\Return_[] */
         $returnTags = DocBlockFactory::createInstance()->create(
             $docComment,
             new Context(
@@ -37,9 +38,9 @@ class FindReturnType
         )->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
-            /* @var $returnTag \phpDocumentor\Reflection\DocBlock\Tags\Return_ */
             return (new ResolveTypes())->__invoke(\explode('|', (string) $returnTag->getType()), $context);
         }
+
         return [];
     }
 

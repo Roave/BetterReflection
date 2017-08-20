@@ -9,7 +9,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
  */
-final class ClassAlreadyLoadedTest extends \PHPUnit_Framework_TestCase
+final class ClassAlreadyLoadedTest extends \PHPUnit\Framework\TestCase
 {
     public function testFromReflectionClass() : void
     {

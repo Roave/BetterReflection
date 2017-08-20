@@ -10,7 +10,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 /**
  * @covers \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
  */
-class IdentifierNotFoundTest extends \PHPUnit_Framework_TestCase
+class IdentifierNotFoundTest extends \PHPUnit\Framework\TestCase
 {
     public function testFromNonObject() : void
     {

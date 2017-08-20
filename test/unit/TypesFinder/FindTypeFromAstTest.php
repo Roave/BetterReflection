@@ -11,7 +11,7 @@ use phpDocumentor\Reflection\Types;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindTypeFromAst
  */
-class FindTypeFromAstTest extends \PHPUnit_Framework_TestCase
+class FindTypeFromAstTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return array

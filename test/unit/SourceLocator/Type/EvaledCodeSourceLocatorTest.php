@@ -14,7 +14,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
  */
-class EvaledCodeSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class EvaledCodeSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

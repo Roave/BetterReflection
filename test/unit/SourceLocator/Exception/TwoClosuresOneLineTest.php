@@ -5,12 +5,12 @@ namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine;
 use SuperClosure\Exception\ClosureAnalysisException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOneLine
  */
-class TwoClosuresOneLineTest extends PHPUnit_Framework_TestCase
+class TwoClosuresOneLineTest extends TestCase
 {
     public function testFromReflection() : void
     {

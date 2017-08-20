@@ -8,7 +8,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
  */
-final class FailedToLoadClassTest extends \PHPUnit_Framework_TestCase
+final class FailedToLoadClassTest extends \PHPUnit\Framework\TestCase
 {
     public function testFromReflectionClass() : void
     {

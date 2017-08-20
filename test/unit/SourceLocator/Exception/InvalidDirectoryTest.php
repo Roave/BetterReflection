@@ -8,7 +8,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory
  */
-class InvalidDirectoryTest extends \PHPUnit_Framework_TestCase
+class InvalidDirectoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider nonStringValuesProvider

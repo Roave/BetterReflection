@@ -15,7 +15,7 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
  */
-class DirectoriesSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class DirectoriesSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DirectoriesSourceLocator

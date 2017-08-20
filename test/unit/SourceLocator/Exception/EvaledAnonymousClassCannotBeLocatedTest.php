@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated
  */
-class EvaledAnonymousClassCannotBeLocatedTest extends PHPUnit_Framework_TestCase
+class EvaledAnonymousClassCannotBeLocatedTest extends TestCase
 {
     public function testCreate() : void
     {

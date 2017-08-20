@@ -15,7 +15,7 @@ use PhpParser\Lexer;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection
  */
-class NodeToReflectionTest extends \PHPUnit_Framework_TestCase
+class NodeToReflectionTest extends \PHPUnit\Framework\TestCase
 {
     private function getFirstAstNodeInString($php) : Node
     {

@@ -8,7 +8,7 @@ use Roave\BetterReflection\SourceLocator\FileChecker;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\FileChecker
  */
-class FileCheckerTest extends \PHPUnit_Framework_TestCase
+class FileCheckerTest extends \PHPUnit\Framework\TestCase
 {
     public function testCheckFileThrowsExceptionIfEmptyFileGiven() : void
     {

@@ -14,7 +14,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction
  */
-class ReflectionFunctionTest extends \PHPUnit_Framework_TestCase
+class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {

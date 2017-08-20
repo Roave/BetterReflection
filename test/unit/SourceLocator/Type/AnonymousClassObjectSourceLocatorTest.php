@@ -15,7 +15,7 @@ use Roave\BetterReflection\Util\FileHelper;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
  */
-class AnonymousClassObjectSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     public function testExceptionThrownWhenNonObjectGiven() : void
     {

@@ -13,7 +13,7 @@ use Composer\Autoload\ClassLoader;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator
  */
-class ComposerSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class ComposerSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

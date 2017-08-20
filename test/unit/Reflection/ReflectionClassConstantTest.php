@@ -8,7 +8,7 @@ use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
-class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
+class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
 {
     private function getComposerLocator() : ComposerSourceLocator
     {

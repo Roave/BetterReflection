@@ -15,7 +15,7 @@ use RecursiveIteratorIterator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
  */
-class FileIteratorSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class FileIteratorSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FileIteratorSourceLocator

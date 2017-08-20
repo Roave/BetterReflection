@@ -17,7 +17,7 @@ use ReflectionClass as PhpReflectionClass;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
  */
-class PhpInternalSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

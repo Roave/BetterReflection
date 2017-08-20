@@ -11,7 +11,7 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
 /**
  * @covers \Roave\BetterReflection\Util\FindReflectionOnLine
  */
-class FindReflectionOnLineTest extends \PHPUnit_Framework_TestCase
+class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 {
     public function testInvokeFindsClass() : void
     {

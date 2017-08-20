@@ -11,7 +11,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator
  */
-class SingleFileSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class SingleFileSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

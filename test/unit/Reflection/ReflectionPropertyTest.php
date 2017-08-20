@@ -19,7 +19,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
  */
-class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
+class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ClassReflector

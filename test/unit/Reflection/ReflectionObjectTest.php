@@ -19,7 +19,7 @@ use PhpParser\ParserFactory;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject
  */
-class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
+class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 {
     private $parser;
 

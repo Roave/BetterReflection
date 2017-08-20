@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant
  */
-class ReflectionClassConstantTest extends \PHPUnit_Framework_TestCase
+class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {

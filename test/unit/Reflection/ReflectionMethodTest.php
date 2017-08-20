@@ -21,7 +21,7 @@ use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
  */
-class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
+class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ClassReflector

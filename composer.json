@@ -3,7 +3,7 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": "7.1.*",
+        "php": ">7.1.0,<7.3.0",
         "nikic/php-parser": "^3.0.5",
         "phpdocumentor/reflection-docblock": "^3.2.0",
         "phpdocumentor/type-resolver": "^0.4.0",
@@ -12,9 +12,7 @@
         "roave/signature": "^1.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.13.1",
-        "phpunit/phpunit": "^5.7.19",
-        "phpunit/phpunit-mock-objects": "^3.4.3"
+        "phpunit/phpunit": "^6.3.0"
     },
     "autoload": {
         "psr-4": {

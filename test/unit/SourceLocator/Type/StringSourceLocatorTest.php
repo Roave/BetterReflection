@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\StringSourceLocator
  */
-class StringSourceLocatorTest extends \PHPUnit_Framework_TestCase
+class StringSourceLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

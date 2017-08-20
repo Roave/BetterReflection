@@ -1,0 +1,6 @@
+parameters:
+    ignoreErrors:
+        # Some parent constructors are explicitly to be ignored
+        - '#does not call parent constructor#'
+        - '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
+        - '#Access to an undefined property PhpParser\\\Node::\$stmts#'

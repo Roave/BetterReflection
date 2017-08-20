@@ -949,7 +949,10 @@ class ReflectionClass implements Reflection, \Reflector
     private function reflectClassForNamedNode(Node\Name $node) : self
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        return $this->reflector->reflect($this->getFqsenFromNamedNode($node));
+        /* @var $class self */
+        $class = $this->reflector->reflect($this->getFqsenFromNamedNode($node));
+
+        return $class;
     }
 
     /**
@@ -993,16 +996,15 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getTraitAliases() : array
     {
+        /* @var Node\Stmt\TraitUse[] $traitUsages */
         $traitUsages = \array_filter($this->node->stmts, function (Node $node) : bool {
             return $node instanceof TraitUse;
         });
 
         $resolvedAliases = [];
 
-        /* @var Node\Stmt\TraitUse[] $traitUsages */
         foreach ($traitUsages as $traitUsage) {
             $traitNames = $traitUsage->traits;
-
             $adaptations = $traitUsage->adaptations;
 
             foreach ($adaptations as $adaptation) {

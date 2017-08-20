@@ -8,7 +8,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource
  */
-class EvaledLocatedSourceTest extends \PHPUnit_Framework_TestCase
+class EvaledLocatedSourceTest extends \PHPUnit\Framework\TestCase
 {
     public function testInternalsLocatedSource() : void
     {

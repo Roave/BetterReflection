@@ -1,20 +1,90 @@
 language: php
 
-php:
-  - 7.1
-
-env:
-  matrix:
-    - DEPENDENCIES=""
-    - DEPENDENCIES="--prefer-lowest --prefer-stable"
-
 before_script:
-  - composer update --prefer-dist $DEPENDENCIES
+  - travis_retry composer update --prefer-dist $DEPENDENCIES
 
-script:
-  - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --colors
-  - test/demo/check-demo.sh
-  - vendor/bin/phpunit test/compat
+jobs:
+  include:
+    - stage: Test
+      php: 7.1
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit
 
-after_script:
-  - if [ $TRAVIS_PHP_VERSION = '7.1' ]; then wget https://scrutinizer-ci.com/ocular.phar; php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
+    - stage: Test
+      php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit
+
+    - stage: Test Compatibility
+      php: 7.1
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Check Demo Scripts
+      php: 7.1
+      env: DEPENDENCIES=""
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: test/demo/check-demo.sh
+
+    - stage: Static Analysis
+      php: 7.1
+      env: DEPENDENCIES=""
+      before_script:
+        - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.8.3
+      script: vendor/bin/phpstan analyse -l 5 -c phpstan.neon src
+
+    - stage: Upload Coverage
+      php: 7.1
+      env: DEPENDENCIES=""
+      before_script:
+        - travis_retry composer update --prefer-dist $DEPENDENCIES
+        - wget https://scrutinizer-ci.com/ocular.phar
+      script:
+        - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
+        - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+  allow_failures:
+    - php: 7.2
+
+cache:
+  directories:
+    - $HOME/.composer/cache
