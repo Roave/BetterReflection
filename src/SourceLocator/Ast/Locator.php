@@ -79,8 +79,6 @@ class Locator
                 $identifierType,
                 $locatedSource
             );
-        } catch (\Exception $exception) {
-            throw Exception\ParseToAstFailure::fromLocatedSource($locatedSource, $exception);
         } catch (\Throwable $exception) {
             throw Exception\ParseToAstFailure::fromLocatedSource($locatedSource, $exception);
         }
