@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
@@ -12,14 +15,12 @@ use Roave\BetterReflection\Util\GetFirstDocComment;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
-use PhpParser\Node\Expr\Closure as ClosureNode;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\Type;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
-use SuperClosure\Analyzer\AstAnalyzer;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
@@ -524,18 +525,13 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * $reflectionFunction->setBodyFromClosure(function () { return true; });
      *
      * @param \Closure $newBody
-     * @throws \Roave\BetterReflection\Reflection\Exception\ClosureAstExtractionFailure
-     * @throws \SuperClosure\Exception\ClosureAnalysisException
+     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     public function setBodyFromClosure(\Closure $newBody) : void
     {
-        $closureData = (new AstAnalyzer())->analyze($newBody);
-
-        if (!isset($closureData['ast']) || !($closureData['ast'] instanceof ClosureNode)) {
-            throw new Exception\ClosureAstExtractionFailure('Failed to extract AST from closure - AST data not returned by AstAnalyzer');
-        }
-
-        $this->node->stmts = $closureData['ast']->stmts;
+        /** @var self $closureReflection */
+        $closureReflection = (new ClosureSourceLocator($newBody))->locateIdentifier($this->reflector, new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
+        $this->node->stmts = $closureReflection->getNode()->stmts;
     }
 
     /**
