@@ -597,7 +597,15 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getConstructor() : ReflectionMethod
     {
-        return $this->getMethod('__construct');
+        $constructors = \array_filter($this->getMethods(), function (ReflectionMethod $method) : bool {
+            return $method->isConstructor();
+        });
+
+        if (! isset($constructors[0])) {
+            throw new \OutOfBoundsException('Could not find method: __construct');
+        }
+
+        return $constructors[0];
     }
 
     /**
