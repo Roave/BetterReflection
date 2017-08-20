@@ -51,10 +51,14 @@ final class ClosureSourceLocator implements SourceLocator
         return $this->getReflectionFunction($reflector, $identifier->getType());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        // @todo https://github.com/Roave/BetterReflection/issues/152
-        throw new \LogicException('Not implemented - Unable to reflect closures in this way currently');
+        return \array_filter([$this->getReflectionFunction($reflector, $identifierType)]);
     }
 
     private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionFunction

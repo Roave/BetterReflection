@@ -85,20 +85,43 @@ class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testLocateIdentifiersByTypeIsNotImplemented() : void
+    /**
+     * @param Closure $closure
+     * @param string $namespace
+     * @param string $file
+     * @param int $startLine
+     * @paran int $endLine
+     * @dataProvider closuresProvider
+     */
+    public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
     {
-        $closure = function () {
-            echo 'Hello world!';
-        };
-
-        $locator = new ClosureSourceLocator($closure);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Not implemented');
-        $locator->locateIdentifiersByType(
-            $this->getMockReflector(),
+        /** @var ReflectionFunction[] $reflections */
+        $reflections = (new ClosureSourceLocator($closure))->locateIdentifiersByType(
+            $this->createMock(Reflector::class),
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         );
+
+        self::assertCount(1, $reflections);
+        self::assertArrayHasKey(0, $reflections);
+
+        self::assertTrue($reflections[0]->isClosure());
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflections[0]->getShortName());
+        self::assertSame($namespace, $reflections[0]->getNamespaceName());
+        self::assertSame($file, $reflections[0]->getFileName());
+        self::assertSame($startLine, $reflections[0]->getStartLine());
+        self::assertSame($endLine, $reflections[0]->getEndLine());
+        self::assertContains('Hello world!', $reflections[0]->getLocatedSource()->getSource());
+    }
+
+    public function testLocateIdentifiersByTypeWithClassIdentifier() : void
+    {
+        /** @var ReflectionFunction[] $reflections */
+        $reflections = (new ClosureSourceLocator(function () {}))->locateIdentifiersByType(
+            $this->createMock(Reflector::class),
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        );
+
+        self::assertCount(0, $reflections);
     }
 
     public function testTwoClosuresSameLineFails() : void
