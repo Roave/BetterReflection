@@ -297,6 +297,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return $this->implementingClass;
     }
 
+    public function getExtensionName() : ?string
+    {
+        return $this->getDeclaringClass()->getExtensionName();
+    }
+
     /**
      * @param object|null $object
      *

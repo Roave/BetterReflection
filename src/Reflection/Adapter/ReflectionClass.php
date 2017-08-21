@@ -503,7 +503,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getExtensionName()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionClass->getExtensionName() ?? false;
     }
 
     /**

@@ -123,7 +123,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getExtensionName()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionMethod->getExtensionName() ?? false;
     }
 
     /**

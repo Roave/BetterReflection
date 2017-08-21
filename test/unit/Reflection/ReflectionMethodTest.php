@@ -25,6 +25,7 @@ use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -414,6 +415,14 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
         self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+    }
+
+    public function testGetExtensionName() : void
+    {
+        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(ReflectionClass::class);
+        $method    = $classInfo->getMethod('isInternal');
+
+        self::assertSame('Reflection', $method->getExtensionName());
     }
 
     public function testGetClosureOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void

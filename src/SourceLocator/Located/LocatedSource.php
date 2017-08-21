@@ -67,6 +67,11 @@ class LocatedSource
         return false;
     }
 
+    public function getExtensionName() : ?string
+    {
+        return null;
+    }
+
     /**
      * Is the located source produced by eval() or \function_create()?
      *
