@@ -22,6 +22,7 @@ class LocatedSourceTest extends TestCase
         self::assertSame($file, $locatedSource->getFileName());
         self::assertFalse($locatedSource->isEvaled());
         self::assertFalse($locatedSource->isInternal());
+        self::assertNull($locatedSource->getExtensionName());
     }
 
     public function testValuesWithNullFilename() : void
@@ -34,6 +35,7 @@ class LocatedSourceTest extends TestCase
         self::assertNull($locatedSource->getFileName());
         self::assertFalse($locatedSource->isEvaled());
         self::assertFalse($locatedSource->isInternal());
+        self::assertNull($locatedSource->getExtensionName());
     }
 
     public function testEmptyStringSourceAllowed() : void

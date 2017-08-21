@@ -311,6 +311,11 @@ class ReflectionClass implements Reflection, CoreReflector
             && null !== $this->declaringNamespace->name;
     }
 
+    public function getExtensionName() : ?string
+    {
+        return $this->locatedSource->getExtensionName();
+    }
+
     /**
      * Construct a flat list of methods that are available. This will search up
      * all parent classes/traits/interfaces/current scope for methods.

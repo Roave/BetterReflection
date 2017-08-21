@@ -88,7 +88,7 @@ class ReflectionObjectTest extends TestCase
             ['isIterateable', null, true, []],
             ['implementsInterface', null, true, ['\Traversable']],
             ['getExtension', NotImplemented::class, null, []],
-            ['getExtensionName', NotImplemented::class, null, []],
+            ['getExtensionName', null, null, []],
             ['inNamespace', null, true, []],
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
@@ -371,5 +371,17 @@ class ReflectionObjectTest extends TestCase
 
         $this->expectException(CoreReflectionException::class);
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
+    }
+
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getExtensionName')
+            ->willReturn(null);
+
+        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($betterReflectionObject->getExtensionName());
     }
 }

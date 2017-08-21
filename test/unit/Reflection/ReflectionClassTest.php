@@ -689,6 +689,7 @@ class ReflectionClassTest extends TestCase
 
         self::assertFalse($classInfo->isInternal());
         self::assertTrue($classInfo->isUserDefined());
+        self::assertNull($classInfo->getExtensionName());
     }
 
     public function testIsInternalWithInternalClass() : void
@@ -697,6 +698,7 @@ class ReflectionClassTest extends TestCase
 
         self::assertTrue($classInfo->isInternal());
         self::assertFalse($classInfo->isUserDefined());
+        self::assertSame('Core', $classInfo->getExtensionName());
     }
 
     public function testIsAbstract() : void

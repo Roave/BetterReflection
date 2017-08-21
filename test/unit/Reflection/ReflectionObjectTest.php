@@ -88,6 +88,7 @@ class ReflectionObjectTest extends TestCase
         self::assertInstanceOf(ReflectionObject::class, $classInfo);
         self::assertSame('stdClass', $classInfo->getName());
         self::assertTrue($classInfo->isInternal());
+        self::assertSame('Core', $classInfo->getExtensionName());
     }
 
     public function testReflectionWorksWithEvaledClasses() : void
@@ -98,6 +99,7 @@ class ReflectionObjectTest extends TestCase
         self::assertInstanceOf(ReflectionObject::class, $classInfo);
         self::assertSame(ClassForHinting::class, $classInfo->getName());
         self::assertFalse($classInfo->isInternal());
+        self::assertNull($classInfo->getExtensionName());
     }
 
     public function testReflectionWorksWithDynamicallyDeclaredMembers() : void

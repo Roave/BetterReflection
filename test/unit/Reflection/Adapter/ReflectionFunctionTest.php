@@ -56,7 +56,7 @@ class ReflectionFunctionTest extends TestCase
             ['getStartLine', null, 123, []],
             ['getEndLine', null, 123, []],
             ['getExtension', NotImplemented::class, null, []],
-            ['getExtensionName', NotImplemented::class, null, []],
+            ['getExtensionName', null, null, []],
             ['getFileName', null, '', []],
             ['getName', null, '', []],
             ['getNamespaceName', null, '', []],
@@ -134,5 +134,17 @@ class ReflectionFunctionTest extends TestCase
         $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertFalse($reflectionFunctionAdapter->getDocComment());
+    }
+
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getExtensionName')
+            ->willReturn(null);
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertFalse($betterReflectionFunction->getExtensionName());
     }
 }

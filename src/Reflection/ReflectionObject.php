@@ -221,6 +221,11 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->inNamespace();
     }
 
+    public function getExtensionName() : ?string
+    {
+        return $this->reflectionClass->getExtensionName();
+    }
+
     /**
      * {@inheritdoc}
      */
