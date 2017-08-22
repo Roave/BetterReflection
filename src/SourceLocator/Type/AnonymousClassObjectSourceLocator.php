@@ -7,13 +7,13 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
-use PhpParser\ParserFactory;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
@@ -29,6 +29,11 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
     private $coreClassReflection;
 
     /**
+     * @var \PhpParser\Parser
+     */
+    private $parser;
+
+    /**
      * @param object $anonymousClassObject
      *
      * @throws \InvalidArgumentException
@@ -41,6 +46,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         }
 
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
+        $this->parser = PhpParserFactory::create();
     }
 
     /**
@@ -129,7 +135,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         };
 
         $fileContents = \file_get_contents($fileName);
-        $ast          = (new ParserFactory())->create(ParserFactory::PREFER_PHP7)->parse($fileContents);
+        $ast          = $this->parser->parse($fileContents);
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor($nodeVisitor);

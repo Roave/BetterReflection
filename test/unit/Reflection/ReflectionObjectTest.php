@@ -8,13 +8,13 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject
@@ -29,7 +29,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
             return $this->parser;
         }
 
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = PhpParserFactory::create();
         return $this->parser;
     }
 

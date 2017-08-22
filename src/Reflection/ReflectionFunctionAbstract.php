@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
@@ -18,7 +19,6 @@ use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Param as ParamNode;
 use phpDocumentor\Reflection\Type;
 use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 
@@ -545,9 +545,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        $this->node->stmts = (new ParserFactory())
-            ->create(ParserFactory::PREFER_PHP7)
-            ->parse('<?php ' . $newBody);
+        $this->node->stmts = PhpParserFactory::create()->parse('<?php ' . $newBody);
     }
 
     /**

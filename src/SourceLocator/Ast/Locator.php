@@ -11,7 +11,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 
 /**
  * @internal
@@ -32,7 +31,7 @@ class Locator
     {
         $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection());
 
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = PhpParserFactory::create();
     }
 
     /**
