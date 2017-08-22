@@ -330,4 +330,29 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
             ["<?php\nclass T {\npublic \n\$test = 1; }", 3, 4],
         ];
     }
+
+    public function columsProvider() : array
+    {
+        return [
+            ["<?php\n\nclass T {\npublic \$test = 1;\n}", 1, 17],
+            ["<?php\n\n    class T {\n        protected \$test = 1;\n    }", 9, 28],
+            ["<?php class T {private \$test = 1;}", 16, 33],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $startColumn
+     * @param int $endColumn
+     * @dataProvider columsProvider
+     */
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    {
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classReflection = $reflector->reflect('T');
+        $constantReflection = $classReflection->getProperty('test');
+
+        self::assertEquals($startColumn, $constantReflection->getStartColumn());
+        self::assertEquals($endColumn, $constantReflection->getEndColumn());
+    }
 }

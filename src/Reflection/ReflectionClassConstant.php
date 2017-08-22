@@ -7,6 +7,7 @@ use PhpParser\Node\Stmt\ClassConst;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant implements \Reflector
@@ -152,6 +153,16 @@ class ReflectionClassConstant implements \Reflector
     public function getEndLine() : int
     {
         return (int)$this->node->getAttribute('endLine', -1);
+    }
+
+    public function getStartColumn() : int
+    {
+        return CalculateReflectionColum::getStartColumn($this->owner->getLocatedSource()->getSource(), $this->node);
+    }
+
+    public function getEndColumn() : int
+    {
+        return CalculateReflectionColum::getEndColumn($this->owner->getLocatedSource()->getSource(), $this->node);
     }
 
     /**

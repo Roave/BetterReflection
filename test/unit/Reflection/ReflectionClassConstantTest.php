@@ -134,4 +134,29 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
             ["<?php\nclass T {\nconst \nTEST = 1; }", 3, 4],
         ];
     }
+
+    public function columsProvider() : array
+    {
+        return [
+            ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
+            ["<?php\n\n    class T {\n        const TEST = 1;}", 9, 23],
+            ["<?php class T {const TEST = 1;}", 16, 30],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $startColumn
+     * @param int $endColumn
+     * @dataProvider columsProvider
+     */
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    {
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classReflection = $reflector->reflect('T');
+        $constantReflection = $classReflection->getReflectionConstant('TEST');
+
+        self::assertEquals($startColumn, $constantReflection->getStartColumn());
+        self::assertEquals($endColumn, $constantReflection->getEndColumn());
+    }
 }

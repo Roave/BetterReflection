@@ -451,6 +451,30 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertSame($expectedEnd, $classInfo->getEndLine());
     }
 
+    public function columnsProvider() : array
+    {
+        return [
+            ["<?php\n\nclass Foo {\n}\n", 1, 1],
+            ["<?php\n\n    class Foo {\n    }\n", 5, 5],
+            ["<?php class Foo { }", 7, 19],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $expectedStart
+     * @param int $expectedEnd
+     * @dataProvider columnsProvider
+     */
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    {
+        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $classInfo = $reflector->reflect('Foo');
+
+        self::assertSame($startColumn, $classInfo->getStartColumn());
+        self::assertSame($endColumn, $classInfo->getEndColumn());
+    }
+
     public function testGetDocComment() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());

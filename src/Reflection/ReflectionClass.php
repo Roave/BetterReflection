@@ -21,6 +21,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClass implements Reflection, \Reflector
@@ -760,6 +761,16 @@ class ReflectionClass implements Reflection, \Reflector
     public function getEndLine() : int
     {
         return (int)$this->node->getAttribute('endLine', -1);
+    }
+
+    public function getStartColumn() : int
+    {
+        return CalculateReflectionColum::getStartColumn($this->locatedSource->getSource(), $this->node);
+    }
+
+    public function getEndColumn() : int
+    {
+        return CalculateReflectionColum::getEndColumn($this->locatedSource->getSource(), $this->node);
     }
 
     /**
