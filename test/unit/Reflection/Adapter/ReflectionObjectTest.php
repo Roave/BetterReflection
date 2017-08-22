@@ -127,6 +127,18 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         self::assertContains('stdClass', $exported);
     }
 
+    public function testGetFileNameReturnsFalseWhenNoFileName() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getFileName')
+            ->willReturn(null);
+
+        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($betterReflectionObject->getFileName());
+    }
+
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);

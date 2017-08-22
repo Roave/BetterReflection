@@ -127,7 +127,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getFileName()
     {
-        return $this->betterReflectionMethod->getFileName();
+        return $this->betterReflectionMethod->getFileName() ?? false;
     }
 
     /**
