@@ -7,12 +7,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 class ParseToAstFailure extends \RuntimeException
 {
-    /**
-     * @param LocatedSource $locatedSource
-     * @param \Throwable|null $previous
-     * @return ParseToAstFailure
-     */
-    public static function fromLocatedSource(LocatedSource $locatedSource, \Throwable $previous = null) : self
+    public static function fromLocatedSource(LocatedSource $locatedSource, \Throwable $previous) : self
     {
         $additionalInformation = '';
         if (null !== $locatedSource->getFileName()) {
