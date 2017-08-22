@@ -392,7 +392,7 @@ class ReflectionClass extends CoreReflectionClass
 
         $realParentClassName = $parentClassNames[\strtolower($class)] ?? $class;
 
-        return $this->betterReflectionClass->isSubclassOf($realParentClassName);
+        return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($class);
     }
 
     /**

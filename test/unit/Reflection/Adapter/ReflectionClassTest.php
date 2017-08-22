@@ -220,6 +220,29 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($reflectionClassAdapter->isSubclassOf('foo'));
     }
 
+    public function testIsSubclassOfChecksAlsoImplementedInterfaces() : void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getParentClassNames')
+            ->willReturn([]);
+        $betterReflectionClass
+            ->method('isSubclassOf')
+            ->with('Foo')
+            ->willReturn(false);
+        $betterReflectionClass
+            ->method('getInterfaceNames')
+            ->willReturn(['Foo']);
+        $betterReflectionClass
+            ->method('implementsInterface')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertTrue($reflectionClassAdapter->isSubclassOf('Foo'));
+    }
+
     public function testImplementsInterfaceIsCaseInsensitive() : void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
