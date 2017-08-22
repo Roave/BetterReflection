@@ -124,6 +124,18 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         ReflectionMethodAdapter::export('\stdClass', 'foo');
     }
 
+    public function testGetFileNameReturnsFalseWhenNoFileName() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getFileName')
+            ->willReturn(null);
+
+        $betterReflectionMethod = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertFalse($betterReflectionMethod->getFileName());
+    }
+
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);

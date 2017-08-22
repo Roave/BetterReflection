@@ -89,7 +89,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getFileName()
     {
-        return $this->betterReflectionClass->getFileName();
+        return $this->betterReflectionClass->getFileName() ?? false;
     }
 
     /**

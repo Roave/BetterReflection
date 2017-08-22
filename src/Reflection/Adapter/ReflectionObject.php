@@ -80,7 +80,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getFileName()
     {
-        return $this->betterReflectionObject->getFileName();
+        return $this->betterReflectionObject->getFileName() ?? false;
     }
 
     /**

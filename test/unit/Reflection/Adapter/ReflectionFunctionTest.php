@@ -108,6 +108,18 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         ReflectionFunctionAdapter::export('str_replace');
     }
 
+    public function testGetFileNameReturnsFalseWhenNoFileName() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getFileName')
+            ->willReturn(null);
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertFalse($betterReflectionFunction->getFileName());
+    }
+
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
