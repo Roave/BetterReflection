@@ -487,8 +487,8 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
     public function testGetDefaultValueConstantNameClassConstants() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php')
-        );
+            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php'
+        ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method = $classInfo->getMethod('method');
 
@@ -507,8 +507,8 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $this->markTestSkipped('@todo - implement reflection of constants outside a class');
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php')
-        );
+            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php'
+        ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method = $classInfo->getMethod('method');
 
