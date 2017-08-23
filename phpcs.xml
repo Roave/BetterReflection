@@ -17,4 +17,6 @@
         <!-- Contains stream wrapper -->
         <exclude-pattern>src/SourceLocator/Type/AutoloadSourceLocator.php</exclude-pattern>
     </rule>
+
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 </ruleset>
