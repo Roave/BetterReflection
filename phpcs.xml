@@ -62,4 +62,5 @@
             <property name="spacesCountAroundEqualsSign" value="0"/>
         </properties>
     </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
 </ruleset>
