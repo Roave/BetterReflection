@@ -1409,7 +1409,7 @@ class ReflectionClass implements Reflection, \Reflector
         bool $static = false
     ) : void {
         $type = 0;
-        switch($visibility) {
+        switch ($visibility) {
             case \ReflectionProperty::IS_PRIVATE:
                 $type |= ClassNode::MODIFIER_PRIVATE;
                 break;
