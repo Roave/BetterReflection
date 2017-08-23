@@ -163,7 +163,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
 
         /** @var ReflectionClass $reflection */
-       (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
+        (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
                 \get_class($class),

@@ -131,7 +131,8 @@ class CompileNodeToValue
                 (new ContextFactory())->createForNamespace(
                     $context->getSelf()->getNamespaceName(),
                     $context->getSelf()->getLocatedSource()->getSource()
-                ))[0];
+                )
+            )[0];
 
             return \substr((string) $resolvedType->getFqsen(), 1);
         }
