@@ -18,9 +18,9 @@ use Roave\BetterReflection\Util\CalculateReflectionColum;
 
 class ReflectionParameter implements \Reflector
 {
-    const CONST_TYPE_NOT_A_CONST = 0;
-    const CONST_TYPE_CLASS       = 1;
-    const CONST_TYPE_DEFINED     = 2;
+    private const CONST_TYPE_NOT_A_CONST = 0;
+    private const CONST_TYPE_CLASS       = 1;
+    private const CONST_TYPE_DEFINED     = 2;
 
     /**
      * @var ParamNode

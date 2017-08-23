@@ -45,4 +45,5 @@
 
     <config name="installed_paths" value="../../slevomat/coding-standard"/><!-- relative path from PHPCS source location -->
     <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
 </ruleset>
