@@ -204,7 +204,7 @@ class ReflectionParameter implements \Reflector
 
     private function parseDefaultValueNode() : void
     {
-        if (!$this->isDefaultValueAvailable()) {
+        if ( ! $this->isDefaultValueAvailable()) {
             throw new \LogicException('This parameter does not have a default value available');
         }
 
@@ -361,7 +361,7 @@ class ReflectionParameter implements \Reflector
             return true;
         }
 
-        if (!$this->isDefaultValueAvailable()) {
+        if ( ! $this->isDefaultValueAvailable()) {
             return false;
         }
 
@@ -530,7 +530,7 @@ class ReflectionParameter implements \Reflector
      */
     public function canBePassedByValue() : bool
     {
-        return !$this->isPassedByReference();
+        return ! $this->isPassedByReference();
     }
 
     /**
@@ -549,7 +549,7 @@ class ReflectionParameter implements \Reflector
     public function getDefaultValueConstantName() : string
     {
         $this->parseDefaultValueNode();
-        if (!$this->isDefaultValueConstant()) {
+        if ( ! $this->isDefaultValueConstant()) {
             throw new \LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
@@ -574,17 +574,17 @@ class ReflectionParameter implements \Reflector
             return $this->getDeclaringClass()->getParentClass();
         }
 
-        if (! $hint instanceof Types\Object_) {
+        if ( ! $hint instanceof Types\Object_) {
             return null;
         }
 
         $fqsen = $hint->getFqsen();
 
-        if (! $fqsen) {
+        if ( ! $fqsen) {
             return null;
         }
 
-        if (!$this->reflector instanceof ClassReflector) {
+        if ( ! $this->reflector instanceof ClassReflector) {
             throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
 

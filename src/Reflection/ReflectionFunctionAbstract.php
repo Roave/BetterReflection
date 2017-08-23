@@ -70,7 +70,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         LocatedSource $locatedSource,
         NamespaceNode $declaringNamespace = null
     ) : void {
-        if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
+        if ( ! ($node instanceof Node\Stmt\ClassMethod) && ! ($node instanceof Node\FunctionLike)) {
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
 
@@ -106,7 +106,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional
             // EVEN if they have a default value
-            if (!$hasDefault) {
+            if ( ! $hasDefault) {
                 $overallOptionalFlag = false;
             }
 
@@ -122,7 +122,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getName() : string
     {
-        if (!$this->inNamespace()) {
+        if ( ! $this->inNamespace()) {
             return $this->getShortName();
         }
 
@@ -152,7 +152,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getNamespaceName() : string
     {
-        if (!$this->inNamespace()) {
+        if ( ! $this->inNamespace()) {
             return '';
         }
 
@@ -191,7 +191,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         return \count(\array_filter(
             $this->getParameters(),
             function (ReflectionParameter $p) : bool {
-                return !$p->isOptional();
+                return ! $p->isOptional();
             }
         ));
     }
@@ -305,7 +305,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function isUserDefined() : bool
     {
-        return !$this->isInternal();
+        return ! $this->isInternal();
     }
 
     /**

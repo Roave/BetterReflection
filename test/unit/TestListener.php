@@ -53,7 +53,7 @@ class TestListener extends BaseTestListener
     public function endTest(\PHPUnit\Framework\Test $test, $time) : void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
-        if (!($test instanceof TestCase)) {
+        if ( ! ($test instanceof TestCase)) {
             return;
         }
 

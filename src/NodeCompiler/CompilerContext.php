@@ -38,7 +38,7 @@ class CompilerContext
 
     public function getSelf() : ReflectionClass
     {
-        if (!$this->hasSelf()) {
+        if ( ! $this->hasSelf()) {
             throw new \RuntimeException('The current context does not have a class for self');
         }
 

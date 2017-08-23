@@ -19,15 +19,15 @@ class FileChecker
             throw new InvalidFileLocation('Filename was empty');
         }
 
-        if (!\file_exists($filename)) {
+        if ( ! \file_exists($filename)) {
             throw new InvalidFileLocation('File does not exist');
         }
 
-        if (!\is_readable($filename)) {
+        if ( ! \is_readable($filename)) {
             throw new InvalidFileLocation('File is not readable');
         }
 
-        if (!\is_file($filename)) {
+        if ( ! \is_file($filename)) {
             throw new InvalidFileLocation('Is not a file: ' . $filename);
         }
     }

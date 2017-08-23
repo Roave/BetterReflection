@@ -42,7 +42,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
-        if (!($locatedSource = $this->createLocatedSource($identifier))) {
+        if ( ! ($locatedSource = $this->createLocatedSource($identifier))) {
             return null;
         }
 
@@ -59,7 +59,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        if (!($locatedSource = $this->createLocatedSource(new Identifier('*', $identifierType)))) {
+        if ( ! ($locatedSource = $this->createLocatedSource(new Identifier('*', $identifierType)))) {
             return [];
         }
 

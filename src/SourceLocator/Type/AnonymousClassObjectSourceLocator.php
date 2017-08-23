@@ -41,7 +41,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      */
     public function __construct($anonymousClassObject)
     {
-        if (! \is_object($anonymousClassObject)) {
+        if ( ! \is_object($anonymousClassObject)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
@@ -71,7 +71,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionClass
     {
-        if (! $identifierType->isClass()) {
+        if ( ! $identifierType->isClass()) {
             return null;
         }
 
@@ -122,7 +122,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                     return $node->getLine() === $this->startLine;
                 }));
 
-                if (! $anonymousClassNodesOnSameLine) {
+                if ( ! $anonymousClassNodesOnSameLine) {
                     return null;
                 }
 

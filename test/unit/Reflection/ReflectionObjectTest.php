@@ -154,7 +154,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
         $filteredMethods = [];
         foreach ($publicClassMethods as $method) {
-            if (!\in_array($method, $ignoreMethods, true)) {
+            if ( ! \in_array($method, $ignoreMethods, true)) {
                 $filteredMethods[$method] = [$method];
             }
         }

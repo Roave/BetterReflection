@@ -165,7 +165,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function getMethodNode() : MethodNode
     {
-        if (!($this->getNode() instanceof MethodNode)) {
+        if ( ! ($this->getNode() instanceof MethodNode)) {
             throw new \RuntimeException('Expected a ClassMethod node');
         }
         return $this->getNode();

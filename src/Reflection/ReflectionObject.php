@@ -88,7 +88,7 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromInstance($object) : ReflectionClass
     {
-        if (! \is_object($object)) {
+        if ( ! \is_object($object)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
@@ -114,7 +114,7 @@ class ReflectionObject extends ReflectionClass
      */
     private function getRuntimeProperties(?int $filter = null) : array
     {
-        if (!$this->reflectionClass->isInstance($this->object)) {
+        if ( ! $this->reflectionClass->isInstance($this->object)) {
             throw new \InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 

@@ -78,7 +78,7 @@ class ReflectionProperty implements \Reflector
     {
         $stateModifier = '';
 
-        if (! $this->isStatic()) {
+        if ( ! $this->isStatic()) {
             $stateModifier = $this->isDefault() ? ' <default>' : ' <dynamic>';
         }
 

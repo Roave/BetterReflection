@@ -31,7 +31,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
-        if (! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
+        if ( ! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
             return null;
         }
 
@@ -83,7 +83,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         if (\class_exists($className, false) || \interface_exists($className, false) || \trait_exists($className, false)) {
             $filename = (new \ReflectionClass($className))->getFileName();
 
-            if (! \is_string($filename)) {
+            if ( ! \is_string($filename)) {
                 return null;
             }
 
@@ -113,14 +113,14 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     private function locateFunctionByName(string $functionName) : ?string
     {
-        if (!\function_exists($functionName)) {
+        if ( ! \function_exists($functionName)) {
             return null;
         }
 
         $reflection         = new \ReflectionFunction($functionName);
         $reflectionFileName = $reflection->getFileName();
 
-        if (! \is_string($reflectionFileName)) {
+        if ( ! \is_string($reflectionFileName)) {
             return null;
         }
 

@@ -157,7 +157,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
     {
-        if (! (
+        if ( ! (
             \class_exists($className, false)
             || \interface_exists($className, false)
             || \trait_exists($className, false)

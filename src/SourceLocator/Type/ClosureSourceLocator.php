@@ -64,7 +64,7 @@ final class ClosureSourceLocator implements SourceLocator
 
     private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionFunction
     {
-        if (! $identifierType->isFunction()) {
+        if ( ! $identifierType->isFunction()) {
             return null;
         }
 
@@ -136,7 +136,7 @@ final class ClosureSourceLocator implements SourceLocator
                     return $nodes[0]->getLine() === $this->startLine;
                 }));
 
-                if (! $closureNodesDataOnSameLine) {
+                if ( ! $closureNodesDataOnSameLine) {
                     return null;
                 }
 

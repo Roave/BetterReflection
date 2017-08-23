@@ -41,7 +41,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
 
         $filename = $this->classLoader->findFile($identifier->getName());
 
-        if (!$filename) {
+        if ( ! $filename) {
             return null;
         }
 
