@@ -12,7 +12,6 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
  */
 final class CalculateReflectionColum
 {
-
     /**
      * @param string $source
      * @param \PhpParser\Node $node

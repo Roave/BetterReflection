@@ -9,7 +9,6 @@ use PhpParser\ParserFactory;
 
 class PhpParserFactory
 {
-
     public static function create() : Parser
     {
         $lexer = new Lexer\Emulative([

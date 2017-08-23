@@ -8,7 +8,6 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-
     /**
      * @var BetterReflectionClassConstant
      */

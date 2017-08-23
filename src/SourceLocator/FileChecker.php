@@ -7,7 +7,6 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 
 class FileChecker
 {
-
     /**
      * @param string $filename
      *
