@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="Roave/BetterReflection coding standard">
+    <arg value="p"/>
+    <arg value="s"/>
+    <arg name="colors"/>
+
+    <file>src</file>
+    <file>test/unit</file>
+    <exclude-pattern>test/unit/Assets/*</exclude-pattern>
+    <exclude-pattern>test/unit/Fixture/*</exclude-pattern>
+    
+    <rule ref="PSR2"/>
+</ruleset>
