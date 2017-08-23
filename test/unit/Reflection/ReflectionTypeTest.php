@@ -41,9 +41,7 @@ class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
         self::assertTrue(ReflectionType::createFromType(new Types\Integer(), false)->isBuiltin());
         self::assertTrue(ReflectionType::createFromType(new Types\Array_(), false)->isBuiltin());
         self::assertTrue(ReflectionType::createFromType(new Types\Object_(), false)->isBuiltin());
-        self::assertFalse(ReflectionType::createFromType(
-            new Types\Object_(new Fqsen('\foo')), false)->isBuiltin()
-        );
+        self::assertFalse(ReflectionType::createFromType(new Types\Object_(new Fqsen('\foo')), false)->isBuiltin());
     }
 
     public function testImplicitCastToString() : void
