@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use phpDocumentor\Reflection\Types\Integer;
+use PhpParser\Node\Stmt\Function_;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use phpDocumentor\Reflection\Types\Integer;
-use PhpParser\Node\Stmt\Function_;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;

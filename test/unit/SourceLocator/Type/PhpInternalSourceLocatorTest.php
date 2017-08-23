@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use ReflectionClass as PhpReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -12,7 +13,6 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use ReflectionClass as PhpReflectionClass;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator

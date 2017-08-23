@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
+use phpDocumentor\Reflection\Types;
+use PhpParser\Node\Name;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
-use PhpParser\Node\Name;
-use phpDocumentor\Reflection\Types;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindTypeFromAst

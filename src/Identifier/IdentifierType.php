@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Identifier;
 
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\Reflection;
 
 class IdentifierType
 {

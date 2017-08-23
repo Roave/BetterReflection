@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\TypesFinder;
 
 use phpDocumentor\Reflection\Type;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 class FindTypeFromAst
 {

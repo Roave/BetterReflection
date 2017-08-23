@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use ClassWithNoNamespace;
+use Composer\Autoload\ClassLoader;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use ClassWithNoNamespace;
-use Composer\Autoload\ClassLoader;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator

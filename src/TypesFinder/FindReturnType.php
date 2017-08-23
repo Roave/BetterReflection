@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
-use Roave\BetterReflection\Reflection\ReflectionMethod;
 use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
-use phpDocumentor\Reflection\Type;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
 
 class FindReturnType
 {

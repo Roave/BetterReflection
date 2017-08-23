@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util;
 
-use Roave\BetterReflection\Util\GetFirstDocComment;
-use PhpParser\Node\Stmt\Function_;
 use PhpParser\Comment;
 use PhpParser\Comment\Doc;
+use PhpParser\Node\Stmt\Function_;
+use Roave\BetterReflection\Util\GetFirstDocComment;
 
 /**
  * @covers \Roave\BetterReflection\Util\GetFirstDocComment

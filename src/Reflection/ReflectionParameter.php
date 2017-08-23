@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types;
+use phpDocumentor\Reflection\Types\Self_;
+use PhpParser\Node;
+use PhpParser\Node\Param as ParamNode;
+use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
-use phpDocumentor\Reflection\Types;
-use phpDocumentor\Reflection\Types\Self_;
-use PhpParser\Node\Param as ParamNode;
-use PhpParser\Node;
-use phpDocumentor\Reflection\Type;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 
 class ReflectionParameter implements \Reflector

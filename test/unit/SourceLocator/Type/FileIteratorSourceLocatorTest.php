@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator

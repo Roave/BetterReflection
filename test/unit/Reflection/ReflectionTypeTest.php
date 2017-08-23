@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Roave\BetterReflection\Reflection\ReflectionType;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types;
+use Roave\BetterReflection\Reflection\ReflectionType;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionType

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType

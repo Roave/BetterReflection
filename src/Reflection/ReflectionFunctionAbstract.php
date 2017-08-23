@@ -3,6 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Type;
+use PhpParser\Node;
+use PhpParser\Node\Expr\Yield_ as YieldNode;
+use PhpParser\Node\Param as ParamNode;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\NodeTraverser;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PhpParser\PrettyPrinterAbstract;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -12,16 +20,8 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use Roave\BetterReflection\Util\GetFirstDocComment;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use PhpParser\Node\Expr\Yield_ as YieldNode;
-use PhpParser\Node\Param as ParamNode;
-use phpDocumentor\Reflection\Type;
-use PhpParser\NodeTraverser;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
-use PhpParser\PrettyPrinterAbstract;
+use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {

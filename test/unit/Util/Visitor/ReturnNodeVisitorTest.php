@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Visitor;
 
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
+use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 /**
  * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor

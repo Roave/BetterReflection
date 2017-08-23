@@ -8,8 +8,8 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator

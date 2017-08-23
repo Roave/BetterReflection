@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
+use PhpParser\Lexer;
 use PhpParser\Node;
+use PhpParser\Node\Expr\BinaryOp\Coalesce;
+use PhpParser\Node\Expr\BinaryOp\Spaceship;
+use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\Yield_;
+use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\LNumber;
+use PhpParser\Parser;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use PhpParser\Lexer;
-use PhpParser\Node\Expr\ConstFetch;
-use PhpParser\Node\Expr\Yield_;
-use PhpParser\Node\Expr\BinaryOp\Coalesce;
-use PhpParser\Node\Expr\BinaryOp\Spaceship;
-use PhpParser\Node\Name;
-use PhpParser\Node\Scalar\LNumber;
-use PhpParser\Parser;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue

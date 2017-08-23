@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
 
+use InvalidArgumentException;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use InvalidArgumentException;
 
 /**
  * @covers \Roave\BetterReflection\Identifier\IdentifierType

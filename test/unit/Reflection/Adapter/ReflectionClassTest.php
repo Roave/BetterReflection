@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use ReflectionClass as CoreReflectionClass;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
-use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClass

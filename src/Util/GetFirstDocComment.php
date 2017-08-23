@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
 
-use PhpParser\NodeAbstract;
 use PhpParser\Comment\Doc;
+use PhpParser\NodeAbstract;
 
 /**
  * @internal

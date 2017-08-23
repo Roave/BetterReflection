@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Roave\BetterReflection\Reflector\Reflector;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use Roave\BetterReflection\Reflector\Reflector;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {

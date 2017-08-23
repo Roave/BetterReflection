@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PhpParser\Lexer;
 use PhpParser\Node;
+use PhpParser\Parser;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use PhpParser\Parser;
-use PhpParser\Lexer;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection

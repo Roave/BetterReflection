@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
+use phpDocumentor\Reflection\Types;
+use PhpParser\Node\Param as ParamNode;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -10,8 +12,6 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
-use PhpParser\Node\Param as ParamNode;
-use phpDocumentor\Reflection\Types;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindParameterType

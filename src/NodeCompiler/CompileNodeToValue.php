@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
 
+use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Object_;
+use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use Roave\BetterReflection\Util\FileHelper;
-use phpDocumentor\Reflection\Types\ContextFactory;
-use PhpParser\Node;
 
 class CompileNodeToValue
 {

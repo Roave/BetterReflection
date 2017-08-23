@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
-use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
+use Roave\BetterReflection\TypesFinder\ResolveTypes;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes

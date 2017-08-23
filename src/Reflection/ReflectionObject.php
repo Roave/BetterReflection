@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Stmt\Property as PropertyNode;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 

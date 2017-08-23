@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
-use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated

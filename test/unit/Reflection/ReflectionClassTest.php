@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
+use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -33,9 +36,6 @@ use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
-use PhpParser\Node\Name;
-use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
-use PhpParser\Node\Stmt\Class_;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 

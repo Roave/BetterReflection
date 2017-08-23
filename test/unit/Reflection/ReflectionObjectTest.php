@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Parser;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
@@ -13,8 +15,6 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Parser;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject

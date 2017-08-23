@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use phpDocumentor\Reflection\Types;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\PropertyProperty;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -10,10 +14,6 @@ use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use phpDocumentor\Reflection\Types;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Property;
-use PhpParser\Node\Stmt\PropertyProperty;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 /**

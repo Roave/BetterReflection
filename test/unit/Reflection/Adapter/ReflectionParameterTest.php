@@ -6,10 +6,10 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
-use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 /**

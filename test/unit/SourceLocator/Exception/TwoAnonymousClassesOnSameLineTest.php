@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
-use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine

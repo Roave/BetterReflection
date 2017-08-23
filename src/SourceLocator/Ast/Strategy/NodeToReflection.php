@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use PhpParser\Node;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\Reflection;
-use PhpParser\Node;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * @internal

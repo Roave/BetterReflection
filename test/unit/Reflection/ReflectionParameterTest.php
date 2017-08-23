@@ -3,23 +3,23 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use phpDocumentor\Reflection\Types;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
-use phpDocumentor\Reflection\Types;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionParameter

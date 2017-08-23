@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 /**
  * This source locator loads all php files in an entire directory or multiple directories.

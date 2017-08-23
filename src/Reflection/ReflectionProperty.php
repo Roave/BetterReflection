@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Type;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property as PropertyNode;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Property as PropertyNode;
-use phpDocumentor\Reflection\Type;
 
 class ReflectionProperty implements \Reflector
 {

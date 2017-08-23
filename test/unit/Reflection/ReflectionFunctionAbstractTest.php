@@ -3,17 +3,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Expr\BinaryOp;
@@ -25,6 +14,17 @@ use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract

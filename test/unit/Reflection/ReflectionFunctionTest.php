@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use phpDocumentor\Reflection\Types\Boolean;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
