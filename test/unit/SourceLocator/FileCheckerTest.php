@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator;
+
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 
