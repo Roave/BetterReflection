@@ -44,7 +44,7 @@ class CompilerContextTest extends \PHPUnit\Framework\TestCase
         $filename = FileHelper::normalizeWindowsPath(__DIR__ . '/CompilerContextTest.php');
 
         $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
-        $self      = $reflector->reflect(CompilerContextTest::class);
+        $self      = $reflector->reflect(self::class);
 
         $context = new CompilerContext($reflector, $self);
 
