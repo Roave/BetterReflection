@@ -140,7 +140,7 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
         return [
             ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
             ["<?php\n\n    class T {\n        const TEST = 1;}", 9, 23],
-            ["<?php class T {const TEST = 1;}", 16, 30],
+            ['<?php class T {const TEST = 1;}', 16, 30],
         ];
     }
 

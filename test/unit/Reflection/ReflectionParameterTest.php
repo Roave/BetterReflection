@@ -672,8 +672,8 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         return [
             ["<?php\n\nfunction foo(\n\$test\n) {}", 1, 5],
             ["<?php\n\n    function foo(\n    &\$test) {    \n    }\n", 5, 10],
-            ["<?php function foo(...\$test) { }", 20, 27],
-            ["<?php function foo(array \$test = null) { }", 20, 37],
+            ['<?php function foo(...$test) { }', 20, 27],
+            ['<?php function foo(array $test = null) { }', 20, 37],
         ];
     }
 

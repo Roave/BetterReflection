@@ -336,7 +336,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         return [
             ["<?php\n\nclass T {\npublic \$test = 1;\n}", 1, 17],
             ["<?php\n\n    class T {\n        protected \$test = 1;\n    }", 9, 28],
-            ["<?php class T {private \$test = 1;}", 16, 33],
+            ['<?php class T {private $test = 1;}', 16, 33],
         ];
     }
 

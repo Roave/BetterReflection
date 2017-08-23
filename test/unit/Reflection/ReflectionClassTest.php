@@ -456,7 +456,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         return [
             ["<?php\n\nclass Foo {\n}\n", 1, 1],
             ["<?php\n\n    class Foo {\n    }\n", 5, 5],
-            ["<?php class Foo { }", 7, 19],
+            ['<?php class Foo { }', 7, 19],
         ];
     }
 

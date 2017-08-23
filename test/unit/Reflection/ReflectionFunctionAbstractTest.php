@@ -238,7 +238,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
         return [
             ["<?php\n\nfunction foo() {\n}\n", 1, 1],
             ["<?php\n\n    function foo() {\n    }\n", 5, 5],
-            ["<?php function foo() { }", 7, 24],
+            ['<?php function foo() { }', 7, 24],
         ];
     }
 
