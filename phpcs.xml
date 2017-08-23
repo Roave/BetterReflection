@@ -63,4 +63,5 @@
         </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
 </ruleset>

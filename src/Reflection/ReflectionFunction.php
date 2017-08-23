@@ -65,7 +65,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         Reflector $reflector,
         FunctionNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespaceNode = null
+        ?NamespaceNode $namespaceNode = null
     ) : self {
         $function = new self();
 

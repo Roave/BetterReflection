@@ -213,7 +213,7 @@ class ReflectionClass implements Reflection, \Reflector
         Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespace = null
+        ?NamespaceNode $namespace = null
     ) : self {
         $class = new self();
 

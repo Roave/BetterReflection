@@ -247,8 +247,8 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
     public function testGetTypeHint(
         string $parameterToTest,
         string $expectedType,
-        string $expectedFqsen = null,
-        string $expectedFqsenName = null
+        ?string $expectedFqsen = null,
+        ?string $expectedFqsenName = null
     ) : void {
         $classInfo = $this->reflector->reflect(Methods::class);
 

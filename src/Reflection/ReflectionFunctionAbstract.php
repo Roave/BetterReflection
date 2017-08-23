@@ -68,7 +68,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         Reflector $reflector,
         Node $node,
         LocatedSource $locatedSource,
-        NamespaceNode $declaringNamespace = null
+        ?NamespaceNode $declaringNamespace = null
     ) : void {
         if ( ! ($node instanceof Node\Stmt\ClassMethod) && ! ($node instanceof Node\FunctionLike)) {
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
@@ -509,7 +509,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param PrettyPrinterAbstract|null $printer
      * @return string
      */
-    public function getBodyCode(PrettyPrinterAbstract $printer = null) : string
+    public function getBodyCode(?PrettyPrinterAbstract $printer = null) : string
     {
         if (null === $printer) {
             $printer = new StandardPrettyPrinter();

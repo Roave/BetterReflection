@@ -61,7 +61,7 @@ class ReflectionObject extends ReflectionClass
         Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespace = null
+        ?NamespaceNode $namespace = null
     ) : ReflectionClass {
         throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }

@@ -331,7 +331,7 @@ class ReflectionObject extends CoreReflectionObject
     /**
      * {@inheritDoc}
      */
-    public function newInstanceArgs(array $args = null)
+    public function newInstanceArgs(?array $args = null)
     {
         throw new Exception\NotImplemented('Not implemented');
     }
