@@ -32,9 +32,9 @@ final class ClosureSourceLocator implements SourceLocator
     private $coreFunctionReflection;
 
     /**
-      * @var Parser
-      */
-     private $parser;
+     * @var Parser
+     */
+    private $parser;
 
     public function __construct(Closure $closure)
     {
