@@ -41,7 +41,8 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionForAnonymousClass() : void
     {
-        $classInfo = ReflectionObject::createFromInstance(new class {});
+        $classInfo = ReflectionObject::createFromInstance(new class {
+        });
 
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());

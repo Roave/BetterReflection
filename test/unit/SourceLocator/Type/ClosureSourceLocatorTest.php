@@ -115,8 +115,11 @@ class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifiersByTypeWithClassIdentifier() : void
     {
+        $closure = function () {
+        };
+
         /** @var ReflectionFunction[] $reflections */
-        $reflections = (new ClosureSourceLocator(function () {}))->locateIdentifiersByType(
+        $reflections = (new ClosureSourceLocator($closure))->locateIdentifiersByType(
             $this->createMock(Reflector::class),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );

@@ -67,8 +67,11 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifierWithFunctionIdentifier() : void
     {
+        $anonymousClass = new class {
+        };
+
         /** @var ReflectionClass|null $reflection */
-        $reflection = (new AnonymousClassObjectSourceLocator(new class {}))->locateIdentifier(
+        $reflection = (new AnonymousClassObjectSourceLocator($anonymousClass))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
                 'foo',
@@ -106,8 +109,11 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifiersByTypeWithFunctionIdentifier() : void
     {
+        $anonymousClass = new class {
+        };
+
         /** @var ReflectionClass[] $reflections */
-        $reflections = (new AnonymousClassObjectSourceLocator(new class {}))->locateIdentifiersByType(
+        $reflections = (new AnonymousClassObjectSourceLocator($anonymousClass))->locateIdentifiersByType(
             $this->createMock(Reflector::class),
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         );

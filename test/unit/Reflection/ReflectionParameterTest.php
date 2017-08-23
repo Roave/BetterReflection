@@ -56,7 +56,8 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromCallable() : void
     {
-        $parameterInfo = ReflectionParameter::createFromClosure(function ($a) {}, 'a');
+        $parameterInfo = ReflectionParameter::createFromClosure(function ($a) {
+        }, 'a');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('a', $parameterInfo->getName());
@@ -90,7 +91,8 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromSpecWithClosure() : void
     {
-        $parameterInfo = ReflectionParameter::createFromSpec(function ($a) {}, 'a');
+        $parameterInfo = ReflectionParameter::createFromSpec(function ($a) {
+        }, 'a');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('a', $parameterInfo->getName());

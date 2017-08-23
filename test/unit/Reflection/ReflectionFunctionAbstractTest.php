@@ -82,7 +82,8 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
     public function testNameMethodsWithClosure() : void
     {
-        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {}));
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {
+        }));
         $functionInfo = $reflector->reflect('foo');
 
         self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
@@ -102,7 +103,8 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
     public function testIsClosureWithClosure() : void
     {
-        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {}));
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {
+        }));
         $function = $reflector->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
 
         self::assertTrue($function->isClosure());
