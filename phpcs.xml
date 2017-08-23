@@ -8,6 +8,8 @@
     <file>test/unit</file>
     <exclude-pattern>test/unit/Assets/*</exclude-pattern>
     <exclude-pattern>test/unit/Fixture/*</exclude-pattern>
-    
-    <rule ref="PSR2"/>
+
+    <rule ref="PSR2">
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+    </rule>
 </ruleset>
