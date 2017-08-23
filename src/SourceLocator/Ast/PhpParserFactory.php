@@ -17,5 +17,4 @@ class PhpParserFactory
         ]);
         return (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
     }
-
 }

@@ -197,5 +197,4 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         return ReflectionType::fromReturnTypeOrNull($this->betterReflectionParameter->getType());
     }
-
 }
