@@ -1224,7 +1224,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once($staticPropertyGetSetFixture);
+        require_once $staticPropertyGetSetFixture;
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Foo::class);
@@ -1236,7 +1236,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsProtected() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once($staticPropertyGetSetFixture);
+        require_once $staticPropertyGetSetFixture;
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Bar::class);
@@ -1248,7 +1248,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsPrivate() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once($staticPropertyGetSetFixture);
+        require_once $staticPropertyGetSetFixture;
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Bar::class);
@@ -1260,7 +1260,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
     public function testGetStaticPropertyValueGetsValue() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once($staticPropertyGetSetFixture);
+        require_once $staticPropertyGetSetFixture;
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Bar::class);
@@ -1284,7 +1284,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
     public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once($staticPropertyGetSetFixture);
+        require_once $staticPropertyGetSetFixture;
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Foo::class);
@@ -1296,7 +1296,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
     public function testSetStaticPropertyValueSetsValue() : void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once($staticPropertyGetSetFixture);
+        require_once $staticPropertyGetSetFixture;
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture)))
             ->reflect(StaticPropertyGetSet\Bar::class);

@@ -129,7 +129,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
-        require_once(__DIR__ . '/../../Fixture/Functions.php');
+        require_once __DIR__ . '/../../Fixture/Functions.php';
         $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
 
         self::assertSame('myFunction', $classInfo->getShortName());

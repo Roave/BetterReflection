@@ -323,7 +323,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isDefaultValueAvailable() : bool
     {
-        return (null !== $this->node->default);
+        return null !== $this->node->default;
     }
 
     /**
@@ -492,7 +492,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isArray() : bool
     {
-        return ($this->getTypeHint() instanceof Types\Array_);
+        return $this->getTypeHint() instanceof Types\Array_;
     }
 
     /**
@@ -502,7 +502,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isCallable() : bool
     {
-        return ($this->getTypeHint() instanceof Types\Callable_);
+        return $this->getTypeHint() instanceof Types\Callable_;
     }
 
     /**

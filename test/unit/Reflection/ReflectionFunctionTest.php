@@ -84,7 +84,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
 
     public function testStaticCreationFromName() : void
     {
-        require_once(__DIR__ . '/../Fixture/Functions.php');
+        require_once __DIR__ . '/../Fixture/Functions.php';
         $reflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
         self::assertSame('myFunction', $reflection->getShortName());
     }
