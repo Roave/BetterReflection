@@ -5,7 +5,7 @@ namespace Roave\BetterReflection\Util;
 
 class FileHelper
 {
-    public static function normalizeWindowsPath(string $path): string
+    public static function normalizeWindowsPath(string $path) : string
     {
         return \str_replace('\\', '/', $path);
     }

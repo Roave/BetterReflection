@@ -241,7 +241,7 @@ class ReflectionParameter implements \Reflector
     /**
      * @throws \LogicException
      */
-    private function findParentClassDeclaringConstant(string $constantName): string
+    private function findParentClassDeclaringConstant(string $constantName) : string
     {
         /* @var $method ReflectionMethod */
         $method = $this->function;

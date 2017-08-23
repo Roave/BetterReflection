@@ -811,7 +811,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getParentClassNames() : array
     {
-        return \array_map(function (self $parentClass): string {
+        return \array_map(function (self $parentClass) : string {
             return $parentClass->getName();
         }, \array_slice(\array_reverse($this->getInheritanceClassHierarchy()), 1));
     }

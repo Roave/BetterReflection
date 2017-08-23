@@ -11,7 +11,7 @@ use PhpParser\Comment\Doc;
  */
 final class GetFirstDocComment
 {
-    public static function forNode(NodeAbstract $node): string
+    public static function forNode(NodeAbstract $node) : string
     {
         if ( ! $node->hasAttribute('comments')) {
             return '';

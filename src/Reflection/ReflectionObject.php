@@ -308,7 +308,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateProperties(?int $filter = null): array
+    public function getImmediateProperties(?int $filter = null) : array
     {
         return \array_merge(
             $this->reflectionClass->getImmediateProperties($filter),

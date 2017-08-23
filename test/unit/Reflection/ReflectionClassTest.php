@@ -541,7 +541,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         ], $classInfo->getDefaultProperties());
     }
 
-    public function testIsAnonymousWithNotAnonymousClass(): void
+    public function testIsAnonymousWithNotAnonymousClass() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php'));
 
@@ -549,7 +549,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($classInfo->isAnonymous());
     }
 
-    public function testIsAnonymousWithAnonymousClassNoNamespace(): void
+    public function testIsAnonymousWithAnonymousClassNoNamespace() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AnonymousClassNoNamespace.php'));
 
@@ -563,7 +563,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertStringEndsWith('Fixture/AnonymousClassNoNamespace.php(3)', $classInfo->getName());
     }
 
-    public function testIsAnonymousWithAnonymousClassInNamespace(): void
+    public function testIsAnonymousWithAnonymousClassInNamespace() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AnonymousClassInNamespace.php'));
 
@@ -578,7 +578,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testIsAnonymousWithNestedAnonymousClasses(): void
+    public function testIsAnonymousWithNestedAnonymousClasses() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/NestedAnonymousClassInstances.php'));
 
@@ -593,7 +593,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testIsAnonymousWithAnonymousClassInString(): void
+    public function testIsAnonymousWithAnonymousClassInString() : void
     {
         $php = '<?php
             function createAnonymous()

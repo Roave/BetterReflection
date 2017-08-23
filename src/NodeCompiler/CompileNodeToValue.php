@@ -273,7 +273,7 @@ class CompileNodeToValue
     /**
      * Compile a __DIR__ node
      */
-    private function compileDirConstant(CompilerContext $context): string
+    private function compileDirConstant(CompilerContext $context) : string
     {
         return FileHelper::normalizeWindowsPath(\dirname(\realpath($context->getFileName())));
     }
@@ -281,7 +281,7 @@ class CompileNodeToValue
     /**
      * Compiles magic constant __CLASS__
      */
-    private function compileClassConstant(CompilerContext $context): string
+    private function compileClassConstant(CompilerContext $context) : string
     {
         return $context->hasSelf() ? $context->getSelf()->getName() : '';
     }
