@@ -38,7 +38,7 @@ class FindParameterType
             )
         );
 
-        /* @var $paramTags \phpDocumentor\Reflection\DocBlock\Tags\Param[] */
+        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param[] $paramTags */
         $paramTags = $docBlock->getTagsByName('param');
 
         foreach ($paramTags as $paramTag) {

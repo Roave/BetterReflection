@@ -300,7 +300,7 @@ class ReflectionClass implements Reflection, \Reflector
     private function scanMethods() : array
     {
         // merging together methods from interfaces, parent class, traits, current class (in this precise order)
-        /* @var $inheritedMethods \ReflectionMethod[] */
+        /** @var \ReflectionMethod[] $inheritedMethods */
         $inheritedMethods = \array_merge(
             \array_merge(
                 [],
@@ -386,7 +386,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getImmediateMethods(?int $filter = null) : array
     {
-        /* @var $methods \ReflectionMethod[] */
+        /** @var \ReflectionMethod[] $methods */
         $methods = \array_map(
             function (ClassMethod $methodNode) : ReflectionMethod {
                 return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
@@ -555,7 +555,7 @@ class ReflectionClass implements Reflection, \Reflector
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
-        /* @var $allReflectionConstants ReflectionClassConstant[] */
+        /** @var ReflectionClassConstant[] $allReflectionConstants */
         $allReflectionConstants = \array_merge(
             \array_values($this->getImmediateReflectionConstants()),
             ...\array_map(
@@ -794,7 +794,7 @@ class ReflectionClass implements Reflection, \Reflector
         }
 
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        /* @var $parent self */
+        /** @var self $parent */
         $parent = $this->reflector->reflect((string) $objectType->getFqsen());
 
         if ($parent->isInterface() || $parent->isTrait()) {
@@ -968,7 +968,7 @@ class ReflectionClass implements Reflection, \Reflector
     private function reflectClassForNamedNode(Node\Name $node) : self
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        /* @var $class self */
+        /** @var self $class */
         $class = $this->reflector->reflect($this->getFqsenFromNamedNode($node));
 
         return $class;
@@ -1015,7 +1015,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getTraitAliases() : array
     {
-        /* @var Node\Stmt\TraitUse[] $traitUsages */
+        /** @var Node\Stmt\TraitUse[] $traitUsages */
         $traitUsages = \array_filter($this->node->stmts, function (Node $node) : bool {
             return $node instanceof TraitUse;
         });
@@ -1249,7 +1249,7 @@ class ReflectionClass implements Reflection, \Reflector
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
-        /* @var $node InterfaceNode */
+        /** @var InterfaceNode $node */
         $node = $this->node;
 
         return \array_merge(

@@ -66,7 +66,7 @@ class ClassReflector implements Reflector
      */
     public function getAllClasses() : array
     {
-        /* @var $allClasses \Roave\BetterReflection\Reflection\ReflectionClass[] */
+        /** @var \Roave\BetterReflection\Reflection\ReflectionClass[] $allClasses */
         $allClasses = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)

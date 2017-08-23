@@ -28,7 +28,7 @@ class FindReturnType
 
         $context = $this->createContextForFunction($function);
 
-        /* @var $returnTags \phpDocumentor\Reflection\DocBlock\Tags\Return_[] */
+        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_[] $returnTags */
         $returnTags = DocBlockFactory::createInstance()->create(
             $docComment,
             new Context(

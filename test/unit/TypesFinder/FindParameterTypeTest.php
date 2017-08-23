@@ -84,7 +84,7 @@ class FindParameterTypeTest extends \PHPUnit\Framework\TestCase
             ->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
-        /* @var ReflectionFunction $function */
+        /** @var ReflectionFunction $function */
         $foundTypes = (new FindParameterType())->__invoke($function, $node);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
@@ -124,7 +124,7 @@ class FindParameterTypeTest extends \PHPUnit\Framework\TestCase
             ->method('getDeclaringClass')
             ->will($this->returnValue($class));
 
-        /* @var ReflectionMethod $method */
+        /** @var ReflectionMethod $method */
         $foundTypes = (new FindParameterType())->__invoke($method, $node);
 
         self::assertCount(\count($expectedInstances), $foundTypes);

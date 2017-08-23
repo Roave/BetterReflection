@@ -79,7 +79,6 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testCanReflectEvaledLocatedSourceClass() : void
     {
-        /* @var $class */
         $reflector = (new ClassReflector(new EvaledCodeSourceLocator()));
         $className = \uniqid('foo', false);
 

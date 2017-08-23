@@ -47,7 +47,7 @@ class FunctionReflector implements Reflector
      */
     public function getAllFunctions() : array
     {
-        /* @var $allFunctions \Roave\BetterReflection\Reflection\ReflectionFunction[] */
+        /** @var \Roave\BetterReflection\Reflection\ReflectionFunction[] $allFunctions */
         $allFunctions = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)

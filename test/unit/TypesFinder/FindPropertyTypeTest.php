@@ -53,7 +53,7 @@ class FindPropertyTypeTest extends \PHPUnit\Framework\TestCase
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue("/**\n * $docBlock\n */"));
 
-        /* @var ReflectionProperty $property */
+        /** @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
@@ -104,7 +104,7 @@ class FindPropertyTypeTest extends \PHPUnit\Framework\TestCase
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue('Nothing here...'));
 
-        /* @var ReflectionProperty $property */
+        /** @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
         self::assertSame([], $foundTypes);

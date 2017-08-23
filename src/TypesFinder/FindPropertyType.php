@@ -40,7 +40,7 @@ class FindPropertyType
             )
         );
 
-        /* @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
+        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
         $varTags      = $docBlock->getTagsByName('var');
         $typeResolver = new ResolveTypes();
 

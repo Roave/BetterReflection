@@ -63,7 +63,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
      */
     public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
     {
-        /* @var BetterReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 
         if (null === $expectedException) {

@@ -55,7 +55,7 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
      */
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
     {
-        /* @var BetterReflectionClassConstant|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionClassConstant|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
         $reflectionStub->expects($this->once())

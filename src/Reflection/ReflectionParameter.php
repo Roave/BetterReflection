@@ -243,7 +243,7 @@ class ReflectionParameter implements \Reflector
      */
     private function findParentClassDeclaringConstant(string $constantName) : string
     {
-        /* @var $method ReflectionMethod */
+        /** @var ReflectionMethod $method */
         $method = $this->function;
         $class  = $method->getDeclaringClass();
 

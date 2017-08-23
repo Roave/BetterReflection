@@ -64,7 +64,7 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public function getDeclaringFunction()
     {
-        /* @var $function BetterReflectionMethod|\Roave\BetterReflection\Reflection\ReflectionFunction */
+        /** @var BetterReflectionMethod|\Roave\BetterReflection\Reflection\ReflectionFunction $function */
         $function = $this->betterReflectionParameter->getDeclaringFunction();
 
         if ($function instanceof BetterReflectionMethod) {

@@ -141,7 +141,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        /* @var $reflectionClass ReflectionClass|null */
+        /** @var ReflectionClass|null $reflectionClass */
         $reflectionClass = (new NodeToReflection())->__invoke(
             $reflector,
             $nodeVisitor->getAnonymousClassNode(),

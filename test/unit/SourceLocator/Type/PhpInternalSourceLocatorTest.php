@@ -63,7 +63,6 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
-        /* @var $class */
         $phpInternalSourceLocator = new PhpInternalSourceLocator();
         $reflector                = new ClassReflector($phpInternalSourceLocator);
 

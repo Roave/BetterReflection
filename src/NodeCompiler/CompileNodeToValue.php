@@ -125,7 +125,7 @@ class CompileNodeToValue
         $className = \implode('\\', $node->class->parts);
 
         if ($node->name === 'class') {
-            /* @var $resolvedType Object_ */
+            /** @var Object_ $resolvedType */
             $resolvedType = (new ResolveTypes())->__invoke(
                 [$className],
                 (new ContextFactory())->createForNamespace(
@@ -137,7 +137,7 @@ class CompileNodeToValue
             return \substr((string) $resolvedType->getFqsen(), 1);
         }
 
-        /* @var $classInfo ReflectionClass|null */
+        /** @var ReflectionClass|null $classInfo */
         $classInfo = null;
 
         if ('self' === $className || 'static' === $className) {
@@ -145,7 +145,7 @@ class CompileNodeToValue
         }
 
         if (null === $classInfo) {
-            /* @var $classInfo ReflectionClass */
+            /** @var ReflectionClass $classInfo */
             $classInfo = $context->getReflector()->reflect(
                 (string) (new FindTypeFromAst())->__invoke(
                     $className,

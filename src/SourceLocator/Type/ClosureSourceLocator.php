@@ -157,7 +157,7 @@ final class ClosureSourceLocator implements SourceLocator
 
         $closureNodes = $nodeVisitor->getClosureNodes();
 
-        /* @var $reflectionFunction ReflectionFunction|null */
+        /** @var ReflectionFunction|null $reflectionFunction */
         $reflectionFunction = (new NodeToReflection())->__invoke(
             $reflector,
             $closureNodes[0],
