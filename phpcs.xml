@@ -19,4 +19,13 @@
     </rule>
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+         <properties>
+             <property name="ignoreBlankLines" value="false"/>
+         </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
+        <!-- Turned off by PSR2 -> turning on with default severity -->
+        <severity>5</severity>
+    </rule>
 </ruleset>
