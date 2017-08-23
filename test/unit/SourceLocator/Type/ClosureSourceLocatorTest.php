@@ -115,7 +115,7 @@ class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifiersByTypeWithClassIdentifier() : void
     {
-        $closure = function () {
+        $closure = function () : void {
         };
 
         /** @var ReflectionFunction[] $reflections */

@@ -49,6 +49,7 @@ class TestListener extends BaseTestListener
      * @param \PHPUnit\Framework\Test $test
      * @param float $time
      * @throws \PHPUnit\Framework\AssertionFailedError
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function endTest(\PHPUnit\Framework\Test $test, $time) : void
     {

@@ -82,7 +82,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
     public function testNameMethodsWithClosure() : void
     {
-        $reflector    = new FunctionReflector(new ClosureSourceLocator(function () {
+        $reflector    = new FunctionReflector(new ClosureSourceLocator(function () : void {
         }));
         $functionInfo = $reflector->reflect('foo');
 
@@ -103,7 +103,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
     public function testIsClosureWithClosure() : void
     {
-        $reflector = new FunctionReflector(new ClosureSourceLocator(function () {
+        $reflector = new FunctionReflector(new ClosureSourceLocator(function () : void {
         }));
         $function  = $reflector->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
 
@@ -521,7 +521,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function  = $reflector->reflect('foo');
 
-        $function->setBodyFromClosure(function () {
+        $function->setBodyFromClosure(function () : void {
             echo 'Hello world!';
         });
 

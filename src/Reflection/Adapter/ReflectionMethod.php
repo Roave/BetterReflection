@@ -23,7 +23,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public static function export($class, $name, $return = null)
     {
-        return BetterReflectionMethod::export(...\func_get_args());
+        BetterReflectionMethod::export(...\func_get_args());
     }
 
     /**

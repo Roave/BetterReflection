@@ -299,7 +299,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
      * @param string|null $expectedPrototype
      * @dataProvider prototypeProvider
      */
-    public function testGetPrototype(string $class, string $method, $expectedPrototype) : void
+    public function testGetPrototype(string $class, string $method, ?string $expectedPrototype) : void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));

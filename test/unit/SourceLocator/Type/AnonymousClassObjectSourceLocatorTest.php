@@ -134,7 +134,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param string $file
-     * $param object $class
+     * @param object $class
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void

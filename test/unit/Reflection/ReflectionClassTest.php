@@ -227,14 +227,14 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 
-    public function testGetReflectionConstants()
+    public function testGetReflectionConstants() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
         $this->assertCount(5, $classInfo->getReflectionConstants());
     }
 
-    public function testGetReflectionConstant()
+    public function testGetReflectionConstant() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -1429,7 +1429,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($reflection->getProperty('staticBar')->isStatic());
     }
 
-    public function testGetConstantsReturnsAllConstantsRegardlessOfVisibility()
+    public function testGetConstantsReturnsAllConstantsRegardlessOfVisibility() : void
     {
         $php = '<?php
             class Foo {

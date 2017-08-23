@@ -17,7 +17,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
 {
-    private function getAstForString($php) : array
+    private function getAstForString(string $php) : array
     {
         return PhpParserFactory::create()->parse($php);
     }

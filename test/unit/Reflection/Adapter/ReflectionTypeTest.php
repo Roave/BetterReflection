@@ -48,7 +48,7 @@ class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
         /** @var BetterReflectionType|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionType::class);

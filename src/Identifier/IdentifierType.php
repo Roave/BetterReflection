@@ -22,7 +22,7 @@ class IdentifierType
      */
     private $name;
 
-    public function __construct($type = self::IDENTIFIER_CLASS)
+    public function __construct(string $type = self::IDENTIFIER_CLASS)
     {
         if ( ! \array_key_exists($type, self::VALID_TYPES)) {
             throw new \InvalidArgumentException(\sprintf(

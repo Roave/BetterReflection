@@ -17,7 +17,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class NodeToReflectionTest extends \PHPUnit\Framework\TestCase
 {
-    private function getFirstAstNodeInString($php) : Node
+    private function getFirstAstNodeInString(string $php) : Node
     {
         $nodes = (new Parser\Multiple([
             new Parser\Php7(new Lexer()),

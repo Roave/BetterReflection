@@ -43,7 +43,7 @@ final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $loaderMethod->expects(self::once())
             ->method('__invoke')
             ->with($reflection)
-            ->willReturnCallback(function () use ($reflection) {
+            ->willReturnCallback(function () use ($reflection) : void {
                 eval((new PhpParserPrinter())->__invoke($reflection));
             });
 

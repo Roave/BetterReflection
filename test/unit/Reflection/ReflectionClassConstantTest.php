@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -17,32 +18,32 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private function getExampleConstant(string $name)
+    private function getExampleConstant(string $name) : ?ReflectionClassConstant
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
         return $classInfo->getReflectionConstant($name);
     }
 
-    public function testDefaultVisibility()
+    public function testDefaultVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
         $this->assertTrue($const->isPublic());
     }
 
-    public function testPublicVisibility()
+    public function testPublicVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_3');
         $this->assertTrue($const->isPublic());
     }
 
-    public function testProtectedVisibility()
+    public function testProtectedVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_4');
         $this->assertTrue($const->isProtected());
     }
 
-    public function testPrivateVisibility()
+    public function testPrivateVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_5');
         $this->assertTrue($const->isPrivate());
@@ -53,13 +54,13 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
      * @param string $expected
      * @dataProvider toStringProvider
      */
-    public function testToString(string $const, string $expected)
+    public function testToString(string $const, string $expected) : void
     {
         $const = $this->getExampleConstant($const);
         $this->assertSame($expected, (string) $const);
     }
 
-    public function toStringProvider()
+    public function toStringProvider() : array
     {
         return [
             ['MY_CONST_1', 'Constant [ public integer MY_CONST_1 ] { 123 }' . PHP_EOL],
@@ -74,13 +75,13 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
      * @param int $expected
      * @dataProvider getModifiersProvider
      */
-    public function testGetModifiers(string $const, int $expected)
+    public function testGetModifiers(string $const, int $expected) : void
     {
         $const = $this->getExampleConstant($const);
         $this->assertSame($expected, $const->getModifiers());
     }
 
-    public function getModifiersProvider()
+    public function getModifiersProvider() : array
     {
         return [
             ['MY_CONST_1', \ReflectionProperty::IS_PUBLIC],
@@ -90,19 +91,19 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testGetDocComment()
+    public function testGetDocComment() : void
     {
         $const = $this->getExampleConstant('MY_CONST_2');
         $this->assertContains('Documentation for constant', $const->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment()
+    public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
         $this->assertSame('', $const->getDocComment());
     }
 
-    public function testGetDeclaringClass()
+    public function testGetDeclaringClass() : void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);

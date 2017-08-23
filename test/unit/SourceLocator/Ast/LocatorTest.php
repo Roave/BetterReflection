@@ -20,7 +20,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class LocatorTest extends \PHPUnit\Framework\TestCase
 {
-    private function getIdentifier($name, $type) : Identifier
+    private function getIdentifier(string $name, string $type) : Identifier
     {
         return new Identifier($name, new IdentifierType($type));
     }

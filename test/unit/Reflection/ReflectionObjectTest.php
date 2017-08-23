@@ -21,6 +21,9 @@ use Roave\BetterReflectionTest\Fixture\ClassForHinting;
  */
 class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Parser
+     */
     private $parser;
 
     private function getPhpParser() : Parser
@@ -48,7 +51,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
         self::assertSame(FileHelper::normalizeWindowsPath(__FILE__), $classInfo->getFileName());
-        self::assertSame(44, $classInfo->getStartLine());
+        self::assertSame(47, $classInfo->getStartLine());
     }
 
     public function testReflectionWorksWithInternalClasses() : void

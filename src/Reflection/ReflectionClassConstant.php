@@ -205,7 +205,7 @@ class ReflectionClassConstant implements \Reflector
     /**
      * {@inheritDoc}
      */
-    public function __toString()
+    public function __toString() : string
     {
         $value = $this->getValue();
 
@@ -221,7 +221,7 @@ class ReflectionClassConstant implements \Reflector
     /**
      * {@inheritDoc}
      */
-    public static function export()
+    public static function export() : void
     {
         throw new \Exception('Unable to export statically');
     }

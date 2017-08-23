@@ -29,6 +29,11 @@ class ReflectionObject extends ReflectionClass
      */
     private $reflector;
 
+    /**
+     * @param \Roave\BetterReflection\Reflector\Reflector $reflector
+     * @param \Roave\BetterReflection\Reflection\ReflectionClass $reflectionClass
+     * @param object $object
+     */
     private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
     {
         $this->reflector       = $reflector;
