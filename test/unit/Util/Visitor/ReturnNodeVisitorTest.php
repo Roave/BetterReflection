@@ -20,7 +20,7 @@ class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
                     new Node\Scalar\MagicConst\File(),
                     new Node\Stmt\Return_(),
                 ],
-                1
+                1,
             ],
             'returnWithinClosureShouldNotBeReturned' => [
                 [
@@ -29,7 +29,7 @@ class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
                     ]),
                     new Node\Stmt\Return_(),
                 ],
-                1
+                1,
             ],
             'returnWithinAnonymousClassShouldNotBeReturned' => [
                 [
@@ -38,7 +38,7 @@ class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
                     ]),
                     new Node\Stmt\Return_(),
                 ],
-                1
+                1,
             ],
         ];
     }

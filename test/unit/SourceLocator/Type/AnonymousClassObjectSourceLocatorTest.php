@@ -36,7 +36,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
             [$classes[1], $fileWithClasses, 11, 17],
             [$classWithNestedClasses, $fileWithClassWithNestedClasses, 3, 13],
             [$classWithNestedClasses->getWrapped(0), $fileWithClassWithNestedClasses, 8, 8],
-            [$classWithNestedClasses->getWrapped(1), $fileWithClassWithNestedClasses, 11, 11]
+            [$classWithNestedClasses->getWrapped(1), $fileWithClassWithNestedClasses, 11, 11],
         ];
     }
 
@@ -158,7 +158,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
         return [
             [$class, 3, 13],
             [$class->getWrapped(0), 8, 8],
-            [$class->getWrapped(1), 11, 11]
+            [$class->getWrapped(1), 11, 11],
         ];
     }
 

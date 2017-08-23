@@ -170,7 +170,7 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame(
             [
-                $mockReflectionClass
+                $mockReflectionClass,
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,

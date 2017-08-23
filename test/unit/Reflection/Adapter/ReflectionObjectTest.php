@@ -176,7 +176,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         $betterReflectionObject
             ->method('getMethods')
             ->willReturn([
-                $betterReflectionMethod
+                $betterReflectionMethod,
             ]);
         $betterReflectionObject
             ->method('hasMethod')
@@ -200,7 +200,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         $betterReflectionObject
             ->method('getMethods')
             ->willReturn([
-                $betterReflectionMethod
+                $betterReflectionMethod,
             ]);
         $betterReflectionObject
             ->method('getMethod')

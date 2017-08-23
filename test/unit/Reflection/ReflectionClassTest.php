@@ -146,8 +146,8 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
                 \ReflectionMethod::IS_PUBLIC |
                 \ReflectionMethod::IS_PROTECTED |
                 \ReflectionMethod::IS_PRIVATE,
-                18
-            ]
+                18,
+            ],
         ];
     }
 
@@ -318,8 +318,8 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
                 \ReflectionProperty::IS_PUBLIC |
                 \ReflectionProperty::IS_PROTECTED |
                 \ReflectionProperty::IS_PRIVATE,
-                4
-            ]
+                4,
+            ],
         ];
     }
 

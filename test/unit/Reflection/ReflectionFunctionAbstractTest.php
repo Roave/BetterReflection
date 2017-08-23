@@ -560,7 +560,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
         $function->setBodyFromAst([
             new Echo_([
-                new String_('Hello world!')
+                new String_('Hello world!'),
             ]),
         ]);
 

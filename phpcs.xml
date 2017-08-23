@@ -42,4 +42,7 @@
         <!-- Turned off by PSR2 -> turning on with default severity -->
         <severity>5</severity>
     </rule>
+
+    <config name="installed_paths" value="../../slevomat/coding-standard"/><!-- relative path from PHPCS source location -->
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
 </ruleset>
