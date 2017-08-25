@@ -9,7 +9,7 @@
     <exclude-pattern>test/unit/Assets/*</exclude-pattern>
     <exclude-pattern>test/unit/Fixture/*</exclude-pattern>
 
-    <rule ref="PSR2">
+    <rule ref="vendor/doctrine/coding-standard/lib/Doctrine/ruleset.xml">
         <exclude name="Generic.Files.LineLength.TooLong"/>
     </rule>
 
