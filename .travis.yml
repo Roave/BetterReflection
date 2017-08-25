@@ -39,7 +39,7 @@ jobs:
       php: 7.1
       env: DEPENDENCIES=""
       before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable doctrine/coding-standard:^1.0.0 slevomat/coding-standard:^3.2.1
+        - travis_retry composer require --dev --prefer-dist --prefer-stable doctrine/coding-standard:^1.0.0 slevomat/coding-standard:^3.3.0
       script: vendor/bin/phpcs
 
     - stage: Static Analysis
