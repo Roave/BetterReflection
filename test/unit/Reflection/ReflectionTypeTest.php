@@ -5,12 +5,13 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Types;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionType;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionType
  */
-class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
+class ReflectionTypeTest extends TestCase
 {
     public function testCreateFromType() : void
     {

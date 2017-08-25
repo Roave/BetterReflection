@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Throwable;
 
 /**
  * @internal
@@ -78,7 +79,7 @@ class Locator
                 $identifierType,
                 $locatedSource
             );
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw Exception\ParseToAstFailure::fromLocatedSource($locatedSource, $exception);
         }
     }

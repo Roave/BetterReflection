@@ -3,8 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest;
 
+use ClassWithExplicitGlobalNamespace;
+use ClassWithNoNamespace;
 use PHPUnit\Framework\BaseTestListener;
+use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestSuite;
+use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 
 class TestListener extends BaseTestListener
 {
@@ -51,18 +58,18 @@ class TestListener extends BaseTestListener
      * @throws \PHPUnit\Framework\AssertionFailedError
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function endTest(\PHPUnit\Framework\Test $test, $time) : void
+    public function endTest(Test $test, $time) : void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
         if ( ! ($test instanceof TestCase)) {
             return;
         }
 
-        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\ExampleClass::class, $test);
-        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\FixtureOther\AnotherClass::class, $test);
-        $this->assertClassNotLoaded(\ClassWithExplicitGlobalNamespace::class, $test);
-        $this->assertClassNotLoaded(\ClassWithNoNamespace::class, $test);
-        $this->assertClassNotLoaded(\Roave\BetterReflectionTest\Fixture\Methods::class, $test);
+        $this->assertClassNotLoaded(ExampleClass::class, $test);
+        $this->assertClassNotLoaded(AnotherClass::class, $test);
+        $this->assertClassNotLoaded(ClassWithExplicitGlobalNamespace::class, $test);
+        $this->assertClassNotLoaded(ClassWithNoNamespace::class, $test);
+        $this->assertClassNotLoaded(Methods::class, $test);
     }
 
     /**
@@ -71,7 +78,7 @@ class TestListener extends BaseTestListener
      *
      * @param \PHPUnit\Framework\TestSuite $suite
      */
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
+    public function startTestSuite(TestSuite $suite) : void
     {
         $this->currentSuite = $suite;
     }
@@ -82,7 +89,7 @@ class TestListener extends BaseTestListener
      *
      * @param \PHPUnit\Framework\TestSuite $suite
      */
-    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
+    public function endTestSuite(TestSuite $suite) : void
     {
         $this->currentSuite = null;
     }

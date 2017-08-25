@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -16,7 +17,7 @@ use Roave\BetterReflection\TypesFinder\FindParameterType;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindParameterType
  */
-class FindParameterTypeTest extends \PHPUnit\Framework\TestCase
+class FindParameterTypeTest extends TestCase
 {
     /**
      * @return array

@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Exception;
+use InvalidArgumentException;
+use OutOfBoundsException;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -14,17 +17,25 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionProperty as CoreReflectionProperty;
+use Reflector as CoreReflector;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
+use Traversable;
 
-class ReflectionClass implements Reflection, \Reflector
+class ReflectionClass implements Reflection, CoreReflector
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
 
@@ -76,7 +87,7 @@ class ReflectionClass implements Reflection, \Reflector
     public static function export(?string $className) : string
     {
         if (null === $className) {
-            throw new \InvalidArgumentException('Class name must be provided');
+            throw new InvalidArgumentException('Class name must be provided');
         }
 
         $reflection = self::createFromName($className);
@@ -193,7 +204,7 @@ class ReflectionClass implements Reflection, \Reflector
     public static function createFromInstance($instance) : self
     {
         if ( ! \is_object($instance)) {
-            throw new \InvalidArgumentException('Instance must be an instance of an object');
+            throw new InvalidArgumentException('Instance must be an instance of an object');
         }
 
         return ReflectionObject::createFromInstance($instance);
@@ -243,7 +254,7 @@ class ReflectionClass implements Reflection, \Reflector
         $fileName = $this->getFileName();
 
         if (null === $fileName) {
-            $fileName = sha1($this->locatedSource->getSource());
+            $fileName = \sha1($this->locatedSource->getSource());
         }
 
         return \sprintf('%s%c%s(%d)', self::ANONYMOUS_CLASS_NAME_PREFIX, "\0", $fileName, $this->getStartLine());
@@ -419,7 +430,7 @@ class ReflectionClass implements Reflection, \Reflector
         $methods = $this->getMethodsIndexedByName();
 
         if ( ! isset($methods[$methodName])) {
-            throw new \OutOfBoundsException('Could not find method: ' . $methodName);
+            throw new OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
         return $methods[$methodName];
@@ -436,7 +447,7 @@ class ReflectionClass implements Reflection, \Reflector
         try {
             $this->getMethod($methodName);
             return true;
-        } catch (\OutOfBoundsException $exception) {
+        } catch (OutOfBoundsException $exception) {
             return false;
         }
     }
@@ -603,7 +614,7 @@ class ReflectionClass implements Reflection, \Reflector
         });
 
         if ( ! isset($constructors[0])) {
-            throw new \OutOfBoundsException('Could not find method: __construct');
+            throw new OutOfBoundsException('Could not find method: __construct');
         }
 
         return $constructors[0];
@@ -878,8 +889,8 @@ class ReflectionClass implements Reflection, \Reflector
     public function getModifiers() : int
     {
         $val  = 0;
-        $val += $this->isAbstract() ? \ReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
-        $val += $this->isFinal() ? \ReflectionClass::IS_FINAL : 0;
+        $val += $this->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
+        $val += $this->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
         return $val;
     }
 
@@ -948,7 +959,7 @@ class ReflectionClass implements Reflection, \Reflector
             || ! $objectType instanceof Object_
             || ! $fqsen = $objectType->getFqsen()
         ) {
-            throw new \Exception('Unable to determine FQSEN for named node');
+            throw new Exception('Unable to determine FQSEN for named node');
         }
 
         return $fqsen->__toString();
@@ -1196,7 +1207,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function isIterateable() : bool
     {
-        return $this->isInstantiable() && $this->implementsInterface(\Traversable::class);
+        return $this->isInstantiable() && $this->implementsInterface(Traversable::class);
     }
 
     /**
@@ -1266,11 +1277,11 @@ class ReflectionClass implements Reflection, \Reflector
     }
 
     /**
-     * @throws Exception\Uncloneable
+     * @throws Uncloneable
      */
     public function __clone()
     {
-        throw Exception\Uncloneable::fromClass(\get_class($this));
+        throw Uncloneable::fromClass(\get_class($this));
     }
 
     /**
@@ -1284,20 +1295,20 @@ class ReflectionClass implements Reflection, \Reflector
     public function getStaticPropertyValue(string $propertyName)
     {
         if ( ! \class_exists($this->getName(), false)) {
-            throw new Exception\ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
+            throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
 
         $property = $this->getProperty($propertyName);
 
         if ( ! $property || ! $property->isStatic()) {
-            throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
+            throw new PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         // PHP behaviour is to simply say "property does not exist" if accessing
         // protected or private values. Here we be a little more explicit in
         // reasoning...
         if ( ! $property->isPublic()) {
-            throw new Exception\PropertyNotPublic('Property is not public');
+            throw new PropertyNotPublic('Property is not public');
         }
 
         return $this->getName()::${$propertyName};
@@ -1313,20 +1324,20 @@ class ReflectionClass implements Reflection, \Reflector
     public function setStaticPropertyValue(string $propertyName, $value) : void
     {
         if ( ! \class_exists($this->getName(), false)) {
-            throw new Exception\ClassDoesNotExist('Property cannot be set as the class is not loaded');
+            throw new ClassDoesNotExist('Property cannot be set as the class is not loaded');
         }
 
         $property = $this->getProperty($propertyName);
 
         if ( ! $property || ! $property->isStatic()) {
-            throw new Exception\PropertyDoesNotExist('Property does not exist on class or is not static');
+            throw new PropertyDoesNotExist('Property does not exist on class or is not static');
         }
 
         // PHP behaviour is to simply say "property does not exist" if accessing
         // protected or private values. Here we be a little more explicit in
         // reasoning...
         if ( ! $property->isPublic()) {
-            throw new Exception\PropertyNotPublic('Property is not public');
+            throw new PropertyNotPublic('Property is not public');
         }
 
         $this->getName()::${$propertyName} = $value;
@@ -1351,7 +1362,7 @@ class ReflectionClass implements Reflection, \Reflector
     public function setFinal(bool $isFinal) : void
     {
         if ( ! $this->node instanceof ClassNode) {
-            throw Exception\NotAClassReflection::fromReflectionClass($this);
+            throw NotAClassReflection::fromReflectionClass($this);
         }
 
         if ($isFinal === true) {
@@ -1405,15 +1416,15 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function addProperty(
         string $propertyName,
-        int $visibility = \ReflectionProperty::IS_PUBLIC,
+        int $visibility = CoreReflectionProperty::IS_PUBLIC,
         bool $static = false
     ) : void {
         $type = 0;
         switch ($visibility) {
-            case \ReflectionProperty::IS_PRIVATE:
+            case CoreReflectionProperty::IS_PRIVATE:
                 $type |= ClassNode::MODIFIER_PRIVATE;
                 break;
-            case \ReflectionProperty::IS_PROTECTED:
+            case CoreReflectionProperty::IS_PROTECTED:
                 $type |= ClassNode::MODIFIER_PROTECTED;
                 break;
             default:

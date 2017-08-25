@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -15,11 +17,11 @@ use Roave\BetterReflection\Util\FileHelper;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
  */
-class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class AnonymousClassObjectSourceLocatorTest extends TestCase
 {
     public function testExceptionThrownWhenNonObjectGiven() : void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new AnonymousClassObjectSourceLocator(123);
     }
 

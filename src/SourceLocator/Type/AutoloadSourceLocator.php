@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use ReflectionClass;
+use ReflectionFunction;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
@@ -81,7 +83,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     private function locateClassByName(string $className) : ?string
     {
         if (\class_exists($className, false) || \interface_exists($className, false) || \trait_exists($className, false)) {
-            $filename = (new \ReflectionClass($className))->getFileName();
+            $filename = (new ReflectionClass($className))->getFileName();
 
             if ( ! \is_string($filename)) {
                 return null;
@@ -117,7 +119,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        $reflection         = new \ReflectionFunction($functionName);
+        $reflection         = new ReflectionFunction($functionName);
         $reflectionFileName = $reflection->getFileName();
 
         if ( ! \is_string($reflectionFileName)) {

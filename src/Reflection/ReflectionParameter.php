@@ -3,20 +3,27 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Closure;
+use Exception;
+use InvalidArgumentException;
+use LogicException;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Self_;
 use PhpParser\Node;
 use PhpParser\Node\Param as ParamNode;
+use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
+use RuntimeException;
 
-class ReflectionParameter implements \Reflector
+class ReflectionParameter implements CoreReflector
 {
     private const CONST_TYPE_NOT_A_CONST = 0;
     private const CONST_TYPE_CLASS       = 1;
@@ -68,7 +75,7 @@ class ReflectionParameter implements \Reflector
 
     public static function export() : void
     {
-        throw new \Exception('Unable to export statically');
+        throw new Exception('Unable to export statically');
     }
 
     /**
@@ -116,7 +123,7 @@ class ReflectionParameter implements \Reflector
      * @param string $parameterName
      * @return ReflectionParameter
      */
-    public static function createFromClosure(\Closure $closure, string $parameterName) : ReflectionParameter
+    public static function createFromClosure(Closure $closure, string $parameterName) : ReflectionParameter
     {
         return ReflectionFunction::createFromClosure($closure)
             ->getParameter($parameterName);
@@ -150,11 +157,11 @@ class ReflectionParameter implements \Reflector
             return ReflectionFunction::createFromName($spec)->getParameter($parameterName);
         }
 
-        if ($spec instanceof \Closure) {
+        if ($spec instanceof Closure) {
             return self::createFromClosure($spec, $parameterName);
         }
 
-        throw new \InvalidArgumentException('Could not create reflection from the spec given');
+        throw new InvalidArgumentException('Could not create reflection from the spec given');
     }
 
     /**
@@ -205,7 +212,7 @@ class ReflectionParameter implements \Reflector
     private function parseDefaultValueNode() : void
     {
         if ( ! $this->isDefaultValueAvailable()) {
-            throw new \LogicException('This parameter does not have a default value available');
+            throw new LogicException('This parameter does not have a default value available');
         }
 
         $defaultValueNode = $this->node->default;
@@ -254,7 +261,7 @@ class ReflectionParameter implements \Reflector
         } while ($class = $class->getParentClass());
 
         // note: this code is theoretically unreachable, so don't expect any coverage on it
-        throw new \LogicException("Failed to find parent class of constant '$constantName'.");
+        throw new LogicException("Failed to find parent class of constant '$constantName'.");
     }
 
     /**
@@ -550,7 +557,7 @@ class ReflectionParameter implements \Reflector
     {
         $this->parseDefaultValueNode();
         if ( ! $this->isDefaultValueConstant()) {
-            throw new \LogicException('This parameter is not a constant default value, so cannot have a constant name');
+            throw new LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
         return $this->defaultValueConstantName;
@@ -585,7 +592,7 @@ class ReflectionParameter implements \Reflector
         }
 
         if ( ! $this->reflector instanceof ClassReflector) {
-            throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
+            throw new RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
 
         return $this->reflector->reflect($fqsen->__toString());
@@ -593,11 +600,11 @@ class ReflectionParameter implements \Reflector
 
     /**
      * {@inheritdoc}
-     * @throws Exception\Uncloneable
+     * @throws Uncloneable
      */
     public function __clone()
     {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
+        throw Uncloneable::fromClass(__CLASS__);
     }
 
     public function getStartColumn() : int

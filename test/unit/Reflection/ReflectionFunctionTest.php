@@ -4,14 +4,17 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use phpDocumentor\Reflection\Types\Boolean;
+use PHPUnit\Framework\TestCase;
+use Reflector;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
  */
-class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
+class ReflectionFunctionTest extends TestCase
 {
     public function testImplementsReflector() : void
     {
@@ -20,7 +23,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         $reflector    = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
 
-        self::assertInstanceOf(\Reflector::class, $functionInfo);
+        self::assertInstanceOf(Reflector::class, $functionInfo);
     }
 
     public function testNameMethodsWithNoNamespace() : void
@@ -100,7 +103,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromClosureCanReflectTypeHints() : void
     {
-        $myClosure = function (\stdClass $theParam) : int {
+        $myClosure = function (stdClass $theParam) : int {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);

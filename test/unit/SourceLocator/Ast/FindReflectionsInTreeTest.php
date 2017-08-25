@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -15,7 +16,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
  */
-class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
+class FindReflectionsInTreeTest extends TestCase
 {
     private function getAstForString(string $php) : array
     {

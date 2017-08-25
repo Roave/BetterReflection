@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
@@ -10,11 +11,12 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClass
  */
-class ReflectionClassTest extends \PHPUnit\Framework\TestCase
+class ReflectionClassTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
@@ -78,7 +80,7 @@ class ReflectionClassTest extends \PHPUnit\Framework\TestCase
             ['isAbstract', null, true, []],
             ['isFinal', null, true, []],
             ['getModifiers', null, 123, []],
-            ['isInstance', null, true, [new \stdClass()]],
+            ['isInstance', null, true, [new stdClass()]],
             ['newInstance', NotImplemented::class, null, []],
             ['newInstanceWithoutConstructor', NotImplemented::class, null, []],
             ['newInstanceArgs', NotImplemented::class, null, []],

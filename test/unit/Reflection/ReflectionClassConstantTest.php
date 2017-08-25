@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
-class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
+class ReflectionClassConstantTest extends TestCase
 {
     private function getComposerLocator() : ComposerSourceLocator
     {
@@ -63,10 +65,10 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
     public function toStringProvider() : array
     {
         return [
-            ['MY_CONST_1', 'Constant [ public integer MY_CONST_1 ] { 123 }' . PHP_EOL],
-            ['MY_CONST_3', 'Constant [ public integer MY_CONST_3 ] { 345 }' . PHP_EOL],
-            ['MY_CONST_4', 'Constant [ protected integer MY_CONST_4 ] { 456 }' . PHP_EOL],
-            ['MY_CONST_5', 'Constant [ private integer MY_CONST_5 ] { 567 }' . PHP_EOL],
+            ['MY_CONST_1', 'Constant [ public integer MY_CONST_1 ] { 123 }' . \PHP_EOL],
+            ['MY_CONST_3', 'Constant [ public integer MY_CONST_3 ] { 345 }' . \PHP_EOL],
+            ['MY_CONST_4', 'Constant [ protected integer MY_CONST_4 ] { 456 }' . \PHP_EOL],
+            ['MY_CONST_5', 'Constant [ private integer MY_CONST_5 ] { 567 }' . \PHP_EOL],
         ];
     }
 
@@ -84,10 +86,10 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
     public function getModifiersProvider() : array
     {
         return [
-            ['MY_CONST_1', \ReflectionProperty::IS_PUBLIC],
-            ['MY_CONST_3', \ReflectionProperty::IS_PUBLIC],
-            ['MY_CONST_4', \ReflectionProperty::IS_PROTECTED],
-            ['MY_CONST_5', \ReflectionProperty::IS_PRIVATE],
+            ['MY_CONST_1', ReflectionProperty::IS_PUBLIC],
+            ['MY_CONST_3', ReflectionProperty::IS_PUBLIC],
+            ['MY_CONST_4', ReflectionProperty::IS_PROTECTED],
+            ['MY_CONST_5', ReflectionProperty::IS_PRIVATE],
         ];
     }
 

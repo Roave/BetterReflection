@@ -3,8 +3,16 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use A\Foo;
+use Php4StyleCaseInsensitiveConstruct;
+use Php4StyleConstruct;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Stmt\Function_;
+use PHPUnit\Framework\TestCase;
+use Reflection;
+use ReflectionClass;
+use ReflectionMethod as CoreReflectionMethod;
+use Reflector;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -18,11 +26,13 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
+use RuntimeException;
+use SplDoublyLinkedList;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
  */
-class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
+class ReflectionMethodTest extends TestCase
 {
     /**
      * @var ClassReflector
@@ -37,7 +47,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromName() : void
     {
-        $method = ReflectionMethod::createFromName(\SplDoublyLinkedList::class, 'add');
+        $method = ReflectionMethod::createFromName(SplDoublyLinkedList::class, 'add');
 
         self::assertInstanceOf(ReflectionMethod::class, $method);
         self::assertSame('add', $method->getName());
@@ -45,7 +55,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromInstance() : void
     {
-        $method = ReflectionMethod::createFromInstance(new \SplDoublyLinkedList(), 'add');
+        $method = ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'add');
 
         self::assertInstanceOf(ReflectionMethod::class, $method);
         self::assertSame('add', $method->getName());
@@ -56,7 +66,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         $classInfo  = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('publicMethod');
 
-        self::assertInstanceOf(\Reflector::class, $methodInfo);
+        self::assertInstanceOf(Reflector::class, $methodInfo);
     }
 
     /**
@@ -130,7 +140,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function testIsConstructorWhenPhp4Style() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php'));
-        $classInfo = $reflector->reflect(\Php4StyleConstruct::class);
+        $classInfo = $reflector->reflect(Php4StyleConstruct::class);
 
         $method = $classInfo->getMethod('Php4StyleConstruct');
         self::assertTrue($method->isConstructor());
@@ -147,7 +157,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function testIsConstructorWhenPhp4StyleCaseInsensitive() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php'));
-        $classInfo = $reflector->reflect(\Php4StyleCaseInsensitiveConstruct::class);
+        $classInfo = $reflector->reflect(Php4StyleCaseInsensitiveConstruct::class);
 
         $method = $classInfo->getMethod('PHP4STYLECASEINSENSITIVECONSTRUCT');
         self::assertTrue($method->isConstructor());
@@ -241,7 +251,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         ';
 
         $returnType = (new ClassReflector(new StringSourceLocator($php)))
-            ->reflect(\A\Foo::class)
+            ->reflect(Foo::class)
             ->getMethod('someMethod')
             ->getReturnType();
 
@@ -253,13 +263,13 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function modifierProvider() : array
     {
         return [
-            ['publicMethod', \ReflectionMethod::IS_PUBLIC, ['public']],
-            ['privateMethod', \ReflectionMethod::IS_PRIVATE, ['private']],
-            ['protectedMethod', \ReflectionMethod::IS_PROTECTED, ['protected']],
-            ['finalPublicMethod', \ReflectionMethod::IS_FINAL | \ReflectionMethod::IS_PUBLIC, ['final', 'public']],
-            ['abstractPublicMethod', \ReflectionMethod::IS_ABSTRACT | \ReflectionMethod::IS_PUBLIC, ['abstract', 'public']],
-            ['staticPublicMethod', \ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC, ['public', 'static']],
-            ['noVisibility', \ReflectionMethod::IS_PUBLIC, ['public']],
+            ['publicMethod', CoreReflectionMethod::IS_PUBLIC, ['public']],
+            ['privateMethod', CoreReflectionMethod::IS_PRIVATE, ['private']],
+            ['protectedMethod', CoreReflectionMethod::IS_PROTECTED, ['protected']],
+            ['finalPublicMethod', CoreReflectionMethod::IS_FINAL | CoreReflectionMethod::IS_PUBLIC, ['final', 'public']],
+            ['abstractPublicMethod', CoreReflectionMethod::IS_ABSTRACT | CoreReflectionMethod::IS_PUBLIC, ['abstract', 'public']],
+            ['staticPublicMethod', CoreReflectionMethod::IS_STATIC | CoreReflectionMethod::IS_PUBLIC, ['public', 'static']],
+            ['noVisibility', CoreReflectionMethod::IS_PUBLIC, ['public']],
         ];
     }
 
@@ -277,7 +287,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         self::assertSame($expectedModifier, $method->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            \Reflection::getModifierNames($method->getModifiers())
+            Reflection::getModifierNames($method->getModifiers())
         );
     }
 
@@ -318,12 +328,12 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('publicMethod');
 
-        $methodReflection = new \ReflectionClass(ReflectionFunctionAbstract::class);
+        $methodReflection = new ReflectionClass(ReflectionFunctionAbstract::class);
         $methodNodeProp   = $methodReflection->getProperty('node');
         $methodNodeProp->setAccessible(true);
         $methodNodeProp->setValue($method, new Function_('foo'));
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Expected a ClassMethod node');
         $method->isPublic();
     }

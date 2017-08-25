@@ -5,12 +5,13 @@ namespace Roave\BetterReflectionTest\Util\Visitor;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 /**
  * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor
  */
-class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
+class ReturnNodeVisitorTest extends TestCase
 {
     public function outOfScopeNodeTypeProvider() : array
     {

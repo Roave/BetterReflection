@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -14,7 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction
  */
-class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
+class ReflectionFunctionTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
@@ -105,7 +107,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
 
     public function testExport() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionFunctionAdapter::export('str_replace');
     }

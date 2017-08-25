@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Exception;
 use PhpParser\Node\Stmt\ClassConst;
+use ReflectionProperty;
+use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
-class ReflectionClassConstant implements \Reflector
+class ReflectionClassConstant implements CoreReflector
 {
     /**
      * @var bool
@@ -129,9 +132,9 @@ class ReflectionClassConstant implements \Reflector
     public function getModifiers() : int
     {
         $val  = 0;
-        $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? \ReflectionProperty::IS_PRIVATE : 0;
+        $val += $this->isPublic() ? ReflectionProperty::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? ReflectionProperty::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? ReflectionProperty::IS_PRIVATE : 0;
         return $val;
     }
 
@@ -210,7 +213,7 @@ class ReflectionClassConstant implements \Reflector
         $value = $this->getValue();
 
         return \sprintf(
-            'Constant [ %s %s %s ] { %s }' . PHP_EOL,
+            'Constant [ %s %s %s ] { %s }' . \PHP_EOL,
             $this->getVisibility(),
             \gettype($value),
             $this->getName(),
@@ -223,6 +226,6 @@ class ReflectionClassConstant implements \Reflector
      */
     public static function export() : void
     {
-        throw new \Exception('Unable to export statically');
+        throw new Exception('Unable to export statically');
     }
 }

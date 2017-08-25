@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Closure;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -26,7 +27,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * @param \Closure $closure
      * @return ReflectionFunction
      */
-    public static function createFromClosure(\Closure $closure) : self
+    public static function createFromClosure(Closure $closure) : self
     {
         return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect(self::CLOSURE_NAME);
     }

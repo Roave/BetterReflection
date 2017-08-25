@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Identifier;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use ReflectionObject;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -11,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 /**
  * @covers \Roave\BetterReflection\Identifier\IdentifierType
  */
-class IdentifierTypeTest extends \PHPUnit\Framework\TestCase
+class IdentifierTypeTest extends TestCase
 {
     /**
      * @return string[][]
@@ -64,7 +66,7 @@ class IdentifierTypeTest extends \PHPUnit\Framework\TestCase
 
         // We must use reflection to hack the value, because we cannot create
         // an IdentifierType with an invalid type
-        $reflection = new \ReflectionObject($classType);
+        $reflection = new ReflectionObject($classType);
         $prop       = $reflection->getProperty('name');
         $prop->setAccessible(true);
         $prop->setValue($classType, 'nonsense');

@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
 
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
  */
-final class SignatureCheckFailedTest extends \PHPUnit\Framework\TestCase
+final class SignatureCheckFailedTest extends TestCase
 {
     public function testFromReflectionClass() : void
     {

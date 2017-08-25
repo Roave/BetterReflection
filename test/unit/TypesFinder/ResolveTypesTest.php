@@ -5,12 +5,13 @@ namespace Roave\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes
  */
-class ResolveTypesTest extends \PHPUnit\Framework\TestCase
+class ResolveTypesTest extends TestCase
 {
     /**
      * @return array

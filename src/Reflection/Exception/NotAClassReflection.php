@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Exception;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use UnexpectedValueException;
 
-class NotAClassReflection extends \UnexpectedValueException
+class NotAClassReflection extends UnexpectedValueException
 {
     /**
      * @param ReflectionClass $class

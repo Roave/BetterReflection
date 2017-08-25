@@ -58,7 +58,7 @@ final class FileCacheLoader implements LoaderMethodInterface
      */
     public function __invoke(ReflectionClass $classInfo) : void
     {
-        $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
+        $filename = $this->cacheDirectory . '/' . \sha1($classInfo->getName());
 
         if ( ! \file_exists($filename)) {
             $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Exception;
 
-class TwoClosuresOnSameLine extends \LogicException
+use LogicException;
+
+class TwoClosuresOnSameLine extends LogicException
 {
     public static function create(string $fileName, int $lineNumber) : self
     {

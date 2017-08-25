@@ -6,12 +6,13 @@ namespace Roave\BetterReflectionTest\Util;
 use PhpParser\Comment;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt\Function_;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
 /**
  * @covers \Roave\BetterReflection\Util\GetFirstDocComment
  */
-class GetFirstDocCommentTest extends \PHPUnit\Framework\TestCase
+class GetFirstDocCommentTest extends TestCase
 {
     public function testWithComment() : void
     {

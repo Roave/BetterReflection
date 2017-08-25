@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\Exception;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
 
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
  */
-final class ClassAlreadyLoadedTest extends \PHPUnit\Framework\TestCase
+final class ClassAlreadyLoadedTest extends TestCase
 {
     public function testFromReflectionClass() : void
     {

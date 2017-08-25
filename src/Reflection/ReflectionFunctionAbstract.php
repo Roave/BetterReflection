@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Closure;
+use Exception;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
@@ -11,8 +13,11 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
+use Reflector as CoreReflector;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -23,7 +28,7 @@ use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
-abstract class ReflectionFunctionAbstract implements \Reflector
+abstract class ReflectionFunctionAbstract implements CoreReflector
 {
     public const CLOSURE_NAME = '{closure}';
 
@@ -53,7 +58,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
 
     public static function export() : void
     {
-        throw new \Exception('Unable to export statically');
+        throw new Exception('Unable to export statically');
     }
 
     /**
@@ -71,7 +76,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         ?NamespaceNode $declaringNamespace = null
     ) : void {
         if ( ! ($node instanceof Node\Stmt\ClassMethod) && ! ($node instanceof Node\FunctionLike)) {
-            throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
+            throw InvalidAbstractFunctionNodeType::fromNode($node);
         }
 
         $this->reflector          = $reflector;
@@ -479,11 +484,11 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     }
 
     /**
-     * @throws Exception\Uncloneable
+     * @throws Uncloneable
      */
     public function __clone()
     {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
+        throw Uncloneable::fromClass(__CLASS__);
     }
 
     /**
@@ -538,7 +543,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param \Closure $newBody
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
-    public function setBodyFromClosure(\Closure $newBody) : void
+    public function setBodyFromClosure(Closure $newBody) : void
     {
         /** @var self $closureReflection */
         $closureReflection = (new ClosureSourceLocator($newBody))->locateIdentifier($this->reflector, new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));

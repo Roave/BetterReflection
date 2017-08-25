@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Exception;
 
-class Uncloneable extends \LogicException
+use LogicException;
+
+class Uncloneable extends LogicException
 {
     public static function fromClass(string $className) : self
     {

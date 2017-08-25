@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory
  */
-class InvalidDirectoryTest extends \PHPUnit\Framework\TestCase
+class InvalidDirectoryTest extends TestCase
 {
     /**
      * @dataProvider nonStringValuesProvider
@@ -32,7 +34,7 @@ class InvalidDirectoryTest extends \PHPUnit\Framework\TestCase
     public function nonStringValuesProvider() : array
     {
         return [
-            ['Expected string, stdClass given', new \stdClass()],
+            ['Expected string, stdClass given', new stdClass()],
             ['Expected string, boolean given', true],
             ['Expected string, NULL given', null],
             ['Expected string, integer given', 100],

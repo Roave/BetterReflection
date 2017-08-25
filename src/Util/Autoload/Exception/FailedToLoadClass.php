@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\Exception;
 
-final class FailedToLoadClass extends \LogicException
+use LogicException;
+
+final class FailedToLoadClass extends LogicException
 {
     public static function fromClassName(string $className) : self
     {

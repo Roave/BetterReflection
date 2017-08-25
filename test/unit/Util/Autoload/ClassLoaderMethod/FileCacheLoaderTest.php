@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
@@ -13,12 +14,12 @@ use Roave\Signature\SignerInterface;
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
  */
-final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
+final class FileCacheLoaderTest extends TestCase
 {
     public function testFileCacheWriterCreatesFileWithPrintedCode() : void
     {
         $className         = \uniqid(__METHOD__, true);
-        $generatedFilename = __DIR__ . '/' . sha1($className);
+        $generatedFilename = __DIR__ . '/' . \sha1($className);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $classInfo */
         $classInfo = $this->createMock(ReflectionClass::class);
@@ -52,7 +53,7 @@ final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
     public function testExceptionThrownWhenSignatureFailedToVerify() : void
     {
         $className         = \uniqid(__METHOD__, true);
-        $generatedFilename = __DIR__ . '/' . sha1($className);
+        $generatedFilename = __DIR__ . '/' . \sha1($className);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $classInfo */
         $classInfo = $this->createMock(ReflectionClass::class);

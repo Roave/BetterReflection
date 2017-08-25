@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use InvalidArgumentException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
@@ -42,7 +43,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
     public function __construct($anonymousClassObject)
     {
         if ( ! \is_object($anonymousClassObject)) {
-            throw new \InvalidArgumentException('Can only create from an instance of an object');
+            throw new InvalidArgumentException('Can only create from an instance of an object');
         }
 
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);

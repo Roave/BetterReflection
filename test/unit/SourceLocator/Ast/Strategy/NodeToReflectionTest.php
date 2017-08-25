@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflector;
 use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\Parser;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -15,7 +16,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection
  */
-class NodeToReflectionTest extends \PHPUnit\Framework\TestCase
+class NodeToReflectionTest extends TestCase
 {
     private function getFirstAstNodeInString(string $php) : Node
     {

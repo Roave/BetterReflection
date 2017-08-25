@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -15,7 +16,7 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
  */
-class FileIteratorSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class FileIteratorSourceLocatorTest extends TestCase
 {
     /**
      * @var FileIteratorSourceLocator

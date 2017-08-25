@@ -3,8 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Exception;
+use Foo;
+use InvalidArgumentException;
+use LogicException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PHPUnit\Framework\TestCase;
+use Reflector;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -20,11 +26,13 @@ use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
+use SplDoublyLinkedList;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
  */
-class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
+class ReflectionParameterTest extends TestCase
 {
     /**
      * @var ClassReflector
@@ -39,7 +47,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromClassNameAndMethod() : void
     {
-        $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(\SplDoublyLinkedList::class, 'add', 'index');
+        $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(SplDoublyLinkedList::class, 'add', 'index');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('index', $parameterInfo->getName());
@@ -47,7 +55,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromClassInstanceAndMethod() : void
     {
-        $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new \SplDoublyLinkedList(), 'add', 'index');
+        $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new SplDoublyLinkedList(), 'add', 'index');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('index', $parameterInfo->getName());
@@ -64,7 +72,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromSpecWithArray() : void
     {
-        $parameterInfo = ReflectionParameter::createFromSpec([\SplDoublyLinkedList::class, 'add'], 'index');
+        $parameterInfo = ReflectionParameter::createFromSpec([SplDoublyLinkedList::class, 'add'], 'index');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('index', $parameterInfo->getName());
@@ -72,7 +80,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromSpecWithArrayWithInstance() : void
     {
-        $splDoublyLinkedList = new \SplDoublyLinkedList();
+        $splDoublyLinkedList = new SplDoublyLinkedList();
         $parameterInfo       = ReflectionParameter::createFromSpec([$splDoublyLinkedList, 'add'], 'index');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
@@ -99,7 +107,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromSpecWithInvalidArgumentThrowsException() : void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Could not create reflection from the spec given');
         ReflectionParameter::createFromSpec(123, 'a');
     }
@@ -110,12 +118,12 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $methodInfo = $classInfo->getMethod('methodWithParameters');
         $paramInfo  = $methodInfo->getParameter('parameter1');
 
-        self::assertInstanceOf(\Reflector::class, $paramInfo);
+        self::assertInstanceOf(Reflector::class, $paramInfo);
     }
 
     public function testExportThrowsException() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         ReflectionParameter::export();
     }
 
@@ -162,7 +170,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo  = $methodInfo->getParameter('var');
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This parameter does not have a default value available');
         $paramInfo->getDefaultValue();
     }
@@ -283,7 +291,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $method    = $classInfo->getMethod('foo');
 
         $classParamType = $method->getParameter('classParam')->getType();
-        self::assertSame(\stdClass::class, (string) $classParamType);
+        self::assertSame(stdClass::class, (string) $classParamType);
         self::assertFalse($classParamType->isBuiltin());
         self::assertFalse($classParamType->allowsNull());
     }
@@ -480,7 +488,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $intDefault = $method->getParameter('intDefault');
         self::assertFalse($intDefault->isDefaultValueConstant());
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This parameter is not a constant default value, so cannot have a constant name');
         $intDefault->getDefaultValueConstantName();
     }
@@ -652,7 +660,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $content = '<?php class Foo { public function myMethod(object $param) {} }';
 
         $parameter = (new ClassReflector(new StringSourceLocator($content)))
-            ->reflect(\Foo::class)
+            ->reflect(Foo::class)
             ->getMethod('myMethod')
             ->getParameter('param');
 

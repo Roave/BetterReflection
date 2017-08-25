@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\TestCase;
+use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -19,7 +21,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
  */
-class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class AutoloadSourceLocatorTest extends TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
@@ -148,7 +150,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
         $locator = new AutoloadSourceLocator();
 
         $type           = new IdentifierType();
-        $typeReflection = new \ReflectionObject($type);
+        $typeReflection = new ReflectionObject($type);
         $prop           = $typeReflection->getProperty('name');
         $prop->setAccessible(true);
         $prop->setValue($type, 'nonsense');

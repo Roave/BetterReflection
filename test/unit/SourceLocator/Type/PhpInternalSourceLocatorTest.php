@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use ReflectionClass as PhpReflectionClass;
+use IntlGregorianCalendar;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
+use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -17,7 +22,7 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
  */
-class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class PhpInternalSourceLocatorTest extends TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
@@ -46,7 +51,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             self::markTestIncomplete(\sprintf(
                 'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
                 $className,
@@ -68,7 +73,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
         try {
             $class = $reflector->reflect($className);
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             if ($phpInternalSourceLocator->hasStub($className)) {
                 throw $e;
             }
@@ -85,7 +90,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($class->isInternal());
         self::assertFalse($class->isUserDefined());
 
-        $internalReflection = new \ReflectionClass($className);
+        $internalReflection = new CoreReflectionClass($className);
 
         self::assertSame($internalReflection->isInterface(), $class->isInterface());
         self::assertSame($internalReflection->isTrait(), $class->isTrait());
@@ -111,7 +116,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
             \array_filter(
                 $indexedSymbols,
                 function (string $symbol) : bool {
-                    $reflection = new PhpReflectionClass($symbol);
+                    $reflection = new CoreReflectionClass($symbol);
 
                     return $reflection->isInternal();
                 }
@@ -166,7 +171,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
         $reflector = new ClassReflector(new PhpInternalSourceLocator());
 
-        self::assertSameClassAttributes(new \ReflectionClass($className), $reflector->reflect($className));
+        self::assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
     }
 
     /**
@@ -192,7 +197,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private function assertSameClassAttributes(\ReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameClassAttributes(CoreReflectionClass $original, ReflectionClass $stubbed) : void
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
@@ -206,7 +211,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
         $originalMethods = $original->getMethods();
 
         $originalMethodNames = \array_map(
-            function (\ReflectionMethod $method) : string {
+            function (CoreReflectionMethod $method) : string {
                 return $method->getName();
             },
             $originalMethods
@@ -225,7 +230,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
         self::assertSame($originalMethodNames, $stubbedMethodNames);
 
         // See https://bugs.php.net/bug.php?id=75090
-        if ($original->getName() !== \IntlGregorianCalendar::class) {
+        if ($original->getName() !== IntlGregorianCalendar::class) {
             self::assertEquals($original->getConstants(), $stubbed->getConstants());
         }
 
@@ -234,11 +239,11 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    private function assertSameMethodAttributes(\ReflectionMethod $original, ReflectionMethod $stubbed) : void
+    private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed) : void
     {
         self::assertSame(
             \array_map(
-                function (\ReflectionParameter $parameter) : string {
+                function (CoreReflectionParameter $parameter) : string {
                     return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
                 },
                 $original->getParameters()
@@ -263,7 +268,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
         self::assertSame($original->isFinal(), $stubbed->isFinal());
     }
 
-    private function assertSameParameterAttributes(\ReflectionParameter $original, ReflectionParameter $stubbed) : void
+    private function assertSameParameterAttributes(CoreReflectionParameter $original, ReflectionParameter $stubbed) : void
     {
         self::assertSame($original->getName(), $stubbed->getName());
         self::assertSame($original->isArray(), $stubbed->isArray());

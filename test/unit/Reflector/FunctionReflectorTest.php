@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -11,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\Reflector\FunctionReflector
  */
-class FunctionReflectorTest extends \PHPUnit\Framework\TestCase
+class FunctionReflectorTest extends TestCase
 {
     public function testReflectProxiesToGenericReflectMethod() : void
     {
