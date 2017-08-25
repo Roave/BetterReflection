@@ -16,6 +16,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     private $declaringClass;
 
     /**
+     * @var ReflectionClass
+     */
+    private $implementingClass;
+
+    /**
      * @param Reflector $reflector
      * @param MethodNode $node
      * @param ReflectionClass $declaringClass
@@ -24,10 +29,12 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public static function createFromNode(
         Reflector $reflector,
         MethodNode $node,
-        ReflectionClass $declaringClass
+        ReflectionClass $declaringClass,
+        ReflectionClass $implementingClass
     ) : self {
-        $method                 = new self();
-        $method->declaringClass = $declaringClass;
+        $method                    = new self();
+        $method->declaringClass    = $declaringClass;
+        $method->implementingClass = $implementingClass;
 
         // Compat with core reflection means we should NOT pass namespace info
         // for ReflectionMethod
@@ -270,5 +277,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function getDeclaringClass() : ReflectionClass
     {
         return $this->declaringClass;
+    }
+
+    /**
+     * @return ReflectionClass
+     */
+    public function getImplementingClass() : ReflectionClass
+    {
+        return $this->implementingClass;
     }
 }

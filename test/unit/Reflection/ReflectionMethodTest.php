@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use A\Foo;
+use ClassWithMethodsAndTraitMethods;
+use ExtendedClassWithMethodsAndTraitMethods;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
 use phpDocumentor\Reflection\Types\Integer;
@@ -28,6 +30,7 @@ use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use RuntimeException;
 use SplDoublyLinkedList;
+use TraitWithMethod;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
@@ -381,5 +384,38 @@ class ReflectionMethodTest extends TestCase
         $method    = $classInfo->getMethod($methodName);
 
         self::assertStringMatchesFormat($expectedStringValue, (string) $method);
+    }
+
+    public function testGetDeclaringAndImplementingClassWithMethodFromTrait() : void
+    {
+        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php'));
+        $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
+        $methodReflection = $classReflection->getMethod('methodFromTrait');
+
+        self::assertSame(TraitWithMethod::class, $methodReflection->getDeclaringClass()->getName());
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
+        self::assertNotSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+    }
+
+    public function testGetDeclaringAndImplementingClassWithMethodFromClass() : void
+    {
+        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php'));
+        $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
+        $methodReflection = $classReflection->getMethod('methodFromClass');
+
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
+        self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+    }
+
+    public function testGetDeclaringAndImplementingClassWithMethodFromParentClass() : void
+    {
+        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php'));
+        $classReflection  = $classReflector->reflect(ExtendedClassWithMethodsAndTraitMethods::class)->getParentClass();
+        $methodReflection = $classReflection->getMethod('methodFromClass');
+
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
+        self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
     }
 }

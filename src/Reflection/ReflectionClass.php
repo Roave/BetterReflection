@@ -326,14 +326,21 @@ class ReflectionClass implements Reflection, CoreReflector
                     },
                     \array_values(\array_merge(
                         $this->getInterfaces(),
-                        \array_filter([$this->getParentClass()]),
-                        $this->getTraits()
+                        \array_filter([$this->getParentClass()])
                     ))
+                ),
+                ...\array_map(
+                    function (ReflectionClass $trait) : array {
+                        return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
+                            return ReflectionMethod::createFromNode($this->reflector, $method->getAst(), $trait, $this);
+                        }, $trait->getMethods());
+                    },
+                    $this->getTraits()
                 )
             ),
             \array_map(
                 function (ClassMethod $methodNode) : ReflectionMethod {
-                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this, $this);
                 },
                 $this->node->getMethods()
             )
@@ -405,7 +412,7 @@ class ReflectionClass implements Reflection, CoreReflector
         /** @var \ReflectionMethod[] $methods */
         $methods = \array_map(
             function (ClassMethod $methodNode) : ReflectionMethod {
-                return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this);
+                return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this, $this);
             },
             $this->node->getMethods()
         );
