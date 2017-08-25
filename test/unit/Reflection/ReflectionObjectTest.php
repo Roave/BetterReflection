@@ -42,16 +42,35 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         ReflectionObject::createFromInstance(123);
     }
 
-    public function testReflectionForAnonymousClass() : void
+    public function anonymousClassInstancesProvider() : array
     {
-        $classInfo = ReflectionObject::createFromInstance(new class {
-        });
+        $file = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
+
+        $anonymousClasses = require $file;
+
+        return [
+            [$anonymousClasses[0], $file, 3, 9],
+            [$anonymousClasses[1], $file, 11, 17],
+        ];
+    }
+
+    /**
+     * @param object $anonymousClass
+     * @param string $file
+     * @param int $startLine
+     * @param int $endLine
+     * @dataProvider anonymousClassInstancesProvider
+     */
+    public function testReflectionForAnonymousClass($anonymousClass, string $file, int $startLine, int $endLine) : void
+    {
+        $classInfo = ReflectionObject::createFromInstance($anonymousClass);
 
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
-        self::assertSame(FileHelper::normalizeWindowsPath(__FILE__), $classInfo->getFileName());
-        self::assertSame(47, $classInfo->getStartLine());
+        self::assertSame($file, $classInfo->getFileName());
+        self::assertSame($startLine, $classInfo->getStartLine());
+        self::assertSame($endLine, $classInfo->getEndLine());
     }
 
     public function testReflectionWorksWithInternalClasses() : void
