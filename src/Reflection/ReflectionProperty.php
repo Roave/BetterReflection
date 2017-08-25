@@ -26,6 +26,11 @@ class ReflectionProperty implements CoreReflector
     private $declaringClass;
 
     /**
+     * @var ReflectionClass
+     */
+    private $implementingClass;
+
+    /**
      * @var PropertyNode
      */
     private $node;
@@ -100,6 +105,7 @@ class ReflectionProperty implements CoreReflector
      * @param Reflector $reflector
      * @param PropertyNode $node
      * @param ReflectionClass $declaringClass
+     * @param ReflectionClass $implementingClass
      * @param bool $declaredAtCompileTime
      * @return ReflectionProperty
      */
@@ -107,12 +113,14 @@ class ReflectionProperty implements CoreReflector
         Reflector $reflector,
         PropertyNode $node,
         ReflectionClass $declaringClass,
+        ReflectionClass $implementingClass,
         bool $declaredAtCompileTime = true
     ) : self {
         $prop                        = new self();
         $prop->reflector             = $reflector;
         $prop->node                  = $node;
         $prop->declaringClass        = $declaringClass;
+        $prop->implementingClass     = $implementingClass;
         $prop->declaredAtCompileTime = $declaredAtCompileTime;
         return $prop;
     }
@@ -274,6 +282,14 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
+     * @return ReflectionClass
+     */
+    public function getImplementingClass() : ReflectionClass
+    {
+        return $this->implementingClass;
+    }
+
+    /**
      * @return string
      */
     public function getDocComment() : string
@@ -329,6 +345,14 @@ class ReflectionProperty implements CoreReflector
     public function getEndColumn() : int
     {
         return CalculateReflectionColum::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+    }
+
+    /**
+     * @return PropertyNode
+     */
+    public function getAst() : PropertyNode
+    {
+        return $this->node;
     }
 
     /**

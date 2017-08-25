@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use ClassWithPropertiesAndTraitProperties;
 use Exception;
+use ExtendedClassWithPropertiesAndTraitProperties;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
@@ -22,6 +24,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use TraitWithProperty;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
@@ -222,11 +225,14 @@ class ReflectionPropertyTest extends TestCase
 
     public function testIsDefaultWithRuntimeDeclaredProperty() : void
     {
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
+
         self::assertFalse(
             ReflectionProperty::createFromNode(
                 $this->reflector,
                 new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
-                $this->reflector->reflect(ExampleClass::class),
+                $classInfo,
+                $classInfo,
                 false
             )
             ->isDefault()
@@ -361,5 +367,57 @@ class ReflectionPropertyTest extends TestCase
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
+    }
+
+    public function testGetAst() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    private $test = 0;
+}
+PHP;
+
+        $classReflection    = (new ClassReflector(new StringSourceLocator($php)))->reflect('Foo');
+        $propertyReflection = $classReflection->getProperty('test');
+
+        $ast = $propertyReflection->getAst();
+
+        self::assertInstanceOf(Property::class, $ast);
+        self::assertSame('test', $ast->props[0]->name);
+    }
+
+    public function testGetDeclaringAndImplementingClassWithPropertyFromTrait() : void
+    {
+        $classReflector     = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithPropertiesAndTraitProperties.php'));
+        $classReflection    = $classReflector->reflect(ClassWithPropertiesAndTraitProperties::class);
+        $propertyReflection = $classReflection->getProperty('propertyFromTrait');
+
+        self::assertSame(TraitWithProperty::class, $propertyReflection->getDeclaringClass()->getName());
+        self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getImplementingClass()->getName());
+        self::assertNotSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
+    }
+
+    public function testGetDeclaringAndImplementingClassWithPropertyFromClass() : void
+    {
+        $classReflector     = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithPropertiesAndTraitProperties.php'));
+        $classReflection    = $classReflector->reflect(ClassWithPropertiesAndTraitProperties::class);
+        $propertyReflection = $classReflection->getProperty('propertyFromClass');
+
+        self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getDeclaringClass()->getName());
+        self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getImplementingClass()->getName());
+        self::assertSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
+    }
+
+    public function testGetDeclaringAndImplementingClassWithPropertyFromParentClass() : void
+    {
+        $classReflector     = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithPropertiesAndTraitProperties.php'));
+        $classReflection    = $classReflector->reflect(ExtendedClassWithPropertiesAndTraitProperties::class)->getParentClass();
+        $propertyReflection = $classReflection->getProperty('propertyFromClass');
+
+        self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getDeclaringClass()->getName());
+        self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getImplementingClass()->getName());
+        self::assertSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
     }
 }

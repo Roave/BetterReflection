@@ -67,6 +67,11 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * @var ReflectionProperty[]|null
      */
+    private $cachedImmediateProperties;
+
+    /**
+     * @var ReflectionProperty[]|null
+     */
     private $cachedProperties;
 
     /**
@@ -630,24 +635,24 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getImmediateProperties(?int $filter = null) : array
     {
-        if (null === $this->cachedProperties) {
+        if (null === $this->cachedImmediateProperties) {
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
                 if ($stmt instanceof PropertyNode) {
-                    $prop                         = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
+                    $prop                         = ReflectionProperty::createFromNode($this->reflector, $stmt, $this, $this);
                     $properties[$prop->getName()] = $prop;
                 }
             }
 
-            $this->cachedProperties = $properties;
+            $this->cachedImmediateProperties = $properties;
         }
 
         if (null === $filter) {
-            return $this->cachedProperties;
+            return $this->cachedImmediateProperties;
         }
 
         return \array_filter(
-            $this->cachedProperties,
+            $this->cachedImmediateProperties,
             function (ReflectionProperty $property) use ($filter) {
                 return $filter & $property->getModifiers();
             }
@@ -670,29 +675,44 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getProperties(?int $filter = null) : array
     {
-        // merging together properties from parent class, traits, current class (in this precise order)
-        return \array_merge(
-            \array_merge(
-                [],
-                ...\array_map(
-                    function (ReflectionClass $ancestor) use ($filter) : array {
-                        return \array_filter(
-                            $ancestor->getProperties($filter),
-                            function (ReflectionProperty $property) : bool {
-                                return ! $property->isPrivate();
-                            }
-                        );
-                    },
-                    \array_filter([$this->getParentClass()])
+        if (null === $this->cachedProperties) {
+            // merging together properties from parent class, traits, current class (in this precise order)
+            $this->cachedProperties = \array_merge(
+                \array_merge(
+                    [],
+                    ...\array_map(
+                        function (ReflectionClass $ancestor) use ($filter) : array {
+                            return \array_filter(
+                                $ancestor->getProperties($filter),
+                                function (ReflectionProperty $property) : bool {
+                                    return ! $property->isPrivate();
+                                }
+                            );
+                        },
+                        \array_filter([$this->getParentClass()])
+                    ),
+                    ...\array_map(
+                        function (ReflectionClass $trait) use ($filter) {
+                            return \array_map(function (ReflectionProperty $property) : ReflectionProperty {
+                                return ReflectionProperty::createFromNode($this->reflector, $property->getAst(), $property->getDeclaringClass(), $this);
+                            }, $trait->getProperties($filter));
+                        },
+                        $this->getTraits()
+                    )
                 ),
-                ...\array_map(
-                    function (ReflectionClass $trait) use ($filter) {
-                        return $trait->getProperties($filter);
-                    },
-                    $this->getTraits()
-                )
-            ),
-            $this->getImmediateProperties($filter)
+                $this->getImmediateProperties()
+            );
+        }
+
+        if (null === $filter) {
+            return $this->cachedProperties;
+        }
+
+        return \array_filter(
+            $this->cachedProperties,
+            function (ReflectionProperty $property) use ($filter) {
+                return $filter & $property->getModifiers();
+            }
         );
     }
 
@@ -1436,8 +1456,9 @@ class ReflectionClass implements Reflection, CoreReflector
             $type |= ClassNode::MODIFIER_STATIC;
         }
 
-        $this->node->stmts[]    = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
-        $this->cachedProperties = null;
+        $this->node->stmts[]             = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
+        $this->cachedProperties          = null;
+        $this->cachedImmediateProperties = null;
     }
 
     /**
@@ -1457,7 +1478,8 @@ class ReflectionClass implements Reflection, CoreReflector
                 }, $stmt->props);
 
                 if (\in_array($lowerName, $propertyNames, true)) {
-                    $this->cachedProperties = null;
+                    $this->cachedProperties          = null;
+                    $this->cachedImmediateProperties = null;
                     unset($this->node->stmts[$key]);
 
                     return true;
