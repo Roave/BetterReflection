@@ -3,17 +3,22 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Exception;
+use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use ReflectionProperty as CoreReflectionProperty;
+use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
-class ReflectionProperty implements \Reflector
+class ReflectionProperty implements CoreReflector
 {
     /**
      * @var ReflectionClass
@@ -41,7 +46,7 @@ class ReflectionProperty implements \Reflector
 
     public static function export() : void
     {
-        throw new \Exception('Unable to export statically');
+        throw new Exception('Unable to export statically');
     }
 
     /**
@@ -139,17 +144,17 @@ class ReflectionProperty implements \Reflector
         $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
 
         switch ($newVisibility) {
-            case \ReflectionProperty::IS_PRIVATE:
+            case CoreReflectionProperty::IS_PRIVATE:
                 $this->node->flags |= Class_::MODIFIER_PRIVATE;
                 break;
-            case \ReflectionProperty::IS_PROTECTED:
+            case CoreReflectionProperty::IS_PROTECTED:
                 $this->node->flags |= Class_::MODIFIER_PROTECTED;
                 break;
-            case \ReflectionProperty::IS_PUBLIC:
+            case CoreReflectionProperty::IS_PUBLIC:
                 $this->node->flags |= Class_::MODIFIER_PUBLIC;
                 break;
             default:
-                throw new \InvalidArgumentException('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
+                throw new InvalidArgumentException('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
         }
     }
 
@@ -175,10 +180,10 @@ class ReflectionProperty implements \Reflector
     public function getModifiers() : int
     {
         $val  = 0;
-        $val += $this->isStatic() ? \ReflectionProperty::IS_STATIC : 0;
-        $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? \ReflectionProperty::IS_PRIVATE : 0;
+        $val += $this->isStatic() ? CoreReflectionProperty::IS_STATIC : 0;
+        $val += $this->isPublic() ? CoreReflectionProperty::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? CoreReflectionProperty::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? CoreReflectionProperty::IS_PRIVATE : 0;
         return $val;
     }
 
@@ -328,10 +333,10 @@ class ReflectionProperty implements \Reflector
 
     /**
      * {@inheritdoc}
-     * @throws Exception\Uncloneable
+     * @throws Uncloneable
      */
     public function __clone()
     {
-        throw Exception\Uncloneable::fromClass(__CLASS__);
+        throw Uncloneable::fromClass(__CLASS__);
     }
 }

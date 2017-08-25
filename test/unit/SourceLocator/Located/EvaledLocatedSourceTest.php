@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource
  */
-class EvaledLocatedSourceTest extends \PHPUnit\Framework\TestCase
+class EvaledLocatedSourceTest extends TestCase
 {
     public function testInternalsLocatedSource() : void
     {

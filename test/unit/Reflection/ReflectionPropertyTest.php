@@ -3,10 +3,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Exception;
+use InvalidArgumentException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
+use PHPUnit\Framework\TestCase;
+use Reflection;
+use ReflectionFunctionAbstract;
+use ReflectionProperty as CoreReflectionProperty;
+use Reflector;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -19,7 +26,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
  */
-class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
+class ReflectionPropertyTest extends TestCase
 {
     /**
      * @var ClassReflector
@@ -34,7 +41,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromName() : void
     {
-        $property = ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
+        $property = ReflectionProperty::createFromName(ReflectionFunctionAbstract::class, 'name');
 
         self::assertInstanceOf(ReflectionProperty::class, $property);
         self::assertSame('name', $property->getName());
@@ -53,7 +60,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
-        self::assertInstanceOf(\Reflector::class, $publicProp);
+        self::assertInstanceOf(Reflector::class, $publicProp);
     }
 
     public function testVisibilityMethods() : void
@@ -173,17 +180,17 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testExportThrowsException() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         ReflectionProperty::export();
     }
 
     public function modifierProvider() : array
     {
         return [
-            ['publicProperty', \ReflectionProperty::IS_PUBLIC, ['public']],
-            ['protectedProperty', \ReflectionProperty::IS_PROTECTED, ['protected']],
-            ['privateProperty', \ReflectionProperty::IS_PRIVATE, ['private']],
-            ['publicStaticProperty', \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_STATIC, ['public', 'static']],
+            ['publicProperty', CoreReflectionProperty::IS_PUBLIC, ['public']],
+            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED, ['protected']],
+            ['privateProperty', CoreReflectionProperty::IS_PRIVATE, ['private']],
+            ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC, ['public', 'static']],
         ];
     }
 
@@ -201,7 +208,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         self::assertSame($expectedModifier, $property->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            \Reflection::getModifierNames($property->getModifiers())
+            Reflection::getModifierNames($property->getModifiers())
         );
     }
 
@@ -274,21 +281,21 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($publicProp->isPublic(), 'Should initially be public, was not public');
         self::assertTrue($publicProp->isStatic(), 'Should initially be static');
 
-        $publicProp->setVisibility(\ReflectionProperty::IS_PRIVATE);
+        $publicProp->setVisibility(CoreReflectionProperty::IS_PRIVATE);
 
         self::assertTrue($publicProp->isPrivate(), 'After setting private, isPrivate is not set');
         self::assertFalse($publicProp->isProtected(), 'After setting private, protected is now set but should not be');
         self::assertFalse($publicProp->isPublic(), 'After setting private, public is still set but should not be');
         self::assertTrue($publicProp->isStatic(), 'Should still be static after setting private');
 
-        $publicProp->setVisibility(\ReflectionProperty::IS_PROTECTED);
+        $publicProp->setVisibility(CoreReflectionProperty::IS_PROTECTED);
 
         self::assertFalse($publicProp->isPrivate(), 'After setting protected, should no longer be private');
         self::assertTrue($publicProp->isProtected(), 'After setting protected, expect isProtected to be set');
         self::assertFalse($publicProp->isPublic(), 'After setting protected, public is set but should not be');
         self::assertTrue($publicProp->isStatic(), 'Should still be static after setting protected');
 
-        $publicProp->setVisibility(\ReflectionProperty::IS_PUBLIC);
+        $publicProp->setVisibility(CoreReflectionProperty::IS_PUBLIC);
 
         self::assertFalse($publicProp->isPrivate(), 'After setting public, isPrivate should not be set');
         self::assertFalse($publicProp->isProtected(), 'After setting public, isProtected should not be set');
@@ -301,7 +308,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
         $publicProp->setVisibility(0);
     }

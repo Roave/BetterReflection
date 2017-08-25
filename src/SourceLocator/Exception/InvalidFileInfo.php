@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Exception;
 
-class InvalidFileInfo extends \RuntimeException
+use RuntimeException;
+
+class InvalidFileInfo extends RuntimeException
 {
     /**
      * @param mixed $nonSplFileInfo

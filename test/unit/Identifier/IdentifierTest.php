@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 
 /**
  * @covers \Roave\BetterReflection\Identifier\Identifier
  */
-class IdentifierTest extends \PHPUnit\Framework\TestCase
+class IdentifierTest extends TestCase
 {
     public function testGetName() : void
     {

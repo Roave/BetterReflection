@@ -12,6 +12,7 @@ use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -21,7 +22,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
  */
-class CompileNodeToValueTest extends \PHPUnit\Framework\TestCase
+class CompileNodeToValueTest extends TestCase
 {
     /**
      * @param string $phpCode

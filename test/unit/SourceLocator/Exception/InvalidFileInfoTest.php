@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo
  */
-class InvalidFileInfoTest extends \PHPUnit\Framework\TestCase
+class InvalidFileInfoTest extends TestCase
 {
     /**
      * @dataProvider nonSplFileInfoProvider
@@ -32,7 +34,7 @@ class InvalidFileInfoTest extends \PHPUnit\Framework\TestCase
     public function nonSplFileInfoProvider() : array
     {
         return [
-            ['Expected an iterator of SplFileInfo instances, stdClass given instead', new \stdClass()],
+            ['Expected an iterator of SplFileInfo instances, stdClass given instead', new stdClass()],
             ['Expected an iterator of SplFileInfo instances, boolean given instead', true],
             ['Expected an iterator of SplFileInfo instances, NULL given instead', null],
             ['Expected an iterator of SplFileInfo instances, integer given instead', 100],

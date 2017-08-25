@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
@@ -15,7 +17,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter
  */
-class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
+class ReflectionParameterTest extends TestCase
 {
     public function coreReflectionParameterNamesProvider() : array
     {
@@ -100,7 +102,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
     public function testExport() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionParameterAdapter::export('foo', 0);
     }

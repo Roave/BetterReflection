@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
@@ -12,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant
  */
-class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
+class ReflectionClassConstantTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {

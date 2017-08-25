@@ -3,19 +3,22 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector\Exception;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
  */
-class ParseToAstFailureTest extends \PHPUnit\Framework\TestCase
+class ParseToAstFailureTest extends TestCase
 {
     public function testFromLocatedSourceWithoutFilename() : void
     {
         $locatedSource = new LocatedSource('<?php abc', null);
 
-        $previous = new \Exception();
+        $previous = new Exception();
 
         $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 
@@ -28,11 +31,11 @@ class ParseToAstFailureTest extends \PHPUnit\Framework\TestCase
     {
         $locatedSource = new LocatedSource('<?php abc', null);
 
-        $filenameProperty = new \ReflectionProperty($locatedSource, 'filename');
+        $filenameProperty = new ReflectionProperty($locatedSource, 'filename');
         $filenameProperty->setAccessible(true);
         $filenameProperty->setValue($locatedSource, '/foo/bar');
 
-        $previous = new \Exception();
+        $previous = new Exception();
 
         $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 

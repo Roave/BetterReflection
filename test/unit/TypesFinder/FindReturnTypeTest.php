@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Types;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -13,7 +14,7 @@ use Roave\BetterReflection\TypesFinder\FindReturnType;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindReturnType
  */
-class FindReturnTypeTest extends \PHPUnit\Framework\TestCase
+class FindReturnTypeTest extends TestCase
 {
     /**
      * @return array

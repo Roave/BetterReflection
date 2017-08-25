@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Exception;
 
-class InvalidFileLocation extends \RuntimeException
+use RuntimeException;
+
+class InvalidFileLocation extends RuntimeException
 {
 }

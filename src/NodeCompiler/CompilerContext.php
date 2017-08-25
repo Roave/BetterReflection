@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\NodeCompiler;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
+use RuntimeException;
 
 class CompilerContext
 {
@@ -39,7 +40,7 @@ class CompilerContext
     public function getSelf() : ReflectionClass
     {
         if ( ! $this->hasSelf()) {
-            throw new \RuntimeException('The current context does not have a class for self');
+            throw new RuntimeException('The current context does not have a class for self');
         }
 
         return $this->self;

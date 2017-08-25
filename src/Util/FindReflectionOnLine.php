@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
 
+use InvalidArgumentException;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -104,11 +105,11 @@ final class FindReflectionOnLine
     private function containsLine($reflection, int $lineNumber) : bool
     {
         if ( ! \method_exists($reflection, 'getStartLine')) {
-            throw new \InvalidArgumentException('Reflection does not have getStartLine method');
+            throw new InvalidArgumentException('Reflection does not have getStartLine method');
         }
 
         if ( ! \method_exists($reflection, 'getEndLine')) {
-            throw new \InvalidArgumentException('Reflection does not have getEndLine method');
+            throw new InvalidArgumentException('Reflection does not have getEndLine method');
         }
 
         return $lineNumber >= $reflection->getStartLine() && $lineNumber <= $reflection->getEndLine();

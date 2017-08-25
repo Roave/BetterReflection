@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoader;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
@@ -12,11 +13,12 @@ use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
 use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use Roave\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
 use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
  */
-final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
+final class ClassLoaderTest extends TestCase
 {
     public function testAutoloadSelfRegisters() : void
     {
@@ -78,7 +80,7 @@ final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
         $loader       = new ClassLoader($loaderMethod);
 
         $this->expectException(ClassAlreadyLoaded::class);
-        $loader->addClass(ReflectionClass::createFromName(\stdClass::class));
+        $loader->addClass(ReflectionClass::createFromName(stdClass::class));
 
         \spl_autoload_unregister($loader);
     }

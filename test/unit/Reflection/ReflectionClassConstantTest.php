@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
-class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
+class ReflectionClassConstantTest extends TestCase
 {
     private function getComposerLocator() : ComposerSourceLocator
     {
@@ -84,10 +86,10 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
     public function getModifiersProvider() : array
     {
         return [
-            ['MY_CONST_1', \ReflectionProperty::IS_PUBLIC],
-            ['MY_CONST_3', \ReflectionProperty::IS_PUBLIC],
-            ['MY_CONST_4', \ReflectionProperty::IS_PROTECTED],
-            ['MY_CONST_5', \ReflectionProperty::IS_PRIVATE],
+            ['MY_CONST_1', ReflectionProperty::IS_PUBLIC],
+            ['MY_CONST_3', ReflectionProperty::IS_PUBLIC],
+            ['MY_CONST_4', ReflectionProperty::IS_PROTECTED],
+            ['MY_CONST_5', ReflectionProperty::IS_PRIVATE],
         ];
     }
 

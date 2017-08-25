@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Types;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -14,7 +15,7 @@ use Roave\BetterReflection\TypesFinder\FindPropertyType;
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindPropertyType
  */
-class FindPropertyTypeTest extends \PHPUnit\Framework\TestCase
+class FindPropertyTypeTest extends TestCase
 {
     /**
      * @return array

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflector\Reflector;
+use RuntimeException;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
@@ -102,12 +104,12 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function getModifiers() : int
     {
         $val  = 0;
-        $val += $this->isStatic() ? \ReflectionMethod::IS_STATIC : 0;
-        $val += $this->isPublic() ? \ReflectionMethod::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? \ReflectionMethod::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? \ReflectionMethod::IS_PRIVATE : 0;
-        $val += $this->isAbstract() ? \ReflectionMethod::IS_ABSTRACT : 0;
-        $val += $this->isFinal() ? \ReflectionMethod::IS_FINAL : 0;
+        $val += $this->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
+        $val += $this->isPublic() ? CoreReflectionMethod::IS_PUBLIC : 0;
+        $val += $this->isProtected() ? CoreReflectionMethod::IS_PROTECTED : 0;
+        $val += $this->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
+        $val += $this->isAbstract() ? CoreReflectionMethod::IS_ABSTRACT : 0;
+        $val += $this->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
         return $val;
     }
 
@@ -166,7 +168,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     private function getMethodNode() : MethodNode
     {
         if ( ! ($this->getNode() instanceof MethodNode)) {
-            throw new \RuntimeException('Expected a ClassMethod node');
+            throw new RuntimeException('Expected a ClassMethod node');
         }
         return $this->getNode();
     }

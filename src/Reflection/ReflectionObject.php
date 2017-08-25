@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use InvalidArgumentException;
+use LogicException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use ReflectionObject as CoreReflectionObject;
+use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -50,7 +54,7 @@ class ReflectionObject extends ReflectionClass
     public static function export($instance = null) : string
     {
         if (null === $instance) {
-            throw new \InvalidArgumentException('Class instance must be provided');
+            throw new InvalidArgumentException('Class instance must be provided');
         }
 
         $reflection = self::createFromInstance($instance);
@@ -68,7 +72,7 @@ class ReflectionObject extends ReflectionClass
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null
     ) : ReflectionClass {
-        throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
+        throw new LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }
 
     /**
@@ -78,7 +82,7 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromName(string $className) : ReflectionClass
     {
-        throw new \LogicException('Cannot create a ReflectionObject from name - use ReflectionObject::createFromInstance');
+        throw new LogicException('Cannot create a ReflectionObject from name - use ReflectionObject::createFromInstance');
     }
 
     /**
@@ -94,7 +98,7 @@ class ReflectionObject extends ReflectionClass
     public static function createFromInstance($object) : ReflectionClass
     {
         if ( ! \is_object($object)) {
-            throw new \InvalidArgumentException('Can only create from an instance of an object');
+            throw new InvalidArgumentException('Can only create from an instance of an object');
         }
 
         $className = \get_class($object);
@@ -120,7 +124,7 @@ class ReflectionObject extends ReflectionClass
     private function getRuntimeProperties(?int $filter = null) : array
     {
         if ( ! $this->reflectionClass->isInstance($this->object)) {
-            throw new \InvalidArgumentException('Cannot reflect runtime properties of a separate class');
+            throw new InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
         // Ensure we have already cached existing properties so we can add to them
@@ -128,7 +132,7 @@ class ReflectionObject extends ReflectionClass
 
         // Only known current way is to use internal ReflectionObject to get
         // the runtime-declared properties  :/
-        $reflectionProperties = (new \ReflectionObject($this->object))->getProperties();
+        $reflectionProperties = (new CoreReflectionObject($this->object))->getProperties();
         $runtimeProperties    = [];
         foreach ($reflectionProperties as $property) {
             if ($this->reflectionClass->hasProperty($property->getName())) {
@@ -159,7 +163,7 @@ class ReflectionObject extends ReflectionClass
      * @param object $instance
      * @return PropertyNode
      */
-    private function createPropertyNodeFromReflection(\ReflectionProperty $property, $instance) : PropertyNode
+    private function createPropertyNodeFromReflection(CoreReflectionProperty $property, $instance) : PropertyNode
     {
         $builder = new PropertyNodeBuilder($property->getName());
         $builder->setDefault($property->getValue($instance));
@@ -646,7 +650,7 @@ class ReflectionObject extends ReflectionClass
      */
     public function addProperty(
         string $methodName,
-        int $visibility = \ReflectionProperty::IS_PUBLIC,
+        int $visibility = CoreReflectionProperty::IS_PUBLIC,
         bool $static = false
     ) : void {
         $this->reflectionClass->addProperty($methodName, $visibility, $static);

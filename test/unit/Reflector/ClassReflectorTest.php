@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -13,7 +14,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\Reflector\ClassReflector
  */
-class ClassReflectorTest extends \PHPUnit\Framework\TestCase
+class ClassReflectorTest extends TestCase
 {
     public function testGetClassesFromFile() : void
     {

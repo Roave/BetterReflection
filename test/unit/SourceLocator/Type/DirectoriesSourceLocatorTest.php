@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -11,11 +12,12 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
  */
-class DirectoriesSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class DirectoriesSourceLocatorTest extends TestCase
 {
     /**
      * @var DirectoriesSourceLocator
@@ -90,14 +92,14 @@ class DirectoriesSourceLocatorTest extends \PHPUnit\Framework\TestCase
             [[1]],
             [[1.23]],
             [[true]],
-            [[new \stdClass()]],
+            [[new stdClass()]],
             [[null]],
             [[$validDir, __DIR__ . '/' . \uniqid('nonExisting', true)]],
             [[$validDir, __FILE__]],
             [[$validDir, 1]],
             [[$validDir, 1.23]],
             [[$validDir, true]],
-            [[$validDir, new \stdClass()]],
+            [[$validDir, new stdClass()]],
             [[$validDir, null]],
         ];
     }

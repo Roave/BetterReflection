@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Reflection;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
 use Roave\BetterReflectionTest\Fixture\EmptyTrait;
+use Traversable;
 use Zend\Code\Reflection\ClassReflection;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Reflection\SourceStubber
  */
-class SourceStubberTest extends \PHPUnit\Framework\TestCase
+class SourceStubberTest extends TestCase
 {
     /**
      * @var SourceStubber
@@ -37,7 +39,7 @@ class SourceStubberTest extends \PHPUnit\Framework\TestCase
     {
         self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
-            $this->stubber->__invoke(new ClassReflection(\Traversable::class))
+            $this->stubber->__invoke(new ClassReflection(Traversable::class))
         );
     }
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -18,7 +19,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Locator
  */
-class LocatorTest extends \PHPUnit\Framework\TestCase
+class LocatorTest extends TestCase
 {
     private function getIdentifier(string $name, string $type) : Identifier
     {

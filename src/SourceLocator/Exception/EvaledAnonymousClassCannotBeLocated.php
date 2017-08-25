@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Exception;
 
-class EvaledAnonymousClassCannotBeLocated extends \LogicException
+use LogicException;
+
+class EvaledAnonymousClassCannotBeLocated extends LogicException
 {
     public static function create() : self
     {

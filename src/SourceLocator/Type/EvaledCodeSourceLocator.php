@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use ReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -57,7 +58,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
             return null; // not an available internal class
         }
 
-        $reflection = new \ReflectionClass($name);
+        $reflection = new ReflectionClass($name);
         $sourceFile = $reflection->getFileName();
 
         return ($sourceFile && \file_exists($sourceFile))

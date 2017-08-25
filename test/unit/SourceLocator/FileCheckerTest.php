@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\FileChecker
  */
-class FileCheckerTest extends \PHPUnit\Framework\TestCase
+class FileCheckerTest extends TestCase
 {
     public function testCheckFileThrowsExceptionIfEmptyFileGiven() : void
     {
@@ -48,7 +50,7 @@ class FileCheckerTest extends \PHPUnit\Framework\TestCase
 
         try {
             FileChecker::checkFile($file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         } finally {
             \chmod($file, $originalPermission);

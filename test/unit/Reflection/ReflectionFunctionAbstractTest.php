@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Exception;
 use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Expr\BinaryOp;
@@ -14,6 +15,9 @@ use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -25,15 +29,17 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use stdClass;
+use TypeError;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
  */
-class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
+class ReflectionFunctionAbstractTest extends TestCase
 {
     public function testExportThrowsException() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         ReflectionFunctionAbstract::export();
     }
 
@@ -49,7 +55,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
         $breakNode = new Break_();
 
-        $populateMethodReflection = new \ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
+        $populateMethodReflection = new ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
         $populateMethodReflection->setAccessible(true);
 
         $this->expectException(InvalidAbstractFunctionNodeType::class);
@@ -201,7 +207,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
         $reflector    = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
 
-        $rfaRef     = new \ReflectionClass(ReflectionFunctionAbstract::class);
+        $rfaRef     = new ReflectionClass(ReflectionFunctionAbstract::class);
         $rfaRefNode = $rfaRef->getProperty('node');
         $rfaRefNode->setAccessible(true);
         $rfaRefNode->setValue($functionInfo, null);
@@ -391,7 +397,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
             ['returnsInt', 'int'],
             ['returnsString', 'string'],
             ['returnsNull', 'null'],
-            ['returnsObject', \stdClass::class],
+            ['returnsObject', stdClass::class],
             ['returnsVoid', 'void'],
         ];
     }
@@ -547,7 +553,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php));
         $function  = $reflector->reflect('foo');
 
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $function->setBodyFromAst([1]);
     }
 
@@ -576,7 +582,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
         $function->addParameter('myNewParam');
 
-        self::assertStringStartsWith('function foo($myNewParam)', (new \PhpParser\PrettyPrinter\Standard())->prettyPrint([$function->getAst()]));
+        self::assertStringStartsWith('function foo($myNewParam)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
     }
 
     public function testRemoveParameter() : void
@@ -588,7 +594,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
         $function->removeParameter('a');
 
-        self::assertStringStartsWith('function foo($b)', (new \PhpParser\PrettyPrinter\Standard())->prettyPrint([$function->getAst()]));
+        self::assertStringStartsWith('function foo($b)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
     }
 
     public function testGetReturnStatementAstReturnsStatements() : void

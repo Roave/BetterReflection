@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -11,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator
  */
-class SingleFileSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class SingleFileSourceLocatorTest extends TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

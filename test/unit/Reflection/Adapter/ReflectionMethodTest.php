@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -11,11 +13,12 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionMethod
  */
-class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
+class ReflectionMethodTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
@@ -82,10 +85,10 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
             ['isStatic', null, true, []],
             ['isConstructor', null, true, []],
             ['isDestructor', null, true, []],
-            ['getClosure', NotImplemented::class, null, [new \stdClass()]],
+            ['getClosure', NotImplemented::class, null, [new stdClass()]],
             ['getModifiers', null, 123, []],
-            ['invoke', NotImplemented::class, null, [new \stdClass(), '']],
-            ['invokeArgs', NotImplemented::class, null, [new \stdClass(), []]],
+            ['invoke', NotImplemented::class, null, [new stdClass(), '']],
+            ['invokeArgs', NotImplemented::class, null, [new stdClass(), []]],
             ['getDeclaringClass', null, $mockClassLike, []],
             ['getPrototype', null, $mockMethod, []],
             ['setAccessible', NotImplemented::class, null, [true]],
@@ -121,7 +124,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
 
     public function testExport() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionMethodAdapter::export('\stdClass', 'foo');
     }

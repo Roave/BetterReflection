@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Util;
 
 use PhpParser\Node;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
@@ -11,7 +12,7 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
 /**
  * @covers \Roave\BetterReflection\Util\CalculateReflectionColum
  */
-class CalculateReflectionColumnTest extends \PHPUnit\Framework\TestCase
+class CalculateReflectionColumnTest extends TestCase
 {
     public function testGetStartColumn() : void
     {

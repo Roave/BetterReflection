@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -11,11 +12,12 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionObject
  */
-class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
+class ReflectionObjectTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
@@ -74,7 +76,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
             ['isAbstract', null, true, []],
             ['isFinal', null, true, []],
             ['getModifiers', null, 123, []],
-            ['isInstance', null, true, [new \stdClass()]],
+            ['isInstance', null, true, [new stdClass()]],
             ['newInstance', NotImplemented::class, null, ['foo']],
             ['newInstanceWithoutConstructor', NotImplemented::class, null, []],
             ['newInstanceArgs', NotImplemented::class, null, []],
@@ -123,7 +125,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testExport() : void
     {
-        $exported = ReflectionObjectAdapter::export(new \stdClass());
+        $exported = ReflectionObjectAdapter::export(new stdClass());
 
         self::assertInternalType('string', $exported);
         self::assertContains('stdClass', $exported);

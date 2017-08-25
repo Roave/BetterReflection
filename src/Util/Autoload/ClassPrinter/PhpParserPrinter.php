@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Util\Autoload\ClassPrinter;
 
 use phpDocumentor\Reflection\Types\ContextFactory;
+use PhpParser\Builder\Use_ as BuilderUse_;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
@@ -26,7 +27,7 @@ final class PhpParserPrinter implements ClassPrinterInterface
         )->getNamespaceAliases();
 
         foreach ($imports as $alias => $fullyQualified) {
-            $nodes[] = (new \PhpParser\Builder\Use_($fullyQualified, Use_::TYPE_NORMAL))->as($alias)->getNode();
+            $nodes[] = (new BuilderUse_($fullyQualified, Use_::TYPE_NORMAL))->as($alias)->getNode();
         }
 
         $nodes[] = $classInfo->getAst();

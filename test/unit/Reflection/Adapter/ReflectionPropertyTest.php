@@ -3,17 +3,20 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use Exception;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
  */
-class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
+class ReflectionPropertyTest extends TestCase
 {
     public function coreReflectionPropertyNamesProvider() : array
     {
@@ -41,7 +44,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
             ['__toString', null, '', []],
             ['getName', null, '', []],
             ['getValue', NotImplemented::class, null, []],
-            ['setValue', NotImplemented::class, null, [new \stdClass()]],
+            ['setValue', NotImplemented::class, null, [new stdClass()]],
             ['isPublic', null, true, []],
             ['isPrivate', null, true, []],
             ['isProtected', null, true, []],
@@ -83,7 +86,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testExport() : void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionPropertyAdapter::export('foo', 0);
     }

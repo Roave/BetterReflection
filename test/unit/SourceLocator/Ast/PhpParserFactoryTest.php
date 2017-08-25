@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Ast;
 
 use PhpParser\Parser;
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory
  */
-class PhpParserFactoryTest extends \PHPUnit\Framework\TestCase
+class PhpParserFactoryTest extends TestCase
 {
     public function testCreate() : void
     {

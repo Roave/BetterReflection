@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Exception;
 
-class NoParent extends \LogicException
+use LogicException;
+
+class NoParent extends LogicException
 {
 }

@@ -3,8 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use InvalidArgumentException;
+use LogicException;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionObject as CoreReflectionObject;
+use ReflectionParameter;
+use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
@@ -15,11 +22,12 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject
  */
-class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
+class ReflectionObjectTest extends TestCase
 {
     /**
      * @var Parser
@@ -38,7 +46,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testExceptionThrownWhenNonObjectGiven() : void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         ReflectionObject::createFromInstance(123);
     }
 
@@ -75,7 +83,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionWorksWithInternalClasses() : void
     {
-        $foo = new \stdClass();
+        $foo = new stdClass();
 
         $classInfo = ReflectionObject::createFromInstance($foo);
         self::assertInstanceOf(ReflectionObject::class, $classInfo);
@@ -115,44 +123,44 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
         $mockClass = $this->createMock(ReflectionClass::class);
 
-        $reflectionObjectReflection = new \ReflectionObject($classInfo);
+        $reflectionObjectReflection = new CoreReflectionObject($classInfo);
 
         $reflectionObjectObjectReflection = $reflectionObjectReflection->getProperty('object');
         $reflectionObjectObjectReflection->setAccessible(true);
-        $reflectionObjectObjectReflection->setValue($classInfo, new \stdClass());
+        $reflectionObjectObjectReflection->setValue($classInfo, new stdClass());
 
         $reflectionObjectReflectionClassReflection = $reflectionObjectReflection->getProperty('reflectionClass');
         $reflectionObjectReflectionClassReflection->setAccessible(true);
         $reflectionObjectReflectionClassReflection->setValue($classInfo, $mockClass);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $classInfo->getProperties();
     }
 
     public function testGetRuntimePropertiesWithFilter() : void
     {
-        $foo      = new \stdClass();
+        $foo      = new stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
-        self::assertEmpty($classInfo->getProperties(\ReflectionProperty::IS_STATIC));
-        self::assertCount(1, $classInfo->getProperties(\ReflectionProperty::IS_PUBLIC));
-        self::assertEmpty($classInfo->getProperties(\ReflectionProperty::IS_PROTECTED));
-        self::assertEmpty($classInfo->getProperties(\ReflectionProperty::IS_PRIVATE));
+        self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_STATIC));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_PUBLIC));
+        self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_PROTECTED));
+        self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_PRIVATE));
     }
 
     public function testGetRuntimeImmediatePropertiesWithFilter() : void
     {
-        $foo      = new \stdClass();
+        $foo      = new stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
-        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_STATIC));
-        self::assertCount(1, $classInfo->getImmediateProperties(\ReflectionProperty::IS_PUBLIC));
-        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_PROTECTED));
-        self::assertEmpty($classInfo->getImmediateProperties(\ReflectionProperty::IS_PRIVATE));
+        self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_STATIC));
+        self::assertCount(1, $classInfo->getImmediateProperties(CoreReflectionProperty::IS_PUBLIC));
+        self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_PROTECTED));
+        self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_PRIVATE));
     }
 
     /**
@@ -211,7 +219,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
         // Force inject node and locatedSource properties on our ReflectionClass
         // mock so that methods will not fail when they are accessed
-        $mockReflectionClassReflection = new \ReflectionClass(ReflectionClass::class);
+        $mockReflectionClassReflection = new CoreReflectionClass(ReflectionClass::class);
 
         $php = '<?php class stdClass {}';
 
@@ -224,18 +232,18 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $this->getPhpParser()->parse($php)[0]);
 
         // Create the ReflectionObject from a dummy class
-        $reflectionObject = ReflectionObject::createFromInstance(new \stdClass());
+        $reflectionObject = ReflectionObject::createFromInstance(new stdClass());
 
         // Override the reflectionClass property on the ReflectionObject to use
         // the mocked reflectionclass above
-        $reflectionObjectReflection                        = new \ReflectionObject($reflectionObject);
+        $reflectionObjectReflection                        = new CoreReflectionObject($reflectionObject);
         $reflectionObjectReflectionClassPropertyReflection = $reflectionObjectReflection->getProperty('reflectionClass');
         $reflectionObjectReflectionClassPropertyReflection->setAccessible(true);
         $reflectionObjectReflectionClassPropertyReflection->setValue($reflectionObject, $mockReflectionClass);
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
         $fakeParams                       = \array_map(
-            function (\ReflectionParameter $parameter) {
+            function (ReflectionParameter $parameter) {
                 switch ((string) $parameter->getType()) {
                     case 'int':
                         return \random_int(1, 1000);
@@ -267,13 +275,13 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         /** @var LocatedSource|\PHPUnit_Framework_MockObject_MockObject $mLocatedSource */
         $mLocatedSource = $this->createMock(LocatedSource::class);
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         ReflectionObject::createFromNode($mReflector, $mClassNode, $mLocatedSource);
     }
 
     public function testCreateFromNameThrowsException() : void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         ReflectionObject::createFromName('foo');
     }
 
@@ -314,7 +322,7 @@ BLAH;
 
     public function testCannotClone() : void
     {
-        $classInfo = ReflectionObject::createFromInstance(new \stdClass());
+        $classInfo = ReflectionObject::createFromInstance(new stdClass());
 
         $this->expectException(Uncloneable::class);
         $unused = clone $classInfo;

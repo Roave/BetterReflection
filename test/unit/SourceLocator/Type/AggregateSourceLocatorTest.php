@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -14,7 +15,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator
  */
-class AggregateSourceLocatorTest extends \PHPUnit\Framework\TestCase
+class AggregateSourceLocatorTest extends TestCase
 {
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject

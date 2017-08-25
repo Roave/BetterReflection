@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Ast\Exception;
 
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use RuntimeException;
+use Throwable;
 
-class ParseToAstFailure extends \RuntimeException
+class ParseToAstFailure extends RuntimeException
 {
-    public static function fromLocatedSource(LocatedSource $locatedSource, \Throwable $previous) : self
+    public static function fromLocatedSource(LocatedSource $locatedSource, Throwable $previous) : self
     {
         $additionalInformation = '';
         if (null !== $locatedSource->getFileName()) {
