@@ -231,6 +231,30 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
         self::assertSame($expectedEnd, $function->getEndLine());
     }
 
+    public function columnsProvider() : array
+    {
+        return [
+            ["<?php\n\nfunction foo() {\n}\n", 1, 1],
+            ["<?php\n\n    function foo() {\n    }\n", 5, 5],
+            ["<?php function foo() { }", 7, 24],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $expectedStart
+     * @param int $expectedEnd
+     * @dataProvider columnsProvider
+     */
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    {
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+
+        self::assertSame($startColumn, $function->getStartColumn());
+        self::assertSame($endColumn, $function->getEndColumn());
+    }
+
     public function returnsReferenceProvider() : array
     {
         return [

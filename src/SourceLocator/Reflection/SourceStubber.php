@@ -6,8 +6,8 @@ namespace Roave\BetterReflection\SourceLocator\Reflection;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Trait_;
-use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
+use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
@@ -30,7 +30,7 @@ final class SourceStubber
 
     public function __construct()
     {
-        $this->parser        = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser        = PhpParserFactory::create();
         $this->prettyPrinter = new Standard();
     }
 

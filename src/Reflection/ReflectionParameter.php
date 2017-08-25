@@ -14,6 +14,7 @@ use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node;
 use phpDocumentor\Reflection\Type;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Roave\BetterReflection\Util\CalculateReflectionColum;
 
 class ReflectionParameter implements \Reflector
 {
@@ -597,5 +598,15 @@ class ReflectionParameter implements \Reflector
     public function __clone()
     {
         throw Exception\Uncloneable::fromClass(__CLASS__);
+    }
+
+    public function getStartColumn() : int
+    {
+        return CalculateReflectionColum::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
+    }
+
+    public function getEndColumn() : int
+    {
+        return CalculateReflectionColum::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
     }
 }

@@ -664,4 +664,30 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($type->isBuiltin());
         self::assertSame('object', $type->__toString());
     }
+
+    public function columnsProvider() : array
+    {
+        return [
+            ["<?php\n\nfunction foo(\n\$test\n) {}", 1, 5],
+            ["<?php\n\n    function foo(\n    &\$test) {    \n    }\n", 5, 10],
+            ["<?php function foo(...\$test) { }", 20, 27],
+            ["<?php function foo(array \$test = null) { }", 20, 37],
+        ];
+    }
+
+    /**
+     * @param string $php
+     * @param int $expectedStart
+     * @param int $expectedEnd
+     * @dataProvider columnsProvider
+     */
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    {
+        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $function = $reflector->reflect('foo');
+        $parameter = $function->getParameter('test');
+
+        self::assertSame($startColumn, $parameter->getStartColumn());
+        self::assertSame($endColumn, $parameter->getEndColumn());
+    }
 }

@@ -383,6 +383,22 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getStartColumn() : int
+    {
+        return $this->reflectionClass->getStartColumn();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEndColumn() : int
+    {
+        return $this->reflectionClass->getEndColumn();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getParentClass() : ?ReflectionClass
     {
         return $this->reflectionClass->getParentClass();

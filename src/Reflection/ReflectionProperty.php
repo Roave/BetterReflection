@@ -7,6 +7,7 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
+use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
@@ -313,6 +314,16 @@ class ReflectionProperty implements \Reflector
     public function getEndLine() : int
     {
         return (int)$this->node->getAttribute('endLine', -1);
+    }
+
+    public function getStartColumn() : int
+    {
+        return CalculateReflectionColum::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+    }
+
+    public function getEndColumn() : int
+    {
+        return CalculateReflectionColum::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     /**
