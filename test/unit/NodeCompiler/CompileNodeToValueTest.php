@@ -129,8 +129,8 @@ class CompileNodeToValueTest extends TestCase
             ['1 <= 2', true],
             ['2 <= 2', true],
             ['3 <= 2', false],
-            ['PHP_INT_MAX', PHP_INT_MAX],
-            ['PHP_EOL', PHP_EOL],
+            ['PHP_INT_MAX', \PHP_INT_MAX],
+            ['PHP_EOL', \PHP_EOL],
         ];
     }
 
