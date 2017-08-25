@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
+use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\Fixture;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection

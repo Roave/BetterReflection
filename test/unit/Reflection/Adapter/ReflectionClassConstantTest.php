@@ -17,7 +17,9 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = \get_class_methods(CoreReflectionClassConstant::class);
-        return \array_combine($methods, \array_map(function (string $i) : array { return [$i]; }, $methods));
+        return \array_combine($methods, \array_map(function (string $i) : array {
+            return [$i];
+        }, $methods));
     }
 
     /**
@@ -53,7 +55,7 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
      */
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
     {
-        /* @var BetterReflectionClassConstant|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionClassConstant|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
         $reflectionStub->expects($this->once())

@@ -9,7 +9,6 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 use ReflectionFunction as CoreFunctionReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -32,14 +31,14 @@ final class ClosureSourceLocator implements SourceLocator
     private $coreFunctionReflection;
 
     /**
-      * @var Parser
-      */
-     private $parser;
+     * @var Parser
+     */
+    private $parser;
 
     public function __construct(Closure $closure)
     {
         $this->coreFunctionReflection = new CoreFunctionReflection($closure);
-        $this->parser = PhpParserFactory::create();
+        $this->parser                 = PhpParserFactory::create();
     }
 
     /**
@@ -64,7 +63,7 @@ final class ClosureSourceLocator implements SourceLocator
 
     private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionFunction
     {
-        if (! $identifierType->isFunction()) {
+        if ( ! $identifierType->isFunction()) {
             return null;
         }
 
@@ -102,7 +101,7 @@ final class ClosureSourceLocator implements SourceLocator
 
             public function __construct(string $fileName, int $startLine)
             {
-                $this->fileName = $fileName;
+                $this->fileName  = $fileName;
                 $this->startLine = $startLine;
             }
 
@@ -136,7 +135,7 @@ final class ClosureSourceLocator implements SourceLocator
                     return $nodes[0]->getLine() === $this->startLine;
                 }));
 
-                if (! $closureNodesDataOnSameLine) {
+                if ( ! $closureNodesDataOnSameLine) {
                     return null;
                 }
 
@@ -157,7 +156,7 @@ final class ClosureSourceLocator implements SourceLocator
 
         $closureNodes = $nodeVisitor->getClosureNodes();
 
-        /* @var $reflectionFunction ReflectionFunction|null */
+        /** @var ReflectionFunction|null $reflectionFunction */
         $reflectionFunction = (new NodeToReflection())->__invoke(
             $reflector,
             $closureNodes[0],

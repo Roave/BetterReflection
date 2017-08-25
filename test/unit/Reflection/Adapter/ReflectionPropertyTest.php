@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
-use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
@@ -18,7 +18,9 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
     public function coreReflectionPropertyNamesProvider() : array
     {
         $methods = \get_class_methods(CoreReflectionProperty::class);
-        return \array_combine($methods, \array_map(function (string $i) : array { return [$i]; }, $methods));
+        return \array_combine($methods, \array_map(function (string $i) : array {
+            return [$i];
+        }, $methods));
     }
 
     /**
@@ -59,9 +61,9 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /* @var BetterReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 
         if (null === $expectedException) {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
+use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
@@ -10,7 +11,6 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use PhpParser\Node;
 
 /**
  * @internal
@@ -98,7 +98,7 @@ final class FindReflectionsInTree
 
                 if ($node instanceof Node\Stmt\ClassLike) {
                     $classNamespace = null === $node->name ? null : $this->currentNamespace;
-                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
+                    $reflection     = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
 
                     if ($this->identifierType->isMatchingReflector($reflection)) {
                         $this->reflections[] = $reflection;

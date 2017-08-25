@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Visitor;
 
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
+use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 /**
  * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor
@@ -20,7 +20,7 @@ class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
                     new Node\Scalar\MagicConst\File(),
                     new Node\Stmt\Return_(),
                 ],
-                1
+                1,
             ],
             'returnWithinClosureShouldNotBeReturned' => [
                 [
@@ -29,7 +29,7 @@ class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
                     ]),
                     new Node\Stmt\Return_(),
                 ],
-                1
+                1,
             ],
             'returnWithinAnonymousClassShouldNotBeReturned' => [
                 [
@@ -38,7 +38,7 @@ class ReturnNodeVisitorTest extends \PHPUnit\Framework\TestCase
                     ]),
                     new Node\Stmt\Return_(),
                 ],
-                1
+                1,
             ],
         ];
     }

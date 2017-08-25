@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 /**
  * This source locator loads all php files in an entire directory or multiple directories.
@@ -32,11 +32,11 @@ class DirectoriesSourceLocator implements SourceLocator
     {
         $this->aggregateSourceLocator = new AggregateSourceLocator(\array_values(\array_map(
             function ($directory) : FileIteratorSourceLocator {
-                if (! \is_string($directory)) {
+                if ( ! \is_string($directory)) {
                     throw InvalidDirectory::fromNonStringValue($directory);
                 }
 
-                if (! \is_dir($directory)) {
+                if ( ! \is_dir($directory)) {
                     throw InvalidDirectory::fromNonDirectory($directory);
                 }
 

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Stmt\Property as PropertyNode;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
@@ -29,11 +29,16 @@ class ReflectionObject extends ReflectionClass
      */
     private $reflector;
 
+    /**
+     * @param \Roave\BetterReflection\Reflector\Reflector $reflector
+     * @param \Roave\BetterReflection\Reflection\ReflectionClass $reflectionClass
+     * @param object $object
+     */
     private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
     {
-        $this->reflector = $reflector;
+        $this->reflector       = $reflector;
         $this->reflectionClass = $reflectionClass;
-        $this->object = $object;
+        $this->object          = $object;
     }
 
     /**
@@ -61,7 +66,7 @@ class ReflectionObject extends ReflectionClass
         Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespace = null
+        ?NamespaceNode $namespace = null
     ) : ReflectionClass {
         throw new \LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }
@@ -88,7 +93,7 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromInstance($object) : ReflectionClass
     {
-        if (! \is_object($object)) {
+        if ( ! \is_object($object)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
@@ -114,7 +119,7 @@ class ReflectionObject extends ReflectionClass
      */
     private function getRuntimeProperties(?int $filter = null) : array
     {
-        if (!$this->reflectionClass->isInstance($this->object)) {
+        if ( ! $this->reflectionClass->isInstance($this->object)) {
             throw new \InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
@@ -124,7 +129,7 @@ class ReflectionObject extends ReflectionClass
         // Only known current way is to use internal ReflectionObject to get
         // the runtime-declared properties  :/
         $reflectionProperties = (new \ReflectionObject($this->object))->getProperties();
-        $runtimeProperties = [];
+        $runtimeProperties    = [];
         foreach ($reflectionProperties as $property) {
             if ($this->reflectionClass->hasProperty($property->getName())) {
                 continue;
@@ -308,7 +313,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateProperties(?int $filter = null): array
+    public function getImmediateProperties(?int $filter = null) : array
     {
         return \array_merge(
             $this->reflectionClass->getImmediateProperties($filter),

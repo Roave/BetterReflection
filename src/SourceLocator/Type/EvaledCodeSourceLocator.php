@@ -29,7 +29,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if (! $name = $this->getInternalReflectionClassName($identifier)) {
+        if ( ! $name = $this->getInternalReflectionClassName($identifier)) {
             return null;
         }
 
@@ -47,13 +47,13 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      */
     private function getInternalReflectionClassName(Identifier $identifier) : ?string
     {
-        if (! $identifier->isClass()) {
+        if ( ! $identifier->isClass()) {
             return null;
         }
 
         $name = $identifier->getName();
 
-        if (! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
+        if ( ! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
             return null; // not an available internal class
         }
 

@@ -85,7 +85,7 @@ final class FindReflectionOnLine
     private function computeReflections(string $filename) : array
     {
         $singleFileSourceLocator = new SingleFileSourceLocator($filename);
-        $reflector = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
+        $reflector               = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return \array_merge(
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
@@ -103,11 +103,11 @@ final class FindReflectionOnLine
      */
     private function containsLine($reflection, int $lineNumber) : bool
     {
-        if (!\method_exists($reflection, 'getStartLine')) {
+        if ( ! \method_exists($reflection, 'getStartLine')) {
             throw new \InvalidArgumentException('Reflection does not have getStartLine method');
         }
 
-        if (!\method_exists($reflection, 'getEndLine')) {
+        if ( ! \method_exists($reflection, 'getEndLine')) {
             throw new \InvalidArgumentException('Reflection does not have getEndLine method');
         }
 

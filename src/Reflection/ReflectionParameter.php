@@ -3,24 +3,24 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types;
+use phpDocumentor\Reflection\Types\Self_;
+use PhpParser\Node;
+use PhpParser\Node\Param as ParamNode;
+use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
-use phpDocumentor\Reflection\Types;
-use phpDocumentor\Reflection\Types\Self_;
-use PhpParser\Node\Param as ParamNode;
-use PhpParser\Node;
-use phpDocumentor\Reflection\Type;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 
 class ReflectionParameter implements \Reflector
 {
-    const CONST_TYPE_NOT_A_CONST = 0;
-    const CONST_TYPE_CLASS = 1;
-    const CONST_TYPE_DEFINED = 2;
+    private const CONST_TYPE_NOT_A_CONST = 0;
+    private const CONST_TYPE_CLASS       = 1;
+    private const CONST_TYPE_DEFINED     = 2;
 
     /**
      * @var ParamNode
@@ -66,7 +66,7 @@ class ReflectionParameter implements \Reflector
     {
     }
 
-    public static function export()
+    public static function export() : void
     {
         throw new \Exception('Unable to export statically');
     }
@@ -194,17 +194,17 @@ class ReflectionParameter implements \Reflector
         ReflectionFunctionAbstract $function,
         int $parameterIndex
     ) : self {
-        $param = new self();
-        $param->reflector = $reflector;
-        $param->node = $node;
-        $param->function = $function;
+        $param                 = new self();
+        $param->reflector      = $reflector;
+        $param->node           = $node;
+        $param->function       = $function;
         $param->parameterIndex = $parameterIndex;
         return $param;
     }
 
     private function parseDefaultValueNode() : void
     {
-        if (!$this->isDefaultValueAvailable()) {
+        if ( ! $this->isDefaultValueAvailable()) {
             throw new \LogicException('This parameter does not have a default value available');
         }
 
@@ -218,17 +218,17 @@ class ReflectionParameter implements \Reflector
                 $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
             }
 
-            $this->isDefaultValueConstant = true;
+            $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = \ltrim($className, '\\') . '::' . $defaultValueNode->name;
             $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
             && ! \in_array(\strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
-            $this->isDefaultValueConstant = true;
+            $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
-            $this->defaultValue = null;
+            $this->defaultValue             = null;
             return;
         }
 
@@ -241,9 +241,9 @@ class ReflectionParameter implements \Reflector
     /**
      * @throws \LogicException
      */
-    private function findParentClassDeclaringConstant(string $constantName): string
+    private function findParentClassDeclaringConstant(string $constantName) : string
     {
-        /* @var $method ReflectionMethod */
+        /** @var ReflectionMethod $method */
         $method = $this->function;
         $class  = $method->getDeclaringClass();
 
@@ -307,7 +307,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isOptional() : bool
     {
-        return ((bool)$this->node->isOptional) || $this->isVariadic();
+        return ((bool) $this->node->isOptional) || $this->isVariadic();
     }
 
     /**
@@ -323,7 +323,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isDefaultValueAvailable() : bool
     {
-        return (null !== $this->node->default);
+        return null !== $this->node->default;
     }
 
     /**
@@ -361,7 +361,7 @@ class ReflectionParameter implements \Reflector
             return true;
         }
 
-        if (!$this->isDefaultValueAvailable()) {
+        if ( ! $this->isDefaultValueAvailable()) {
             return false;
         }
 
@@ -378,7 +378,7 @@ class ReflectionParameter implements \Reflector
         $stringTypes = [];
 
         foreach ($this->getDocBlockTypes() as $type) {
-            $stringTypes[] = (string)$type;
+            $stringTypes[] = (string) $type;
         }
         return $stringTypes;
     }
@@ -474,7 +474,7 @@ class ReflectionParameter implements \Reflector
      */
     public function setType(Type $newParameterType) : void
     {
-        $this->node->type = new Node\Name((string)$newParameterType);
+        $this->node->type = new Node\Name((string) $newParameterType);
     }
 
     /**
@@ -492,7 +492,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isArray() : bool
     {
-        return ($this->getTypeHint() instanceof Types\Array_);
+        return $this->getTypeHint() instanceof Types\Array_;
     }
 
     /**
@@ -502,7 +502,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isCallable() : bool
     {
-        return ($this->getTypeHint() instanceof Types\Callable_);
+        return $this->getTypeHint() instanceof Types\Callable_;
     }
 
     /**
@@ -530,7 +530,7 @@ class ReflectionParameter implements \Reflector
      */
     public function canBePassedByValue() : bool
     {
-        return !$this->isPassedByReference();
+        return ! $this->isPassedByReference();
     }
 
     /**
@@ -549,7 +549,7 @@ class ReflectionParameter implements \Reflector
     public function getDefaultValueConstantName() : string
     {
         $this->parseDefaultValueNode();
-        if (!$this->isDefaultValueConstant()) {
+        if ( ! $this->isDefaultValueConstant()) {
             throw new \LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
@@ -574,17 +574,17 @@ class ReflectionParameter implements \Reflector
             return $this->getDeclaringClass()->getParentClass();
         }
 
-        if (! $hint instanceof Types\Object_) {
+        if ( ! $hint instanceof Types\Object_) {
             return null;
         }
 
         $fqsen = $hint->getFqsen();
 
-        if (! $fqsen) {
+        if ( ! $fqsen) {
             return null;
         }
 
-        if (!$this->reflector instanceof ClassReflector) {
+        if ( ! $this->reflector instanceof ClassReflector) {
             throw new \RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
 

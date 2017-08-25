@@ -6,8 +6,8 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\StringSourceLocator

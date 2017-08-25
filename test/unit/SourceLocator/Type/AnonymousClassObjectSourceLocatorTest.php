@@ -25,10 +25,10 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function anonymousClassInstancesProvider() : array
     {
-        $fileWithClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
+        $fileWithClasses                = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
         $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
 
-        $classes = require $fileWithClasses;
+        $classes                = require $fileWithClasses;
         $classWithNestedClasses = require $fileWithClassWithNestedClasses;
 
         return [
@@ -36,7 +36,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
             [$classes[1], $fileWithClasses, 11, 17],
             [$classWithNestedClasses, $fileWithClassWithNestedClasses, 3, 13],
             [$classWithNestedClasses->getWrapped(0), $fileWithClassWithNestedClasses, 8, 8],
-            [$classWithNestedClasses->getWrapped(1), $fileWithClassWithNestedClasses, 11, 11]
+            [$classWithNestedClasses->getWrapped(1), $fileWithClassWithNestedClasses, 11, 11],
         ];
     }
 
@@ -67,8 +67,11 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifierWithFunctionIdentifier() : void
     {
+        $anonymousClass = new class {
+        };
+
         /** @var ReflectionClass|null $reflection */
-        $reflection = (new AnonymousClassObjectSourceLocator(new class {}))->locateIdentifier(
+        $reflection = (new AnonymousClassObjectSourceLocator($anonymousClass))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
                 'foo',
@@ -106,8 +109,11 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifiersByTypeWithFunctionIdentifier() : void
     {
+        $anonymousClass = new class {
+        };
+
         /** @var ReflectionClass[] $reflections */
-        $reflections = (new AnonymousClassObjectSourceLocator(new class {}))->locateIdentifiersByType(
+        $reflections = (new AnonymousClassObjectSourceLocator($anonymousClass))->locateIdentifiersByType(
             $this->createMock(Reflector::class),
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         );
@@ -117,7 +123,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider() : array
     {
-        $file = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+        $file    = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
 
         return [
@@ -128,7 +134,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param string $file
-     * $param object $class
+     * @param object $class
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void
@@ -152,7 +158,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
         return [
             [$class, 3, 13],
             [$class->getWrapped(0), 8, 8],
-            [$class->getWrapped(1), 11, 11]
+            [$class->getWrapped(1), 11, 11],
         ];
     }
 
@@ -163,7 +169,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
 
         /** @var ReflectionClass $reflection */
-       (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
+        (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
             $this->createMock(Reflector::class),
             new Identifier(
                 \get_class($class),

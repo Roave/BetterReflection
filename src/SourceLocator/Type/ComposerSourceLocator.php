@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Composer\Autoload\ClassLoader;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.
@@ -41,7 +41,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
 
         $filename = $this->classLoader->findFile($identifier->getName());
 
-        if (!$filename) {
+        if ( ! $filename) {
             return null;
         }
 

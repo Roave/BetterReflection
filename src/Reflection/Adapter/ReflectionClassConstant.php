@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use \ReflectionClassConstant as CoreReflectionClassConstant;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-
     /**
      * @var BetterReflectionClassConstant
      */

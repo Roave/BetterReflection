@@ -9,8 +9,8 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
@@ -129,7 +129,7 @@ class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator());
 
-        require_once(__DIR__ . '/../../Fixture/Functions.php');
+        require_once __DIR__ . '/../../Fixture/Functions.php';
         $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
 
         self::assertSame('myFunction', $classInfo->getShortName());
@@ -147,9 +147,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
     {
         $locator = new AutoloadSourceLocator();
 
-        $type = new IdentifierType();
+        $type           = new IdentifierType();
         $typeReflection = new \ReflectionObject($type);
-        $prop = $typeReflection->getProperty('name');
+        $prop           = $typeReflection->getProperty('name');
         $prop->setAccessible(true);
         $prop->setValue($type, 'nonsense');
 

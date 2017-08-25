@@ -33,7 +33,7 @@ class FileIteratorSourceLocator implements SourceLocator
     public function __construct(\Iterator $fileInfoIterator)
     {
         foreach ($fileInfoIterator as $fileInfo) {
-            if (! $fileInfo instanceof \SplFileInfo) {
+            if ( ! $fileInfo instanceof \SplFileInfo) {
                 throw InvalidFileInfo::fromNonSplFileInfo($fileInfo);
             }
         }
@@ -49,7 +49,7 @@ class FileIteratorSourceLocator implements SourceLocator
     {
         return $this->aggregateSourceLocator ?: new AggregateSourceLocator(\array_values(\array_filter(\array_map(
             function (\SplFileInfo $item) : ?SingleFileSourceLocator {
-                if (! ($item->isFile() && \pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
+                if ( ! ($item->isFile() && \pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
                     return null;
                 }
 

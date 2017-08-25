@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Visitor;
 
+use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
-use PhpParser\Node;
 
 class ReturnNodeVisitor extends NodeVisitorAbstract
 {

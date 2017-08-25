@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Roave\BetterReflection\Reflector\Reflector;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use Roave\BetterReflection\Reflector\Reflector;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
@@ -24,7 +24,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         MethodNode $node,
         ReflectionClass $declaringClass
     ) : self {
-        $method = new self();
+        $method                 = new self();
         $method->declaringClass = $declaringClass;
 
         // Compat with core reflection means we should NOT pass namespace info
@@ -101,7 +101,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getModifiers() : int
     {
-        $val = 0;
+        $val  = 0;
         $val += $this->isStatic() ? \ReflectionMethod::IS_STATIC : 0;
         $val += $this->isPublic() ? \ReflectionMethod::IS_PUBLIC : 0;
         $val += $this->isProtected() ? \ReflectionMethod::IS_PROTECTED : 0;
@@ -165,7 +165,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function getMethodNode() : MethodNode
     {
-        if (!($this->getNode() instanceof MethodNode)) {
+        if ( ! ($this->getNode() instanceof MethodNode)) {
             throw new \RuntimeException('Expected a ClassMethod node');
         }
         return $this->getNode();

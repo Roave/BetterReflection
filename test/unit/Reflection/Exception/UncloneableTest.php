@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\Uncloneable

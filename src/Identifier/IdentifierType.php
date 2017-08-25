@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Identifier;
 
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\Reflection;
 
 class IdentifierType
 {
-    const IDENTIFIER_CLASS = ReflectionClass::class;
-    const IDENTIFIER_FUNCTION = ReflectionFunction::class;
+    public const IDENTIFIER_CLASS    = ReflectionClass::class;
+    public const IDENTIFIER_FUNCTION = ReflectionFunction::class;
 
     private const VALID_TYPES = [
         self::IDENTIFIER_CLASS    => null,
@@ -22,9 +22,9 @@ class IdentifierType
      */
     private $name;
 
-    public function __construct($type = self::IDENTIFIER_CLASS)
+    public function __construct(string $type = self::IDENTIFIER_CLASS)
     {
-        if (! \array_key_exists($type, self::VALID_TYPES)) {
+        if ( ! \array_key_exists($type, self::VALID_TYPES)) {
             throw new \InvalidArgumentException(\sprintf(
                 '%s is not a valid identifier type',
                 $type

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
+use phpDocumentor\Reflection\Types;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
-use phpDocumentor\Reflection\Types;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindReturnType
@@ -51,7 +51,7 @@ class FindReturnTypeTest extends \PHPUnit\Framework\TestCase
             ->method('getLocatedSource')
             ->will($this->returnValue(new LocatedSource('<?php', null)));
 
-        /* @var ReflectionFunction $function */
+        /** @var ReflectionFunction $function */
         $foundTypes = (new FindReturnType())->__invoke($function);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
@@ -89,7 +89,7 @@ class FindReturnTypeTest extends \PHPUnit\Framework\TestCase
             ->method('getDeclaringClass')
             ->will($this->returnValue($class));
 
-        /* @var ReflectionMethod $method */
+        /** @var ReflectionMethod $method */
         $foundTypes = (new FindReturnType())->__invoke($method);
 
         self::assertCount(\count($expectedInstances), $foundTypes);

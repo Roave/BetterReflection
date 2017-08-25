@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Type;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property as PropertyNode;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Property as PropertyNode;
-use phpDocumentor\Reflection\Type;
 
 class ReflectionProperty implements \Reflector
 {
@@ -39,7 +39,7 @@ class ReflectionProperty implements \Reflector
     {
     }
 
-    public static function export()
+    public static function export() : void
     {
         throw new \Exception('Unable to export statically');
     }
@@ -78,7 +78,7 @@ class ReflectionProperty implements \Reflector
     {
         $stateModifier = '';
 
-        if (! $this->isStatic()) {
+        if ( ! $this->isStatic()) {
             $stateModifier = $this->isDefault() ? ' <default>' : ' <dynamic>';
         }
 
@@ -104,10 +104,10 @@ class ReflectionProperty implements \Reflector
         ReflectionClass $declaringClass,
         bool $declaredAtCompileTime = true
     ) : self {
-        $prop = new self();
-        $prop->reflector = $reflector;
-        $prop->node = $node;
-        $prop->declaringClass = $declaringClass;
+        $prop                        = new self();
+        $prop->reflector             = $reflector;
+        $prop->node                  = $node;
+        $prop->declaringClass        = $declaringClass;
         $prop->declaredAtCompileTime = $declaredAtCompileTime;
         return $prop;
     }
@@ -174,7 +174,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getModifiers() : int
     {
-        $val = 0;
+        $val  = 0;
         $val += $this->isStatic() ? \ReflectionProperty::IS_STATIC : 0;
         $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
@@ -242,7 +242,7 @@ class ReflectionProperty implements \Reflector
         $stringTypes = [];
 
         foreach ($this->getDocBlockTypes() as $type) {
-            $stringTypes[] = (string)$type;
+            $stringTypes[] = (string) $type;
         }
         return $stringTypes;
     }
@@ -303,7 +303,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getStartLine() : int
     {
-        return (int)$this->node->getAttribute('startLine', -1);
+        return (int) $this->node->getAttribute('startLine', -1);
     }
 
     /**
@@ -313,7 +313,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getEndLine() : int
     {
-        return (int)$this->node->getAttribute('endLine', -1);
+        return (int) $this->node->getAttribute('endLine', -1);
     }
 
     public function getStartColumn() : int

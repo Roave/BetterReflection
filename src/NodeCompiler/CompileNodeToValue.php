@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
 
+use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Object_;
+use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use Roave\BetterReflection\Util\FileHelper;
-use phpDocumentor\Reflection\Types\ContextFactory;
-use PhpParser\Node;
 
 class CompileNodeToValue
 {
@@ -102,7 +102,7 @@ class CompileNodeToValue
             case 'true':
                 return true;
             default:
-                if (!\defined($firstName)) {
+                if ( ! \defined($firstName)) {
                     throw new Exception\UnableToCompileNode(
                         \sprintf('Constant "%s" has not been defined', $firstName)
                     );
@@ -125,18 +125,19 @@ class CompileNodeToValue
         $className = \implode('\\', $node->class->parts);
 
         if ($node->name === 'class') {
-            /* @var $resolvedType Object_ */
+            /** @var Object_ $resolvedType */
             $resolvedType = (new ResolveTypes())->__invoke(
                 [$className],
                 (new ContextFactory())->createForNamespace(
                     $context->getSelf()->getNamespaceName(),
                     $context->getSelf()->getLocatedSource()->getSource()
-                ))[0];
+                )
+            )[0];
 
             return \substr((string) $resolvedType->getFqsen(), 1);
         }
 
-        /* @var $classInfo ReflectionClass|null */
+        /** @var ReflectionClass|null $classInfo */
         $classInfo = null;
 
         if ('self' === $className || 'static' === $className) {
@@ -144,7 +145,7 @@ class CompileNodeToValue
         }
 
         if (null === $classInfo) {
-            /* @var $classInfo ReflectionClass */
+            /** @var ReflectionClass $classInfo */
             $classInfo = $context->getReflector()->reflect(
                 (string) (new FindTypeFromAst())->__invoke(
                     $className,
@@ -272,7 +273,7 @@ class CompileNodeToValue
     /**
      * Compile a __DIR__ node
      */
-    private function compileDirConstant(CompilerContext $context): string
+    private function compileDirConstant(CompilerContext $context) : string
     {
         return FileHelper::normalizeWindowsPath(\dirname(\realpath($context->getFileName())));
     }
@@ -280,7 +281,7 @@ class CompileNodeToValue
     /**
      * Compiles magic constant __CLASS__
      */
-    private function compileClassConstant(CompilerContext $context): string
+    private function compileClassConstant(CompilerContext $context) : string
     {
         return $context->hasSelf() ? $context->getSelf()->getName() : '';
     }

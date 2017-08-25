@@ -41,12 +41,12 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      */
     public function __construct($anonymousClassObject)
     {
-        if (! \is_object($anonymousClassObject)) {
+        if ( ! \is_object($anonymousClassObject)) {
             throw new \InvalidArgumentException('Can only create from an instance of an object');
         }
 
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
-        $this->parser = PhpParserFactory::create();
+        $this->parser              = PhpParserFactory::create();
     }
 
     /**
@@ -71,7 +71,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionClass
     {
-        if (! $identifierType->isClass()) {
+        if ( ! $identifierType->isClass()) {
             return null;
         }
 
@@ -104,7 +104,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
             public function __construct(string $fileName, int $startLine)
             {
-                $this->fileName = $fileName;
+                $this->fileName  = $fileName;
                 $this->startLine = $startLine;
             }
 
@@ -122,7 +122,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                     return $node->getLine() === $this->startLine;
                 }));
 
-                if (! $anonymousClassNodesOnSameLine) {
+                if ( ! $anonymousClassNodesOnSameLine) {
                     return null;
                 }
 
@@ -141,7 +141,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        /* @var $reflectionClass ReflectionClass|null */
+        /** @var ReflectionClass|null $reflectionClass */
         $reflectionClass = (new NodeToReflection())->__invoke(
             $reflector,
             $nodeVisitor->getAnonymousClassNode(),

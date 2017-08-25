@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
 
-use PhpParser\NodeAbstract;
 use PhpParser\Comment\Doc;
+use PhpParser\NodeAbstract;
 
 /**
  * @internal
  */
 final class GetFirstDocComment
 {
-    public static function forNode(NodeAbstract $node): string
+    public static function forNode(NodeAbstract $node) : string
     {
-        if (!$node->hasAttribute('comments')) {
+        if ( ! $node->hasAttribute('comments')) {
             return '';
         }
 

@@ -115,8 +115,11 @@ class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocateIdentifiersByTypeWithClassIdentifier() : void
     {
+        $closure = function () : void {
+        };
+
         /** @var ReflectionFunction[] $reflections */
-        $reflections = (new ClosureSourceLocator(function () {}))->locateIdentifiersByType(
+        $reflections = (new ClosureSourceLocator($closure))->locateIdentifiersByType(
             $this->createMock(Reflector::class),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
@@ -124,15 +127,28 @@ class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
         self::assertCount(0, $reflections);
     }
 
-    public function testTwoClosuresSameLineFails() : void
+    public function exceptionIfTwoClosuresOnSameLineProvider() : array
     {
-        $closure1 = function () {}; $closure2 = function () {};
+        $file     = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
+        $closures = require $file;
 
-        $locator = new ClosureSourceLocator($closure1);
+        return [
+            [$file, $closures[0]],
+            [$file, $closures[1]],
+        ];
+    }
 
-        $this->expectException(TwoClosuresOnSameLine::class);
+    /**
+     * @param string $file
+     * @param Closure $closure
+     * @dataProvider exceptionIfTwoClosuresOnSameLineProvider
+     */
+    public function testTwoClosuresSameLineFails(string $file, Closure $closure) : void
+    {
+        self::expectException(TwoClosuresOnSameLine::class);
+        self::expectExceptionMessage(\sprintf('Two closures on line 3 in %s', $file));
 
-        $locator->locateIdentifier(
+        (new ClosureSourceLocator($closure))->locateIdentifier(
             $this->getMockReflector(),
             new Identifier(
                 'Foo',

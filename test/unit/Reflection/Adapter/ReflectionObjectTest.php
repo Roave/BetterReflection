@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
-use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 
 /**
@@ -20,7 +20,9 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = \get_class_methods(CoreReflectionObject::class);
-        return \array_combine($methods, \array_map(function (string $i) : array { return [$i]; }, $methods));
+        return \array_combine($methods, \array_map(function (string $i) : array {
+            return [$i];
+        }, $methods));
     }
 
     /**
@@ -99,9 +101,9 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /* @var BetterReflectionObject|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionObject|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
 
         if (null === $expectedException) {
@@ -174,7 +176,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         $betterReflectionObject
             ->method('getMethods')
             ->willReturn([
-                $betterReflectionMethod
+                $betterReflectionMethod,
             ]);
         $betterReflectionObject
             ->method('hasMethod')
@@ -198,7 +200,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         $betterReflectionObject
             ->method('getMethods')
             ->willReturn([
-                $betterReflectionMethod
+                $betterReflectionMethod,
             ]);
         $betterReflectionObject
             ->method('getMethod')

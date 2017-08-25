@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Exception;
 
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use PhpParser\Node;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 class InvalidAbstractFunctionNodeType extends \InvalidArgumentException
 {

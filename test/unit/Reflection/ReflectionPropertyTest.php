@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use phpDocumentor\Reflection\Types;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\PropertyProperty;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -10,10 +14,6 @@ use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use phpDocumentor\Reflection\Types;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Property;
-use PhpParser\Node\Stmt\PropertyProperty;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 /**
@@ -50,7 +50,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testImplementsReflector() : void
     {
-        $classInfo = $this->reflector->reflect(ExampleClass::class);
+        $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
         self::assertInstanceOf(\Reflector::class, $publicProp);
@@ -142,14 +142,14 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         $expectedDoc = "/**\n * @var string\n */";
 
         $classInfo = $this->reflector->reflect(ExampleClass::class);
-        $property = $classInfo->getProperty('publicProperty');
+        $property  = $classInfo->getProperty('publicProperty');
 
         self::assertSame($expectedDoc, $property->getDocComment());
     }
 
     public function testGetDocCommentBetweeenComments() : void
     {
-        $php = '<?php
+        $php       = '<?php
             class Bar implements Foo {
                 /* A comment  */
                 /** Property description */
@@ -158,7 +158,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
             }
         ';
         $reflector = (new ClassReflector(new StringSourceLocator($php)))->reflect('Bar');
-        $property = $reflector->getProperty('prop');
+        $property  = $reflector->getProperty('prop');
 
         self::assertContains('Property description', $property->getDocComment());
     }
@@ -166,7 +166,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
-        $property = $classInfo->getProperty('publicStaticProperty');
+        $property  = $classInfo->getProperty('publicStaticProperty');
 
         self::assertSame('', $property->getDocComment());
     }
@@ -196,7 +196,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
     public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
-        $property = $classInfo->getProperty($propertyName);
+        $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($expectedModifier, $property->getModifiers());
         self::assertSame(
@@ -244,7 +244,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
     public function testCastingToString(string $propertyName, string $expectedString) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
-        self::assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
+        self::assertSame($expectedString, (string) $classInfo->getProperty($propertyName));
     }
 
     public function testGetDefaultProperty() : void
@@ -257,7 +257,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testCannotClone() : void
     {
-        $classInfo = $this->reflector->reflect(ExampleClass::class);
+        $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
         $this->expectException(Uncloneable::class);
@@ -266,7 +266,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testSetVisibility() : void
     {
-        $classInfo = $this->reflector->reflect(ExampleClass::class);
+        $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicStaticProperty');
 
         self::assertFalse($publicProp->isPrivate(), 'Should initially be public, was private');
@@ -298,7 +298,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
 
     public function testSetVisibilityThrowsExceptionWithInvalidArgument() : void
     {
-        $classInfo = $this->reflector->reflect(ExampleClass::class);
+        $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $publicProp = $classInfo->getProperty('publicProperty');
 
         $this->expectException(\InvalidArgumentException::class);
@@ -314,7 +314,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine) : void
     {
-        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $reflector       = new ClassReflector(new StringSourceLocator($php));
         $classReflection = $reflector->reflect('\T');
         $constReflection = $classReflection->getProperty('test');
         $this->assertEquals($startLine, $constReflection->getStartLine());
@@ -336,7 +336,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
         return [
             ["<?php\n\nclass T {\npublic \$test = 1;\n}", 1, 17],
             ["<?php\n\n    class T {\n        protected \$test = 1;\n    }", 9, 28],
-            ["<?php class T {private \$test = 1;}", 16, 33],
+            ['<?php class T {private $test = 1;}', 16, 33],
         ];
     }
 
@@ -348,8 +348,8 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
-        $reflector = new ClassReflector(new StringSourceLocator($php));
-        $classReflection = $reflector->reflect('T');
+        $reflector          = new ClassReflector(new StringSourceLocator($php));
+        $classReflection    = $reflector->reflect('T');
         $constantReflection = $classReflection->getProperty('test');
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());

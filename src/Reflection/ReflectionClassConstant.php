@@ -54,9 +54,9 @@ class ReflectionClassConstant implements \Reflector
         ClassConst $node,
         ReflectionClass $owner
     ) : self {
-        $ref = new self();
-        $ref->node = $node;
-        $ref->owner = $owner;
+        $ref            = new self();
+        $ref->node      = $node;
+        $ref->owner     = $owner;
         $ref->reflector = $reflector;
         return $ref;
     }
@@ -83,7 +83,7 @@ class ReflectionClassConstant implements \Reflector
             return $this->value;
         }
 
-        $this->value = (new CompileNodeToValue())->__invoke(
+        $this->value          = (new CompileNodeToValue())->__invoke(
             $this->node->consts[0]->value,
             new CompilerContext($this->reflector, $this->getDeclaringClass())
         );
@@ -128,7 +128,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getModifiers() : int
     {
-        $val = 0;
+        $val  = 0;
         $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? \ReflectionProperty::IS_PRIVATE : 0;
@@ -142,7 +142,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getStartLine() : int
     {
-        return (int)$this->node->getAttribute('startLine', -1);
+        return (int) $this->node->getAttribute('startLine', -1);
     }
 
     /**
@@ -152,7 +152,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getEndLine() : int
     {
-        return (int)$this->node->getAttribute('endLine', -1);
+        return (int) $this->node->getAttribute('endLine', -1);
     }
 
     public function getStartColumn() : int
@@ -205,7 +205,7 @@ class ReflectionClassConstant implements \Reflector
     /**
      * {@inheritDoc}
      */
-    public function __toString()
+    public function __toString() : string
     {
         $value = $this->getValue();
 
@@ -221,7 +221,7 @@ class ReflectionClassConstant implements \Reflector
     /**
      * {@inheritDoc}
      */
-    public static function export()
+    public static function export() : void
     {
         throw new \Exception('Unable to export statically');
     }

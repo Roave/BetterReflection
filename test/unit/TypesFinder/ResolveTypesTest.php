@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
-use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
+use Roave\BetterReflection\TypesFinder\ResolveTypes;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes
@@ -85,7 +85,7 @@ class ResolveTypesTest extends \PHPUnit\Framework\TestCase
         $resolvedType = \reset($resolvedTypes);
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
-        /* @var $resolvedType Types\Object_ */
-        self::assertSame($expectedType, (string)$resolvedType);
+        /** @var $resolvedType Types\Object_ */
+        self::assertSame($expectedType, (string) $resolvedType);
     }
 }

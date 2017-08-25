@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
 
@@ -13,7 +14,7 @@ class IdentifierTest extends \PHPUnit\Framework\TestCase
     public function testGetName() : void
     {
         $beforeName = '\Some\Thing\Here';
-        $afterName = 'Some\Thing\Here';
+        $afterName  = 'Some\Thing\Here';
 
         $identifier = new Identifier($beforeName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
         self::assertSame($afterName, $identifier->getName());

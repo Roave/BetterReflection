@@ -49,11 +49,12 @@ class TestListener extends BaseTestListener
      * @param \PHPUnit\Framework\Test $test
      * @param float $time
      * @throws \PHPUnit\Framework\AssertionFailedError
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function endTest(\PHPUnit\Framework\Test $test, $time) : void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
-        if (!($test instanceof TestCase)) {
+        if ( ! ($test instanceof TestCase)) {
             return;
         }
 

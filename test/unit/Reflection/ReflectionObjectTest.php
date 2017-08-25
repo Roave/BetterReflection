@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Parser;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
@@ -13,14 +15,15 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Parser;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject
  */
 class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Parser
+     */
     private $parser;
 
     private function getPhpParser() : Parser
@@ -41,13 +44,14 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionForAnonymousClass() : void
     {
-        $classInfo = ReflectionObject::createFromInstance(new class {});
+        $classInfo = ReflectionObject::createFromInstance(new class {
+        });
 
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
         self::assertSame(FileHelper::normalizeWindowsPath(__FILE__), $classInfo->getFileName());
-        self::assertSame(44, $classInfo->getStartLine());
+        self::assertSame(47, $classInfo->getStartLine());
     }
 
     public function testReflectionWorksWithInternalClasses() : void
@@ -72,11 +76,11 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionWorksWithDynamicallyDeclaredMembers() : void
     {
-        $foo = new ClassForHinting();
+        $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
-        $propInfo = $classInfo->getProperty('bar');
+        $propInfo  = $classInfo->getProperty('bar');
 
         self::assertInstanceOf(ReflectionProperty::class, $propInfo);
         self::assertSame('bar', $propInfo->getName());
@@ -85,7 +89,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testExceptionThrownWhenInvalidInstanceGiven() : void
     {
-        $foo = new ClassForHinting();
+        $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -108,7 +112,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testGetRuntimePropertiesWithFilter() : void
     {
-        $foo = new \stdClass();
+        $foo      = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -121,7 +125,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testGetRuntimeImmediatePropertiesWithFilter() : void
     {
-        $foo = new \stdClass();
+        $foo      = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -153,7 +157,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
         $filteredMethods = [];
         foreach ($publicClassMethods as $method) {
-            if (!\in_array($method, $ignoreMethods, true)) {
+            if ( ! \in_array($method, $ignoreMethods, true)) {
                 $filteredMethods[$method] = [$method];
             }
         }
@@ -205,21 +209,21 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
         // Override the reflectionClass property on the ReflectionObject to use
         // the mocked reflectionclass above
-        $reflectionObjectReflection = new \ReflectionObject($reflectionObject);
+        $reflectionObjectReflection                        = new \ReflectionObject($reflectionObject);
         $reflectionObjectReflectionClassPropertyReflection = $reflectionObjectReflection->getProperty('reflectionClass');
         $reflectionObjectReflectionClassPropertyReflection->setAccessible(true);
         $reflectionObjectReflectionClassPropertyReflection->setValue($reflectionObject, $mockReflectionClass);
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
-        $fakeParams = \array_map(
+        $fakeParams                       = \array_map(
             function (\ReflectionParameter $parameter) {
-                switch((string)$parameter->getType()) {
+                switch ((string) $parameter->getType()) {
                     case 'int':
                         return \random_int(1, 1000);
                     case 'null':
                         return null;
                     case 'bool':
-                        return (bool)\random_int(0, 1);
+                        return (bool) \random_int(0, 1);
                     default:
                         return \uniqid('stringParam', true);
                 }
@@ -256,7 +260,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionObjectExportMatchesExpectation() : void
     {
-        $foo = new ClassForHinting();
+        $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
 
         $expectedExport = <<<'BLAH'
@@ -284,7 +288,7 @@ Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHintin
   }
 }
 BLAH;
-        $actualExport = ReflectionObject::export($foo);
+        $actualExport   = ReflectionObject::export($foo);
 
         self::assertStringMatchesFormat($expectedExport, $actualExport);
     }

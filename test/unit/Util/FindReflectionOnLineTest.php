@@ -15,7 +15,7 @@ class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 {
     public function testInvokeFindsClass() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
+        $finder     = FindReflectionOnLine::buildDefaultFinder();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 10);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
@@ -24,7 +24,7 @@ class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 
     public function testInvokeFindsTrait() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
+        $finder     = FindReflectionOnLine::buildDefaultFinder();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 19);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
@@ -33,7 +33,7 @@ class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 
     public function testInvokeFindsInterface() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
+        $finder     = FindReflectionOnLine::buildDefaultFinder();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 24);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
@@ -42,7 +42,7 @@ class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 
     public function testInvokeFindsMethod() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
+        $finder     = FindReflectionOnLine::buildDefaultFinder();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 14);
 
         self::assertInstanceOf(ReflectionMethod::class, $reflection);
@@ -51,7 +51,7 @@ class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 
     public function testInvokeFindsFunction() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
+        $finder     = FindReflectionOnLine::buildDefaultFinder();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 5);
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
@@ -66,7 +66,7 @@ class FindReflectionOnLineTest extends \PHPUnit\Framework\TestCase
 
     public function testInvokeFindsClassWithImplementedInterface() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
+        $finder     = FindReflectionOnLine::buildDefaultFinder();
         $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 26);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);

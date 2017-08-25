@@ -29,7 +29,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if (! $name = $this->getInternalReflectionClassName($identifier)) {
+        if ( ! $name = $this->getInternalReflectionClassName($identifier)) {
             return null;
         }
 
@@ -55,13 +55,13 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private function getInternalReflectionClassName(Identifier $identifier) : ?string
     {
-        if (! $identifier->isClass()) {
+        if ( ! $identifier->isClass()) {
             return null;
         }
 
         $name = $identifier->getName();
 
-        if (! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
+        if ( ! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
             return null; // not an available internal class
         }
 
@@ -80,7 +80,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private function getStub(string $className) : ?string
     {
-        if (!$this->hasStub($className)) {
+        if ( ! $this->hasStub($className)) {
             return null;
         }
 
@@ -95,7 +95,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private function buildStubName(string $className) : ?string
     {
-        if (!\preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
+        if ( ! \preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
             return null;
         }
 
@@ -116,7 +116,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return false;
         }
 
-        if (!\file_exists($expectedStubName) || !\is_readable($expectedStubName) || !\is_file($expectedStubName)) {
+        if ( ! \file_exists($expectedStubName) || ! \is_readable($expectedStubName) || ! \is_file($expectedStubName)) {
             return false;
         }
 

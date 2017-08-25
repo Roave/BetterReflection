@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
+use phpDocumentor\Reflection\Types;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
-use phpDocumentor\Reflection\Types;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindPropertyType
@@ -53,7 +53,7 @@ class FindPropertyTypeTest extends \PHPUnit\Framework\TestCase
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue("/**\n * $docBlock\n */"));
 
-        /* @var ReflectionProperty $property */
+        /** @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
@@ -104,7 +104,7 @@ class FindPropertyTypeTest extends \PHPUnit\Framework\TestCase
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue('Nothing here...'));
 
-        /* @var ReflectionProperty $property */
+        /** @var ReflectionProperty $property */
         $foundTypes = (new FindPropertyType())->__invoke($property);
 
         self::assertSame([], $foundTypes);

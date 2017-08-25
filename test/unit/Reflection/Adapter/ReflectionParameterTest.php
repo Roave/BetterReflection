@@ -6,10 +6,10 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
-use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 /**
@@ -20,7 +20,9 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
     public function coreReflectionParameterNamesProvider() : array
     {
         $methods = \get_class_methods(CoreReflectionParameter::class);
-        return \array_combine($methods, \array_map(function (string $i) : array { return [$i]; }, $methods));
+        return \array_combine($methods, \array_map(function (string $i) : array {
+            return [$i];
+        }, $methods));
     }
 
     /**
@@ -76,9 +78,9 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
      * @param array $args
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /* @var BetterReflectionParameter|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionParameter|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);
 
         if (null === $expectedException) {

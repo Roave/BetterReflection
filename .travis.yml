@@ -35,6 +35,13 @@ jobs:
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 
+    - stage: Check Coding Standard
+      php: 7.1
+      env: DEPENDENCIES=""
+      before_script:
+        - travis_retry composer require --dev --prefer-dist --prefer-stable doctrine/coding-standard:^1.0.0 slevomat/coding-standard:^3.2.1
+      script: vendor/bin/phpcs
+
     - stage: Static Analysis
       php: 7.1
       env: DEPENDENCIES=""

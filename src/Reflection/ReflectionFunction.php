@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
@@ -65,7 +65,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         Reflector $reflector,
         FunctionNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode $namespaceNode = null
+        ?NamespaceNode $namespaceNode = null
     ) : self {
         $function = new self();
 

@@ -21,7 +21,7 @@ class Identifier
 
         $name = \ltrim($name, '\\');
         // @todo validate the name somehow (see issue #20)
-        $this->name = (string)$name;
+        $this->name = (string) $name;
     }
 
     public function getName() : string

@@ -31,7 +31,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
-        if (! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
+        if ( ! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
             return null;
         }
 
@@ -78,12 +78,12 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @return string|null
      * @throws \ReflectionException
      */
-    private function locateClassByName(string $className)  : ?string
+    private function locateClassByName(string $className) : ?string
     {
         if (\class_exists($className, false) || \interface_exists($className, false) || \trait_exists($className, false)) {
             $filename = (new \ReflectionClass($className))->getFileName();
 
-            if (! \is_string($filename)) {
+            if ( ! \is_string($filename)) {
                 return null;
             }
 
@@ -91,7 +91,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         self::$autoloadLocatedFile = null;
-        $previousErrorHandler = \set_error_handler(function () {});
+        $previousErrorHandler      = \set_error_handler(function () : void {
+        });
         \stream_wrapper_unregister('file');
         \stream_wrapper_register('file', self::class);
         \class_exists($className);
@@ -112,14 +113,14 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     private function locateFunctionByName(string $functionName) : ?string
     {
-        if (!\function_exists($functionName)) {
+        if ( ! \function_exists($functionName)) {
             return null;
         }
 
-        $reflection = new \ReflectionFunction($functionName);
+        $reflection         = new \ReflectionFunction($functionName);
         $reflectionFileName = $reflection->getFileName();
 
-        if (! \is_string($reflectionFileName)) {
+        if ( ! \is_string($reflectionFileName)) {
             return null;
         }
 
@@ -137,6 +138,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @return bool
      * @see http://php.net/manual/en/class.streamwrapper.php
      * @see http://php.net/manual/en/streamwrapper.stream-open.php
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function stream_open($path, $mode, $options, &$opened_path) : bool
     {
@@ -152,6 +154,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @return mixed[]
      * @see http://php.net/manual/en/class.streamwrapper.php
      * @see http://php.net/manual/en/streamwrapper.url-stat.php
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function url_stat($path, $flags) : array
     {

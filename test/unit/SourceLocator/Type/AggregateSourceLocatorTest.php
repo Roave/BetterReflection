@@ -40,12 +40,12 @@ class AggregateSourceLocatorTest extends \PHPUnit\Framework\TestCase
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $locator1   = $this->createMock(SourceLocator::class);
-        $locator2   = $this->createMock(SourceLocator::class);
-        $locator3   = $this->createMock(SourceLocator::class);
-        $locator4   = $this->createMock(SourceLocator::class);
+        $locator1 = $this->createMock(SourceLocator::class);
+        $locator2 = $this->createMock(SourceLocator::class);
+        $locator3 = $this->createMock(SourceLocator::class);
+        $locator4 = $this->createMock(SourceLocator::class);
 
-        $source3     = $this->createMock(ReflectionClass::class);
+        $source3 = $this->createMock(ReflectionClass::class);
 
         $locator1->expects($this->once())->method('locateIdentifier');
         $locator2->expects($this->once())->method('locateIdentifier');

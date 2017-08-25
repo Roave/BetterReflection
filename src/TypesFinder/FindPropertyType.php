@@ -27,7 +27,7 @@ class FindPropertyType
         }
 
         $contextFactory = new ContextFactory();
-        $context = $contextFactory->createForNamespace(
+        $context        = $contextFactory->createForNamespace(
             $reflectionProperty->getDeclaringClass()->getNamespaceName(),
             $reflectionProperty->getDeclaringClass()->getLocatedSource()->getSource()
         );
@@ -40,8 +40,8 @@ class FindPropertyType
             )
         );
 
-        /* @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
-        $varTags = $docBlock->getTagsByName('var');
+        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
+        $varTags      = $docBlock->getTagsByName('var');
         $typeResolver = new ResolveTypes();
 
         return \array_merge(

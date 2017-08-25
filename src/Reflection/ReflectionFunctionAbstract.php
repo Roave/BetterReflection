@@ -3,6 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use phpDocumentor\Reflection\Type;
+use PhpParser\Node;
+use PhpParser\Node\Expr\Yield_ as YieldNode;
+use PhpParser\Node\Param as ParamNode;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\NodeTraverser;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PhpParser\PrettyPrinterAbstract;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -12,16 +20,8 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use Roave\BetterReflection\Util\GetFirstDocComment;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use PhpParser\Node\Expr\Yield_ as YieldNode;
-use PhpParser\Node\Param as ParamNode;
-use phpDocumentor\Reflection\Type;
-use PhpParser\NodeTraverser;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
-use PhpParser\PrettyPrinterAbstract;
+use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 abstract class ReflectionFunctionAbstract implements \Reflector
 {
@@ -51,7 +51,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     {
     }
 
-    public static function export()
+    public static function export() : void
     {
         throw new \Exception('Unable to export statically');
     }
@@ -68,15 +68,15 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         Reflector $reflector,
         Node $node,
         LocatedSource $locatedSource,
-        NamespaceNode $declaringNamespace = null
+        ?NamespaceNode $declaringNamespace = null
     ) : void {
-        if (!($node instanceof Node\Stmt\ClassMethod) && !($node instanceof Node\FunctionLike)) {
+        if ( ! ($node instanceof Node\Stmt\ClassMethod) && ! ($node instanceof Node\FunctionLike)) {
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
 
-        $this->reflector = $reflector;
-        $this->node = $node;
-        $this->locatedSource = $locatedSource;
+        $this->reflector          = $reflector;
+        $this->node               = $node;
+        $this->locatedSource      = $locatedSource;
         $this->declaringNamespace = $declaringNamespace;
 
         $this->setNodeOptionalFlag();
@@ -99,14 +99,14 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
-        $lastParamIndex = (\count($this->node->params) - 1);
+        $lastParamIndex      = (\count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
             $hasDefault = ($this->node->params[$i]->default !== null);
 
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional
             // EVEN if they have a default value
-            if (!$hasDefault) {
+            if ( ! $hasDefault) {
                 $overallOptionalFlag = false;
             }
 
@@ -122,7 +122,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getName() : string
     {
-        if (!$this->inNamespace()) {
+        if ( ! $this->inNamespace()) {
             return $this->getShortName();
         }
 
@@ -152,7 +152,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getNamespaceName() : string
     {
-        if (!$this->inNamespace()) {
+        if ( ! $this->inNamespace()) {
             return '';
         }
 
@@ -191,7 +191,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
         return \count(\array_filter(
             $this->getParameters(),
             function (ReflectionParameter $p) : bool {
-                return !$p->isOptional();
+                return ! $p->isOptional();
             }
         ));
     }
@@ -305,7 +305,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function isUserDefined() : bool
     {
-        return !$this->isInternal();
+        return ! $this->isInternal();
     }
 
     /**
@@ -378,7 +378,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getStartLine() : int
     {
-        return (int)$this->node->getAttribute('startLine', -1);
+        return (int) $this->node->getAttribute('startLine', -1);
     }
 
     /**
@@ -388,7 +388,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getEndLine() : int
     {
-        return (int)$this->node->getAttribute('endLine', -1);
+        return (int) $this->node->getAttribute('endLine', -1);
     }
 
     public function getStartColumn() : int
@@ -408,7 +408,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function returnsReference() : bool
     {
-        return (bool)$this->node->byRef;
+        return (bool) $this->node->byRef;
     }
 
     /**
@@ -467,7 +467,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function setReturnType(Type $newReturnType) : void
     {
-        $this->node->returnType = new Node\Name((string)$newReturnType);
+        $this->node->returnType = new Node\Name((string) $newReturnType);
     }
 
     /**
@@ -509,7 +509,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      * @param PrettyPrinterAbstract|null $printer
      * @return string
      */
-    public function getBodyCode(PrettyPrinterAbstract $printer = null) : string
+    public function getBodyCode(?PrettyPrinterAbstract $printer = null) : string
     {
         if (null === $printer) {
             $printer = new StandardPrettyPrinter();

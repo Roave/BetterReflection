@@ -8,8 +8,8 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
@@ -37,7 +37,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit\Framework\TestCase
             $this->getMockReflector(),
             new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
-        $source = $reflection->getLocatedSource();
+        $source     = $reflection->getLocatedSource();
 
         self::assertInstanceOf(EvaledLocatedSource::class, $source);
         self::assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());
@@ -79,7 +79,6 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testCanReflectEvaledLocatedSourceClass() : void
     {
-        /* @var $class */
         $reflector = (new ClassReflector(new EvaledCodeSourceLocator()));
         $className = \uniqid('foo', false);
 

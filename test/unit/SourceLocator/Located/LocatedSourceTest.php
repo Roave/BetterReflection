@@ -13,8 +13,8 @@ class LocatedSourceTest extends \PHPUnit\Framework\TestCase
 {
     public function testValuesHappyPath() : void
     {
-        $source = '<?php echo "Hello world";';
-        $file = FileHelper::normalizeWindowsPath(__DIR__ . '/../../Fixture/NoNamespace.php');
+        $source        = '<?php echo "Hello world";';
+        $file          = FileHelper::normalizeWindowsPath(__DIR__ . '/../../Fixture/NoNamespace.php');
         $locatedSource = new LocatedSource($source, $file);
 
         self::assertSame($source, $locatedSource->getSource());
@@ -25,8 +25,8 @@ class LocatedSourceTest extends \PHPUnit\Framework\TestCase
 
     public function testValuesWithNullFilename() : void
     {
-        $source = '<?php echo "Hello world";';
-        $file = null;
+        $source        = '<?php echo "Hello world";';
+        $file          = null;
         $locatedSource = new LocatedSource($source, $file);
 
         self::assertSame($source, $locatedSource->getSource());
@@ -37,8 +37,8 @@ class LocatedSourceTest extends \PHPUnit\Framework\TestCase
 
     public function testEmptyStringSourceAllowed() : void
     {
-        $source = '';
-        $file = null;
+        $source        = '';
+        $file          = null;
         $locatedSource = new LocatedSource($source, $file);
         self::assertSame('', $locatedSource->getSource());
     }

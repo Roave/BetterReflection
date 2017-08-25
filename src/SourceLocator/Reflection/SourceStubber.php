@@ -44,7 +44,7 @@ final class SourceStubber
         $stubCode    = ClassGenerator::fromReflection($reflection)->generate();
         $isInterface = $reflection->isInterface();
 
-        if (! ($isInterface || $reflection->isTrait())) {
+        if ( ! ($isInterface || $reflection->isTrait())) {
             return $stubCode;
         }
 

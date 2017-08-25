@@ -29,8 +29,8 @@ class ReflectionType
      */
     public static function createFromType(Type $type, bool $allowsNull) : self
     {
-        $reflectionType = new self();
-        $reflectionType->type = $type;
+        $reflectionType             = new self();
+        $reflectionType->type       = $type;
         $reflectionType->allowsNull = $allowsNull;
         return $reflectionType;
     }

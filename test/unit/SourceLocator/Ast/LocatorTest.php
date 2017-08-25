@@ -20,7 +20,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class LocatorTest extends \PHPUnit\Framework\TestCase
 {
-    private function getIdentifier($name, $type) : Identifier
+    private function getIdentifier(string $name, string $type) : Identifier
     {
         return new Identifier($name, new IdentifierType($type));
     }
@@ -105,8 +105,8 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         $phpCode = '<?php syntax error';
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $sourceLocator = new StringSourceLocator($phpCode);
-        $reflector = new ClassReflector($sourceLocator);
+        $sourceLocator  = new StringSourceLocator($phpCode);
+        $reflector      = new ClassReflector($sourceLocator);
 
         $locatedSource = new LocatedSource($phpCode, null);
 

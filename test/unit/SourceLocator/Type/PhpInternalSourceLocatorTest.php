@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use ReflectionClass as PhpReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -12,7 +13,6 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use ReflectionClass as PhpReflectionClass;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
@@ -42,7 +42,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
                 $this->getMockReflector(),
                 new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
             );
-            $source = $reflection->getLocatedSource();
+            $source     = $reflection->getLocatedSource();
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
@@ -63,9 +63,8 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
-        /* @var $class */
         $phpInternalSourceLocator = new PhpInternalSourceLocator();
-        $reflector = new ClassReflector($phpInternalSourceLocator);
+        $reflector                = new ClassReflector($phpInternalSourceLocator);
 
         try {
             $class = $reflector->reflect($className);
@@ -157,7 +156,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
     {
-        if (! (
+        if ( ! (
             \class_exists($className, false)
             || \interface_exists($className, false)
             || \trait_exists($className, false)
