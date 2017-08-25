@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
@@ -38,8 +39,6 @@ class ReflectionPropertyTest extends TestCase
 
     public function methodExpectationProvider() : array
     {
-        $mockClassLike = $this->createMock(BetterReflectionClass::class);
-
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
@@ -51,7 +50,6 @@ class ReflectionPropertyTest extends TestCase
             ['isStatic', null, true, []],
             ['isDefault', null, true, []],
             ['getModifiers', null, 123, []],
-            ['getDeclaringClass', null, $mockClassLike, []],
             ['getDocComment', null, '', []],
             ['setAccessible', NotImplemented::class, null, [true]],
         ];
@@ -101,5 +99,23 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         self::assertFalse($reflectionPropertyAdapter->getDocComment());
+    }
+
+    public function testGetDeclaringClass() : void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('DeclaringClass');
+
+        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('getImplementingClass')
+            ->willReturn($betterReflectionClass);
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionPropertyAdapter->getDeclaringClass());
+        self::assertSame('DeclaringClass', $reflectionPropertyAdapter->getDeclaringClass()->getName());
     }
 }
