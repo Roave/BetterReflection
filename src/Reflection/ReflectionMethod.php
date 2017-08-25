@@ -249,7 +249,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             return false;
         }
 
-        return \strtolower($this->getName()) === strtolower($declaringClass->getShortName());
+        return \strtolower($this->getName()) === \strtolower($declaringClass->getShortName());
     }
 
     /**

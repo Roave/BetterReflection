@@ -254,7 +254,7 @@ class ReflectionClass implements Reflection, CoreReflector
         $fileName = $this->getFileName();
 
         if (null === $fileName) {
-            $fileName = sha1($this->locatedSource->getSource());
+            $fileName = \sha1($this->locatedSource->getSource());
         }
 
         return \sprintf('%s%c%s(%d)', self::ANONYMOUS_CLASS_NAME_PREFIX, "\0", $fileName, $this->getStartLine());
