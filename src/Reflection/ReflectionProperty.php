@@ -104,10 +104,10 @@ class ReflectionProperty implements \Reflector
         ReflectionClass $declaringClass,
         bool $declaredAtCompileTime = true
     ) : self {
-        $prop = new self();
-        $prop->reflector = $reflector;
-        $prop->node = $node;
-        $prop->declaringClass = $declaringClass;
+        $prop                        = new self();
+        $prop->reflector             = $reflector;
+        $prop->node                  = $node;
+        $prop->declaringClass        = $declaringClass;
         $prop->declaredAtCompileTime = $declaredAtCompileTime;
         return $prop;
     }
@@ -174,7 +174,7 @@ class ReflectionProperty implements \Reflector
      */
     public function getModifiers() : int
     {
-        $val = 0;
+        $val  = 0;
         $val += $this->isStatic() ? \ReflectionProperty::IS_STATIC : 0;
         $val += $this->isPublic() ? \ReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? \ReflectionProperty::IS_PROTECTED : 0;

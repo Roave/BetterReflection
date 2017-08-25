@@ -21,7 +21,7 @@ class CompilerContext
     public function __construct(Reflector $reflector, ?ReflectionClass $self)
     {
         $this->reflector = $reflector;
-        $this->self = $self;
+        $this->self      = $self;
     }
 
     /**

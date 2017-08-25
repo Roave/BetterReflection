@@ -31,9 +31,9 @@ class ReflectionObject extends ReflectionClass
 
     private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
     {
-        $this->reflector = $reflector;
+        $this->reflector       = $reflector;
         $this->reflectionClass = $reflectionClass;
-        $this->object = $object;
+        $this->object          = $object;
     }
 
     /**
@@ -124,7 +124,7 @@ class ReflectionObject extends ReflectionClass
         // Only known current way is to use internal ReflectionObject to get
         // the runtime-declared properties  :/
         $reflectionProperties = (new \ReflectionObject($this->object))->getProperties();
-        $runtimeProperties = [];
+        $runtimeProperties    = [];
         foreach ($reflectionProperties as $property) {
             if ($this->reflectionClass->hasProperty($property->getName())) {
                 continue;

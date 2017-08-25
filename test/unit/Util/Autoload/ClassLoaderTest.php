@@ -24,7 +24,7 @@ final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
 
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader = new ClassLoader($loaderMethod);
+        $loader       = new ClassLoader($loaderMethod);
 
         self::assertCount($initialAutoloaderCount + 1, \spl_autoload_functions());
 
@@ -61,7 +61,7 @@ final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
 
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader = new ClassLoader($loaderMethod);
+        $loader       = new ClassLoader($loaderMethod);
 
         $loader->addClass($reflection);
 
@@ -75,7 +75,7 @@ final class ClassLoaderTest extends \PHPUnit\Framework\TestCase
     {
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader = new ClassLoader($loaderMethod);
+        $loader       = new ClassLoader($loaderMethod);
 
         $this->expectException(ClassAlreadyLoaded::class);
         $loader->addClass(ReflectionClass::createFromName(\stdClass::class));

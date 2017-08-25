@@ -129,7 +129,7 @@ class ClosureSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function exceptionIfTwoClosuresOnSameLineProvider() : array
     {
-        $file = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
+        $file     = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
         $closures = require $file;
 
         return [

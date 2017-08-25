@@ -15,7 +15,7 @@ class InvalidAbstractFunctionNodeTypeTest extends TestCase
 {
     public function testFromNode() : void
     {
-        $node = new Node\Scalar\LNumber(5);
+        $node      = new Node\Scalar\LNumber(5);
         $exception = InvalidAbstractFunctionNodeType::fromNode($node);
 
         self::assertInstanceOf(InvalidAbstractFunctionNodeType::class, $exception);

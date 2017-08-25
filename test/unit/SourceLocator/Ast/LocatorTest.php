@@ -105,8 +105,8 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         $phpCode = '<?php syntax error';
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $sourceLocator = new StringSourceLocator($phpCode);
-        $reflector = new ClassReflector($sourceLocator);
+        $sourceLocator  = new StringSourceLocator($phpCode);
+        $reflector      = new ClassReflector($sourceLocator);
 
         $locatedSource = new LocatedSource($phpCode, null);
 

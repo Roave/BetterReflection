@@ -31,7 +31,7 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
             ->method('__invoke');
 
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->createMock(Reflector::class);
+        $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php', null);
 
         self::assertSame(
@@ -54,7 +54,7 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
             ->method('__invoke');
 
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->createMock(Reflector::class);
+        $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 
         self::assertSame(
@@ -80,7 +80,7 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($mockReflection));
 
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->createMock(Reflector::class);
+        $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
         self::assertSame(
@@ -108,7 +108,7 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($mockReflection));
 
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->createMock(Reflector::class);
+        $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', null);
 
         self::assertSame(
@@ -136,7 +136,7 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($mockReflection));
 
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->createMock(Reflector::class);
+        $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
 
         self::assertSame(
@@ -158,14 +158,14 @@ class FindReflectionsInTreeTest extends \PHPUnit\Framework\TestCase
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflectionFunction = $this->createMock(ReflectionFunction::class);
-        $mockReflectionClass = $this->createMock(ReflectionClass::class);
+        $mockReflectionClass    = $this->createMock(ReflectionClass::class);
 
         $strategy->expects($this->exactly(2))
             ->method('__invoke')
             ->willReturnOnConsecutiveCalls($mockReflectionFunction, $mockReflectionClass);
 
         /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
-        $reflector = $this->createMock(Reflector::class);
+        $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);
 
         self::assertSame(

@@ -17,7 +17,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector    = new FunctionReflector(new StringSourceLocator($php));
         $functionInfo = $reflector->reflect('foo');
 
         self::assertInstanceOf(\Reflector::class, $functionInfo);
@@ -28,7 +28,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
-        $function = $reflector->reflect('foo');
+        $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->inNamespace());
         self::assertSame('foo', $function->getName());
@@ -41,7 +41,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         $php = '<?php namespace A\B { function foo() {} }';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
-        $function = $reflector->reflect('A\B\foo');
+        $function  = $reflector->reflect('A\B\foo');
 
         self::assertTrue($function->inNamespace());
         self::assertSame('A\B\foo', $function->getName());
@@ -54,7 +54,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         $php = '<?php namespace { function foo() {} }';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
-        $function = $reflector->reflect('foo');
+        $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->inNamespace());
         self::assertSame('foo', $function->getName());
@@ -67,7 +67,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
-        $function = $reflector->reflect('foo');
+        $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->isDisabled());
     }
@@ -77,7 +77,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         $php = '<?php function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
-        $function = $reflector->reflect('foo');
+        $function  = $reflector->reflect('foo');
 
         self::assertTrue($function->isUserDefined());
     }
@@ -139,7 +139,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
             function foo() {}';
 
         $reflector = new FunctionReflector(new StringSourceLocator($php));
-        $function = $reflector->reflect('foo');
+        $function  = $reflector->reflect('foo');
 
         $types = $function->getDocBlockReturnTypes();
 

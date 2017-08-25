@@ -16,7 +16,7 @@ class ResolveTypes
     public function __invoke(array $stringTypes, Context $context) : array
     {
         $resolvedTypes = [];
-        $resolver = new TypeResolver();
+        $resolver      = new TypeResolver();
 
         foreach ($stringTypes as $stringType) {
             $resolvedTypes[] = $resolver->resolve($stringType, $context);

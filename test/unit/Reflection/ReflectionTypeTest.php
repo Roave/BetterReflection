@@ -14,14 +14,14 @@ class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateFromType() : void
     {
-        $type = new Types\String_();
+        $type     = new Types\String_();
         $typeInfo = ReflectionType::createFromType($type, false);
         self::assertInstanceOf(ReflectionType::class, $typeInfo);
     }
 
     public function testGetTypeObject() : void
     {
-        $type = new Types\String_();
+        $type     = new Types\String_();
         $typeInfo = ReflectionType::createFromType($type, false);
         self::assertSame($type, $typeInfo->getTypeObject());
     }

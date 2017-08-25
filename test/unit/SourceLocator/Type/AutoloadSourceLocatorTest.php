@@ -147,9 +147,9 @@ class AutoloadSourceLocatorTest extends \PHPUnit\Framework\TestCase
     {
         $locator = new AutoloadSourceLocator();
 
-        $type = new IdentifierType();
+        $type           = new IdentifierType();
         $typeReflection = new \ReflectionObject($type);
-        $prop = $typeReflection->getProperty('name');
+        $prop           = $typeReflection->getProperty('name');
         $prop->setAccessible(true);
         $prop->setValue($type, 'nonsense');
 

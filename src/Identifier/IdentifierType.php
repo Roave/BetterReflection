@@ -9,7 +9,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 
 class IdentifierType
 {
-    const IDENTIFIER_CLASS = ReflectionClass::class;
+    const IDENTIFIER_CLASS    = ReflectionClass::class;
     const IDENTIFIER_FUNCTION = ReflectionFunction::class;
 
     private const VALID_TYPES = [

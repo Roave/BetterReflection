@@ -24,7 +24,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         MethodNode $node,
         ReflectionClass $declaringClass
     ) : self {
-        $method = new self();
+        $method                 = new self();
         $method->declaringClass = $declaringClass;
 
         // Compat with core reflection means we should NOT pass namespace info
@@ -101,7 +101,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getModifiers() : int
     {
-        $val = 0;
+        $val  = 0;
         $val += $this->isStatic() ? \ReflectionMethod::IS_STATIC : 0;
         $val += $this->isPublic() ? \ReflectionMethod::IS_PUBLIC : 0;
         $val += $this->isProtected() ? \ReflectionMethod::IS_PROTECTED : 0;

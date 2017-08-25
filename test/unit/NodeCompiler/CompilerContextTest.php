@@ -17,7 +17,7 @@ class CompilerContextTest extends \PHPUnit\Framework\TestCase
     public function testCreatingContextWithoutSelf() : void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php'));
-        $context = new CompilerContext($reflector, null);
+        $context   = new CompilerContext($reflector, null);
 
         self::assertFalse($context->hasSelf());
         self::assertSame($reflector, $context->getReflector());
@@ -30,7 +30,7 @@ class CompilerContextTest extends \PHPUnit\Framework\TestCase
     public function testCreatingContextWithSelf() : void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}'));
-        $self = $reflector->reflect('Foo');
+        $self      = $reflector->reflect('Foo');
 
         $context = new CompilerContext($reflector, $self);
 
@@ -44,7 +44,7 @@ class CompilerContextTest extends \PHPUnit\Framework\TestCase
         $filename = FileHelper::normalizeWindowsPath(__DIR__ . '/CompilerContextTest.php');
 
         $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
-        $self = $reflector->reflect(CompilerContextTest::class);
+        $self      = $reflector->reflect(CompilerContextTest::class);
 
         $context = new CompilerContext($reflector, $self);
 
@@ -56,7 +56,7 @@ class CompilerContextTest extends \PHPUnit\Framework\TestCase
         $filename = __DIR__ . '/CompilerContextTest.php';
 
         $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
-        $context = new CompilerContext($reflector, null);
+        $context   = new CompilerContext($reflector, null);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The current context does not have a class for self');
@@ -88,7 +88,7 @@ class CompilerContextTest extends \PHPUnit\Framework\TestCase
         }
         ';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($phpCode));
+        $reflector    = new FunctionReflector(new StringSourceLocator($phpCode));
         $functionInfo = $reflector->reflect('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());
     }

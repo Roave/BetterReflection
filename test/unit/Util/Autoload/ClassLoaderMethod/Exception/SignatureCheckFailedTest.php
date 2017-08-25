@@ -13,7 +13,7 @@ final class SignatureCheckFailedTest extends \PHPUnit\Framework\TestCase
 {
     public function testFromReflectionClass() : void
     {
-        $className = \uniqid('class name', true);
+        $className  = \uniqid('class name', true);
         $reflection = $this->createMock(ReflectionClass::class);
         $reflection->expects(self::any())->method('getName')->willReturn($className);
 

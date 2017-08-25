@@ -47,9 +47,9 @@ final class FileCacheLoader implements LoaderMethodInterface
         CheckerInterface $checker
     ) {
         $this->cacheDirectory = $cacheDirectory;
-        $this->classPrinter = $classPrinter;
-        $this->signer = $signer;
-        $this->checker = $checker;
+        $this->classPrinter   = $classPrinter;
+        $this->signer         = $signer;
+        $this->checker        = $checker;
     }
 
     /**

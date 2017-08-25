@@ -25,10 +25,10 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function anonymousClassInstancesProvider() : array
     {
-        $fileWithClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
+        $fileWithClasses                = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
         $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
 
-        $classes = require $fileWithClasses;
+        $classes                = require $fileWithClasses;
         $classWithNestedClasses = require $fileWithClassWithNestedClasses;
 
         return [
@@ -123,7 +123,7 @@ class AnonymousClassObjectSourceLocatorTest extends \PHPUnit\Framework\TestCase
 
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider() : array
     {
-        $file = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+        $file    = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
 
         return [

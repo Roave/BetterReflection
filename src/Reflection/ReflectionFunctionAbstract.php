@@ -74,9 +74,9 @@ abstract class ReflectionFunctionAbstract implements \Reflector
             throw Exception\InvalidAbstractFunctionNodeType::fromNode($node);
         }
 
-        $this->reflector = $reflector;
-        $this->node = $node;
-        $this->locatedSource = $locatedSource;
+        $this->reflector          = $reflector;
+        $this->node               = $node;
+        $this->locatedSource      = $locatedSource;
         $this->declaringNamespace = $declaringNamespace;
 
         $this->setNodeOptionalFlag();
@@ -99,7 +99,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
     private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
-        $lastParamIndex = (\count($this->node->params) - 1);
+        $lastParamIndex      = (\count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
             $hasDefault = ($this->node->params[$i]->default !== null);
 

@@ -17,7 +17,7 @@ final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testFileCacheWriterCreatesFileWithPrintedCode() : void
     {
-        $className = \uniqid(__METHOD__, true);
+        $className         = \uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $classInfo */
@@ -25,8 +25,8 @@ final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
         $generatedCode = '// ' . \uniqid(__METHOD__, true);
-        $signature = \uniqid('Roave/Signature: ', true);
-        $signedCode = "<?php\n// " . $signature . "\n" . $generatedCode;
+        $signature     = \uniqid('Roave/Signature: ', true);
+        $signedCode    = "<?php\n// " . $signature . "\n" . $generatedCode;
 
         /** @var ClassPrinterInterface|\PHPUnit_Framework_MockObject_MockObject $printer */
         $printer = $this->createMock(ClassPrinterInterface::class);
@@ -51,7 +51,7 @@ final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testExceptionThrownWhenSignatureFailedToVerify() : void
     {
-        $className = \uniqid(__METHOD__, true);
+        $className         = \uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $classInfo */
@@ -59,8 +59,8 @@ final class FileCacheLoaderTest extends \PHPUnit\Framework\TestCase
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
         $generatedCode = '// ' . \uniqid(__METHOD__, true);
-        $signature = \uniqid('Roave/Signature: ', true);
-        $signedCode = "<?php\n// " . $signature . "\n" . $generatedCode;
+        $signature     = \uniqid('Roave/Signature: ', true);
+        $signedCode    = "<?php\n// " . $signature . "\n" . $generatedCode;
 
         /** @var ClassPrinterInterface|\PHPUnit_Framework_MockObject_MockObject $printer */
         $printer = $this->createMock(ClassPrinterInterface::class);

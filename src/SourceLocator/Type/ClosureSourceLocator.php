@@ -39,7 +39,7 @@ final class ClosureSourceLocator implements SourceLocator
     public function __construct(Closure $closure)
     {
         $this->coreFunctionReflection = new CoreFunctionReflection($closure);
-        $this->parser = PhpParserFactory::create();
+        $this->parser                 = PhpParserFactory::create();
     }
 
     /**
@@ -102,7 +102,7 @@ final class ClosureSourceLocator implements SourceLocator
 
             public function __construct(string $fileName, int $startLine)
             {
-                $this->fileName = $fileName;
+                $this->fileName  = $fileName;
                 $this->startLine = $startLine;
             }
 

@@ -64,7 +64,7 @@ class IdentifierTypeTest extends \PHPUnit\Framework\TestCase
         // We must use reflection to hack the value, because we cannot create
         // an IdentifierType with an invalid type
         $reflection = new \ReflectionObject($classType);
-        $prop = $reflection->getProperty('name');
+        $prop       = $reflection->getProperty('name');
         $prop->setAccessible(true);
         $prop->setValue($classType, 'nonsense');
 

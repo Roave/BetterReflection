@@ -53,7 +53,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
 
     public function testImplementsReflector() : void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo  = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('publicMethod');
 
         self::assertInstanceOf(\Reflector::class, $methodInfo);
@@ -94,7 +94,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         bool $shouldBeAbstract,
         bool $shouldBeStatic
     ) : void {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo        = $this->reflector->reflect(Methods::class);
         $reflectionMethod = $classInfo->getMethod($methodName);
 
         self::assertSame($shouldBePublic, $reflectionMethod->isPublic());
@@ -191,7 +191,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function testGetFileName() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod('methodWithParameters');
+        $method    = $classInfo->getMethod('methodWithParameters');
 
         $detectedFilename = $method->getFileName();
 
@@ -200,7 +200,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
 
     public function testMethodNameWithNamespace() : void
     {
-        $classInfo = $this->reflector->reflect(ExampleClass::class);
+        $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
         self::assertFalse($methodInfo->inNamespace());
@@ -272,7 +272,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames) : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod($methodName);
+        $method    = $classInfo->getMethod($methodName);
 
         self::assertSame($expectedModifier, $method->getModifiers());
         self::assertSame(
@@ -301,7 +301,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetPrototype(string $class, string $method, $expectedPrototype) : void
     {
-        $fixture = __DIR__ . '/../Fixture/PrototypeTree.php';
+        $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
 
         if (null === $expectedPrototype) {
@@ -316,10 +316,10 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function testGetMethodNodeFailsWhenNodeIsNotClassMethod() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod('publicMethod');
+        $method    = $classInfo->getMethod('publicMethod');
 
         $methodReflection = new \ReflectionClass(ReflectionFunctionAbstract::class);
-        $methodNodeProp = $methodReflection->getProperty('node');
+        $methodNodeProp   = $methodReflection->getProperty('node');
         $methodNodeProp->setAccessible(true);
         $methodNodeProp->setValue($method, new Function_('foo'));
 
@@ -368,7 +368,7 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
     public function testStringCast(string $methodName, string $expectedStringValue) : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
-        $method = $classInfo->getMethod($methodName);
+        $method    = $classInfo->getMethod($methodName);
 
         self::assertStringMatchesFormat($expectedStringValue, (string)$method);
     }

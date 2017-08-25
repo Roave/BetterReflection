@@ -91,7 +91,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         self::$autoloadLocatedFile = null;
-        $previousErrorHandler = \set_error_handler(function () {
+        $previousErrorHandler      = \set_error_handler(function () {
         });
         \stream_wrapper_unregister('file');
         \stream_wrapper_register('file', self::class);
@@ -117,7 +117,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        $reflection = new \ReflectionFunction($functionName);
+        $reflection         = new \ReflectionFunction($functionName);
         $reflectionFileName = $reflection->getFileName();
 
         if (! \is_string($reflectionFileName)) {

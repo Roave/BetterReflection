@@ -73,11 +73,11 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionWorksWithDynamicallyDeclaredMembers() : void
     {
-        $foo = new ClassForHinting();
+        $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
-        $propInfo = $classInfo->getProperty('bar');
+        $propInfo  = $classInfo->getProperty('bar');
 
         self::assertInstanceOf(ReflectionProperty::class, $propInfo);
         self::assertSame('bar', $propInfo->getName());
@@ -86,7 +86,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testExceptionThrownWhenInvalidInstanceGiven() : void
     {
-        $foo = new ClassForHinting();
+        $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -109,7 +109,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testGetRuntimePropertiesWithFilter() : void
     {
-        $foo = new \stdClass();
+        $foo      = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -122,7 +122,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testGetRuntimeImmediatePropertiesWithFilter() : void
     {
-        $foo = new \stdClass();
+        $foo      = new \stdClass();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -206,13 +206,13 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
         // Override the reflectionClass property on the ReflectionObject to use
         // the mocked reflectionclass above
-        $reflectionObjectReflection = new \ReflectionObject($reflectionObject);
+        $reflectionObjectReflection                        = new \ReflectionObject($reflectionObject);
         $reflectionObjectReflectionClassPropertyReflection = $reflectionObjectReflection->getProperty('reflectionClass');
         $reflectionObjectReflectionClassPropertyReflection->setAccessible(true);
         $reflectionObjectReflectionClassPropertyReflection->setValue($reflectionObject, $mockReflectionClass);
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
-        $fakeParams = \array_map(
+        $fakeParams                       = \array_map(
             function (\ReflectionParameter $parameter) {
                 switch ((string)$parameter->getType()) {
                     case 'int':
@@ -257,7 +257,7 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
 
     public function testReflectionObjectExportMatchesExpectation() : void
     {
-        $foo = new ClassForHinting();
+        $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
 
         $expectedExport = <<<'BLAH'
@@ -285,7 +285,7 @@ Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHintin
   }
 }
 BLAH;
-        $actualExport = ReflectionObject::export($foo);
+        $actualExport   = ReflectionObject::export($foo);
 
         self::assertStringMatchesFormat($expectedExport, $actualExport);
     }

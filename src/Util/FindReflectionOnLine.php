@@ -85,7 +85,7 @@ final class FindReflectionOnLine
     private function computeReflections(string $filename) : array
     {
         $singleFileSourceLocator = new SingleFileSourceLocator($filename);
-        $reflector = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
+        $reflector               = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return \array_merge(
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),

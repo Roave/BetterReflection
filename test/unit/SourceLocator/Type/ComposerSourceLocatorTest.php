@@ -26,7 +26,7 @@ class ComposerSourceLocatorTest extends \PHPUnit\Framework\TestCase
     public function testInvokableLoadsSource() : void
     {
         $className = ClassWithNoNamespace::class;
-        $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
+        $fileName  = __DIR__ . '/../../Fixture/NoNamespace.php';
 
         $loader = $this->createMock(ClassLoader::class);
 

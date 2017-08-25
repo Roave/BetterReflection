@@ -197,10 +197,10 @@ class CompileNodeToValueTest extends \PHPUnit\Framework\TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
-        $classInfo = $reflector->reflect('Foo');
+        $reflector  = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('method');
-        $paramInfo = $methodInfo->getParameter('param');
+        $paramInfo  = $methodInfo->getParameter('param');
 
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
@@ -217,10 +217,10 @@ class CompileNodeToValueTest extends \PHPUnit\Framework\TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
-        $classInfo = $reflector->reflect('Bat');
+        $reflector  = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo  = $reflector->reflect('Bat');
         $methodInfo = $classInfo->getMethod('method');
-        $paramInfo = $methodInfo->getParameter('param');
+        $paramInfo  = $methodInfo->getParameter('param');
 
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
@@ -234,10 +234,10 @@ class CompileNodeToValueTest extends \PHPUnit\Framework\TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
-        $classInfo = $reflector->reflect('Foo');
+        $reflector  = new ClassReflector(new StringSourceLocator($phpCode));
+        $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('method');
-        $paramInfo = $methodInfo->getParameter('param');
+        $paramInfo  = $methodInfo->getParameter('param');
 
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }

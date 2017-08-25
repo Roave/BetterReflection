@@ -37,7 +37,7 @@ class EvaledCodeSourceLocatorTest extends \PHPUnit\Framework\TestCase
             $this->getMockReflector(),
             new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
-        $source = $reflection->getLocatedSource();
+        $source     = $reflection->getLocatedSource();
 
         self::assertInstanceOf(EvaledLocatedSource::class, $source);
         self::assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());

@@ -69,7 +69,7 @@ class FindParameterTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
-        $node = new ParamNode($nodeName);
+        $node     = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
 
         $function = $this->createMock(ReflectionFunction::class);
@@ -102,7 +102,7 @@ class FindParameterTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
-        $node = new ParamNode($nodeName);
+        $node     = new ParamNode($nodeName);
         $docBlock = "/**\n * $docBlock\n */";
 
         $class = $this->createMock(ReflectionClass::class);

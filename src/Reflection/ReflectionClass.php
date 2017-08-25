@@ -623,7 +623,7 @@ class ReflectionClass implements Reflection, \Reflector
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
                 if ($stmt instanceof PropertyNode) {
-                    $prop = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
+                    $prop                         = ReflectionProperty::createFromNode($this->reflector, $stmt, $this);
                     $properties[$prop->getName()] = $prop;
                 }
             }
@@ -877,7 +877,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getModifiers() : int
     {
-        $val = 0;
+        $val  = 0;
         $val += $this->isAbstract() ? \ReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $val += $this->isFinal() ? \ReflectionClass::IS_FINAL : 0;
         return $val;
@@ -1023,7 +1023,7 @@ class ReflectionClass implements Reflection, \Reflector
         $resolvedAliases = [];
 
         foreach ($traitUsages as $traitUsage) {
-            $traitNames = $traitUsage->traits;
+            $traitNames  = $traitUsage->traits;
             $adaptations = $traitUsage->adaptations;
 
             foreach ($adaptations as $adaptation) {
@@ -1425,7 +1425,7 @@ class ReflectionClass implements Reflection, \Reflector
             $type |= ClassNode::MODIFIER_STATIC;
         }
 
-        $this->node->stmts[] = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
+        $this->node->stmts[]    = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
         $this->cachedProperties = null;
     }
 

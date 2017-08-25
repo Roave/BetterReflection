@@ -42,7 +42,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
                 $this->getMockReflector(),
                 new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
             );
-            $source = $reflection->getLocatedSource();
+            $source     = $reflection->getLocatedSource();
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
@@ -65,7 +65,7 @@ class PhpInternalSourceLocatorTest extends \PHPUnit\Framework\TestCase
     {
         /* @var $class */
         $phpInternalSourceLocator = new PhpInternalSourceLocator();
-        $reflector = new ClassReflector($phpInternalSourceLocator);
+        $reflector                = new ClassReflector($phpInternalSourceLocator);
 
         try {
             $class = $reflector->reflect($className);

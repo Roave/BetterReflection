@@ -37,7 +37,7 @@ class LocatedSource
             $filename = FileHelper::normalizeWindowsPath($filename);
         }
 
-        $this->source = $source;
+        $this->source   = $source;
         $this->filename = $filename;
     }
 

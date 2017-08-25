@@ -46,7 +46,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         }
 
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
-        $this->parser = PhpParserFactory::create();
+        $this->parser              = PhpParserFactory::create();
     }
 
     /**
@@ -104,7 +104,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
             public function __construct(string $fileName, int $startLine)
             {
-                $this->fileName = $fileName;
+                $this->fileName  = $fileName;
                 $this->startLine = $startLine;
             }
 

@@ -106,7 +106,7 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        $const = $classInfo->getReflectionConstant('MY_CONST_1');
+        $const     = $classInfo->getReflectionConstant('MY_CONST_1');
         $this->assertSame($classInfo, $const->getDeclaringClass());
     }
 
@@ -118,7 +118,7 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine) : void
     {
-        $reflector = new ClassReflector(new StringSourceLocator($php));
+        $reflector       = new ClassReflector(new StringSourceLocator($php));
         $classReflection = $reflector->reflect('\T');
         $constReflection = $classReflection->getReflectionConstant('TEST');
         $this->assertEquals($startLine, $constReflection->getStartLine());
@@ -152,8 +152,8 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
-        $reflector = new ClassReflector(new StringSourceLocator($php));
-        $classReflection = $reflector->reflect('T');
+        $reflector          = new ClassReflector(new StringSourceLocator($php));
+        $classReflection    = $reflector->reflect('T');
         $constantReflection = $classReflection->getReflectionConstant('TEST');
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());
