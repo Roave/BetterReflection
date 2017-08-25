@@ -142,7 +142,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getStartLine() : int
     {
-        return (int)$this->node->getAttribute('startLine', -1);
+        return (int) $this->node->getAttribute('startLine', -1);
     }
 
     /**
@@ -152,7 +152,7 @@ class ReflectionClassConstant implements \Reflector
      */
     public function getEndLine() : int
     {
-        return (int)$this->node->getAttribute('endLine', -1);
+        return (int) $this->node->getAttribute('endLine', -1);
     }
 
     public function getStartColumn() : int

@@ -127,7 +127,7 @@ class ReflectionFunctionTest extends \PHPUnit\Framework\TestCase
         require_once __DIR__ . '/../Fixture/Functions.php';
         $functionInfo = ReflectionFunction::createFromName($functionName);
 
-        self::assertStringMatchesFormat($expectedStringValue, (string)$functionInfo);
+        self::assertStringMatchesFormat($expectedStringValue, (string) $functionInfo);
     }
 
     public function testGetDocBlockReturnTypes() : void

@@ -244,7 +244,7 @@ class ReflectionPropertyTest extends \PHPUnit\Framework\TestCase
     public function testCastingToString(string $propertyName, string $expectedString) : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
-        self::assertSame($expectedString, (string)$classInfo->getProperty($propertyName));
+        self::assertSame($expectedString, (string) $classInfo->getProperty($propertyName));
     }
 
     public function testGetDefaultProperty() : void

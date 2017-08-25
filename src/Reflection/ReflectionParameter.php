@@ -307,7 +307,7 @@ class ReflectionParameter implements \Reflector
      */
     public function isOptional() : bool
     {
-        return ((bool)$this->node->isOptional) || $this->isVariadic();
+        return ((bool) $this->node->isOptional) || $this->isVariadic();
     }
 
     /**
@@ -378,7 +378,7 @@ class ReflectionParameter implements \Reflector
         $stringTypes = [];
 
         foreach ($this->getDocBlockTypes() as $type) {
-            $stringTypes[] = (string)$type;
+            $stringTypes[] = (string) $type;
         }
         return $stringTypes;
     }
@@ -474,7 +474,7 @@ class ReflectionParameter implements \Reflector
      */
     public function setType(Type $newParameterType) : void
     {
-        $this->node->type = new Node\Name((string)$newParameterType);
+        $this->node->type = new Node\Name((string) $newParameterType);
     }
 
     /**

@@ -45,7 +45,7 @@ class FindTypeFromAstTest extends \PHPUnit\Framework\TestCase
         );
 
         self::assertInstanceOf($expected, $resolvedType);
-        self::assertSame($toStringValue, (string)$resolvedType);
+        self::assertSame($toStringValue, (string) $resolvedType);
     }
 
     public function testFindTypeFromAstReturnsNull() : void

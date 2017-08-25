@@ -138,7 +138,7 @@ class ReflectionClass implements Reflection, \Reflector
              */
             foreach ($items as $name => $const) {
                 $str .= "\n" . \str_repeat(' ', $indentLevel);
-                $str .= \trim((string)$const);
+                $str .= \trim((string) $const);
             }
 
             return $str;
@@ -750,7 +750,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getStartLine() : int
     {
-        return (int)$this->node->getAttribute('startLine', -1);
+        return (int) $this->node->getAttribute('startLine', -1);
     }
 
     /**
@@ -760,7 +760,7 @@ class ReflectionClass implements Reflection, \Reflector
      */
     public function getEndLine() : int
     {
-        return (int)$this->node->getAttribute('endLine', -1);
+        return (int) $this->node->getAttribute('endLine', -1);
     }
 
     public function getStartColumn() : int
@@ -795,7 +795,7 @@ class ReflectionClass implements Reflection, \Reflector
 
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         /* @var $parent self */
-        $parent = $this->reflector->reflect((string)$objectType->getFqsen());
+        $parent = $this->reflector->reflect((string) $objectType->getFqsen());
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);

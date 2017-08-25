@@ -46,15 +46,15 @@ class ReflectionTypeTest extends \PHPUnit\Framework\TestCase
 
     public function testImplicitCastToString() : void
     {
-        self::assertSame('int', (string)ReflectionType::createFromType(new Types\Integer(), false));
-        self::assertSame('string', (string)ReflectionType::createFromType(new Types\String_(), false));
-        self::assertSame('array', (string)ReflectionType::createFromType(new Types\Array_(), false));
-        self::assertSame('callable', (string)ReflectionType::createFromType(new Types\Callable_(), false));
-        self::assertSame('bool', (string)ReflectionType::createFromType(new Types\Boolean(), false));
-        self::assertSame('float', (string)ReflectionType::createFromType(new Types\Float_(), false));
-        self::assertSame('void', (string)ReflectionType::createFromType(new Types\Void_(), false));
+        self::assertSame('int', (string) ReflectionType::createFromType(new Types\Integer(), false));
+        self::assertSame('string', (string) ReflectionType::createFromType(new Types\String_(), false));
+        self::assertSame('array', (string) ReflectionType::createFromType(new Types\Array_(), false));
+        self::assertSame('callable', (string) ReflectionType::createFromType(new Types\Callable_(), false));
+        self::assertSame('bool', (string) ReflectionType::createFromType(new Types\Boolean(), false));
+        self::assertSame('float', (string) ReflectionType::createFromType(new Types\Float_(), false));
+        self::assertSame('void', (string) ReflectionType::createFromType(new Types\Void_(), false));
 
-        self::assertSame('Foo\Bar\Baz', (string)ReflectionType::createFromType(
+        self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromType(
             new Types\Object_(new Fqsen('\Foo\Bar\Baz')),
             false
         ));

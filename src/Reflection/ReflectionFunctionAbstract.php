@@ -378,7 +378,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getStartLine() : int
     {
-        return (int)$this->node->getAttribute('startLine', -1);
+        return (int) $this->node->getAttribute('startLine', -1);
     }
 
     /**
@@ -388,7 +388,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function getEndLine() : int
     {
-        return (int)$this->node->getAttribute('endLine', -1);
+        return (int) $this->node->getAttribute('endLine', -1);
     }
 
     public function getStartColumn() : int
@@ -408,7 +408,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function returnsReference() : bool
     {
-        return (bool)$this->node->byRef;
+        return (bool) $this->node->byRef;
     }
 
     /**
@@ -467,7 +467,7 @@ abstract class ReflectionFunctionAbstract implements \Reflector
      */
     public function setReturnType(Type $newReturnType) : void
     {
-        $this->node->returnType = new Node\Name((string)$newReturnType);
+        $this->node->returnType = new Node\Name((string) $newReturnType);
     }
 
     /**

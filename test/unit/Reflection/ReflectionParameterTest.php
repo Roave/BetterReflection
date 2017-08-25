@@ -205,10 +205,10 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $method    = $classInfo->getMethod('methodWithOptionalParameters');
 
         $requiredParam = $method->getParameter('parameter');
-        self::assertSame('Parameter #0 [ <required> $parameter ]', (string)$requiredParam);
+        self::assertSame('Parameter #0 [ <required> $parameter ]', (string) $requiredParam);
 
         $optionalParam = $method->getParameter('optionalParameter');
-        self::assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string)$optionalParam);
+        self::assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string) $optionalParam);
     }
 
     public function testGetPosition() : void
@@ -259,7 +259,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf($expectedType, $type);
 
         if (null !== $expectedFqsen) {
-            self::assertSame($expectedFqsen, (string)$type->getFqsen());
+            self::assertSame($expectedFqsen, (string) $type->getFqsen());
         }
 
         if (null !== $expectedFqsenName) {
@@ -273,7 +273,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $method    = $classInfo->getMethod('foo');
 
         $intParamType = $method->getParameter('intParam')->getType();
-        self::assertSame('int', (string)$intParamType);
+        self::assertSame('int', (string) $intParamType);
         self::assertTrue($intParamType->isBuiltin());
         self::assertFalse($intParamType->allowsNull());
     }
@@ -284,7 +284,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $method    = $classInfo->getMethod('foo');
 
         $classParamType = $method->getParameter('classParam')->getType();
-        self::assertSame(\stdClass::class, (string)$classParamType);
+        self::assertSame(\stdClass::class, (string) $classParamType);
         self::assertFalse($classParamType->isBuiltin());
         self::assertFalse($classParamType->allowsNull());
     }
@@ -303,7 +303,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
         $method    = $classInfo->getMethod('foo');
 
         $stringParamType = $method->getParameter('stringParamAllowsNull')->getType();
-        self::assertSame('string', (string)$stringParamType);
+        self::assertSame('string', (string) $stringParamType);
         self::assertTrue($stringParamType->isBuiltin());
         self::assertTrue($stringParamType->allowsNull());
     }
@@ -332,7 +332,7 @@ class ReflectionParameterTest extends \PHPUnit\Framework\TestCase
 
         $parameterInfo->setType(new Types\String_());
 
-        self::assertSame('string', (string)$parameterInfo->getType());
+        self::assertSame('string', (string) $parameterInfo->getType());
         self::assertStringStartsWith(
             'public function foo(string $intParam',
             (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])

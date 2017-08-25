@@ -214,13 +214,13 @@ class ReflectionObjectTest extends \PHPUnit\Framework\TestCase
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
         $fakeParams                       = \array_map(
             function (\ReflectionParameter $parameter) {
-                switch ((string)$parameter->getType()) {
+                switch ((string) $parameter->getType()) {
                     case 'int':
                         return \random_int(1, 1000);
                     case 'null':
                         return null;
                     case 'bool':
-                        return (bool)\random_int(0, 1);
+                        return (bool) \random_int(0, 1);
                     default:
                         return \uniqid('stringParam', true);
                 }

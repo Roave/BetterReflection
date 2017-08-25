@@ -408,7 +408,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
         $reflectionType = $functionInfo->getReturnType();
         self::assertInstanceOf(ReflectionType::class, $reflectionType);
-        self::assertSame($expectedType, (string)$reflectionType);
+        self::assertSame($expectedType, (string) $reflectionType);
     }
 
     public function testGetReturnTypeReturnsNullWhenTypeIsNotDeclared() : void
@@ -439,7 +439,7 @@ class ReflectionFunctionAbstractTest extends \PHPUnit\Framework\TestCase
 
         $functionInfo->setReturnType(new Integer());
 
-        self::assertSame('int', (string)$functionInfo->getReturnType());
+        self::assertSame('int', (string) $functionInfo->getReturnType());
         self::assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
     }
 

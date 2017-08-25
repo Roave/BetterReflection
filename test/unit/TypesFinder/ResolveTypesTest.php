@@ -86,6 +86,6 @@ class ResolveTypesTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
         /* @var $resolvedType Types\Object_ */
-        self::assertSame($expectedType, (string)$resolvedType);
+        self::assertSame($expectedType, (string) $resolvedType);
     }
 }

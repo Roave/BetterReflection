@@ -370,6 +370,6 @@ class ReflectionMethodTest extends \PHPUnit\Framework\TestCase
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod($methodName);
 
-        self::assertStringMatchesFormat($expectedStringValue, (string)$method);
+        self::assertStringMatchesFormat($expectedStringValue, (string) $method);
     }
 }

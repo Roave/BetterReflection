@@ -56,7 +56,7 @@ class ReflectionClassConstantTest extends \PHPUnit\Framework\TestCase
     public function testToString(string $const, string $expected)
     {
         $const = $this->getExampleConstant($const);
-        $this->assertSame($expected, (string)$const);
+        $this->assertSame($expected, (string) $const);
     }
 
     public function toStringProvider()
