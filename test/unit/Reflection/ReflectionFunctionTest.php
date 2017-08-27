@@ -14,9 +14,10 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
@@ -29,6 +30,9 @@ class ReflectionFunctionTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var SourceStubber */
+    private $sourceStubber;
+
     protected function setUp() : void
     {
         parent::setUp();
@@ -36,6 +40,7 @@ class ReflectionFunctionTest extends TestCase
         $configuration        = BetterReflectionSingleton::instance();
         $this->classReflector = $configuration->classReflector();
         $this->astLocator     = $configuration->astLocator();
+        $this->sourceStubber  = $configuration->sourceStubber();
     }
 
     public function testImplementsReflector() : void
@@ -107,6 +112,16 @@ class ReflectionFunctionTest extends TestCase
         self::assertTrue($function->isUserDefined());
         self::assertFalse($function->isInternal());
         self::assertNull($function->getExtensionName());
+    }
+
+    public function testIsInternal() : void
+    {
+        $reflector = new FunctionReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber), $this->classReflector);
+        $function  = $reflector->reflect('min');
+
+        self::assertTrue($function->isInternal());
+        self::assertFalse($function->isUserDefined());
+        self::assertSame('standard', $function->getExtensionName());
     }
 
     public function testStaticCreationFromName() : void

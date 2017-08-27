@@ -18,10 +18,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
-use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use const PHP_VERSION_ID;
@@ -40,11 +39,11 @@ use function sprintf;
  */
 class PhpInternalSourceLocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    /** @var PhpInternalSourceLocator */
+    private $phpInternalSourceLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    /** @var ClassReflector */
+    private $classReflector;
 
     protected function setUp() : void
     {
@@ -52,8 +51,12 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         $betterReflection = BetterReflectionSingleton::instance();
 
-        $this->astLocator    = $betterReflection->astLocator();
-        $this->sourceStubber = $betterReflection->sourceStubber();
+        $this->phpInternalSourceLocator = new PhpInternalSourceLocator(
+            $betterReflection->astLocator(),
+            $betterReflection->sourceStubber()
+        );
+
+        $this->classReflector = $betterReflection->classReflector();
     }
 
     /**
@@ -69,11 +72,9 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanFetchInternalLocatedSource(string $className) : void
     {
-        $locator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
-
         try {
             /** @var ReflectionClass $reflection */
-            $reflection = $locator->locateIdentifier(
+            $reflection = $this->phpInternalSourceLocator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
             );
@@ -97,8 +98,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
-        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
-        $reflector                = new ClassReflector($phpInternalSourceLocator);
+        $reflector = new ClassReflector($this->phpInternalSourceLocator);
 
         $class = $reflector->reflect($className);
 
@@ -143,9 +143,8 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForNonExistentCode() : void
     {
-        $locator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
         self::assertNull(
-            $locator->locateIdentifier(
+            $this->phpInternalSourceLocator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier(
                     'Foo\Bar',
@@ -157,9 +156,8 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForFunctions() : void
     {
-        $locator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
         self::assertNull(
-            $locator->locateIdentifier(
+            $this->phpInternalSourceLocator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier(
                     'foo',
@@ -283,5 +281,58 @@ class PhpInternalSourceLocatorTest extends TestCase
         } else {
             self::assertNull($stubbed->getClass(), $parameterName);
         }
+    }
+
+    public function testFunctionWithParameterPassedByReference() : void
+    {
+        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
+        $functionReflection = $reflector->reflect('sort');
+
+        self::assertSame('sort', $functionReflection->getName());
+        self::assertSame(2, $functionReflection->getNumberOfParameters());
+
+        $parameterReflection = $functionReflection->getParameters()[0];
+        self::assertSame('arg', $parameterReflection->getName());
+        self::assertFalse($parameterReflection->isOptional());
+        self::assertTrue($parameterReflection->isPassedByReference());
+        self::assertFalse($parameterReflection->canBePassedByValue());
+    }
+
+    public function testFunctionWithOptionalParameter() : void
+    {
+        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
+        $functionReflection = $reflector->reflect('preg_match');
+
+        self::assertSame('preg_match', $functionReflection->getName());
+        self::assertSame(5, $functionReflection->getNumberOfParameters());
+        self::assertSame(2, $functionReflection->getNumberOfRequiredParameters());
+
+        $parameterReflection = $functionReflection->getParameters()[2];
+        self::assertSame('subpatterns', $parameterReflection->getName());
+        self::assertTrue($parameterReflection->isOptional());
+    }
+
+    public function variadicParametersProvider() : array
+    {
+        return [
+            ['sprintf', 1, true, true],
+            ['printf', 1, true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider variadicParametersProvider
+     */
+    public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional) : void
+    {
+        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
+        $functionReflection = $reflector->reflect($functionName);
+
+        self::assertSame($functionName, $functionReflection->getName());
+
+        $parametersReflections = $functionReflection->getParameters();
+        self::assertArrayHasKey($parameterPosition, $parametersReflections);
+        self::assertSame($parameterIsVariadic, $parametersReflections[$parameterPosition]->isVariadic());
+        self::assertSame($parameterIsOptional, $parametersReflections[$parameterPosition]->isOptional());
     }
 }

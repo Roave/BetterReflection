@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Type;
 
 use InvalidArgumentException;
-use ReflectionClass;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
@@ -14,6 +15,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use function class_exists;
+use function function_exists;
 use function interface_exists;
 use function trait_exists;
 
@@ -37,6 +39,11 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
+        return $this->getClassSource($identifier) ?? $this->getFunctionSource($identifier);
+    }
+
+    private function getClassSource(Identifier $identifier) : ?InternalLocatedSource
+    {
         $classReflection = $this->getInternalReflectionClass($identifier);
 
         if ($classReflection === null) {
@@ -55,7 +62,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         );
     }
 
-    private function getInternalReflectionClass(Identifier $identifier) : ?ReflectionClass
+    private function getInternalReflectionClass(Identifier $identifier) : ?CoreReflectionClass
     {
         if (! $identifier->isClass()) {
             return null;
@@ -67,8 +74,45 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null; // not an available internal class
         }
 
-        $reflection = new ReflectionClass($name);
+        $reflection = new CoreReflectionClass($name);
 
         return $reflection->isInternal() ? $reflection : null;
+    }
+
+    private function getFunctionSource(Identifier $identifier) : ?InternalLocatedSource
+    {
+        $functionReflection = $this->getInternalReflectionFunction($identifier);
+
+        if ($functionReflection === null) {
+            return null;
+        }
+
+        $stub = $this->stubber->generateFunctionStub($functionReflection);
+
+        if ($stub === null) {
+            return null;
+        }
+
+        return new InternalLocatedSource(
+            "<?php\n\n" . $stub,
+            $functionReflection->getExtensionName()
+        );
+    }
+
+    private function getInternalReflectionFunction(Identifier $identifier) : ?CoreReflectionFunction
+    {
+        if (! $identifier->isFunction()) {
+            return null;
+        }
+
+        $name = $identifier->getName();
+
+        if (! function_exists($name)) {
+            return null;
+        }
+
+        $functionReflection = new CoreReflectionFunction($name);
+
+        return $functionReflection->isInternal() ? $functionReflection : null;
     }
 }

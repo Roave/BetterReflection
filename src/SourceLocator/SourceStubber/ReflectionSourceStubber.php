@@ -7,6 +7,8 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 use PhpParser\Builder;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\Declaration;
+use PhpParser\Builder\Function_;
+use PhpParser\Builder\FunctionLike;
 use PhpParser\Builder\Interface_;
 use PhpParser\Builder\Method;
 use PhpParser\Builder\Param;
@@ -27,6 +29,8 @@ use PhpParser\NodeAbstract;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant;
+use ReflectionFunction as CoreReflectionFunction;
+use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
@@ -89,6 +93,16 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->prettyPrinter->prettyPrint([$namespaceNode->getNode()]);
     }
 
+    public function generateFunctionStub(CoreReflectionFunction $functionReflection) : ?string
+    {
+        $functionNode = $this->builderFactory->function($functionReflection->getName());
+
+        $this->addDocComment($functionNode, $functionReflection);
+        $this->addParameters($functionNode, $functionReflection);
+
+        return $this->prettyPrinter->prettyPrint([$functionNode->getNode()]);
+    }
+
     /**
      * @return Class_|Interface_|Trait_
      */
@@ -106,8 +120,8 @@ final class ReflectionSourceStubber implements SourceStubber
     }
 
     /**
-     * @param Class_|Interface_|Trait_|Method|Property                        $node
-     * @param CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty $reflection
+     * @param Class_|Interface_|Trait_|Method|Property|Function_                                     $node
+     * @param CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection
      */
     private function addDocComment(Builder $node, CoreReflector $reflection) : void
     {
@@ -345,18 +359,18 @@ final class ReflectionSourceStubber implements SourceStubber
         $methodNode->makeReturnByRef();
     }
 
-    private function addParameters(Method $methodNode, CoreReflectionMethod $methodReflection) : void
+    private function addParameters(FunctionLike $functionNode, CoreReflectionFunctionAbstract $functionReflectionAbstract) : void
     {
-        foreach ($methodReflection->getParameters() as $parameterReflection) {
+        foreach ($functionReflectionAbstract->getParameters() as $parameterReflection) {
             $parameterNode = $this->builderFactory->param($parameterReflection->getName());
 
             $this->addParameterModifiers($parameterReflection, $parameterNode);
 
             if ($parameterReflection->isOptional() && ! $parameterReflection->isVariadic()) {
-                $parameterNode->setDefault($this->parameterDefaultValue($parameterReflection, $methodReflection));
+                $parameterNode->setDefault($this->parameterDefaultValue($parameterReflection, $functionReflectionAbstract));
             }
 
-            $methodNode->addParam($this->addParameterModifiers($parameterReflection, $parameterNode));
+            $functionNode->addParam($this->addParameterModifiers($parameterReflection, $parameterNode));
         }
     }
 
@@ -384,9 +398,9 @@ final class ReflectionSourceStubber implements SourceStubber
      */
     private function parameterDefaultValue(
         ReflectionParameter $parameterReflection,
-        CoreReflectionMethod $methodReflection
+        CoreReflectionFunctionAbstract $functionReflectionAbstract
     ) {
-        if ($methodReflection->getDeclaringClass()->isInternal()) {
+        if ($functionReflectionAbstract->isInternal()) {
             return null;
         }
 
