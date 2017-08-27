@@ -234,44 +234,33 @@ class ReflectionParameterTest extends TestCase
     /**
      * @return array
      */
-    public function typeHintProvider() : array
+    public function typeProvider() : array
     {
         return [
-            ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
-            ['fullyQualifiedClassParameter', Types\Object_::class, '\\' . ClassForHinting::class, 'ClassForHinting'],
-            ['arrayParameter', Types\Array_::class],
-            ['callableParameter', Types\Callable_::class],
-            ['namespaceClassParameter', Types\Object_::class, '\\' . ClassForHinting::class, 'ClassForHinting'],
+            ['stdClassParameter', 'stdClass'],
+            ['fullyQualifiedClassParameter', ClassForHinting::class],
+            ['arrayParameter', 'array'],
+            ['callableParameter', 'callable'],
+            ['namespaceClassParameter', ClassForHinting::class],
         ];
     }
 
     /**
-     * @dataProvider typeHintProvider
+     * @dataProvider typeProvider
      * @param string $parameterToTest
-     * @param string $expectedType
-     * @param string|null $expectedFqsen
-     * @param string|null $expectedFqsenName
+     * @parem string $expectedType
      */
-    public function testGetTypeHint(
+    public function testGetType(
         string $parameterToTest,
-        string $expectedType,
-        ?string $expectedFqsen = null,
-        ?string $expectedFqsenName = null
+        string $expectedType
     ) : void {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
-        $type = $method->getParameter($parameterToTest)->getTypeHint();
-        self::assertInstanceOf($expectedType, $type);
+        $type = $method->getParameter($parameterToTest)->getType();
 
-        if (null !== $expectedFqsen) {
-            self::assertSame($expectedFqsen, (string) $type->getFqsen());
-        }
-
-        if (null !== $expectedFqsenName) {
-            self::assertSame($expectedFqsenName, $type->getFqsen()->getName());
-        }
+        self::assertSame($expectedType, (string) $type);
     }
 
     public function testPhp7TypeDeclarationWithIntBuiltinType() : void
@@ -337,7 +326,7 @@ class ReflectionParameterTest extends TestCase
         $methodInfo    = $classInfo->getMethod('foo');
         $parameterInfo = $methodInfo->getParameter('intParam');
 
-        $parameterInfo->setType(new Types\String_());
+        $parameterInfo->setType('string');
 
         self::assertSame('string', (string) $parameterInfo->getType());
         self::assertStringStartsWith(

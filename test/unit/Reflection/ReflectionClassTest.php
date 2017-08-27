@@ -6,13 +6,11 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Bar;
 use Baz;
 use E;
-use Exception;
 use InvalidArgumentException;
 use Iterator;
 use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
-use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\TestCase;
 use Qux;
@@ -22,8 +20,6 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
@@ -1130,24 +1126,6 @@ class ReflectionClassTest extends TestCase
 
         $traitReflection = $reflector->reflect('TraitFixtureTraitA');
         self::assertSame([], $traitReflection->getInterfaces());
-    }
-
-    public function testFetchingFqsenThrowsExceptionWithNonObjectName() : void
-    {
-        $sourceLocator = new StringSourceLocator('<?php class Foo {}');
-        $reflector     = new ClassReflector($sourceLocator);
-        $identifier    = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
-        $reflection    = $sourceLocator->locateIdentifier($reflector, $identifier);
-
-        $reflectionClassReflection       = new CoreReflectionClass(ReflectionClass::class);
-        $reflectionClassMethodReflection = $reflectionClassReflection->getMethod('getFqsenFromNamedNode');
-        $reflectionClassMethodReflection->setAccessible(true);
-
-        $nameNode = new Name(['int']);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Unable to determine FQSEN for named node');
-        $reflectionClassMethodReflection->invoke($reflection, $nameNode);
     }
 
     public function testClassToString() : void

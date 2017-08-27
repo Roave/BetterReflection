@@ -8,6 +8,7 @@ use Exception;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
+use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
@@ -23,7 +24,6 @@ use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
-use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
@@ -65,7 +65,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * Populate the common elements of the function abstract.
      *
      * @param Reflector $reflector
-     * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node
+     * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param LocatedSource $locatedSource
      * @param NamespaceNode|null $declaringNamespace
      */
@@ -436,21 +436,17 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getReturnType() : ?ReflectionType
     {
-        $namespaceForType = $this instanceof ReflectionMethod
-            ? $this->getDeclaringClass()->getNamespaceName()
-            : $this->getNamespaceName();
+        $returnType = $this->node->getReturnType();
 
-        $typeHint = (new FindTypeFromAst())->__invoke(
-            $this->node->getReturnType(),
-            $this->getLocatedSource(),
-            $namespaceForType
-        );
-
-        if (null === $typeHint) {
+        if (null === $returnType) {
             return null;
         }
 
-        return ReflectionType::createFromType($typeHint, false);
+        if ($returnType instanceof NullableType) {
+            $returnType = $returnType->type;
+        }
+
+        return ReflectionType::createFromType((string) $returnType, false);
     }
 
     /**

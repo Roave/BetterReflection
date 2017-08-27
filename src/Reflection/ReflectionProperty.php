@@ -103,7 +103,7 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @param Reflector $reflector
-     * @param PropertyNode $node
+     * @param PropertyNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param ReflectionClass $declaringClass
      * @param ReflectionClass $implementingClass
      * @param bool $declaredAtCompileTime

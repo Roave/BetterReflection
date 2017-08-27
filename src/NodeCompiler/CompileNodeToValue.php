@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
 
-use phpDocumentor\Reflection\Types\ContextFactory;
-use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
-use Roave\BetterReflection\TypesFinder\ResolveTypes;
 use Roave\BetterReflection\Util\FileHelper;
 
 class CompileNodeToValue
@@ -16,7 +12,7 @@ class CompileNodeToValue
     /**
      * Compile an expression from a node into a value.
      *
-     * @param Node $node
+     * @param Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param CompilerContext $context
      * @return mixed
      * @throw Exception\UnableToCompileNode
@@ -122,19 +118,10 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        $className = \implode('\\', $node->class->parts);
+        $className = $node->class->toString();
 
         if ($node->name === 'class') {
-            /** @var Object_ $resolvedType */
-            $resolvedType = (new ResolveTypes())->__invoke(
-                [$className],
-                (new ContextFactory())->createForNamespace(
-                    $context->getSelf()->getNamespaceName(),
-                    $context->getSelf()->getLocatedSource()->getSource()
-                )
-            )[0];
-
-            return \substr((string) $resolvedType->getFqsen(), 1);
+            return $className;
         }
 
         /** @var ReflectionClass|null $classInfo */
@@ -146,13 +133,7 @@ class CompileNodeToValue
 
         if (null === $classInfo) {
             /** @var ReflectionClass $classInfo */
-            $classInfo = $context->getReflector()->reflect(
-                (string) (new FindTypeFromAst())->__invoke(
-                    $className,
-                    $context->getSelf()->getLocatedSource(),
-                    $context->getSelf()->getNamespaceName()
-                )
-            );
+            $classInfo = $context->getReflector()->reflect($className);
         }
 
         return $classInfo->getConstant($node->name);
