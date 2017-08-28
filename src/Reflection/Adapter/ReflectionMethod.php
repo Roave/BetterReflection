@@ -333,7 +333,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getDeclaringClass()
     {
-        return new ReflectionClass($this->betterReflectionMethod->getDeclaringClass());
+        return new ReflectionClass($this->betterReflectionMethod->getImplementingClass());
     }
 
     /**

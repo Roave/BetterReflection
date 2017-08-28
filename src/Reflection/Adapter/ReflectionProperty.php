@@ -111,7 +111,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function getDeclaringClass()
     {
-        return new ReflectionClass($this->betterReflectionProperty->getDeclaringClass());
+        return new ReflectionClass($this->betterReflectionProperty->getImplementingClass());
     }
 
     /**

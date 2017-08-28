@@ -143,6 +143,7 @@ class ReflectionObject extends ReflectionClass
                 $this->reflector,
                 $this->createPropertyNodeFromReflection($property, $this->object),
                 $this,
+                $this,
                 false
             );
 
