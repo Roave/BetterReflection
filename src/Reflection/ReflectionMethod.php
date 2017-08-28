@@ -22,7 +22,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
     /**
      * @param Reflector $reflector
-     * @param MethodNode $node
+     * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param ReflectionClass $declaringClass
      * @return ReflectionMethod
      */

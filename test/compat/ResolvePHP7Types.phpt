@@ -29,22 +29,19 @@ array_map(function (\Roave\BetterReflection\Reflection\ReflectionParameter $para
 --EXPECTF--
 object(Roave\BetterReflection\Reflection\ReflectionType)#%d (2) {
   ["type":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  object(phpDocumentor\Reflection\Types\Boolean)#%d (0) {
-  }
+  string(4) "bool"
   ["allowsNull":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
   bool(false)
 }
 object(Roave\BetterReflection\Reflection\ReflectionType)#%d (2) {
   ["type":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  object(phpDocumentor\Reflection\Types\Integer)#%d (0) {
-  }
+  string(3) "int"
   ["allowsNull":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
   bool(false)
 }
 object(Roave\BetterReflection\Reflection\ReflectionType)#%d (2) {
   ["type":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  object(phpDocumentor\Reflection\Types\String_)#%d (0) {
-  }
+  string(6) "string"
   ["allowsNull":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
   bool(true)
 }

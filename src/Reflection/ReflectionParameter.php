@@ -8,9 +8,8 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\Types;
-use phpDocumentor\Reflection\Types\Self_;
 use PhpParser\Node;
+use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -19,7 +18,6 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
-use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use RuntimeException;
 
@@ -171,13 +169,13 @@ class ReflectionParameter implements CoreReflector
      */
     public function __toString() : string
     {
-        $isNullableObjectParam = $this->getTypeHint() && $this->getTypeHint() instanceof Types\Object_ && $this->isOptional();
+        $isNullableObjectParam = $this->hasType() && null !== $this->getClassName() && $this->isOptional();
 
         return \sprintf(
             'Parameter #%d [ %s %s%s%s%s$%s%s ]',
             $this->parameterIndex,
             ($this->isVariadic() || $this->isOptional()) ? '<optional>' : '<required>',
-            $this->getTypeHint() ? \ltrim($this->getTypeHint()->__toString(), '\\') . ' ' : '',
+            $this->hasType() ? (string) $this->getType() . ' ' : '',
             $isNullableObjectParam ? 'or NULL ' : '',
             $this->isVariadic() ? '...' : '',
             $this->isPassedByReference() ? '&' : '',
@@ -190,7 +188,7 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * @param Reflector $reflector
-     * @param ParamNode $node
+     * @param ParamNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param ReflectionFunctionAbstract $function
      * @param int $parameterIndex
      * @return ReflectionParameter
@@ -218,15 +216,14 @@ class ReflectionParameter implements CoreReflector
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
-            $classNameType = $this->getRealClassName(\implode('\\', $defaultValueNode->class->parts));
-            $className     = (string) $classNameType;
+            $className = $defaultValueNode->class->toString();
 
-            if ($classNameType instanceof Self_) {
+            if ('self' === $className || 'static' === $className) {
                 $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
             }
 
             $this->isDefaultValueConstant   = true;
-            $this->defaultValueConstantName = \ltrim($className, '\\') . '::' . $defaultValueNode->name;
+            $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name;
             $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 
@@ -364,7 +361,11 @@ class ReflectionParameter implements CoreReflector
      */
     public function allowsNull() : bool
     {
-        if (null === $this->getTypeHint()) {
+        if ( ! $this->hasType()) {
+            return true;
+        }
+
+        if ($this->node->type instanceof NullableType) {
             return true;
         }
 
@@ -415,35 +416,6 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * Get the type hint declared for the parameter. This is the real type hint
-     * for the parameter, e.g. `method(closure $someFunc)` defined by the
-     * method itself, and is separate from the DocBlock type hints.
-     *
-     * @see getDocBlockTypes()
-     * @return Type|null
-     */
-    public function getTypeHint() : ?Type
-    {
-        return $this->getRealClassName($this->node->type);
-    }
-
-    /**
-     * @param string|null|Node
-     */
-    private function getRealClassName($className) : ?Type
-    {
-        $namespaceForType = $this->function instanceof ReflectionMethod
-            ? $this->function->getDeclaringClass()->getNamespaceName()
-            : $this->function->getNamespaceName();
-
-        return (new FindTypeFromAst())->__invoke(
-            $className,
-            $this->function->getLocatedSource(),
-            $namespaceForType
-        );
-    }
-
-    /**
      * Get the ReflectionType instance representing the type declaration for
      * this parameter
      *
@@ -453,11 +425,17 @@ class ReflectionParameter implements CoreReflector
      */
     public function getType() : ?ReflectionType
     {
-        if (null === $this->getTypeHint()) {
+        $type = $this->node->type;
+
+        if (null === $type) {
             return null;
         }
 
-        return ReflectionType::createFromType($this->getTypeHint(), $this->allowsNull());
+        if ($type instanceof NullableType) {
+            $type = $type->type;
+        }
+
+        return ReflectionType::createFromType((string) $type, $this->allowsNull());
     }
 
     /**
@@ -469,19 +447,17 @@ class ReflectionParameter implements CoreReflector
      */
     public function hasType() : bool
     {
-        return null !== $this->getTypeHint();
+        return null !== $this->node->type;
     }
 
     /**
      * Set the parameter type declaration.
      *
-     * You must use the phpDocumentor reflection type classes as the parameter.
-     *
-     * @param Type $newParameterType
+     * @param string $newParameterType
      */
-    public function setType(Type $newParameterType) : void
+    public function setType(string $newParameterType) : void
     {
-        $this->node->type = new Node\Name((string) $newParameterType);
+        $this->node->type = new Node\Name($newParameterType);
     }
 
     /**
@@ -499,7 +475,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function isArray() : bool
     {
-        return $this->getTypeHint() instanceof Types\Array_;
+        return 'array' === \strtolower((string) $this->getType());
     }
 
     /**
@@ -509,7 +485,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function isCallable() : bool
     {
-        return $this->getTypeHint() instanceof Types\Callable_;
+        return 'callable' === \strtolower((string) $this->getType());
     }
 
     /**
@@ -571,23 +547,9 @@ class ReflectionParameter implements CoreReflector
      */
     public function getClass() : ?ReflectionClass
     {
-        $hint = $this->getTypeHint();
+        $className = $this->getClassName();
 
-        if ($hint instanceof Types\Self_) {
-            return $this->getDeclaringClass();
-        }
-
-        if ($hint instanceof Types\Parent_) {
-            return $this->getDeclaringClass()->getParentClass();
-        }
-
-        if ( ! $hint instanceof Types\Object_) {
-            return null;
-        }
-
-        $fqsen = $hint->getFqsen();
-
-        if ( ! $fqsen) {
+        if (null === $className) {
             return null;
         }
 
@@ -595,7 +557,31 @@ class ReflectionParameter implements CoreReflector
             throw new RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
         }
 
-        return $this->reflector->reflect($fqsen->__toString());
+        return $this->reflector->reflect($className);
+    }
+
+    private function getClassName() : ?string
+    {
+        if ( ! $this->hasType()) {
+            return null;
+        }
+
+        $type     = $this->getType();
+        $typeHint = (string) $type;
+
+        if ('self' === $typeHint) {
+            return $this->getDeclaringClass()->getName();
+        }
+
+        if ('parent' === $typeHint) {
+            return $this->getDeclaringClass()->getParentClass()->getName();
+        }
+
+        if ($type->isBuiltin()) {
+            return null;
+        }
+
+        return $typeHint;
     }
 
     /**

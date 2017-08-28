@@ -2,12 +2,12 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
+use Roave\BetterReflection\TypesFinder\FindReturnType;
 
 class TestClassForPhpParserPrinterTest
 {
-    public function foo() : FindTypeFromAst
+    public function foo() : FindReturnType
     {
-        return new FindTypeFromAst();
+        return new FindReturnType();
     }
 }

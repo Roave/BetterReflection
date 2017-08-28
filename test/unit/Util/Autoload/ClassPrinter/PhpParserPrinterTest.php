@@ -19,12 +19,11 @@ final class PhpParserPrinterTest extends TestCase
             <<<'PHP'
 namespace Roave\BetterReflectionTest\Fixture;
 
-use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 class TestClassForPhpParserPrinterTest
 {
-    public function foo() : FindTypeFromAst
+    public function foo() : \Roave\BetterReflection\TypesFinder\FindReturnType
     {
-        return new FindTypeFromAst();
+        return new \Roave\BetterReflection\TypesFinder\FindReturnType();
     }
 }
 PHP

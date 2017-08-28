@@ -47,6 +47,10 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `Reflector` now requires a `string` for `$identiferName` parameter
  * Namespace moved to `\Roave\BetterReflection` instead of just `\BetterReflection`
  * `ReflectionParameter#getDefaultValueAsString` is deprecated in favour of using `var_export` directly.
+ * `FindTypeFromAst` was removed
+ * `ReflectionParameter::getTypeHint()` was removed
+ * `ReflectionType::getTypeObject()` was removed
+ * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
 
 ## More documentation
 

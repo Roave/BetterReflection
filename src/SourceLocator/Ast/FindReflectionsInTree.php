@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Ast;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -133,6 +134,7 @@ final class FindReflectionsInTree
         };
 
         $nodeTraverser = new NodeTraverser();
+        $nodeTraverser->addVisitor(new NameResolver());
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 

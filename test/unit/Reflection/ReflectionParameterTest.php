@@ -14,6 +14,7 @@ use Reflector;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
@@ -24,6 +25,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
@@ -234,44 +236,33 @@ class ReflectionParameterTest extends TestCase
     /**
      * @return array
      */
-    public function typeHintProvider() : array
+    public function typeProvider() : array
     {
         return [
-            ['stdClassParameter', Types\Object_::class, '\stdClass', 'stdClass'],
-            ['fullyQualifiedClassParameter', Types\Object_::class, '\\' . ClassForHinting::class, 'ClassForHinting'],
-            ['arrayParameter', Types\Array_::class],
-            ['callableParameter', Types\Callable_::class],
-            ['namespaceClassParameter', Types\Object_::class, '\\' . ClassForHinting::class, 'ClassForHinting'],
+            ['stdClassParameter', 'stdClass'],
+            ['fullyQualifiedClassParameter', ClassForHinting::class],
+            ['arrayParameter', 'array'],
+            ['callableParameter', 'callable'],
+            ['namespaceClassParameter', ClassForHinting::class],
         ];
     }
 
     /**
-     * @dataProvider typeHintProvider
+     * @dataProvider typeProvider
      * @param string $parameterToTest
-     * @param string $expectedType
-     * @param string|null $expectedFqsen
-     * @param string|null $expectedFqsenName
+     * @parem string $expectedType
      */
-    public function testGetTypeHint(
+    public function testGetType(
         string $parameterToTest,
-        string $expectedType,
-        ?string $expectedFqsen = null,
-        ?string $expectedFqsenName = null
+        string $expectedType
     ) : void {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
 
-        $type = $method->getParameter($parameterToTest)->getTypeHint();
-        self::assertInstanceOf($expectedType, $type);
+        $type = $method->getParameter($parameterToTest)->getType();
 
-        if (null !== $expectedFqsen) {
-            self::assertSame($expectedFqsen, (string) $type->getFqsen());
-        }
-
-        if (null !== $expectedFqsenName) {
-            self::assertSame($expectedFqsenName, $type->getFqsen()->getName());
-        }
+        self::assertSame($expectedType, (string) $type);
     }
 
     public function testPhp7TypeDeclarationWithIntBuiltinType() : void
@@ -315,6 +306,31 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($stringParamType->allowsNull());
     }
 
+    public function nullableParameterTypeFunctionProvider() : array
+    {
+        return [
+            ['nullableIntParam', 'int'],
+            ['nullableClassParam', stdClass::class],
+            ['nullableStringParamWithDefaultValue', 'string'],
+        ];
+    }
+
+    /**
+     * @param string $parameterToReflect
+     * @param string $expectedType
+     * @dataProvider nullableParameterTypeFunctionProvider
+     */
+    public function testGetNullableReturnTypeWithDeclaredType(string $parameterToReflect, string $expectedType) : void
+    {
+        $classInfo = $this->reflector->reflect(Php71NullableParameterTypeDeclarations::class);
+        $parameter = $classInfo->getMethod('foo')->getParameter($parameterToReflect);
+
+        $reflectionType = $parameter->getType();
+        self::assertInstanceOf(ReflectionType::class, $reflectionType);
+        self::assertSame($expectedType, (string) $reflectionType);
+        self::assertTrue($reflectionType->allowsNull());
+    }
+
     public function testHasTypeReturnsTrueWithType() : void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
@@ -337,7 +353,7 @@ class ReflectionParameterTest extends TestCase
         $methodInfo    = $classInfo->getMethod('foo');
         $parameterInfo = $methodInfo->getParameter('intParam');
 
-        $parameterInfo->setType(new Types\String_());
+        $parameterInfo->setType('string');
 
         self::assertSame('string', (string) $parameterInfo->getType());
         self::assertStringStartsWith(

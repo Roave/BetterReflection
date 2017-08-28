@@ -26,12 +26,10 @@ See [AST extraction documentation](https://github.com/Roave/BetterReflection/tre
 
 These act in the same way as the core reflection API, except they return a
 `\Roave\BetterReflection\Reflection\ReflectionType` instance (which does not
-extend `\ReflectionType`). You can fetch the phpDocumentor Reflection Type
-by using the `getTypeObject()` method:
+extend `\ReflectionType`).
 
 ```
 $reflectionType = $parameterInfo->getType();
-$phpDocumentorReflectionType = $reflectionType->getTypeObject();
 ```
 
 However, Better Reflection also gives the ability to change, and remove type
@@ -42,12 +40,12 @@ declaration to that defined in the PHP DocBlock.
 
 ```
 // Change a function to ensure it returns an integer
-$functionInfo->setReturnType(new \phpDocumentor\Reflection\Types\Integer());
+$functionInfo->setReturnType('int');
 
 // If there is only one type defined in the DocBlock, set it as the return type
 $returnTypes = $functionInfo->getDocBlockReturnTypes();
 if (count($returnTypes) === 1) {
-    $functionInfo->setReturnType($returnTypes[0]);
+    $functionInfo->setReturnType((string) $returnTypes[0]);
 }
 
 // Remove the return type declaration
@@ -57,6 +55,6 @@ $functionInfo->removeReturnType();
 You can do similar things with parameter types also:
 
 ```
-$parameterInfo->setType(new \phpDocumentor\Reflection\Types\Integer());
+$parameterInfo->setType('int');
 $parameterInfo->removeType();
 ```

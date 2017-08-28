@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Exception;
 use InvalidArgumentException;
 use OutOfBoundsException;
-use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
@@ -30,7 +28,6 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\TypesFinder\FindTypeFromAst;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Traversable;
@@ -219,7 +216,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * Create from a Class Node.
      *
      * @param Reflector          $reflector
-     * @param ClassLikeNode      $node
+     * @param ClassLikeNode      $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param LocatedSource      $locatedSource
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
      *
@@ -277,7 +274,7 @@ class ReflectionClass implements Reflection, CoreReflector
             return $this->getShortName();
         }
 
-        return $this->getNamespaceName() . '\\' . $this->getShortName();
+        return $this->node->namespacedName->toString();
     }
 
     /**
@@ -826,14 +823,9 @@ class ReflectionClass implements Reflection, CoreReflector
             return null;
         }
 
-        $objectType = (new FindTypeFromAst())->__invoke($this->node->extends, $this->locatedSource, $this->getNamespaceName());
-        if (null === $objectType || ! ($objectType instanceof Object_)) {
-            return null;
-        }
-
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         /** @var self $parent */
-        $parent = $this->reflector->reflect((string) $objectType->getFqsen());
+        $parent = $this->reflector->reflect($this->node->extends->toString());
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);
@@ -971,34 +963,7 @@ class ReflectionClass implements Reflection, CoreReflector
     }
 
     /**
-     * Given an AST Node\Name, try to resolve the type into a fully qualified
-     * structural element name (FQSEN).
-     *
-     * @param Node\Name $node
-     * @return string
-     * @throws \Exception
-     */
-    private function getFqsenFromNamedNode(Node\Name $node) : string
-    {
-        $objectType = (new FindTypeFromAst())->__invoke($node, $this->locatedSource, $this->getNamespaceName());
-
-        if (null === $objectType
-            || ! $objectType instanceof Object_
-            || ! $fqsen = $objectType->getFqsen()
-        ) {
-            throw new Exception('Unable to determine FQSEN for named node');
-        }
-
-        return $fqsen->__toString();
-    }
-
-    /**
      * Given an AST Node\Name, create a new ReflectionClass for the element.
-     * This should work with traits, interfaces and classes alike, as long as
-     * the FQSEN resolves to something that exists.
-     *
-     * You may optionally specify a source locator that will be used to locate
-     * the traits. If no source locator is given, a default will be used.
      *
      * @param Node\Name $node
      * @return ReflectionClass
@@ -1007,7 +972,7 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         /** @var self $class */
-        $class = $this->reflector->reflect($this->getFqsenFromNamedNode($node));
+        $class = $this->reflector->reflect($node->toString());
 
         return $class;
     }
@@ -1076,7 +1041,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
                 $resolvedAliases[$adaptation->newName] = \sprintf(
                     '%s::%s',
-                    \ltrim($this->getFqsenFromNamedNode($usedTrait), '\\'),
+                    $usedTrait->toString(),
                     $adaptation->method
                 );
             }

@@ -22,8 +22,8 @@ $classInfo = ReflectionClass::createFromName('MyClass');
 $methodInfo = $classInfo->getMethod('myMethod');
 $parameterInfo = $methodInfo->getParameter('myParameter');
 
-// Will fetch a Type object for the language hint
-var_dump($parameterInfo->getTypeHint());
+// Will fetch the language hint
+var_dump($parameterInfo->getType());
 
 // Will fetch an array of Type objects for the typehint in the DocBlock
 var_dump($parameterInfo->getDocBlockTypes());
@@ -31,22 +31,6 @@ var_dump($parameterInfo->getDocBlockTypes());
 // Will fetch an array of strings describing the DocBlock type hints
 var_dump($parameterInfo->getDocBlockTypeStrings());
 ```
-
-## `getTypeHint`
-
-The `getTypeHint()` method retrieves the language type hint, which there will
-only ever be one of (in current versions of PHP). This method will therefore
-return a single instance of a `Type` object (see below).
-
-## `getDocBlockTypes`
-
-The `getDocBlockTypes()` method will return an array of type hints that are
-extracted from the DocBlock. These are read by a phpDocumentor component, and
-so this returns an array of `Type` objects (see below).
-
-## `getDocBlockTypeStrings`
-
-This is simply a convenience wrapper to fetch the types named as strings.
 
 ## `ReflectionParameter->getType()`
 
@@ -57,6 +41,16 @@ This is compatible with the PHP 7 reflection API, and will return a
 
 This is compatible with the PHP 7 reflection API, and will return a
 `\Roave\BetterReflection\Reflection\ReflectionType` instance.
+
+## `getDocBlockTypes`
+
+The `getDocBlockTypes()` method will return an array of type hints that are
+extracted from the DocBlock. These are read by a phpDocumentor component, and
+so this returns an array of `Type` objects (see below).
+
+## `getDocBlockTypeStrings`
+
+This is simply a convenience wrapper to fetch the types named as strings.
 
 ## The `Type` object
 
