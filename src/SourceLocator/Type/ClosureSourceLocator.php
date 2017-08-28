@@ -23,6 +23,9 @@ use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
+/**
+ * @internal
+ */
 final class ClosureSourceLocator implements SourceLocator
 {
     /**
