@@ -443,7 +443,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         }
 
         if ($returnType instanceof NullableType) {
-            $returnType = $returnType->type;
+            return ReflectionType::createFromType((string) $returnType->type, true);
         }
 
         return ReflectionType::createFromType((string) $returnType, false);

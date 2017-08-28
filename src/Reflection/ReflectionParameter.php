@@ -365,6 +365,10 @@ class ReflectionParameter implements CoreReflector
             return true;
         }
 
+        if ($this->node->type instanceof NullableType) {
+            return true;
+        }
+
         if ( ! $this->isDefaultValueAvailable()) {
             return false;
         }

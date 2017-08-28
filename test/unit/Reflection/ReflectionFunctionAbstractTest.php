@@ -438,6 +438,31 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertFalse($functionInfo->hasReturnType());
     }
 
+    public function nullableReturnTypeFunctionProvider() : array
+    {
+        return [
+            ['returnsNullableInt', 'int'],
+            ['returnsNullableString', 'string'],
+            ['returnsNullableObject', stdClass::class],
+        ];
+    }
+
+    /**
+     * @param string $functionToReflect
+     * @param string $expectedType
+     * @dataProvider nullableReturnTypeFunctionProvider
+     */
+    public function testGetNullableReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType) : void
+    {
+        $reflector    = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php71NullableReturnTypeDeclarations.php'));
+        $functionInfo = $reflector->reflect($functionToReflect);
+
+        $reflectionType = $functionInfo->getReturnType();
+        self::assertInstanceOf(ReflectionType::class, $reflectionType);
+        self::assertSame($expectedType, (string) $reflectionType);
+        self::assertTrue($reflectionType->allowsNull());
+    }
+
     public function testSetReturnType() : void
     {
         $reflector    = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));

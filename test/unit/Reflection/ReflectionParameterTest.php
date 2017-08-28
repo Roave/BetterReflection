@@ -14,6 +14,7 @@ use Reflector;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
@@ -24,6 +25,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
@@ -302,6 +304,31 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('string', (string) $stringParamType);
         self::assertTrue($stringParamType->isBuiltin());
         self::assertTrue($stringParamType->allowsNull());
+    }
+
+    public function nullableParameterTypeFunctionProvider() : array
+    {
+        return [
+            ['nullableIntParam', 'int'],
+            ['nullableClassParam', stdClass::class],
+            ['nullableStringParamWithDefaultValue', 'string'],
+        ];
+    }
+
+    /**
+     * @param string $parameterToReflect
+     * @param string $expectedType
+     * @dataProvider nullableParameterTypeFunctionProvider
+     */
+    public function testGetNullableReturnTypeWithDeclaredType(string $parameterToReflect, string $expectedType) : void
+    {
+        $classInfo = $this->reflector->reflect(Php71NullableParameterTypeDeclarations::class);
+        $parameter = $classInfo->getMethod('foo')->getParameter($parameterToReflect);
+
+        $reflectionType = $parameter->getType();
+        self::assertInstanceOf(ReflectionType::class, $reflectionType);
+        self::assertSame($expectedType, (string) $reflectionType);
+        self::assertTrue($reflectionType->allowsNull());
     }
 
     public function testHasTypeReturnsTrueWithType() : void
