@@ -8,7 +8,6 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
-use Zend\Code\Reflection\ClassReflection;
 
 final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
@@ -30,23 +29,20 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if ( ! $name = $this->getInternalReflectionClassName($identifier)) {
+        $classReflection = $this->getInternalReflectionClass($identifier);
+
+        if (null === $classReflection) {
             return null;
         }
 
         $stubber = $this->stubber;
 
         return new EvaledLocatedSource(
-            "<?php\n\n" . $stubber(new ClassReflection($name))
+            "<?php\n\n" . $stubber($classReflection)
         );
     }
 
-    /**
-     * @param Identifier $identifier
-     *
-     * @return null|string
-     */
-    private function getInternalReflectionClassName(Identifier $identifier) : ?string
+    private function getInternalReflectionClass(Identifier $identifier) : ?ReflectionClass
     {
         if ( ! $identifier->isClass()) {
             return null;
@@ -62,6 +58,6 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         $sourceFile = $reflection->getFileName();
 
         return ($sourceFile && \file_exists($sourceFile))
-            ? null : $reflection->getName();
+            ? null : $reflection;
     }
 }
