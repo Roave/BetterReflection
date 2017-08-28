@@ -89,6 +89,8 @@ within the `Reflector`s. The library comes bundled with the following
  * `PhpInternalSourceLocator` - used to perform reflection on PHP's internal
     classes and functions.
 
+ * `AnonymousClassObjectSourceLocator` - used to perform reflection on an anonymous class object.
+
  * `ClosureSourceLocator` - used to perform reflection on a closure.
 
  * `AggregateSourceLocator` - a combination of multiple `SourceLocator`s which
