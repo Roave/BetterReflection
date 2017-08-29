@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
 use LogicException;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
@@ -12,6 +13,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
@@ -34,14 +36,12 @@ class ReflectionObjectTest extends TestCase
      */
     private $parser;
 
-    private function getPhpParser() : Parser
+    /**
+     * @return Node[]
+     */
+    private function parse(string $code) : array
     {
-        if (isset($this->parser)) {
-            return $this->parser;
-        }
-
-        $this->parser = PhpParserFactory::create();
-        return $this->parser;
+        return (new Configuration())->phpParser()->parse($code);
     }
 
     public function testExceptionThrownWhenNonObjectGiven() : void
@@ -229,7 +229,7 @@ class ReflectionObjectTest extends TestCase
 
         $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('node');
         $mockReflectionClassNodeReflection->setAccessible(true);
-        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $this->getPhpParser()->parse($php)[0]);
+        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $this->parse($php)[0]);
 
         // Create the ReflectionObject from a dummy class
         $reflectionObject = ReflectionObject::createFromInstance(new stdClass());
