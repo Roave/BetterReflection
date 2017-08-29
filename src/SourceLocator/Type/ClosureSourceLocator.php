@@ -131,10 +131,12 @@ final class ClosureSourceLocator implements SourceLocator
 
             /**
              * @return Node[]|null[]|null
+             *
+             * @throws TwoClosuresOnSameLine
              */
             public function getClosureNodes() : ?array
             {
-                /** @var Node\Expr\Closure[] $closureNodesDataOnSameLine */
+                /** @var Node\Expr\Closure[][] $closureNodesDataOnSameLine */
                 $closureNodesDataOnSameLine = \array_values(\array_filter($this->closureNodes, function (array $nodes) : bool {
                     return $nodes[0]->getLine() === $this->startLine;
                 }));
