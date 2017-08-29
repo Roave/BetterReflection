@@ -15,6 +15,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
@@ -556,7 +557,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function setBodyFromString(string $newBody) : void
     {
         // @TODO this parser is to be injected
-        $this->node->stmts = PhpParserFactory::create()->parse('<?php ' . $newBody);
+        $this->node->stmts = (new Configuration())->phpParser()->parse('<?php ' . $newBody);
     }
 
     /**

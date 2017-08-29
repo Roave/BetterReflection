@@ -10,6 +10,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use ReflectionFunction as CoreFunctionReflection;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
@@ -41,7 +42,7 @@ final class ClosureSourceLocator implements SourceLocator
     public function __construct(Closure $closure)
     {
         $this->coreFunctionReflection = new CoreFunctionReflection($closure);
-        $this->parser                 = PhpParserFactory::create();
+        $this->parser                 = (new Configuration())->phpParser(); // @TODO inject
     }
 
     /**
