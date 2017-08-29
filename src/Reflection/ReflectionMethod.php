@@ -24,7 +24,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param Reflector $reflector
      * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param ReflectionClass $declaringClass
-     * @return ReflectionMethod
+     * @param ReflectionClass $implementingClass
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -48,7 +48,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @param string $className
      * @param string $methodName
-     * @return ReflectionMethod
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromName(string $className, string $methodName) : self
     {
@@ -60,7 +61,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @param object $instance
      * @param string $methodName
-     * @return ReflectionMethod
+     *
+     * @throws \InvalidArgumentException
      */
     public static function createFromInstance($instance, string $methodName) : self
     {

@@ -17,7 +17,10 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 {
     /**
      * @param string $functionName
+     *
      * @return ReflectionFunction
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromName(string $functionName) : self
     {
@@ -26,7 +29,10 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
     /**
      * @param \Closure $closure
+     *
      * @return ReflectionFunction
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromClosure(Closure $closure) : self
     {
