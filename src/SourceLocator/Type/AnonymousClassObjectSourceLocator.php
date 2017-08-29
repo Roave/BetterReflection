@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
+use PhpParser\Parser;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -39,11 +40,12 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     /**
      * @param object $anonymousClassObject
+     * @param Parser $parser
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
      */
-    public function __construct($anonymousClassObject)
+    public function __construct($anonymousClassObject, Parser $parser)
     {
         if ( ! \is_object($anonymousClassObject)) {
             throw new InvalidArgumentException('Can only create from an instance of an object');
@@ -51,7 +53,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         // @TODO how does this source locator find other located sources?
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
-        $this->parser              = PhpParserFactory::create();
+        $this->parser              = $parser;
     }
 
     /**
