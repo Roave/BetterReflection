@@ -112,7 +112,7 @@ class ReflectionObject extends ReflectionClass
                 (new Configuration())->phpParser()
             ));
         } else {
-            $reflector = ClassReflector::buildDefaultReflector();
+            $reflector = (new Configuration())->classReflector();
         }
 
         $reflectionClass = $reflector->reflect($className);
