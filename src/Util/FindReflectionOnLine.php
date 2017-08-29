@@ -28,11 +28,13 @@ final class FindReflectionOnLine
     }
 
     /**
-     * @return self
+     * @deprecated
+     *
+     * @see \Roave\BetterReflection\Configuration#findReflectionsOnLine()
      */
     public static function buildDefaultFinder() : self
     {
-        return new self((new Configuration())->sourceLocator());
+        return (new Configuration())->findReflectionsOnLine();
     }
 
     /**

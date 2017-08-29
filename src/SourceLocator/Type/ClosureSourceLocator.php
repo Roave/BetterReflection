@@ -77,7 +77,7 @@ final class ClosureSourceLocator implements SourceLocator
             throw EvaledClosureCannotBeLocated::create();
         }
 
-        FileChecker::checkFile($fileName);
+        FileChecker::assertReadableFile($fileName);
 
         $fileName = FileHelper::normalizeWindowsPath($fileName);
 

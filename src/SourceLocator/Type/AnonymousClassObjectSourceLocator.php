@@ -88,7 +88,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             throw EvaledAnonymousClassCannotBeLocated::create();
         }
 
-        FileChecker::checkFile($fileName);
+        FileChecker::assertReadableFile($fileName);
 
         $fileName = FileHelper::normalizeWindowsPath($fileName);
 
