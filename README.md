@@ -52,6 +52,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
+ * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
 
 ## More documentation
 

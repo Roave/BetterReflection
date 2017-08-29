@@ -462,13 +462,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Set the return type declaration.
      *
-     * You must use the phpDocumentor reflection type classes as the parameter.
-     *
-     * @param Type $newReturnType
+     * @param string $newReturnType
      */
-    public function setReturnType(Type $newReturnType) : void
+    public function setReturnType(string $newReturnType) : void
     {
-        $this->node->returnType = new Node\Name((string) $newReturnType);
+        $this->node->returnType = new Node\Name($newReturnType);
     }
 
     /**
