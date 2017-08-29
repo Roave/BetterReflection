@@ -555,6 +555,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
+        // @TODO this parser is to be injected
         $this->node->stmts = PhpParserFactory::create()->parse('<?php ' . $newBody);
     }
 

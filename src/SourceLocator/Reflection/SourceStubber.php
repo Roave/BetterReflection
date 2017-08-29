@@ -23,6 +23,7 @@ use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\TraitUseAdaptation;
 use PhpParser\NodeAbstract;
+use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant;

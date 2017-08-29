@@ -28,11 +28,11 @@ class Locator
      */
     private $parser;
 
-    public function __construct(Parser $parser = null) // @TODO make non-nullable
+    public function __construct(Parser $parser)
     {
         $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection());
 
-        $this->parser = PhpParserFactory::create();
+        $this->parser = $parser;
     }
 
     /**

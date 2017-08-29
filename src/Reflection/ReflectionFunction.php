@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 use Closure;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -20,7 +21,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public static function createFromName(string $functionName) : self
     {
-        return (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
+        return (new Configuration())->functionReflector()->reflect($functionName);
     }
 
     /**
@@ -29,6 +30,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public static function createFromClosure(Closure $closure) : self
     {
+        // @TODO this source locator is not sufficient - needs to be merged with other reflectors too.
         return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect(self::CLOSURE_NAME);
     }
 
