@@ -78,4 +78,20 @@ class ReflectionTypeTest extends TestCase
     {
         self::assertInstanceOf(ReflectionTypeAdapter::class, ReflectionType::fromReturnTypeOrNull($this->createMock(BetterReflectionType::class)));
     }
+
+    public function testSelfIsNotBuiltin() : void
+    {
+        $betterReflectionType  = BetterReflectionType::createFromType('self', false);
+        $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
+
+        self::assertFalse($reflectionTypeAdapter->isBuiltin());
+    }
+
+    public function testParentIsNotBuiltin() : void
+    {
+        $betterReflectionType  = BetterReflectionType::createFromType('parent', false);
+        $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
+
+        self::assertFalse($reflectionTypeAdapter->isBuiltin());
+    }
 }
