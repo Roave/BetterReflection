@@ -13,10 +13,12 @@ use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
+use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -36,6 +38,18 @@ use TypeError;
  */
 class ReflectionFunctionAbstractTest extends TestCase
 {
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->parser = (new Configuration())->phpParser();
+    }
+
     public function testExportThrowsException() : void
     {
         $this->expectException(Exception::class);
@@ -87,9 +101,11 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testNameMethodsWithClosure() : void
     {
-        $reflector    = new FunctionReflector(new ClosureSourceLocator(function () : void {
-        }));
-        $functionInfo = $reflector->reflect('foo');
+        $functionInfo = (new FunctionReflector(new ClosureSourceLocator(
+            function () : void {
+            },
+            $this->parser
+        )))->reflect('foo');
 
         self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
         self::assertSame('Roave\BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
@@ -108,9 +124,11 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testIsClosureWithClosure() : void
     {
-        $reflector = new FunctionReflector(new ClosureSourceLocator(function () : void {
-        }));
-        $function  = $reflector->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
+        $function = (new FunctionReflector(new ClosureSourceLocator(
+            function () : void {
+            },
+            $this->parser
+        )))->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
 
         self::assertTrue($function->isClosure());
     }

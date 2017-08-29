@@ -541,7 +541,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function setBodyFromClosure(Closure $newBody) : void
     {
         /** @var self $closureReflection */
-        $closureReflection = (new ClosureSourceLocator($newBody))->locateIdentifier($this->reflector, new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
+        $closureReflection = (new ClosureSourceLocator($newBody, (new Configuration())->phpParser()))->locateIdentifier(
+            $this->reflector,
+            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+        );
+
         $this->node->stmts = $closureReflection->getNode()->stmts;
     }
 

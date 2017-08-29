@@ -39,10 +39,10 @@ final class ClosureSourceLocator implements SourceLocator
      */
     private $parser;
 
-    public function __construct(Closure $closure)
+    public function __construct(Closure $closure, Parser $parser)
     {
         $this->coreFunctionReflection = new CoreFunctionReflection($closure);
-        $this->parser                 = (new Configuration())->phpParser(); // @TODO inject
+        $this->parser                 = $parser;
     }
 
     /**

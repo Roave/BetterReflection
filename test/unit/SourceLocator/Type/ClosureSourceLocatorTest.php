@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use Closure;
+use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -20,11 +22,21 @@ use Roave\BetterReflection\Util\FileHelper;
 class ClosureSourceLocatorTest extends TestCase
 {
     /**
-     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     * @var Parser
      */
-    private function getMockReflector()
+    private $parser;
+
+    /**
+     * @var Reflector
+     */
+    private $reflector;
+
+    protected function setUp() : void
     {
-        return $this->createMock(Reflector::class);
+        parent::setUp();
+
+        $this->parser    = (new Configuration())->phpParser();
+        $this->reflector = $this->createMock(Reflector::class);
     }
 
     public function closuresProvider() : array
@@ -48,11 +60,11 @@ class ClosureSourceLocatorTest extends TestCase
      */
     public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
     {
-        $locator = new ClosureSourceLocator($closure);
+        $locator = new ClosureSourceLocator($closure, $this->parser);
 
         /** @var ReflectionFunction $reflection */
         $reflection = $locator->locateIdentifier(
-            $this->getMockReflector(),
+            $this->reflector,
             new Identifier(
                 'Foo',
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
@@ -74,11 +86,11 @@ class ClosureSourceLocatorTest extends TestCase
 
         eval('$closure = function () {};');
 
-        $locator = new ClosureSourceLocator($closure);
+        $locator = new ClosureSourceLocator($closure, $this->parser);
 
         /** @var ReflectionFunction $reflection */
         $locator->locateIdentifier(
-            $this->getMockReflector(),
+            $this->reflector,
             new Identifier(
                 'Foo',
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
@@ -97,8 +109,8 @@ class ClosureSourceLocatorTest extends TestCase
     public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
     {
         /** @var ReflectionFunction[] $reflections */
-        $reflections = (new ClosureSourceLocator($closure))->locateIdentifiersByType(
-            $this->createMock(Reflector::class),
+        $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
+            $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         );
 
@@ -120,8 +132,8 @@ class ClosureSourceLocatorTest extends TestCase
         };
 
         /** @var ReflectionFunction[] $reflections */
-        $reflections = (new ClosureSourceLocator($closure))->locateIdentifiersByType(
-            $this->createMock(Reflector::class),
+        $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
+            $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
 
@@ -149,8 +161,8 @@ class ClosureSourceLocatorTest extends TestCase
         self::expectException(TwoClosuresOnSameLine::class);
         self::expectExceptionMessage(\sprintf('Two closures on line 3 in %s', $file));
 
-        (new ClosureSourceLocator($closure))->locateIdentifier(
-            $this->getMockReflector(),
+        (new ClosureSourceLocator($closure, $this->parser))->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 'Foo',
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
