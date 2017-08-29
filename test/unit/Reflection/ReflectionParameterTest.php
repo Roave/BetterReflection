@@ -572,7 +572,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = '<?php function myMethod($var = 123) {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($content));
+        $reflector    = new FunctionReflector(new StringSourceLocator($content), $this->reflector);
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo    = $functionInfo->getParameter('var');
 
@@ -603,7 +603,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = "<?php function myMethod(\$var = $defaultValue) {}";
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($content));
+        $reflector    = new FunctionReflector(new StringSourceLocator($content), $this->reflector);
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo    = $functionInfo->getParameter('var');
 
@@ -708,7 +708,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php), $this->reflector);
         $function  = $reflector->reflect('foo');
         $parameter = $function->getParameter('test');
 

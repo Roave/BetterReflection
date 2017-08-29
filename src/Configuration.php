@@ -82,7 +82,7 @@ final class Configuration implements BetterReflection
     public function functionReflector() : FunctionReflector
     {
         return $this->functionReflector
-            ?? $this->functionReflector = new FunctionReflector($this->sourceLocator());
+            ?? $this->functionReflector = new FunctionReflector($this->sourceLocator(), $this->classReflector());
     }
 
     public function phpParser() : Parser

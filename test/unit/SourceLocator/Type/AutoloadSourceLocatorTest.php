@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -129,7 +130,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testFunctionLoads() : void
     {
-        $reflector = new FunctionReflector(new AutoloadSourceLocator());
+        $reflector = new FunctionReflector(new AutoloadSourceLocator(), (new Configuration())->classReflector());
 
         require_once __DIR__ . '/../../Fixture/Functions.php';
         $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
@@ -139,7 +140,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testFunctionReflectionFailsWhenFunctionNotDefined() : void
     {
-        $reflector = new FunctionReflector(new AutoloadSourceLocator());
+        $reflector = new FunctionReflector(new AutoloadSourceLocator(), (new Configuration())->classReflector());
 
         $this->expectException(IdentifierNotFound::class);
         $reflector->reflect('this function does not exist, hopefully');

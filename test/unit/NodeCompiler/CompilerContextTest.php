@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -91,7 +92,7 @@ class CompilerContextTest extends TestCase
         }
         ';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($phpCode));
+        $reflector    = new FunctionReflector(new StringSourceLocator($phpCode), (new Configuration())->classReflector());
         $functionInfo = $reflector->reflect('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());
     }

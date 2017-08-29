@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -14,6 +16,18 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class FunctionReflectorTest extends TestCase
 {
+    /**
+     * @var ClassReflector
+     */
+    private $classReflector;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->classReflector = (new Configuration())->classReflector();
+    }
+
     public function testReflectProxiesToGenericReflectMethod() : void
     {
         $php = '<?php function foo() {}';
@@ -31,14 +45,15 @@ class FunctionReflectorTest extends TestCase
             ->method('locateIdentifier')
             ->will($this->returnValue($reflection));
 
-        $reflector = new FunctionReflector($sourceLocator);
+        $reflector = new FunctionReflector($sourceLocator, $this->classReflector);
         self::assertSame($reflection, $reflector->reflect('foo'));
     }
 
     public function testGetFunctionsFromFile() : void
     {
         $functions = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php')
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php'),
+            $this->classReflector
         ))->getAllFunctions();
 
         self::assertContainsOnlyInstancesOf(ReflectionFunction::class, $functions);

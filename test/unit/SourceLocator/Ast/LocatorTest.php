@@ -77,7 +77,7 @@ class LocatorTest extends TestCase
         ';
 
         $functionInfo = $this->locator->findReflection(
-            new FunctionReflector(new StringSourceLocator($php)),
+            new FunctionReflector(new StringSourceLocator($php), (new Configuration())->classReflector()),
             new LocatedSource($php, null),
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION)
         );
