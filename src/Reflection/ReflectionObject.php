@@ -50,7 +50,10 @@ class ReflectionObject extends ReflectionClass
      * Create a reflection and return the string representation of a class instance
      *
      * @param object $instance
-     * @return string
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \ReflectionException
+     * @throws \InvalidArgumentException
      */
     public static function export($instance = null) : string
     {
@@ -58,8 +61,7 @@ class ReflectionObject extends ReflectionClass
             throw new InvalidArgumentException('Class instance must be provided');
         }
 
-        $reflection = self::createFromInstance($instance);
-        return $reflection->__toString();
+        return self::createFromInstance($instance)->__toString();
     }
 
     /**
