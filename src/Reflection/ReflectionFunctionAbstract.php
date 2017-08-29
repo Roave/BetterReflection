@@ -53,8 +53,14 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     private $reflector;
 
+    /**
+     * @var
+     */
+    private $parser;
+
     protected function __construct()
     {
+        $this->parser = (new Configuration())->phpParser();
     }
 
     public static function export() : void
@@ -560,8 +566,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        // @TODO this parser is to be injected
-        $this->node->stmts = (new Configuration())->phpParser()->parse('<?php ' . $newBody);
+        $this->node->stmts = $this->parser->parse('<?php ' . $newBody);
     }
 
     /**
