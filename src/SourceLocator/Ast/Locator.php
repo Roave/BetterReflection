@@ -28,7 +28,7 @@ class Locator
      */
     private $parser;
 
-    public function __construct()
+    public function __construct(Parser $parser = null) // @TODO make non-nullable
     {
         $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection());
 

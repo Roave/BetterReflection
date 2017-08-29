@@ -49,6 +49,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             throw new InvalidArgumentException('Can only create from an instance of an object');
         }
 
+        // @TODO how does this source locator find other located sources?
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
         $this->parser              = PhpParserFactory::create();
     }
