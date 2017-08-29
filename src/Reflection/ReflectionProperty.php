@@ -55,7 +55,11 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
-     * Create a reflection of a class's property by its name
+     * Create a reflection of a class's property by it's name
+     *
+     * @param string $className
+     * @param string $propertyName
+     * @return self
      */
     public static function createFromName(string $className, string $propertyName) : self
     {
@@ -63,14 +67,12 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
-     * Create a reflection of an instance's property by its name
+     * Create a reflection of an instance's property by it's name
      *
      * @param object $instance
      * @param string $propertyName
-     *
+     * @return self
      * @throws \InvalidArgumentException
-     * @throws \ReflectionException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromInstance($instance, string $propertyName) : self
     {

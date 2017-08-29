@@ -32,7 +32,7 @@ class LocatedSource
     public function __construct(string $source, ?string $filename)
     {
         if (null !== $filename) {
-            FileChecker::assertReadableFile($filename);
+            FileChecker::checkFile($filename);
 
             $filename = FileHelper::normalizeWindowsPath($filename);
         }
