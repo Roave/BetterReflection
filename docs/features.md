@@ -49,7 +49,7 @@ if (count($returnTypes) === 1) {
 }
 
 // Remove the return type declaration
-$functionInfo->removeReturnType();
+$functionInfo = (new RemoveFunctionReturnType())($functionInfo);
 ```
 
 You can do similar things with parameter types also:

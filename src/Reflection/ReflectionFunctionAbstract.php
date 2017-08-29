@@ -476,14 +476,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     }
 
     /**
-     * Remove the return type declaration completely.
-     */
-    public function removeReturnType() : void
-    {
-        $this->node->returnType = null;
-    }
-
-    /**
      * @throws Uncloneable
      */
     public function __clone()

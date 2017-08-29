@@ -529,19 +529,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
     }
 
-    public function testRemoveReturnType() : void
-    {
-        $functionInfo = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
-        ))->reflect('returnsString');
-
-        $functionInfo->removeReturnType();
-
-        self::assertNull($functionInfo->getReturnType());
-        self::assertNotContains(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
-    }
-
     public function testCannotClone() : void
     {
         $php = '<?php function foo() {}';

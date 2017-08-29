@@ -71,6 +71,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `Roave\BetterReflection\BetterReflection#classReflector()` instead
  * `Roave\BetterReflection\Util\FindReflectionOnLine::buildDefaultFinder()` was dropped, please use the newly
    introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#removeReturnType()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType()` instead
 
 ## More documentation
 
