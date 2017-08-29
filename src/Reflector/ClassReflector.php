@@ -25,11 +25,13 @@ class ClassReflector implements Reflector
     }
 
     /**
-     * @return self
+     * @deprecated
+     *
+     * @see \Roave\BetterReflection\Configuration#classReflector()
      */
     public static function buildDefaultReflector() : self
     {
-        return new self((new Configuration())->sourceLocator());
+        return (new Configuration())->classReflector();
     }
 
     /**

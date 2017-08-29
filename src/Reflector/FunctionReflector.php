@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector;
 
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
@@ -31,7 +32,7 @@ class FunctionReflector implements Reflector
     {
         $identifier = new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
-        $functionInfo = $this->sourceLocator->locateIdentifier(ClassReflector::buildDefaultReflector(), $identifier);
+        $functionInfo = $this->sourceLocator->locateIdentifier((new Configuration())->classReflector(), $identifier);
 
         if (null === $functionInfo) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
