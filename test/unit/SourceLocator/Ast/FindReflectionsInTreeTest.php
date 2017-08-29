@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PhpParser\Node;
+use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -18,9 +21,12 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class FindReflectionsInTreeTest extends TestCase
 {
-    private function getAstForString(string $php) : array
+    /**
+     * @return Node[]
+     */
+    private function getAstForSource(LocatedSource $source) : array
     {
-        return PhpParserFactory::create()->parse($php);
+        return (new Configuration())->phpParser()->parse($source->getSource());
     }
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void
@@ -39,7 +45,7 @@ class FindReflectionsInTreeTest extends TestCase
             [],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
-                $this->getAstForString($locatedSource->getSource()),
+                $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 $locatedSource
             )
@@ -62,7 +68,7 @@ class FindReflectionsInTreeTest extends TestCase
             [],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
-                $this->getAstForString($locatedSource->getSource()),
+                $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 $locatedSource
             )
@@ -90,7 +96,7 @@ class FindReflectionsInTreeTest extends TestCase
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
-                $this->getAstForString($locatedSource->getSource()),
+                $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 $locatedSource
             )
@@ -118,7 +124,7 @@ class FindReflectionsInTreeTest extends TestCase
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
-                $this->getAstForString($locatedSource->getSource()),
+                $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 $locatedSource
             )
@@ -146,7 +152,7 @@ class FindReflectionsInTreeTest extends TestCase
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
-                $this->getAstForString($locatedSource->getSource()),
+                $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
                 $locatedSource
             )
@@ -175,7 +181,7 @@ class FindReflectionsInTreeTest extends TestCase
             ],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
-                $this->getAstForString($locatedSource->getSource()),
+                $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 $locatedSource
             )
