@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Util;
 
 use InvalidArgumentException;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -11,9 +12,6 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
@@ -34,11 +32,7 @@ final class FindReflectionOnLine
      */
     public static function buildDefaultFinder() : self
     {
-        return new self(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new EvaledCodeSourceLocator(),
-            new AutoloadSourceLocator(),
-        ]));
+        return new self((new Configuration())->sourceLocator());
     }
 
     /**
