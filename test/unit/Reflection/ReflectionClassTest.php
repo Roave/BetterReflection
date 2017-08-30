@@ -869,11 +869,11 @@ class ReflectionClassTest extends TestCase
 
     public function testGetInterfaces() : void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(
+        $reflector  = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
             $this->astLocator
         ));
-        $interfaces    = $reflector
+        $interfaces = $reflector
                 ->reflect(ClassWithInterfaces\ExampleClass::class)
                 ->getInterfaces();
 
@@ -923,7 +923,7 @@ class ReflectionClassTest extends TestCase
             $this->astLocator
         ));
 
-        $interfaces    = $reflector
+        $interfaces = $reflector
             ->reflect(ClassWithInterfaces\SubExampleClass::class)
             ->getInterfaces();
 
@@ -969,11 +969,11 @@ class ReflectionClassTest extends TestCase
 
     public function testGetInterfacesWillConsiderMultipleInheritanceLevels() : void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(
+        $reflector  = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
             $this->astLocator
         ));
-        $interfaces    = $reflector
+        $interfaces = $reflector
             ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
             ->getInterfaces();
 
@@ -997,11 +997,11 @@ class ReflectionClassTest extends TestCase
 
     public function testGetInterfacesWillConsiderInterfaceInheritanceLevels() : void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(
+        $reflector  = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
             $this->astLocator
         ));
-        $interfaces    = $reflector
+        $interfaces = $reflector
             ->reflect(ClassWithInterfaces\ExampleImplementingCompositeInterface::class)
             ->getInterfaces();
 

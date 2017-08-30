@@ -21,7 +21,7 @@ class NotAnInterfaceReflectionTest extends TestCase
      */
     private $astLocator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

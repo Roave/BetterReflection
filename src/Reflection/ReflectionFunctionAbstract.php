@@ -22,7 +22,6 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
@@ -636,7 +635,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         return $visitor->getReturnNodes();
     }
 
-    private final function loadStaticParser() : Parser
+    final private function loadStaticParser() : Parser
     {
         return self::$parser ?? self::$parser = (new BetterReflection())->phpParser();
     }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
-
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 use PhpParser\Node\Expr\BinaryOp\Spaceship;
@@ -36,7 +35,7 @@ class CompileNodeToValueTest extends TestCase
      */
     private $astLocator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
