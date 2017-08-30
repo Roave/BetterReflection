@@ -118,6 +118,4 @@ final class Configuration
         return $this->findReflectionOnLine
             ?? $this->findReflectionOnLine = new FindReflectionOnLine($this->sourceLocator(), $this->astLocator());
     }
-
-    // @TODO modifier methods here. They should be `withFoo()`, `withBar()`, and be immutable.
 }
