@@ -7,12 +7,9 @@ namespace Roave\BetterReflection;
 use PhpParser\Lexer\Emulative;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
@@ -46,16 +43,6 @@ final class BetterReflection
      * @var AstLocator|null
      */
     private $astLocator;
-
-    /**
-     * @var AstConversionStrategy|null
-     */
-    private $astConversionStrategy;
-
-    /**
-     * @var CompileNodeToValue|null
-     */
-    private $compileNodeToValue;
 
     /**
      * @var FindReflectionOnLine|null
@@ -99,18 +86,6 @@ final class BetterReflection
     {
         return $this->astLocator
             ?? $this->astLocator = new AstLocator($this->phpParser());
-    }
-
-    public function astConversionStrategy() : AstConversionStrategy
-    {
-        return $this->astConversionStrategy
-            ?? $this->astConversionStrategy = new NodeToReflection();
-    }
-
-    public function compileNodeToValue() : CompileNodeToValue
-    {
-        return $this->compileNodeToValue
-            ?? $this->compileNodeToValue = new CompileNodeToValue();
     }
 
     public function findReflectionsOnLine() : FindReflectionOnLine
