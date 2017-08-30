@@ -13,7 +13,6 @@ use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
@@ -572,18 +571,6 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertInstanceOf(Function_::class, $ast);
         self::assertSame('foo', $ast->name);
-    }
-
-    public function testRemoveParameter() : void
-    {
-        $php = '<?php function foo($a, $b) {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->removeParameter('a');
-
-        self::assertStringStartsWith('function foo($b)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
     }
 
     public function testGetReturnStatementAstReturnsStatements() : void

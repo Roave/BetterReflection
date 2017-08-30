@@ -511,23 +511,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     }
 
     /**
-     * Remove a parameter from the method/function.
-     *
-     * @param string $parameterName
-     * @return void
-     */
-    public function removeParameter(string $parameterName) : void
-    {
-        $lowerName = \strtolower($parameterName);
-
-        foreach ($this->node->params as $key => $paramNode) {
-            if (\strtolower($paramNode->name) === $lowerName) {
-                unset($this->node->params[$key]);
-            }
-        }
-    }
-
-    /**
      * Fetch an array of all return statements found within this function.
      *
      * Note that return statements within smaller scopes contained (e.g. anonymous classes, closures) are not returned
