@@ -28,4 +28,16 @@ final class BetterReflectionTest extends TestCase
         self::assertInstanceOf(SourceLocator::class, $betterReflection->sourceLocator());
         self::assertInstanceOf(Parser::class, $betterReflection->phpParser());
     }
+
+    public function testProducedInstancesAreMemoized() : void
+    {
+        $betterReflection = new BetterReflection();
+
+        self::assertSame($betterReflection->astLocator(), $betterReflection->astLocator());
+        self::assertSame($betterReflection->classReflector(), $betterReflection->classReflector());
+        self::assertSame($betterReflection->functionReflector(), $betterReflection->functionReflector());
+        self::assertSame($betterReflection->findReflectionsOnLine(), $betterReflection->findReflectionsOnLine());
+        self::assertSame($betterReflection->sourceLocator(), $betterReflection->sourceLocator());
+        self::assertSame($betterReflection->phpParser(), $betterReflection->phpParser());
+    }
 }
