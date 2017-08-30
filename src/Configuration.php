@@ -65,11 +65,14 @@ final class Configuration implements BetterReflection
 
     public function sourceLocator() : SourceLocator
     {
+        $astLocator = $this->astLocator();
+        $parser     = $this->phpParser();
+
         return $this->sourceLocator
             ?? $this->sourceLocator = new AggregateSourceLocator([
-                new PhpInternalSourceLocator($this->astLocator(), $this->phpParser()),
-                new EvaledCodeSourceLocator($this->astLocator()),
-                new AutoloadSourceLocator($this->astLocator()),
+                new PhpInternalSourceLocator($astLocator, $parser),
+                new EvaledCodeSourceLocator($astLocator, $parser),
+                new AutoloadSourceLocator($astLocator),
             ]);
     }
 
