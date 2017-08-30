@@ -40,4 +40,17 @@ final class BetterReflectionTest extends TestCase
         self::assertSame($betterReflection->sourceLocator(), $betterReflection->sourceLocator());
         self::assertSame($betterReflection->phpParser(), $betterReflection->phpParser());
     }
+
+    public function testProducedInstancesAreNotMemoizedAcrossInstances() : void
+    {
+        $betterReflection1 = new BetterReflection();
+        $betterReflection2 = new BetterReflection();
+
+        self::assertNotSame($betterReflection1->astLocator(), $betterReflection2->astLocator());
+        self::assertNotSame($betterReflection1->classReflector(), $betterReflection2->classReflector());
+        self::assertNotSame($betterReflection1->functionReflector(), $betterReflection2->functionReflector());
+        self::assertNotSame($betterReflection1->findReflectionsOnLine(), $betterReflection2->findReflectionsOnLine());
+        self::assertNotSame($betterReflection1->sourceLocator(), $betterReflection2->sourceLocator());
+        self::assertNotSame($betterReflection1->phpParser(), $betterReflection2->phpParser());
+    }
 }
