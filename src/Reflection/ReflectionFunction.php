@@ -35,7 +35,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public static function createFromClosure(Closure $closure) : self
     {
-        // @TODO this source locator is not sufficient - needs to be merged with other reflectors too.
         $configuration = new BetterReflection();
 
         return (new FunctionReflector(

@@ -108,7 +108,6 @@ class ReflectionObject extends ReflectionClass
         $className = \get_class($object);
 
         if (\strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
-            // @TODO inject rather than locate?
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
                 $object,
                 (new BetterReflection())->phpParser()
