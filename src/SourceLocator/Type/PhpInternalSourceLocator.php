@@ -8,7 +8,6 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
-use Zend\Code\Reflection\ClassReflection;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator
 {
@@ -30,11 +29,13 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if ( ! $name = $this->getInternalReflectionClassName($identifier)) {
+        $classReflection = $this->getInternalReflectionClass($identifier);
+
+        if (null === $classReflection) {
             return null;
         }
 
-        if ($stub = $this->getStub($name)) {
+        if ($stub = $this->getStub($classReflection->getName())) {
             /**
              * @todo this code path looks never used, and disagrees with the contract anyway...?
              * @see https://github.com/Roave/BetterReflection/issues/257
@@ -45,16 +46,11 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         $stubber = $this->stubber;
 
         return new InternalLocatedSource(
-            "<?php\n\n" . $stubber(new ClassReflection($name))
+            "<?php\n\n" . $stubber($classReflection)
         );
     }
 
-    /**
-     * @param Identifier $identifier
-     *
-     * @return null|string
-     */
-    private function getInternalReflectionClassName(Identifier $identifier) : ?string
+    private function getInternalReflectionClass(Identifier $identifier) : ?ReflectionClass
     {
         if ( ! $identifier->isClass()) {
             return null;
@@ -68,7 +64,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
         $reflection = new ReflectionClass($name);
 
-        return $reflection->isInternal() ? $reflection->getName() : null;
+        return $reflection->isInternal() ? $reflection : null;
     }
 
     /**

@@ -53,6 +53,7 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
  * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
+ * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
 
 ## More documentation
 
