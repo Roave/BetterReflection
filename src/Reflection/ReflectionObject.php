@@ -634,15 +634,4 @@ class ReflectionObject extends ReflectionClass
     {
         $this->reflectionClass->addMethod($methodName);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addProperty(
-        string $methodName,
-        int $visibility = CoreReflectionProperty::IS_PUBLIC,
-        bool $static = false
-    ) : void {
-        $this->reflectionClass->addProperty($methodName, $visibility, $static);
-    }
 }

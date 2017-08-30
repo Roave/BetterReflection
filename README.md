@@ -94,6 +94,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `new Roave\BetterReflection\Reflection\Mutation\SetClassFinal()` instead
  * `Roave\BetterReflection\Reflection\ReflectionClass#removeProperty()` and `Roave\BetterReflection\Reflection\ReflectionObject#removeProperty()`
    were dropped, please use the newly introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveClassProperty()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionClass#addProperty()` and `Roave\BetterReflection\Reflection\ReflectionObject#addProperty()`
+   were dropped, please use the newly introduced `new Roave\BetterReflection\Reflection\Mutation\AddClassProperty()` instead
 
 ## More documentation
 

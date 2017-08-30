@@ -1481,34 +1481,6 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($reflection->hasMethod('bar'));
     }
 
-    public function testAddProperty() : void
-    {
-        $php = '<?php
-            class Foo {
-            }
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-
-        self::assertFalse($reflection->hasProperty('bar'));
-
-        $reflection->addProperty('publicBar', CoreReflectionProperty::IS_PUBLIC);
-        self::assertTrue($reflection->hasProperty('publicBar'));
-        self::assertTrue($reflection->getProperty('publicBar')->isPublic());
-
-        $reflection->addProperty('protectedBar', CoreReflectionProperty::IS_PROTECTED);
-        self::assertTrue($reflection->hasProperty('protectedBar'));
-        self::assertTrue($reflection->getProperty('protectedBar')->isProtected());
-
-        $reflection->addProperty('privateBar', CoreReflectionProperty::IS_PRIVATE);
-        self::assertTrue($reflection->hasProperty('privateBar'));
-        self::assertTrue($reflection->getProperty('privateBar')->isPrivate());
-
-        $reflection->addProperty('staticBar', CoreReflectionProperty::IS_PUBLIC, true);
-        self::assertTrue($reflection->hasProperty('staticBar'));
-        self::assertTrue($reflection->getProperty('staticBar')->isStatic());
-    }
-
     public function testGetConstantsReturnsAllConstantsRegardlessOfVisibility() : void
     {
         $php = '<?php

@@ -16,7 +16,6 @@ use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
-use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -1388,41 +1387,5 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         $this->node->stmts[] = new ClassMethod($methodName);
         unset($this->cachedMethods);
-    }
-
-    /**
-     * Add a new property to the class.
-     *
-     * Visibility defaults to \ReflectionProperty::IS_PUBLIC, or can be ::IS_PROTECTED or ::IS_PRIVATE.
-     *
-     * @param string $propertyName
-     * @param int $visibility
-     * @param bool $static
-     */
-    public function addProperty(
-        string $propertyName,
-        int $visibility = CoreReflectionProperty::IS_PUBLIC,
-        bool $static = false
-    ) : void {
-        $type = 0;
-        switch ($visibility) {
-            case CoreReflectionProperty::IS_PRIVATE:
-                $type |= ClassNode::MODIFIER_PRIVATE;
-                break;
-            case CoreReflectionProperty::IS_PROTECTED:
-                $type |= ClassNode::MODIFIER_PROTECTED;
-                break;
-            default:
-                $type |= ClassNode::MODIFIER_PUBLIC;
-                break;
-        }
-
-        if ($static) {
-            $type |= ClassNode::MODIFIER_STATIC;
-        }
-
-        $this->node->stmts[]             = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
-        $this->cachedProperties          = null;
-        $this->cachedImmediateProperties = null;
     }
 }
