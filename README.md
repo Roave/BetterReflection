@@ -69,6 +69,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `Roave\BetterReflection\Util\FindReflectionOnLine::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was dropped, please use the newly
    introduced `Roave\BetterReflection\BetterReflection#classReflector()` instead
+ * `Roave\BetterReflection\Util\FindReflectionOnLine::buildDefaultFinder()` was dropped, please use the newly
+   introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
 
 ## More documentation
 

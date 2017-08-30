@@ -35,16 +35,6 @@ final class FindReflectionOnLine
     }
 
     /**
-     * @deprecated
-     *
-     * @see \Roave\BetterReflection\BetterReflection#findReflectionsOnLine()
-     */
-    public static function buildDefaultFinder() : self
-    {
-        return (new BetterReflection())->findReflectionsOnLine();
-    }
-
-    /**
      * Find a reflection on the specified line number.
      *
      * Returns null if no reflections found on the line.
