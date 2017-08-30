@@ -9,7 +9,6 @@ use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflector;
 use Roave\BetterReflection\BetterReflection;
@@ -355,21 +354,6 @@ class ReflectionParameterTest extends TestCase
         $method    = $classInfo->getMethod('foo');
 
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
-    }
-
-    public function testSetType() : void
-    {
-        $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
-        $methodInfo    = $classInfo->getMethod('foo');
-        $parameterInfo = $methodInfo->getParameter('intParam');
-
-        $parameterInfo->setType('string');
-
-        self::assertSame('string', (string) $parameterInfo->getType());
-        self::assertStringStartsWith(
-            'public function foo(string $intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
-        );
     }
 
     public function testIsCallable() : void

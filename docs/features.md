@@ -55,6 +55,6 @@ $functionInfo = (new RemoveFunctionReturnType())($functionInfo);
 You can do similar things with parameter types also:
 
 ```
-$parameterInfo->setType('int');
+(new SetParameterType())($parameterInfo, 'int');
 (new RemoveParameterType())($parameterInfo);
 ```

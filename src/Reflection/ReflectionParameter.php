@@ -451,16 +451,6 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * Set the parameter type declaration.
-     *
-     * @param string $newParameterType
-     */
-    public function setType(string $newParameterType) : void
-    {
-        $this->node->type = new Node\Name($newParameterType);
-    }
-
-    /**
      * Is this parameter an array?
      *
      * @return bool
