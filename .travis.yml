@@ -15,6 +15,16 @@ jobs:
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit
 
+    - stage: Test
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit
+
     - stage: Test Compatibility
       php: 7.1
       env: DEPENDENCIES=""
@@ -25,6 +35,16 @@ jobs:
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit test/compat
 
+    - stage: Test Compatibility
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.2
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit test/compat
+
     - stage: Check Demo Scripts
       php: 7.1
       env: DEPENDENCIES=""
@@ -32,6 +52,16 @@ jobs:
 
     - stage: Check Demo Scripts
       php: 7.1
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.2
+      env: DEPENDENCIES=""
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.2
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 
@@ -58,6 +88,9 @@ jobs:
       script:
         - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
         - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+  allow_failures:
+    - php: 7.2
 
 cache:
   directories:
