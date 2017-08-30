@@ -638,14 +638,6 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function removeProperty(string $methodName) : bool
-    {
-        return $this->reflectionClass->removeProperty($methodName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function addProperty(
         string $methodName,
         int $visibility = CoreReflectionProperty::IS_PUBLIC,

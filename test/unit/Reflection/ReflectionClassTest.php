@@ -1481,23 +1481,6 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($reflection->hasMethod('bar'));
     }
 
-    public function testRemoveProperty() : void
-    {
-        $php = '<?php
-            class Foo {
-                public $bar;
-            }
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-
-        self::assertTrue($reflection->hasProperty('bar'));
-
-        $reflection->removeProperty('bar');
-
-        self::assertFalse($reflection->hasProperty('bar'));
-    }
-
     public function testAddProperty() : void
     {
         $php = '<?php

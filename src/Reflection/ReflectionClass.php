@@ -1425,33 +1425,4 @@ class ReflectionClass implements Reflection, CoreReflector
         $this->cachedProperties          = null;
         $this->cachedImmediateProperties = null;
     }
-
-    /**
-     * Remove a property from the class.
-     *
-     * @param string $propertyName
-     * @return bool
-     */
-    public function removeProperty(string $propertyName) : bool
-    {
-        $lowerName = \strtolower($propertyName);
-
-        foreach ($this->node->stmts as $key => $stmt) {
-            if ($stmt instanceof PropertyNode) {
-                $propertyNames = \array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
-                    return \strtolower($propertyProperty->name);
-                }, $stmt->props);
-
-                if (\in_array($lowerName, $propertyNames, true)) {
-                    $this->cachedProperties          = null;
-                    $this->cachedImmediateProperties = null;
-                    unset($this->node->stmts[$key]);
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 }
