@@ -1356,15 +1356,4 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         return $this->node;
     }
-
-    /**
-     * Add a new method to the class.
-     *
-     * @param string $methodName
-     */
-    public function addMethod(string $methodName) : void
-    {
-        $this->node->stmts[] = new ClassMethod($methodName);
-        unset($this->cachedMethods);
-    }
 }

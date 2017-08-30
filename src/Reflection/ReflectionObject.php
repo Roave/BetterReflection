@@ -618,12 +618,4 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->getAst();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addMethod(string $methodName) : void
-    {
-        $this->reflectionClass->addMethod($methodName);
-    }
 }

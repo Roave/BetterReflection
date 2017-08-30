@@ -1448,22 +1448,6 @@ class ReflectionClassTest extends TestCase
         self::assertSame('Foo', $ast->name);
     }
 
-    public function testAddMethod() : void
-    {
-        $php = '<?php
-            class Foo {
-            }
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-
-        self::assertFalse($reflection->hasMethod('bar'));
-
-        $reflection->addMethod('bar');
-
-        self::assertTrue($reflection->hasMethod('bar'));
-    }
-
     public function testGetConstantsReturnsAllConstantsRegardlessOfVisibility() : void
     {
         $php = '<?php
