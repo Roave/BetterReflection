@@ -117,9 +117,7 @@ class ReflectionObject extends ReflectionClass
             $reflector = (new Configuration())->classReflector();
         }
 
-        $reflectionClass = $reflector->reflect($className);
-
-        return new self($reflector, $reflectionClass, $object);
+        return new self($reflector, $reflector->reflect($className), $object);
     }
 
     /**
