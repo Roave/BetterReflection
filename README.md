@@ -84,6 +84,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `new Roave\BetterReflection\Reflection\Mutation\AddFunctionParameter()` instead
  * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#removeParameter()` was dropped, please use the newly
    introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveFunctionParameter()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionProperty#setVisibility()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetPropertyVisibility()` instead
 
 ## More documentation
 

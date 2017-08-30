@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Exception;
-use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
-use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
@@ -137,31 +135,6 @@ class ReflectionProperty implements CoreReflector
         }
 
         return 'public';
-    }
-
-    /**
-     * Set the default visibility of this property. Use the core \ReflectionProperty::IS_* values as parameters, e.g.:
-     *
-     * @param int $newVisibility
-     * @throws \InvalidArgumentException
-     */
-    public function setVisibility(int $newVisibility) : void
-    {
-        $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
-
-        switch ($newVisibility) {
-            case CoreReflectionProperty::IS_PRIVATE:
-                $this->node->flags |= Class_::MODIFIER_PRIVATE;
-                break;
-            case CoreReflectionProperty::IS_PROTECTED:
-                $this->node->flags |= Class_::MODIFIER_PROTECTED;
-                break;
-            case CoreReflectionProperty::IS_PUBLIC:
-                $this->node->flags |= Class_::MODIFIER_PUBLIC;
-                break;
-            default:
-                throw new InvalidArgumentException('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
-        }
     }
 
     /**
