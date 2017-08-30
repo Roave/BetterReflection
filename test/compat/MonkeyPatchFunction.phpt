@@ -30,7 +30,7 @@ $reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
 $functionInfo = $reflector->reflect('increment');
 
 // Note, when outputting the code, formatting is lost, so the needless parens will not be expected
-$functionInfo->setBodyFromString('return ($a + 2);');
+$functionInfo = (new \Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromString())->__invoke($functionInfo, 'return ($a + 2);');
 
 var_dump($functionInfo->getBodyCode());
 

@@ -574,18 +574,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame('foo', $ast->name);
     }
 
-    public function testSetBodyFromString() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->setBodyFromString("echo 'Hello world!';");
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
     public function testAddParameter() : void
     {
         $php = '<?php function foo() {}';

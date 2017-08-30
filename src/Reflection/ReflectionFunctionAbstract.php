@@ -512,20 +512,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     }
 
     /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * $reflectionFunction->setBodyFromString('return true;');
-     *
-     * @param string $newBody
-     */
-    public function setBodyFromString(string $newBody) : void
-    {
-        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
-    }
-
-    /**
      * Add a new parameter to the method/function.
      *
      * @param string $parameterName
