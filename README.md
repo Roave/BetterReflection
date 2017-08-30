@@ -49,8 +49,10 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `ReflectionParameter#getDefaultValueAsString` is deprecated in favour of using `var_export` directly.
  * `FindTypeFromAst` was removed
  * `ReflectionParameter::getTypeHint()` was removed
+ * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
+ * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
 
 ## More documentation
 

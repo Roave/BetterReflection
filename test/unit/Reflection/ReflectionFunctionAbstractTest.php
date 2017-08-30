@@ -5,7 +5,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use Exception;
 use phpDocumentor\Reflection\Types\Boolean;
-use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
@@ -468,7 +467,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $reflector    = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php'));
         $functionInfo = $reflector->reflect('returnsString');
 
-        $functionInfo->setReturnType(new Integer());
+        $functionInfo->setReturnType('int');
 
         self::assertSame('int', (string) $functionInfo->getReturnType());
         self::assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
