@@ -7,12 +7,14 @@ use PhpParser\Builder\Class_;
 use PhpParser\Builder\Declaration;
 use PhpParser\Builder\Interface_;
 use PhpParser\Builder\Method;
+use PhpParser\Builder\Param;
 use PhpParser\Builder\Property;
 use PhpParser\Builder\Trait_;
 use PhpParser\BuilderAbstract;
 use PhpParser\BuilderFactory;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Const_;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\NullableType;
@@ -23,7 +25,9 @@ use PhpParser\Node\Stmt\TraitUseAdaptation;
 use PhpParser\NodeAbstract;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod as CoreReflectionMethod;
+use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use ReflectionType as CoreReflectionType;
 use Reflector as CoreReflector;
@@ -106,7 +110,9 @@ final class SourceStubber
         if ( ! $classReflection->isInterface() && $classReflection->isAbstract()) {
             // Interface \Iterator is interface and abstract
             $classNode->makeAbstract();
-        } elseif ($classReflection->isFinal()) {
+        }
+
+        if ($classReflection->isFinal()) {
             $classNode->makeFinal();
         }
     }
@@ -119,7 +125,8 @@ final class SourceStubber
     {
         $parentClass = $classReflection->getParentClass();
         $interfaces  = $classReflection->getInterfaceNames();
-        if (false !== $parentClass) {
+
+        if ($parentClass) {
             $classNode->extend(new FullyQualified($parentClass->getName()));
             $interfaces = \array_diff($interfaces, $parentClass->getInterfaceNames());
         }
@@ -127,6 +134,7 @@ final class SourceStubber
         foreach ($classReflection->getInterfaces() as $interface) {
             $interfaces = \array_diff($interfaces, $interface->getInterfaceNames());
         }
+
         foreach ($interfaces as $interfaceName) {
             if ($classReflection->isInterface()) {
                 $classNode->extend(new FullyQualified($interfaceName));
@@ -139,16 +147,19 @@ final class SourceStubber
     private function addTraitUse(Declaration $classNode, CoreReflectionClass $classReflection) : void
     {
         $alreadyUsedTraitNames = [];
+
         foreach ($classReflection->getTraitAliases() as $methodNameAlias => $methodInfo) {
             [$traitName, $methodName] = \explode('::', $methodInfo);
             $traitUseNode             = new TraitUse(
                 [new FullyQualified($traitName)],
                 [new TraitUseAdaptation\Alias(new FullyQualified($traitName), $methodName, null, $methodNameAlias)]
             );
+
             $classNode->addStmt($traitUseNode);
 
             $alreadyUsedTraitNames[] = $traitName;
         }
+
         foreach (\array_diff($classReflection->getTraitNames(), $alreadyUsedTraitNames) as $traitName) {
             $classNode->addStmt(new TraitUse([new FullyQualified($traitName)]));
         }
@@ -157,6 +168,7 @@ final class SourceStubber
     private function addProperties(Declaration $classNode, CoreReflectionClass $classReflection) : void
     {
         $defaultProperties = $classReflection->getDefaultProperties();
+
         foreach ($classReflection->getProperties() as $propertyReflection) {
             if ( ! $this->isPropertyDeclaredInClass($propertyReflection, $classReflection)) {
                 continue;
@@ -180,6 +192,7 @@ final class SourceStubber
         if ($propertyReflection->getDeclaringClass()->getName() !== $classReflection->getName()) {
             return false;
         }
+
         foreach ($classReflection->getTraits() as $trait) {
             if ($trait->hasProperty($propertyReflection->getName())) {
                 return false;
@@ -194,11 +207,16 @@ final class SourceStubber
         if ($propertyReflection->isStatic()) {
             $propertyNode->makeStatic();
         }
+
         if ($propertyReflection->isPublic()) {
             $propertyNode->makePublic();
-        } elseif ($propertyReflection->isProtected()) {
+        }
+
+        if ($propertyReflection->isProtected()) {
             $propertyNode->makeProtected();
-        } elseif ($propertyReflection->isPrivate()) {
+        }
+
+        if ($propertyReflection->isPrivate()) {
             $propertyNode->makePrivate();
         }
     }
@@ -210,13 +228,10 @@ final class SourceStubber
                 continue;
             }
 
-            // A little hack so we don't have to copy the code in PhpParser\BuilderAbstract::normalizeValue()
-            $constantValueNode = $this->builderFactory->property('')->setDefault($constantReflection->getValue())->getNode()->props[0]->default;
-
-            $flags             = $constantReflection->isPrivate()
-                ? ClassNode::MODIFIER_PRIVATE
-                : ($constantReflection->isProtected() ? ClassNode::MODIFIER_PROTECTED : ClassNode::MODIFIER_PUBLIC);
-            $classConstantNode = new ClassConst([new Const_($constantReflection->getName(), $constantValueNode)], $flags);
+            $classConstantNode = new ClassConst(
+                [new Const_($constantReflection->getName(), $this->constantValueNode($constantReflection))],
+                $this->constantVisibilityFlags($constantReflection)
+            );
 
             if (false !== $constantReflection->getDocComment()) {
                 $classConstantNode->setDocComment(new Doc($constantReflection->getDocComment()));
@@ -224,6 +239,33 @@ final class SourceStubber
 
             $classNode->addStmt($classConstantNode);
         }
+    }
+
+    /**
+     * A little hack so we don't have to copy the code in PhpParser\BuilderAbstract::normalizeValue()
+     */
+    private function constantValueNode(ReflectionClassConstant $constant) : ?Expr
+    {
+        return $this
+            ->builderFactory
+            ->property('')
+            ->setDefault($constant->getValue())
+            ->getNode()
+            ->props[0]
+            ->default;
+    }
+
+    private function constantVisibilityFlags(ReflectionClassConstant $constant) : int
+    {
+        if ($constant->isPrivate()) {
+            return ClassNode::MODIFIER_PRIVATE;
+        }
+
+        if ($constant->isProtected()) {
+            return ClassNode::MODIFIER_PROTECTED;
+        }
+
+        return ClassNode::MODIFIER_PUBLIC;
     }
 
     private function addMethods(Declaration $classNode, CoreReflectionClass $classReflection) : void
@@ -240,6 +282,7 @@ final class SourceStubber
             $this->addParameters($methodNode, $methodReflection);
 
             $returnType = $methodReflection->getReturnType();
+
             if (null !== $methodReflection->getReturnType()) {
                 $methodNode->setReturnType($this->formatType($returnType));
             }
@@ -253,9 +296,11 @@ final class SourceStubber
         if ($methodReflection->getDeclaringClass()->getName() !== $classReflection->getName()) {
             return false;
         }
+
         if (\array_key_exists($methodReflection->getName(), $classReflection->getTraitAliases())) {
             return false;
         }
+
         foreach ($classReflection->getTraits() as $trait) {
             if ($trait->hasMethod($methodReflection->getName())) {
                 return false;
@@ -270,17 +315,24 @@ final class SourceStubber
         if ($methodReflection->isFinal()) {
             $methodNode->makeFinal();
         }
+
         if ($methodReflection->isAbstract()) {
             $methodNode->makeAbstract();
         }
+
         if ($methodReflection->isStatic()) {
             $methodNode->makeStatic();
         }
+
         if ($methodReflection->isPublic()) {
             $methodNode->makePublic();
-        } elseif ($methodReflection->isProtected()) {
+        }
+
+        if ($methodReflection->isProtected()) {
             $methodNode->makeProtected();
-        } elseif ($methodReflection->isPrivate()) {
+        }
+
+        if ($methodReflection->isPrivate()) {
             $methodNode->makePrivate();
         }
 
@@ -294,27 +346,47 @@ final class SourceStubber
         foreach ($methodReflection->getParameters() as $parameterReflection) {
             $parameterNode = $this->builderFactory->param($parameterReflection->getName());
 
-            if ($parameterReflection->isVariadic()) {
-                $parameterNode->makeVariadic();
-            } elseif ($parameterReflection->isOptional()) {
-                if ($methodReflection->getDeclaringClass()->isInternal()) {
-                    $parameterNode->setDefault(null);
-                } else {
-                    $parameterNode->setDefault($parameterReflection->getDefaultValue());
-                }
+            $this->addParameterModifiers($parameterReflection, $parameterNode);
+
+            if ($parameterReflection->isOptional() && ! $parameterReflection->isVariadic()) {
+                $parameterNode->setDefault($this->parameterDefaultValue($parameterReflection, $methodReflection));
             }
 
-            if ($parameterReflection->isPassedByReference()) {
-                $parameterNode->makeByRef();
-            }
-
-            $parameterType = $parameterReflection->getType();
-            if (null !== $parameterReflection->getType()) {
-                $parameterNode->setTypeHint($this->formatType($parameterType));
-            }
-
-            $methodNode->addParam($parameterNode);
+            $methodNode->addParam($this->addParameterModifiers($parameterReflection, $parameterNode));
         }
+    }
+
+    private function addParameterModifiers(ReflectionParameter $parameterReflection, Param $parameterNode) : Param
+    {
+        if ($parameterReflection->isVariadic()) {
+            $parameterNode->makeVariadic();
+        }
+
+        if ($parameterReflection->isPassedByReference()) {
+            $parameterNode->makeByRef();
+        }
+
+        $parameterType = $parameterReflection->getType();
+
+        if (null !== $parameterReflection->getType()) {
+            $parameterNode->setTypeHint($this->formatType($parameterType));
+        }
+
+        return $parameterNode;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function parameterDefaultValue(
+        ReflectionParameter $parameterReflection,
+        CoreReflectionMethod $methodReflection
+    ) {
+        if ($methodReflection->getDeclaringClass()->isInternal()) {
+            return null;
+        }
+
+        return $parameterReflection->getDefaultValue();
     }
 
     /**
