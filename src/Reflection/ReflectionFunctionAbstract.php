@@ -12,6 +12,7 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
+use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
@@ -58,9 +59,9 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     private $parser;
 
-    protected function __construct()
+    protected function __construct(Parser $parser)
     {
-        $this->parser = (new Configuration())->phpParser();
+        $this->parser = $parser;
     }
 
     public static function export() : void

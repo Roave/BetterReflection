@@ -81,7 +81,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null
     ) : self {
-        $function = new self();
+        $function = new self((new Configuration())->phpParser());
 
         $function->populateFunctionAbstract($reflector, $node, $locatedSource, $namespaceNode);
 

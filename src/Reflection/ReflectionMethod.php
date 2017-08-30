@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use ReflectionMethod as CoreReflectionMethod;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflector\Reflector;
 use RuntimeException;
 
@@ -32,7 +33,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass
     ) : self {
-        $method                    = new self();
+        $method                    = new self((new Configuration())->phpParser());
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
 
