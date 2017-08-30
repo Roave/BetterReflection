@@ -694,8 +694,7 @@ class ReflectionClassTest extends TestCase
 
     public function testIsInternalWithInternalClass() : void
     {
-        $reflector = ClassReflector::buildDefaultReflector();
-        $classInfo = $reflector->reflect('stdClass');
+        $classInfo = (new BetterReflection())->classReflector()->reflect(stdClass::class);
 
         self::assertTrue($classInfo->isInternal());
         self::assertFalse($classInfo->isUserDefined());

@@ -48,17 +48,9 @@ class ClassReflectorTest extends TestCase
         self::assertSame($reflection, $reflector->reflect('MyClass'));
     }
 
-    public function testBuildDefaultReflector() : void
-    {
-        $defaultReflector = ClassReflector::buildDefaultReflector();
-
-        $sourceLocator = $this->getObjectAttribute($defaultReflector, 'sourceLocator');
-        self::assertInstanceOf(AggregateSourceLocator::class, $sourceLocator);
-    }
-
     public function testThrowsExceptionWhenIdentifierNotFound() : void
     {
-        $defaultReflector = ClassReflector::buildDefaultReflector();
+        $defaultReflector = (new BetterReflection())->classReflector();
 
         $this->expectException(IdentifierNotFound::class);
 

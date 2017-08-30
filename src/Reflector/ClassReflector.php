@@ -25,16 +25,6 @@ class ClassReflector implements Reflector
     }
 
     /**
-     * @deprecated
-     *
-     * @see \Roave\BetterReflection\BetterReflection#classReflector()
-     */
-    public static function buildDefaultReflector() : self
-    {
-        return (new BetterReflection())->classReflector();
-    }
-
-    /**
      * Create a ReflectionClass for the specified $className.
      *
      * @param string $className
