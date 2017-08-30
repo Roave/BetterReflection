@@ -602,4 +602,9 @@ class ReflectionParameter implements CoreReflector
     {
         return CalculateReflectionColum::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
     }
+
+    public function getAst() : ParamNode
+    {
+        return $this->node;
+    }
 }

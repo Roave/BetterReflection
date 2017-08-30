@@ -8,6 +8,7 @@ use Foo;
 use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Types;
+use PhpParser\Node\Param;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflector;
@@ -725,5 +726,18 @@ class ReflectionParameterTest extends TestCase
 
         self::assertSame($startColumn, $parameter->getStartColumn());
         self::assertSame($endColumn, $parameter->getEndColumn());
+    }
+
+    public function testGetAst() : void
+    {
+        $php = '<?php function foo($a = 123) {}';
+
+        $functionReflection  = (new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->reflector))->reflect('foo');
+        $parameterReflection = $functionReflection->getParameter('a');
+
+        $ast = $parameterReflection->getAst();
+
+        self::assertInstanceOf(Param::class, $ast);
+        self::assertSame('a', $ast->name);
     }
 }
