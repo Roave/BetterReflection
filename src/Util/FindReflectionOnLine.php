@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Util;
 
 use InvalidArgumentException;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;

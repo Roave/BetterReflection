@@ -24,16 +24,6 @@ class DirectoriesSourceLocator implements SourceLocator
     private $aggregateSourceLocator;
 
     /**
-     * @var array|string[]
-     */
-    private $directories;
-
-    /**
-     * @var Locator
-     */
-    private $astLocator;
-
-    /**
      * @param string[] $directories directories to scan
      *
      * @throws InvalidDirectory
