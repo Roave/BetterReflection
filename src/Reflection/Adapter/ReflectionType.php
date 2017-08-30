@@ -48,6 +48,12 @@ class ReflectionType extends CoreReflectionType
      */
     public function isBuiltin() : bool
     {
+        $type = (string) $this->betterReflectionType;
+
+        if ('self' === $type || 'parent' === $type) {
+            return false;
+        }
+
         return $this->betterReflectionType->isBuiltin();
     }
 }
