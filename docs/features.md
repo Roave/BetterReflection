@@ -40,12 +40,12 @@ declaration to that defined in the PHP DocBlock.
 
 ```
 // Change a function to ensure it returns an integer
-$functionInfo->setReturnType('int');
+$functionInfo = (new SetFunctionReturnType())($functionInfo, 'int');
 
 // If there is only one type defined in the DocBlock, set it as the return type
 $returnTypes = $functionInfo->getDocBlockReturnTypes();
 if (count($returnTypes) === 1) {
-    $functionInfo->setReturnType((string) $returnTypes[0]);
+    $functionInfo = (new SetFunctionReturnType())($functionInfo, (string) $returnTypes[0], false);
 }
 
 // Remove the return type declaration

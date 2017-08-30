@@ -466,16 +466,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     }
 
     /**
-     * Set the return type declaration.
-     *
-     * @param string $newReturnType
-     */
-    public function setReturnType(string $newReturnType) : void
-    {
-        $this->node->returnType = new Node\Name($newReturnType);
-    }
-
-    /**
      * @throws Uncloneable
      */
     public function __clone()

@@ -516,19 +516,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($reflectionType->allowsNull());
     }
 
-    public function testSetReturnType() : void
-    {
-        $functionInfo = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
-        ))->reflect('returnsString');
-
-        $functionInfo->setReturnType('int');
-
-        self::assertSame('int', (string) $functionInfo->getReturnType());
-        self::assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
-    }
-
     public function testCannotClone() : void
     {
         $php = '<?php function foo() {}';

@@ -52,7 +52,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
- * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
  * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
  * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
@@ -73,6 +72,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
  * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#removeReturnType()` was dropped, please use the newly
    introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType()` instead
 
 ## More documentation
 
