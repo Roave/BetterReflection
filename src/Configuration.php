@@ -20,8 +20,7 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
 
-// @TODO should the naming be swapped around? `new BetterReflection()` sounds MUCH cooler!
-final class Configuration implements BetterReflection
+final class Configuration
 {
     /**
      * @var SourceLocator|null
