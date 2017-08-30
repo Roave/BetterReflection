@@ -8,7 +8,6 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\NullableType;
-use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
@@ -509,16 +508,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function getAst() : Node\FunctionLike
     {
         return $this->node;
-    }
-
-    /**
-     * Add a new parameter to the method/function.
-     *
-     * @param string $parameterName
-     */
-    public function addParameter(string $parameterName) : void
-    {
-        $this->node->params[] = new ParamNode($parameterName);
     }
 
     /**

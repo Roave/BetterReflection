@@ -574,18 +574,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame('foo', $ast->name);
     }
 
-    public function testAddParameter() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->addParameter('myNewParam');
-
-        self::assertStringStartsWith('function foo($myNewParam)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
-    }
-
     public function testRemoveParameter() : void
     {
         $php = '<?php function foo($a, $b) {}';

@@ -80,6 +80,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromClosure()` instead
  * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setBodyFromString()` was dropped, please use the newly
    introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromString()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#addParameter()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\AddFunctionParameter()` instead
 
 ## More documentation
 
