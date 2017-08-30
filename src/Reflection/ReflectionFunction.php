@@ -10,7 +10,6 @@ use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
@@ -81,7 +80,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null
     ) : self {
-        $function = new self((new Configuration())->phpParser());
+        $function = new self();
 
         $function->populateFunctionAbstract($reflector, $node, $locatedSource, $namespaceNode);
 

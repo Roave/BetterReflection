@@ -55,13 +55,13 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     private $reflector;
 
     /**
-     * @var
+     * @var Parser
      */
     private $parser;
 
-    protected function __construct(Parser $parser)
+    protected function __construct()
     {
-        $this->parser = $parser;
+        $this->parser = (new Configuration())->phpParser();
     }
 
     public static function export() : void
