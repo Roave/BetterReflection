@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use IntlGregorianCalendar;
-use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
@@ -32,18 +31,11 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     private $astLocator;
 
-    /**
-     * @var Parser
-     */
-    private $parser;
-
     protected function setUp() : void
     {
         parent::setUp();
 
-        $configuration    = new BetterReflection();
-        $this->astLocator = $configuration->astLocator();
-        $this->parser     = $configuration->phpParser();
+        $this->astLocator = (new BetterReflection())->astLocator();
     }
 
     /**
@@ -61,7 +53,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanFetchInternalLocatedSource(string $className) : void
     {
-        $locator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
+        $locator = new PhpInternalSourceLocator($this->astLocator);
 
         try {
             /** @var ReflectionClass $reflection */
@@ -90,7 +82,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
-        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator);
         $reflector                = new ClassReflector($phpInternalSourceLocator);
 
         try {
@@ -148,7 +140,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForNonExistentCode() : void
     {
-        $locator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
+        $locator = new PhpInternalSourceLocator($this->astLocator);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -162,7 +154,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForFunctions() : void
     {
-        $locator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
+        $locator = new PhpInternalSourceLocator($this->astLocator);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -191,7 +183,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             $this->markTestSkipped(\sprintf('Class "%s" is not available in this environment', $className));
         }
 
-        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->parser));
+        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
 
         self::assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
     }

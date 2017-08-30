@@ -8,7 +8,6 @@ use Foo;
 use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Types;
-use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflector;
@@ -49,17 +48,11 @@ class ReflectionParameterTest extends TestCase
      */
     private $astLocator;
 
-    /**
-     * @var Parser
-     */
-    private $parser;
-
     public function setUp() : void
     {
         global $loader;
-        $configuration    = new BetterReflection();
-        $this->astLocator = $configuration->astLocator();
-        $this->parser     = $configuration->phpParser();
+
+        $this->astLocator = (new BetterReflection())->astLocator();
         $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 
@@ -634,7 +627,7 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator, $this->parser),
+            new PhpInternalSourceLocator($this->astLocator),
             new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');
@@ -678,7 +671,7 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator, $this->parser),
+            new PhpInternalSourceLocator($this->astLocator),
             new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');

@@ -51,12 +51,11 @@ final class BetterReflection
     public function sourceLocator() : SourceLocator
     {
         $astLocator = $this->astLocator();
-        $parser     = $this->phpParser();
 
         return $this->sourceLocator
             ?? $this->sourceLocator = new AggregateSourceLocator([
-                new PhpInternalSourceLocator($astLocator, $parser),
-                new EvaledCodeSourceLocator($astLocator, $parser),
+                new PhpInternalSourceLocator($astLocator),
+                new EvaledCodeSourceLocator($astLocator),
                 new AutoloadSourceLocator($astLocator),
             ]);
     }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
-use PhpParser\Parser;
 use ReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -18,11 +17,11 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private $stubber;
 
-    public function __construct(Locator $astLocator, Parser $parser)
+    public function __construct(Locator $astLocator)
     {
         parent::__construct($astLocator);
 
-        $this->stubber = new SourceStubber($parser);
+        $this->stubber = new SourceStubber();
     }
 
     /**

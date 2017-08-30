@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -25,18 +24,11 @@ class EvaledCodeSourceLocatorTest extends TestCase
      */
     private $astLocator;
 
-    /**
-     * @var Parser
-     */
-    private $parser;
-
     protected function setUp() : void
     {
         parent::setUp();
 
-        $configuration    = new BetterReflection();
-        $this->astLocator = $configuration->astLocator();
-        $this->parser     = $configuration->phpParser();
+        $this->astLocator = (new BetterReflection())->astLocator();
     }
 
     /**
@@ -53,7 +45,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         eval('class ' . $className . ' {function foo(){}}');
 
-        $locator = new EvaledCodeSourceLocator($this->astLocator, $this->parser);
+        $locator = new EvaledCodeSourceLocator($this->astLocator);
 
         /** @var ReflectionClass $reflection */
         $reflection = $locator->locateIdentifier(
@@ -72,7 +64,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         eval('interface ' . $interfaceName . ' {function foo();}');
 
-        $locator = new EvaledCodeSourceLocator($this->astLocator, $this->parser);
+        $locator = new EvaledCodeSourceLocator($this->astLocator);
 
         $reflection = $locator->locateIdentifier(
             $this->getMockReflector(),
@@ -89,7 +81,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         eval('trait ' . $traitName . ' {function foo(){}}');
 
-        $locator = new EvaledCodeSourceLocator($this->astLocator, $this->parser);
+        $locator = new EvaledCodeSourceLocator($this->astLocator);
 
         $reflection = $locator->locateIdentifier(
             $this->getMockReflector(),
@@ -102,7 +94,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testCanReflectEvaledLocatedSourceClass() : void
     {
-        $reflector = (new ClassReflector(new EvaledCodeSourceLocator($this->astLocator, $this->parser)));
+        $reflector = (new ClassReflector(new EvaledCodeSourceLocator($this->astLocator)));
         $className = \uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo($bar = "baz") {}}');
@@ -120,14 +112,14 @@ class EvaledCodeSourceLocatorTest extends TestCase
     public function testCannotReflectRequiredClass() : void
     {
         self::assertNull(
-            (new EvaledCodeSourceLocator($this->astLocator, $this->parser))
+            (new EvaledCodeSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(__CLASS__, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
         );
     }
 
     public function testReturnsNullForNonExistentCode() : void
     {
-        $locator = new EvaledCodeSourceLocator($this->astLocator, $this->parser);
+        $locator = new EvaledCodeSourceLocator($this->astLocator);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -141,7 +133,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testReturnsNullForFunctions() : void
     {
-        $locator = new EvaledCodeSourceLocator($this->astLocator, $this->parser);
+        $locator = new EvaledCodeSourceLocator($this->astLocator);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
