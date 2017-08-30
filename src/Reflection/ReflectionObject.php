@@ -622,14 +622,6 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function setFinal(bool $isFinal) : void
-    {
-        $this->reflectionClass->setFinal($isFinal);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function removeMethod(string $methodName) : bool
     {
         return $this->reflectionClass->removeMethod($methodName);

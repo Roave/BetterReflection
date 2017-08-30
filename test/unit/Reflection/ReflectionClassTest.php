@@ -1448,35 +1448,6 @@ class ReflectionClassTest extends TestCase
         self::assertSame('Foo', $ast->name);
     }
 
-    public function testSetIsFinal() : void
-    {
-        $php = '<?php
-            final class Foo {}
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-
-        self::assertTrue($reflection->isFinal());
-
-        $reflection->setFinal(false);
-        self::assertFalse($reflection->isFinal());
-
-        $reflection->setFinal(true);
-        self::assertTrue($reflection->isFinal());
-    }
-
-    public function testSetIsFinalThrowsExceptionForInterface() : void
-    {
-        $php = '<?php
-            interface Foo {}
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-
-        $this->expectException(NotAClassReflection::class);
-        $reflection->setFinal(true);
-    }
-
     public function testRemoveMethod() : void
     {
         $php = '<?php

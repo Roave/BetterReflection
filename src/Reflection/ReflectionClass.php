@@ -1359,26 +1359,6 @@ class ReflectionClass implements Reflection, CoreReflector
     }
 
     /**
-     * Set whether this class is final or not
-     *
-     * @param bool $isFinal
-     * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
-     */
-    public function setFinal(bool $isFinal) : void
-    {
-        if ( ! $this->node instanceof ClassNode) {
-            throw NotAClassReflection::fromReflectionClass($this);
-        }
-
-        if ($isFinal === true) {
-            $this->node->flags |= ClassNode::MODIFIER_FINAL;
-            return;
-        }
-
-        $this->node->flags &= ~ClassNode::MODIFIER_FINAL;
-    }
-
-    /**
      * Remove the named method from the class.
      *
      * Returns true if method was successfully removed.
