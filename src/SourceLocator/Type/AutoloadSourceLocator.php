@@ -27,7 +27,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * Note: the constructor has been made a 0-argument constructor because `\stream_wrapper_register`
      *       is a piece of trash, and doesn't accept instances, just class names.
      */
-    public function __construct(AstLocator $astLocator = null)
+    public function __construct(?AstLocator $astLocator = null)
     {
         $validLocator = $astLocator ?? self::$currentAstLocator ?? (new BetterReflection())->astLocator();
 
