@@ -19,9 +19,11 @@ class MyClassInString {
 }
 EOF;
 
-
 $reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
-    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator($source)
+    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
+        $source,
+        (new Roave\BetterReflection\Configuration())->astLocator()
+    )
 );
 
 $classInfo = $reflector->reflect(MyClassInString::class);

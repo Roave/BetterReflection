@@ -12,9 +12,14 @@ function myFunction(int $a, string $b = null): bool
 }
 EOF;
 
+$sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
+    $source,
+    (new Roave\BetterReflection\Configuration())->astLocator()
+);
 
 $reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
-    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator($source)
+    $sourceLocator,
+    new \Roave\BetterReflection\Reflector\ClassReflector($sourceLocator)
 );
 
 $functionInfo = $reflector->reflect('myFunction');

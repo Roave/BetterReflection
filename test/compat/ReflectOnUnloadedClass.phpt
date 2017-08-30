@@ -7,7 +7,10 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 var_dump(class_exists(UnloadedClass::class, false));
 
 $reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
-    new Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator(__DIR__ . '/assets/UnloadedClass.php')
+    new Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator(
+        __DIR__ . '/assets/UnloadedClass.php',
+        (new Roave\BetterReflection\Configuration())->astLocator()
+    )
 );
 
 $classInfo = $reflector->reflect(UnloadedClass::class);
