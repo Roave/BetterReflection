@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Identifier;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 /**
  * @covers \Roave\BetterReflection\Identifier\Identifier
@@ -43,5 +46,74 @@ class IdentifierTest extends TestCase
 
         self::assertFalse($identifier->isClass());
         self::assertTrue($identifier->isFunction());
+    }
+
+    public function testGetNameForClosure() : void
+    {
+        $identifier = new Identifier(ReflectionFunctionAbstract::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
+        self::assertSame(ReflectionFunctionAbstract::CLOSURE_NAME, $identifier->getName());
+    }
+
+    public function testGetNameForAnonymousClass() : void
+    {
+        $identifier = new Identifier(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX . ' filename.php', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $identifier->getName());
+    }
+
+    public function testGetNameForWildcard() : void
+    {
+        $identifier = new Identifier(Identifier::WILDCARD, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        self::assertSame(Identifier::WILDCARD, $identifier->getName());
+    }
+
+    public function validNamesProvider() : array
+    {
+        return [
+            ['Foo', 'Foo'],
+            ['\Foo', 'Foo'],
+            ['Foo\Bar', 'Foo\Bar'],
+            ['\Foo\Bar', 'Foo\Bar'],
+            ['F', 'F'],
+            ['F\B', 'F\B'],
+            ['foo', 'foo'],
+            ['\foo', 'foo'],
+            ['Foo\bar', 'Foo\bar'],
+            ['\Foo\bar', 'Foo\bar'],
+            ['f', 'f'],
+            ['F\b', 'F\b'],
+            ['fooööö', 'fooööö'],
+            ['Option«T»', 'Option«T»'],
+        ];
+    }
+
+    /**
+     * @param string $name
+     * @param string $expectedName
+     * @dataProvider validNamesProvider
+     */
+    public function testValidName(string $name, string $expectedName) : void
+    {
+        $identifier = new Identifier($name, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        self::assertSame($expectedName, $identifier->getName());
+    }
+
+    public function invalidNamesProvider() : array
+    {
+        return [
+            [''],
+            ['1234567890'],
+            ['!@#$%^&*()'],
+            ['\\'],
+        ];
+    }
+
+    /**
+     * @param string $invalidName
+     * @dataProvider invalidNamesProvider
+     */
+    public function testThrowExceptionForInvalidName(string $invalidName) : void
+    {
+        $this->expectException(InvalidIdentifierName::class);
+        new Identifier($invalidName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
     }
 }

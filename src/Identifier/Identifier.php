@@ -3,8 +3,16 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Identifier;
 
+use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+
 class Identifier
 {
+    public const WILDCARD = '*';
+
+    private const VALID_NAME_REGEXP = '/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)(\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)*/';
+
     /**
      * @var string
      */
@@ -15,13 +23,31 @@ class Identifier
      */
     private $type;
 
+    /**
+     * @param string $name
+     * @param IdentifierType $type
+     *
+     * @throws InvalidIdentifierName
+     */
     public function __construct(string $name, IdentifierType $type)
     {
         $this->type = $type;
 
+        if (self::WILDCARD === $name
+            || ReflectionFunctionAbstract::CLOSURE_NAME === $name
+            || 0 === \strpos($name, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX)
+        ) {
+            $this->name = $name;
+            return;
+        }
+
         $name = \ltrim($name, '\\');
-        // @todo validate the name somehow (see issue #20)
-        $this->name = (string) $name;
+
+        if ( ! \preg_match(self::VALID_NAME_REGEXP, $name)) {
+            throw InvalidIdentifierName::fromInvalidName($name);
+        }
+
+        $this->name = $name;
     }
 
     public function getName() : string
