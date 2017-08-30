@@ -4,12 +4,13 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $reflector = new ClassReflector(new AggregateSourceLocator([
-    new SingleFileSourceLocator(__DIR__ . '/assets/MyClass.php'),
+    new SingleFileSourceLocator(__DIR__ . '/assets/MyClass.php', (new Configuration())->astLocator()),
 ]));
 
 $reflection = $reflector->reflect('MyClass');

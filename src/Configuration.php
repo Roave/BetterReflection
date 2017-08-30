@@ -67,9 +67,9 @@ final class Configuration implements BetterReflection
     {
         return $this->sourceLocator
             ?? $this->sourceLocator = new AggregateSourceLocator([
-                new PhpInternalSourceLocator(),
-                new EvaledCodeSourceLocator(),
-                new AutoloadSourceLocator(),
+                new PhpInternalSourceLocator($this->astLocator(), $this->phpParser()),
+                new EvaledCodeSourceLocator($this->astLocator()),
+                new AutoloadSourceLocator($this->astLocator()),
             ]);
     }
 
@@ -114,7 +114,7 @@ final class Configuration implements BetterReflection
     public function findReflectionsOnLine() : FindReflectionOnLine
     {
         return $this->findReflectionOnLine
-            ?? $this->findReflectionOnLine = new FindReflectionOnLine($this->sourceLocator());
+            ?? $this->findReflectionOnLine = new FindReflectionOnLine($this->sourceLocator(), $this->astLocator());
     }
 
     // @TODO modifier methods here. They should be `withFoo()`, `withBar()`, and be immutable.

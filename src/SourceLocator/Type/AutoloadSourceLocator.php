@@ -5,7 +5,9 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use ReflectionClass;
 use ReflectionFunction;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
@@ -17,12 +19,35 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 class AutoloadSourceLocator extends AbstractSourceLocator
 {
     /**
+     * @var AstLocator
+     */
+    private $astLocator;
+
+    /**
+     * Note: the constructor has been made a 0-argument constructor because `\stream_wrapper_register`
+     *       is a piece of trash, and doesn't accept instances, just class names.
+     */
+    public function __construct(AstLocator $astLocator = null)
+    {
+        $validLocator = $astLocator ?? self::$currentAstLocator ?? (new Configuration())->astLocator();
+
+        parent::__construct($validLocator);
+
+        $this->astLocator = $validLocator;
+    }
+
+    /**
      * Primarily used by the non-loading-autoloader magic trickery to determine
      * the filename used during autoloading.
      *
      * @var string|null
      */
     private static $autoloadLocatedFile;
+
+    /**
+     * @var AstLocator
+     */
+    private static $currentAstLocator;
 
     /**
      * {@inheritDoc}
@@ -93,6 +118,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         self::$autoloadLocatedFile = null;
+        self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
         $previousErrorHandler      = \set_error_handler(function () : void {
         });
         \stream_wrapper_unregister('file');

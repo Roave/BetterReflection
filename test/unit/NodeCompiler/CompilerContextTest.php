@@ -8,6 +8,7 @@ use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
@@ -18,22 +19,34 @@ use RuntimeException;
  */
 class CompilerContextTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->astLocator = (new Configuration())->astLocator();
+    }
+
     public function testCreatingContextWithoutSelf() : void
     {
-        $reflector = new ClassReflector(new StringSourceLocator('<?php'));
+        $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
         $context   = new CompilerContext($reflector, null);
 
         self::assertFalse($context->hasSelf());
         self::assertSame($reflector, $context->getReflector());
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The current context does not have a class for self');
+        $this->expectExceptionMessage('The current context does not have a class for self', $this->astLocator);
         $context->getSelf();
     }
 
     public function testCreatingContextWithSelf() : void
     {
-        $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}'));
+        $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
         $self      = $reflector->reflect('Foo');
 
         $context = new CompilerContext($reflector, $self);
@@ -47,7 +60,7 @@ class CompilerContextTest extends TestCase
     {
         $filename = FileHelper::normalizeWindowsPath(__DIR__ . '/CompilerContextTest.php');
 
-        $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
+        $reflector = new ClassReflector(new SingleFileSourceLocator($filename, $this->astLocator));
         $self      = $reflector->reflect(self::class);
 
         $context = new CompilerContext($reflector, $self);
@@ -59,7 +72,7 @@ class CompilerContextTest extends TestCase
     {
         $filename = __DIR__ . '/CompilerContextTest.php';
 
-        $reflector = new ClassReflector(new SingleFileSourceLocator($filename));
+        $reflector = new ClassReflector(new SingleFileSourceLocator($filename, $this->astLocator));
         $context   = new CompilerContext($reflector, null);
 
         $this->expectException(RuntimeException::class);
@@ -77,7 +90,7 @@ class CompilerContextTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Foo\Bar');
         self::assertSame('Foo\Bar', $classInfo->getProperty('property')->getDefaultValue());
     }
@@ -92,7 +105,10 @@ class CompilerContextTest extends TestCase
         }
         ';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($phpCode), (new Configuration())->classReflector());
+        $reflector    = new FunctionReflector(
+            new StringSourceLocator($phpCode, $this->astLocator),
+            (new Configuration())->classReflector()
+        );
         $functionInfo = $reflector->reflect('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -19,7 +20,7 @@ class ClassReflectorTest extends TestCase
     public function testGetClassesFromFile() : void
     {
         $classes = (new ClassReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php')
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', (new Configuration())->astLocator())
         ))->getAllClasses();
 
         self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
@@ -31,8 +32,9 @@ class ClassReflectorTest extends TestCase
         $reflection = $this->createMock(ReflectionClass::class);
 
         /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
-        $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
-            ->setConstructorArgs(['<?php'])
+        $sourceLocator = $this
+            ->getMockBuilder(StringSourceLocator::class)
+            ->disableOriginalConstructor()
             ->setMethods(['locateIdentifier'])
             ->getMock();
 

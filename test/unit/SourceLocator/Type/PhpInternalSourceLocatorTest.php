@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use IntlGregorianCalendar;
+use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -16,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 
@@ -24,6 +27,25 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
  */
 class PhpInternalSourceLocatorTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $configuration    = new Configuration();
+        $this->astLocator = $configuration->astLocator();
+        $this->parser     = $configuration->phpParser();
+    }
+
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -39,7 +61,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanFetchInternalLocatedSource(string $className) : void
     {
-        $locator = new PhpInternalSourceLocator();
+        $locator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
 
         try {
             /** @var ReflectionClass $reflection */
@@ -68,7 +90,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
-        $phpInternalSourceLocator = new PhpInternalSourceLocator();
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
         $reflector                = new ClassReflector($phpInternalSourceLocator);
 
         try {
@@ -126,7 +148,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForNonExistentCode() : void
     {
-        $locator = new PhpInternalSourceLocator();
+        $locator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -140,7 +162,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForFunctions() : void
     {
-        $locator = new PhpInternalSourceLocator();
+        $locator = new PhpInternalSourceLocator($this->astLocator, $this->parser);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -169,7 +191,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             $this->markTestSkipped(\sprintf('Class "%s" is not available in this environment', $className));
         }
 
-        $reflector = new ClassReflector(new PhpInternalSourceLocator());
+        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->parser));
 
         self::assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
     }

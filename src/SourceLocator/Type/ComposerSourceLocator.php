@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 use Composer\Autoload\ClassLoader;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
@@ -22,9 +23,9 @@ class ComposerSourceLocator extends AbstractSourceLocator
      */
     private $classLoader;
 
-    public function __construct(ClassLoader $classLoader)
+    public function __construct(ClassLoader $classLoader, Locator $astLocator)
     {
-        parent::__construct();
+        parent::__construct($astLocator);
         $this->classLoader = $classLoader;
     }
 

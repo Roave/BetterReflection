@@ -12,6 +12,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
@@ -25,6 +26,25 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 class AutoloadSourceLocatorTest extends TestCase
 {
     /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    /**
+     * @var ClassReflector
+     */
+    private $classReflector;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $configuration        = new Configuration();
+        $this->astLocator     = $configuration->astLocator();
+        $this->classReflector = $configuration->classReflector();
+    }
+
+    /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockReflector()
@@ -34,7 +54,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testClassLoads() : void
     {
-        $reflector = new ClassReflector(new AutoloadSourceLocator());
+        $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
 
         self::assertFalse(\class_exists(ExampleClass::class, false));
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -45,7 +65,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testClassLoadsWorksWithExistingClass() : void
     {
-        $reflector = new ClassReflector(new AutoloadSourceLocator());
+        $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
 
         // Ensure class is loaded first
         new ClassForHinting();
@@ -65,7 +85,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(
             LocatedSource::class,
-            (new AutoloadSourceLocator())
+            (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableInterface::class,
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -84,7 +104,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(
             LocatedSource::class,
-            (new AutoloadSourceLocator())
+            (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableInterface::class,
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -101,7 +121,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(
             LocatedSource::class,
-            (new AutoloadSourceLocator())
+            (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -120,7 +140,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(
             LocatedSource::class,
-            (new AutoloadSourceLocator())
+            (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -130,7 +150,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testFunctionLoads() : void
     {
-        $reflector = new FunctionReflector(new AutoloadSourceLocator(), (new Configuration())->classReflector());
+        $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
         require_once __DIR__ . '/../../Fixture/Functions.php';
         $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
@@ -140,7 +160,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testFunctionReflectionFailsWhenFunctionNotDefined() : void
     {
-        $reflector = new FunctionReflector(new AutoloadSourceLocator(), (new Configuration())->classReflector());
+        $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
         $this->expectException(IdentifierNotFound::class);
         $reflector->reflect('this function does not exist, hopefully');
@@ -148,7 +168,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testNullReturnedWhenInvalidTypeGiven() : void
     {
-        $locator = new AutoloadSourceLocator();
+        $locator = new AutoloadSourceLocator($this->astLocator);
 
         $type           = new IdentifierType();
         $typeReflection = new ReflectionObject($type);
@@ -162,7 +182,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testReturnsNullWhenUnableToAutoload() : void
     {
-        $sourceLocator = new AutoloadSourceLocator();
+        $sourceLocator = new AutoloadSourceLocator($this->astLocator);
 
         self::assertNull($sourceLocator->locateIdentifier(
             new ClassReflector($sourceLocator),
@@ -177,7 +197,7 @@ class AutoloadSourceLocatorTest extends TestCase
         eval('class ' . $className . '{}');
 
         self::assertNull(
-            (new AutoloadSourceLocator())
+            (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
         );
     }
@@ -185,7 +205,7 @@ class AutoloadSourceLocatorTest extends TestCase
     public function testReturnsNullWithInternalFunctions() : void
     {
         self::assertNull(
-            (new AutoloadSourceLocator())
+            (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
                     new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))

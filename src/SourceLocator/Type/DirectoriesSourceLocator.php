@@ -9,6 +9,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 
@@ -23,15 +24,25 @@ class DirectoriesSourceLocator implements SourceLocator
     private $aggregateSourceLocator;
 
     /**
+     * @var array|string[]
+     */
+    private $directories;
+
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    /**
      * @param string[] $directories directories to scan
      *
      * @throws InvalidDirectory
      * @throws InvalidFileInfo
      */
-    public function __construct(array $directories)
+    public function __construct(array $directories, Locator $astLocator)
     {
         $this->aggregateSourceLocator = new AggregateSourceLocator(\array_values(\array_map(
-            function ($directory) : FileIteratorSourceLocator {
+            function ($directory) use ($astLocator) : FileIteratorSourceLocator {
                 if ( ! \is_string($directory)) {
                     throw InvalidDirectory::fromNonStringValue($directory);
                 }
@@ -40,10 +51,13 @@ class DirectoriesSourceLocator implements SourceLocator
                     throw InvalidDirectory::fromNonDirectory($directory);
                 }
 
-                return new FileIteratorSourceLocator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
-                    $directory,
-                    RecursiveDirectoryIterator::SKIP_DOTS
-                )));
+                return new FileIteratorSourceLocator(
+                    new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                        $directory,
+                        RecursiveDirectoryIterator::SKIP_DOTS
+                    )),
+                    $astLocator
+                );
             },
             $directories
         )));

@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -17,6 +19,18 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class AggregateSourceLocatorTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->astLocator = (new Configuration())->astLocator();
+    }
+
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -78,8 +92,8 @@ class AggregateSourceLocatorTest extends TestCase
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $locator1 = new StringSourceLocator('<?php');
-        $locator2 = new StringSourceLocator('<?php class Foo {}');
+        $locator1 = new StringSourceLocator('<?php', $this->astLocator);
+        $locator2 = new StringSourceLocator('<?php class Foo {}', $this->astLocator);
 
         $aggregate = new AggregateSourceLocator([$locator1, $locator2]);
 

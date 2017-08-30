@@ -47,7 +47,7 @@ class LocatorTest extends TestCase
         ';
 
         $classInfo = $this->locator->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -62,7 +62,7 @@ class LocatorTest extends TestCase
         ';
 
         $classInfo = $this->locator->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -77,7 +77,7 @@ class LocatorTest extends TestCase
         ';
 
         $functionInfo = $this->locator->findReflection(
-            new FunctionReflector(new StringSourceLocator($php), (new Configuration())->classReflector()),
+            new FunctionReflector(new StringSourceLocator($php, $this->locator), (new Configuration())->classReflector()),
             new LocatedSource($php, null),
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION)
         );
@@ -91,7 +91,7 @@ class LocatorTest extends TestCase
 
         $this->expectException(IdentifierNotFound::class);
         $this->locator->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -106,7 +106,7 @@ class LocatorTest extends TestCase
 
         $this->expectException(IdentifierNotFound::class);
         $this->locator->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -117,7 +117,7 @@ class LocatorTest extends TestCase
         $phpCode = '<?php syntax error';
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $sourceLocator  = new StringSourceLocator($phpCode);
+        $sourceLocator  = new StringSourceLocator($phpCode, $this->locator);
         $reflector      = new ClassReflector($sourceLocator);
 
         $locatedSource = new LocatedSource($phpCode, null);

@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Configuration;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\Fixture;
 
@@ -14,11 +16,21 @@ use Roave\BetterReflectionTest\Fixture;
  */
 class NotAClassReflectionTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->astLocator = (new Configuration())->astLocator();
+    }
+
     public function testFromInterface() : void
     {
-        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php');
-        $reflector     = new ClassReflector($sourceLocator);
-
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php', $this->astLocator));
         $exception = NotAClassReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleInterface::class));
 
         self::assertInstanceOf(NotAClassReflection::class, $exception);
@@ -30,9 +42,7 @@ class NotAClassReflectionTest extends TestCase
 
     public function testFromTrait() : void
     {
-        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php');
-        $reflector     = new ClassReflector($sourceLocator);
-
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php', $this->astLocator));
         $exception = NotAClassReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleTrait::class));
 
         self::assertInstanceOf(NotAClassReflection::class, $exception);

@@ -30,13 +30,12 @@ class FunctionReflectorTest extends TestCase
 
     public function testReflectProxiesToGenericReflectMethod() : void
     {
-        $php = '<?php function foo() {}';
-
         $reflection = $this->createMock(ReflectionFunction::class);
 
         /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
-        $sourceLocator = $this->getMockBuilder(StringSourceLocator::class)
-            ->setConstructorArgs([$php])
+        $sourceLocator = $this
+            ->getMockBuilder(StringSourceLocator::class)
+            ->disableOriginalConstructor()
             ->setMethods(['locateIdentifier'])
             ->getMock();
 
@@ -52,7 +51,7 @@ class FunctionReflectorTest extends TestCase
     public function testGetFunctionsFromFile() : void
     {
         $functions = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php'),
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', (new Configuration())->astLocator()),
             $this->classReflector
         ))->getAllFunctions();
 
