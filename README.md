@@ -54,6 +54,19 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
  * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
  * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
+ * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Ast\Locator::__construct` now has mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\AbstractSourceLocator::__construct` now has mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\AutoloadSourceLocator::__construct` now has mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\ClosureSourceLocator::__construct` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\ComposerSourceLocator::__construct` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\DirectoriesSourceLocator::__construct` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\EvaledCodeSourceLocator::__construct` now has mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\FileIteratorSourceLocator::__construct` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\PhpInternalSourceLocator::__construct` now has mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\SingleFileSourceLocator::__construct` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\SourceLcoator\Type\StringSourceLocator::__construct` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\Util\FindReflectionOnLine::__construct` now has mandatory constructor arguments
 
 ## More documentation
 
