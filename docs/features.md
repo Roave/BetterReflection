@@ -56,5 +56,5 @@ You can do similar things with parameter types also:
 
 ```
 $parameterInfo->setType('int');
-$parameterInfo->removeType();
+(new RemoveParameterType())($parameterInfo);
 ```

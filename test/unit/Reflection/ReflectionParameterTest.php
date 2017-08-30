@@ -372,21 +372,6 @@ class ReflectionParameterTest extends TestCase
         );
     }
 
-    public function testRemoveType() : void
-    {
-        $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
-        $methodInfo    = $classInfo->getMethod('foo');
-        $parameterInfo = $methodInfo->getParameter('intParam');
-
-        $parameterInfo->removeType();
-
-        self::assertNull($parameterInfo->getType());
-        self::assertStringStartsWith(
-            'public function foo($intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
-        );
-    }
-
     public function testIsCallable() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);

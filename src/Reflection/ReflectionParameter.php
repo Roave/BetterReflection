@@ -461,14 +461,6 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * Remove the parameter type declaration completely.
-     */
-    public function removeType() : void
-    {
-        $this->node->type = null;
-    }
-
-    /**
      * Is this parameter an array?
      *
      * @return bool
