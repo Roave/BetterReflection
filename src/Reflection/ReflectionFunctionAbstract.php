@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Closure;
 use Exception;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
@@ -17,13 +16,10 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
@@ -513,27 +509,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function getAst() : Node\FunctionLike
     {
         return $this->node;
-    }
-
-    /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * $reflectionFunction->setBodyFromClosure(function () { return true; });
-     *
-     * @param \Closure $newBody
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
-     */
-    public function setBodyFromClosure(Closure $newBody) : void
-    {
-        /** @var self $closureReflection */
-        $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
-            $this->reflector,
-            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
-        );
-
-        $this->node->stmts = $closureReflection->getNode()->stmts;
     }
 
     /**

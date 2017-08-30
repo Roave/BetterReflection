@@ -23,10 +23,14 @@ You can replace the body of the function like so:
 <?php
 
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromClosure;
 
-$classInfo = (new BetterReflection())->classReflector()->reflect('MyClass');
+$betterReflection = new BetterReflection();
 
-$classInfo->getMethod('foo')->setBody(function () {
+$classInfo = $betterReflection->classReflector()->reflect('MyClass');
+
+$methodInfo = $classInfo->getMethod('foo');
+$modifiedMethodInfo = (new SetFunctionBodyFromClosure($betterReflection->phpParser()))($methodInfo, function () {
     return 4;
 });
 ```
