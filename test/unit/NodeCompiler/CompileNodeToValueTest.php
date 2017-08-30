@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
-use PhpParser\Lexer;
+
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 use PhpParser\Node\Expr\BinaryOp\Spaceship;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
-use PhpParser\Parser;
+
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
