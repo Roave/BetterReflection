@@ -57,11 +57,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * @var Parser
      */
-    private $parser;
+    private static $parser;
 
     protected function __construct()
     {
-        $this->parser = (new Configuration())->phpParser();
     }
 
     public static function export() : void
@@ -548,7 +547,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function setBodyFromClosure(Closure $newBody) : void
     {
         /** @var self $closureReflection */
-        $closureReflection = (new ClosureSourceLocator($newBody, $this->parser))->locateIdentifier(
+        $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
             $this->reflector,
             new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
@@ -567,7 +566,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        $this->node->stmts = $this->parser->parse('<?php ' . $newBody);
+        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
     }
 
     /**
@@ -635,5 +634,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $traverser->traverse($this->node->getStmts());
 
         return $visitor->getReturnNodes();
+    }
+
+    private final function loadStaticParser() : Parser
+    {
+        return self::$parser ?? self::$parser = (new Configuration())->phpParser();
     }
 }
