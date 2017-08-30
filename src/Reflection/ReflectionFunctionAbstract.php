@@ -551,26 +551,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     }
 
     /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * // $ast should be an array of Nodes
-     * $reflectionFunction->setBodyFromAst($ast);
-     *
-     * @param Node[] $nodes
-     */
-    public function setBodyFromAst(array $nodes) : void
-    {
-        // This slightly confusing code simply type-checks the $sourceLocators
-        // array by unpacking them and splatting them in the closure.
-        $validator = function (Node ...$node) : array {
-            return $node;
-        };
-        $this->node->stmts = $validator(...$nodes);
-    }
-
-    /**
      * Add a new parameter to the method/function.
      *
      * @param string $parameterName

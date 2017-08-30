@@ -74,6 +74,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType()` instead
  * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` was dropped, please use the newly
    introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setBodyFromAst()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromAst()` instead
 
 ## More documentation
 

@@ -8,7 +8,6 @@ use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
-use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
@@ -33,7 +32,6 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use stdClass;
-use TypeError;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
@@ -598,33 +596,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         $function  = $reflector->reflect('foo');
 
         $function->setBodyFromString("echo 'Hello world!';");
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromAstWithInvalidArgumentsThrowsException() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $this->expectException(TypeError::class);
-        $function->setBodyFromAst([1]);
-    }
-
-    public function testSetBodyFromAst() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->setBodyFromAst([
-            new Echo_([
-                new String_('Hello world!'),
-            ]),
-        ]);
 
         self::assertSame("echo 'Hello world!';", $function->getBodyCode());
     }
