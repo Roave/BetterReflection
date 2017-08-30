@@ -59,7 +59,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        if ( ! ($locatedSource = $this->createLocatedSource(new Identifier('*', $identifierType)))) {
+        if ( ! ($locatedSource = $this->createLocatedSource(new Identifier(Identifier::WILDCARD, $identifierType)))) {
             return [];
         }
 
