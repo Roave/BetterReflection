@@ -1358,27 +1358,6 @@ class ReflectionClass implements Reflection, CoreReflector
     }
 
     /**
-     * Remove the named method from the class.
-     *
-     * Returns true if method was successfully removed.
-     * Returns false if method was not found, or could not be removed.
-     *
-     * @param string $methodName
-     * @return bool
-     */
-    public function removeMethod(string $methodName) : bool
-    {
-        $lowerName = \strtolower($methodName);
-        foreach ($this->node->stmts as $key => $stmt) {
-            if ($stmt instanceof ClassMethod && $lowerName === \strtolower($stmt->name)) {
-                unset($this->node->stmts[$key], $this->cachedMethods);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Add a new method to the class.
      *
      * @param string $methodName

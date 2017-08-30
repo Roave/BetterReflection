@@ -1448,23 +1448,6 @@ class ReflectionClassTest extends TestCase
         self::assertSame('Foo', $ast->name);
     }
 
-    public function testRemoveMethod() : void
-    {
-        $php = '<?php
-            class Foo {
-                public function bar() {}
-            }
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-
-        self::assertTrue($reflection->hasMethod('bar'));
-
-        $reflection->removeMethod('bar');
-
-        self::assertFalse($reflection->hasMethod('bar'));
-    }
-
     public function testAddMethod() : void
     {
         $php = '<?php

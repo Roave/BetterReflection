@@ -622,14 +622,6 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function removeMethod(string $methodName) : bool
-    {
-        return $this->reflectionClass->removeMethod($methodName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function addMethod(string $methodName) : void
     {
         $this->reflectionClass->addMethod($methodName);
