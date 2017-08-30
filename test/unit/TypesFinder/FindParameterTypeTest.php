@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\TypesFinder;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param as ParamNode;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -55,7 +55,7 @@ class FindParameterTypeTest extends TestCase
             }
         ';
 
-        $param = (new ClassReflector(new StringSourceLocator($php, (new Configuration())->astLocator())))
+        $param = (new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator())))
             ->reflect('MyNamespace\ThingThatLogs')
             ->getMethod('foo')
             ->getParameter('bar');

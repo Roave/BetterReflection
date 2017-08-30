@@ -11,7 +11,7 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -111,10 +111,10 @@ class ReflectionObject extends ReflectionClass
             // @TODO inject rather than locate?
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
                 $object,
-                (new Configuration())->phpParser()
+                (new BetterReflection())->phpParser()
             ));
         } else {
-            $reflector = (new Configuration())->classReflector();
+            $reflector = (new BetterReflection())->classReflector();
         }
 
         return new self($reflector, $reflector->reflect($className), $object);

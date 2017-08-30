@@ -22,7 +22,7 @@ EOF;
 $reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
     new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
         $source,
-        (new Roave\BetterReflection\Configuration())->astLocator()
+        (new Roave\BetterReflection\BetterReflection())->astLocator()
     )
 );
 

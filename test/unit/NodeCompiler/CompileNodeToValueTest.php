@@ -13,7 +13,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -40,7 +40,7 @@ class CompileNodeToValueTest extends TestCase
     {
         parent::setUp();
 
-        $configuration    = new Configuration();
+        $configuration    = new BetterReflection();
         $this->parser     = $configuration->phpParser();
         $this->astLocator = $configuration->astLocator();
     }

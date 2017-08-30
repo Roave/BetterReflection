@@ -16,7 +16,7 @@ use Reflection;
 use ReflectionFunctionAbstract;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -47,7 +47,7 @@ class ReflectionPropertyTest extends TestCase
     {
         global $loader;
 
-        $this->astLocator = (new Configuration())->astLocator();
+        $this->astLocator = (new BetterReflection())->astLocator();
         $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 

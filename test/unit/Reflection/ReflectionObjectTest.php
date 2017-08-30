@@ -13,7 +13,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
@@ -41,7 +41,7 @@ class ReflectionObjectTest extends TestCase
      */
     private function parse(string $code) : array
     {
-        return (new Configuration())->phpParser()->parse($code);
+        return (new BetterReflection())->phpParser()->parse($code);
     }
 
     public function testExceptionThrownWhenNonObjectGiven() : void

@@ -16,7 +16,7 @@ use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
@@ -638,6 +638,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     private final function loadStaticParser() : Parser
     {
-        return self::$parser ?? self::$parser = (new Configuration())->phpParser();
+        return self::$parser ?? self::$parser = (new BetterReflection())->phpParser();
     }
 }

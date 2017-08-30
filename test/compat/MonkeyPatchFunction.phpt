@@ -19,7 +19,7 @@ var_dump(function_exists('increment'));
 
 $sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
     $source,
-    (new Roave\BetterReflection\Configuration())->astLocator()
+    (new Roave\BetterReflection\BetterReflection())->astLocator()
 );
 
 $reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(

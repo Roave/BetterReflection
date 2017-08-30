@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\Reflector;
 use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -26,7 +26,7 @@ class FindReflectionsInTreeTest extends TestCase
      */
     private function getAstForSource(LocatedSource $source) : array
     {
-        return (new Configuration())->phpParser()->parse($source->getSource());
+        return (new BetterReflection())->phpParser()->parse($source->getSource());
     }
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void

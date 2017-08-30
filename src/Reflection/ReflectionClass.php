@@ -18,7 +18,7 @@ use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
@@ -192,7 +192,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public static function createFromName(string $className) : self
     {
-        return (new Configuration())->classReflector()->reflect($className);
+        return (new BetterReflection())->classReflector()->reflect($className);
     }
 
     /**

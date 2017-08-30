@@ -5,7 +5,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -39,7 +39,7 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $configuration        = new Configuration();
+        $configuration        = new BetterReflection();
         $this->astLocator     = $configuration->astLocator();
         $this->classReflector = $configuration->classReflector();
     }

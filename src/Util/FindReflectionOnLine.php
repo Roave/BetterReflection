@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Util;
 
 use InvalidArgumentException;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -37,11 +37,11 @@ final class FindReflectionOnLine
     /**
      * @deprecated
      *
-     * @see \Roave\BetterReflection\Configuration#findReflectionsOnLine()
+     * @see \Roave\BetterReflection\BetterReflection#findReflectionsOnLine()
      */
     public static function buildDefaultFinder() : self
     {
-        return (new Configuration())->findReflectionsOnLine();
+        return (new BetterReflection())->findReflectionsOnLine();
     }
 
     /**

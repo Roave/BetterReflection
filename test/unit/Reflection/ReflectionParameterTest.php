@@ -12,7 +12,7 @@ use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -57,7 +57,7 @@ class ReflectionParameterTest extends TestCase
     public function setUp() : void
     {
         global $loader;
-        $configuration    = new Configuration();
+        $configuration    = new BetterReflection();
         $this->astLocator = $configuration->astLocator();
         $this->parser     = $configuration->phpParser();
         $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));

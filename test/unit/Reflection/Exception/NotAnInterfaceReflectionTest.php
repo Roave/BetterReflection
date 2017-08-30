@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -25,7 +25,7 @@ class NotAnInterfaceReflectionTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new Configuration())->astLocator();
+        $this->astLocator = (new BetterReflection())->astLocator();
     }
 
     public function testFromClass() : void

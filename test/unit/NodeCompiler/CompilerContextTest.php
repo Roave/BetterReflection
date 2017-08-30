@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -28,7 +28,7 @@ class CompilerContextTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new Configuration())->astLocator();
+        $this->astLocator = (new BetterReflection())->astLocator();
     }
 
     public function testCreatingContextWithoutSelf() : void
@@ -107,7 +107,7 @@ class CompilerContextTest extends TestCase
 
         $reflector    = new FunctionReflector(
             new StringSourceLocator($phpCode, $this->astLocator),
-            (new Configuration())->classReflector()
+            (new BetterReflection())->classReflector()
         );
         $functionInfo = $reflector->reflect('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());

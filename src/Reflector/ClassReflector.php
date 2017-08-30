@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector;
 
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
@@ -27,11 +27,11 @@ class ClassReflector implements Reflector
     /**
      * @deprecated
      *
-     * @see \Roave\BetterReflection\Configuration#classReflector()
+     * @see \Roave\BetterReflection\BetterReflection#classReflector()
      */
     public static function buildDefaultReflector() : self
     {
-        return (new Configuration())->classReflector();
+        return (new BetterReflection())->classReflector();
     }
 
     /**

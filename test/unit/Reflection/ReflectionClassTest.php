@@ -19,7 +19,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -68,7 +68,7 @@ class ReflectionClassTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new Configuration())->astLocator();
+        $this->astLocator = (new BetterReflection())->astLocator();
     }
 
     private function getComposerLocator() : ComposerSourceLocator

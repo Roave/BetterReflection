@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Closure;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -35,7 +35,7 @@ class ClosureSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->parser    = (new Configuration())->phpParser();
+        $this->parser    = (new BetterReflection())->phpParser();
         $this->reflector = $this->createMock(Reflector::class);
     }
 

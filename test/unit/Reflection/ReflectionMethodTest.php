@@ -15,7 +15,7 @@ use Reflection;
 use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -52,7 +52,7 @@ class ReflectionMethodTest extends TestCase
     public function setUp() : void
     {
         global $loader;
-        $this->astLocator = (new Configuration())->astLocator();
+        $this->astLocator = (new BetterReflection())->astLocator();
         $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 

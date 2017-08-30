@@ -5,7 +5,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use PhpParser\Parser;
 use ReflectionClass;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;

@@ -5,7 +5,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -34,7 +34,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $configuration    = new Configuration();
+        $configuration    = new BetterReflection();
         $this->astLocator = $configuration->astLocator();
         $this->parser     = $configuration->phpParser();
     }

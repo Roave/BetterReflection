@@ -5,7 +5,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use ReflectionClass;
 use ReflectionFunction;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -29,7 +29,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     public function __construct(AstLocator $astLocator = null)
     {
-        $validLocator = $astLocator ?? self::$currentAstLocator ?? (new Configuration())->astLocator();
+        $validLocator = $astLocator ?? self::$currentAstLocator ?? (new BetterReflection())->astLocator();
 
         parent::__construct($validLocator);
 

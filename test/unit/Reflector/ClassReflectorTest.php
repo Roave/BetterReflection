@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -20,7 +20,7 @@ class ClassReflectorTest extends TestCase
     public function testGetClassesFromFile() : void
     {
         $classes = (new ClassReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', (new Configuration())->astLocator())
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', (new BetterReflection())->astLocator())
         ))->getAllClasses();
 
         self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);

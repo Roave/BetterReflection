@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -25,7 +25,7 @@ class FunctionReflectorTest extends TestCase
     {
         parent::setUp();
 
-        $this->classReflector = (new Configuration())->classReflector();
+        $this->classReflector = (new BetterReflection())->classReflector();
     }
 
     public function testReflectProxiesToGenericReflectMethod() : void
@@ -51,7 +51,7 @@ class FunctionReflectorTest extends TestCase
     public function testGetFunctionsFromFile() : void
     {
         $functions = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', (new Configuration())->astLocator()),
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', (new BetterReflection())->astLocator()),
             $this->classReflector
         ))->getAllFunctions();
 

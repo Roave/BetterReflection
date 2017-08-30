@@ -5,7 +5,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
@@ -18,7 +18,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         return new ComposerSourceLocator(
             require __DIR__ . '/../../../vendor/autoload.php',
-            (new Configuration())->astLocator()
+            (new BetterReflection())->astLocator()
         );
     }
 
@@ -123,7 +123,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine) : void
     {
-        $reflector       = new ClassReflector(new StringSourceLocator($php, (new Configuration())->astLocator()));
+        $reflector       = new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator()));
         $classReflection = $reflector->reflect('\T');
         $constReflection = $classReflection->getReflectionConstant('TEST');
         $this->assertEquals($startLine, $constReflection->getStartLine());
@@ -157,7 +157,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
-        $reflector          = new ClassReflector(new StringSourceLocator($php, (new Configuration())->astLocator()));
+        $reflector          = new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator()));
         $classReflection    = $reflector->reflect('T');
         $constantReflection = $classReflection->getReflectionConstant('TEST');
 

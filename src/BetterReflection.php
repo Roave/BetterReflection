@@ -20,7 +20,7 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
 
-final class Configuration
+final class BetterReflection
 {
     /**
      * @var SourceLocator|null

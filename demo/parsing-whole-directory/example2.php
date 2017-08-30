@@ -4,7 +4,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
@@ -15,7 +15,7 @@ $directories = [__DIR__ . '/src'];
 $sourceLocator = new AggregateSourceLocator([
     new DirectoriesSourceLocator($directories),
     // ↓ required to autoload parent classes/interface from another directory than /src (e.g. /vendor)
-    new AutoloadSourceLocator((new Configuration())->astLocator())
+    new AutoloadSourceLocator((new BetterReflection())->astLocator())
 ]);
 
 $classReflector = new ClassReflector($sourceLocator);

@@ -10,7 +10,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -41,7 +41,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $configuration    = new Configuration();
+        $configuration    = new BetterReflection();
         $this->astLocator = $configuration->astLocator();
         $this->parser     = $configuration->phpParser();
     }

@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use phpDocumentor\Reflection\Types\Boolean;
 use PHPUnit\Framework\TestCase;
 use Reflector;
-use Roave\BetterReflection\Configuration;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -33,7 +33,7 @@ class ReflectionFunctionTest extends TestCase
     {
         parent::setUp();
 
-        $configuration        = new Configuration();
+        $configuration        = new BetterReflection();
         $this->classReflector = $configuration->classReflector();
         $this->astLocator     = $configuration->astLocator();
     }
