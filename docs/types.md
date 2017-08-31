@@ -17,9 +17,12 @@ class MyClass
 ```
 
 ```php
+<?php
 
-$classInfo = ReflectionClass::createFromName('MyClass');
-$methodInfo = $classInfo->getMethod('myMethod');
+use Roave\BetterReflection\BetterReflection;
+
+$classInfo     = (new BetterReflection())->classReflector()->reflect('MyClass');
+$methodInfo    = $classInfo->getMethod('myMethod');
 $parameterInfo = $methodInfo->getParameter('myParameter');
 
 // Will fetch the language hint
