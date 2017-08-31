@@ -4,9 +4,9 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\BetterReflection;
 
-$reflection = ReflectionClass::createFromName('stdClass');
+$reflection = (new BetterReflection())->classReflector()->reflect(\stdClass::class);
+
 echo $reflection->getName() . "\n"; // stdClass
 echo ($reflection->isInternal() === true ? 'internal' : 'not internal') . "\n"; // internal
-

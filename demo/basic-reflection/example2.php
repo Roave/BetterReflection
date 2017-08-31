@@ -2,10 +2,11 @@
 
 // Load an autoloadable class
 
+use Roave\BetterReflection\BetterReflection;
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
+$reflection = (new BetterReflection())->classReflector()->reflect(\stdClass::class);
 
-$reflection = ReflectionClass::createFromName(ReflectionClass::class);
 echo $reflection->getName() . "\n"; // ReflectionClass
 echo ($reflection->isInternal() === true ? 'internal' : 'not internal') . "\n"; // not internal
