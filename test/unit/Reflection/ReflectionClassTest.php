@@ -20,13 +20,10 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Fixture\StaticPropertyGetSet;
-use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
@@ -50,6 +47,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
+use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
@@ -1336,102 +1334,28 @@ class ReflectionClassTest extends TestCase
         $unused = clone $classInfo;
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenClassDoesNotExist() : void
-    {
-        $php = '<?php
-            class Foo {}
-        ';
-
-        $classInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-        $this->expectException(ClassDoesNotExist::class);
-        $classInfo->getStaticPropertyValue('foo');
-    }
-
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
+        $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixtureFile;
 
-        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))
-            ->reflect(StaticPropertyGetSet\Foo::class);
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixtureFile, $this->astLocator)))
+            ->reflect(StaticPropertyGetSet::class);
 
         $this->expectException(PropertyDoesNotExist::class);
         $classInfo->getStaticPropertyValue('foo');
-    }
-
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsProtected() : void
-    {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
-
-        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))
-            ->reflect(StaticPropertyGetSet\Bar::class);
-
-        $this->expectException(PropertyNotPublic::class);
-        $classInfo->getStaticPropertyValue('bat');
-    }
-
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsPrivate() : void
-    {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
-
-        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))
-            ->reflect(StaticPropertyGetSet\Bar::class);
-
-        $this->expectException(PropertyNotPublic::class);
-        $classInfo->getStaticPropertyValue('qux');
-    }
-
-    public function testGetStaticPropertyValueGetsValue() : void
-    {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
-
-        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))
-            ->reflect(StaticPropertyGetSet\Bar::class);
-
-        StaticPropertyGetSet\Bar::$baz = 'test value';
-
-        self::assertSame('test value', $classInfo->getStaticPropertyValue('baz'));
-    }
-
-    public function testSetStaticPropertyValueThrowsExceptionWhenClassDoesNotExist() : void
-    {
-        $php = '<?php
-            class Foo {}
-        ';
-
-        $classInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-        $this->expectException(ClassDoesNotExist::class);
-        $classInfo->setStaticPropertyValue('foo', 'bar');
     }
 
     public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
+        $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixtureFile;
 
-        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))
-            ->reflect(StaticPropertyGetSet\Foo::class);
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixtureFile, $this->astLocator)))
+            ->reflect(StaticPropertyGetSet::class);
 
         $this->expectException(PropertyDoesNotExist::class);
-        $classInfo->setStaticPropertyValue('foo', 'bar');
-    }
-
-    public function testSetStaticPropertyValueSetsValue() : void
-    {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
-
-        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))
-            ->reflect(StaticPropertyGetSet\Bar::class);
-
-        StaticPropertyGetSet\Bar::$baz = 'value before';
-
-        $classInfo->setStaticPropertyValue('baz', 'value after');
-
-        self::assertSame('value after', StaticPropertyGetSet\Bar::$baz);
+        $classInfo->setStaticPropertyValue('foo', null);
     }
 
     public function testGetAst() : void

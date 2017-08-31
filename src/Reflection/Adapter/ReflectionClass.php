@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionClass as CoreReflectionClass;
+use ReflectionException as CoreReflectionException;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -180,7 +181,13 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getProperty($name)
     {
-        return new ReflectionProperty($this->betterReflectionClass->getProperty($name));
+        $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
+
+        if (null === $betterReflectionProperty) {
+            return null;
+        }
+
+        return new ReflectionProperty($betterReflectionProperty);
     }
 
     /**
@@ -408,7 +415,25 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getStaticPropertyValue($name, $default = null)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        $property = $this->getProperty($name);
+
+        if (null === $property) {
+            if (2 === \func_num_args()) {
+                return $default;
+            }
+
+            throw new CoreReflectionException(\sprintf('Property "%s" does not exist', $name));
+        }
+
+        if ( ! $property->isAccessible()) {
+            throw new CoreReflectionException(\sprintf('Property "%s" is not accessible', $name));
+        }
+
+        if ( ! $property->isStatic()) {
+            throw new CoreReflectionException(\sprintf('Property "%s" is not static', $name));
+        }
+
+        return $property->getValue();
     }
 
     /**
@@ -416,7 +441,21 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function setStaticPropertyValue($name, $value)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        $property = $this->getProperty($name);
+
+        if (null === $property) {
+            throw new CoreReflectionException(\sprintf('Property "%s" does not exist', $name));
+        }
+
+        if ( ! $property->isAccessible()) {
+            throw new CoreReflectionException(\sprintf('Property "%s" is not accessible', $name));
+        }
+
+        if ( ! $property->isStatic()) {
+            throw new CoreReflectionException(\sprintf('Property "%s" is not static', $name));
+        }
+
+        $property->setValue($value);
     }
 
     /**

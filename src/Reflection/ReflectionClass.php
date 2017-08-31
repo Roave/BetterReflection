@@ -20,11 +20,12 @@ use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -1294,29 +1295,20 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * @return mixed
      *
-     * @throws PropertyDoesNotExist
      * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
      */
     public function getStaticPropertyValue(string $propertyName)
     {
-        if ( ! \class_exists($this->getName(), false)) {
-            throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
-        }
-
         $property = $this->getProperty($propertyName);
 
         if ( ! $property || ! $property->isStatic()) {
-            throw new PropertyDoesNotExist('Property does not exist on class or is not static');
+            throw PropertyDoesNotExist::fromName($propertyName);
         }
 
-        // PHP behaviour is to simply say "property does not exist" if accessing
-        // protected or private values. Here we be a little more explicit in
-        // reasoning...
-        if ( ! $property->isPublic()) {
-            throw new PropertyNotPublic('Property is not public');
-        }
-
-        return $this->getName()::${$propertyName};
+        return $property->getValue();
     }
 
     /**
@@ -1325,27 +1317,21 @@ class ReflectionClass implements Reflection, CoreReflector
      * @param string $propertyName
      * @param mixed $value
      * @return void
+     *
+     * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
      */
     public function setStaticPropertyValue(string $propertyName, $value) : void
     {
-        if ( ! \class_exists($this->getName(), false)) {
-            throw new ClassDoesNotExist('Property cannot be set as the class is not loaded');
-        }
-
         $property = $this->getProperty($propertyName);
 
         if ( ! $property || ! $property->isStatic()) {
-            throw new PropertyDoesNotExist('Property does not exist on class or is not static');
+            throw PropertyDoesNotExist::fromName($propertyName);
         }
 
-        // PHP behaviour is to simply say "property does not exist" if accessing
-        // protected or private values. Here we be a little more explicit in
-        // reasoning...
-        if ( ! $property->isPublic()) {
-            throw new PropertyNotPublic('Property is not public');
-        }
-
-        $this->getName()::${$propertyName} = $value;
+        $property->setValue($value);
     }
 
     /**
