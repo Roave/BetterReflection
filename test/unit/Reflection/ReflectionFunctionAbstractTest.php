@@ -59,7 +59,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         parent::setUp();
 
-        $configuration = (new BetterReflection());
+        $configuration = new BetterReflection();
 
         $this->parser         = $configuration->phpParser();
         $this->classReflector = $configuration->classReflector();
