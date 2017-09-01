@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
-use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 use PhpParser\Node\Expr\BinaryOp\Spaceship;
@@ -13,10 +12,12 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 /**
@@ -25,17 +26,36 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 class CompileNodeToValueTest extends TestCase
 {
     /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $configuration    = new BetterReflection();
+        $this->parser     = $configuration->phpParser();
+        $this->astLocator = $configuration->astLocator();
+    }
+
+    /**
      * @param string $phpCode
      * @return \PhpParser\Node
      */
     private function parseCode(string $phpCode) : Node
     {
-        return (new Parser\Php7(new Lexer()))->parse('<?php ' . $phpCode . ';')[0];
+        return $this->parser->parse('<?php ' . $phpCode . ';')[0];
     }
 
     private function getDummyContext() : CompilerContext
     {
-        return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php')), null);
+        return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php', $this->astLocator)), null);
     }
 
     public function nodeProvider() : array
@@ -199,7 +219,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector  = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo  = $methodInfo->getParameter('param');
@@ -219,7 +239,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector  = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo  = $reflector->reflect('Bat');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo  = $methodInfo->getParameter('param');
@@ -236,7 +256,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector  = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo  = $methodInfo->getParameter('param');
@@ -255,7 +275,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bat');
         self::assertSame('Foo', $classInfo->getConstant('QUX'));
     }
@@ -272,7 +292,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
         self::assertSame('Bar\Foo', $classInfo->getConstant('QUX'));
     }
@@ -289,7 +309,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
         self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
@@ -306,7 +326,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
         self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
@@ -324,7 +344,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
@@ -344,7 +364,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
@@ -363,7 +383,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Foo\Bar');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
@@ -380,7 +400,7 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode));
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }

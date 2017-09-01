@@ -6,8 +6,11 @@ namespace Roave\BetterReflectionTest\Reflection;
 use phpDocumentor\Reflection\Types\Boolean;
 use PHPUnit\Framework\TestCase;
 use Reflector;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use stdClass;
 
@@ -16,11 +19,30 @@ use stdClass;
  */
 class ReflectionFunctionTest extends TestCase
 {
+    /**
+     * @var ClassReflector
+     */
+    private $classReflector;
+
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $configuration        = new BetterReflection();
+        $this->classReflector = $configuration->classReflector();
+        $this->astLocator     = $configuration->astLocator();
+    }
+
     public function testImplementsReflector() : void
     {
         $php = '<?php function foo() {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php));
+        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionInfo = $reflector->reflect('foo');
 
         self::assertInstanceOf(Reflector::class, $functionInfo);
@@ -30,7 +52,7 @@ class ReflectionFunctionTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->inNamespace());
@@ -43,7 +65,7 @@ class ReflectionFunctionTest extends TestCase
     {
         $php = '<?php namespace A\B { function foo() {} }';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('A\B\foo');
 
         self::assertTrue($function->inNamespace());
@@ -56,7 +78,7 @@ class ReflectionFunctionTest extends TestCase
     {
         $php = '<?php namespace { function foo() {} }';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->inNamespace());
@@ -69,7 +91,7 @@ class ReflectionFunctionTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->isDisabled());
@@ -79,7 +101,7 @@ class ReflectionFunctionTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
         self::assertTrue($function->isUserDefined());
@@ -141,7 +163,7 @@ class ReflectionFunctionTest extends TestCase
              */
             function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
         $types = $function->getDocBlockReturnTypes();

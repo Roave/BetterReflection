@@ -15,12 +15,14 @@ use Reflection;
 use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -42,10 +44,16 @@ class ReflectionMethodTest extends TestCase
      */
     private $reflector;
 
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
     public function setUp() : void
     {
         global $loader;
-        $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
+        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 
     public function testCreateFromName() : void
@@ -142,7 +150,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsConstructorWhenPhp4Style() : void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php'));
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php', $this->astLocator));
         $classInfo = $reflector->reflect(Php4StyleConstruct::class);
 
         $method = $classInfo->getMethod('Php4StyleConstruct');
@@ -151,7 +159,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testsIsConstructorWhenPhp4StyleInNamespace() : void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php'));
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php', $this->astLocator));
         $classInfo = $reflector->reflect(Php4StyleConstructInNamespace::class);
 
         $method = $classInfo->getMethod('Php4StyleConstructInNamespace');
@@ -159,7 +167,7 @@ class ReflectionMethodTest extends TestCase
     }
     public function testIsConstructorWhenPhp4StyleCaseInsensitive() : void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php'));
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php', $this->astLocator));
         $classInfo = $reflector->reflect(Php4StyleCaseInsensitiveConstruct::class);
 
         $method = $classInfo->getMethod('PHP4STYLECASEINSENSITIVECONSTRUCT');
@@ -233,7 +241,7 @@ class ReflectionMethodTest extends TestCase
         }
         ';
 
-        $methodInfo = (new ClassReflector(new StringSourceLocator($php)))
+        $methodInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))
             ->reflect('Foo')
             ->getMethod('someMethod');
 
@@ -253,7 +261,7 @@ class ReflectionMethodTest extends TestCase
         }
         ';
 
-        $returnType = (new ClassReflector(new StringSourceLocator($php)))
+        $returnType = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))
             ->reflect(Foo::class)
             ->getMethod('someMethod')
             ->getReturnType();
@@ -315,7 +323,7 @@ class ReflectionMethodTest extends TestCase
     public function testGetPrototype(string $class, string $method, ?string $expectedPrototype) : void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
-        $reflector = new ClassReflector(new SingleFileSourceLocator($fixture));
+        $reflector = new ClassReflector(new SingleFileSourceLocator($fixture, $this->astLocator));
 
         if (null === $expectedPrototype) {
             $this->expectException(MethodPrototypeNotFound::class);
@@ -388,7 +396,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetDeclaringAndImplementingClassWithMethodFromTrait() : void
     {
-        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php'));
+        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
         $methodReflection = $classReflection->getMethod('methodFromTrait');
 
@@ -399,7 +407,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetDeclaringAndImplementingClassWithMethodFromClass() : void
     {
-        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php'));
+        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
         $methodReflection = $classReflection->getMethod('methodFromClass');
 
@@ -410,7 +418,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetDeclaringAndImplementingClassWithMethodFromParentClass() : void
     {
-        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php'));
+        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $classReflector->reflect(ExtendedClassWithMethodsAndTraitMethods::class)->getParentClass();
         $methodReflection = $classReflection->getMethod('methodFromClass');
 

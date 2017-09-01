@@ -9,6 +9,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -16,6 +17,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 
@@ -24,6 +26,18 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
  */
 class PhpInternalSourceLocatorTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->astLocator = (new BetterReflection())->astLocator();
+    }
+
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -39,7 +53,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanFetchInternalLocatedSource(string $className) : void
     {
-        $locator = new PhpInternalSourceLocator();
+        $locator = new PhpInternalSourceLocator($this->astLocator);
 
         try {
             /** @var ReflectionClass $reflection */
@@ -68,7 +82,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
-        $phpInternalSourceLocator = new PhpInternalSourceLocator();
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator);
         $reflector                = new ClassReflector($phpInternalSourceLocator);
 
         try {
@@ -126,7 +140,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForNonExistentCode() : void
     {
-        $locator = new PhpInternalSourceLocator();
+        $locator = new PhpInternalSourceLocator($this->astLocator);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -140,7 +154,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     public function testReturnsNullForFunctions() : void
     {
-        $locator = new PhpInternalSourceLocator();
+        $locator = new PhpInternalSourceLocator($this->astLocator);
         self::assertNull(
             $locator->locateIdentifier(
                 $this->getMockReflector(),
@@ -169,7 +183,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             $this->markTestSkipped(\sprintf('Class "%s" is not available in this environment', $className));
         }
 
-        $reflector = new ClassReflector(new PhpInternalSourceLocator());
+        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
 
         self::assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
     }

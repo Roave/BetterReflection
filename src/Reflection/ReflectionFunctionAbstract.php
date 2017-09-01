@@ -12,15 +12,16 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
+use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\PhpParserFactory;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
@@ -51,6 +52,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * @var Reflector
      */
     private $reflector;
+
+    /**
+     * @var Parser
+     */
+    private static $parser;
 
     protected function __construct()
     {
@@ -540,7 +546,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function setBodyFromClosure(Closure $newBody) : void
     {
         /** @var self $closureReflection */
-        $closureReflection = (new ClosureSourceLocator($newBody))->locateIdentifier($this->reflector, new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
+        $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
+            $this->reflector,
+            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+        );
+
         $this->node->stmts = $closureReflection->getNode()->stmts;
     }
 
@@ -555,7 +565,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        $this->node->stmts = PhpParserFactory::create()->parse('<?php ' . $newBody);
+        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
     }
 
     /**
@@ -623,5 +633,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $traverser->traverse($this->node->getStmts());
 
         return $visitor->getReturnNodes();
+    }
+
+    final private function loadStaticParser() : Parser
+    {
+        return self::$parser ?? self::$parser = (new BetterReflection())->phpParser();
     }
 }

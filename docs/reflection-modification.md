@@ -20,7 +20,12 @@ class MyClass
 You can replace the body of the function like so:
 
 ```php
-$classInfo = ReflectionClass::createFromName('MyClass');
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+
+$classInfo = (new BetterReflection())->classReflector()->reflect('MyClass');
+
 $classInfo->getMethod('foo')->setBody(function () {
     return 4;
 });
@@ -34,6 +39,8 @@ using Better Reflection's own autoload system (make sure this is added *after*
 any other autoloader, otherwise it may not behave correctly.
 
 ```php
+<?php
+
 // Call this anywhere after all other autoloaders are registered (e.g. Composer)
 use Roave\BetterReflection\Util\Autoload\ClassLoader;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -21,6 +22,18 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
  */
 class LocatorTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $locator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->locator = new Locator((new BetterReflection())->phpParser());
+    }
+
     private function getIdentifier(string $name, string $type) : Identifier
     {
         return new Identifier($name, new IdentifierType($type));
@@ -33,8 +46,8 @@ class LocatorTest extends TestCase
         class Bar {}
         ';
 
-        $classInfo = (new Locator())->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+        $classInfo = $this->locator->findReflection(
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -48,8 +61,8 @@ class LocatorTest extends TestCase
         class Foo {}
         ';
 
-        $classInfo = (new Locator())->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+        $classInfo = $this->locator->findReflection(
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -63,8 +76,8 @@ class LocatorTest extends TestCase
         function foo() {}
         ';
 
-        $functionInfo = (new Locator())->findReflection(
-            new FunctionReflector(new StringSourceLocator($php)),
+        $functionInfo = $this->locator->findReflection(
+            new FunctionReflector(new StringSourceLocator($php, $this->locator), (new BetterReflection())->classReflector()),
             new LocatedSource($php, null),
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION)
         );
@@ -77,8 +90,8 @@ class LocatorTest extends TestCase
         $php = '<?php';
 
         $this->expectException(IdentifierNotFound::class);
-        (new Locator())->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+        $this->locator->findReflection(
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -92,8 +105,8 @@ class LocatorTest extends TestCase
         ";
 
         $this->expectException(IdentifierNotFound::class);
-        (new Locator())->findReflection(
-            new ClassReflector(new StringSourceLocator($php)),
+        $this->locator->findReflection(
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
             new LocatedSource($php, null),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS)
         );
@@ -101,17 +114,15 @@ class LocatorTest extends TestCase
 
     public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode() : void
     {
-        $locator = new Locator();
-
         $phpCode = '<?php syntax error';
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $sourceLocator  = new StringSourceLocator($phpCode);
+        $sourceLocator  = new StringSourceLocator($phpCode, $this->locator);
         $reflector      = new ClassReflector($sourceLocator);
 
         $locatedSource = new LocatedSource($phpCode, null);
 
         $this->expectException(ParseToAstFailure::class);
-        $locator->findReflectionsOfType($reflector, $locatedSource, $identifierType);
+        $this->locator->findReflectionsOfType($reflector, $locatedSource, $identifierType);
     }
 }

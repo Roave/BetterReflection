@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use InvalidArgumentException;
+use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -19,10 +21,28 @@ use Roave\BetterReflection\Util\FileHelper;
  */
 class AnonymousClassObjectSourceLocatorTest extends TestCase
 {
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @var Reflector
+     */
+    private $reflector;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->parser    = (new BetterReflection())->phpParser();
+        $this->reflector = $this->createMock(Reflector::class);
+    }
+
     public function testExceptionThrownWhenNonObjectGiven() : void
     {
         $this->expectException(InvalidArgumentException::class);
-        new AnonymousClassObjectSourceLocator(123);
+        new AnonymousClassObjectSourceLocator(123, $this->parser);
     }
 
     public function anonymousClassInstancesProvider() : array
@@ -52,8 +72,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     public function testLocateIdentifier($class, string $file, int $startLine, int $endLine) : void
     {
         /** @var ReflectionClass $reflection */
-        $reflection = (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
-            $this->createMock(Reflector::class),
+        $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 \get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -73,8 +93,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         };
 
         /** @var ReflectionClass|null $reflection */
-        $reflection = (new AnonymousClassObjectSourceLocator($anonymousClass))->locateIdentifier(
-            $this->createMock(Reflector::class),
+        $reflection = (new AnonymousClassObjectSourceLocator($anonymousClass, $this->parser))->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 'foo',
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
@@ -94,8 +114,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     public function testLocateIdentifiersByType($class, string $file, int $startLine, int $endLine) : void
     {
         /** @var ReflectionClass[] $reflections */
-        $reflections = (new AnonymousClassObjectSourceLocator($class))->locateIdentifiersByType(
-            $this->createMock(Reflector::class),
+        $reflections = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifiersByType(
+            $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
         );
 
@@ -115,8 +135,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         };
 
         /** @var ReflectionClass[] $reflections */
-        $reflections = (new AnonymousClassObjectSourceLocator($anonymousClass))->locateIdentifiersByType(
-            $this->createMock(Reflector::class),
+        $reflections = (new AnonymousClassObjectSourceLocator($anonymousClass, $this->parser))->locateIdentifiersByType(
+            $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
         );
 
@@ -144,8 +164,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::expectException(TwoAnonymousClassesOnSameLine::class);
         self::expectExceptionMessage(\sprintf('Two anonymous classes on line 3 in %s', $file));
 
-        (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
-            $this->createMock(Reflector::class),
+        (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 \get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -171,8 +191,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
 
         /** @var ReflectionClass $reflection */
-        (new AnonymousClassObjectSourceLocator($class))->locateIdentifier(
-            $this->createMock(Reflector::class),
+        (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 \get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)

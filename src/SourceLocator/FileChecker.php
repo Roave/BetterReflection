@@ -12,7 +12,7 @@ class FileChecker
      *
      * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
-    public static function checkFile(string $filename) : void
+    public static function assertReadableFile(string $filename) : void
     {
         if (empty($filename)) {
             throw new InvalidFileLocation('Filename was empty');

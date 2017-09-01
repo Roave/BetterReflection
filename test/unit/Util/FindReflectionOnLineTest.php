@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -14,10 +15,21 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
  */
 class FindReflectionOnLineTest extends TestCase
 {
+    /**
+     * @var FindReflectionOnLine
+     */
+    private $finder;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->finder = (new BetterReflection())->findReflectionsOnLine();
+    }
+
     public function testInvokeFindsClass() : void
     {
-        $finder     = FindReflectionOnLine::buildDefaultFinder();
-        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 10);
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 10);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('SomeFooClass', $reflection->getName());
@@ -25,8 +37,7 @@ class FindReflectionOnLineTest extends TestCase
 
     public function testInvokeFindsTrait() : void
     {
-        $finder     = FindReflectionOnLine::buildDefaultFinder();
-        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 19);
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 19);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('SomeFooTrait', $reflection->getName());
@@ -34,8 +45,7 @@ class FindReflectionOnLineTest extends TestCase
 
     public function testInvokeFindsInterface() : void
     {
-        $finder     = FindReflectionOnLine::buildDefaultFinder();
-        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 24);
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 24);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('SomeFooInterface', $reflection->getName());
@@ -43,8 +53,7 @@ class FindReflectionOnLineTest extends TestCase
 
     public function testInvokeFindsMethod() : void
     {
-        $finder     = FindReflectionOnLine::buildDefaultFinder();
-        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 14);
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 14);
 
         self::assertInstanceOf(ReflectionMethod::class, $reflection);
         self::assertSame('someMethod', $reflection->getName());
@@ -52,8 +61,7 @@ class FindReflectionOnLineTest extends TestCase
 
     public function testInvokeFindsFunction() : void
     {
-        $finder     = FindReflectionOnLine::buildDefaultFinder();
-        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 5);
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 5);
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertSame('fooFunc', $reflection->getName());
@@ -61,14 +69,12 @@ class FindReflectionOnLineTest extends TestCase
 
     public function testInvokeReturnsNullWhenNothingFound() : void
     {
-        $finder = FindReflectionOnLine::buildDefaultFinder();
-        self::assertNull($finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 1));
+        self::assertNull(($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 1));
     }
 
     public function testInvokeFindsClassWithImplementedInterface() : void
     {
-        $finder     = FindReflectionOnLine::buildDefaultFinder();
-        $reflection = $finder(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 26);
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 26);
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('SomeFooClassWithImplementedInterface', $reflection->getName());

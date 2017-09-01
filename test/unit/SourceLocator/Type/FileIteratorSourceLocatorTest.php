@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -32,7 +33,8 @@ class FileIteratorSourceLocatorTest extends TestCase
             new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
                 RecursiveDirectoryIterator::SKIP_DOTS
-            ))
+            )),
+            (new BetterReflection())->astLocator()
         );
     }
 

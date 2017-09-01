@@ -4,7 +4,24 @@
 
 ## 1. Reflector
 
-There are two "entry points" to begin using Better Reflection. The first is the static constructors on the `Reflection*`
+There are 3 "entry points" to begin using Better Reflection:
+
+#### 1.1 The `BetterReflection` bootstrapper
+
+The first entry point is a minimal service locator provided by the library:
+
+```php
+<?php
+
+$betterReflection = new \Roave\BetterReflection\BetterReflection();
+
+$class    = $betterReflection->classReflector()->reflect('ClassName');
+$function = $betterReflection->functionReflector()->reflect('functionName');
+```
+
+#### 1.2 The `Reflection*` static methods
+
+The second entry point is the static constructors on the `Reflection*`
 classes:
 
  - `ReflectionClass::createFromName(string $name)`
@@ -20,11 +37,13 @@ classes:
  - `ReflectionProperty::createFromInstance(object $instance, string $propertyName)`
 
 Using these is documented in a bit more detail within the [Usage documentation](usage.md#initialisers). These methods
-use a default set of Source Locators:
+use a default set of pre-configured Source Locators:
 
  * `PhpInternalSourceLocator`
  * `EvaledCodeSourceLocator`
  * `AutoloadSourceLocator`
+
+#### 1.3 Manually instantiating  `*Reflector` objects
 
 The second entry point is the `ClassReflector` and `FunctionReflector` objects, to which you must provide specific
 instructions on how Better Reflection is to find code, in the form of the Source Locators.

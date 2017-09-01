@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 
 use ReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
@@ -16,9 +17,10 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      */
     private $stubber;
 
-    public function __construct()
+    public function __construct(Locator $astLocator)
     {
-        parent::__construct();
+        parent::__construct($astLocator);
+
         $this->stubber = new SourceStubber();
     }
 

@@ -11,6 +11,7 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -49,7 +50,10 @@ class ReflectionObject extends ReflectionClass
      * Create a reflection and return the string representation of a class instance
      *
      * @param object $instance
-     * @return string
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \ReflectionException
+     * @throws \InvalidArgumentException
      */
     public static function export($instance = null) : string
     {
@@ -57,8 +61,7 @@ class ReflectionObject extends ReflectionClass
             throw new InvalidArgumentException('Class instance must be provided');
         }
 
-        $reflection = self::createFromInstance($instance);
-        return $reflection->__toString();
+        return self::createFromInstance($instance)->__toString();
     }
 
     /**
@@ -92,6 +95,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @return self
      *
+     * @throws \ReflectionException
      * @throws \InvalidArgumentException
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
@@ -104,14 +108,15 @@ class ReflectionObject extends ReflectionClass
         $className = \get_class($object);
 
         if (\strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
-            $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator($object));
+            $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
+                $object,
+                (new BetterReflection())->phpParser()
+            ));
         } else {
-            $reflector = ClassReflector::buildDefaultReflector();
+            $reflector = (new BetterReflection())->classReflector();
         }
 
-        $reflectionClass = $reflector->reflect($className);
-
-        return new self($reflector, $reflectionClass, $object);
+        return new self($reflector, $reflector->reflect($className), $object);
     }
 
     /**

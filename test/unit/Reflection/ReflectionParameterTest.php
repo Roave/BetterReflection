@@ -11,12 +11,14 @@ use phpDocumentor\Reflection\Types;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflector;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -41,10 +43,17 @@ class ReflectionParameterTest extends TestCase
      */
     private $reflector;
 
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
     public function setUp() : void
     {
         global $loader;
-        $this->reflector = new ClassReflector(new ComposerSourceLocator($loader));
+
+        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 
     public function testCreateFromClassNameAndMethod() : void
@@ -154,7 +163,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = "<?php class Foo { public function myMethod(\$var = $defaultExpression) {} }";
 
-        $reflector   = new ClassReflector(new StringSourceLocator($content));
+        $reflector   = new ClassReflector(new StringSourceLocator($content, $this->astLocator));
         $classInfo   = $reflector->reflect('Foo');
         $methodInfo  = $classInfo->getMethod('myMethod');
         $paramInfo   = $methodInfo->getParameter('var');
@@ -167,7 +176,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = '<?php class Foo { public function myMethod($var) {} }';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($content));
+        $reflector  = new ClassReflector(new StringSourceLocator($content, $this->astLocator));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo  = $methodInfo->getParameter('var');
@@ -512,7 +521,8 @@ class ReflectionParameterTest extends TestCase
     public function testGetDefaultValueConstantNameClassConstants() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php'
+            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
+            $this->astLocator
         ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method    = $classInfo->getMethod('method');
@@ -532,7 +542,8 @@ class ReflectionParameterTest extends TestCase
         $this->markTestSkipped('@todo - implement reflection of constants outside a class');
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php'
+            __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
+            $this->astLocator
         ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method    = $classInfo->getMethod('method');
@@ -548,7 +559,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($content));
+        $reflector  = new ClassReflector(new StringSourceLocator($content, $this->astLocator));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo  = $methodInfo->getParameter('var');
@@ -560,7 +571,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($content));
+        $reflector  = new ClassReflector(new StringSourceLocator($content, $this->astLocator));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo  = $methodInfo->getParameter('var');
@@ -572,7 +583,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = '<?php function myMethod($var = 123) {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($content));
+        $reflector    = new FunctionReflector(new StringSourceLocator($content, $this->astLocator), $this->reflector);
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo    = $functionInfo->getParameter('var');
 
@@ -603,7 +614,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = "<?php function myMethod(\$var = $defaultValue) {}";
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($content));
+        $reflector    = new FunctionReflector(new StringSourceLocator($content, $this->astLocator), $this->reflector);
         $functionInfo = $reflector->reflect('myMethod');
         $paramInfo    = $functionInfo->getParameter('var');
 
@@ -616,8 +627,8 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new StringSourceLocator($content),
+            new PhpInternalSourceLocator($this->astLocator),
+            new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
@@ -645,7 +656,7 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo { public function myMethod(self $param) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new StringSourceLocator($content),
+            new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
@@ -660,8 +671,8 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new StringSourceLocator($content),
+            new PhpInternalSourceLocator($this->astLocator),
+            new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
@@ -675,7 +686,7 @@ class ReflectionParameterTest extends TestCase
     {
         $content = '<?php class Foo { public function myMethod(object $param) {} }';
 
-        $parameter = (new ClassReflector(new StringSourceLocator($content)))
+        $parameter = (new ClassReflector(new StringSourceLocator($content, $this->astLocator)))
             ->reflect(Foo::class)
             ->getMethod('myMethod')
             ->getParameter('param');
@@ -708,7 +719,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php));
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->reflector);
         $function  = $reflector->reflect('foo');
         $parameter = $function->getParameter('test');
 

@@ -19,15 +19,15 @@ work with this technique.
 ```php
 <?php
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\BetterReflection;
 
-$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
+$classInfo = (new BetterReflection)->classReflector()->reflect('Foo\Bar\MyClass');
 ```
 
 If this instantiation technique is not possible - for example, your autoloader
 does not load classes from file, then you must use `SourceLocator` creation.
 
-*Fun fact... using `ReflectionClass::createFromName` actually uses a
+*Fun fact... using the method described above actually uses a
 SourceLocator under the hood - it uses the `AutoloadSourceLocator`.*
 
 ### Initialisers
@@ -133,11 +133,14 @@ $functionInfo = ReflectionFunction::createFromName('foo');
 ```php
 <?php
 
-$classLoader = require "vendor/autoload.php";
-
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 
-$reflector = new ClassReflector(new ComposerSourceLocator($classLoader));
+$classLoader = require 'vendor/autoload.php';
+
+$astLocator = (new BetterReflection())->astLocator();
+$reflector = new ClassReflector(new ComposerSourceLocator($classLoader, $astLocator));
 $reflectionClass = $reflector->reflect('Foo\Bar\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
@@ -150,7 +153,12 @@ echo $reflectionClass->getNamespaceName(); // Foo\Bar
 ```php
 <?php
 
-$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php'));
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+
+$astLocator = (new BetterReflection())->astLocator();
+$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php', $astLocator));
 $reflectionClass = $reflector->reflect('MyApp\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
@@ -163,9 +171,14 @@ echo $reflectionClass->getNamespaceName(); // MyApp
 ```php
 <?php
 
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+
 $code = '<?php class Foo {};';
 
-$reflector = new ClassReflector(new StringSourceLocator($code));
+$astLocator = (new BetterReflection())->astLocator();
+$reflector = new ClassReflector(new StringSourceLocator($code, $astLocator));
 $reflectionClass = $reflector->reflect('Foo');
 
 echo $reflectionClass->getShortName(); // Foo
@@ -176,7 +189,12 @@ echo $reflectionClass->getShortName(); // Foo
 ```php
 <?php
 
-$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php'));
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+
+$astLocator = (new BetterReflection())->astLocator();
+$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php', $astLocator));
 $classes = $reflector->getAllClasses();
 ```
 
@@ -185,8 +203,12 @@ $classes = $reflector->getAllClasses();
 ```php
 <?php
 
-$directoriesToScan = ['path/to/directory1'];
-$directoriesSourceLocator = new DirectoriesSourceLocator($directoriesToScan);
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+
+$astLocator = (new BetterReflection())->astLocator();
+$directoriesSourceLocator = new DirectoriesSourceLocator(['path/to/directory1'], $astLocator);
 $reflector = new ClassReflector($directoriesSourceLocator);
 $classes = $reflector->getAllClasses();
 ```
@@ -207,9 +229,16 @@ See example in "Reflecting Classes" section on the same subheading.
 ```php
 <?php
 
-$directoriesToScan = ['path/to/directory1'];
-$directoriesSourceLocator = new DirectoriesSourceLocator($directoriesToScan);
-$reflector = new FunctionReflector($directoriesSourceLocator);
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+
+$configuration = new BetterReflection();
+$astLocator = $configuration->astLocator();
+$classReflector = $configuration->classReflector();
+
+$directoriesSourceLocator = new DirectoriesSourceLocator(['path/to/directory1'], $astLocator);
+$reflector = new FunctionReflector($directoriesSourceLocator, $classReflector);
 $functions = $reflector->getAllFunctions();
 ```
 

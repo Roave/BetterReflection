@@ -18,6 +18,7 @@ use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
@@ -25,7 +26,6 @@ use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\PropertyNotPublic;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
@@ -92,8 +92,7 @@ class ReflectionClass implements Reflection, CoreReflector
             throw new InvalidArgumentException('Class name must be provided');
         }
 
-        $reflection = self::createFromName($className);
-        return $reflection->__toString();
+        return self::createFromName($className)->__toString();
     }
 
     /**
@@ -187,10 +186,12 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Create a ReflectionClass by name, using default reflectors etc.
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromName(string $className) : self
     {
-        return ClassReflector::buildDefaultReflector()->reflect($className);
+        return (new BetterReflection())->classReflector()->reflect($className);
     }
 
     /**
@@ -199,8 +200,12 @@ class ReflectionClass implements Reflection, CoreReflector
      * This is simply a helper method that calls ReflectionObject::createFromInstance().
      *
      * @see ReflectionObject::createFromInstance
+     *
      * @param object $instance
+     *
      * @return ReflectionClass
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \ReflectionException
      * @throws \InvalidArgumentException
      */
     public static function createFromInstance($instance) : self
@@ -816,6 +821,8 @@ class ReflectionClass implements Reflection, CoreReflector
      * the parent class. If no source locator is given, a default will be used.
      *
      * @return ReflectionClass|null
+     *
+     * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
      */
     public function getParentClass() : ?ReflectionClass
     {
@@ -1245,6 +1252,8 @@ class ReflectionClass implements Reflection, CoreReflector
      * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
      *
      * @return ReflectionClass[] parent interfaces of this interface
+     *
+     * @throws NotAnInterfaceReflection
      */
     private function getInterfacesHierarchy() : array
     {
@@ -1282,7 +1291,11 @@ class ReflectionClass implements Reflection, CoreReflector
      * (note, differs very slightly from internal reflection behaviour)
      *
      * @param string $propertyName
+     *
      * @return mixed
+     *
+     * @throws PropertyDoesNotExist
+     * @throws ClassDoesNotExist
      */
     public function getStaticPropertyValue(string $propertyName)
     {

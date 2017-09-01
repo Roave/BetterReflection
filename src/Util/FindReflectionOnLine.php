@@ -10,10 +10,8 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
@@ -24,21 +22,15 @@ final class FindReflectionOnLine
      */
     private $sourceLocator;
 
-    public function __construct(SourceLocator $sourceLocator)
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    public function __construct(SourceLocator $sourceLocator, Locator $astLocator)
     {
         $this->sourceLocator = $sourceLocator;
-    }
-
-    /**
-     * @return self
-     */
-    public static function buildDefaultFinder() : self
-    {
-        return new self(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new EvaledCodeSourceLocator(),
-            new AutoloadSourceLocator(),
-        ]));
+        $this->astLocator    = $astLocator;
     }
 
     /**
@@ -78,14 +70,14 @@ final class FindReflectionOnLine
     /**
      * Find all class and function reflections in the specified file
      *
-     * @param string $filename
      * @return Reflection[]
+     *
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     private function computeReflections(string $filename) : array
     {
-        $singleFileSourceLocator = new SingleFileSourceLocator($filename);
+        $singleFileSourceLocator = new SingleFileSourceLocator($filename, $this->astLocator);
         $reflector               = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return \array_merge(

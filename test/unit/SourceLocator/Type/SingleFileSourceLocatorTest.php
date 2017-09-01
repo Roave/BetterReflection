@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 /**
@@ -14,6 +16,18 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
  */
 class SingleFileSourceLocatorTest extends TestCase
 {
+    /**
+     * @var Locator
+     */
+    private $astLocator;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->astLocator = (new BetterReflection())->astLocator();
+    }
+
     /**
      * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -26,7 +40,7 @@ class SingleFileSourceLocatorTest extends TestCase
     {
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
-        $locator = new SingleFileSourceLocator($fileName);
+        $locator = new SingleFileSourceLocator($fileName, $this->astLocator);
 
         self::assertNull($locator->locateIdentifier(
             $this->getMockReflector(),
@@ -41,7 +55,7 @@ class SingleFileSourceLocatorTest extends TestCase
     {
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
-        $locator = new SingleFileSourceLocator($fileName);
+        $locator = new SingleFileSourceLocator($fileName, $this->astLocator);
 
         $reflectionClass = $locator->locateIdentifier(
             $this->getMockReflector(),

@@ -6,10 +6,6 @@ namespace Roave\BetterReflection\Reflector;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 class ClassReflector implements Reflector
@@ -25,18 +21,6 @@ class ClassReflector implements Reflector
     public function __construct(SourceLocator $sourceLocator)
     {
         $this->sourceLocator = $sourceLocator;
-    }
-
-    /**
-     * @return self
-     */
-    public static function buildDefaultReflector() : self
-    {
-        return new self(new AggregateSourceLocator([
-            new PhpInternalSourceLocator(),
-            new EvaledCodeSourceLocator(),
-            new AutoloadSourceLocator(),
-        ]));
     }
 
     /**

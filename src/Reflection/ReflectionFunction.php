@@ -6,30 +6,41 @@ namespace Roave\BetterReflection\Reflection;
 use Closure;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
     /**
      * @param string $functionName
+     *
      * @return ReflectionFunction
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromName(string $functionName) : self
     {
-        return (new FunctionReflector(new AutoloadSourceLocator()))->reflect($functionName);
+        return (new BetterReflection())->functionReflector()->reflect($functionName);
     }
 
     /**
      * @param \Closure $closure
+     *
      * @return ReflectionFunction
+     *
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromClosure(Closure $closure) : self
     {
-        return (new FunctionReflector(new ClosureSourceLocator($closure)))->reflect(self::CLOSURE_NAME);
+        $configuration = new BetterReflection();
+
+        return (new FunctionReflector(
+            new ClosureSourceLocator($closure, $configuration->phpParser()),
+            $configuration->classReflector()
+        ))->reflect(self::CLOSURE_NAME);
     }
 
     /**

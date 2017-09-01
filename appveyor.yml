@@ -58,6 +58,6 @@ install:
   - IF %dependencies%==highest composer update --prefer-dist --no-interaction --no-progress
 test_script:
   - ps: cd $Env:project_directory
-  - vendor\bin\phpunit
+  - php -dmemory_limit=2G vendor\phpunit\phpunit\phpunit
 
 
