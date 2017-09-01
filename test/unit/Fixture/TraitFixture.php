@@ -45,3 +45,9 @@ class TraitFixtureD
         TraitFixtureTraitD1::foo insteadof TraitFixtureTraitD2;
     }
 }
+
+// Trait in a Trait
+trait TraitFixtureTraitE
+{
+    use TraitFixtureTraitA;
+}

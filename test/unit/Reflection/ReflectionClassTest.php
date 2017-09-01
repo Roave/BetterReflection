@@ -802,6 +802,40 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($traits[0]->isTrait());
     }
 
+    public function testGetTraitsOfATrait() : void
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $traitInfo = $reflector->reflect('TraitFixtureTraitE');
+        self::assertTrue($traitInfo->isTrait());
+
+        $traits = $traitInfo->getTraits();
+        self::assertCount(1, $traits);
+    }
+
+    public function testGetTraitsInANamespace() : void
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/NamespacedTraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $traitInfo = $reflector->reflect('Namespaced\ClassFixture');
+
+        $traits = $traitInfo->getTraits();
+        self::assertCount(1, $traits);
+    }
+
+    public function testGetTraitsOfATraitInANamespace() : void
+    {
+        $sourceLocator = new SingleFileSourceLocator(__DIR__ . '/../Fixture/NamespacedTraitFixture.php');
+        $reflector = new ClassReflector($sourceLocator);
+
+        $traitInfo = $reflector->reflect('Namespaced\TraitFixtureTraitB');
+
+        $traits = $traitInfo->getTraits();
+        self::assertCount(1, $traits);
+    }
+
     public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
