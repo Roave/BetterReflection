@@ -299,4 +299,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     {
         return $this->getDeclaringClass()->getExtensionName();
     }
+
+    public function isInternal() : bool
+    {
+        return $this->declaringClass->getLocatedSource()->isInternal();
+    }
 }
