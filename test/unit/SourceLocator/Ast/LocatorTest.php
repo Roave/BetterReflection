@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;

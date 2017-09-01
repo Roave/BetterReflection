@@ -5,7 +5,6 @@ namespace Roave\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Types;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;

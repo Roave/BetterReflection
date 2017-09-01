@@ -15,7 +15,6 @@ use Reflection;
 use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;

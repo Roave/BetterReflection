@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\Reflector;
 use PhpParser\Node;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;

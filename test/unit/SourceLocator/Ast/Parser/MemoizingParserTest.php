@@ -18,14 +18,14 @@ class MemoizingParserTest extends TestCase
         /* @var $wrappedParser Parser|\PHPUnit_Framework_MockObject_MockObject */
         $wrappedParser = $this->createMock(Parser::class);
 
-        $randomCodeStrings = array_unique(array_map(
+        $randomCodeStrings = \array_unique(\array_map(
             function () : string {
-                return uniqid('code', true);
+                return \uniqid('code', true);
             },
-            range(0, 100)
+            \range(0, 100)
         ));
 
-        $randomCodeStringsCount = count($randomCodeStrings);
+        $randomCodeStringsCount = \count($randomCodeStrings);
 
         $wrappedParser
             ->expects(self::exactly($randomCodeStringsCount))
@@ -36,7 +36,7 @@ class MemoizingParserTest extends TestCase
 
         $parser = new MemoizingParser($wrappedParser);
 
-        $producedNodes = array_map([$parser, 'parse'], $randomCodeStrings);
+        $producedNodes = \array_map([$parser, 'parse'], $randomCodeStrings);
 
         self::assertCount($randomCodeStringsCount, $producedNodes);
 
@@ -45,14 +45,14 @@ class MemoizingParserTest extends TestCase
             self::assertInstanceOf(Node::class, $parsed[0]);
         }
 
-        $nodeIdentifiers = array_map(
+        $nodeIdentifiers = \array_map(
             function (array $nodes) : string {
                 return \spl_object_hash($nodes[0]);
             },
             $producedNodes
         );
 
-        self::assertCount(count($nodeIdentifiers), array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
-        self::assertSame($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
+        self::assertCount(\count($nodeIdentifiers), \array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
+        self::assertSame($producedNodes, \array_map([$parser, 'parse'], $randomCodeStrings));
     }
 }

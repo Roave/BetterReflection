@@ -5,7 +5,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;

@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use InvalidArgumentException;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;

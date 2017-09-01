@@ -16,7 +16,6 @@ use Reflection;
 use ReflectionFunctionAbstract;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;

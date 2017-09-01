@@ -13,7 +13,6 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
