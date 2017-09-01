@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use A\Foo;
 use ClassWithMethodsAndTraitMethods;
 use Closure;
+use Exception;
 use ExtendedClassWithMethodsAndTraitMethods;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
@@ -342,6 +343,17 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
 
+    public function overwrittenMethodProvider() : array
+    {
+        return [
+            ['FooInterface', 'foo', null],
+            ['ClassB', 'foo', 'ClassA'],
+            ['ClassC', 'foo', null],
+            ['ClassD', 'boo', 'ClassC'],
+            ['ClassD', 'zoo', 'ClassC'],
+        ];
+    }
+
     public function methodStringRepresentations() : array
     {
         $methods = [
@@ -385,6 +397,14 @@ class ReflectionMethodTest extends TestCase
         $method    = $classInfo->getMethod($methodName);
 
         self::assertStringMatchesFormat($expectedStringValue, (string) $method);
+    }
+
+    public function testStringCastForInternal() : void
+    {
+        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(Exception::class);
+        $method    = $classInfo->getMethod('getMessage');
+
+        self::assertSame("Method [ <internal:Core, prototype Throwable> final public method getMessage ] {\n}", (string) $method);
     }
 
     public function testGetDeclaringAndImplementingClassWithMethodFromTrait() : void

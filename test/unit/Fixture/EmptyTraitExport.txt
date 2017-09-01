@@ -1,0 +1,18 @@
+Trait [ <user> trait Roave\BetterReflectionTest\Fixture\EmptyTrait ] {
+  @@ %s/test/unit/Fixture/EmptyTrait.php 5-7
+
+  - Constants [0] {
+  }
+
+  - Static properties [0] {
+  }
+
+  - Static methods [0] {
+  }
+
+  - Properties [0] {
+  }
+
+  - Methods [0] {
+  }
+}

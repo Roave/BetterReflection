@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Bar;
 use Baz;
 use E;
+use Exception;
 use InvalidArgumentException;
 use Iterator;
 use OutOfBoundsException;
@@ -42,6 +43,8 @@ use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\EmptyInterface;
+use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
@@ -1287,6 +1290,33 @@ class ReflectionClassTest extends TestCase
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertStringMatchesFormat(
             \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            $reflection->__toString()
+        );
+    }
+
+    public function testInternalClassToString() : void
+    {
+        $reflection = ReflectionClass::createFromName(Exception::class);
+        self::assertStringEqualsFile(
+            __DIR__ . '/../Fixture/ExceptionExport.txt',
+            $reflection->__toString()
+        );
+    }
+
+    public function testInterfaceToString() : void
+    {
+        $reflection = ReflectionClass::createFromName(EmptyInterface::class);
+        self::assertStringMatchesFormat(
+            \file_get_contents(__DIR__ . '/../Fixture/EmptyInterfaceExport.txt'),
+            $reflection->__toString()
+        );
+    }
+
+    public function testTraitToString() : void
+    {
+        $reflection = ReflectionClass::createFromName(EmptyTrait::class);
+        self::assertStringMatchesFormat(
+            \file_get_contents(__DIR__ . '/../Fixture/EmptyTraitExport.txt'),
             $reflection->__toString()
         );
     }

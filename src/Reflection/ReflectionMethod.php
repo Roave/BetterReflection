@@ -166,25 +166,49 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function __toString() : string
     {
-        $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
+        $paramFormat = $this->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
+
+        try {
+            $prototype = $this->getPrototype();
+        } catch (Exception\MethodPrototypeNotFound $e) {
+            $prototype = null;
+        }
+
+        $overwrittenMethod = $this->getOverwrittenMethod();
 
         return \sprintf(
-            "Method [ <user%s%s>%s%s%s %s method %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
+            "Method [ <%s%s%s%s%s>%s%s%s %s method %s ] {%s{$paramFormat}\n}",
+            $this->isUserDefined() ? 'user' : \sprintf('internal:%s', $this->getExtensionName()),
             $this->isConstructor() ? ', ctor' : '',
             $this->isDestructor() ? ', dtor' : '',
+            null !== $overwrittenMethod ? \sprintf(', overwrites %s', $overwrittenMethod->getDeclaringClass()->getName()) : '',
+            null !== $prototype ? \sprintf(', prototype %s', $prototype->getDeclaringClass()->getName()) : '',
             $this->isFinal() ? ' final' : '',
             $this->isStatic() ? ' static' : '',
             $this->isAbstract() ? ' abstract' : '',
             $this->getVisibilityAsString(),
             $this->getName(),
-            $this->getFileName(),
-            $this->getStartLine(),
-            $this->getEndLine(),
+            $this->isUserDefined() ? \sprintf("\n  @@ %s %d - %d", $this->getFileName(), $this->getStartLine(), $this->getEndLine()) : '',
             \count($this->getParameters()),
-            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) : string {
-                return $str . "\n    " . $param;
+            \array_reduce($this->getParameters(), function (string $str, ReflectionParameter $param) : string {
+                return $str . "\n    " . (string) $param;
             }, '')
         );
+    }
+
+    private function getOverwrittenMethod() : ?self
+    {
+        $parentClass = $this->getDeclaringClass()->getParentClass();
+
+        if ( ! $parentClass) {
+            return null;
+        }
+
+        if ( ! $parentClass->hasMethod($this->getName())) {
+            return null;
+        }
+
+        return $parentClass->getMethod($this->getName());
     }
 
     /**

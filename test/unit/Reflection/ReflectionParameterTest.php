@@ -27,6 +27,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\Fixture\ParametersToString;
 use Roave\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
@@ -217,16 +218,68 @@ class ReflectionParameterTest extends TestCase
         self::assertInstanceOf(Types\Float_::class, $param2Types[1]);
     }
 
-    public function testStringCast() : void
+    public function stringCastProvider() : array
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
-        $method    = $classInfo->getMethod('methodWithOptionalParameters');
+        return [
+            ['parametersWithBuiltInTypes', 'string', 'Parameter #0 [ <required> string $string ]'],
+            ['parametersWithBuiltInTypes', 'int', 'Parameter #1 [ <required> integer $int ]'],
+            ['parametersWithBuiltInTypes', 'float', 'Parameter #2 [ <required> float $float ]'],
+            ['parametersWithBuiltInTypes', 'bool', 'Parameter #3 [ <required> boolean $bool ]'],
+            ['parametersWithBuiltInTypes', 'callable', 'Parameter #4 [ <required> callable $callable ]'],
+            ['parametersWithBuiltInTypes', 'self', 'Parameter #5 [ <required> self $self ]'],
+            ['parametersWithBuiltInTypes', 'parent', 'Parameter #6 [ <required> parent $parent ]'],
+            ['parametersWithBuiltInTypes', 'array', 'Parameter #7 [ <required> array $array ]'],
+            ['parametersWithBuiltInTypes', 'iterable', 'Parameter #8 [ <required> iterable $iterable ]'],
+            ['parametersWithBuiltInTypes', 'object', 'Parameter #9 [ <required> object $object ]'],
 
-        $requiredParam = $method->getParameter('parameter');
-        self::assertSame('Parameter #0 [ <required> $parameter ]', (string) $requiredParam);
+            ['parametersWithNullableBuiltInTypes', 'string', 'Parameter #0 [ <required> string or NULL $string ]'],
+            ['parametersWithNullableBuiltInTypes', 'int', 'Parameter #1 [ <required> integer or NULL $int ]'],
+            ['parametersWithNullableBuiltInTypes', 'float', 'Parameter #2 [ <required> float or NULL $float ]'],
+            ['parametersWithNullableBuiltInTypes', 'bool', 'Parameter #3 [ <required> boolean or NULL $bool ]'],
+            ['parametersWithNullableBuiltInTypes', 'callable', 'Parameter #4 [ <required> callable or NULL $callable ]'],
+            ['parametersWithNullableBuiltInTypes', 'self', 'Parameter #5 [ <required> self or NULL $self ]'],
+            ['parametersWithNullableBuiltInTypes', 'parent', 'Parameter #6 [ <required> parent or NULL $parent ]'],
+            ['parametersWithNullableBuiltInTypes', 'array', 'Parameter #7 [ <required> array or NULL $array ]'],
+            ['parametersWithNullableBuiltInTypes', 'iterable', 'Parameter #8 [ <required> iterable or NULL $iterable ]'],
+            ['parametersWithNullableBuiltInTypes', 'object', 'Parameter #9 [ <required> object or NULL $object ]'],
 
-        $optionalParam = $method->getParameter('optionalParameter');
-        self::assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string) $optionalParam);
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'string', 'Parameter #0 [ <optional> string or NULL $string = \'stringstringstr...\' ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'int', 'Parameter #1 [ <optional> integer or NULL $int = 0 ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'float', 'Parameter #2 [ <optional> float or NULL $float = 0.0 ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'bool', 'Parameter #3 [ <optional> boolean or NULL $bool = true ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'callable', 'Parameter #4 [ <optional> callable or NULL $callable = NULL ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'self', 'Parameter #5 [ <optional> self or NULL $self = NULL ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'parent', 'Parameter #6 [ <optional> parent or NULL $parent = NULL ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'array', 'Parameter #7 [ <optional> array or NULL $array = Array ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'iterable', 'Parameter #8 [ <optional> iterable or NULL $iterable = Array ]'],
+            ['parametersWithNullableBuiltInTypesWithDefaultValue', 'object', 'Parameter #9 [ <optional> object or NULL $object = NULL ]'],
+
+            ['parametersWithDefaultValue', 'string', 'Parameter #0 [ <optional> $string = \'string\' ]'],
+            ['parametersWithDefaultValue', 'int', 'Parameter #1 [ <optional> $int = 0 ]'],
+            ['parametersWithDefaultValue', 'float', 'Parameter #2 [ <optional> $float = 0.0 ]'],
+            ['parametersWithDefaultValue', 'bool', 'Parameter #3 [ <optional> $bool = true ]'],
+            ['parametersWithDefaultValue', 'callable', 'Parameter #4 [ <optional> $callable = NULL ]'],
+            ['parametersWithDefaultValue', 'self', 'Parameter #5 [ <optional> $self = NULL ]'],
+            ['parametersWithDefaultValue', 'parent', 'Parameter #6 [ <optional> $parent = NULL ]'],
+            ['parametersWithDefaultValue', 'array', 'Parameter #7 [ <optional> $array = Array ]'],
+            ['parametersWithDefaultValue', 'iterable', 'Parameter #8 [ <optional> $iterable = Array ]'],
+            ['parametersWithDefaultValue', 'object', 'Parameter #9 [ <optional> $object = NULL ]'],
+        ];
+    }
+
+    /**
+     * @param string $methodName
+     * @param string $parameterName
+     * @param string $expectedString
+     * @dataProvider stringCastProvider
+     */
+    public function testStringCast(string $methodName, string $parameterName, string $expectedString) : void
+    {
+        $reflector  = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ParametersToString.php', $this->astLocator));
+        $classInfo  = $reflector->reflect(ParametersToString::class);
+        $methodInfo = $classInfo->getMethod($methodName);
+
+        self::assertSame($expectedString, (string) $methodInfo->getParameter($parameterName));
     }
 
     public function testGetPosition() : void

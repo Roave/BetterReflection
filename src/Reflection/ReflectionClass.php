@@ -109,8 +109,8 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         $isObject = $this instanceof ReflectionObject;
 
-        $format  = "%s [ <user> class %s%s%s ] {\n";
-        $format .= "  @@ %s %d-%d\n\n";
+        $format  = "%s [ <%s> %s%s %s%s%s ] {\n";
+        $format .= "%s\n";
         $format .= "  - Constants [%d] {%s\n  }\n\n";
         $format .= "  - Static properties [%d] {%s\n  }\n\n";
         $format .= "  - Static methods [%d] {%s\n  }\n\n";
@@ -135,12 +135,13 @@ class ReflectionClass implements Reflection, CoreReflector
             return ! $method->isStatic();
         });
 
-        $buildString = function (array $items, int $indentLevel = 4) : string {
+        $buildString = function (array $items, int $emptyLinesAmongItems = 1) : string {
             if ( ! \count($items)) {
                 return '';
             }
-            $indent = "\n" . \str_repeat(' ', $indentLevel);
-            return $indent . \implode($indent, \explode("\n", \implode("\n", $items)));
+
+            $itemsString = \implode(\str_repeat("\n", $emptyLinesAmongItems), $items);
+            return "\n" . \preg_replace('/(^|\n)(?!\n)/', '\1' . \str_repeat(' ', 4), $itemsString);
         };
 
         $buildConstants = function (array $items, int $indentLevel = 4) : string {
@@ -160,15 +161,29 @@ class ReflectionClass implements Reflection, CoreReflector
 
         $interfaceNames = $this->getInterfaceNames();
 
+        $type = (function () : string {
+            if ($this->isInterface()) {
+                return 'Interface';
+            }
+
+            if ($this->isTrait()) {
+                return 'Trait';
+            }
+
+            return 'Class';
+        })();
+
         $str = \sprintf(
             $format,
-            ($isObject ? 'Object of class' : 'Class'),
+            $isObject ? 'Object of class' : $type,
+            $this->isUserDefined() ? 'user' : \sprintf('internal:%s', $this->getExtensionName()),
+            $this->isFinal() ? 'final ' : '',
+            $this->isAbstract() ? 'abstract ' : '',
+            \strtolower($type),
             $this->getName(),
             null !== $this->getParentClass() ? (' extends ' . $this->getParentClass()->getName()) : '',
             \count($interfaceNames) ? (' implements ' . \implode(', ', $interfaceNames)) : '',
-            $this->getFileName(),
-            $this->getStartLine(),
-            $this->getEndLine(),
+            $this->isUserDefined() ? \sprintf("  @@ %s %d-%d\n", $this->getFileName(), $this->getStartLine(), $this->getEndLine()) : '',
             \count($this->getReflectionConstants()),
             $buildConstants($this->getReflectionConstants()),
             \count($staticProperties),
@@ -180,7 +195,7 @@ class ReflectionClass implements Reflection, CoreReflector
             $isObject ? \count($dynamicProperties) : '',
             $isObject ? $buildString($dynamicProperties) : '',
             \count($methods),
-            $buildString($methods)
+            $buildString($methods, 2)
         );
 
         return $str;

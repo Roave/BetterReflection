@@ -56,7 +56,8 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
         return \sprintf(
-            "Function [ <user> function %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
+            "Function [ <%s> function %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
+            $this->isUserDefined() ? 'user' : \sprintf('internal:%s', $this->getExtensionName()),
             $this->getName(),
             $this->getFileName(),
             $this->getStartLine(),
