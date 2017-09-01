@@ -79,32 +79,65 @@ class MemoizingSourceLocatorTest extends TestCase
 
     public function testLocateIdentifierIsMemoized() : void
     {
-        $identifiers = array_map(
+        $this->assertMemoization(
+            array_map(
+                function (string $identifier) : Identifier {
+                    return new Identifier(
+                        $identifier,
+                        new IdentifierType(
+                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)]
+                        )
+                    );
+                },
+                $this->identifierNames
+            ),
+            $this->identifierCount
+        );
+    }
+
+    public function testLocateIdentifiersDistinguishesBetweenIdentifierTypes() : void
+    {
+        $classIdentifiers = array_map(
             function (string $identifier) : Identifier {
-                return new Identifier(
-                    $identifier,
-                    new IdentifierType(
-                        [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)]
-                    )
-                );
+                return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+            },
+            $this->identifierNames
+        );
+        $functionIdentifiers = array_map(
+            function (string $identifier) : Identifier {
+                return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
             },
             $this->identifierNames
         );
 
-        $locatedSymbols = array_combine(
+        $this->assertMemoization(
+            array_merge($classIdentifiers, $functionIdentifiers),
+            $this->identifierCount * 2
+        );
+    }
+
+    /**
+     * @param Identifier[] $identifiers
+     * @param int          $expectedFetchOperationsCount
+     * @param int[]        $fetchedSymbols
+     */
+    private function assertMemoization(
+        array $identifiers,
+        int $expectedFetchOperationsCount
+    ) : void {
+        $fetchedSymbolsCount = [];
+        $locatedSymbols      = array_combine(
             array_map('spl_object_hash', $identifiers),
             array_map(
                 function () : ?Reflection {
                     return [
-                        $this->createMock(Reflection::class),
-                        null
-                    ][random_int(0, 1)];
+                               $this->createMock(Reflection::class),
+                               null
+                           ][random_int(0, 1)];
                 },
                 $identifiers
             )
         );
-
-        $fetchedSymbolsCount = [];
 
         $this
             ->wrappedLocator
@@ -127,21 +160,22 @@ class MemoizingSourceLocatorTest extends TestCase
                 return $locatedSymbols[$identifierId];
             });
 
-        $memoizedSymbols = array_map(
+        $identifiersCount = count($identifiers);
+        $memoizedSymbols  = array_map(
             [$this->memoizingLocator, 'locateIdentifier'],
-            array_fill(0, $this->identifierCount, $this->reflector1),
+            array_fill(0, $identifiersCount, $this->reflector1),
             $identifiers
         );
 
         // repeated operation - for sport
         $cachedSymbols = array_map(
             [$this->memoizingLocator, 'locateIdentifier'],
-            array_fill(0, $this->identifierCount, $this->reflector1),
+            array_fill(0, $identifiersCount, $this->reflector1),
             $identifiers
         );
 
-        self::assertCount($this->identifierCount, $memoizedSymbols);
-        self::assertCount($this->identifierCount, $fetchedSymbolsCount);
+        self::assertCount($expectedFetchOperationsCount, $memoizedSymbols);
+        self::assertSame($expectedFetchOperationsCount, array_sum($fetchedSymbolsCount));
 
         foreach ($fetchedSymbolsCount as $fetchedSymbolCount) {
             self::assertSame(1, $fetchedSymbolCount);
