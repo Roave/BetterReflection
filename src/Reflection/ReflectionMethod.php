@@ -94,8 +94,22 @@ class ReflectionMethod extends ReflectionFunctionAbstract
                 continue;
             }
 
-            if ($i->hasMethod($this->getName()) && $i->getMethod($this->getName())->isAbstract()) {
-                return $i->getMethod($this->getName());
+            if ($i->hasMethod($this->getName())) {
+                $method = $i->getMethod($this->getName());
+
+                if ($method->isAbstract()) {
+                    return $method;
+                }
+
+                if ($method->isPrivate()) {
+                    break;
+                }
+
+                try {
+                    return $method->getPrototype();
+                } catch (Exception\MethodPrototypeNotFound $e) {
+                    return $method;
+                }
             }
         }
 
