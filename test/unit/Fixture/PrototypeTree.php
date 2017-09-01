@@ -23,6 +23,43 @@ namespace {
         public function foo($a, $b = 123)
         {
         }
+
+        public function boo()
+        {
+        }
+
+        private function zoo()
+        {
+        }
+    }
+
+    class ClassD extends ClassC
+    {
+        public function boo()
+        {
+        }
+
+        protected function zoo()
+        {
+        }
+    }
+
+    class ClassE extends ClassD
+    {
+        public function boo()
+        {
+        }
+
+        protected function zoo()
+        {
+        }
+    }
+
+    class ClassF extends ClassE
+    {
+        protected function zoo()
+        {
+        }
     }
 
     interface BarInterface

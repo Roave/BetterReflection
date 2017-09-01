@@ -316,6 +316,8 @@ class ReflectionMethodTest extends TestCase
             ['ClassC', 'foo', 'FooInterface'],
             ['ClassT', 'bar', null],
             ['Foom\A', 'foo', 'Foom\Foo'],
+            ['ClassE', 'boo', 'ClassC'],
+            ['ClassF', 'zoo', 'ClassD'],
         ];
     }
 
