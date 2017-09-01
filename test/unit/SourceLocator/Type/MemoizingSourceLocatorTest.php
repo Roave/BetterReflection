@@ -149,18 +149,6 @@ class MemoizingSourceLocatorTest extends TestCase
         array $reflectors
     ) : void {
         $fetchedSymbolsCount = [];
-        $locatedSymbols      = array_combine(
-            array_map('spl_object_hash', $identifiers),
-            array_map(
-                function () : ?Reflection {
-                    return [
-                        $this->createMock(Reflection::class),
-                        null
-                    ][random_int(0, 1)];
-                },
-                $identifiers
-            )
-        );
 
         $this
             ->wrappedLocator
@@ -173,7 +161,6 @@ class MemoizingSourceLocatorTest extends TestCase
                 })
             )
             ->willReturnCallback(function (Reflector $reflector, Identifier $identifier) use (
-                $locatedSymbols,
                 & $fetchedSymbolsCount
             ) : ?Reflection {
                 $identifierId = \spl_object_hash($identifier);
@@ -182,7 +169,10 @@ class MemoizingSourceLocatorTest extends TestCase
 
                 $fetchedSymbolsCount[$hash] = ($fetchedSymbolsCount[$hash] ?? 0) + 1;
 
-                return $locatedSymbols[$identifierId];
+                return [
+                    $this->createMock(Reflection::class),
+                    null
+                ][random_int(0, 1)];
             });
 
         $memoizedSymbols = $this->locateIdentifiers($reflectors, $identifiers);
@@ -195,6 +185,9 @@ class MemoizingSourceLocatorTest extends TestCase
         }
 
         self::assertSame($memoizedSymbols, $cachedSymbols);
+
+        $memoizedSymbolsIds = array_map('spl_object_hash', array_filter($memoizedSymbols));
+        self::assertCount(count($memoizedSymbolsIds), array_unique($memoizedSymbolsIds), 'No duplicate symbols');
     }
 
     /**
