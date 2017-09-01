@@ -425,6 +425,14 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('Reflection', $method->getExtensionName());
     }
 
+    public function testIsInternal() : void
+    {
+        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(ReflectionClass::class);
+        $method    = $classInfo->getMethod('isInternal');
+
+        self::assertTrue($method->isInternal());
+    }
+
     public function testGetClosureOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
     {
         $php = <<<'PHP'
