@@ -45,6 +45,14 @@ class MemoizingParserTest extends TestCase
             self::assertInstanceOf(Node::class, $parsed[0]);
         }
 
+        $nodeIdentifiers = array_map(
+            function (array $nodes) : string {
+                return \spl_object_hash($nodes[0]);
+            },
+            $producedNodes
+        );
+
+        self::assertCount(count($nodeIdentifiers), array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
         self::assertSame($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
     }
 }
