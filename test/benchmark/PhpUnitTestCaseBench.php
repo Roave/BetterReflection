@@ -8,6 +8,9 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 
+/**
+ * @Iterations(10)
+ */
 class PhpUnitTestCaseBench
 {
     /**
