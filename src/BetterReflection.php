@@ -9,9 +9,11 @@ use PhpParser\ParserFactory;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
@@ -53,11 +55,11 @@ final class BetterReflection
         $astLocator = $this->astLocator();
 
         return $this->sourceLocator
-            ?? $this->sourceLocator = new AggregateSourceLocator([
+            ?? $this->sourceLocator = new MemoizingSourceLocator(new AggregateSourceLocator([
                 new PhpInternalSourceLocator($astLocator),
                 new EvaledCodeSourceLocator($astLocator),
                 new AutoloadSourceLocator($astLocator),
-            ]);
+            ]));
     }
 
     public function classReflector() : ClassReflector
@@ -75,9 +77,11 @@ final class BetterReflection
     public function phpParser() : Parser
     {
         return $this->phpParser
-            ?? $this->phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
-                'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
-            ]));
+            ?? $this->phpParser = new MemoizingParser(
+                (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
+                    'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
+                ]))
+            );
     }
 
     public function astLocator() : AstLocator
