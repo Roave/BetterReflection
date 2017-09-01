@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Closure;
 use Exception;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\NullableType;
-use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
@@ -17,13 +15,10 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
@@ -466,24 +461,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     }
 
     /**
-     * Set the return type declaration.
-     *
-     * @param string $newReturnType
-     */
-    public function setReturnType(string $newReturnType) : void
-    {
-        $this->node->returnType = new Node\Name($newReturnType);
-    }
-
-    /**
-     * Remove the return type declaration completely.
-     */
-    public function removeReturnType() : void
-    {
-        $this->node->returnType = null;
-    }
-
-    /**
      * @throws Uncloneable
      */
     public function __clone()
@@ -531,88 +508,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function getAst() : Node\FunctionLike
     {
         return $this->node;
-    }
-
-    /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * $reflectionFunction->setBodyFromClosure(function () { return true; });
-     *
-     * @param \Closure $newBody
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
-     */
-    public function setBodyFromClosure(Closure $newBody) : void
-    {
-        /** @var self $closureReflection */
-        $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
-            $this->reflector,
-            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
-        );
-
-        $this->node->stmts = $closureReflection->getNode()->stmts;
-    }
-
-    /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * $reflectionFunction->setBodyFromString('return true;');
-     *
-     * @param string $newBody
-     */
-    public function setBodyFromString(string $newBody) : void
-    {
-        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
-    }
-
-    /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * // $ast should be an array of Nodes
-     * $reflectionFunction->setBodyFromAst($ast);
-     *
-     * @param Node[] $nodes
-     */
-    public function setBodyFromAst(array $nodes) : void
-    {
-        // This slightly confusing code simply type-checks the $sourceLocators
-        // array by unpacking them and splatting them in the closure.
-        $validator = function (Node ...$node) : array {
-            return $node;
-        };
-        $this->node->stmts = $validator(...$nodes);
-    }
-
-    /**
-     * Add a new parameter to the method/function.
-     *
-     * @param string $parameterName
-     */
-    public function addParameter(string $parameterName) : void
-    {
-        $this->node->params[] = new ParamNode($parameterName);
-    }
-
-    /**
-     * Remove a parameter from the method/function.
-     *
-     * @param string $parameterName
-     * @return void
-     */
-    public function removeParameter(string $parameterName) : void
-    {
-        $lowerName = \strtolower($parameterName);
-
-        foreach ($this->node->params as $key => $paramNode) {
-            if (\strtolower($paramNode->name) === $lowerName) {
-                unset($this->node->params[$key]);
-            }
-        }
     }
 
     /**

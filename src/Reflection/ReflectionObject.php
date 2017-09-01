@@ -618,47 +618,4 @@ class ReflectionObject extends ReflectionClass
     {
         return $this->reflectionClass->getAst();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFinal(bool $isFinal) : void
-    {
-        $this->reflectionClass->setFinal($isFinal);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeMethod(string $methodName) : bool
-    {
-        return $this->reflectionClass->removeMethod($methodName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addMethod(string $methodName) : void
-    {
-        $this->reflectionClass->addMethod($methodName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeProperty(string $methodName) : bool
-    {
-        return $this->reflectionClass->removeProperty($methodName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addProperty(
-        string $methodName,
-        int $visibility = CoreReflectionProperty::IS_PUBLIC,
-        bool $static = false
-    ) : void {
-        $this->reflectionClass->addProperty($methodName, $visibility, $static);
-    }
 }

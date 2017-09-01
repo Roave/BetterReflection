@@ -451,24 +451,6 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * Set the parameter type declaration.
-     *
-     * @param string $newParameterType
-     */
-    public function setType(string $newParameterType) : void
-    {
-        $this->node->type = new Node\Name($newParameterType);
-    }
-
-    /**
-     * Remove the parameter type declaration completely.
-     */
-    public function removeType() : void
-    {
-        $this->node->type = null;
-    }
-
-    /**
      * Is this parameter an array?
      *
      * @return bool
@@ -601,5 +583,10 @@ class ReflectionParameter implements CoreReflector
     public function getEndColumn() : int
     {
         return CalculateReflectionColum::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
+    }
+
+    public function getAst() : ParamNode
+    {
+        return $this->node;
     }
 }

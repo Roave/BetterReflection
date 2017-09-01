@@ -8,7 +8,7 @@ use Foo;
 use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Types;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PhpParser\Node\Param;
 use PHPUnit\Framework\TestCase;
 use Reflector;
 use Roave\BetterReflection\BetterReflection;
@@ -356,36 +356,6 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
-    public function testSetType() : void
-    {
-        $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
-        $methodInfo    = $classInfo->getMethod('foo');
-        $parameterInfo = $methodInfo->getParameter('intParam');
-
-        $parameterInfo->setType('string');
-
-        self::assertSame('string', (string) $parameterInfo->getType());
-        self::assertStringStartsWith(
-            'public function foo(string $intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
-        );
-    }
-
-    public function testRemoveType() : void
-    {
-        $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
-        $methodInfo    = $classInfo->getMethod('foo');
-        $parameterInfo = $methodInfo->getParameter('intParam');
-
-        $parameterInfo->removeType();
-
-        self::assertNull($parameterInfo->getType());
-        self::assertStringStartsWith(
-            'public function foo($intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
-        );
-    }
-
     public function testIsCallable() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
@@ -725,5 +695,18 @@ class ReflectionParameterTest extends TestCase
 
         self::assertSame($startColumn, $parameter->getStartColumn());
         self::assertSame($endColumn, $parameter->getEndColumn());
+    }
+
+    public function testGetAst() : void
+    {
+        $php = '<?php function foo($a = 123) {}';
+
+        $functionReflection  = (new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->reflector))->reflect('foo');
+        $parameterReflection = $functionReflection->getParameter('a');
+
+        $ast = $parameterReflection->getAst();
+
+        self::assertInstanceOf(Param::class, $ast);
+        self::assertSame('a', $ast->name);
     }
 }

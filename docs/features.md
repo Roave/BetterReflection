@@ -38,23 +38,36 @@ written for PHP 7 work in PHP 5 for example, and setting new types might
 do the opposite. For instance, you might want to set the PHP 7 return type
 declaration to that defined in the PHP DocBlock.
 
-```
+```php
+<?php
+
+use Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType;
+use Roave\BetterReflection\Reflection\Mutation\RemoveParameterType;
+use Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType;
+use Roave\BetterReflection\Reflection\Mutation\SetParameterType;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionMutators;
+
+$reflectionMutators = new ReflectionMutators();
+
 // Change a function to ensure it returns an integer
-$functionInfo->setReturnType('int');
+$functionInfo = (new SetFunctionReturnType($reflectionMutators->functionMutator()))($functionInfo, 'int');
 
 // If there is only one type defined in the DocBlock, set it as the return type
 $returnTypes = $functionInfo->getDocBlockReturnTypes();
 if (count($returnTypes) === 1) {
-    $functionInfo->setReturnType((string) $returnTypes[0]);
+    $functionInfo = (new SetFunctionReturnType($reflectionMutators->functionMutator()))($functionInfo, (string) $returnTypes[0], false);
 }
 
 // Remove the return type declaration
-$functionInfo->removeReturnType();
+$functionInfo = (new RemoveFunctionReturnType($reflectionMutators->functionMutator()))($functionInfo);
 ```
 
 You can do similar things with parameter types also:
 
-```
-$parameterInfo->setType('int');
-$parameterInfo->removeType();
+<<<<<<< HEAD
+```php
+<?php
+
+(new SetParameterType($reflectionMutators->parameterMutator()))($parameterInfo, 'int');
+(new RemoveParameterType($reflectionMutators->parameterMutator()))($parameterInfo);
 ```

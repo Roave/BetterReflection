@@ -8,13 +8,11 @@ use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
-use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
@@ -33,7 +31,6 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use stdClass;
-use TypeError;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
@@ -516,32 +513,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($reflectionType->allowsNull());
     }
 
-    public function testSetReturnType() : void
-    {
-        $functionInfo = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
-        ))->reflect('returnsString');
-
-        $functionInfo->setReturnType('int');
-
-        self::assertSame('int', (string) $functionInfo->getReturnType());
-        self::assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
-    }
-
-    public function testRemoveReturnType() : void
-    {
-        $functionInfo = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
-        ))->reflect('returnsString');
-
-        $functionInfo->removeReturnType();
-
-        self::assertNull($functionInfo->getReturnType());
-        self::assertNotContains(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
-    }
-
     public function testCannotClone() : void
     {
         $php = '<?php function foo() {}';
@@ -600,83 +571,6 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertInstanceOf(Function_::class, $ast);
         self::assertSame('foo', $ast->name);
-    }
-
-    public function testSetBodyFromClosure() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->setBodyFromClosure(function () : void {
-            echo 'Hello world!';
-        });
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromString() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->setBodyFromString("echo 'Hello world!';");
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromAstWithInvalidArgumentsThrowsException() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $this->expectException(TypeError::class);
-        $function->setBodyFromAst([1]);
-    }
-
-    public function testSetBodyFromAst() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->setBodyFromAst([
-            new Echo_([
-                new String_('Hello world!'),
-            ]),
-        ]);
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testAddParameter() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->addParameter('myNewParam');
-
-        self::assertStringStartsWith('function foo($myNewParam)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
-    }
-
-    public function testRemoveParameter() : void
-    {
-        $php = '<?php function foo($a, $b) {}';
-
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
-
-        $function->removeParameter('a');
-
-        self::assertStringStartsWith('function foo($b)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
     }
 
     public function testGetReturnStatementAstReturnsStatements() : void

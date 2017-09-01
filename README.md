@@ -52,7 +52,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
- * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
  * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
  * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
@@ -71,6 +70,36 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
    introduced `Roave\BetterReflection\BetterReflection#classReflector()` instead
  * `Roave\BetterReflection\Util\FindReflectionOnLine::buildDefaultFinder()` was dropped, please use the newly
    introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#removeReturnType()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setBodyFromAst()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromAst()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setBodyFromClosure()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromClosure()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#setBodyFromString()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromString()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#addParameter()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\AddFunctionParameter()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionFunctionAbstract#removeParameter()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveFunctionParameter()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionProperty#setVisibility()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetPropertyVisibility()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionParameter#removeType()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveParameterType()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionParameter#setType()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetParameterType()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionClass#setFinal()` was dropped, please use the newly
+   introduced `new Roave\BetterReflection\Reflection\Mutation\SetClassFinal()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionClass#removeProperty()` and `Roave\BetterReflection\Reflection\ReflectionObject#removeProperty()`
+   were dropped, please use the newly introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveClassProperty()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionClass#addProperty()` and `Roave\BetterReflection\Reflection\ReflectionObject#addProperty()`
+   were dropped, please use the newly introduced `new Roave\BetterReflection\Reflection\Mutation\AddClassProperty()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionClass#removeMethod()` and `Roave\BetterReflection\Reflection\ReflectionObject#removeMethod()`
+   were dropped, please use the newly introduced `new Roave\BetterReflection\Reflection\Mutation\RemoveClassMethod()` instead
+ * `Roave\BetterReflection\Reflection\ReflectionClass#addMethod()` and `Roave\BetterReflection\Reflection\ReflectionObject#addMethod()`
+   were dropped, please use the newly introduced `new Roave\BetterReflection\Reflection\Mutation\AddClassMethod()` instead
 
 ## More documentation
 
