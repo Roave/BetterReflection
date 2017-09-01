@@ -16,7 +16,7 @@ final class MemoizingSourceLocator implements SourceLocator
     private $wrappedSourceLocator;
 
     /**
-     * @var Reflection[][] indexed by reflector key and identifier cache key
+     * @var Reflection[] indexed by reflector key and identifier cache key
      */
     private $cacheByIdentifierKeyAndOid = [];
 
@@ -32,35 +32,25 @@ final class MemoizingSourceLocator implements SourceLocator
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
-        $cacheKey     = $this->identifierToCacheKey($identifier);
-        $reflectorKey = $this->reflectorCacheKey($reflector);
+        $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierToCacheKey($identifier);
 
-        if (! isset($this->cacheByIdentifierKeyAndOid[$reflectorKey])) {
-            $this->cacheByIdentifierKeyAndOid[$reflectorKey] = [];
+        if (\array_key_exists($cacheKey, $this->cacheByIdentifierKeyAndOid)) {
+            return $this->cacheByIdentifierKeyAndOid[$cacheKey];
         }
 
-        if (\array_key_exists($cacheKey, $this->cacheByIdentifierKeyAndOid[$reflectorKey])) {
-            return $this->cacheByIdentifierKeyAndOid[$reflectorKey][$cacheKey];
-        }
-
-        return $this->cacheByIdentifierKeyAndOid[$reflectorKey][$cacheKey]
+        return $this->cacheByIdentifierKeyAndOid[$cacheKey]
             = $this->wrappedSourceLocator->locateIdentifier($reflector, $identifier);
     }
 
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        $cacheKey     = $this->identifierTypeToCacheKey($identifierType);
-        $reflectorKey = $this->reflectorCacheKey($reflector);
+        $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierTypeToCacheKey($identifierType);
 
-        if (! isset($this->cacheByIdentifierTypeKeyAndOid[$reflectorKey])) {
-            $this->cacheByIdentifierTypeKeyAndOid[$reflectorKey] = [];
+        if (\array_key_exists($cacheKey, $this->cacheByIdentifierTypeKeyAndOid)) {
+            return $this->cacheByIdentifierTypeKeyAndOid[$cacheKey];
         }
 
-        if (\array_key_exists($cacheKey, $this->cacheByIdentifierTypeKeyAndOid[$reflectorKey])) {
-            return $this->cacheByIdentifierTypeKeyAndOid[$reflectorKey][$cacheKey];
-        }
-
-        return $this->cacheByIdentifierTypeKeyAndOid[$reflectorKey][$cacheKey]
+        return $this->cacheByIdentifierTypeKeyAndOid[$cacheKey]
             = $this->wrappedSourceLocator->locateIdentifiersByType($reflector, $identifierType);
     }
 
