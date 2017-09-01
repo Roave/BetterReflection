@@ -8,8 +8,10 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\SetPropertyVisibility;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionPropertyMutator;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Mutation\SetPropertyVisibility
@@ -21,11 +23,17 @@ class SetPropertyVisibilityTest extends TestCase
      */
     private $classReflector;
 
+    /**
+     * @var ReflectionPropertyMutator
+     */
+    private $propertyMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->classReflector = (new BetterReflection())->classReflector();
+        $this->classReflector  = (new BetterReflection())->classReflector();
+        $this->propertyMutator = ReflectionMutatorsSingleton::instance()->propertyMutator();
     }
 
     public function testInvalidVisibilityThrowsException() : void
@@ -35,7 +43,7 @@ class SetPropertyVisibilityTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
-        (new SetPropertyVisibility())->__invoke($propertyReflection, 0);
+        (new SetPropertyVisibility($this->propertyMutator))->__invoke($propertyReflection, 0);
     }
 
     public function testValidVisibility() : void
@@ -48,7 +56,9 @@ class SetPropertyVisibilityTest extends TestCase
         self::assertTrue($propertyReflection->isPublic(), 'Should initially be public, was not public');
         self::assertTrue($propertyReflection->isStatic(), 'Should initially be static');
 
-        $propertyModifiedToPrivate = (new SetPropertyVisibility())->__invoke($propertyReflection, CoreReflectionProperty::IS_PRIVATE);
+        $setPropertyVisitibility = new SetPropertyVisibility($this->propertyMutator);
+
+        $propertyModifiedToPrivate = $setPropertyVisitibility->__invoke($propertyReflection, CoreReflectionProperty::IS_PRIVATE);
 
         self::assertNotSame($propertyReflection, $propertyModifiedToPrivate);
         self::assertTrue($propertyModifiedToPrivate->isPrivate(), 'After setting private, isPrivate is not set');
@@ -56,7 +66,7 @@ class SetPropertyVisibilityTest extends TestCase
         self::assertFalse($propertyModifiedToPrivate->isPublic(), 'After setting private, public is still set but should not be');
         self::assertTrue($propertyModifiedToPrivate->isStatic(), 'Should still be static after setting private');
 
-        $propertyModifiedToProtected = (new SetPropertyVisibility())->__invoke($propertyReflection, CoreReflectionProperty::IS_PROTECTED);
+        $propertyModifiedToProtected = $setPropertyVisitibility->__invoke($propertyReflection, CoreReflectionProperty::IS_PROTECTED);
 
         self::assertNotSame($propertyReflection, $propertyModifiedToProtected);
         self::assertFalse($propertyModifiedToProtected->isPrivate(), 'After setting protected, should no longer be private');
@@ -64,7 +74,7 @@ class SetPropertyVisibilityTest extends TestCase
         self::assertFalse($propertyModifiedToProtected->isPublic(), 'After setting protected, public is set but should not be');
         self::assertTrue($propertyModifiedToProtected->isStatic(), 'Should still be static after setting protected');
 
-        $propertyModifiedToPublic = (new SetPropertyVisibility())->__invoke($propertyReflection, CoreReflectionProperty::IS_PUBLIC);
+        $propertyModifiedToPublic = $setPropertyVisitibility->__invoke($propertyReflection, CoreReflectionProperty::IS_PUBLIC);
 
         self::assertNotSame($propertyReflection, $propertyModifiedToPublic);
         self::assertFalse($propertyModifiedToPublic->isPrivate(), 'After setting public, isPrivate should not be set');

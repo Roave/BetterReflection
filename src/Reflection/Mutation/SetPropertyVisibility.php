@@ -16,9 +16,9 @@ class SetPropertyVisibility
      */
     private $mutator;
 
-    public function __construct()
+    public function __construct(ReflectionPropertyMutator $mutator)
     {
-        $this->mutator = new ReflectionPropertyMutator();
+        $this->mutator = $mutator;
     }
 
     /**

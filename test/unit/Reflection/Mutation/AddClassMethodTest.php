@@ -8,10 +8,12 @@ use PHPUnit\Framework\TestCase;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\AddClassMethod;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionClassMutator;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Mutation\AddClassMethod
@@ -23,11 +25,17 @@ class AddClassMethodTest extends TestCase
      */
     private $astLocator;
 
+    /**
+     * @var ReflectionClassMutator
+     */
+    private $classMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator   = (new BetterReflection())->astLocator();
+        $this->classMutator = ReflectionMutatorsSingleton::instance()->classMutator();
     }
 
     public function testAdd() : void
@@ -39,7 +47,7 @@ class AddClassMethodTest extends TestCase
 
         self::assertFalse($classReflection->hasMethod('boo'));
 
-        $modifiedClassReflection = (new AddClassMethod())->__invoke($classReflection, 'boo', CoreReflectionMethod::IS_PUBLIC | CoreReflectionMethod::IS_FINAL);
+        $modifiedClassReflection = (new AddClassMethod($this->classMutator))->__invoke($classReflection, 'boo', CoreReflectionMethod::IS_PUBLIC | CoreReflectionMethod::IS_FINAL);
 
         self::assertInstanceOf(ReflectionClass::class, $modifiedClassReflection);
         self::assertNotSame($classReflection, $modifiedClassReflection);
@@ -61,6 +69,6 @@ class AddClassMethodTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        (new AddClassMethod())->__invoke($classReflection, 'boo', 999999999);
+        (new AddClassMethod($this->classMutator))->__invoke($classReflection, 'boo', 999999999);
     }
 }

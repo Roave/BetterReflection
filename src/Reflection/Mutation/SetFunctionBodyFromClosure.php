@@ -26,10 +26,10 @@ class SetFunctionBodyFromClosure
      */
     private $mutator;
 
-    public function __construct(Parser $parser)
+    public function __construct(Parser $parser, ReflectionFunctionAbstractMutator $mutator)
     {
         $this->parser  = $parser;
-        $this->mutator = new ReflectionFunctionAbstractMutator();
+        $this->mutator = $mutator;
     }
 
     /**

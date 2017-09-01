@@ -18,9 +18,9 @@ class AddClassProperty
      */
     private $mutator;
 
-    public function __construct()
+    public function __construct(ReflectionClassMutator $mutator)
     {
-        $this->mutator = new ReflectionClassMutator();
+        $this->mutator = $mutator;
     }
 
     public function __invoke(ReflectionClass $classReflection, string $propertyName, int $visibility, bool $static) : ReflectionClass

@@ -8,11 +8,13 @@ use PhpParser\Node\Stmt\Echo_;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromAst;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionFunctionAbstractMutator;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 use TypeError;
 
 /**
@@ -30,12 +32,18 @@ class SetFunctionBodyFromAstTest extends TestCase
      */
     private $classReflector;
 
+    /**
+     * @var ReflectionFunctionAbstractMutator
+     */
+    private $functionMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator     = (new BetterReflection())->astLocator();
-        $this->classReflector = $this->createMock(ClassReflector::class);
+        $this->astLocator      = (new BetterReflection())->astLocator();
+        $this->classReflector  = $this->createMock(ClassReflector::class);
+        $this->functionMutator = ReflectionMutatorsSingleton::instance()->functionMutator();
     }
 
     public function testInvalidAstThrowsException() : void
@@ -46,7 +54,7 @@ class SetFunctionBodyFromAstTest extends TestCase
         $functionReflection = $reflector->reflect('foo');
 
         $this->expectException(TypeError::class);
-        (new SetFunctionBodyFromAst())->__invoke($functionReflection, [1]);
+        (new SetFunctionBodyFromAst($this->functionMutator))->__invoke($functionReflection, [1]);
     }
 
     public function testValidAst() : void
@@ -56,7 +64,7 @@ class SetFunctionBodyFromAstTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('foo');
 
-        $modifiedFunctionReflection = (new SetFunctionBodyFromAst())->__invoke($functionReflection, [
+        $modifiedFunctionReflection = (new SetFunctionBodyFromAst($this->functionMutator))->__invoke($functionReflection, [
             new Echo_([
                 new String_('Hello world!'),
             ]),

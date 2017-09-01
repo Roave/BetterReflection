@@ -7,11 +7,13 @@ use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromString;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionFunctionAbstractMutator;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Mutation\SetFunctionBodyFromString
@@ -33,15 +35,21 @@ class SetFunctionBodyFromStringTest extends TestCase
      */
     private $classReflector;
 
+    /**
+     * @var ReflectionFunctionAbstractMutator
+     */
+    private $functionMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
         $betterReflection = new BetterReflection();
 
-        $this->astLocator     = $betterReflection->astLocator();
-        $this->parser         = $betterReflection->phpParser();
-        $this->classReflector = $this->createMock(ClassReflector::class);
+        $this->astLocator      = $betterReflection->astLocator();
+        $this->parser          = $betterReflection->phpParser();
+        $this->classReflector  = $this->createMock(ClassReflector::class);
+        $this->functionMutator = ReflectionMutatorsSingleton::instance()->functionMutator();
     }
 
     public function testString() : void
@@ -53,7 +61,7 @@ class SetFunctionBodyFromStringTest extends TestCase
 
         $string = "echo 'Hello world!';";
 
-        $modifiedFunctionReflection = (new SetFunctionBodyFromString($this->parser))->__invoke($functionReflection, $string);
+        $modifiedFunctionReflection = (new SetFunctionBodyFromString($this->parser, $this->functionMutator))->__invoke($functionReflection, $string);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);

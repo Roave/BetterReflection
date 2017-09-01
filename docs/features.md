@@ -45,25 +45,29 @@ use Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType;
 use Roave\BetterReflection\Reflection\Mutation\RemoveParameterType;
 use Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType;
 use Roave\BetterReflection\Reflection\Mutation\SetParameterType;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionMutators;
+
+$reflectionMutators = new ReflectionMutators();
 
 // Change a function to ensure it returns an integer
-$functionInfo = (new SetFunctionReturnType())($functionInfo, 'int');
+$functionInfo = (new SetFunctionReturnType($reflectionMutators->functionMutator()))($functionInfo, 'int');
 
 // If there is only one type defined in the DocBlock, set it as the return type
 $returnTypes = $functionInfo->getDocBlockReturnTypes();
 if (count($returnTypes) === 1) {
-    $functionInfo = (new SetFunctionReturnType())($functionInfo, (string) $returnTypes[0], false);
+    $functionInfo = (new SetFunctionReturnType($reflectionMutators->functionMutator()))($functionInfo, (string) $returnTypes[0], false);
 }
 
 // Remove the return type declaration
-$functionInfo = (new RemoveFunctionReturnType())($functionInfo);
+$functionInfo = (new RemoveFunctionReturnType($reflectionMutators->functionMutator()))($functionInfo);
 ```
 
 You can do similar things with parameter types also:
 
+<<<<<<< HEAD
 ```php
 <?php
 
-(new SetParameterType())($parameterInfo, 'int');
-(new RemoveParameterType())($parameterInfo);
+(new SetParameterType($reflectionMutators->parameterMutator()))($parameterInfo, 'int');
+(new RemoveParameterType($reflectionMutators->parameterMutator()))($parameterInfo);
 ```

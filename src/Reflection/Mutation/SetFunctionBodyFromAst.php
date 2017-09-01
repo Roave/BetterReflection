@@ -16,9 +16,9 @@ class SetFunctionBodyFromAst
      */
     private $mutator;
 
-    public function __construct()
+    public function __construct(ReflectionFunctionAbstractMutator $mutator)
     {
-        $this->mutator = new ReflectionFunctionAbstractMutator();
+        $this->mutator = $mutator;
     }
 
     /**

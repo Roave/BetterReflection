@@ -8,9 +8,11 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\AddClassProperty;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionClassMutator;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Mutation\AddClassProperty
@@ -22,11 +24,17 @@ class AddClassPropertyTest extends TestCase
      */
     private $astLocator;
 
+    /**
+     * @var ReflectionClassMutator
+     */
+    private $classMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator   = (new BetterReflection())->astLocator();
+        $this->classMutator = ReflectionMutatorsSingleton::instance()->classMutator();
     }
 
     public function testAdd() : void
@@ -37,22 +45,24 @@ class AddClassPropertyTest extends TestCase
 
         self::assertFalse($classReflection->hasProperty('bar'));
 
-        $modifiedClassReflectionWithPublicProperty = (new AddClassProperty())->__invoke($classReflection, 'publicBar', CoreReflectionProperty::IS_PUBLIC, false);
+        $addClassProperty = new AddClassProperty($this->classMutator);
+
+        $modifiedClassReflectionWithPublicProperty = $addClassProperty->__invoke($classReflection, 'publicBar', CoreReflectionProperty::IS_PUBLIC, false);
 
         self::assertTrue($modifiedClassReflectionWithPublicProperty->hasProperty('publicBar'));
         self::assertTrue($modifiedClassReflectionWithPublicProperty->getProperty('publicBar')->isPublic());
 
-        $modifiedClassReflectionWithProtectedProperty = (new AddClassProperty())->__invoke($classReflection, 'protectedBar', CoreReflectionProperty::IS_PROTECTED, false);
+        $modifiedClassReflectionWithProtectedProperty = $addClassProperty->__invoke($classReflection, 'protectedBar', CoreReflectionProperty::IS_PROTECTED, false);
 
         self::assertTrue($modifiedClassReflectionWithProtectedProperty->hasProperty('protectedBar'));
         self::assertTrue($modifiedClassReflectionWithProtectedProperty->getProperty('protectedBar')->isProtected());
 
-        $modifiedClassReflectionWithPrivateProperty = (new AddClassProperty())->__invoke($classReflection, 'privateBar', CoreReflectionProperty::IS_PRIVATE, false);
+        $modifiedClassReflectionWithPrivateProperty = $addClassProperty->__invoke($classReflection, 'privateBar', CoreReflectionProperty::IS_PRIVATE, false);
 
         self::assertTrue($modifiedClassReflectionWithPrivateProperty->hasProperty('privateBar'));
         self::assertTrue($modifiedClassReflectionWithPrivateProperty->getProperty('privateBar')->isPrivate());
 
-        $modifiedClassReflectionWithStaticProperty = (new AddClassProperty())->__invoke($classReflection, 'staticBar', CoreReflectionProperty::IS_PUBLIC, true);
+        $modifiedClassReflectionWithStaticProperty = $addClassProperty->__invoke($classReflection, 'staticBar', CoreReflectionProperty::IS_PUBLIC, true);
 
         self::assertTrue($modifiedClassReflectionWithStaticProperty->hasProperty('staticBar'));
         self::assertTrue($modifiedClassReflectionWithStaticProperty->getProperty('staticBar')->isStatic());
@@ -66,6 +76,6 @@ class AddClassPropertyTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        (new AddClassProperty())->__invoke($classReflection, 'public', 999999999, false);
+        (new AddClassProperty($this->classMutator))->__invoke($classReflection, 'public', 999999999, false);
     }
 }

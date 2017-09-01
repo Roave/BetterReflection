@@ -6,11 +6,13 @@ namespace Roave\BetterReflectionTest\Reflection\Mutation;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionFunctionAbstractMutator;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 use Traversable;
 
 /**
@@ -28,12 +30,18 @@ class SetFunctionReturnTypeTest extends TestCase
      */
     private $classReflector;
 
+    /**
+     * @var ReflectionFunctionAbstractMutator
+     */
+    private $functionMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator     = (new BetterReflection())->astLocator();
-        $this->classReflector = $this->createMock(ClassReflector::class);
+        $this->astLocator      = (new BetterReflection())->astLocator();
+        $this->classReflector  = $this->createMock(ClassReflector::class);
+        $this->functionMutator = ReflectionMutatorsSingleton::instance()->functionMutator();
     }
 
     public function testWithReturnType() : void
@@ -43,7 +51,7 @@ class SetFunctionReturnTypeTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('boo');
 
-        $modifiedFunctionReflection = (new SetFunctionReturnType())->__invoke($functionReflection, 'int', false);
+        $modifiedFunctionReflection = (new SetFunctionReturnType($this->functionMutator))->__invoke($functionReflection, 'int', false);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);
@@ -60,7 +68,7 @@ class SetFunctionReturnTypeTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('boo');
 
-        $modifiedFunctionReflection = (new SetFunctionReturnType())->__invoke($functionReflection, 'bool', false);
+        $modifiedFunctionReflection = (new SetFunctionReturnType($this->functionMutator))->__invoke($functionReflection, 'bool', false);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);
@@ -76,7 +84,7 @@ class SetFunctionReturnTypeTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('boo');
 
-        $modifiedFunctionReflection = (new SetFunctionReturnType())->__invoke($functionReflection, 'string', true);
+        $modifiedFunctionReflection = (new SetFunctionReturnType($this->functionMutator))->__invoke($functionReflection, 'string', true);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);
@@ -92,7 +100,7 @@ class SetFunctionReturnTypeTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('boo');
 
-        $modifiedFunctionReflection = (new SetFunctionReturnType())->__invoke($functionReflection, Traversable::class, false);
+        $modifiedFunctionReflection = (new SetFunctionReturnType($this->functionMutator))->__invoke($functionReflection, Traversable::class, false);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);

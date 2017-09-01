@@ -6,11 +6,13 @@ namespace Roave\BetterReflectionTest\Reflection\Mutation;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionFunctionAbstractMutator;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType
@@ -27,12 +29,18 @@ class RemoveFunctionReturnTypeTest extends TestCase
      */
     private $classReflector;
 
+    /**
+     * @var ReflectionFunctionAbstractMutator
+     */
+    private $functionMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator     = (new BetterReflection())->astLocator();
-        $this->classReflector = $this->createMock(ClassReflector::class);
+        $this->astLocator      = (new BetterReflection())->astLocator();
+        $this->classReflector  = $this->createMock(ClassReflector::class);
+        $this->functionMutator = ReflectionMutatorsSingleton::instance()->functionMutator();
     }
 
     public function testWithReturnType() : void
@@ -42,7 +50,7 @@ class RemoveFunctionReturnTypeTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('boo');
 
-        $modifiedFunctionReflection = (new RemoveFunctionReturnType())->__invoke($functionReflection);
+        $modifiedFunctionReflection = (new RemoveFunctionReturnType($this->functionMutator))->__invoke($functionReflection);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);
@@ -58,7 +66,7 @@ class RemoveFunctionReturnTypeTest extends TestCase
         $reflector          = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect('boo');
 
-        $modifiedFunctionReflection = (new RemoveFunctionReturnType())->__invoke($functionReflection);
+        $modifiedFunctionReflection = (new RemoveFunctionReturnType($this->functionMutator))->__invoke($functionReflection);
 
         self::assertInstanceOf(ReflectionFunction::class, $modifiedFunctionReflection);
         self::assertNotSame($functionReflection, $modifiedFunctionReflection);

@@ -6,10 +6,12 @@ namespace Roave\BetterReflectionTest\Reflection\Mutation;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Mutation\RemoveClassMethod;
+use Roave\BetterReflection\Reflection\Mutator\ReflectionClassMutator;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\Reflection\Mutator\ReflectionMutatorsSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Mutation\RemoveClassMethod
@@ -21,11 +23,17 @@ class RemoveClassMethodTest extends TestCase
      */
     private $astLocator;
 
+    /**
+     * @var ReflectionClassMutator
+     */
+    private $classMutator;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator   = (new BetterReflection())->astLocator();
+        $this->classMutator = ReflectionMutatorsSingleton::instance()->classMutator();
     }
 
     public function testRemove() : void
@@ -45,7 +53,7 @@ PHP;
 
         self::assertTrue($classReflection->hasMethod('boo'));
 
-        $modifiedClassReflection = (new RemoveClassMethod())->__invoke($classReflection, 'boo');
+        $modifiedClassReflection = (new RemoveClassMethod($this->classMutator))->__invoke($classReflection, 'boo');
 
         self::assertInstanceOf(ReflectionClass::class, $modifiedClassReflection);
         self::assertNotSame($classReflection, $modifiedClassReflection);

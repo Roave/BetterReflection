@@ -13,9 +13,9 @@ class RemoveParameterType
      */
     private $mutator;
 
-    public function __construct()
+    public function __construct(ReflectionParameterMutator $mutator)
     {
-        $this->mutator = new ReflectionParameterMutator();
+        $this->mutator = $mutator;
     }
 
     public function __invoke(ReflectionParameter $parameterReflection) : ReflectionParameter

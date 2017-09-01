@@ -15,9 +15,9 @@ class SetParameterType
      */
     private $mutator;
 
-    public function __construct()
+    public function __construct(ReflectionParameterMutator $mutator)
     {
-        $this->mutator = new ReflectionParameterMutator();
+        $this->mutator = $mutator;
     }
 
     public function __invoke(ReflectionParameter $parameterReflection, string $type, bool $allowsNull) : ReflectionParameter
