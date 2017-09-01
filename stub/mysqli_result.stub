@@ -1,5 +1,3 @@
-<?php
-
 class mysqli_result implements Traversable
 {
 
