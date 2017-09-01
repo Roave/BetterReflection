@@ -138,6 +138,60 @@ class MemoizingSourceLocatorTest extends TestCase
         );
     }
 
+    public function testMemoizationByTypeDistinguishesBetweenSourceLocatorsAndType()
+    {
+        /* @var $types IdentifierType[] */
+        $types    = [
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+        ];
+        $symbols1 = [
+            IdentifierType::IDENTIFIER_FUNCTION => [$this->createMock(Reflection::class)],
+            IdentifierType::IDENTIFIER_CLASS    => [$this->createMock(Reflection::class)],
+        ];
+        $symbols2 = [
+            IdentifierType::IDENTIFIER_FUNCTION => [$this->createMock(Reflection::class)],
+            IdentifierType::IDENTIFIER_CLASS    => [$this->createMock(Reflection::class)],
+        ];
+
+        $this
+            ->wrappedLocator
+            ->expects(self::exactly(4))
+            ->method('locateIdentifiersByType')
+            ->with(self::logicalOr($this->reflector1, $this->reflector2))
+            ->willReturnCallback(function (Reflector $reflector, IdentifierType $identifierType) use (
+                $symbols1,
+                $symbols2
+            ) : array {
+                if ($reflector === $this->reflector1) {
+                    return $symbols1[$identifierType->getName()];
+                }
+
+                return $symbols2[$identifierType->getName()];
+            });
+
+        foreach ($types as $type) {
+            self::assertSame(
+                $symbols1[$type->getName()],
+                $this->memoizingLocator->locateIdentifiersByType($this->reflector1, $type)
+            );
+            self::assertSame(
+                $symbols2[$type->getName()],
+                $this->memoizingLocator->locateIdentifiersByType($this->reflector2, $type)
+            );
+
+            // second execution - ensures that memoization is in place
+            self::assertSame(
+                $symbols1[$type->getName()],
+                $this->memoizingLocator->locateIdentifiersByType($this->reflector1, $type)
+            );
+            self::assertSame(
+                $symbols2[$type->getName()],
+                $this->memoizingLocator->locateIdentifiersByType($this->reflector2, $type)
+            );
+        }
+    }
+
     /**
      * @param Identifier[] $identifiers
      * @param int          $expectedFetchOperationsCount
