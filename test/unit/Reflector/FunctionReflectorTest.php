@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Reflector\FunctionReflector
@@ -25,7 +26,7 @@ class FunctionReflectorTest extends TestCase
     {
         parent::setUp();
 
-        $this->classReflector = (new BetterReflection())->classReflector();
+        $this->classReflector = BetterReflectionSingleton::instance()->classReflector();
     }
 
     public function testReflectProxiesToGenericReflectMethod() : void
@@ -51,7 +52,7 @@ class FunctionReflectorTest extends TestCase
     public function testGetFunctionsFromFile() : void
     {
         $functions = (new FunctionReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', (new BetterReflection())->astLocator()),
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', BetterReflectionSingleton::instance()->astLocator()),
             $this->classReflector
         ))->getAllFunctions();
 

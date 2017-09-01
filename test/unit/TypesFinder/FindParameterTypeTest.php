@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindParameterType
@@ -55,7 +56,7 @@ class FindParameterTypeTest extends TestCase
             }
         ';
 
-        $param = (new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator())))
+        $param = (new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator())))
             ->reflect('MyNamespace\ThingThatLogs')
             ->getMethod('foo')
             ->getParameter('bar');

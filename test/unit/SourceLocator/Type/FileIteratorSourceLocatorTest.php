@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
@@ -34,7 +35,7 @@ class FileIteratorSourceLocatorTest extends TestCase
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
                 RecursiveDirectoryIterator::SKIP_DOTS
             )),
-            (new BetterReflection())->astLocator()
+            BetterReflectionSingleton::instance()->astLocator()
         );
     }
 

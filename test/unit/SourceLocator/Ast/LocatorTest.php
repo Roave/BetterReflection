@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Locator
@@ -31,7 +32,7 @@ class LocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->locator = new Locator((new BetterReflection())->phpParser());
+        $this->locator = new Locator(BetterReflectionSingleton::instance()->phpParser());
     }
 
     private function getIdentifier(string $name, string $type) : Identifier
@@ -77,7 +78,7 @@ class LocatorTest extends TestCase
         ';
 
         $functionInfo = $this->locator->findReflection(
-            new FunctionReflector(new StringSourceLocator($php, $this->locator), (new BetterReflection())->classReflector()),
+            new FunctionReflector(new StringSourceLocator($php, $this->locator), BetterReflectionSingleton::instance()->classReflector()),
             new LocatedSource($php, null),
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION)
         );

@@ -15,6 +15,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeL
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
@@ -35,7 +36,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->parser    = (new BetterReflection())->phpParser();
+        $this->parser    = BetterReflectionSingleton::instance()->phpParser();
         $this->reflector = $this->createMock(Reflector::class);
     }
 
@@ -161,8 +162,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
      */
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void
     {
-        self::expectException(TwoAnonymousClassesOnSameLine::class);
-        self::expectExceptionMessage(\sprintf('Two anonymous classes on line 3 in %s', $file));
+        $this->expectException(TwoAnonymousClassesOnSameLine::class);
+        $this->expectExceptionMessage(\sprintf('Two anonymous classes on line 3 in %s', $file));
 
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
@@ -186,7 +187,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     public function testExceptionIfEvaledAnonymousClass() : void
     {
-        self::expectException(EvaledAnonymousClassCannotBeLocated::class);
+        $this->expectException(EvaledAnonymousClassCannotBeLocated::class);
 
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
 

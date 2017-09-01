@@ -12,6 +12,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use RuntimeException;
 
 /**
@@ -28,7 +29,7 @@ class CompilerContextTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     public function testCreatingContextWithoutSelf() : void
@@ -40,7 +41,7 @@ class CompilerContextTest extends TestCase
         self::assertSame($reflector, $context->getReflector());
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The current context does not have a class for self', $this->astLocator);
+        $this->expectExceptionMessage('The current context does not have a class for self');
         $context->getSelf();
     }
 
@@ -107,7 +108,7 @@ class CompilerContextTest extends TestCase
 
         $reflector    = new FunctionReflector(
             new StringSourceLocator($phpCode, $this->astLocator),
-            (new BetterReflection())->classReflector()
+            BetterReflectionSingleton::instance()->classReflector()
         );
         $functionInfo = $reflector->reflect('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());

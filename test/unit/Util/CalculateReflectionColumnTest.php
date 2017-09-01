@@ -67,7 +67,7 @@ class CalculateReflectionColumnTest extends TestCase
 
     public function testGetStartColumnThrowsExceptionIfInvalidPosition() : void
     {
-        self::expectException(InvalidNodePosition::class);
+        $this->expectException(InvalidNodePosition::class);
 
         $node = $this->createMock(Node::class);
         $node
@@ -84,7 +84,7 @@ class CalculateReflectionColumnTest extends TestCase
 
     public function testGetStartColumnThrowsExceptionIfNoPosition() : void
     {
-        self::expectException(NoNodePosition::class);
+        $this->expectException(NoNodePosition::class);
 
         $node = $this->createMock(Node::class);
         $node
@@ -148,7 +148,7 @@ class CalculateReflectionColumnTest extends TestCase
 
     public function testGetEndColumnThrowsExceptionIfInvalidPosition() : void
     {
-        self::expectException(InvalidNodePosition::class);
+        $this->expectException(InvalidNodePosition::class);
 
         $node = $this->createMock(Node::class);
         $node
@@ -165,7 +165,7 @@ class CalculateReflectionColumnTest extends TestCase
 
     public function testGetEndColumnThrowsExceptionIfNoPosition() : void
     {
-        self::expectException(NoNodePosition::class);
+        $this->expectException(NoNodePosition::class);
 
         $node = $this->createMock(Node::class);
         $node

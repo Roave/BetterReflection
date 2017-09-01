@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 class ReflectionClassConstantTest extends TestCase
@@ -18,7 +19,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         return new ComposerSourceLocator(
             require __DIR__ . '/../../../vendor/autoload.php',
-            (new BetterReflection())->astLocator()
+            BetterReflectionSingleton::instance()->astLocator()
         );
     }
 
@@ -60,8 +61,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testToString(string $const, string $expected) : void
     {
-        $const = $this->getExampleConstant($const);
-        $this->assertSame($expected, (string) $const);
+        $this->assertSame($expected, (string) $this->getExampleConstant($const));
     }
 
     public function toStringProvider() : array
@@ -81,8 +81,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testGetModifiers(string $const, int $expected) : void
     {
-        $const = $this->getExampleConstant($const);
-        $this->assertSame($expected, $const->getModifiers());
+        $this->assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
     public function getModifiersProvider() : array
@@ -123,7 +122,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine) : void
     {
-        $reflector       = new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator()));
+        $reflector       = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection = $reflector->reflect('\T');
         $constReflection = $classReflection->getReflectionConstant('TEST');
         $this->assertEquals($startLine, $constReflection->getStartLine());
@@ -157,7 +156,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
-        $reflector          = new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator()));
+        $reflector          = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection    = $reflector->reflect('T');
         $constantReflection = $classReflection->getReflectionConstant('TEST');
 

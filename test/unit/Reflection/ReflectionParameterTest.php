@@ -24,6 +24,7 @@ use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
@@ -52,7 +53,7 @@ class ReflectionParameterTest extends TestCase
     {
         global $loader;
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
         $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 

@@ -12,6 +12,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindPropertyType
@@ -81,7 +82,7 @@ class FindPropertyTypeTest extends TestCase
             }
         ';
 
-        $prop = (new ClassReflector(new StringSourceLocator($php, (new BetterReflection())->astLocator())))
+        $prop = (new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator())))
             ->reflect('MyNamespace\ThingThatLogs')
             ->getProperty('logger');
 

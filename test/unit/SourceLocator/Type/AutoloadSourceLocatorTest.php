@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
@@ -39,7 +40,7 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $configuration        = new BetterReflection();
+        $configuration        = BetterReflectionSingleton::instance();
         $this->astLocator     = $configuration->astLocator();
         $this->classReflector = $configuration->classReflector();
     }

@@ -19,6 +19,7 @@ use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
@@ -39,7 +40,7 @@ class CompileNodeToValueTest extends TestCase
     {
         parent::setUp();
 
-        $configuration    = new BetterReflection();
+        $configuration    = BetterReflectionSingleton::instance();
         $this->parser     = $configuration->phpParser();
         $this->astLocator = $configuration->astLocator();
     }

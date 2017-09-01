@@ -12,6 +12,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator
@@ -27,7 +28,7 @@ class ComposerSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     /**

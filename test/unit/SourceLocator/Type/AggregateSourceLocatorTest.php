@@ -13,6 +13,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator
@@ -28,7 +29,7 @@ class AggregateSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     /**

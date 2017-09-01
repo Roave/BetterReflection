@@ -9,6 +9,7 @@ use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture;
 
 /**
@@ -25,7 +26,7 @@ class NotAnInterfaceReflectionTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     public function testFromClass() : void
