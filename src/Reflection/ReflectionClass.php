@@ -324,35 +324,12 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     private function scanMethods() : array
     {
-        // merging together methods from interfaces, parent class, traits, current class (in this precise order)
-        /** @var \ReflectionMethod[] $inheritedMethods */
-        $inheritedMethods = \array_merge(
-            \array_merge(
-                [],
-                ...\array_map(
-                    function (ReflectionClass $ancestor) : array {
-                        return $ancestor->getMethods();
-                    },
-                    \array_values(\array_merge(
-                        $this->getInterfaces(),
-                        \array_filter([$this->getParentClass()])
-                    ))
-                ),
-                ...\array_map(
-                    function (ReflectionClass $trait) : array {
-                        return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
-                            return ReflectionMethod::createFromNode(
-                                $this->reflector,
-                                $method->getAst(),
-                                $this->declaringNamespace,
-                                $trait,
-                                $this
-                            );
-                        }, $trait->getMethods());
-                    },
-                    $this->getTraits()
-                )
-            ),
+        // Note: methods are not merged via their name as array index, since internal PHP method
+        //       sorting does not follow `\array_merge()` semantics
+        // Note: merging methods from current class, traits, parent class, interfaces in this precise order
+        /** @var ReflectionMethod[] $allMethods */
+        $allMethods = \array_merge(
+            [],
             \array_map(
                 function (ClassMethod $methodNode) : ReflectionMethod {
                     return ReflectionMethod::createFromNode(
@@ -364,16 +341,43 @@ class ReflectionClass implements Reflection, CoreReflector
                     );
                 },
                 $this->node->getMethods()
+            ),
+            ...\array_map(
+                function (ReflectionClass $trait) : array {
+                    return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
+                        return ReflectionMethod::createFromNode(
+                            $this->reflector,
+                            $method->getAst(),
+                            $this->declaringNamespace,
+                            $trait,
+                            $this
+                        );
+                    }, $trait->getMethods());
+                },
+                $this->getTraits()
+            ),
+            ...\array_map(
+                function (ReflectionClass $ancestor) : array {
+                    return $ancestor->getMethods();
+                },
+                \array_values(\array_merge(
+                    \array_filter([$this->getParentClass()]),
+                    $this->getInterfaces()
+                ))
             )
         );
 
-        $methodsByName = [];
+        $methods = [];
 
-        foreach ($inheritedMethods as $inheritedMethod) {
-            $methodsByName[$inheritedMethod->getName()] = $inheritedMethod;
+        foreach ($allMethods as $method) {
+            $methodName = $method->getName();
+
+            if ( ! isset($methods[$methodName])) {
+                $methods[$methodName] = $method;
+            }
         }
 
-        return $methodsByName;
+        return $methods;
     }
 
     /**

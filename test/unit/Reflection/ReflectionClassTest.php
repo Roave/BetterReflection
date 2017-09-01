@@ -47,6 +47,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
+use Roave\BetterReflectionTest\Fixture\MethodsOrder;
 use Roave\BetterReflectionTest\Fixture\StaticProperties;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
@@ -221,6 +222,27 @@ class ReflectionClassTest extends TestCase
 
         self::assertSame('f', $classInfo->getMethod('f')->getName(), 'Failed asserting that method from SUT was returned');
         self::assertSame('Qux', $classInfo->getMethod('f')->getDeclaringClass()->getName());
+    }
+
+    public function testGetMethodsOrder() : void
+    {
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/MethodsOrder.php',
+            $this->astLocator
+        )))->reflect(MethodsOrder::class);
+
+        $actualMethodNames = \array_map(function (ReflectionMethod $method) : string {
+            return $method->getName();
+        }, $classInfo->getMethods());
+
+        $expectedMethodNames = [
+            'first',
+            'second',
+            'third',
+            'forth',
+        ];
+
+        self::assertSame($expectedMethodNames, $actualMethodNames);
     }
 
     public function testGetImmediateMethods() : void
