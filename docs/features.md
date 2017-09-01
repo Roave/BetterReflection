@@ -38,7 +38,14 @@ written for PHP 7 work in PHP 5 for example, and setting new types might
 do the opposite. For instance, you might want to set the PHP 7 return type
 declaration to that defined in the PHP DocBlock.
 
-```
+```php
+<?php
+
+use Roave\BetterReflection\Reflection\Mutation\RemoveFunctionReturnType;
+use Roave\BetterReflection\Reflection\Mutation\RemoveParameterType;
+use Roave\BetterReflection\Reflection\Mutation\SetFunctionReturnType;
+use Roave\BetterReflection\Reflection\Mutation\SetParameterType;
+
 // Change a function to ensure it returns an integer
 $functionInfo = (new SetFunctionReturnType())($functionInfo, 'int');
 
@@ -54,7 +61,9 @@ $functionInfo = (new RemoveFunctionReturnType())($functionInfo);
 
 You can do similar things with parameter types also:
 
-```
+```php
+<?php
+
 (new SetParameterType())($parameterInfo, 'int');
 (new RemoveParameterType())($parameterInfo);
 ```
