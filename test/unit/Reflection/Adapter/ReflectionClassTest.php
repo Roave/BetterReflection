@@ -87,7 +87,7 @@ class ReflectionClassTest extends TestCase
             ['newInstanceArgs', NotImplemented::class, null, []],
             ['getParentClass', null, $mockClassLike, []],
             ['isSubclassOf', null, true, ['\stdClass']],
-            ['getStaticProperties', NotImplemented::class, null, []],
+            ['getStaticProperties', null, [], []],
             ['getDefaultProperties', null, ['foo' => 'bar'], []],
             ['isIterateable', null, true, []],
             ['implementsInterface', null, true, ['\Traversable']],

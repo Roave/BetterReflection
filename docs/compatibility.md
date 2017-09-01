@@ -24,7 +24,7 @@
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | :heavy_check_mark: Yes |
-| getStaticProperties | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getStaticProperties | :heavy_check_mark: Yes |
 | getStaticPropertyValue | :heavy_check_mark: Yes |
 | getTraitAliases | :heavy_check_mark: Yes |
 | getTraitNames | :heavy_check_mark: Yes |

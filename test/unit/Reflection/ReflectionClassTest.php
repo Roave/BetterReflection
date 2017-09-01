@@ -47,6 +47,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
+use Roave\BetterReflectionTest\Fixture\StaticProperties;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
@@ -1332,6 +1333,25 @@ class ReflectionClassTest extends TestCase
 
         $this->expectException(Uncloneable::class);
         $unused = clone $classInfo;
+    }
+
+    public function testGetStaticProperties() : void
+    {
+        $staticPropertiesFixtureFile = __DIR__ . '/../Fixture/StaticProperties.php';
+        require_once $staticPropertiesFixtureFile;
+
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator($staticPropertiesFixtureFile, $this->astLocator)))
+            ->reflect(StaticProperties::class);
+
+        $expectedStaticProperties = [
+            'parentBaz' => 'parentBaz',
+            'parentBat' => 456,
+            'baz' => 'baz',
+            'bat' => 123,
+            'qux' => null,
+        ];
+
+        self::assertSame($expectedStaticProperties, $classInfo->getStaticProperties());
     }
 
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void

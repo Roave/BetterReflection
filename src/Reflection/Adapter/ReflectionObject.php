@@ -377,7 +377,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getStaticProperties()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionObject->getStaticProperties();
     }
 
     /**

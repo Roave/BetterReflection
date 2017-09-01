@@ -1335,6 +1335,24 @@ class ReflectionClass implements Reflection, CoreReflector
     }
 
     /**
+     * @return mixed[]
+     */
+    public function getStaticProperties() : array
+    {
+        $staticProperties = [];
+
+        foreach ($this->getProperties() as $property) {
+            if ( ! $property->isStatic()) {
+                continue;
+            }
+
+            $staticProperties[$property->getName()] = $property->getValue();
+        }
+
+        return $staticProperties;
+    }
+
+    /**
      * Retrieve the AST node for this class
      *
      * @return ClassLikeNode
