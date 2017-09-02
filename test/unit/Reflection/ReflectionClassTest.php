@@ -1335,7 +1335,7 @@ class ReflectionClassTest extends TestCase
         $unused = clone $classInfo;
     }
 
-    public function testGetStaticProperties() : void
+    public function testGetStaticPropertiesValues() : void
     {
         $staticPropertiesFixtureFile = __DIR__ . '/../Fixture/StaticProperties.php';
         require_once $staticPropertiesFixtureFile;
@@ -1351,7 +1351,7 @@ class ReflectionClassTest extends TestCase
             'qux' => null,
         ];
 
-        self::assertSame($expectedStaticProperties, $classInfo->getStaticProperties());
+        self::assertSame($expectedStaticProperties, $classInfo->getStaticPropertiesValues());
     }
 
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void

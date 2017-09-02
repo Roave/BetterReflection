@@ -377,7 +377,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getStaticProperties()
     {
-        return $this->betterReflectionObject->getStaticProperties();
+        return $this->betterReflectionObject->getStaticPropertiesValues();
     }
 
     /**
