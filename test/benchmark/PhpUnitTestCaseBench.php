@@ -2,12 +2,14 @@
 
 namespace Roave\BetterReflectionBenchmark;
 
+use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\Subject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflector\ClassReflector;
 
 /**
  * @Iterations(5)
@@ -20,21 +22,36 @@ class PhpUnitTestCaseBench
     private $reflector;
 
     /**
-     * @var ReflectionClass
+     * @var ReflectionProperty[]
      */
-    private $reflectionClass;
+    private $properties;
+
+    /**
+     * @var ReflectionMethod[]
+     */
+    private $methods;
+
+    /**
+     * @var ReflectionParameter[]
+     */
+    private $parameters = [];
 
     public function __construct()
     {
-        $reflection = new BetterReflection();
-        $this->reflector = $reflection->classReflector();
-        $this->reflectionClass = $this->reflector->reflect(TestCase::class);
+        $reflection       = new BetterReflection();
+        $this->reflector  = $reflection->classReflector();
+        $reflectionClass  = $this->reflector->reflect(TestCase::class);
+        $this->methods    = $reflectionClass->getMethods();
+        $this->properties = $reflectionClass->getProperties();
+        $this->parameters = \array_merge([], ...\array_map(function (ReflectionMethod $method) : array {
+            return $method->getParameters();
+        }, $this->methods));
     }
 
     /**
      * @Subject()
      */
-    public function reflect_class()
+    public function reflect_class() : void
     {
         $this->reflector->reflect(TestCase::class);
     }
@@ -42,38 +59,40 @@ class PhpUnitTestCaseBench
     /**
      * @Subject()
      */
-    public function reflect_methods()
+    public function reflect_properties_doc_types() : void
     {
-        /** @var $method ReflectionMethod */
-        foreach ($this->reflectionClass->getMethods() as $method) {
-            $method->getReturnType();
+        foreach ($this->properties as $property) {
+            $property->getDocBlockTypes();
         }
     }
 
     /**
      * @Subject()
      */
-    public function reflect_method_parameters()
+    public function reflect_method_parameters() : void
     {
-        /** @var $method ReflectionMethod */
-        foreach ($this->reflectionClass->getMethods() as $method) {
-            $method->getReturnType();
-
-            foreach ($method->getParameters() as $parameter) {
-                $parameter->getType();
-            }
+        foreach ($this->parameters as $parameter) {
+            $parameter->getType();
         }
     }
 
     /**
      * @Subject()
      */
-    public function reflect_methods_doc_return_types()
+    public function reflect_methods_parameter_doc_types() : void
     {
-        /** @var $method ReflectionMethod */
-        foreach ($this->reflectionClass->getMethods() as $method) {
+        foreach ($this->parameters as $parameter) {
+            $parameter->getDocBlockTypes();
+        }
+    }
+
+    /**
+     * @Subject()
+     */
+    public function reflect_methods_doc_return_types() : void
+    {
+        foreach ($this->methods as $method) {
             $method->getDocBlockReturnTypes();
         }
     }
 }
-
