@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use IntlChar;
 use IntlGregorianCalendar;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -251,6 +252,17 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         self::assertSame($originalMethodNames, $stubbedMethodNames);
 
+        foreach ($originalMethods as $method) {
+            self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
+        }
+
+        if (\in_array($original->getName(), [IntlGregorianCalendar::class, IntlChar::class], true)) {
+            self::markTestSkipped(\sprintf(
+                'Constants for "%s" change depending on environment: not testing them, as it\'s a suicide',
+                $original->getName()
+            ));
+        }
+
         // See https://bugs.php.net/bug.php?id=75090
         if ($original->getName() !== IntlGregorianCalendar::class) {
             $originalConstants = $original->getConstants();
@@ -265,10 +277,6 @@ class PhpInternalSourceLocatorTest extends TestCase
             }
 
             self::assertEquals($original->getConstants(), $stubbed->getConstants());
-        }
-
-        foreach ($originalMethods as $method) {
-            self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
     }
 
