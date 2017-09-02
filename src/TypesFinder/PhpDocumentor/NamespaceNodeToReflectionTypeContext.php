@@ -29,41 +29,34 @@ class NamespaceNodeToReflectionTypeContext
      */
     private function aliasesToFullyQualifiedNames(Namespace_ $namespace) : array
     {
-        $aliases = [];
+        return \array_merge([], ...\array_merge([], ...\array_map(function ($use) : array {
+            /** @var $use Use_|GroupUse */
 
-        // Note: we replaced an `array_filter` with a `foreach` because this seems to be very performance-sensitive API
-        foreach ($this->classAlikeUses($namespace) as $use) {
-            foreach ($use->uses as $useUse) {
+            return \array_map(function (UseUse $useUse) use ($use) : array {
                 if ($use instanceof GroupUse) {
-                    $aliases[$useUse->alias] = $use->prefix->toString() . '\\' . $useUse->name->toString();
-
-                    continue;
+                    return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
                 }
 
-                $aliases[$useUse->alias] = $useUse->name->toString();
-            }
-        }
-
-        return $aliases;
+                return [$useUse->alias => $useUse->name->toString()];
+            }, $use->uses);
+        }, $this->classAlikeUses($namespace))));
     }
 
     /**
+     * @param null|Namespace_ $namespace
+     *
      * @return Use_[]|GroupUse[]
      */
     private function classAlikeUses(Namespace_ $namespace) : array
     {
-        $validNodes = [];
-
-        // Note: we replaced an `array_filter` with a `foreach` because this seems to be very performance-sensitive API
-        foreach ($namespace->stmts ?? [] as $node) {
-            if (
-                ($node instanceof Use_ || $node instanceof GroupUse)
-                && ($node->type === Use_::TYPE_UNKNOWN || $node->type === Use_::TYPE_NORMAL)
-            ) {
-                $validNodes[] = $node;
+        return \array_filter(
+            $namespace->stmts ?? [],
+            function (Node $node) : bool {
+                return (
+                    $node instanceof Use_
+                    || $node instanceof GroupUse
+                ) && \in_array($node->type, [Use_::TYPE_UNKNOWN, Use_::TYPE_NORMAL], true);
             }
-        }
-
-        return $validNodes;
+        );
     }
 }
