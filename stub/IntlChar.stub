@@ -7,6 +7,12 @@ class IntlChar
 
     const CODEPOINT_MAX = 1114111;
 
+    const FOLD_CASE_DEFAULT = 0;
+
+    const FOLD_CASE_EXCLUDE_SPECIAL_I = 1;
+
+    const NO_NUMERIC_VALUE = -123456789.0;
+
     const PROPERTY_ALPHABETIC = 0;
 
     const PROPERTY_BINARY_START = 0;
