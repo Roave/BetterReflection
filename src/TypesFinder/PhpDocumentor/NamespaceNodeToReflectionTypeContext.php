@@ -29,6 +29,7 @@ class NamespaceNodeToReflectionTypeContext
      */
     private function aliasesToFullyQualifiedNames(Namespace_ $namespace) : array
     {
+        // flatten(flatten(map(stuff)))
         return \array_merge([], ...\array_merge([], ...\array_map(function ($use) : array {
             /** @var $use Use_|GroupUse */
 
