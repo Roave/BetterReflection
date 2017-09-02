@@ -33,6 +33,14 @@ class NamespaceNodeToReflectionTypeContextTest extends TestCase
                 new Namespace_(new Name('')),
                 new Context(''),
             ],
+            'Actual namespace' => [
+                new Namespace_(new Name('Foo\\Bar')),
+                new Context('Foo\\Bar'),
+            ],
+            'Actual namespace prefixed with \\' => [
+                new Namespace_(new Name('\\Foo\\Bar')),
+                new Context('Foo\\Bar'),
+            ],
         ];
     }
 }
