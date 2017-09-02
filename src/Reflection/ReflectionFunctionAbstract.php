@@ -179,9 +179,8 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function inNamespace() : bool
     {
-        return (! $this instanceof ReflectionMethod)
-            && $this->declaringNamespace
-            && $this->declaringNamespace->name;
+        return null !== $this->declaringNamespace
+            && null !== $this->declaringNamespace->name;
     }
 
     /**

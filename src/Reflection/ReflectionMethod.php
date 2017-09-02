@@ -186,6 +186,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return $this->getNode();
     }
 
+    public function inNamespace() : bool
+    {
+        return false;
+    }
+
     /**
      * Is the method abstract.
      *
