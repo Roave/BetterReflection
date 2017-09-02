@@ -180,8 +180,8 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function inNamespace() : bool
     {
         return (! $this instanceof ReflectionMethod)
-            && null !== $this->declaringNamespace
-            && null !== $this->declaringNamespace->name;
+            && $this->declaringNamespace
+            && $this->declaringNamespace->name;
     }
 
     /**
