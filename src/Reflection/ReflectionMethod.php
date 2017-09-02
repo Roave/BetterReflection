@@ -39,9 +39,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
 
-        // @TODO I don't understand the following comment:
-        // Compat with core reflection means we should NOT pass namespace info
-        // for ReflectionMethod
         $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
 
         return $method;
