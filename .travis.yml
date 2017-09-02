@@ -79,6 +79,13 @@ jobs:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.8.3
       script: vendor/bin/phpstan analyse -l 5 -c phpstan.neon src
 
+    - stage: Run benchmarks
+      php: 7.1
+      env: DEPENDENCIES=""
+      before_script:
+        - travis_retry composer require --dev --prefer-dist --prefer-stable phpbench/phpbench:^0.13.0
+      script: ./vendor/bin/phpbench run --progress=dots --iterations=1
+
     - stage: Upload Coverage
       php: 7.1
       env: DEPENDENCIES=""
@@ -88,11 +95,6 @@ jobs:
       script:
         - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
         - php ocular.phar code-coverage:upload --format=php-clover clover.xml
-
-    - stage: Run benchmarks
-      php: 7.1
-      env: DEPENDENCIES=""
-      script: ./vendor/bin/phpbench run --progress=dots --iterations=1
 
   allow_failures:
     - php: 7.2
