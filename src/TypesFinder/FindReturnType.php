@@ -5,14 +5,10 @@ namespace Roave\BetterReflection\TypesFinder;
 
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\Types\Context;
-use phpDocumentor\Reflection\Types\ContextFactory;
-use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
-use PhpParser\Node\Stmt\UseUse;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
 class FindReturnType
 {
@@ -27,15 +23,15 @@ class FindReturnType
     private $docBlockFactory;
 
     /**
-     * @var ContextFactory
+     * @var NamespaceNodeToReflectionTypeContext
      */
-    private $contextFactory;
+    private $makeContext;
 
     public function __construct()
     {
         $this->resolveTypes    = new ResolveTypes();
         $this->docBlockFactory = DocBlockFactory::createInstance();
-        $this->contextFactory  = new ContextFactory();
+        $this->makeContext     = new NamespaceNodeToReflectionTypeContext();
     }
 
     /**
@@ -53,15 +49,12 @@ class FindReturnType
             return [];
         }
 
-        $context = $this->createContextForFunction($function, $namespace, $this->useStatements($namespace));
+        $context = $this->makeContext->__invoke($namespace);
 
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_[] $returnTags */
         $returnTags = $this->docBlockFactory->create(
             $docComment,
-            new Context(
-                $context->getNamespace(),
-                $context->getNamespaceAliases()
-            )
+            $context
         )->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
@@ -69,64 +62,5 @@ class FindReturnType
         }
 
         return [];
-    }
-
-    /**
-     * @param null|Namespace_ $namespace
-     *
-     * @return Use_[]
-     */
-    private function useStatements(?Namespace_ $namespace) : array
-    {
-        if (null === $namespace) {
-            return [];
-        }
-
-        return array_filter(
-            $namespace->stmts ?? [],
-            function (Node $node) : bool {
-                return $node instanceof Use_;
-            }
-        );
-    }
-
-    /**
-     * @param ReflectionFunctionAbstract $function
-     * @param Namespace_|null $namespace
-     * @param Use_[] $useStatements
-     *
-     * @return Context
-     */
-    private function createContextForFunction(ReflectionFunctionAbstract $function, ?Namespace_ $namespace, array $useStatements) : Context
-    {
-
-        $uses = array_merge([], ...array_merge([], ...array_map(function (Use_ $use) : array {
-            return array_map(function (UseUse $useUse) : array {
-                return [$useUse->alias => $useUse->name->toString()];
-            }, $use->uses);
-        }, $useStatements)));
-
-        return new Context(
-            ($namespace && $namespace->name) ? $namespace->name->toString() : '',
-            $uses
-        );
-
-        if ($function instanceof ReflectionMethod) {
-            $declaringClass = $function->getDeclaringClass();
-
-            return new Context(
-                ($namespace && $namespace->name) ? $namespace->name->toString() : '',
-                $uses
-            );
-            return $this->contextFactory->createForNamespace(
-                $declaringClass->getNamespaceName(),
-                $declaringClass->getLocatedSource()->getSource()
-            );
-        }
-
-        return $this->contextFactory->createForNamespace(
-            $function->getNamespaceName(),
-            $function->getLocatedSource()->getSource()
-        );
     }
 }
