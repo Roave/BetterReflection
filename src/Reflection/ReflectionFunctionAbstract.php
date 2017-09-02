@@ -21,7 +21,6 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -217,14 +216,17 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function getParameters() : array
     {
         $parameters = [];
+
         foreach ($this->node->params as $paramIndex => $paramNode) {
             $parameters[] = ReflectionParameter::createFromNode(
                 $this->reflector,
                 $paramNode,
+                $this->declaringNamespace,
                 $this,
                 $paramIndex
             );
         }
+
         return $parameters;
     }
 

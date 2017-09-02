@@ -139,6 +139,7 @@ class ReflectionObject extends ReflectionClass
         // the runtime-declared properties  :/
         $reflectionProperties = (new CoreReflectionObject($this->object))->getProperties();
         $runtimeProperties    = [];
+
         foreach ($reflectionProperties as $property) {
             if ($this->reflectionClass->hasProperty($property->getName())) {
                 continue;
@@ -147,6 +148,7 @@ class ReflectionObject extends ReflectionClass
             $runtimeProperty = ReflectionProperty::createFromNode(
                 $this->reflector,
                 $this->createPropertyNodeFromReflection($property, $this->object),
+                $this->reflectionClass->getProperty($property->getName())->getDeclaringClass()->getDeclaringNamespaceAst(),
                 $this,
                 $this,
                 false
@@ -156,6 +158,7 @@ class ReflectionObject extends ReflectionClass
                 $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
             }
         }
+
         return $runtimeProperties;
     }
 

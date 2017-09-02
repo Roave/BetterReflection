@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\TypesFinder;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
@@ -37,8 +36,6 @@ class FindReturnType
     /**
      * Given a function, attempt to find the return type.
      *
-     * @param ReflectionFunctionAbstract $function
-     * @param Use_[] $useStatements
      * @return Type[]
      */
     public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace) : array
@@ -52,10 +49,10 @@ class FindReturnType
         $context = $this->makeContext->__invoke($namespace);
 
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_[] $returnTags */
-        $returnTags = $this->docBlockFactory->create(
-            $docComment,
-            $context
-        )->getTagsByName('return');
+        $returnTags = $this
+            ->docBlockFactory
+            ->create($docComment, $context)
+            ->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
             return $this->resolveTypes->__invoke(\explode('|', (string) $returnTag->getType()), $context);

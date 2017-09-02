@@ -125,7 +125,7 @@ class FindReturnTypeTest extends TestCase
             ->method('getDocComment')
             ->will($this->returnValue($docBlock));
 
-        $uses      = [];
+        $uses = [];
 
         foreach ($aliasesToFQCNs as $alias => $fqcn) {
             $uses[] = (new Use_($fqcn, Stmt\Use_::TYPE_NORMAL))
@@ -145,7 +145,7 @@ class FindReturnTypeTest extends TestCase
                 null,
                 [
                     'Bar' => 'Bar',
-                    'Baz' => 'Taw\\Taz'
+                    'Baz' => 'Taw\\Taz',
                 ],
                 'Foo|Bar|Baz|Tab',
                 [
@@ -153,13 +153,13 @@ class FindReturnTypeTest extends TestCase
                     new Types\Object_(new Fqsen('\\Bar')),
                     new Types\Object_(new Fqsen('\\Taw\\Taz')),
                     new Types\Object_(new Fqsen('\\Tab')),
-                ]
+                ],
             ],
             'Foo' => [
                 'Foo',
                 [
                     'Bar' => 'Bar',
-                    'Baz' => 'Taw\\Taz'
+                    'Baz' => 'Taw\\Taz',
                 ],
                 'Foo|Bar|Baz|Tab',
                 [
@@ -167,7 +167,7 @@ class FindReturnTypeTest extends TestCase
                     new Types\Object_(new Fqsen('\\Bar')),
                     new Types\Object_(new Fqsen('\\Taw\\Taz')),
                     new Types\Object_(new Fqsen('\\Foo\\Tab')),
-                ]
+                ],
             ],
         ];
     }

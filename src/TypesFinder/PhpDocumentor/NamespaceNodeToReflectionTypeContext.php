@@ -13,7 +13,7 @@ class NamespaceNodeToReflectionTypeContext
 {
     public function __invoke(?Namespace_ $namespace) : Context
     {
-        if (! $namespace) {
+        if ( ! $namespace) {
             return new Context('');
         }
 
@@ -30,8 +30,8 @@ class NamespaceNodeToReflectionTypeContext
      */
     private function aliasesToFullyQualifiedNames(array $useStatements) : array
     {
-        return array_merge([], ...array_merge([], ...array_map(function (Use_ $use) : array {
-            return array_map(function (UseUse $useUse) : array {
+        return \array_merge([], ...\array_merge([], ...\array_map(function (Use_ $use) : array {
+            return \array_map(function (UseUse $useUse) : array {
                 return [$useUse->alias => $useUse->name->toString()];
             }, $use->uses);
         }, $useStatements)));
@@ -44,7 +44,7 @@ class NamespaceNodeToReflectionTypeContext
      */
     private function useStatements(Namespace_ $namespace) : array
     {
-        return array_filter(
+        return \array_filter(
             $namespace->stmts ?? [],
             function (Node $node) : bool {
                 return $node instanceof Use_;

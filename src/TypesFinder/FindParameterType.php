@@ -5,22 +5,41 @@ namespace Roave\BetterReflection\TypesFinder;
 
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\Types\Context;
-use phpDocumentor\Reflection\Types\ContextFactory;
 use PhpParser\Node\Param as ParamNode;
+use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
 class FindParameterType
 {
     /**
+     * @var ResolveTypes
+     */
+    private $resolveTypes;
+
+    /**
+     * @var DocBlockFactory
+     */
+    private $docBlockFactory;
+
+    /**
+     * @var NamespaceNodeToReflectionTypeContext
+     */
+    private $makeContext;
+
+    public function __construct()
+    {
+        $this->resolveTypes    = new ResolveTypes();
+        $this->docBlockFactory = DocBlockFactory::createInstance();
+        $this->makeContext     = new NamespaceNodeToReflectionTypeContext();
+    }
+
+    /**
      * Given a function and parameter, attempt to find the type of the parameter.
      *
-     * @param ReflectionFunctionAbstract $function
-     * @param ParamNode $node
      * @return Type[]
      */
-    public function __invoke(ReflectionFunctionAbstract $function, ParamNode $node) : array
+    public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace, ParamNode $node) : array
     {
         $docComment = $function->getDocComment();
 
@@ -28,46 +47,20 @@ class FindParameterType
             return [];
         }
 
-        $context = $this->createContextForFunction($function);
-
-        $docBlock = DocBlockFactory::createInstance()->create(
-            $docComment,
-            new Context(
-                $context->getNamespace(),
-                $context->getNamespaceAliases()
-            )
-        );
+        $context = $this->makeContext->__invoke($namespace);
 
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param[] $paramTags */
-        $paramTags = $docBlock->getTagsByName('param');
+        $paramTags = $this
+            ->docBlockFactory
+            ->create($docComment, $context)
+            ->getTagsByName('param');
 
         foreach ($paramTags as $paramTag) {
             if ($paramTag->getVariableName() === $node->name) {
-                return (new ResolveTypes())->__invoke(\explode('|', (string) $paramTag->getType()), $context);
+                return $this->resolveTypes->__invoke(\explode('|', (string) $paramTag->getType()), $context);
             }
         }
 
         return [];
-    }
-
-    /**
-     * @param ReflectionFunctionAbstract $function
-     * @return Context
-     */
-    private function createContextForFunction(ReflectionFunctionAbstract $function) : Context
-    {
-        if ($function instanceof ReflectionMethod) {
-            $declaringClass = $function->getDeclaringClass();
-
-            return (new ContextFactory())->createForNamespace(
-                $declaringClass->getNamespaceName(),
-                $declaringClass->getLocatedSource()->getSource()
-            );
-        }
-
-        return (new ContextFactory())->createForNamespace(
-            $function->getNamespaceName(),
-            $function->getLocatedSource()->getSource()
-        );
     }
 }

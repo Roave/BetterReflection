@@ -8,6 +8,7 @@ use Exception;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
@@ -39,6 +40,11 @@ class ReflectionProperty implements CoreReflector
      * @var PropertyNode
      */
     private $node;
+
+    /**
+     * @var Namespace_|null
+     */
+    private $declaringNamespace;
 
     /**
      * @var bool
@@ -105,16 +111,19 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
-     * @param Reflector $reflector
-     * @param PropertyNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Reflector       $reflector
+     * @param PropertyNode    $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Namespace_      $declaringNamespace
      * @param ReflectionClass $declaringClass
      * @param ReflectionClass $implementingClass
-     * @param bool $declaredAtCompileTime
-     * @return ReflectionProperty
+     * @param bool            $declaredAtCompileTime
+     *
+     * @return self
      */
     public static function createFromNode(
         Reflector $reflector,
         PropertyNode $node,
+        ?Namespace_ $declaringNamespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         bool $declaredAtCompileTime = true
@@ -122,9 +131,11 @@ class ReflectionProperty implements CoreReflector
         $prop                        = new self();
         $prop->reflector             = $reflector;
         $prop->node                  = $node;
+        $prop->declaringNamespace    = $declaringNamespace;
         $prop->declaringClass        = $declaringClass;
         $prop->implementingClass     = $implementingClass;
         $prop->declaredAtCompileTime = $declaredAtCompileTime;
+
         return $prop;
     }
 
@@ -273,7 +284,7 @@ class ReflectionProperty implements CoreReflector
      */
     public function getDocBlockTypes() : array
     {
-        return (new FindPropertyType())->__invoke($this);
+        return (new FindPropertyType())->__invoke($this, $this->declaringNamespace);
     }
 
     /**
