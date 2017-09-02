@@ -29,34 +29,41 @@ class NamespaceNodeToReflectionTypeContext
      */
     private function aliasesToFullyQualifiedNames(Namespace_ $namespace) : array
     {
-        return \array_merge([], ...\array_merge([], ...\array_map(function ($use) : array {
-            /** @var $use Use_|GroupUse */
+        $aliases = [];
 
-            return \array_map(function (UseUse $useUse) use ($use) : array {
+        // Note: we replaced an `array_filter` with a `foreach` because this seems to be very performance-sensitive API
+        foreach ($this->classAlikeUses($namespace) as $use) {
+            foreach ($use->uses as $useUse) {
                 if ($use instanceof GroupUse) {
-                    return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
+                    $aliases[$useUse->alias] = $use->prefix->toString() . '\\' . $useUse->name->toString();
+
+                    continue;
                 }
 
-                return [$useUse->alias => $useUse->name->toString()];
-            }, $use->uses);
-        }, $this->classAlikeUses($namespace))));
+                $aliases[$useUse->alias] = $useUse->name->toString();
+            }
+        }
+
+        return $aliases;
     }
 
     /**
-     * @param null|Namespace_ $namespace
-     *
      * @return Use_[]|GroupUse[]
      */
     private function classAlikeUses(Namespace_ $namespace) : array
     {
-        return \array_filter(
-            $namespace->stmts ?? [],
-            function (Node $node) : bool {
-                return (
-                    $node instanceof Use_
-                    || $node instanceof GroupUse
-                ) && \in_array($node->type, [Use_::TYPE_UNKNOWN, Use_::TYPE_NORMAL], true);
+        $validNodes = [];
+
+        // Note: we replaced an `array_filter` with a `foreach` because this seems to be very performance-sensitive API
+        foreach ($namespace->stmts ?? [] as $node) {
+            if (
+                ($node instanceof Use_ || $node instanceof GroupUse)
+                && ($node->type === Use_::TYPE_UNKNOWN || $node->type === Use_::TYPE_NORMAL)
+            ) {
+                $validNodes[] = $node;
             }
-        );
+        }
+
+        return $validNodes;
     }
 }
