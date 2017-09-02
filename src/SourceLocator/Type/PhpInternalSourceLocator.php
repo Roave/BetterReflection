@@ -115,10 +115,6 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return false;
         }
 
-        if ( ! \file_exists($expectedStubName) || ! \is_readable($expectedStubName) || ! \is_file($expectedStubName)) {
-            return false;
-        }
-
-        return true;
+        return \is_file($expectedStubName) && \is_readable($expectedStubName);
     }
 }
