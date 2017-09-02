@@ -331,7 +331,13 @@ class PhpInternalSourceLocatorTest extends TestCase
             . '#' . $originalMethod->getName()
             . '.' . $original->getName();
 
-        if ('DateTime#createFromFormat.object' === $parameterName && \PHP_VERSION_ID < 70200) {
+        if (\PHP_VERSION_ID < 70200
+            && \in_array(
+                $parameterName,
+                ['DateTime#createFromFormat.object', 'DateTimeImmutable#createFromFormat.object'],
+                true
+            )
+        ) {
             self::markTestSkipped('New type hints were introduced in PHP 7.2 for ' . $parameterName);
         }
 
