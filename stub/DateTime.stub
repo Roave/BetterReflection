@@ -15,6 +15,8 @@ class DateTime implements DateTimeInterface
 
     const RFC1123 = 'D, d M Y H:i:s O';
 
+    const RFC7231 = 'D, d M Y H:i:s \G\M\T';
+
     const RFC2822 = 'D, d M Y H:i:s O';
 
     const RFC3339 = 'Y-m-d\\TH:i:sP';
@@ -37,7 +39,7 @@ class DateTime implements DateTimeInterface
     {
     }
 
-    public static function createFromFormat($format, $time, $object = null)
+    public static function createFromFormat($format, $time, ?\DateTimeZone $object = null)
     {
     }
 

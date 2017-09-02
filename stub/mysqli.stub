@@ -39,6 +39,16 @@ class mysqli
 
     public $warning_count = null;
 
+    public function __construct (
+        string $host = null,
+        string $user = null,
+        string $password = null,
+        string $database = '',
+        int $port = null,
+        string $socket = null
+    ) {
+    }
+
     public function autocommit($mode)
     {
     }
@@ -104,10 +114,6 @@ class mysqli
     }
 
     public function multi_query($query)
-    {
-    }
-
-    public function mysqli($host = null, $user = null, $password = null, $database = '', $port = null, $socket = null)
     {
     }
 

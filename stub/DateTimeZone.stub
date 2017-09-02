@@ -49,7 +49,7 @@ class DateTimeZone
     {
     }
 
-    public function getTransitions($timestamp_begin, $timestamp_end)
+    public function getTransitions($timestamp_begin = 0, $timestamp_end = 0)
     {
     }
 

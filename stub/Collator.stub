@@ -65,7 +65,7 @@ class Collator
     {
     }
 
-    public function sortWithSortKeys(array &$arr, $flags = null)
+    public function sortWithSortKeys(array &$arr)
     {
     }
 
@@ -101,7 +101,7 @@ class Collator
     {
     }
 
-    public function getSortKey($arg1, $arg2)
+    public function getSortKey($arg1)
     {
     }
 

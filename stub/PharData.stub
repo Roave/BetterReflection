@@ -229,7 +229,7 @@ class PharData extends RecursiveDirectoryIterator implements Countable, ArrayAcc
     {
     }
 
-    final public static function running($retphar)
+    final public static function running($retphar = true)
     {
     }
 

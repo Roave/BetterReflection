@@ -169,16 +169,6 @@ class PDO
 
     const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
 
-    const ODBC_ATTR_USE_CURSOR_LIBRARY = 1000;
-
-    const ODBC_ATTR_ASSUME_UTF8 = 1001;
-
-    const ODBC_SQL_USE_IF_NEEDED = 0;
-
-    const ODBC_SQL_USE_DRIVER = 2;
-
-    const ODBC_SQL_USE_ODBC = 1;
-
     public function __construct($dsn, $username = null, $passwd = null, $options = null)
     {
     }

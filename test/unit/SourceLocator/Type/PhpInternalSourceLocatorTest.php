@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use IntlChar;
 use IntlGregorianCalendar;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -194,7 +195,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     public function stubbedClassesProvider() : array
     {
         $classNames = \array_filter(
-            \str_replace('.stub', '', \scandir(__DIR__ . '/../../../../stub')),
+            \str_replace('.stub', '', \scandir(__DIR__ . '/../../../../stub', 0)),
             function (string $fileName) : string {
                 return \trim($fileName, '.');
             }
@@ -241,37 +242,76 @@ class PhpInternalSourceLocatorTest extends TestCase
         \sort($originalMethodNames);
         \sort($stubbedMethodNames);
 
-        self::assertSame($originalMethodNames, $stubbedMethodNames);
-
-        // See https://bugs.php.net/bug.php?id=75090
-        if ($original->getName() !== IntlGregorianCalendar::class) {
-            self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        if (\count($originalMethodNames) > \count($stubbedMethodNames)) {
+            self::markTestIncomplete(\sprintf(
+                'New methods detected in class "%s" which are not present in the stubs: %s',
+                $original->getName(),
+                "\n\n" . \implode("\n", \array_diff($originalMethodNames, $stubbedMethodNames))
+            ));
         }
+
+        self::assertSame($originalMethodNames, $stubbedMethodNames);
 
         foreach ($originalMethods as $method) {
             self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
+        }
+
+        if (\in_array($original->getName(), [IntlGregorianCalendar::class, IntlChar::class], true)) {
+            self::markTestSkipped(\sprintf(
+                'Constants for "%s" change depending on environment: not testing them, as it\'s a suicide',
+                $original->getName()
+            ));
+        }
+
+        // See https://bugs.php.net/bug.php?id=75090
+        if ($original->getName() !== IntlGregorianCalendar::class) {
+            $originalConstants = $original->getConstants();
+            $stubConstants     = $stubbed->getConstants();
+
+            if (\count($originalConstants) > \count($stubConstants)) {
+                self::markTestIncomplete(\sprintf(
+                    'New constants detected in class "%s" which are not present in the stubs: %s',
+                    $original->getName(),
+                    "\n\n" . \implode("\n", \array_diff($originalConstants, $stubConstants))
+                ));
+            }
+
+            self::assertEquals($original->getConstants(), $stubbed->getConstants());
         }
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed) : void
     {
-        self::assertSame(
-            \array_map(
-                function (CoreReflectionParameter $parameter) : string {
-                    return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
-                },
-                $original->getParameters()
-            ),
-            \array_map(
-                function (ReflectionParameter $parameter) : string {
-                    return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
-                },
-                $stubbed->getParameters()
-            )
+        $originalParameterNames = \array_map(
+            function (CoreReflectionParameter $parameter) : string {
+                return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
+            },
+            $original->getParameters()
+        );
+        $stubParameterNames = \array_map(
+            function (ReflectionParameter $parameter) : string {
+                return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
+            },
+            $stubbed->getParameters()
         );
 
+        if (\count($originalParameterNames) > \count($stubParameterNames)) {
+            self::markTestIncomplete(\sprintf(
+                'New parameters found in method "%s#%s": %s',
+                $original->getDeclaringClass()->getName(),
+                $original->getName(),
+                "\n" . \implode("\n", \array_diff($originalParameterNames, $stubParameterNames))
+            ));
+        }
+
+        self::assertSame($originalParameterNames, $stubParameterNames);
+
         foreach ($original->getParameters() as $parameter) {
-            self::assertSameParameterAttributes($parameter, $stubbed->getParameter($parameter->getName()));
+            self::assertSameParameterAttributes(
+                $original,
+                $parameter,
+                $stubbed->getParameter($parameter->getName())
+            );
         }
 
         self::assertSame($original->isPublic(), $stubbed->isPublic());
@@ -282,24 +322,41 @@ class PhpInternalSourceLocatorTest extends TestCase
         self::assertSame($original->isFinal(), $stubbed->isFinal());
     }
 
-    private function assertSameParameterAttributes(CoreReflectionParameter $original, ReflectionParameter $stubbed) : void
-    {
-        self::assertSame($original->getName(), $stubbed->getName());
-        self::assertSame($original->isArray(), $stubbed->isArray());
-        self::assertSame($original->isCallable(), $stubbed->isCallable());
+    private function assertSameParameterAttributes(
+        CoreReflectionMethod $originalMethod,
+        CoreReflectionParameter $original,
+        ReflectionParameter $stubbed
+    ) : void {
+        $parameterName = $original->getDeclaringClass()->getName()
+            . '#' . $originalMethod->getName()
+            . '.' . $original->getName();
+
+        if (\PHP_VERSION_ID < 70200
+            && \in_array(
+                $parameterName,
+                ['DateTime#createFromFormat.object', 'DateTimeImmutable#createFromFormat.object'],
+                true
+            )
+        ) {
+            self::markTestSkipped('New type hints were introduced in PHP 7.2 for ' . $parameterName);
+        }
+
+        self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
+        self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
+        self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
-        self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue());
-        self::assertSame($original->isOptional(), $stubbed->isOptional());
-        self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference());
-        self::assertSame($original->isVariadic(), $stubbed->isVariadic());
+        self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
+        self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
+        self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
+        self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
         if ($class = $original->getClass()) {
             $stubbedClass = $stubbed->getClass();
 
-            self::assertInstanceOf(ReflectionClass::class, $stubbedClass);
-            self::assertSame($class->getName(), $stubbedClass->getName());
+            self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
+            self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
         } else {
-            self::assertNull($stubbed->getClass());
+            self::assertNull($stubbed->getClass(), $parameterName);
         }
     }
 }
