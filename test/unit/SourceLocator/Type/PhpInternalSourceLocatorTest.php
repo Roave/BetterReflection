@@ -331,6 +331,10 @@ class PhpInternalSourceLocatorTest extends TestCase
             . '#' . $originalMethod->getName()
             . '.' . $original->getName();
 
+        if ('DateTime#createFromFormat.object' === $parameterName && \PHP_VERSION_ID < 70200) {
+            self::markTestSkipped('New type hints were introduced in PHP 7.2 for ' . $parameterName);
+        }
+
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
         self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);

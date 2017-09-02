@@ -39,7 +39,7 @@ class DateTime implements DateTimeInterface
     {
     }
 
-    public static function createFromFormat($format, $time, $object = null)
+    public static function createFromFormat($format, $time, ?\DateTimeZone $object = null)
     {
     }
 
