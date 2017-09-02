@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\TypesFinder\PhpDocumentor;
 
 use phpDocumentor\Reflection\Types\Context;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\GroupUse;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
@@ -19,35 +20,42 @@ class NamespaceNodeToReflectionTypeContext
 
         return new Context(
             $namespace->name ? $namespace->name->toString() : '',
-            $this->aliasesToFullyQualifiedNames($this->useStatements($namespace))
+            $this->aliasesToFullyQualifiedNames($namespace)
         );
     }
 
     /**
-     * @param Use_[] $useStatements
-     *
      * @return string[] indexed by alias
      */
-    private function aliasesToFullyQualifiedNames(array $useStatements) : array
+    private function aliasesToFullyQualifiedNames(Namespace_ $namespace) : array
     {
-        return \array_merge([], ...\array_merge([], ...\array_map(function (Use_ $use) : array {
-            return \array_map(function (UseUse $useUse) : array {
+        return \array_merge([], ...\array_merge([], ...\array_map(function ($use) : array {
+            /** @var $use Use_|GroupUse */
+
+            return \array_map(function (UseUse $useUse) use ($use) : array {
+                if ($use instanceof GroupUse) {
+                    return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
+                }
+
                 return [$useUse->alias => $useUse->name->toString()];
             }, $use->uses);
-        }, $useStatements)));
+        }, $this->classAlikeUses($namespace))));
     }
 
     /**
      * @param null|Namespace_ $namespace
      *
-     * @return Use_[]
+     * @return Use_[]|GroupUse[]
      */
-    private function useStatements(Namespace_ $namespace) : array
+    private function classAlikeUses(Namespace_ $namespace) : array
     {
         return \array_filter(
             $namespace->stmts ?? [],
             function (Node $node) : bool {
-                return $node instanceof Use_;
+                return (
+                    $node instanceof Use_
+                    || $node instanceof GroupUse
+                ) && \in_array($node->type, [Use_::TYPE_UNKNOWN, Use_::TYPE_NORMAL], true);
             }
         );
     }
