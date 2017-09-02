@@ -21,6 +21,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -178,7 +179,8 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function inNamespace() : bool
     {
-        return null !== $this->declaringNamespace
+        return (! $this instanceof ReflectionMethod)
+            && null !== $this->declaringNamespace
             && null !== $this->declaringNamespace->name;
     }
 
@@ -432,7 +434,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getDocBlockReturnTypes() : array
     {
-        return  (new FindReturnType())->__invoke($this);
+        return  (new FindReturnType())->__invoke($this, $this->declaringNamespace);
     }
 
     /**

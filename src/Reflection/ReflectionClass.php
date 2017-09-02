@@ -43,7 +43,7 @@ class ReflectionClass implements Reflection, CoreReflector
     private $reflector;
 
     /**
-     * @var NamespaceNode
+     * @var NamespaceNode|null
      */
     private $declaringNamespace;
 
@@ -335,7 +335,13 @@ class ReflectionClass implements Reflection, CoreReflector
                 ...\array_map(
                     function (ReflectionClass $trait) : array {
                         return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
-                            return ReflectionMethod::createFromNode($this->reflector, $method->getAst(), $trait, $this);
+                            return ReflectionMethod::createFromNode(
+                                $this->reflector,
+                                $method->getAst(),
+                                $this->declaringNamespace,
+                                $trait,
+                                $this
+                            );
                         }, $trait->getMethods());
                     },
                     $this->getTraits()
@@ -343,7 +349,13 @@ class ReflectionClass implements Reflection, CoreReflector
             ),
             \array_map(
                 function (ClassMethod $methodNode) : ReflectionMethod {
-                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this, $this);
+                    return ReflectionMethod::createFromNode(
+                        $this->reflector,
+                        $methodNode,
+                        $this->declaringNamespace,
+                        $this,
+                        $this
+                    );
                 },
                 $this->node->getMethods()
             )
@@ -415,7 +427,13 @@ class ReflectionClass implements Reflection, CoreReflector
         /** @var \ReflectionMethod[] $methods */
         $methods = \array_map(
             function (ClassMethod $methodNode) : ReflectionMethod {
-                return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this, $this);
+                return ReflectionMethod::createFromNode(
+                    $this->reflector,
+                    $methodNode,
+                    $this->declaringNamespace,
+                    $this,
+                    $this
+                );
             },
             $this->node->getMethods()
         );
