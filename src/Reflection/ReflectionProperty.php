@@ -369,7 +369,9 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @param object|null $object
+     *
      * @return mixed
+     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -396,7 +398,9 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @param object $object
+     *
      * @param mixed|null $value
+     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -424,7 +428,6 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
-     * @param string $className
      * @throws ClassDoesNotExist
      */
     private function assertClassExist(string $className) : void
@@ -436,6 +439,7 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @param object $object
+     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
@@ -451,6 +455,7 @@ class ReflectionProperty implements CoreReflector
         }
 
         $declaringClassName = $this->getDeclaringClass()->getName();
+
         if (\get_class($object) !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
