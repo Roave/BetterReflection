@@ -3,10 +3,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types;
+use PhpParser\Builder\Use_;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt;
+use PhpParser\Node\Stmt\Namespace_;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
@@ -94,5 +101,76 @@ class FindReturnTypeTest extends TestCase
             ->will(self::returnValue(''));
 
         self::assertEmpty((new FindReturnType())->__invoke($function, null));
+    }
+
+    /**
+     * @dataProvider aliasedReturnTypesProvider
+     *
+     * @param string|null $namespaceName
+     * @param string[]    $aliasesToFQCNs indexed by alias
+     * @param string      $returnType
+     * @param Type[]      $expectedTypes
+     */
+    public function testWillResolveAliasedTypes(
+        ?string $namespaceName,
+        array $aliasesToFQCNs,
+        string $returnType,
+        array $expectedTypes
+    ) : void {
+        $docBlock = "/**\n * @return $returnType\n */";
+
+        /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
+        $function = $this->createMock(ReflectionFunctionAbstract::class);
+
+        $function
+            ->expects($this->once())
+            ->method('getDocComment')
+            ->will($this->returnValue($docBlock));
+
+        $uses      = [];
+
+        foreach ($aliasesToFQCNs as $alias => $fqcn) {
+            $uses[] = (new Use_($fqcn, Stmt\Use_::TYPE_NORMAL))
+                ->as($alias)
+                ->getNode();
+        }
+
+        $namespace = new Namespace_($namespaceName ? new Name($namespaceName) : null, $uses);
+
+        self::assertEquals($expectedTypes, (new FindReturnType())->__invoke($function, $namespace));
+    }
+
+    public function aliasedReturnTypesProvider() : array
+    {
+        return [
+            'No namespace' => [
+                null,
+                [
+                    'Bar' => 'Bar',
+                    'Baz' => 'Taw\\Taz'
+                ],
+                'Foo|Bar|Baz|Tab',
+                [
+                    new Types\Object_(new Fqsen('\\Foo')),
+                    new Types\Object_(new Fqsen('\\Bar')),
+                    new Types\Object_(new Fqsen('\\Taw\\Taz')),
+                    new Types\Object_(new Fqsen('\\Tab')),
+                ]
+            ],
+            'Foo' => [
+                'Foo',
+                [
+                    'Bar' => 'Bar',
+                    'Baz' => 'Taw\\Taz'
+                ],
+                'Foo|Bar|Baz|Tab',
+                [
+                    new Types\Object_(new Fqsen('\\Foo\\Foo')),
+                    new Types\Object_(new Fqsen('\\Bar')),
+                    new Types\Object_(new Fqsen('\\Taw\\Taz')),
+                    new Types\Object_(new Fqsen('\\Foo\\Tab')),
+                ]
+            ],
+        ];
     }
 }
