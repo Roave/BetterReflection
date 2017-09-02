@@ -27,6 +27,11 @@ final class MemoizingParser implements Parser
         $this->wrappedParser = $wrappedParser;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+     */
     public function parse($code, ?ErrorHandler $errorHandler = null) : ?array
     {
         // note: this code is mathematically buggy by default, as we are using a hash to identify
