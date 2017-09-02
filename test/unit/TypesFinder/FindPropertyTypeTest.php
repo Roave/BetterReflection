@@ -39,24 +39,13 @@ class FindPropertyTypeTest extends TestCase
      */
     public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
     {
-        $class = $this->createMock(ReflectionClass::class);
-
-        $class->expects($this->any())->method('getNamespaceName')
-            ->will($this->returnValue(''));
-
-        $class->expects($this->any())->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
-
         $property = $this->createMock(ReflectionProperty::class);
-
-        $property->expects($this->any())->method('getDeclaringClass')
-            ->will($this->returnValue($class));
 
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue("/**\n * $docBlock\n */"));
 
         /** @var ReflectionProperty $property */
-        $foundTypes = (new FindPropertyType())->__invoke($property);
+        $foundTypes = (new FindPropertyType())->__invoke($property, null);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
 
@@ -90,24 +79,13 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
     {
-        $class = $this->createMock(ReflectionClass::class);
-
-        $class->expects($this->any())->method('getNamespaceName')
-            ->will($this->returnValue(''));
-
-        $class->expects($this->any())->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
-
         $property = $this->createMock(ReflectionProperty::class);
-
-        $property->expects($this->any())->method('getDeclaringClass')
-            ->will($this->returnValue($class));
 
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue('Nothing here...'));
 
         /** @var ReflectionProperty $property */
-        $foundTypes = (new FindPropertyType())->__invoke($property);
+        $foundTypes = (new FindPropertyType())->__invoke($property, null);
 
         self::assertSame([], $foundTypes);
     }
@@ -119,7 +97,7 @@ class FindPropertyTypeTest extends TestCase
         $property->expects(self::once())->method('getDocComment')
             ->will(self::returnValue(''));
 
-        $foundTypes = (new FindPropertyType())->__invoke($property);
+        $foundTypes = (new FindPropertyType())->__invoke($property, null);
 
         self::assertEmpty($foundTypes);
     }
