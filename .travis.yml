@@ -89,6 +89,11 @@ jobs:
         - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
         - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
+    - stage: Run benchmarks
+      php: 7.1
+      env: DEPENDENCIES=""
+      script: ./vendor/bin/phpbench run --progress=dots --iterations=1
+
   allow_failures:
     - php: 7.2
 
