@@ -53,7 +53,7 @@ class Phar extends RecursiveDirectoryIterator implements Countable, ArrayAccess
 
     const SHA512 = 4;
 
-    public function __construct($filename, $flags = null, $alias = null, $fileformat = null)
+    public function __construct($filename, $flags = null, $alias = null)
     {
     }
 
