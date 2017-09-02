@@ -98,7 +98,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return __DIR__ . '/../../stub/' . $className . '.stub';
+        return __DIR__ . '/../../../stub/' . $className . '.stub';
     }
 
     /**
