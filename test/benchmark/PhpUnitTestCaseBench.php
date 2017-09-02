@@ -7,9 +7,10 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
 
 /**
- * @Iterations(10)
+ * @Iterations(5)
  */
 class PhpUnitTestCaseBench
 {
@@ -18,27 +19,60 @@ class PhpUnitTestCaseBench
      */
     private $reflector;
 
+    /**
+     * @var ReflectionClass
+     */
+    private $reflectionClass;
+
     public function __construct()
     {
         $reflection = new BetterReflection();
         $this->reflector = $reflection->classReflector();
+        $this->reflectionClass = $this->reflector->reflect(TestCase::class);
     }
 
     /**
      * @Subject()
      */
-    public function reflect_phpunit_test_case()
+    public function reflect_class()
     {
-        $reflection = $this->reflector->reflect(TestCase::class);
+        $this->reflector->reflect(TestCase::class);
+    }
 
+    /**
+     * @Subject()
+     */
+    public function reflect_methods()
+    {
         /** @var $method ReflectionMethod */
-        foreach ($reflection->getMethods() as $method) {
-            $method->hasReturnType() ? $method->getReturnType()->__toString() : null;
+        foreach ($this->reflectionClass->getMethods() as $method) {
+            $method->getReturnType();
+        }
+    }
 
-            /** @var $parameter ReflectionParameter */
+    /**
+     * @Subject()
+     */
+    public function reflect_method_parameters()
+    {
+        /** @var $method ReflectionMethod */
+        foreach ($this->reflectionClass->getMethods() as $method) {
+            $method->getReturnType();
+
             foreach ($method->getParameters() as $parameter) {
-                $parameter->hasType() ? $parameter->getType()->__toString() : null;
+                $parameter->getType();
             }
+        }
+    }
+
+    /**
+     * @Subject()
+     */
+    public function reflect_methods_doc_return_types()
+    {
+        /** @var $method ReflectionMethod */
+        foreach ($this->reflectionClass->getMethods() as $method) {
+            $method->getDocBlockReturnTypes();
         }
     }
 }
