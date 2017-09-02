@@ -598,9 +598,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getStaticPropertiesValues() : array
+    public function getStaticProperties() : array
     {
-        return $this->reflectionClass->getStaticPropertiesValues();
+        return $this->reflectionClass->getStaticProperties();
     }
 
     /**

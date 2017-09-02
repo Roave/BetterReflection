@@ -1337,7 +1337,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * @return mixed[]
      */
-    public function getStaticPropertiesValues() : array
+    public function getStaticProperties() : array
     {
         $staticProperties = [];
 
