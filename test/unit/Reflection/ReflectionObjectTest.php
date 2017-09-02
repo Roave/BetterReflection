@@ -13,7 +13,6 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
@@ -22,6 +21,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use stdClass;
 
@@ -40,7 +40,7 @@ class ReflectionObjectTest extends TestCase
      */
     private function parse(string $code) : array
     {
-        return (new BetterReflection())->phpParser()->parse($code);
+        return BetterReflectionSingleton::instance()->phpParser()->parse($code);
     }
 
     public function testExceptionThrownWhenNonObjectGiven() : void

@@ -18,7 +18,6 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -32,6 +31,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 use TypeError;
 
@@ -59,8 +59,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         parent::setUp();
 
-        $configuration = new BetterReflection();
-
+        $configuration        = BetterReflectionSingleton::instance();
         $this->parser         = $configuration->phpParser();
         $this->classReflector = $configuration->classReflector();
         $this->astLocator     = $configuration->astLocator();

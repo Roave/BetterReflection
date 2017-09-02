@@ -6,12 +6,12 @@ namespace Roave\BetterReflectionTest\Reflection;
 use phpDocumentor\Reflection\Types\Boolean;
 use PHPUnit\Framework\TestCase;
 use Reflector;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 
 /**
@@ -33,7 +33,7 @@ class ReflectionFunctionTest extends TestCase
     {
         parent::setUp();
 
-        $configuration        = new BetterReflection();
+        $configuration        = BetterReflectionSingleton::instance();
         $this->classReflector = $configuration->classReflector();
         $this->astLocator     = $configuration->astLocator();
     }

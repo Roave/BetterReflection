@@ -12,13 +12,13 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
@@ -39,7 +39,7 @@ class CompileNodeToValueTest extends TestCase
     {
         parent::setUp();
 
-        $configuration    = new BetterReflection();
+        $configuration    = BetterReflectionSingleton::instance();
         $this->parser     = $configuration->phpParser();
         $this->astLocator = $configuration->astLocator();
     }

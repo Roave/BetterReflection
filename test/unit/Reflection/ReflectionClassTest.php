@@ -19,7 +19,6 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -34,6 +33,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\ClassesImplementingIterators;
 use Roave\BetterReflectionTest\ClassesWithCloneMethod;
 use Roave\BetterReflectionTest\ClassWithInterfaces;
@@ -67,7 +67,7 @@ class ReflectionClassTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     private function getComposerLocator() : ComposerSourceLocator
@@ -316,7 +316,7 @@ class ReflectionClassTest extends TestCase
 
     public function testGetConstructorWhenPhp4StyleInNamespace() : void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php',
@@ -693,7 +693,7 @@ class ReflectionClassTest extends TestCase
 
     public function testIsInternalWithInternalClass() : void
     {
-        $classInfo = (new BetterReflection())->classReflector()->reflect(stdClass::class);
+        $classInfo = BetterReflectionSingleton::instance()->classReflector()->reflect(stdClass::class);
 
         self::assertTrue($classInfo->isInternal());
         self::assertFalse($classInfo->isUserDefined());

@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\Util\FindReflectionOnLine
@@ -24,7 +24,7 @@ class FindReflectionOnLineTest extends TestCase
     {
         parent::setUp();
 
-        $this->finder = (new BetterReflection())->findReflectionsOnLine();
+        $this->finder = BetterReflectionSingleton::instance()->findReflectionsOnLine();
     }
 
     public function testInvokeFindsClass() : void

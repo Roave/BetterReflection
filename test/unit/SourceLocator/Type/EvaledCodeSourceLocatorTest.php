@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -13,6 +12,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
@@ -28,7 +28,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     /**
@@ -94,7 +94,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testCanReflectEvaledLocatedSourceClass() : void
     {
-        $reflector = (new ClassReflector(new EvaledCodeSourceLocator($this->astLocator)));
+        $reflector = new ClassReflector(new EvaledCodeSourceLocator($this->astLocator));
         $className = \uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo($bar = "baz") {}}');

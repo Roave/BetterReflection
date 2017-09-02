@@ -6,13 +6,13 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
@@ -34,7 +34,7 @@ class FileIteratorSourceLocatorTest extends TestCase
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
                 RecursiveDirectoryIterator::SKIP_DOTS
             )),
-            (new BetterReflection())->astLocator()
+            BetterReflectionSingleton::instance()->astLocator()
         );
     }
 

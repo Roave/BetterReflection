@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -13,6 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 
 /**
@@ -32,7 +32,7 @@ class DirectoriesSourceLocatorTest extends TestCase
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
                 __DIR__ . '/../../Assets/DirectoryScannerAssetsFoo',
             ],
-            (new BetterReflection())->astLocator()
+            BetterReflectionSingleton::instance()->astLocator()
         );
     }
 
@@ -83,7 +83,7 @@ class DirectoriesSourceLocatorTest extends TestCase
     {
         $this->expectException(InvalidDirectory::class);
 
-        new DirectoriesSourceLocator($directories, (new BetterReflection())->astLocator());
+        new DirectoriesSourceLocator($directories, BetterReflectionSingleton::instance()->astLocator());
     }
 
     public function invalidDirectoriesProvider() : array

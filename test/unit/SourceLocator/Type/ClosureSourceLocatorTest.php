@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Closure;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -15,6 +14,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator
@@ -35,7 +35,7 @@ class ClosureSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->parser    = (new BetterReflection())->phpParser();
+        $this->parser    = BetterReflectionSingleton::instance()->phpParser();
         $this->reflector = $this->createMock(Reflector::class);
     }
 
@@ -158,8 +158,8 @@ class ClosureSourceLocatorTest extends TestCase
      */
     public function testTwoClosuresSameLineFails(string $file, Closure $closure) : void
     {
-        self::expectException(TwoClosuresOnSameLine::class);
-        self::expectExceptionMessage(\sprintf('Two closures on line 3 in %s', $file));
+        $this->expectException(TwoClosuresOnSameLine::class);
+        $this->expectExceptionMessage(\sprintf('Two closures on line 3 in %s', $file));
 
         (new ClosureSourceLocator($closure, $this->parser))->locateIdentifier(
             $this->reflector,

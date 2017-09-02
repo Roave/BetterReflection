@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\Reflector;
 use PhpParser\Node;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -14,6 +13,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
@@ -25,7 +25,7 @@ class FindReflectionsInTreeTest extends TestCase
      */
     private function getAstForSource(LocatedSource $source) : array
     {
-        return (new BetterReflection())->phpParser()->parse($source->getSource());
+        return BetterReflectionSingleton::instance()->phpParser()->parse($source->getSource());
     }
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void

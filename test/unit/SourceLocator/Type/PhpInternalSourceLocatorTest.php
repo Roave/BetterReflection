@@ -10,7 +10,6 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
-use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -21,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
@@ -36,7 +36,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->astLocator = (new BetterReflection())->astLocator();
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
     /**
@@ -186,7 +186,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
 
-        self::assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
+        $this->assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
     }
 
     /**
@@ -253,7 +253,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         self::assertSame($originalMethodNames, $stubbedMethodNames);
 
         foreach ($originalMethods as $method) {
-            self::assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
+            $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
         if (\in_array($original->getName(), [IntlGregorianCalendar::class, IntlChar::class], true)) {
@@ -307,7 +307,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         self::assertSame($originalParameterNames, $stubParameterNames);
 
         foreach ($original->getParameters() as $parameter) {
-            self::assertSameParameterAttributes(
+            $this->assertSameParameterAttributes(
                 $original,
                 $parameter,
                 $stubbed->getParameter($parameter->getName())
