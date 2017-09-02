@@ -24,8 +24,8 @@
 | getProperty | :heavy_check_mark: Yes |
 | getShortName | :heavy_check_mark: Yes |
 | getStartLine | :heavy_check_mark: Yes |
-| getStaticProperties | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| getStaticPropertyValue | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getStaticProperties | :heavy_check_mark: Yes |
+| getStaticPropertyValue | :heavy_check_mark: Yes |
 | getTraitAliases | :heavy_check_mark: Yes |
 | getTraitNames | :heavy_check_mark: Yes |
 | getTraits | :heavy_check_mark: Yes |
@@ -49,7 +49,7 @@
 | newInstance | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | newInstanceArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | newInstanceWithoutConstructor | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| setStaticPropertyValue | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setStaticPropertyValue | :heavy_check_mark: Yes |
 
 ## ReflectionFunctionAbstract
 
@@ -143,14 +143,14 @@
 | getDocComment | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
-| getValue | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getValue | :heavy_check_mark: Yes |
 | isDefault | :heavy_check_mark: Yes |
 | isPrivate | :heavy_check_mark: Yes |
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| setValue | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setAccessible | :heavy_check_mark: Yes |
+| setValue | :heavy_check_mark: Yes |
 
 ## ReflectionExtension
 

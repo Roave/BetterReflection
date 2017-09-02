@@ -17,6 +17,10 @@ use ReflectionFunctionAbstract;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -26,6 +30,9 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
+use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use stdClass;
 use TraitWithProperty;
 
 /**
@@ -428,5 +435,175 @@ PHP;
         self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getDeclaringClass()->getName());
         self::assertSame(ClassWithPropertiesAndTraitProperties::class, $propertyReflection->getImplementingClass()->getName());
         self::assertSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
+    }
+
+    public function testSetAndGetValueOfStaticProperty() : void
+    {
+        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixture;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))->reflect(StaticPropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->setValue('value');
+
+        self::assertSame('value', StaticPropertyGetSet::$baz);
+        self::assertSame('value', $propertyReflection->getValue());
+    }
+
+    public function testSetValueOfStaticPropertyWithValueAsSecondParameter() : void
+    {
+        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixture;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))->reflect(StaticPropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->setValue('first', 'second');
+
+        self::assertSame('second', StaticPropertyGetSet::$baz);
+        self::assertSame('second', $propertyReflection->getValue());
+    }
+
+    public function testSetValueOfStaticPropertyThrowsExceptionWhenClassDoesNotExist() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    public static $boo = 'boo';
+}
+PHP;
+
+        $this->expectException(ClassDoesNotExist::class);
+
+        $classReflection    = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $propertyReflection = $classReflection->getProperty('boo');
+
+        $propertyReflection->setValue(null);
+    }
+
+    public function testGetValueOfStaticPropertyThrowsExceptionWhenClassDoesNotExist() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    public static $boo = 'boo';
+}
+PHP;
+
+        $this->expectException(ClassDoesNotExist::class);
+
+        $classReflection    = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $propertyReflection = $classReflection->getProperty('boo');
+
+        $propertyReflection->getValue();
+    }
+
+    public function testSetAccessibleAndSetAndGetValueOfStaticProperty() : void
+    {
+        $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixtureFile;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixtureFile, $this->astLocator)))->reflect(StaticPropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('bat');
+
+        $object = new PropertyGetSet();
+
+        $propertyReflection->setValue($object, 'batman');
+
+        self::assertSame('batman', $propertyReflection->getValue($object));
+    }
+
+    public function testSetAndGetValueOfObjectProperty() : void
+    {
+        $propertyGetSetFixture = __DIR__ . '/../Fixture/PropertyGetSet.php';
+        require_once $propertyGetSetFixture;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($propertyGetSetFixture, $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $object = new PropertyGetSet();
+
+        $propertyReflection->setValue($object, 'value');
+
+        self::assertSame('value', $object->baz);
+        self::assertSame('value', $propertyReflection->getValue($object));
+    }
+
+    public function testSetValueOfObjectPropertyThrowsExceptionWhenNoObject() : void
+    {
+        $this->expectException(NoObjectProvided::class);
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->setValue(null);
+    }
+
+    public function testGetValueOfObjectPropertyThrowsExceptionWhenNoObject() : void
+    {
+        $this->expectException(NoObjectProvided::class);
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->getValue();
+    }
+
+    public function testSetValueOfObjectPropertyThrowsExceptionWhenNotAnObject() : void
+    {
+        $this->expectException(NotAnObject::class);
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->setValue('string');
+    }
+
+    public function testGetValueOfObjectPropertyThrowsExceptionNotAnObject() : void
+    {
+        $this->expectException(NotAnObject::class);
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->getValue('string');
+    }
+
+    public function testSetValueOfObjectPropertyThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->setValue(new stdClass());
+    }
+
+    public function testGetValueOfObjectPropertyThrowsExceptionObjectNotInstanceOfClass() : void
+    {
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('baz');
+
+        $propertyReflection->getValue(new stdClass());
+    }
+
+    public function testSetAccessibleAndSetAndGetValueOfObjectProperty() : void
+    {
+        $propertyGetSetFixtureFile = __DIR__ . '/../Fixture/PropertyGetSet.php';
+        require_once $propertyGetSetFixtureFile;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($propertyGetSetFixtureFile, $this->astLocator)))->reflect(PropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('bat');
+
+        $object = new PropertyGetSet();
+
+        $propertyReflection->setValue($object, 'batman');
+
+        self::assertSame('batman', $propertyReflection->getValue($object));
     }
 }

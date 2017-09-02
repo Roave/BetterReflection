@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Closure;
 use Exception;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
@@ -12,6 +13,10 @@ use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
@@ -360,5 +365,99 @@ class ReflectionProperty implements CoreReflector
     public function __clone()
     {
         throw Uncloneable::fromClass(__CLASS__);
+    }
+
+    /**
+     * @param object|null $object
+     *
+     * @return mixed
+     *
+     * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    public function getValue($object = null)
+    {
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        if ($this->isStatic()) {
+            $this->assertClassExist($declaringClassName);
+
+            return Closure::bind(function (string $declaringClassName, string $propertyName) {
+                return $declaringClassName::${$propertyName};
+            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName());
+        }
+
+        $this->assertObject($object);
+
+        return Closure::bind(function ($object, string $propertyName) {
+            return $object->{$propertyName};
+        }, $object, $declaringClassName)->__invoke($object, $this->getName());
+    }
+
+    /**
+     * @param object $object
+     *
+     * @param mixed|null $value
+     *
+     * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    public function setValue($object, $value = null) : void
+    {
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        if ($this->isStatic()) {
+            $this->assertClassExist($declaringClassName);
+
+            Closure::bind(function (string $declaringClassName, string $propertyName, $value) : void {
+                $declaringClassName::${$propertyName} = $value;
+            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), \func_num_args() === 2 ? $value : $object);
+
+            return;
+        }
+
+        $this->assertObject($object);
+
+        Closure::bind(function ($object, string $propertyName, $value) : void {
+            $object->{$propertyName} = $value;
+        }, $object, $declaringClassName)->__invoke($object, $this->getName(), $value);
+    }
+
+    /**
+     * @throws ClassDoesNotExist
+     */
+    private function assertClassExist(string $className) : void
+    {
+        if ( ! \class_exists($className, false)) {
+            throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
+        }
+    }
+
+    /**
+     * @param object $object
+     *
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    private function assertObject($object) : void
+    {
+        if (null === $object) {
+            throw NoObjectProvided::create();
+        }
+
+        if ( ! \is_object($object)) {
+            throw NotAnObject::fromNonObject($object);
+        }
+
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        if (\get_class($object) !== $declaringClassName) {
+            throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
+        }
     }
 }

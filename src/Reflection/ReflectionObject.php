@@ -598,6 +598,14 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getStaticProperties() : array
+    {
+        return $this->reflectionClass->getStaticProperties();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setStaticPropertyValue(string $propertyName, $value) : void
     {
         $this->reflectionClass->setStaticPropertyValue($propertyName, $value);

@@ -5,10 +5,10 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use RuntimeException;
 
-class PropertyDoesNotExist extends RuntimeException
+class PropertyIsNotStatic extends RuntimeException
 {
     public static function fromName(string $propertyName) : self
     {
-        return new self(\sprintf('Property "%s" does not exist', $propertyName));
+        return new self(\sprintf('Property "%s" is not static', $propertyName));
     }
 }

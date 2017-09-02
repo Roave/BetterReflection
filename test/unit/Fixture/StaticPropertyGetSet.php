@@ -1,12 +1,8 @@
 <?php
 
-namespace Roave\BetterReflection\Fixture\StaticPropertyGetSet;
+namespace Roave\BetterReflectionTest\Fixture;
 
-class Foo
-{
-}
-
-class Bar
+class StaticPropertyGetSet
 {
     public static $baz;
     protected static $bat;
