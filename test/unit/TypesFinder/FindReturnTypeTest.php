@@ -40,20 +40,15 @@ class FindReturnTypeTest extends TestCase
     {
         $docBlock = "/**\n * $docBlock\n */";
 
+        /* @var $function ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getDocComment')
-            ->will($this->returnValue($docBlock));
+            ->willReturn($docBlock);
 
-        $function
-            ->expects($this->once())
-            ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
-
-        /** @var ReflectionFunction $function */
-        $foundTypes = (new FindReturnType())->__invoke($function);
+        $foundTypes = (new FindReturnType())->__invoke($function, null);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
 
@@ -71,13 +66,7 @@ class FindReturnTypeTest extends TestCase
     {
         $docBlock = "/**\n * $docBlock\n */";
 
-        $class = $this->createMock(ReflectionClass::class);
-
-        $class
-            ->expects($this->once())
-            ->method('getLocatedSource')
-            ->will($this->returnValue(new LocatedSource('<?php', null)));
-
+        /* @var $method ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject */
         $method = $this->createMock(ReflectionMethod::class);
 
         $method
@@ -85,13 +74,7 @@ class FindReturnTypeTest extends TestCase
             ->method('getDocComment')
             ->will($this->returnValue($docBlock));
 
-        $method
-            ->expects($this->once())
-            ->method('getDeclaringClass')
-            ->will($this->returnValue($class));
-
-        /** @var ReflectionMethod $method */
-        $foundTypes = (new FindReturnType())->__invoke($method);
+        $foundTypes = (new FindReturnType())->__invoke($method, null);
 
         self::assertCount(\count($expectedInstances), $foundTypes);
 
@@ -102,6 +85,7 @@ class FindReturnTypeTest extends TestCase
 
     public function testFindReturnTypeForFunctionWithNoDocBlock() : void
     {
+        /* @var $function ReflectionFunction|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -109,6 +93,6 @@ class FindReturnTypeTest extends TestCase
             ->method('getDocComment')
             ->will(self::returnValue(''));
 
-        self::assertEmpty((new FindReturnType())->__invoke($function));
+        self::assertEmpty((new FindReturnType())->__invoke($function, null));
     }
 }
