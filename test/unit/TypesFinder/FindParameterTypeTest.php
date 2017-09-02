@@ -3,8 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
 
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types;
+use PhpParser\Builder\Use_;
+use PhpParser\Node\Name;
 use PhpParser\Node\Param as ParamNode;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
@@ -130,5 +136,77 @@ class FindParameterTypeTest extends TestCase
             ->will(self::returnValue(''));
 
         self::assertEmpty((new FindParameterType())->__invoke($function, null, $node));
+    }
+    /**
+     * @dataProvider aliasedParameterTypesProvider
+     *
+     * @param string|null $namespaceName
+     * @param string[]    $aliasesToFQCNs indexed by alias
+     * @param string      $docBlockType
+     * @param Type[]      $expectedTypes
+     */
+    public function testWillResolveAliasedTypes(
+        ?string $namespaceName,
+        array $aliasesToFQCNs,
+        string $docBlockType,
+        array $expectedTypes
+    ) : void {
+        $docBlock = "/**\n * @param $docBlockType \$foo\n */";
+
+        $parameterNode = new ParamNode('foo');
+
+        /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
+        $function = $this->createMock(ReflectionFunctionAbstract::class);
+
+        $function
+            ->expects(self::once())
+            ->method('getDocComment')
+            ->willReturn($docBlock);
+
+        $uses = [];
+
+        foreach ($aliasesToFQCNs as $alias => $fqcn) {
+            $uses[] = (new Use_($fqcn, UseStatement::TYPE_NORMAL))
+                ->as($alias)
+                ->getNode();
+        }
+
+        $namespace = new Namespace_($namespaceName ? new Name($namespaceName) : null, $uses);
+
+        self::assertEquals($expectedTypes, (new FindParameterType())->__invoke($function, $namespace, $parameterNode));
+    }
+
+    public function aliasedParameterTypesProvider() : array
+    {
+        return [
+            'No namespace' => [
+                null,
+                [
+                    'Bar' => 'Bar',
+                    'Baz' => 'Taw\\Taz',
+                ],
+                'Foo|Bar|Baz|Tab',
+                [
+                    new Types\Object_(new Fqsen('\\Foo')),
+                    new Types\Object_(new Fqsen('\\Bar')),
+                    new Types\Object_(new Fqsen('\\Taw\\Taz')),
+                    new Types\Object_(new Fqsen('\\Tab')),
+                ],
+            ],
+            'Foo' => [
+                'Foo',
+                [
+                    'Bar' => 'Bar',
+                    'Baz' => 'Taw\\Taz',
+                ],
+                'Foo|Bar|Baz|Tab',
+                [
+                    new Types\Object_(new Fqsen('\\Foo\\Foo')),
+                    new Types\Object_(new Fqsen('\\Bar')),
+                    new Types\Object_(new Fqsen('\\Taw\\Taz')),
+                    new Types\Object_(new Fqsen('\\Foo\\Tab')),
+                ],
+            ],
+        ];
     }
 }

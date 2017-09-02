@@ -110,7 +110,6 @@ class FindPropertyTypeTest extends TestCase
         self::assertEmpty($foundTypes);
     }
 
-
     /**
      * @dataProvider aliasedVarTypesProvider
      *
