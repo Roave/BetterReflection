@@ -89,7 +89,7 @@ class NamespaceNodeToReflectionTypeContextTest extends TestCase
                         'PPP' => 'PPP',
                     ]
                 ),
-            ]
+            ],
         ];
     }
 }
