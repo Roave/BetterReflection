@@ -86,3 +86,9 @@ the `$name` parameter to be a `string`.
 A `BetterReflection\Reflection\Exception\NotAString` will no longer be thrown,
 while you will get a `TypeError` instead, should you not comply with this
 signature at call time.
+
+
+### `Roave\BetterReflection\NodeCompiler` constructor changed
+
+The internal `Roave\BetterReflection\NodeCompiler` class now requires
+a second mandatory constructor argument.
