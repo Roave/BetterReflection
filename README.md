@@ -59,7 +59,6 @@ what is required to upgrade your installed `BetterReflection` version.
 ## Limitations
 
 * PHP cannot autoload functions, therefore we cannot statically reflect functions
-* Using `ReflectionClass::createFromName()` makes [some assumptions](docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
 
 ## License
 
