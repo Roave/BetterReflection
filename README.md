@@ -40,7 +40,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 ## Changes in BR 2.0
 
  * Changed instantiation of `FindReflectionOnLine` utility from `new FindReflectionOnLine()` to `FindReflectionOnLine::buildDefaultFinder()`. `FindReflectionOnLine` constructor now requires a `SourceLocator` parameter.
- * Minimum PHP 7.1
  * `NotAString` exception class is now gone
  * `Identifier` class requires string for `$name` parameter
  * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
@@ -56,16 +55,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
  * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\StringSourceLocator::__construct` has additional mandatory constructor arguments
  * `Roave\BetterReflection\Util\FindReflectionOnLine::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was dropped, please use the newly
    introduced `Roave\BetterReflection\BetterReflection#classReflector()` instead

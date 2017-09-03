@@ -6,6 +6,12 @@ or backwards compatibility (BC) breakages occur.
 
 ## 2.0.0
 
+### PHP Version requirement raised to PHP 7.1.* and PHP 7.2.*
+
+Due to the complexity of maintaining compatibility with multiple PHP
+runtime environments and reflection API changes, the library now
+only supports PHP 7.1.x and PHP 7.2.x
+
 ### Source locators now require additional dependencies
 
 Due to major design and performance improvements, many of the
