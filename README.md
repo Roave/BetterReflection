@@ -32,9 +32,13 @@ $ composer require roave/better-reflection
 ## Usage
 
 ```php
-use Roave\BetterReflection\Reflection\ReflectionClass;
+<?php
 
-$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
+use Roave\BetterReflection\BetterReflection;
+
+$classInfo = (new BetterReflection())
+    ->classReflector()
+    ->reflect(\Foo\Bar\MyClass::class);
 ```
 
 ## Changes in BR 2.0
