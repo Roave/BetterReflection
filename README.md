@@ -41,8 +41,6 @@ $classInfo = (new BetterReflection())
     ->reflect(\Foo\Bar\MyClass::class);
 ```
 
-## Changes in BR 2.0
-
 ## More documentation
 
 * [Compatibility with core Reflection API](https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md)
@@ -52,6 +50,11 @@ $classInfo = (new BetterReflection())
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
 * [AST extraction](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
 * [Reflection modification](https://github.com/Roave/BetterReflection/tree/master/docs/reflection-modification.md)
+
+## Upgrading
+
+Please refer to the [Upgrade Documentation](UPGRADE.md) documentation to see
+what is required to upgrade your installed `BetterReflection` version.
 
 ## Limitations
 
