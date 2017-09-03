@@ -9,7 +9,6 @@ use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
@@ -17,8 +16,6 @@ use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionMethod;
-use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
@@ -69,25 +66,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $this->expectException(Exception::class);
         ReflectionFunctionAbstract::export();
-    }
-
-    public function testPopulateFunctionAbstractThrowsExceptionWithInvalidNode() : void
-    {
-        $reflector     = new FunctionReflector(new StringSourceLocator('<?php', $this->astLocator), $this->classReflector);
-        $locatedSource = new LocatedSource('<?php', null);
-
-        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $abstract */
-        $abstract = $this->getMockBuilder(ReflectionFunctionAbstract::class)
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-
-        $breakNode = new Break_();
-
-        $populateMethodReflection = new ReflectionMethod(ReflectionFunctionAbstract::class, 'populateFunctionAbstract');
-        $populateMethodReflection->setAccessible(true);
-
-        $this->expectException(InvalidAbstractFunctionNodeType::class);
-        $populateMethodReflection->invoke($abstract, $reflector, $breakNode, $locatedSource, null);
     }
 
     public function testNameMethodsWithNamespace() : void

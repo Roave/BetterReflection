@@ -19,7 +19,6 @@ use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -70,21 +69,19 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Populate the common elements of the function abstract.
      *
-     * @param Reflector $reflector
+     * @param Reflector                                              $reflector
      * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param LocatedSource $locatedSource
-     * @param NamespaceNode|null $declaringNamespace
+     * @param LocatedSource                                          $locatedSource
+     * @param NamespaceNode|null                                     $declaringNamespace
+     *
+     * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
      */
     protected function populateFunctionAbstract(
         Reflector $reflector,
-        Node $node,
+        Node\FunctionLike $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $declaringNamespace = null
     ) : void {
-        if ( ! ($node instanceof Node\Stmt\ClassMethod) && ! ($node instanceof Node\FunctionLike)) {
-            throw InvalidAbstractFunctionNodeType::fromNode($node);
-        }
-
         $this->reflector          = $reflector;
         $this->node               = $node;
         $this->locatedSource      = $locatedSource;
@@ -544,7 +541,9 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * $reflectionFunction->setBodyFromClosure(function () { return true; });
      *
      * @param \Closure $newBody
+     *
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName
      */
     public function setBodyFromClosure(Closure $newBody) : void
     {
