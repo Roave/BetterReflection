@@ -235,3 +235,17 @@ from the `Roave\BetterReflection\BetterReflection` kernel:
 use Roave\BetterReflection\BetterReflection;
 $astLocator = (new BetterReflection())->astLocator();
 ```
+
+### `Roave\BetterReflection\Reflection\Reflection*::createFromNode()` changes
+
+Due to performance and type introspection requirements, the following methods
+changed their signature completely:
+
+ * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()`
+ * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()`
+ * `Roave\BetterReflection\Reflection\ReflectionProperty::createFromNode()`
+
+It is advisable to not call these methods directly, as they are likely to change
+in future as well. Instead, please use a
+corresponding `Roave\BetterReflection\Reflector\Reflector` object to
+instantiate them.
