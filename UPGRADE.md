@@ -183,3 +183,17 @@ The `Roave\BetterReflection\SourceLocator\Reflection\SourceStubber` is
 now capable of working with just `ReflectionClass` instances from PHP
 core: it is no longer required to use `Zend\Code` instances, but the
 type hints also changed accordingly.
+
+### `Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` dropped
+
+Since the `Roave\BetterReflection\BetterReflection` kernel was introduced,
+`Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was
+removed. The equivalent API is following:
+
+```php
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+
+$reflector = (new BetterReflection())->classReflector();
+```
