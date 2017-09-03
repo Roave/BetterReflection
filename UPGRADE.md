@@ -57,3 +57,8 @@ new SingleFileSourceLocator(__FILE__, $astLocator);
 Classes that you may have implemented and that
 extend `Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator`
 also need to adapt to the parent constructor signature.
+
+### `BetterReflection\Reflection\Exception\NotAString` removed
+
+The `BetterReflection\Reflection\Exception\NotAString` exception was
+removed, as we now rely on PHP7's `declare(strict_types=1)`
