@@ -41,7 +41,7 @@ $classInfo = (new BetterReflection())
     ->reflect(\Foo\Bar\MyClass::class);
 ```
 
-## More documentation
+## Documentation
 
 * [Compatibility with core Reflection API](docs/compatibility.md)
 * [Basic usage instructions](docs/usage.md)
