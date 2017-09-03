@@ -160,3 +160,13 @@ favoring just `BetterReflection\Reflection\ReflectionParameter#getType()` instea
 The `BetterReflection\Reflection\ReflectionParameter#setType()` method now
 requires a `string` argument to be passed to it. The type will be detected
 from the given string.
+
+### `BetterReflection\Reflection\ReflectionType` now works with `string` type definitions
+
+The `BetterReflection\Reflection\ReflectionType` object used to work with
+`phpDocumentor` implementation details, but is now fully independent and
+only relying on `string` type definitions. Therefore:
+
+ * `ReflectionType::getTypeObject()` was removed
+ * `ReflectionType::createFromType()` now requires a `string` for the
+   `$type` parameter

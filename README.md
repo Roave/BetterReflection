@@ -39,8 +39,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
- * `ReflectionType::getTypeObject()` was removed
- * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
  * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
  * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
  * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
