@@ -21,7 +21,9 @@ work with this technique.
 
 use Roave\BetterReflection\BetterReflection;
 
-$classInfo = (new BetterReflection)->classReflector()->reflect('Foo\Bar\MyClass');
+$classInfo = (new BetterReflection)
+    ->classReflector()
+    ->reflect(\Foo\Bar\MyClass::class);
 ```
 
 If this instantiation technique is not possible - for example, your autoloader
@@ -57,7 +59,7 @@ ReflectionParameter::createFromSpec('my_function', 'param1');
 // Creating a ReflectionParameter from a closure is not supported yet :(
 
 ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
-ReflectionProperty::createFromInstance(new \ReflectionFunctionAbstract, 'name')
+ReflectionProperty::createFromInstance(new \ReflectionClass(\stdClass::class), 'name');
 ```
 
 ## SourceLocators
