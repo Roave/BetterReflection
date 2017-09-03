@@ -77,3 +77,12 @@ use Roave\BetterReflection\BetterReflection;
 
 $findReflectionOnLine = (new BetterReflection())->findReflectionsOnLine();
 ```
+
+### `Roave\BetterReflection\Identifier\Identifier` constructor changed
+
+`Roave\BetterReflection\Identifier\Identifier::__construct()` now requires
+the `$name` parameter to be a `string`.
+
+A `BetterReflection\Reflection\Exception\NotAString` will no longer be thrown,
+while you will get a `TypeError` instead, should you not comply with this
+signature at call time.

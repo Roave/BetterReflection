@@ -39,7 +39,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
- * `Identifier` class requires string for `$name` parameter
  * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
  * `Reflector` now requires a `string` for `$identiferName` parameter
  * Namespace moved to `\Roave\BetterReflection` instead of just `\BetterReflection`
