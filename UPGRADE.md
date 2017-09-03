@@ -154,3 +154,9 @@ node types.
 
 The `BetterReflection\Reflection\ReflectionParameter#getTypeHint()` was dropped,
 favoring just `BetterReflection\Reflection\ReflectionParameter#getType()` instead.
+
+### `BetterReflection\Reflection\ReflectionParameter#setType()` now requires a `string`
+
+The `BetterReflection\Reflection\ReflectionParameter#setType()` method now
+requires a `string` argument to be passed to it. The type will be detected
+from the given string.

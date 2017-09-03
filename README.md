@@ -39,7 +39,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
- * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
  * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
