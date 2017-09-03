@@ -8,6 +8,7 @@ use LogicException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
@@ -139,14 +140,20 @@ class ReflectionObject extends ReflectionClass
         // the runtime-declared properties  :/
         $reflectionProperties = (new CoreReflectionObject($this->object))->getProperties();
         $runtimeProperties    = [];
+
         foreach ($reflectionProperties as $property) {
             if ($this->reflectionClass->hasProperty($property->getName())) {
                 continue;
             }
 
+            $reflectionProperty = $this->reflectionClass->getProperty($property->getName());
+
             $runtimeProperty = ReflectionProperty::createFromNode(
                 $this->reflector,
                 $this->createPropertyNodeFromReflection($property, $this->object),
+                $reflectionProperty
+                    ? $reflectionProperty->getDeclaringClass()->getDeclaringNamespaceAst()
+                    : null,
                 $this,
                 $this,
                 false
@@ -156,6 +163,7 @@ class ReflectionObject extends ReflectionClass
                 $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
             }
         }
+
         return $runtimeProperties;
     }
 
@@ -625,6 +633,14 @@ class ReflectionObject extends ReflectionClass
     public function getAst() : ClassLikeNode
     {
         return $this->reflectionClass->getAst();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeclaringNamespaceAst() : ?Namespace_
+    {
+        return $this->reflectionClass->getDeclaringNamespaceAst();
     }
 
     /**

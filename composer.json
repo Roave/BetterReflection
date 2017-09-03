@@ -19,7 +19,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Roave\\BetterReflectionTest\\": "test/unit"
+            "Roave\\BetterReflectionTest\\": "test/unit",
+            "Roave\\BetterReflectionBenchmark\\": "test/benchmark"
         }
     },
     "suggest": {

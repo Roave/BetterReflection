@@ -72,6 +72,9 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `Roave\BetterReflection\Util\FindReflectionOnLine::buildDefaultFinder()` was dropped, please use the newly
    introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
  * `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` was dropped, all properties are accessible now 
+ * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()` has additional mandatory constructor arguments
+ * `Roave\BetterReflection\Reflection\ReflectionProperty::createFromNode()` has additional mandatory constructor arguments
 
 ## More documentation
 

@@ -5,20 +5,40 @@ namespace Roave\BetterReflection\TypesFinder;
 
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\Types\Context;
-use phpDocumentor\Reflection\Types\ContextFactory;
+use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
 class FindReturnType
 {
     /**
+     * @var ResolveTypes
+     */
+    private $resolveTypes;
+
+    /**
+     * @var DocBlockFactory
+     */
+    private $docBlockFactory;
+
+    /**
+     * @var NamespaceNodeToReflectionTypeContext
+     */
+    private $makeContext;
+
+    public function __construct()
+    {
+        $this->resolveTypes    = new ResolveTypes();
+        $this->docBlockFactory = DocBlockFactory::createInstance();
+        $this->makeContext     = new NamespaceNodeToReflectionTypeContext();
+    }
+
+    /**
      * Given a function, attempt to find the return type.
      *
-     * @param ReflectionFunctionAbstract $function
      * @return Type[]
      */
-    public function __invoke(ReflectionFunctionAbstract $function) : array
+    public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace) : array
     {
         $docComment = $function->getDocComment();
 
@@ -26,42 +46,18 @@ class FindReturnType
             return [];
         }
 
-        $context = $this->createContextForFunction($function);
+        $context = $this->makeContext->__invoke($namespace);
 
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_[] $returnTags */
-        $returnTags = DocBlockFactory::createInstance()->create(
-            $docComment,
-            new Context(
-                $context->getNamespace(),
-                $context->getNamespaceAliases()
-            )
-        )->getTagsByName('return');
+        $returnTags = $this
+            ->docBlockFactory
+            ->create($docComment, $context)
+            ->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
-            return (new ResolveTypes())->__invoke(\explode('|', (string) $returnTag->getType()), $context);
+            return $this->resolveTypes->__invoke(\explode('|', (string) $returnTag->getType()), $context);
         }
 
         return [];
-    }
-
-    /**
-     * @param ReflectionFunctionAbstract $function
-     * @return Context
-     */
-    private function createContextForFunction(ReflectionFunctionAbstract $function) : Context
-    {
-        if ($function instanceof ReflectionMethod) {
-            $declaringClass = $function->getDeclaringClass();
-
-            return (new ContextFactory())->createForNamespace(
-                $declaringClass->getNamespaceName(),
-                $declaringClass->getLocatedSource()->getSource()
-            );
-        }
-
-        return (new ContextFactory())->createForNamespace(
-            $function->getNamespaceName(),
-            $function->getLocatedSource()->getSource()
-        );
     }
 }

@@ -11,6 +11,7 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
+use PhpParser\Node\Stmt\Namespace_;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
@@ -31,6 +32,11 @@ class ReflectionParameter implements CoreReflector
      * @var ParamNode
      */
     private $node;
+
+    /**
+     * @var Namespace_|null
+     */
+    private $declaringNamespace;
 
     /**
      * @var ReflectionFunctionAbstract
@@ -187,23 +193,28 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * @param Reflector $reflector
-     * @param ParamNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Reflector                  $reflector
+     * @param ParamNode                  $node               Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Namespace_|null            $declaringNamespace namespace of the declaring function/method
      * @param ReflectionFunctionAbstract $function
-     * @param int $parameterIndex
+     * @param int                        $parameterIndex
+     *
      * @return ReflectionParameter
      */
     public static function createFromNode(
         Reflector $reflector,
         ParamNode $node,
+        ?Namespace_ $declaringNamespace,
         ReflectionFunctionAbstract $function,
         int $parameterIndex
     ) : self {
-        $param                 = new self();
-        $param->reflector      = $reflector;
-        $param->node           = $node;
-        $param->function       = $function;
-        $param->parameterIndex = $parameterIndex;
+        $param                     = new self();
+        $param->reflector          = $reflector;
+        $param->node               = $node;
+        $param->declaringNamespace = $declaringNamespace;
+        $param->function           = $function;
+        $param->parameterIndex     = $parameterIndex;
+
         return $param;
     }
 
@@ -402,7 +413,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function getDocBlockTypes() : array
     {
-        return  (new FindParameterType())->__invoke($this->function, $this->node);
+        return  (new FindParameterType())->__invoke($this->function, $this->declaringNamespace, $this->node);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
+use PhpParser\Node\Stmt\Namespace_;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflector\Reflector;
 use RuntimeException;
@@ -23,12 +24,14 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /**
      * @param Reflector $reflector
      * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Namespace_|null $namespace
      * @param ReflectionClass $declaringClass
      * @param ReflectionClass $implementingClass
      */
     public static function createFromNode(
         Reflector $reflector,
         MethodNode $node,
+        ?Namespace_ $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass
     ) : self {
@@ -36,9 +39,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
 
-        // Compat with core reflection means we should NOT pass namespace info
-        // for ReflectionMethod
-        $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), null);
+        $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
 
         return $method;
     }
@@ -180,6 +181,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             throw new RuntimeException('Expected a ClassMethod node');
         }
         return $this->getNode();
+    }
+
+    public function inNamespace() : bool
+    {
+        return false;
     }
 
     /**

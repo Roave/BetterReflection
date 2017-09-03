@@ -9,6 +9,16 @@ use phpDocumentor\Reflection\Types\Context;
 class ResolveTypes
 {
     /**
+     * @var TypeResolver
+     */
+    private $typeResolver;
+
+    public function __construct()
+    {
+        $this->typeResolver = new TypeResolver();
+    }
+
+    /**
      * @param string[] $stringTypes
      * @param Context $context
      * @return \phpDocumentor\Reflection\Type[]
@@ -16,10 +26,9 @@ class ResolveTypes
     public function __invoke(array $stringTypes, Context $context) : array
     {
         $resolvedTypes = [];
-        $resolver      = new TypeResolver();
 
         foreach ($stringTypes as $stringType) {
-            $resolvedTypes[] = $resolver->resolve($stringType, $context);
+            $resolvedTypes[] = $this->typeResolver->resolve($stringType, $context);
         }
 
         return $resolvedTypes;

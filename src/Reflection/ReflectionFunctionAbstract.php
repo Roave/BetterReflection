@@ -216,14 +216,17 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function getParameters() : array
     {
         $parameters = [];
+
         foreach ($this->node->params as $paramIndex => $paramNode) {
             $parameters[] = ReflectionParameter::createFromNode(
                 $this->reflector,
                 $paramNode,
+                $this->declaringNamespace,
                 $this,
                 $paramIndex
             );
         }
+
         return $parameters;
     }
 
@@ -432,7 +435,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getDocBlockReturnTypes() : array
     {
-        return  (new FindReturnType())->__invoke($this);
+        return  (new FindReturnType())->__invoke($this, $this->declaringNamespace);
     }
 
     /**

@@ -247,6 +247,7 @@ class ReflectionPropertyTest extends TestCase
             ReflectionProperty::createFromNode(
                 $this->reflector,
                 new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
+                null,
                 $classInfo,
                 $classInfo,
                 false

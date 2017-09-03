@@ -12,6 +12,7 @@ use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
@@ -43,7 +44,7 @@ class ReflectionClass implements Reflection, CoreReflector
     private $reflector;
 
     /**
-     * @var NamespaceNode
+     * @var NamespaceNode|null
      */
     private $declaringNamespace;
 
@@ -335,7 +336,13 @@ class ReflectionClass implements Reflection, CoreReflector
                 ...\array_map(
                     function (ReflectionClass $trait) : array {
                         return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
-                            return ReflectionMethod::createFromNode($this->reflector, $method->getAst(), $trait, $this);
+                            return ReflectionMethod::createFromNode(
+                                $this->reflector,
+                                $method->getAst(),
+                                $this->declaringNamespace,
+                                $trait,
+                                $this
+                            );
                         }, $trait->getMethods());
                     },
                     $this->getTraits()
@@ -343,7 +350,13 @@ class ReflectionClass implements Reflection, CoreReflector
             ),
             \array_map(
                 function (ClassMethod $methodNode) : ReflectionMethod {
-                    return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this, $this);
+                    return ReflectionMethod::createFromNode(
+                        $this->reflector,
+                        $methodNode,
+                        $this->declaringNamespace,
+                        $this,
+                        $this
+                    );
                 },
                 $this->node->getMethods()
             )
@@ -415,7 +428,13 @@ class ReflectionClass implements Reflection, CoreReflector
         /** @var \ReflectionMethod[] $methods */
         $methods = \array_map(
             function (ClassMethod $methodNode) : ReflectionMethod {
-                return ReflectionMethod::createFromNode($this->reflector, $methodNode, $this, $this);
+                return ReflectionMethod::createFromNode(
+                    $this->reflector,
+                    $methodNode,
+                    $this->declaringNamespace,
+                    $this,
+                    $this
+                );
             },
             $this->node->getMethods()
         );
@@ -649,7 +668,13 @@ class ReflectionClass implements Reflection, CoreReflector
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
                 if ($stmt instanceof PropertyNode) {
-                    $prop                         = ReflectionProperty::createFromNode($this->reflector, $stmt, $this, $this);
+                    $prop                         = ReflectionProperty::createFromNode(
+                        $this->reflector,
+                        $stmt,
+                        $this->declaringNamespace,
+                        $this,
+                        $this
+                    );
                     $properties[$prop->getName()] = $prop;
                 }
             }
@@ -703,8 +728,14 @@ class ReflectionClass implements Reflection, CoreReflector
                     ),
                     ...\array_map(
                         function (ReflectionClass $trait) use ($filter) {
-                            return \array_map(function (ReflectionProperty $property) : ReflectionProperty {
-                                return ReflectionProperty::createFromNode($this->reflector, $property->getAst(), $property->getDeclaringClass(), $this);
+                            return \array_map(function (ReflectionProperty $property) use ($trait) : ReflectionProperty {
+                                return ReflectionProperty::createFromNode(
+                                    $this->reflector,
+                                    $property->getAst(),
+                                    $trait->declaringNamespace,
+                                    $property->getDeclaringClass(),
+                                    $this
+                                );
                             }, $trait->getProperties($filter));
                         },
                         $this->getTraits()
@@ -1360,6 +1391,11 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getAst() : ClassLikeNode
     {
         return $this->node;
+    }
+
+    public function getDeclaringNamespaceAst() : ?Namespace_
+    {
+        return $this->declaringNamespace;
     }
 
     /**
