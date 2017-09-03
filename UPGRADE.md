@@ -221,3 +221,17 @@ use Roave\BetterReflection\BetterReflection;
 
 $reflector = (new BetterReflection())->functionReflector();
 ```
+
+### `Roave\BetterReflection\SourceLocator\Ast\Locator` constructor changed
+
+The constructor of `Roave\BetterReflection\SourceLocator\Ast\Locator`
+changed in its required parameters. For generic `BetterReflection` usage,
+it is advisable to simply obtain a `Roave\BetterReflection\SourceLocator\Ast\Locator`
+from the `Roave\BetterReflection\BetterReflection` kernel:
+
+```php
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+$astLocator = (new BetterReflection())->astLocator();
+```
