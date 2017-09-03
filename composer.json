@@ -9,6 +9,29 @@
         "phpdocumentor/type-resolver": "^0.4.0",
         "roave/signature": "^1.0"
     },
+    "authors": [
+        {
+            "name":     "James Titcumb",
+            "email":    "james@asgrim.com",
+            "homepage": "https://github.com/asgrim"
+        },
+        {
+            "name":     "Marco Pivetta",
+            "email":    "ocramius@gmail.com",
+            "homepage": "http://ocramius.github.io/"
+        },
+        {
+            "name":     "Gary Hockin",
+            "email":    "gary@roave.com",
+            "homepage": "https://github.com/geeh"
+        },
+        {
+            "name":     "Jaroslav Hanslík",
+            "email":    "kukulich@kukulich.cz",
+            "homepage": "https://github.com/kukulich"
+        }
+
+    ],
     "require-dev": {
         "phpunit/phpunit": "^6.3.0"
     },
