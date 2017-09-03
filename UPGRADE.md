@@ -197,3 +197,12 @@ use Roave\BetterReflection\BetterReflection;
 
 $reflector = (new BetterReflection())->classReflector();
 ```
+
+### `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` dropped
+
+The `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` was
+thrown when a non-accessible reflection property is being read or written
+to. Since this is "better" reflection, there is no need for calling anything
+like `setAccessible` on a `Roave\BetterReflection\Reflection\ReflectionProperty`
+instance. All properties are directly accessible, even if `private`, `protected`
+or dynamically defined.

@@ -41,7 +41,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
  * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` was dropped, all properties are accessible now 
  * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()` has additional mandatory constructor arguments
  * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()` has additional mandatory constructor arguments
  * `Roave\BetterReflection\Reflection\ReflectionProperty::createFromNode()` has additional mandatory constructor arguments
