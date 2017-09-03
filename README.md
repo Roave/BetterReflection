@@ -19,7 +19,7 @@ features than PHP's built-in [reflection API](http://php.net/manual/en/book.refl
 * Change the body of a function or method to do something different
 * *Moar stuff coming soon!*
 
-Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).
+Be sure to read more in the [feature documentation](docs/features.md).
 
 ## Installation
 
@@ -43,13 +43,13 @@ $classInfo = (new BetterReflection())
 
 ## More documentation
 
-* [Compatibility with core Reflection API](https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md)
-* [Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md)
-* [Using types](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
-* [The features](https://github.com/Roave/BetterReflection/tree/master/docs/features.md)
+* [Compatibility with core Reflection API](docs/compatibility.md)
+* [Basic usage instructions](docs/usage.md)
+* [Using types](docs/types.md)
+* [The features](docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
-* [AST extraction](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
-* [Reflection modification](https://github.com/Roave/BetterReflection/tree/master/docs/reflection-modification.md)
+* [AST extraction](docs/ast-extraction.md)
+* [Reflection modification](docs/reflection-modification.md)
 
 ## Upgrading
 
@@ -59,7 +59,7 @@ what is required to upgrade your installed `BetterReflection` version.
 ## Limitations
 
 * PHP cannot autoload functions, therefore we cannot statically reflect functions
-* Using `ReflectionClass::createFromName()` makes [some assumptions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
+* Using `ReflectionClass::createFromName()` makes [some assumptions](docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
 
 ## Authors
 
