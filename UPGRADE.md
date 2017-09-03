@@ -176,3 +176,10 @@ only relying on `string` type definitions. Therefore:
 The `BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` method
 now requires a `string` argument to be passed to it. The type will be
 detected from the given string.
+
+### `Roave\BetterReflection\SourceLocator\Reflection\SourceStubber` now works with core `ReflectionClass`
+
+The `Roave\BetterReflection\SourceLocator\Reflection\SourceStubber` is 
+now capable of working with just `ReflectionClass` instances from PHP
+core: it is no longer required to use `Zend\Code` instances, but the
+type hints also changed accordingly.
