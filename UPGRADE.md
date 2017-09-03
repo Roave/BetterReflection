@@ -138,3 +138,14 @@ $defaultValue = (new BetterReflection())
 
 echo var_export($defaultValue, true);
 ```
+
+### `BetterReflection\TypesFinder\FindTypeFromAst` was removed
+
+The `BetterReflection\TypesFinder\FindTypeFromAst` utility was removed,
+as all AST nodes used by `BetterReflection` are now processed through
+a `PhpParser\NodeVisitor\NameResolver` visitor, which guarantees that
+the FQCN of the symbol is always available.
+
+This change also allowed for massive performance improvement, as fewer
+repeated parsing operations have to be performed in order to discover
+node types.
