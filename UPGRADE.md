@@ -6,6 +6,19 @@ or backwards compatibility (BC) breakages occur.
 
 ## 2.0.0
 
+### Namespace change
+
+The base namespace of the library changed from `BetterReflection`
+to `Roave\BetterReflection`.
+You may search for usages of the previous namespace with following
+regular expressions:
+
+ * `/\s*use\s+(\\)?BetterReflection/`
+ * `/[^A-Za-z0-9]+(\\)?BetterReflection/`
+ 
+The found imports should be replaced with `Roave\BetterReflection`
+imports.
+ 
 ### PHP Version requirement raised to PHP 7.1.* and PHP 7.2.*
 
 Due to the complexity of maintaining compatibility with multiple PHP
