@@ -39,7 +39,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
- * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()` has additional mandatory constructor arguments
  * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()` has additional mandatory constructor arguments

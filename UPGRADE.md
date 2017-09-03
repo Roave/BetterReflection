@@ -206,3 +206,18 @@ to. Since this is "better" reflection, there is no need for calling anything
 like `setAccessible` on a `Roave\BetterReflection\Reflection\ReflectionProperty`
 instance. All properties are directly accessible, even if `private`, `protected`
 or dynamically defined.
+
+### `Roave\BetterReflection\Reflector\FunctionReflector` constructor changed
+
+The constructor of `Roave\BetterReflection\Reflector\FunctionReflector`
+changed in its required parameters. For generic `BetterReflection` usage,
+it is advisable to simply obtain a `Roave\BetterReflection\Reflector\FunctionReflector`
+from the `Roave\BetterReflection\BetterReflection` kernel:
+
+```php
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+
+$reflector = (new BetterReflection())->functionReflector();
+```
