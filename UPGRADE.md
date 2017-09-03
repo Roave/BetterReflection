@@ -92,3 +92,9 @@ signature at call time.
 
 The internal `Roave\BetterReflection\NodeCompiler` class now requires
 a second mandatory constructor argument.
+
+### `Roave\BetterReflection\Reflector\Reflector#reflect()` interface changed
+
+The `Roave\BetterReflection\Reflector\Reflector#reflect()` now requires
+a `string` argument for `$identifierName`. You will need to change
+your own implementations of the interface.
