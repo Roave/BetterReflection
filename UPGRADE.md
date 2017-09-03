@@ -111,3 +111,30 @@ a second mandatory constructor argument.
 The `Roave\BetterReflection\Reflector\Reflector#reflect()` now requires
 a `string` argument for `$identifierName`. You will need to change
 your own implementations of the interface.
+
+### `BetterReflection\Reflection\ReflectionParameter#getDefaultValueAsString()` removed
+
+`BetterReflection\Reflection\ReflectionParameter#getDefaultValueAsString()`
+was removed. This method was providing some sort of serialization of internal
+reflection data, and it opens possibilities for security issues if mishandled.
+
+The equivalent replacement is to manually call `var_export($value, true)`
+instead, assuming that you know its intended usage context:
+
+```php
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+
+function myFunction($myParameter = 'default value') {
+    // ...
+}
+
+$defaultValue = (new BetterReflection())
+    ->functionReflector()
+    ->reflect('myFunction')
+    ->getParameter('myParameter')
+    ->getDefaultValue();
+
+echo var_export($defaultValue, true);
+```

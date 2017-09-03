@@ -39,7 +39,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
- * `ReflectionParameter#getDefaultValueAsString` is deprecated in favour of using `var_export` directly.
  * `FindTypeFromAst` was removed
  * `ReflectionParameter::getTypeHint()` was removed
  * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter

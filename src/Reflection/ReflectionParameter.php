@@ -355,17 +355,6 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * Get the default value represented as a string.
-     *
-     * @return string
-     * @deprecated Use `\var_export($reflection->getDefaultValue(), true)` instead
-     */
-    public function getDefaultValueAsString() : string
-    {
-        return \var_export($this->getDefaultValue(), true);
-    }
-
-    /**
      * Does this method allow null for a parameter?
      *
      * @return bool
