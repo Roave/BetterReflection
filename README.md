@@ -39,7 +39,6 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
 
 ## Changes in BR 2.0
 
- * Changed instantiation of `FindReflectionOnLine` utility from `new FindReflectionOnLine()` to `FindReflectionOnLine::buildDefaultFinder()`. `FindReflectionOnLine` constructor now requires a `SourceLocator` parameter.
  * `Identifier` class requires string for `$name` parameter
  * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
  * `Reflector` now requires a `string` for `$identiferName` parameter
@@ -54,11 +53,8 @@ $classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
  * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
  * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\Util\FindReflectionOnLine::__construct` now has mandatory constructor arguments
  * `Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was dropped, please use the newly
    introduced `Roave\BetterReflection\BetterReflection#classReflector()` instead
- * `Roave\BetterReflection\Util\FindReflectionOnLine::buildDefaultFinder()` was dropped, please use the newly
-   introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
  * `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` was dropped, all properties are accessible now 
  * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()` has additional mandatory constructor arguments
  * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()` has additional mandatory constructor arguments

@@ -62,3 +62,18 @@ also need to adapt to the parent constructor signature.
 
 The `BetterReflection\Reflection\Exception\NotAString` exception was
 removed, as we now rely on PHP7's `declare(strict_types=1)`
+
+### `Roave\BetterReflection\Util\FindReflectionOnLine` constructor changed
+
+`Roave\BetterReflection\Util\FindReflectionOnLine` now requires additional
+parameters. It is advisable to simply use
+the `Roave\BetterReflection\BetterReflection` kernel to get an instance of
+this class instead:
+
+```php
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+
+$findReflectionOnLine = (new BetterReflection())->findReflectionsOnLine();
+```
