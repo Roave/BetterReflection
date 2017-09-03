@@ -170,3 +170,9 @@ only relying on `string` type definitions. Therefore:
  * `ReflectionType::getTypeObject()` was removed
  * `ReflectionType::createFromType()` now requires a `string` for the
    `$type` parameter
+
+### `BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` now requires a `string`
+
+The `BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` method
+now requires a `string` argument to be passed to it. The type will be
+detected from the given string.
