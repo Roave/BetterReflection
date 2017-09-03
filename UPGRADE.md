@@ -149,3 +149,8 @@ the FQCN of the symbol is always available.
 This change also allowed for massive performance improvement, as fewer
 repeated parsing operations have to be performed in order to discover
 node types.
+
+### `BetterReflection\Reflection\ReflectionParameter#getTypeHint()` was removed
+
+The `BetterReflection\Reflection\ReflectionParameter#getTypeHint()` was dropped,
+favoring just `BetterReflection\Reflection\ReflectionParameter#getType()` instead.
