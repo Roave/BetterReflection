@@ -43,7 +43,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     private $locatedSource;
 
     /**
-     * @var Node\Stmt\ClassMethod|Node\Stmt\Function_
+     * @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure
      */
     private $node;
 
