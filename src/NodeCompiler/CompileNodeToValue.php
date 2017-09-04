@@ -18,10 +18,12 @@ class CompileNodeToValue
     /**
      * Compile an expression from a node into a value.
      *
-     * @param Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Node            $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param CompilerContext $context
+     *
      * @return mixed
-     * @throw Exception\UnableToCompileNode
+     *
+     * @throws Exception\UnableToCompileNode
      */
     public function __invoke(Node $node, CompilerContext $context)
     {
