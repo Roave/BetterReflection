@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Throwable;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
@@ -299,9 +303,15 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function getClosure($object)
+    public function getClosure($object = null)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        try {
+            $this->betterReflectionMethod->getClosure($object);
+        } catch (NoObjectProvided | NotAnObject $e) {
+            return null;
+        } catch (Throwable $e) {
+            throw new CoreReflectionException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
