@@ -93,10 +93,7 @@ class ReflectionMethodTest extends TestCase
             ['isDestructor', null, true, []],
             ['getClosure', null, $closure, []],
             ['getModifiers', null, 123, []],
-            ['invoke', NotImplemented::class, null, [new stdClass(), '']],
-            ['invokeArgs', NotImplemented::class, null, [new stdClass(), []]],
             ['getPrototype', null, $mockMethod, []],
-            ['setAccessible', NotImplemented::class, null, [true]],
         ];
     }
 
@@ -223,5 +220,140 @@ class ReflectionMethodTest extends TestCase
 
         $this->expectException(CoreReflectionException::class);
         $reflectionMethodAdapter->getClosure(new stdClass());
+    }
+
+    public function testInvoke() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invoke')
+            ->with(null, 100, 23)
+            ->willReturn(123);
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertSame(123, $reflectionMethodAdapter->invoke(null, 100, 23));
+    }
+
+    public function testInvokeArgs() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invokeArgs')
+            ->with(null, [100, 23])
+            ->willReturn(123);
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertSame(123, $reflectionMethodAdapter->invokeArgs(null, [100, 23]));
+    }
+
+    public function testInvokeArgsReturnsNullWhenNoObject() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invokeArgs')
+            ->willThrowException(NoObjectProvided::create());
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertNull($reflectionMethodAdapter->invokeArgs(null, []));
+    }
+
+    public function testInvokeReturnsNullWhenNotAnObject() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invoke')
+            ->willThrowException(NotAnObject::fromNonObject('string'));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertNull($reflectionMethodAdapter->invoke('string'));
+    }
+
+    public function testInvokeArgsReturnsNullWhenNotAnObject() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invokeArgs')
+            ->willThrowException(NotAnObject::fromNonObject('string'));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertNull($reflectionMethodAdapter->invokeArgs('string', []));
+    }
+
+    public function testInvokeThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invoke')
+            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionMethodAdapter->invoke(new stdClass());
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invokeArgs')
+            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionMethodAdapter->invokeArgs(new stdClass(), []);
+    }
+
+    public function testInvokeThrowsExceptionWhenPropertyNotAccessible() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(false);
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionMethodAdapter->invoke();
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenPropertyNotAccessible() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(false);
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionMethodAdapter->invokeArgs();
     }
 }
