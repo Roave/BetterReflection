@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use InvalidArgumentException;
 use LogicException;
 use PhpParser\Node;
-use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -17,9 +16,7 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
@@ -261,21 +258,6 @@ class ReflectionObjectTest extends TestCase
         // ensure that the method of the same name gets called on the
         // $mockReflectionClass mock (as we expect $methodName to be called)
         $reflectionObject->{$methodName}(...$fakeParams);
-    }
-
-    public function testCreateFromNodeThrowsException() : void
-    {
-        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $mReflector */
-        $mReflector = $this->createMock(Reflector::class);
-
-        /** @var ClassLike|\PHPUnit_Framework_MockObject_MockObject $mClassNode */
-        $mClassNode = $this->createMock(ClassLike::class);
-
-        /** @var LocatedSource|\PHPUnit_Framework_MockObject_MockObject $mLocatedSource */
-        $mLocatedSource = $this->createMock(LocatedSource::class);
-
-        $this->expectException(LogicException::class);
-        ReflectionObject::createFromNode($mReflector, $mClassNode, $mLocatedSource);
     }
 
     public function testCreateFromNameThrowsException() : void

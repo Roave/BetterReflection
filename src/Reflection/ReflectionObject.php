@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use LogicException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionObject as CoreReflectionObject;
@@ -63,20 +62,6 @@ class ReflectionObject extends ReflectionClass
         }
 
         return self::createFromInstance($instance)->__toString();
-    }
-
-    /**
-     * Cannot instantiate this way, use ReflectionObject::createFromInstance
-     *
-     * @throws \LogicException
-     */
-    public static function createFromNode(
-        Reflector $reflector,
-        ClassLikeNode $node,
-        LocatedSource $locatedSource,
-        ?NamespaceNode $namespace = null
-    ) : ReflectionClass {
-        throw new LogicException('Cannot create a ReflectionObject from node - use ReflectionObject::createFromInstance');
     }
 
     /**
