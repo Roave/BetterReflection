@@ -343,20 +343,85 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            return function (...$args) use ($declaringClassName) {
-                return Closure::bind(function (string $declaringClassName, string $methodName, array $methodArgs) {
-                    return $declaringClassName::{$methodName}(...$methodArgs);
-                }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), $args);
+            return function (...$args) {
+                return $this->callStaticMethod($args);
             };
         }
 
         $this->assertObject($object);
 
-        return function (...$args) use ($declaringClassName, $object) {
-            return Closure::bind(function ($object, string $methodName, array $methodArgs) {
-                return $object->{$methodName}(...$methodArgs);
-            }, $object, $declaringClassName)->__invoke($object, $this->getName(), $args);
+        return function (...$args) use ($object) {
+            return $this->callObjectMethod($object, $args);
         };
+    }
+
+    /**
+     * @param object|null $object
+     * @param mixed ...$args
+     *
+     * @return mixed
+     *
+     * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    public function invoke($object = null, ...$args)
+    {
+        return $this->invokeArgs($object, $args);
+    }
+
+    /**
+     * @param object|null $object
+     * @param mixed[] $args
+     *
+     * @return mixed
+     *
+     * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    public function invokeArgs($object = null, array $args = [])
+    {
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        if ($this->isStatic()) {
+            $this->assertClassExist($declaringClassName);
+
+            return $this->callStaticMethod($args);
+        }
+
+        $this->assertObject($object);
+
+        return $this->callObjectMethod($object, $args);
+    }
+
+    /**
+     * @param mixed[] $args
+     *
+     * @return mixed
+     */
+    private function callStaticMethod(array $args)
+    {
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        return Closure::bind(function (string $declaringClassName, string $methodName, array $methodArgs) {
+            return $declaringClassName::{$methodName}(...$methodArgs);
+        }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), $args);
+    }
+
+    /**
+     * @param object $object
+     * @param mixed[] $args
+     *
+     * @return mixed
+     */
+    private function callObjectMethod($object, array $args)
+    {
+        return Closure::bind(function ($object, string $methodName, array $methodArgs) {
+            return $object->{$methodName}(...$methodArgs);
+        }, $object, $this->getDeclaringClass()->getName())->__invoke($object, $this->getName(), $args);
     }
 
     /**

@@ -90,8 +90,8 @@
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
 | getPrototype | :heavy_check_mark: Yes |
-| invoke | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invokeArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| invoke | :heavy_check_mark: Yes |
+| invokeArgs | :heavy_check_mark: Yes |
 | isAbstract | :heavy_check_mark: Yes |
 | isConstructor | :heavy_check_mark: Yes |
 | isDestructor | :heavy_check_mark: Yes |
@@ -100,7 +100,7 @@
 | isProtected | :heavy_check_mark: Yes |
 | isPublic | :heavy_check_mark: Yes |
 | isStatic | :heavy_check_mark: Yes |
-| setAccessible | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| setAccessible | :heavy_check_mark: Yes |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 
 ## ReflectionParameter

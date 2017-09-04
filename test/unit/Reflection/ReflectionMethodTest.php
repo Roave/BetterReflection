@@ -515,4 +515,130 @@ PHP;
         self::assertInstanceOf(Closure::class, $closure);
         self::assertSame(103, $closure(1, 2));
     }
+
+    public function testInvokeOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    public static function boo()
+    {
+    }
+}
+PHP;
+
+        $this->expectException(ClassDoesNotExist::class);
+
+        $classReflection  = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $methodReflection = $classReflection->getMethod('boo');
+
+        $methodReflection->invoke();
+    }
+
+    public function testInvokeArgsOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    public static function boo()
+    {
+    }
+}
+PHP;
+
+        $this->expectException(ClassDoesNotExist::class);
+
+        $classReflection  = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $methodReflection = $classReflection->getMethod('boo');
+
+        $methodReflection->invokeArgs();
+    }
+
+    public function testInvokeOfStaticMethod() : void
+    {
+        $classWithStaticMethodFile = __DIR__ . '/../Fixture/ClassWithStaticMethod.php';
+        require_once $classWithStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithStaticMethodFile, $this->astLocator)))->reflect(ClassWithStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        self::assertSame(3, $methodReflection->invoke(null, 1, 2));
+        self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
+    }
+
+    public function testInvokeOfObjectMethodThrowsExceptionWhenNoObject() : void
+    {
+        $this->expectException(NoObjectProvided::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->invoke(null);
+    }
+
+    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenNoObject() : void
+    {
+        $this->expectException(NoObjectProvided::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->invokeArgs(null);
+    }
+
+    public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
+    {
+        $this->expectException(NotAnObject::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->invoke(123);
+    }
+
+    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
+    {
+        $this->expectException(NotAnObject::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->invokeArgs(123);
+    }
+
+    public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->invoke(new stdClass());
+    }
+
+    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->invokeArgs(new stdClass());
+    }
+
+    public function testInvokeOfObjectMethod() : void
+    {
+        $classWithNonStaticMethodFile = __DIR__ . '/../Fixture/ClassWithNonStaticMethod.php';
+        require_once $classWithNonStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithNonStaticMethodFile, $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $object = new ClassWithNonStaticMethod();
+
+        self::assertSame(103, $methodReflection->invoke($object, 1, 2));
+        self::assertSame(107, $methodReflection->invoke($object, 3, 4));
+    }
 }

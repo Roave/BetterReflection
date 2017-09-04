@@ -17,6 +17,11 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     private $betterReflectionMethod;
 
+    /**
+     * @var bool
+     */
+    private $accessible = false;
+
     public function __construct(BetterReflectionMethod $betterReflectionMethod)
     {
         $this->betterReflectionMethod = $betterReflectionMethod;
@@ -325,17 +330,37 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function invoke($object, $args)
+    public function invoke($object = null, $args = null)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ( ! $this->isAccessible()) {
+            throw new CoreReflectionException('Method not accessible');
+        }
+
+        try {
+            return $this->betterReflectionMethod->invoke(...\func_get_args());
+        } catch (NoObjectProvided | NotAnObject $e) {
+            return null;
+        } catch (Throwable $e) {
+            throw new CoreReflectionException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function invokeArgs($object, array $args)
+    public function invokeArgs($object = null, array $args = [])
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ( ! $this->isAccessible()) {
+            throw new CoreReflectionException('Method not accessible');
+        }
+
+        try {
+            return $this->betterReflectionMethod->invokeArgs($object, $args);
+        } catch (NoObjectProvided | NotAnObject $e) {
+            return null;
+        } catch (Throwable $e) {
+            throw new CoreReflectionException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
@@ -357,8 +382,13 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function setAccessible($value)
+    public function setAccessible($accesible)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        $this->accessible = true;
+    }
+
+    private function isAccessible() : bool
+    {
+        return $this->accessible || $this->isPublic();
     }
 }
