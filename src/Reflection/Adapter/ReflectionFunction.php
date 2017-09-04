@@ -119,7 +119,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getExtensionName()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionFunction->getExtensionName() ?? false;
     }
 
     /**

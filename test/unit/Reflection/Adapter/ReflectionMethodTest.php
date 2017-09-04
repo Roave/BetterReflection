@@ -68,7 +68,7 @@ class ReflectionMethodTest extends TestCase
             ['getStartLine', null, 123, []],
             ['getEndLine', null, 123, []],
             ['getExtension', NotImplemented::class, null, []],
-            ['getExtensionName', NotImplemented::class, null, []],
+            ['getExtensionName', null, null, []],
             ['getFileName', null, '', []],
             ['getName', null, '', []],
             ['getNamespaceName', null, '', []],
@@ -174,6 +174,18 @@ class ReflectionMethodTest extends TestCase
 
         self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionMethodAdapter->getDeclaringClass());
         self::assertSame('DeclaringClass', $reflectionMethodAdapter->getDeclaringClass()->getName());
+    }
+
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getExtensionName')
+            ->willReturn(null);
+
+        $betterReflectionMethod = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertFalse($betterReflectionMethod->getExtensionName());
     }
 
     public function testGetClosureReturnsNullWhenNoObject() : void

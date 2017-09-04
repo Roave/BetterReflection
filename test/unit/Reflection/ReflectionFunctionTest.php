@@ -105,6 +105,8 @@ class ReflectionFunctionTest extends TestCase
         $function  = $reflector->reflect('foo');
 
         self::assertTrue($function->isUserDefined());
+        self::assertFalse($function->isInternal());
+        self::assertNull($function->getExtensionName());
     }
 
     public function testStaticCreationFromName() : void

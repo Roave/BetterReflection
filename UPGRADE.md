@@ -249,3 +249,9 @@ It is advisable to not call these methods directly, as they are likely to change
 in future as well. Instead, please use a
 corresponding `Roave\BetterReflection\Reflector\Reflector` object to
 instantiate them.
+
+### `Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource` constructor changed
+
+In order to aid in detecting the source of a located internal class or function,
+the `Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource` now has
+an additional mandatory `$extensionName` parameter.

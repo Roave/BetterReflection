@@ -9,11 +9,18 @@ namespace Roave\BetterReflection\SourceLocator\Located;
 class InternalLocatedSource extends LocatedSource
 {
     /**
+     * @var string
+     */
+    private $extensionName;
+
+    /**
      * {@inheritDoc}
      */
-    public function __construct(string $source)
+    public function __construct(string $source, string $extensionName)
     {
         parent::__construct($source, null);
+
+        $this->extensionName = $extensionName;
     }
 
     /**
@@ -22,5 +29,10 @@ class InternalLocatedSource extends LocatedSource
     public function isInternal() : bool
     {
         return true;
+    }
+
+    public function getExtensionName() : ?string
+    {
+        return $this->extensionName;
     }
 }

@@ -311,43 +311,21 @@ class ReflectionClass implements Reflection, CoreReflector
             && null !== $this->declaringNamespace->name;
     }
 
+    public function getExtensionName() : ?string
+    {
+        return $this->locatedSource->getExtensionName();
+    }
+
     /**
-     * Construct a flat list of methods that are available. This will search up
-     * all parent classes/traits/interfaces/current scope for methods.
+     * Construct a flat list of all methods from current class, traits,
+     * parent classes and interfaces in this precise order.
      *
      * @return ReflectionMethod[]
      */
-    private function scanMethods() : array
+    private function getAllMethods() : array
     {
-        // merging together methods from interfaces, parent class, traits, current class (in this precise order)
-        /** @var \ReflectionMethod[] $inheritedMethods */
-        $inheritedMethods = \array_merge(
-            \array_merge(
-                [],
-                ...\array_map(
-                    function (ReflectionClass $ancestor) : array {
-                        return $ancestor->getMethods();
-                    },
-                    \array_values(\array_merge(
-                        $this->getInterfaces(),
-                        \array_filter([$this->getParentClass()])
-                    ))
-                ),
-                ...\array_map(
-                    function (ReflectionClass $trait) : array {
-                        return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
-                            return ReflectionMethod::createFromNode(
-                                $this->reflector,
-                                $method->getAst(),
-                                $this->declaringNamespace,
-                                $trait,
-                                $this
-                            );
-                        }, $trait->getMethods());
-                    },
-                    $this->getTraits()
-                )
-            ),
+        return \array_merge(
+            [],
             \array_map(
                 function (ClassMethod $methodNode) : ReflectionMethod {
                     return ReflectionMethod::createFromNode(
@@ -359,25 +337,56 @@ class ReflectionClass implements Reflection, CoreReflector
                     );
                 },
                 $this->node->getMethods()
+            ),
+            ...\array_map(
+                function (ReflectionClass $trait) : array {
+                    return \array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
+                        return ReflectionMethod::createFromNode(
+                            $this->reflector,
+                            $method->getAst(),
+                            $this->declaringNamespace,
+                            $trait,
+                            $this
+                        );
+                    }, $trait->getMethods());
+                },
+                $this->getTraits()
+            ),
+            ...\array_map(
+                function (ReflectionClass $ancestor) : array {
+                    return $ancestor->getMethods();
+                },
+                \array_values(\array_merge(
+                    \array_filter([$this->getParentClass()]),
+                    $this->getInterfaces()
+                ))
             )
         );
-
-        $methodsByName = [];
-
-        foreach ($inheritedMethods as $inheritedMethod) {
-            $methodsByName[$inheritedMethod->getName()] = $inheritedMethod;
-        }
-
-        return $methodsByName;
     }
 
     /**
+     * Construct a flat list of methods that are available. This will search up
+     * all parent classes/traits/interfaces/current scope for methods.
+     *
+     * Methods are not merged via their name as array index, since internal PHP method
+     * sorting does not follow `\array_merge()` semantics.
+     *
      * @return ReflectionMethod[] indexed by method name
      */
     private function getMethodsIndexedByName() : array
     {
-        if (null === $this->cachedMethods) {
-            $this->cachedMethods = $this->scanMethods();
+        if (null !== $this->cachedMethods) {
+            return $this->cachedMethods;
+        }
+
+        $this->cachedMethods = [];
+
+        foreach ($this->getAllMethods() as $method) {
+            $methodName = $method->getName();
+
+            if ( ! isset($this->cachedMethods[$methodName])) {
+                $this->cachedMethods[$methodName] = $method;
+            }
         }
 
         return $this->cachedMethods;

@@ -473,7 +473,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getExtensionName()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionObject->getExtensionName() ?? false;
     }
 
     /**
