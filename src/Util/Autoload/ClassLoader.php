@@ -56,9 +56,9 @@ final class ClassLoader
 
         $this->loaderMethod->__invoke($this->reflections[$classToLoad]);
 
-        if ( ! \class_exists($classToLoad, false)
-            && ! \interface_exists($classToLoad, false)
-            && ! \trait_exists($classToLoad, false)) {
+        if ( ! (\class_exists($classToLoad, false)
+            || \interface_exists($classToLoad, false)
+            || \trait_exists($classToLoad, false))) {
             throw Exception\FailedToLoadClass::fromClassName($classToLoad);
         }
 
