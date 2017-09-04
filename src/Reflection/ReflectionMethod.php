@@ -79,23 +79,23 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getPrototype() : self
     {
-        $i = $this->getDeclaringClass();
+        $currentClass = $this->getDeclaringClass();
 
-        while ($i) {
-            foreach ($i->getImmediateInterfaces() as $interface) {
+        while ($currentClass) {
+            foreach ($currentClass->getImmediateInterfaces() as $interface) {
                 if ($interface->hasMethod($this->getName())) {
                     return $interface->getMethod($this->getName());
                 }
             }
 
-            $i = $i->getParentClass();
+            $currentClass = $currentClass->getParentClass();
 
-            if (null === $i) {
+            if (null === $currentClass) {
                 continue;
             }
 
-            if ($i->hasMethod($this->getName())) {
-                $method = $i->getMethod($this->getName());
+            if ($currentClass->hasMethod($this->getName())) {
+                $method = $currentClass->getMethod($this->getName());
 
                 if ($method->isAbstract()) {
                     return $method;
