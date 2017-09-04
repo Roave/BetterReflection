@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
-use LogicException;
 use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
@@ -258,12 +257,6 @@ class ReflectionObjectTest extends TestCase
         // ensure that the method of the same name gets called on the
         // $mockReflectionClass mock (as we expect $methodName to be called)
         $reflectionObject->{$methodName}(...$fakeParams);
-    }
-
-    public function testCreateFromNameThrowsException() : void
-    {
-        $this->expectException(LogicException::class);
-        ReflectionObject::createFromName('foo');
     }
 
     public function testReflectionObjectExportMatchesExpectation() : void

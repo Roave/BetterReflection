@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use InvalidArgumentException;
-use LogicException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_;
@@ -62,16 +61,6 @@ class ReflectionObject extends ReflectionClass
         }
 
         return self::createFromInstance($instance)->__toString();
-    }
-
-    /**
-     * Cannot instantiate this way, use ReflectionObject::createFromInstance
-     *
-     * @throws \LogicException
-     */
-    public static function createFromName(string $className) : ReflectionClass
-    {
-        throw new LogicException('Cannot create a ReflectionObject from name - use ReflectionObject::createFromInstance');
     }
 
     /**
