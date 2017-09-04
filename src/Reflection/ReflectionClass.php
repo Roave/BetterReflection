@@ -317,18 +317,14 @@ class ReflectionClass implements Reflection, CoreReflector
     }
 
     /**
-     * Construct a flat list of methods that are available. This will search up
-     * all parent classes/traits/interfaces/current scope for methods.
+     * Construct a flat list of all methods from current class, traits,
+     * parent classes and interfaces in this precise order.
      *
      * @return ReflectionMethod[]
      */
-    private function scanMethods() : array
+    private function getAllMethods() : array
     {
-        // Note: methods are not merged via their name as array index, since internal PHP method
-        //       sorting does not follow `\array_merge()` semantics
-        // Note: merging methods from current class, traits, parent class, interfaces in this precise order
-        /** @var ReflectionMethod[] $allMethods */
-        $allMethods = \array_merge(
+        return \array_merge(
             [],
             \array_map(
                 function (ClassMethod $methodNode) : ReflectionMethod {
@@ -366,27 +362,31 @@ class ReflectionClass implements Reflection, CoreReflector
                 ))
             )
         );
-
-        $methods = [];
-
-        foreach ($allMethods as $method) {
-            $methodName = $method->getName();
-
-            if ( ! isset($methods[$methodName])) {
-                $methods[$methodName] = $method;
-            }
-        }
-
-        return $methods;
     }
 
     /**
+     * Construct a flat list of methods that are available. This will search up
+     * all parent classes/traits/interfaces/current scope for methods.
+     *
+     * Methods are not merged via their name as array index, since internal PHP method
+     * sorting does not follow `\array_merge()` semantics.
+     *
      * @return ReflectionMethod[] indexed by method name
      */
     private function getMethodsIndexedByName() : array
     {
-        if (null === $this->cachedMethods) {
-            $this->cachedMethods = $this->scanMethods();
+        if (null !== $this->cachedMethods) {
+            return $this->cachedMethods;
+        }
+
+        $this->cachedMethods = [];
+
+        foreach ($this->getAllMethods() as $method) {
+            $methodName = $method->getName();
+
+            if ( ! isset($this->cachedMethods[$methodName])) {
+                $this->cachedMethods[$methodName] = $method;
+            }
         }
 
         return $this->cachedMethods;
