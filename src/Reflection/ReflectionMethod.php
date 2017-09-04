@@ -106,26 +106,14 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
             $currentClass = $currentClass->getParentClass();
 
-            if (null === $currentClass) {
-                continue;
+            if (null === $currentClass || ! $currentClass->hasMethod($this->getName())) {
+                break;
             }
 
-            if ($currentClass->hasMethod($this->getName())) {
-                $method = $currentClass->getMethod($this->getName());
+            $prototype = $currentClass->getMethod($this->getName())->findPrototype();
 
-                if ($method->isAbstract()) {
-                    return $method;
-                }
-
-                if ($method->isPrivate()) {
-                    break;
-                }
-
-                try {
-                    return $method->getPrototype();
-                } catch (Exception\MethodPrototypeNotFound $e) {
-                    return $method;
-                }
+            if (null !== $prototype) {
+                return $prototype;
             }
         }
 
@@ -134,6 +122,23 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             $this->getDeclaringClass()->getName(),
             $this->getName()
         ));
+    }
+
+    private function findPrototype() : ?self
+    {
+        if ($this->isAbstract()) {
+            return $this;
+        }
+
+        if ($this->isPrivate()) {
+            return null;
+        }
+
+        try {
+            return $this->getPrototype();
+        } catch (Exception\MethodPrototypeNotFound $e) {
+            return $this;
+        }
     }
 
     /**
