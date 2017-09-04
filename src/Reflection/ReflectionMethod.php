@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Closure;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Namespace_;
 use ReflectionMethod as CoreReflectionMethod;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflector\Reflector;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
@@ -290,5 +295,72 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function getImplementingClass() : ReflectionClass
     {
         return $this->implementingClass;
+    }
+
+    /**
+     * @param object|null $object
+     *
+     * @return \Closure
+     *
+     * @throws ClassDoesNotExist
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    public function getClosure($object = null) : Closure
+    {
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        if ($this->isStatic()) {
+            $this->assertClassExist($declaringClassName);
+
+            return function (...$args) use ($declaringClassName) {
+                return Closure::bind(function (string $declaringClassName, string $methodName, array $methodArgs) {
+                    return $declaringClassName::{$methodName}(...$methodArgs);
+                }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), $args);
+            };
+        }
+
+        $this->assertObject($object);
+
+        return function (...$args) use ($declaringClassName, $object) {
+            return Closure::bind(function ($object, string $methodName, array $methodArgs) {
+                return $object->{$methodName}(...$methodArgs);
+            }, $object, $declaringClassName)->__invoke($object, $this->getName(), $args);
+        };
+    }
+
+    /**
+     * @throws ClassDoesNotExist
+     */
+    private function assertClassExist(string $className) : void
+    {
+        if ( ! \class_exists($className, false)) {
+            throw new ClassDoesNotExist(\sprintf('Method of class %s cannot be used as the class is not loaded', $className));
+        }
+    }
+
+    /**
+     * @param object $object
+     *
+     * @throws NoObjectProvided
+     * @throws NotAnObject
+     * @throws ObjectNotInstanceOfClass
+     */
+    private function assertObject($object) : void
+    {
+        if (null === $object) {
+            throw NoObjectProvided::create();
+        }
+
+        if ( ! \is_object($object)) {
+            throw NotAnObject::fromNonObject($object);
+        }
+
+        $declaringClassName = $this->getDeclaringClass()->getName();
+
+        if (\get_class($object) !== $declaringClassName) {
+            throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
+        }
     }
 }

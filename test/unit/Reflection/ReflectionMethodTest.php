@@ -5,6 +5,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use A\Foo;
 use ClassWithMethodsAndTraitMethods;
+use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
@@ -13,7 +14,11 @@ use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -23,11 +28,14 @@ use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\ClassWithNonStaticMethod;
+use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
+use stdClass;
 use TraitWithMethod;
 
 /**
@@ -406,5 +414,85 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
         self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+    }
+
+    public function testGetClosureOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    public static function boo()
+    {
+    }
+}
+PHP;
+
+        $this->expectException(ClassDoesNotExist::class);
+
+        $classReflection  = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $methodReflection = $classReflection->getMethod('boo');
+
+        $methodReflection->getClosure();
+    }
+
+    public function testGetClosureOfStaticMethod() : void
+    {
+        $classWithStaticMethodFile = __DIR__ . '/../Fixture/ClassWithStaticMethod.php';
+        require_once $classWithStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithStaticMethodFile, $this->astLocator)))->reflect(ClassWithStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $closure = $methodReflection->getClosure();
+
+        self::assertInstanceOf(Closure::class, $closure);
+        self::assertSame(3, $closure(1, 2));
+    }
+
+    public function testGetClosureOfObjectMethodThrowsExceptionWhenNoObject() : void
+    {
+        $this->expectException(NoObjectProvided::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->getClosure(null);
+    }
+
+    public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
+    {
+        $this->expectException(NotAnObject::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->getClosure(123);
+    }
+
+    public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $methodReflection->getClosure(new stdClass());
+    }
+
+    public function testGetClosureOfObjectMethod() : void
+    {
+        $classWithNonStaticMethodFile = __DIR__ . '/../Fixture/ClassWithNonStaticMethod.php';
+        require_once $classWithNonStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithNonStaticMethodFile, $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        $object = new ClassWithNonStaticMethod();
+
+        $closure = $methodReflection->getClosure($object);
+
+        self::assertInstanceOf(Closure::class, $closure);
+        self::assertSame(103, $closure(1, 2));
     }
 }

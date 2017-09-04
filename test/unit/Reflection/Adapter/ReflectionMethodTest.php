@@ -6,10 +6,14 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
+use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
@@ -46,6 +50,9 @@ class ReflectionMethodTest extends TestCase
         $mockMethod = $this->createMock(BetterReflectionMethod::class);
 
         $mockType = $this->createMock(BetterReflectionType::class);
+
+        $closure = function () : void {
+        };
 
         return [
             // Inherited
@@ -84,7 +91,7 @@ class ReflectionMethodTest extends TestCase
             ['isStatic', null, true, []],
             ['isConstructor', null, true, []],
             ['isDestructor', null, true, []],
-            ['getClosure', NotImplemented::class, null, [new stdClass()]],
+            ['getClosure', null, $closure, []],
             ['getModifiers', null, 123, []],
             ['invoke', NotImplemented::class, null, [new stdClass(), '']],
             ['invokeArgs', NotImplemented::class, null, [new stdClass(), []]],
@@ -167,5 +174,42 @@ class ReflectionMethodTest extends TestCase
 
         self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionMethodAdapter->getDeclaringClass());
         self::assertSame('DeclaringClass', $reflectionMethodAdapter->getDeclaringClass()->getName());
+    }
+
+    public function testGetClosureReturnsNullWhenNoObject() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getClosure')
+            ->willThrowException(NoObjectProvided::create());
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertNull($reflectionMethodAdapter->getClosure());
+    }
+
+    public function testGetClosureReturnsNullWhenNotAnObject() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getClosure')
+            ->willThrowException(NotAnObject::fromNonObject('string'));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->assertNull($reflectionMethodAdapter->getClosure('string'));
+    }
+
+    public function testGetClosureThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getClosure')
+            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionMethodAdapter->getClosure(new stdClass());
     }
 }

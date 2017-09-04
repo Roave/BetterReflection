@@ -85,7 +85,7 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getClosure | :heavy_check_mark: Yes |
 | getDeclaringClass | :heavy_check_mark: Yes |
 | getModifiers | :heavy_check_mark: Yes |
 | getPrototype | :heavy_check_mark: Yes |
