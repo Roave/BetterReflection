@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\NodeCompiler;
 
 use PhpParser\Node;
+use ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\FileHelper;
 
@@ -159,7 +160,7 @@ class CompileNodeToValue
         $evaluators = self::loadEvaluators();
         $nodeClass  = \get_class($node);
 
-        if (! isset($evaluators[$nodeClass])) {
+        if ( ! isset($evaluators[$nodeClass])) {
             throw new Exception\UnableToCompileNode(\sprintf(
                 'Unable to compile binary operator: %s',
                 $nodeClass
@@ -212,7 +213,7 @@ class CompileNodeToValue
             \array_map(function (callable $nodeEvaluator) : string {
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 /** @noinspection NullPointerExceptionInspection */
-                return (new \ReflectionFunction($nodeEvaluator))->getParameters()[0]->getType()->getName();
+                return (new ReflectionFunction($nodeEvaluator))->getParameters()[0]->getType()->getName();
             }, $evaluators),
             $evaluators
         );
