@@ -348,10 +348,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             };
         }
 
-        $this->assertObject($object);
+        $instance = $this->assertObject($object);
 
-        return function (...$args) use ($object) {
-            return $this->callObjectMethod($object, $args);
+        return function (...$args) use ($instance) {
+            return $this->callObjectMethod($instance, $args);
         };
     }
 
@@ -392,9 +392,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             return $this->callStaticMethod($args);
         }
 
-        $this->assertObject($object);
-
-        return $this->callObjectMethod($object, $args);
+        return $this->callObjectMethod($this->assertObject($object), $args);
     }
 
     /**
@@ -435,13 +433,15 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * @param object $object
+     * @param mixed $object
      *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
+     *
+     * @return object
      */
-    private function assertObject($object) : void
+    private function assertObject($object)
     {
         if (null === $object) {
             throw NoObjectProvided::create();
@@ -456,5 +456,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         if (\get_class($object) !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
+
+        return $object;
     }
 }
