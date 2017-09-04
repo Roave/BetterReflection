@@ -5,7 +5,6 @@ namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
-use PhpParser\Node\Expr\BinaryOp\Spaceship;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Name;
@@ -151,6 +150,9 @@ class CompileNodeToValueTest extends TestCase
             ['3 <= 2', false],
             ['PHP_INT_MAX', \PHP_INT_MAX],
             ['PHP_EOL', \PHP_EOL],
+            ['1 <=> 4', -1],
+            ['4 <=> 1', 1],
+            ['1 <=> 1', 0],
         ];
     }
 
@@ -180,13 +182,6 @@ class CompileNodeToValueTest extends TestCase
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage('Unable to compile binary operator');
         (new CompileNodeToValue())->__invoke(new Coalesce(new LNumber(5), new LNumber(3)), $this->getDummyContext());
-    }
-
-    public function testExceptionThrownWhenSpaceshipOperatorUsed() : void
-    {
-        $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Unable to compile binary operator');
-        (new CompileNodeToValue())->__invoke(new Spaceship(new LNumber(5), new LNumber(3)), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenUndefinedConstUsed() : void
