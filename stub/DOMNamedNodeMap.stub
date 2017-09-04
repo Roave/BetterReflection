@@ -1,4 +1,4 @@
-class DOMNamedNodeMap implements Traversable
+class DOMNamedNodeMap implements Traversable, Countable
 {
 
     public function getNamedItem($name)
@@ -29,5 +29,7 @@ class DOMNamedNodeMap implements Traversable
     {
     }
 
-
+    public function count()
+    {
+    }
 }

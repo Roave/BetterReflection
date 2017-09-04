@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use DOMNamedNodeMap;
 use IntlChar;
 use IntlGregorianCalendar;
 use PHPUnit\Framework\TestCase;
@@ -225,6 +226,10 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed) : void
     {
+        if (\PHP_VERSION_ID < 70200 && DOMNamedNodeMap::class === $original->getName()) {
+            self::markTestSkipped(\sprintf('"%s" changed between PHP 7.1 and PHP 7.2', DOMNamedNodeMap::class));
+        }
+
         $originalInterfacesNames = $original->getInterfaceNames();
         $stubbedInterfacesNames  = $stubbed->getInterfaceNames();
 
