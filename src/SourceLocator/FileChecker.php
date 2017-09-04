@@ -19,15 +19,15 @@ class FileChecker
         }
 
         if ( ! \file_exists($filename)) {
-            throw new InvalidFileLocation('File does not exist');
+            throw new InvalidFileLocation(\sprintf('File "%s" does not exist', $filename));
         }
 
         if ( ! \is_readable($filename)) {
-            throw new InvalidFileLocation('File is not readable');
+            throw new InvalidFileLocation(\sprintf('File "%s" is not readable', $filename));
         }
 
         if ( ! \is_file($filename)) {
-            throw new InvalidFileLocation('Is not a file: ' . $filename);
+            throw new InvalidFileLocation(\sprintf('"%s" is not a file', $filename));
         }
     }
 }

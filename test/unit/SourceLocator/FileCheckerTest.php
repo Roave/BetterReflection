@@ -23,14 +23,14 @@ class FileCheckerTest extends TestCase
     public function testCheckFileThrowsExceptionIfFileDoesNotExist() : void
     {
         $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('File does not exist');
+        $this->expectExceptionMessage('File "sdklfjdfslsdfhlkjsdglkjsdflgkj" does not exist');
         FileChecker::assertReadableFile('sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
     public function testCheckFileThrowsExceptionIfFileIsNotAFile() : void
     {
         $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('Is not a file');
+        $this->expectExceptionMessage('"' . __DIR__ . '" is not a file');
         FileChecker::assertReadableFile(__DIR__);
     }
 
@@ -46,7 +46,7 @@ class FileCheckerTest extends TestCase
         \chmod($file, 0000);
 
         $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('File is not readable');
+        $this->expectExceptionMessage(\sprintf('File "%s" is not readable', $file));
 
         try {
             FileChecker::assertReadableFile($file);
