@@ -9,14 +9,11 @@ use ExtendedClassWithMethodsAndTraitMethods;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
 use phpDocumentor\Reflection\Types\Integer;
-use PhpParser\Node\Stmt\Function_;
 use PHPUnit\Framework\TestCase;
 use Reflection;
-use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -30,7 +27,6 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
-use RuntimeException;
 use SplDoublyLinkedList;
 use TraitWithMethod;
 
@@ -332,21 +328,6 @@ class ReflectionMethodTest extends TestCase
         $b = $reflector->reflect($class)->getMethod($method)->getPrototype();
         self::assertInstanceOf(ReflectionMethod::class, $b);
         self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
-    }
-
-    public function testGetMethodNodeFailsWhenNodeIsNotClassMethod() : void
-    {
-        $classInfo = $this->reflector->reflect(Methods::class);
-        $method    = $classInfo->getMethod('publicMethod');
-
-        $methodReflection = new ReflectionClass(ReflectionFunctionAbstract::class);
-        $methodNodeProp   = $methodReflection->getProperty('node');
-        $methodNodeProp->setAccessible(true);
-        $methodNodeProp->setValue($method, new Function_('foo'));
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Expected a ClassMethod node');
-        $method->isPublic();
     }
 
     public function methodStringRepresentations() : array

@@ -47,7 +47,10 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
     public function __construct($anonymousClassObject, Parser $parser)
     {
         if ( ! \is_object($anonymousClassObject)) {
-            throw new InvalidArgumentException('Can only create from an instance of an object');
+            throw new InvalidArgumentException(\sprintf(
+                'Can only create from an instance of an object, "%s" given',
+                \gettype($anonymousClassObject)
+            ));
         }
 
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);

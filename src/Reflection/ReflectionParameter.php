@@ -554,7 +554,11 @@ class ReflectionParameter implements CoreReflector
         }
 
         if ( ! $this->reflector instanceof ClassReflector) {
-            throw new RuntimeException('Unable to reflect class type because we were not given a ClassReflector');
+            throw new RuntimeException(\sprintf(
+                'Unable to reflect class type because we were not given a "%s", but a "%s" instead',
+                ClassReflector::class,
+                \get_class($this->reflector)
+            ));
         }
 
         return $this->reflector->reflect($className);

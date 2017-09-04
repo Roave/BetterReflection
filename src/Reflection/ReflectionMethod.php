@@ -7,7 +7,6 @@ use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Namespace_;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflector\Reflector;
-use RuntimeException;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
@@ -22,11 +21,18 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     private $implementingClass;
 
     /**
-     * @param Reflector $reflector
-     * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @var MethodNode
+     */
+    private $methodNode;
+
+    /**
+     * @param Reflector       $reflector
+     * @param MethodNode      $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param Namespace_|null $namespace
      * @param ReflectionClass $declaringClass
      * @param ReflectionClass $implementingClass
+     *
+     * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -38,6 +44,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         $method                    = new self();
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
+        $method->methodNode        = $node;
 
         $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
 
@@ -51,6 +58,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param string $methodName
      *
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \OutOfBoundsException
      */
     public static function createFromName(string $className, string $methodName) : self
     {
@@ -64,6 +72,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param string $methodName
      *
      * @throws \InvalidArgumentException
+     * @throws \ReflectionException
+     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \OutOfBoundsException
      */
     public static function createFromInstance($instance, string $methodName) : self
     {
@@ -169,20 +180,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return 'public';
     }
 
-    /**
-     * Get the method node (ensuring it is a ClassMethod node)
-     *
-     * @throws \RuntimeException
-     * @return MethodNode
-     */
-    private function getMethodNode() : MethodNode
-    {
-        if ( ! ($this->getNode() instanceof MethodNode)) {
-            throw new RuntimeException('Expected a ClassMethod node');
-        }
-        return $this->getNode();
-    }
-
     public function inNamespace() : bool
     {
         return false;
@@ -195,7 +192,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isAbstract() : bool
     {
-        return $this->getMethodNode()->isAbstract();
+        return $this->methodNode->isAbstract();
     }
 
     /**
@@ -205,7 +202,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isFinal() : bool
     {
-        return $this->getMethodNode()->isFinal();
+        return $this->methodNode->isFinal();
     }
 
     /**
@@ -215,7 +212,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isPrivate() : bool
     {
-        return $this->getMethodNode()->isPrivate();
+        return $this->methodNode->isPrivate();
     }
 
     /**
@@ -225,7 +222,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isProtected() : bool
     {
-        return $this->getMethodNode()->isProtected();
+        return $this->methodNode->isProtected();
     }
 
     /**
@@ -235,7 +232,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isPublic() : bool
     {
-        return $this->getMethodNode()->isPublic();
+        return $this->methodNode->isPublic();
     }
 
     /**
@@ -245,7 +242,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isStatic() : bool
     {
-        return $this->getMethodNode()->isStatic();
+        return $this->methodNode->isStatic();
     }
 
     /**

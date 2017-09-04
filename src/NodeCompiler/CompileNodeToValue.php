@@ -4,18 +4,26 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\NodeCompiler;
 
 use PhpParser\Node;
+use ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\FileHelper;
 
 class CompileNodeToValue
 {
     /**
+     * @var callable[]|null indexed by supported expression node class name
+     */
+    private static $nodeEvaluators;
+
+    /**
      * Compile an expression from a node into a value.
      *
-     * @param Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Node            $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param CompilerContext $context
+     *
      * @return mixed
-     * @throw Exception\UnableToCompileNode
+     *
+     * @throws Exception\UnableToCompileNode
      */
     public function __invoke(Node $node, CompilerContext $context)
     {
@@ -143,112 +151,26 @@ class CompileNodeToValue
      * Compile a binary operator node
      *
      * @param Node\Expr\BinaryOp $node
-     * @param CompilerContext $context
+     * @param CompilerContext    $context
+     *
      * @return mixed
+     *
+     * @throws \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
      */
     private function compileBinaryOperator(Node\Expr\BinaryOp $node, CompilerContext $context)
     {
-        if ($node instanceof Node\Expr\BinaryOp\Plus) {
-            return $this($node->left, $context) + $this($node->right, $context);
+        $evaluators = self::loadEvaluators();
+        $nodeClass  = \get_class($node);
+
+        if ( ! isset($evaluators[$nodeClass])) {
+            throw new Exception\UnableToCompileNode(\sprintf(
+                'Unable to compile binary operator: %s',
+                $nodeClass
+            ));
         }
 
-        if ($node instanceof Node\Expr\BinaryOp\Mul) {
-            return $this($node->left, $context) * $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Minus) {
-            return $this($node->left, $context) - $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Div) {
-            return $this($node->left, $context) / $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Concat) {
-            return $this($node->left, $context) . $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\BooleanAnd) {
-            return $this($node->left, $context) && $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\BooleanOr) {
-            return $this($node->left, $context) || $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\BitwiseAnd) {
-            return $this($node->left, $context) & $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\BitwiseOr) {
-            return $this($node->left, $context) | $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\BitwiseXor) {
-            return $this($node->left, $context) ^ $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Equal) {
-            return $this($node->left, $context) == $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Greater) {
-            return $this($node->left, $context) > $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\GreaterOrEqual) {
-            return $this($node->left, $context) >= $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Identical) {
-            return $this($node->left, $context) === $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\LogicalAnd) {
-            return $this($node->left, $context) and $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\LogicalOr) {
-            return $this($node->left, $context) or $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\LogicalXor) {
-            return $this($node->left, $context) xor $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Mod) {
-            return $this($node->left, $context) % $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\NotEqual) {
-            return $this($node->left, $context) != $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\NotIdentical) {
-            return $this($node->left, $context) !== $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Pow) {
-            return $this($node->left, $context) ** $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\ShiftLeft) {
-            return $this($node->left, $context) << $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\ShiftRight) {
-            return $this($node->left, $context) >> $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\Smaller) {
-            return $this($node->left, $context) < $this($node->right, $context);
-        }
-
-        if ($node instanceof Node\Expr\BinaryOp\SmallerOrEqual) {
-            return $this($node->left, $context) <= $this($node->right, $context);
-        }
-
-        throw new Exception\UnableToCompileNode('Unable to compile binary operator: ' . \get_class($node));
+        // Welcome to method overloading implemented PHP-style. Yay?
+        return $evaluators[$nodeClass]($node, $context, $this);
     }
 
     /**
@@ -276,5 +198,115 @@ class CompileNodeToValue
         $parentClass = $class->getParentClass();
 
         return $parentClass ? $this->getConstantDeclaringClass($constantName, $parentClass) : null;
+    }
+
+    /**
+     * @return callable[] indexed by node class name
+     */
+    private static function loadEvaluators() : array
+    {
+        if (self::$nodeEvaluators) {
+            return self::$nodeEvaluators;
+        }
+
+        $evaluators = self::makeEvaluators();
+
+        return self::$nodeEvaluators = \array_combine(
+            \array_map(function (callable $nodeEvaluator) : string {
+                /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+                /** @noinspection NullPointerExceptionInspection */
+                return (new ReflectionFunction($nodeEvaluator))->getParameters()[0]->getType()->getName();
+            }, $evaluators),
+            $evaluators
+        );
+    }
+
+    /**
+     * @return callable[]
+     */
+    private static function makeEvaluators() : array
+    {
+        return [
+            function (Node\Expr\BinaryOp\Plus $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) + $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Mul $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) * $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Minus $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) - $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Div $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) / $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Concat $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) . $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\BooleanAnd $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) && $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\BooleanOr $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) || $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\BitwiseAnd $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) & $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\BitwiseOr $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) | $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\BitwiseXor $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) ^ $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Equal $node, CompilerContext $context, self $next) {
+                /** @noinspection TypeUnsafeComparisonInspection */
+                return $next($node->left, $context) == $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Greater $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) > $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\GreaterOrEqual $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) >= $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Identical $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) === $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\LogicalAnd $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) and $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\LogicalOr $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) or $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\LogicalXor $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) xor $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Mod $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) % $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\NotEqual $node, CompilerContext $context, self $next) {
+                /** @noinspection TypeUnsafeComparisonInspection */
+                return $next($node->left, $context) != $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\NotIdentical $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) !== $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Pow $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) ** $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\ShiftLeft $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) << $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\ShiftRight $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) >> $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Smaller $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) < $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\SmallerOrEqual $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) <= $next($node->right, $context);
+            },
+            function (Node\Expr\BinaryOp\Spaceship $node, CompilerContext $context, self $next) {
+                return $next($node->left, $context) <=> $next($node->right, $context);
+            },
+        ];
     }
 }
