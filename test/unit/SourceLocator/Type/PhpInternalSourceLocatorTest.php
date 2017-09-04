@@ -22,6 +22,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use ZipArchive;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
@@ -226,8 +227,10 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed) : void
     {
-        if (\PHP_VERSION_ID < 70200 && DOMNamedNodeMap::class === $original->getName()) {
-            self::markTestSkipped(\sprintf('"%s" changed between PHP 7.1 and PHP 7.2', DOMNamedNodeMap::class));
+        $className = $original->getName();
+
+        if (\PHP_VERSION_ID < 70200 && \in_array($className, [DOMNamedNodeMap::class, ZipArchive::class], true)) {
+            self::markTestSkipped(\sprintf('"%s" changed between PHP 7.1 and PHP 7.2', $className));
         }
 
         $originalInterfacesNames = $original->getInterfaceNames();

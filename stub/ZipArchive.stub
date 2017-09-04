@@ -1,4 +1,4 @@
-class ZipArchive
+class ZipArchive implements Countable
 {
 
     const CREATE = 1;
@@ -289,5 +289,7 @@ class ZipArchive
     {
     }
 
-
+    public function count()
+    {
+    }
 }
