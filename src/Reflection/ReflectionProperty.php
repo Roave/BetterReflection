@@ -400,11 +400,11 @@ class ReflectionProperty implements CoreReflector
             }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName());
         }
 
-        $this->assertObject($object);
+        $instance = $this->assertObject($object);
 
-        return Closure::bind(function ($object, string $propertyName) {
-            return $object->{$propertyName};
-        }, $object, $declaringClassName)->__invoke($object, $this->getName());
+        return Closure::bind(function ($instance, string $propertyName) {
+            return $instance->{$propertyName};
+        }, $instance, $declaringClassName)->__invoke($instance, $this->getName());
     }
 
     /**
@@ -431,11 +431,11 @@ class ReflectionProperty implements CoreReflector
             return;
         }
 
-        $this->assertObject($object);
+        $instance = $this->assertObject($object);
 
-        Closure::bind(function ($object, string $propertyName, $value) : void {
-            $object->{$propertyName} = $value;
-        }, $object, $declaringClassName)->__invoke($object, $this->getName(), $value);
+        Closure::bind(function ($instance, string $propertyName, $value) : void {
+            $instance->{$propertyName} = $value;
+        }, $instance, $declaringClassName)->__invoke($instance, $this->getName(), $value);
     }
 
     /**
@@ -449,13 +449,15 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
-     * @param object $object
+     * @param mixed $object
      *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
+     *
+     * @return object
      */
-    private function assertObject($object) : void
+    private function assertObject($object)
     {
         if (null === $object) {
             throw NoObjectProvided::create();
@@ -470,5 +472,7 @@ class ReflectionProperty implements CoreReflector
         if (\get_class($object) !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
+
+        return $object;
     }
 }
