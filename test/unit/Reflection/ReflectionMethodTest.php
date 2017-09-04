@@ -12,6 +12,7 @@ use Php4StyleConstruct;
 use phpDocumentor\Reflection\Types\Integer;
 use PHPUnit\Framework\TestCase;
 use Reflection;
+use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
