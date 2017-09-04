@@ -590,38 +590,6 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    public function defaultValueStringProvider() : array
-    {
-        return [
-            ['123', '123'],
-            ['12.3', '12.3'],
-            ['true', 'true'],
-            ['false', 'false'],
-            ['null', 'NULL'],
-            ['[]', "array (\n)"],
-            ['[1, 2, 3]', "array (\n  0 => 1,\n  1 => 2,\n  2 => 3,\n)"],
-            ['"foo"', "'foo'"],
-        ];
-    }
-
-    /**
-     * @param string $defaultValue
-     * @param string $expectedValue
-     * @dataProvider defaultValueStringProvider
-     * @deprecated
-     */
-    public function testGetDefaultValueAsString(string $defaultValue, string $expectedValue) : void
-    {
-        $content = "<?php function myMethod(\$var = $defaultValue) {}";
-
-        $reflector    = new FunctionReflector(new StringSourceLocator($content, $this->astLocator), $this->reflector);
-        $functionInfo = $reflector->reflect('myMethod');
-        $paramInfo    = $functionInfo->getParameter('var');
-
-        // Must be starts with because PHP (sometimes value is 12.300000000000001)
-        self::assertStringStartsWith($expectedValue, $paramInfo->getDefaultValueAsString());
-    }
-
     public function testGetClassForTypeHintedMethodParameters() : void
     {
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';

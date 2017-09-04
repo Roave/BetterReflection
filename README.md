@@ -19,7 +19,7 @@ features than PHP's built-in [reflection API](http://php.net/manual/en/book.refl
 * Change the body of a function or method to do something different
 * *Moar stuff coming soon!*
 
-Be sure to read more in the [feature documentation](https://github.com/Roave/BetterReflection/tree/master/docs/features.md).
+Be sure to read more in the [feature documentation](docs/features.md).
 
 ## Installation
 
@@ -32,70 +32,33 @@ $ composer require roave/better-reflection
 ## Usage
 
 ```php
-use Roave\BetterReflection\Reflection\ReflectionClass;
+<?php
 
-$classInfo = ReflectionClass::createFromName('Foo\Bar\MyClass');
+use Roave\BetterReflection\BetterReflection;
+
+$classInfo = (new BetterReflection())
+    ->classReflector()
+    ->reflect(\Foo\Bar\MyClass::class);
 ```
 
-## Changes in BR 2.0
+## Documentation
 
- * Changed instantiation of `FindReflectionOnLine` utility from `new FindReflectionOnLine()` to `FindReflectionOnLine::buildDefaultFinder()`. `FindReflectionOnLine` constructor now requires a `SourceLocator` parameter.
- * Minimum PHP 7.1
- * `NotAString` exception class is now gone
- * `Identifier` class requires string for `$name` parameter
- * `CompilerContext` requires second parameter (no longer optional, but still `null`able)
- * `Reflector` now requires a `string` for `$identiferName` parameter
- * Namespace moved to `\Roave\BetterReflection` instead of just `\BetterReflection`
- * `ReflectionParameter#getDefaultValueAsString` is deprecated in favour of using `var_export` directly.
- * `FindTypeFromAst` was removed
- * `ReflectionParameter::getTypeHint()` was removed
- * `ReflectionParameter::setType()` now requires `string` for `$newParameterType` parameter
- * `ReflectionType::getTypeObject()` was removed
- * `ReflectionType::createFromType()` now requires `string` for `$type` parameter
- * `ReflectionFunctionAbstract::setReturnType()` now requires `string` for `$newReturnType` parameter
- * `SourceStubber::__invoke()` now requires `\ReflectionClass` for `$classReflection` parameter
- * `Roave\BetterReflection\Reflector\FunctionReflector::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Ast\Locator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\SourceLocator\Type\StringSourceLocator::__construct` has additional mandatory constructor arguments
- * `Roave\BetterReflection\Util\FindReflectionOnLine::__construct` now has mandatory constructor arguments
- * `Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was dropped, please use the newly
-   introduced `Roave\BetterReflection\BetterReflection#classReflector()` instead
- * `Roave\BetterReflection\Util\FindReflectionOnLine::buildDefaultFinder()` was dropped, please use the newly
-   introduced `Roave\BetterReflection\BetterReflection#findReflectionOnLine()` instead
- * `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` was dropped, all properties are accessible now 
- * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()` has additional mandatory constructor arguments
- * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()` has additional mandatory constructor arguments
- * `Roave\BetterReflection\Reflection\ReflectionProperty::createFromNode()` has additional mandatory constructor arguments
-
-## More documentation
-
-* [Compatibility with core Reflection API](https://github.com/Roave/BetterReflection/tree/master/docs/compatibility.md)
-* [Basic usage instructions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md)
-* [Using types](https://github.com/Roave/BetterReflection/tree/master/docs/types.md)
-* [The features](https://github.com/Roave/BetterReflection/tree/master/docs/features.md)
+* [Compatibility with core Reflection API](docs/compatibility.md)
+* [Basic usage instructions](docs/usage.md)
+* [Using types](docs/types.md)
+* [The features](docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
-* [AST extraction](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
-* [Reflection modification](https://github.com/Roave/BetterReflection/tree/master/docs/reflection-modification.md)
+* [AST extraction](docs/ast-extraction.md)
+* [Reflection modification](docs/reflection-modification.md)
+
+## Upgrading
+
+Please refer to the [Upgrade Documentation](UPGRADE.md) documentation to see
+what is required to upgrade your installed `BetterReflection` version.
 
 ## Limitations
 
 * PHP cannot autoload functions, therefore we cannot statically reflect functions
-* Using `ReflectionClass::createFromName()` makes [some assumptions](https://github.com/Roave/BetterReflection/tree/master/docs/usage.md#basic-reflection). Alternative reflection techniques are possible to overcome this.
-
-## Authors
-
-* [James Titcumb](https://github.com/asgrim)
-* [Marco Pivetta](https://github.com/Ocramius)
-* [Gary Hockin](https://github.com/GeeH)
 
 ## License
 
