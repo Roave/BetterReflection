@@ -90,23 +90,25 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getPrototype() : self
     {
-        $i = $this->getDeclaringClass();
+        $currentClass = $this->getDeclaringClass();
 
-        while ($i) {
-            foreach ($i->getImmediateInterfaces() as $interface) {
+        while ($currentClass) {
+            foreach ($currentClass->getImmediateInterfaces() as $interface) {
                 if ($interface->hasMethod($this->getName())) {
                     return $interface->getMethod($this->getName());
                 }
             }
 
-            $i = $i->getParentClass();
+            $currentClass = $currentClass->getParentClass();
 
-            if (null === $i) {
-                continue;
+            if (null === $currentClass || ! $currentClass->hasMethod($this->getName())) {
+                break;
             }
 
-            if ($i->hasMethod($this->getName()) && $i->getMethod($this->getName())->isAbstract()) {
-                return $i->getMethod($this->getName());
+            $prototype = $currentClass->getMethod($this->getName())->findPrototype();
+
+            if (null !== $prototype) {
+                return $prototype;
             }
         }
 
@@ -115,6 +117,23 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             $this->getDeclaringClass()->getName(),
             $this->getName()
         ));
+    }
+
+    private function findPrototype() : ?self
+    {
+        if ($this->isAbstract()) {
+            return $this;
+        }
+
+        if ($this->isPrivate()) {
+            return null;
+        }
+
+        try {
+            return $this->getPrototype();
+        } catch (Exception\MethodPrototypeNotFound $e) {
+            return $this;
+        }
     }
 
     /**
@@ -290,5 +309,15 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function getImplementingClass() : ReflectionClass
     {
         return $this->implementingClass;
+    }
+
+    public function getExtensionName() : ?string
+    {
+        return $this->getDeclaringClass()->getExtensionName();
+    }
+
+    public function isInternal() : bool
+    {
+        return $this->declaringClass->getLocatedSource()->isInternal();
     }
 }

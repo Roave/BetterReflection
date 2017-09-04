@@ -102,4 +102,16 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     {
         return false;
     }
+
+    /**
+     * Note - we cannot reflect on internal functions (as there is no PHP source
+     * code we can access. This means, at present, we can only EVER return null
+     * from this function.
+
+     * @return string|null
+     */
+    public function getExtensionName() : ?string
+    {
+        return null;
+    }
 }

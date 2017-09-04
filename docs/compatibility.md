@@ -11,6 +11,7 @@
 | getDocComment | :heavy_check_mark: Yes |
 | getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - see ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
+| getExtensionName | :heavy_check_mark: Yes |
 | getFileName | :heavy_check_mark: Yes |
 | getInterfaceNames | :heavy_check_mark: Yes  |
 | getInterfaces | :heavy_check_mark: Yes  |
