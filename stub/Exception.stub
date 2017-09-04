@@ -1,4 +1,5 @@
-class Exception {
+class Exception implements Throwable
+{
     protected $message;
     protected $code;
     protected $file;

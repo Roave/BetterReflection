@@ -212,16 +212,34 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
+    private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    {
+        $originalParentClass = $original->getParentClass();
+        $stubbedParentClass  = $stubbed->getParentClass();
+
+        self::assertSame(
+            $originalParentClass ? $originalParentClass->getName() : null,
+            $stubbedParentClass ? $stubbedParentClass->getName() : null
+        );
+    }
+
+    private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    {
+        $originalInterfacesNames = $original->getInterfaceNames();
+        $stubbedInterfacesNames  = $stubbed->getInterfaceNames();
+
+        \sort($originalInterfacesNames);
+        \sort($stubbedInterfacesNames);
+
+        self::assertSame($originalInterfacesNames, $stubbedInterfacesNames);
+    }
+
     private function assertSameClassAttributes(CoreReflectionClass $original, ReflectionClass $stubbed) : void
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
-        $internalParent     = $original->getParentClass();
-        $betterParent       = $stubbed->getParentClass();
-        $internalParentName = $internalParent ? $internalParent->getName() : null;
-        $betterParentName   = $betterParent ? $betterParent->getName() : null;
-
-        self::assertSame($internalParentName, $betterParentName);
+        $this->assertSameParentClass($original, $stubbed);
+        $this->assertSameInterfaces($original, $stubbed);
 
         $originalMethods = $original->getMethods();
 
