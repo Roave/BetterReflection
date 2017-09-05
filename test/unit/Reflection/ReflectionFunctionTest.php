@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Closure;
 use phpDocumentor\Reflection\Types\Boolean;
 use PHPUnit\Framework\TestCase;
 use Reflector;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -140,7 +143,7 @@ class ReflectionFunctionTest extends TestCase
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\myFunction', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}"],
-            ['Roave\BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ %s/test/unit/Fixture/Functions.php 8 - 9\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
+            ['Roave\BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ %s/test/unit/Fixture/Functions.php 8 - 10\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
         ];
     }
 
@@ -173,5 +176,100 @@ class ReflectionFunctionTest extends TestCase
         self::assertInternalType('array', $types);
         self::assertCount(1, $types);
         self::assertInstanceOf(Boolean::class, $types[0]);
+    }
+
+    public function testGetClosure() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithParams');
+
+        $closure = $functionReflection->getClosure();
+
+        self::assertInstanceOf(Closure::class, $closure);
+        self::assertSame(5, $closure(2, 3));
+    }
+
+    public function testGetClosureThrowsExceptionWhenFunctionIsClosure() : void
+    {
+        $closure = function () : void {
+        };
+
+        $functionReflection = ReflectionFunction::createFromClosure($closure);
+
+        $this->expectException(NotImplemented::class);
+
+        $functionReflection->getClosure();
+    }
+
+    public function testGetClosureThrowsExceptionWhenFunctionDoesNotExist() : void
+    {
+        $php = '<?php function foo() {}';
+
+        $functionReflector  = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $functionReflection = $functionReflector->reflect('foo');
+
+        $this->expectException(FunctionDoesNotExist::class);
+
+        $functionReflection->getClosure();
+    }
+
+    public function testInvoke() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithParams');
+
+        self::assertSame(5, $functionReflection->invoke(2, 3));
+        self::assertSame(10, $functionReflection->invokeArgs([3, 7]));
+    }
+
+    public function testInvokeThrowsExceptionWhenFunctionIsClosure() : void
+    {
+        $closure = function () : void {
+        };
+
+        $functionReflection = ReflectionFunction::createFromClosure($closure);
+
+        $this->expectException(NotImplemented::class);
+
+        $functionReflection->invoke();
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenFunctionIsClosure() : void
+    {
+        $closure = function () : void {
+        };
+
+        $functionReflection = ReflectionFunction::createFromClosure($closure);
+
+        $this->expectException(NotImplemented::class);
+
+        $functionReflection->invokeArgs();
+    }
+
+
+    public function testInvokeThrowsExceptionWhenFunctionDoesNotExist() : void
+    {
+        $php = '<?php function foo() {}';
+
+        $functionReflector  = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $functionReflection = $functionReflector->reflect('foo');
+
+        $this->expectException(FunctionDoesNotExist::class);
+
+        $functionReflection->invoke();
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenFunctionDoesNotExist() : void
+    {
+        $php = '<?php function foo() {}';
+
+        $functionReflector  = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $functionReflection = $functionReflector->reflect('foo');
+
+        $this->expectException(FunctionDoesNotExist::class);
+
+        $functionReflection->invokeArgs();
     }
 }

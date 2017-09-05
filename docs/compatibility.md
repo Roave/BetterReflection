@@ -61,7 +61,7 @@
 | getDocComment | :heavy_check_mark: Yes |
 | getEndLine | :heavy_check_mark: Yes |
 | getExtension | :x: No - see ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
-| getExtensionName | :x: No - see ([#15](https://github.com/Roave/BetterReflection/issues/15)) |
+| getExtensionName | :heavy_check_mark: Yes |
 | getFileName | :heavy_check_mark: Yes |
 | getName | :heavy_check_mark: Yes |
 | getNamespaceName | :heavy_check_mark: Yes |
@@ -130,9 +130,9 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invoke | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invokeArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getClosure | :heavy_check_mark: Not implemented for closures |
+| invoke | :heavy_check_mark: Not implemented for closures |
+| invokeArgs | :heavy_check_mark: Not implemented for closures |
 | isDisabled | :heavy_check_mark: Yes |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 

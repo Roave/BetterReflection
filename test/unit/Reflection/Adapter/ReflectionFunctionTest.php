@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunctionAdapter;
@@ -42,6 +43,9 @@ class ReflectionFunctionTest extends TestCase
 
         $mockType = $this->createMock(BetterReflectionType::class);
 
+        $closure = function () : void {
+        };
+
         return [
             // Inherited
             ['__toString', null, '', []],
@@ -71,10 +75,10 @@ class ReflectionFunctionTest extends TestCase
             ['isVariadic', null, true, []],
 
             // ReflectionFunction
-            ['isDisabled', NotImplemented::class, null, []],
-            ['invoke', NotImplemented::class, null, []],
-            ['invokeArgs', NotImplemented::class, null, [[]]],
-            ['getClosure', NotImplemented::class, null, []],
+            ['isDisabled', null, false, []],
+            ['invoke', null, null, []],
+            ['invokeArgs', null, null, [[]]],
+            ['getClosure', null, $closure, []],
         ];
     }
 
@@ -146,5 +150,43 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertFalse($betterReflectionFunction->getExtensionName());
+    }
+
+    public function testGetClosureReturnsNullWhenError() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getClosure')
+            ->willThrowException(new Exception());
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        $this->assertNull($betterReflectionFunction->getClosure());
+    }
+
+    public function testInvokeThrowsExceptionWhenError() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('invoke')
+            ->willThrowException(new Exception());
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        $this->expectException(CoreReflectionException::class);
+        $betterReflectionFunction->invoke();
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenError() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('invokeArgs')
+            ->willThrowException(new Exception());
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        $this->expectException(CoreReflectionException::class);
+        $betterReflectionFunction->invokeArgs([]);
     }
 }
