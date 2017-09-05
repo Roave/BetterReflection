@@ -7,6 +7,8 @@ use Closure;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -113,5 +115,28 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     public function getExtensionName() : ?string
     {
         return null;
+    }
+
+    /**
+     * @return Closure
+     *
+     * @throws NotImplemented
+     * @throws FunctionDoesNotExist
+     */
+    public function getClosure() : Closure
+    {
+        if ($this->isClosure()) {
+            throw new NotImplemented('Not implemented for closures');
+        }
+
+        $functionName = $this->getName();
+
+        if ( ! \function_exists($functionName)) {
+            throw FunctionDoesNotExist::fromName($functionName);
+        }
+
+        return function (...$args) use ($functionName) {
+            return $functionName(...$args);
+        };
     }
 }

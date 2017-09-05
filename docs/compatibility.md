@@ -130,7 +130,7 @@
 
 | Method | Supported |
 |--------|-----------|
-| getClosure | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| getClosure | :heavy_check_mark: Not implemented for closures |
 | invoke | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | invokeArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | isDisabled | :heavy_check_mark: Yes |

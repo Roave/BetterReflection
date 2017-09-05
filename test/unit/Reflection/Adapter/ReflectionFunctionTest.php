@@ -42,6 +42,9 @@ class ReflectionFunctionTest extends TestCase
 
         $mockType = $this->createMock(BetterReflectionType::class);
 
+        $closure = function () : void {
+        };
+
         return [
             // Inherited
             ['__toString', null, '', []],
@@ -74,7 +77,7 @@ class ReflectionFunctionTest extends TestCase
             ['isDisabled', NotImplemented::class, null, []],
             ['invoke', NotImplemented::class, null, []],
             ['invokeArgs', NotImplemented::class, null, [[]]],
-            ['getClosure', NotImplemented::class, null, []],
+            ['getClosure', null, $closure, []],
         ];
     }
 
@@ -146,5 +149,17 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertFalse($betterReflectionFunction->getExtensionName());
+    }
+
+    public function testGetClosureReturnsNullWhenError() : void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getClosure')
+            ->willThrowException(new Exception());
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        $this->assertNull($betterReflectionFunction->getClosure());
     }
 }

@@ -5,6 +5,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Throwable;
 
 class ReflectionFunction extends CoreReflectionFunction
 {
@@ -261,6 +262,10 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getClosure()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        try {
+            return $this->betterReflectionFunction->getClosure();
+        } catch (Throwable $e) {
+            return null;
+        }
     }
 }
