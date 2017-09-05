@@ -111,6 +111,7 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
+     * @internal
      * @param Reflector       $reflector
      * @param PropertyNode    $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param Namespace_      $declaringNamespace

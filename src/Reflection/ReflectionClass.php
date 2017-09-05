@@ -222,6 +222,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Create from a Class Node.
      *
+     * @internal
      * @param Reflector          $reflector
      * @param ClassLikeNode      $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param LocatedSource      $locatedSource

@@ -31,6 +31,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     private $methodNode;
 
     /**
+     * @internal
      * @param Reflector       $reflector
      * @param MethodNode      $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param Namespace_|null $namespace

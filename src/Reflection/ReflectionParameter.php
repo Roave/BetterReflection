@@ -193,6 +193,7 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
+     * @internal
      * @param Reflector                  $reflector
      * @param ParamNode                  $node               Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param Namespace_|null            $declaringNamespace namespace of the declaring function/method
