@@ -75,7 +75,7 @@ class ReflectionFunctionTest extends TestCase
             ['isVariadic', null, true, []],
 
             // ReflectionFunction
-            ['isDisabled', NotImplemented::class, null, []],
+            ['isDisabled', null, false, []],
             ['invoke', null, null, []],
             ['invokeArgs', null, null, [[]]],
             ['getClosure', null, $closure, []],

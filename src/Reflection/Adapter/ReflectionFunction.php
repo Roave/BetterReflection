@@ -239,7 +239,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function isDisabled()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionFunction->isDisabled();
     }
 
     /**
