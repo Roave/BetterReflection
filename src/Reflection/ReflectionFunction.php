@@ -69,6 +69,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
+     * @internal
      * @param Reflector $reflector
      * @param FunctionNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param LocatedSource $locatedSource
