@@ -125,18 +125,68 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public function getClosure() : Closure
     {
-        if ($this->isClosure()) {
-            throw new NotImplemented('Not implemented for closures');
-        }
+        $this->assertIsNoClosure();
 
         $functionName = $this->getName();
 
-        if ( ! \function_exists($functionName)) {
-            throw FunctionDoesNotExist::fromName($functionName);
-        }
+        $this->assertFunctionExist($functionName);
 
         return function (...$args) use ($functionName) {
             return $functionName(...$args);
         };
+    }
+
+    /**
+     * @param mixed ...$args
+     *
+     * @return mixed
+     *
+     * @throws NotImplemented
+     * @throws FunctionDoesNotExist
+     */
+    public function invoke(...$args)
+    {
+        return $this->invokeArgs($args);
+    }
+
+    /**
+     * @param mixed[] $args
+     *
+     * @return mixed
+     *
+     * @throws NotImplemented
+     * @throws FunctionDoesNotExist
+     */
+    public function invokeArgs(array $args = [])
+    {
+        $this->assertIsNoClosure();
+
+        $functionName = $this->getName();
+
+        $this->assertFunctionExist($functionName);
+
+        return $functionName(...$args);
+    }
+
+    /**
+     * @throws NotImplemented
+     */
+    private function assertIsNoClosure() : void
+    {
+        if ($this->isClosure()) {
+            throw new NotImplemented('Not implemented for closures');
+        }
+    }
+
+    /**
+     * @param string $functionName
+     *
+     * @throws FunctionDoesNotExist
+     */
+    private function assertFunctionExist(string $functionName) : void
+    {
+        if ( ! \function_exists($functionName)) {
+            throw FunctionDoesNotExist::fromName($functionName);
+        }
     }
 }

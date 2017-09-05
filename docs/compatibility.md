@@ -131,8 +131,8 @@
 | Method | Supported |
 |--------|-----------|
 | getClosure | :heavy_check_mark: Not implemented for closures |
-| invoke | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| invokeArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| invoke | :heavy_check_mark: Not implemented for closures |
+| invokeArgs | :heavy_check_mark: Not implemented for closures |
 | isDisabled | :heavy_check_mark: Yes |
 | _inherited methods_ | see `ReflectionFunctionAbstract` |
 

@@ -213,4 +213,63 @@ class ReflectionFunctionTest extends TestCase
 
         $functionReflection->getClosure();
     }
+
+    public function testInvoke() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithParams');
+
+        self::assertSame(5, $functionReflection->invoke(2, 3));
+        self::assertSame(10, $functionReflection->invokeArgs([3, 7]));
+    }
+
+    public function testInvokeThrowsExceptionWhenFunctionIsClosure() : void
+    {
+        $closure = function () : void {
+        };
+
+        $functionReflection = ReflectionFunction::createFromClosure($closure);
+
+        $this->expectException(NotImplemented::class);
+
+        $functionReflection->invoke();
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenFunctionIsClosure() : void
+    {
+        $closure = function () : void {
+        };
+
+        $functionReflection = ReflectionFunction::createFromClosure($closure);
+
+        $this->expectException(NotImplemented::class);
+
+        $functionReflection->invokeArgs();
+    }
+
+
+    public function testInvokeThrowsExceptionWhenFunctionDoesNotExist() : void
+    {
+        $php = '<?php function foo() {}';
+
+        $functionReflector  = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $functionReflection = $functionReflector->reflect('foo');
+
+        $this->expectException(FunctionDoesNotExist::class);
+
+        $functionReflection->invoke();
+    }
+
+    public function testInvokeArgsThrowsExceptionWhenFunctionDoesNotExist() : void
+    {
+        $php = '<?php function foo() {}';
+
+        $functionReflector  = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $functionReflection = $functionReflector->reflect('foo');
+
+        $this->expectException(FunctionDoesNotExist::class);
+
+        $functionReflection->invokeArgs();
+    }
 }

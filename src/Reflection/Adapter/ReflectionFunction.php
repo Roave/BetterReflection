@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Throwable;
@@ -246,7 +247,11 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function invoke($args = null)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        try {
+            return $this->betterReflectionFunction->invoke(...\func_get_args());
+        } catch (Throwable $e) {
+            throw new CoreReflectionException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
@@ -254,7 +259,11 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function invokeArgs(array $args)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        try {
+            return $this->betterReflectionFunction->invokeArgs($args);
+        } catch (Throwable $e) {
+            throw new CoreReflectionException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
