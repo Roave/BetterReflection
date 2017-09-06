@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
@@ -159,74 +160,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return $val;
     }
 
-    /**
-     * Return string representation of this parameter
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $paramFormat = $this->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
-
-        try {
-            $prototype = $this->getPrototype();
-        } catch (Exception\MethodPrototypeNotFound $e) {
-            $prototype = null;
-        }
-
-        $overwrittenMethod = $this->getOverwrittenMethod();
-
-        return \sprintf(
-            "Method [ <%s%s%s%s%s>%s%s%s %s method %s ] {%s{$paramFormat}\n}",
-            $this->isUserDefined() ? 'user' : \sprintf('internal:%s', $this->getExtensionName()),
-            $this->isConstructor() ? ', ctor' : '',
-            $this->isDestructor() ? ', dtor' : '',
-            null !== $overwrittenMethod ? \sprintf(', overwrites %s', $overwrittenMethod->getDeclaringClass()->getName()) : '',
-            null !== $prototype ? \sprintf(', prototype %s', $prototype->getDeclaringClass()->getName()) : '',
-            $this->isFinal() ? ' final' : '',
-            $this->isStatic() ? ' static' : '',
-            $this->isAbstract() ? ' abstract' : '',
-            $this->getVisibilityAsString(),
-            $this->getName(),
-            $this->isUserDefined() ? \sprintf("\n  @@ %s %d - %d", $this->getFileName(), $this->getStartLine(), $this->getEndLine()) : '',
-            \count($this->getParameters()),
-            \array_reduce($this->getParameters(), function (string $str, ReflectionParameter $param) : string {
-                return $str . "\n    " . (string) $param;
-            }, '')
-        );
-    }
-
-    private function getOverwrittenMethod() : ?self
-    {
-        $parentClass = $this->getDeclaringClass()->getParentClass();
-
-        if ( ! $parentClass) {
-            return null;
-        }
-
-        if ( ! $parentClass->hasMethod($this->getName())) {
-            return null;
-        }
-
-        return $parentClass->getMethod($this->getName());
-    }
-
-    /**
-     * Get the visibility of this method as a string (private/protected/public)
-     *
-     * @return string
-     */
-    private function getVisibilityAsString() : string
-    {
-        if ($this->isPrivate()) {
-            return 'private';
-        }
-
-        if ($this->isProtected()) {
-            return 'protected';
-        }
-
-        return 'public';
+        return ReflectionMethodStringCast::toString($this);
     }
 
     public function inNamespace() : bool
