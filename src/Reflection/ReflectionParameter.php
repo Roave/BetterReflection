@@ -16,6 +16,7 @@ use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
@@ -168,51 +169,9 @@ class ReflectionParameter implements CoreReflector
         throw new InvalidArgumentException('Could not create reflection from the spec given');
     }
 
-    /**
-     * Return string representation of this parameter.
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $getType = function () : string {
-            $mapping = [
-              'int' => 'integer',
-              'bool' => 'boolean',
-            ];
-
-            $type = (string) $this->getType();
-
-            return \array_key_exists($type, $mapping) ? $mapping[$type] : $type;
-        };
-
-        $getValue = function () : string {
-            $defaultValue = $this->getDefaultValue();
-
-            if (\is_array($defaultValue)) {
-                return 'Array';
-            }
-
-            if (\is_string($defaultValue) && \strlen($defaultValue) > 15) {
-                return \var_export(\substr($defaultValue, 0, 15) . '...', true);
-            }
-
-            return \var_export($defaultValue, true);
-        };
-
-        return \sprintf(
-            'Parameter #%d [ %s %s%s%s%s$%s%s ]',
-            $this->parameterIndex,
-            $this->isOptional() ? '<optional>' : '<required>',
-            $this->hasType() ? $getType() . ' ' : '',
-            $this->hasType() && $this->getType()->allowsNull() ? 'or NULL ' : '',
-            $this->isVariadic() ? '...' : '',
-            $this->isPassedByReference() ? '&' : '',
-            $this->getName(),
-            ($this->isOptional() && $this->isDefaultValueAvailable())
-                ? ' = ' . $getValue()
-                : ''
-        );
+        return ReflectionParameterStringCast::toString($this);
     }
 
     /**

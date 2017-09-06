@@ -2,11 +2,11 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-class ParametersToStringParent
+class StringCastParametersParent
 {
 }
 
-abstract class ParametersToString extends ParametersToStringParent
+abstract class StringCastParameters extends StringCastParametersParent
 {
     public function parametersWithBuiltInTypes(
         string $string,
@@ -65,6 +65,14 @@ abstract class ParametersToString extends ParametersToStringParent
         $iterable = [],
         $object = null
     )
+    {
+    }
+
+    public function variadicParameter(...$variadic)
+    {
+    }
+
+    public function passedByReferenceParameter(&$passedByReference)
     {
     }
 }
