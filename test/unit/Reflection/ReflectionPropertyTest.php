@@ -256,25 +256,10 @@ class ReflectionPropertyTest extends TestCase
         );
     }
 
-    public function castToStringProvider() : array
-    {
-        return [
-            ['publicProperty', 'Property [ <default> public $publicProperty ]'],
-            ['protectedProperty', 'Property [ <default> protected $protectedProperty ]'],
-            ['privateProperty', 'Property [ <default> private $privateProperty ]'],
-            ['publicStaticProperty', 'Property [ public static $publicStaticProperty ]'],
-        ];
-    }
-
-    /**
-     * @param string $propertyName
-     * @param string $expectedString
-     * @dataProvider castToStringProvider
-     */
-    public function testCastingToString(string $propertyName, string $expectedString) : void
+    public function testToString() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
-        self::assertSame($expectedString, (string) $classInfo->getProperty($propertyName));
+        self::assertSame('Property [ <default> public $publicProperty ]', (string) $classInfo->getProperty('publicProperty'));
     }
 
     public function testGetDefaultProperty() : void

@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
@@ -88,26 +89,9 @@ class ReflectionProperty implements CoreReflector
         return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
     }
 
-    /**
-     * Return string representation of this little old property.
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $stateModifier = '';
-
-        if ( ! $this->isStatic()) {
-            $stateModifier = $this->isDefault() ? ' <default>' : ' <dynamic>';
-        }
-
-        return \sprintf(
-            'Property [%s %s%s $%s ]',
-            $stateModifier,
-            $this->getVisibilityAsString(),
-            $this->isStatic() ? ' static' : '',
-            $this->getName()
-        );
+        return ReflectionPropertyStringCast::toString($this);
     }
 
     /**
@@ -138,22 +122,6 @@ class ReflectionProperty implements CoreReflector
         $prop->declaredAtCompileTime = $declaredAtCompileTime;
 
         return $prop;
-    }
-
-    /**
-     * @return string
-     */
-    private function getVisibilityAsString() : string
-    {
-        if ($this->isProtected()) {
-            return 'protected';
-        }
-
-        if ($this->isPrivate()) {
-            return 'private';
-        }
-
-        return 'public';
     }
 
     /**
