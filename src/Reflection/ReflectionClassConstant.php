@@ -9,6 +9,7 @@ use ReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
@@ -190,36 +191,11 @@ class ReflectionClassConstant implements CoreReflector
     }
 
     /**
-     * Returns the constant visibility
-     *
-     * @return string
-     */
-    private function getVisibility() : string
-    {
-        if ($this->isPrivate()) {
-            return 'private';
-        }
-        if ($this->isProtected()) {
-            return 'protected';
-        }
-        // default visibility always is public
-        return 'public';
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function __toString() : string
     {
-        $value = $this->getValue();
-
-        return \sprintf(
-            'Constant [ %s %s %s ] { %s }' . \PHP_EOL,
-            $this->getVisibility(),
-            \gettype($value),
-            $this->getName(),
-            $value
-        );
+        return ReflectionClassConstantStringCast::toString($this);
     }
 
     /**
