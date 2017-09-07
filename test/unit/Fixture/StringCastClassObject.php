@@ -2,6 +2,6 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-interface EmptyInterface
+class StringCastClassObject
 {
 }

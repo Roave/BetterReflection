@@ -1,0 +1,77 @@
+Class [ <user> abstract class Roave\BetterReflectionTest\Fixture\StringCastClass extends Roave\BetterReflectionTest\Fixture\StringCastClassParent implements Roave\BetterReflectionTest\Fixture\StringCastClassInterface, Roave\BetterReflectionTest\Fixture\StringCastClassInterface2 ] {
+  @@ %s/Fixture/StringCastClass.php 21-78
+
+  - Constants [4] {
+    Constant [ public boolean PUBLIC_CONSTANT ] { 1 }
+    Constant [ protected integer PROTECTED_CONSTANT ] { 0 }
+    Constant [ private string PRIVATE_CONSTANT ] { string }
+    Constant [ public array NO_VISIBILITY_CONSTANT ] { Array }
+  }
+
+  - Static properties [1] {
+    Property [ public static $publicStaticProperty ]
+  }
+
+  - Static methods [1] {
+    Method [ <user> static public method staticPublicMethod ] {
+      @@ %s/Fixture/StringCastClass.php 59 - 61
+    }
+  }
+
+  - Properties [3] {
+    Property [ <default> private $privateProperty ]
+    Property [ <default> protected $protectedProperty ]
+    Property [ <default> public $publicProperty ]
+  }
+
+  - Methods [11] {
+    Method [ <user, ctor> public method __construct ] {
+      @@ %s/Fixture/StringCastClass.php 33 - 35
+    }
+
+    Method [ <user, dtor> public method __destruct ] {
+      @@ %s/Fixture/StringCastClass.php 37 - 39
+    }
+
+    Method [ <user> public method publicMethod ] {
+      @@ %s/Fixture/StringCastClass.php 41 - 43
+    }
+
+    Method [ <user> protected method protectedMethod ] {
+      @@ %s/Fixture/StringCastClass.php 45 - 47
+    }
+
+    Method [ <user> private method privateMethod ] {
+      @@ %s/Fixture/StringCastClass.php 49 - 51
+    }
+
+    Method [ <user> final public method finalPublicMethod ] {
+      @@ %s/Fixture/StringCastClass.php 53 - 55
+    }
+
+    Method [ <user> abstract public method abstractPublicMethod ] {
+      @@ %s/Fixture/StringCastClass.php 57 - 57
+    }
+
+    Method [ <user> public method noVisibility ] {
+      @@ %s/Fixture/StringCastClass.php 63 - 65
+    }
+
+    Method [ <user, overwrites Roave\BetterReflectionTest\Fixture\StringCastClassParent, prototype Roave\BetterReflectionTest\Fixture\StringCastClassParent> public method overwrittenMethod ] {
+      @@ %s/Fixture/StringCastClass.php 67 - 69
+    }
+
+    Method [ <user, prototype Roave\BetterReflectionTest\Fixture\StringCastClassInterface> public method prototypeMethod ] {
+      @@ %s/Fixture/StringCastClass.php 71 - 73
+    }
+
+    Method [ <user> public method methodWithParameters ] {
+      @@ %s/Fixture/StringCastClass.php 75 - 77
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $a ]
+        Parameter #1 [ <required> $b ]
+      }
+    }
+  }
+}

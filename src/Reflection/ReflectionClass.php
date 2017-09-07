@@ -28,6 +28,7 @@ use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
@@ -97,108 +98,9 @@ class ReflectionClass implements Reflection, CoreReflector
         return self::createFromName($className)->__toString();
     }
 
-    /**
-     * Get a string representation of this reflection
-     *
-     * @todo Refactor this
-     * @see https://github.com/Roave/BetterReflection/issues/94
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $isObject = $this instanceof ReflectionObject;
-
-        $format  = "%s [ <%s> %s%s %s%s%s ] {\n";
-        $format .= "%s\n";
-        $format .= "  - Constants [%d] {%s\n  }\n\n";
-        $format .= "  - Static properties [%d] {%s\n  }\n\n";
-        $format .= "  - Static methods [%d] {%s\n  }\n\n";
-        $format .= "  - Properties [%d] {%s\n  }\n\n";
-        $format .= ($isObject ? "  - Dynamic properties [%d] {%s\n  }\n\n" : '%s%s');
-        $format .= "  - Methods [%d] {%s\n  }\n";
-        $format .= "}\n";
-
-        $staticProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
-            return $property->isStatic();
-        });
-        $staticMethods = \array_filter($this->getMethods(), function (ReflectionMethod $method) : bool {
-            return $method->isStatic();
-        });
-        $defaultProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
-            return ! $property->isStatic() && $property->isDefault();
-        });
-        $dynamicProperties = \array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
-            return ! $property->isStatic() && ! $property->isDefault();
-        });
-        $methods = \array_filter($this->getMethods(), function (ReflectionMethod $method) : bool {
-            return ! $method->isStatic();
-        });
-
-        $buildString = function (array $items, int $emptyLinesAmongItems = 1) : string {
-            if ( ! \count($items)) {
-                return '';
-            }
-
-            $itemsString = \implode(\str_repeat("\n", $emptyLinesAmongItems), $items);
-            return "\n" . \preg_replace('/(^|\n)(?!\n)/', '\1' . \str_repeat(' ', 4), $itemsString);
-        };
-
-        $buildConstants = function (array $items, int $indentLevel = 4) : string {
-            $str = '';
-
-            /**
-             * @var string $name
-             * @var ReflectionClassConstant $const
-             */
-            foreach ($items as $name => $const) {
-                $str .= "\n" . \str_repeat(' ', $indentLevel);
-                $str .= \trim((string) $const);
-            }
-
-            return $str;
-        };
-
-        $interfaceNames = $this->getInterfaceNames();
-
-        $type = (function () : string {
-            if ($this->isInterface()) {
-                return 'Interface';
-            }
-
-            if ($this->isTrait()) {
-                return 'Trait';
-            }
-
-            return 'Class';
-        })();
-
-        $str = \sprintf(
-            $format,
-            $isObject ? 'Object of class' : $type,
-            $this->isUserDefined() ? 'user' : \sprintf('internal:%s', $this->getExtensionName()),
-            $this->isFinal() ? 'final ' : '',
-            $this->isAbstract() ? 'abstract ' : '',
-            \strtolower($type),
-            $this->getName(),
-            null !== $this->getParentClass() ? (' extends ' . $this->getParentClass()->getName()) : '',
-            \count($interfaceNames) ? (' implements ' . \implode(', ', $interfaceNames)) : '',
-            $this->isUserDefined() ? \sprintf("  @@ %s %d-%d\n", $this->getFileName(), $this->getStartLine(), $this->getEndLine()) : '',
-            \count($this->getReflectionConstants()),
-            $buildConstants($this->getReflectionConstants()),
-            \count($staticProperties),
-            $buildString($staticProperties),
-            \count($staticMethods),
-            $buildString($staticMethods),
-            \count($defaultProperties),
-            $buildString($defaultProperties),
-            $isObject ? \count($dynamicProperties) : '',
-            $isObject ? $buildString($dynamicProperties) : '',
-            \count($methods),
-            $buildString($methods, 2)
-        );
-
-        return $str;
+        return ReflectionClassStringCast::toString($this);
     }
 
     /**
