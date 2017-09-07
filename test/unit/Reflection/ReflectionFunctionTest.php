@@ -139,25 +139,12 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame('stdClass', $theParam->getName());
     }
 
-    public function functionStringRepresentations() : array
-    {
-        return [
-            ['Roave\BetterReflectionTest\Fixture\myFunction', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}"],
-            ['Roave\BetterReflectionTest\Fixture\myFunctionWithParams', "Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunctionWithParams ] {\n  @@ %s/test/unit/Fixture/Functions.php 8 - 10\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
-        ];
-    }
-
-    /**
-     * @param string $functionName
-     * @param string $expectedStringValue
-     * @dataProvider functionStringRepresentations
-     */
-    public function testStringCast(string $functionName, string $expectedStringValue) : void
+    public function testToString() : void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
-        $functionInfo = ReflectionFunction::createFromName($functionName);
+        $functionInfo = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
 
-        self::assertStringMatchesFormat($expectedStringValue, (string) $functionInfo);
+        self::assertStringMatchesFormat("Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}", (string) $functionInfo);
     }
 
     public function testGetDocBlockReturnTypes() : void
