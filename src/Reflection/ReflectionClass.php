@@ -449,13 +449,13 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getConstant(string $name)
     {
-        $constants = $this->getConstants();
+        $reflectionConstant = $this->getReflectionConstant($name);
 
-        if ( ! isset($constants[$name])) {
+        if ( ! $reflectionConstant) {
             return null;
         }
 
-        return $constants[$name];
+        return $reflectionConstant->getValue();
     }
 
     /**
@@ -466,7 +466,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function hasConstant(string $name) : bool
     {
-        return null !== $this->getConstant($name);
+        return null !== $this->getReflectionConstant($name);
     }
 
     /**

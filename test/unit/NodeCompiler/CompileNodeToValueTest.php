@@ -222,6 +222,31 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
 
+    public function testClassConstantResolutionWithAnotherClassConstant() : void
+    {
+        $phpCode = <<<'PHP'
+<?php
+namespace Bar;
+
+class Foo {
+    const SECOND = 1;
+    const MINUTE = 60 * self::SECOND;
+    const HOUR = 60 * self::MINUTE;
+    const DAY = 24 * self::HOUR;
+    const WEEK = 7 * self::DAY;
+}
+PHP;
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflect('Bar\Foo');
+
+        self::assertSame(1, $classInfo->getReflectionConstant('SECOND')->getValue());
+        self::assertSame(60, $classInfo->getReflectionConstant('MINUTE')->getValue());
+        self::assertSame(3600, $classInfo->getReflectionConstant('HOUR')->getValue());
+        self::assertSame(86400, $classInfo->getReflectionConstant('DAY')->getValue());
+        self::assertSame(604800, $classInfo->getReflectionConstant('WEEK')->getValue());
+    }
+
     public function testClassConstantResolutionExternalForMethod() : void
     {
         $phpCode = '<?php
