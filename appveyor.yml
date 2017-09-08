@@ -26,8 +26,8 @@ init:
   - ps: $Env:ANSICON = '121x90 (121x90)'
 install:
   # Install PHP
-  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y OpenSSL.Light }
-  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y php }
+  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y OpenSSL.Light } Else { appveyor-retry choco upgrade OpenSSL.Light }
+  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y php } Else { appveyor-retry choco upgrade php }
 
   # Prepare PHP
   - ps: cd $Env:php_directory
