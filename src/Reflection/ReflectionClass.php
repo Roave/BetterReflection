@@ -494,15 +494,24 @@ class ReflectionClass implements Reflection, CoreReflector
             return $this->cachedReflectionConstants;
         }
 
-        $constants = \array_map(
-            function (ConstNode $constantNode) : ReflectionClassConstant {
-                return ReflectionClassConstant::createFromNode($this->reflector, $constantNode, $this);
-            },
-            \array_filter(
-                $this->node->stmts,
-                function (Node\Stmt $stmt) : bool {
-                    return $stmt instanceof ConstNode;
-                }
+        $constants = \array_merge(
+            [],
+            ...\array_map(
+                function (ConstNode $constNode) : array {
+                    $constants = [];
+
+                    foreach ($constNode->consts as $constantPositionInNode => $constantNode) {
+                        $constants[] = ReflectionClassConstant::createFromNode($this->reflector, $constNode, $constantPositionInNode, $this);
+                    }
+
+                    return $constants;
+                },
+                \array_filter(
+                    $this->node->stmts,
+                    function (Node\Stmt $stmt) : bool {
+                        return $stmt instanceof ConstNode;
+                    }
+                )
             )
         );
 

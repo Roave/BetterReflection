@@ -149,23 +149,38 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    public function testGetAst() : void
+    public function getAstProvider() : array
+    {
+        return [
+            ['TEST', 0],
+            ['TEST2', 1],
+        ];
+    }
+
+    /**
+     * @param string $constantName
+     * @param int $positionInAst
+     * @dataProvider getAstProvider
+     */
+    public function testGetAst(string $constantName, int $positionInAst) : void
     {
         $php = <<<'PHP'
 <?php
 class Foo
 {
-    const TEST = 'test';
+    const TEST = 'test',
+        TEST2 = 'test2';
 }
 PHP;
 
         $reflector          = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection    = $reflector->reflect('Foo');
-        $constantReflection = $classReflection->getReflectionConstant('TEST');
+        $constantReflection = $classReflection->getReflectionConstant($constantName);
 
         $ast = $constantReflection->getAst();
 
         self::assertInstanceOf(ClassConst::class, $ast);
-        self::assertSame('TEST', $ast->consts[0]->name);
+        self::assertSame($positionInAst, $constantReflection->getPositionInAst());
+        self::assertSame($constantName, $ast->consts[$positionInAst]->name);
     }
 }

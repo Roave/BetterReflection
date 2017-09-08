@@ -1593,4 +1593,28 @@ class ReflectionClassTest extends TestCase
         self::assertInstanceOf(ReflectionClassConstant::class, $reflectionConstants['F']);
         self::assertSame('ff', $reflectionConstants['F']->getValue());
     }
+
+    public function testGetConstantsDeclaredWithOneKeyword() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    const A = 0,
+          B = 1;
+}
+PHP;
+
+        $expectedConstants = [
+            'A' => 0,
+            'B' => 1,
+        ];
+
+        $classInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+
+        $constants = $classInfo->getConstants();
+
+        self::assertCount(2, $constants);
+        self::assertSame($expectedConstants, $constants);
+    }
 }

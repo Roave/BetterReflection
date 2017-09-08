@@ -41,6 +41,11 @@ class ReflectionClassConstant implements CoreReflector
      */
     private $node;
 
+    /**
+     * @var int
+     */
+    private $positionInNode;
+
     private function __construct()
     {
     }
@@ -51,18 +56,21 @@ class ReflectionClassConstant implements CoreReflector
      * @internal
      * @param Reflector $reflector
      * @param ClassConst $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param int $positionInNode
      * @param ReflectionClass $owner
      * @return ReflectionClassConstant
      */
     public static function createFromNode(
         Reflector $reflector,
         ClassConst $node,
+        int $positionInNode,
         ReflectionClass $owner
     ) : self {
-        $ref            = new self();
-        $ref->node      = $node;
-        $ref->owner     = $owner;
-        $ref->reflector = $reflector;
+        $ref                 = new self();
+        $ref->node           = $node;
+        $ref->positionInNode = $positionInNode;
+        $ref->owner          = $owner;
+        $ref->reflector      = $reflector;
         return $ref;
     }
 
@@ -74,7 +82,7 @@ class ReflectionClassConstant implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->consts[0]->name;
+        return $this->node->consts[$this->positionInNode]->name;
     }
 
     /**
@@ -89,7 +97,7 @@ class ReflectionClassConstant implements CoreReflector
         }
 
         $this->value          = (new CompileNodeToValue())->__invoke(
-            $this->node->consts[0]->value,
+            $this->node->consts[$this->positionInNode]->value,
             new CompilerContext($this->reflector, $this->getDeclaringClass())
         );
         $this->valueWasCached = true;
@@ -209,5 +217,10 @@ class ReflectionClassConstant implements CoreReflector
     public function getAst() : ClassConst
     {
         return $this->node;
+    }
+
+    public function getPositionInAst() : int
+    {
+        return $this->positionInNode;
     }
 }
