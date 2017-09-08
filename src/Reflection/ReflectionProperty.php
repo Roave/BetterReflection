@@ -43,6 +43,11 @@ class ReflectionProperty implements CoreReflector
     private $node;
 
     /**
+     * @var int
+     */
+    private $positionInNode;
+
+    /**
      * @var Namespace_|null
      */
     private $declaringNamespace;
@@ -98,6 +103,7 @@ class ReflectionProperty implements CoreReflector
      * @internal
      * @param Reflector       $reflector
      * @param PropertyNode    $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param int             $positionInNode
      * @param Namespace_      $declaringNamespace
      * @param ReflectionClass $declaringClass
      * @param ReflectionClass $implementingClass
@@ -108,6 +114,7 @@ class ReflectionProperty implements CoreReflector
     public static function createFromNode(
         Reflector $reflector,
         PropertyNode $node,
+        int $positionInNode,
         ?Namespace_ $declaringNamespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
@@ -116,6 +123,7 @@ class ReflectionProperty implements CoreReflector
         $prop                        = new self();
         $prop->reflector             = $reflector;
         $prop->node                  = $node;
+        $prop->positionInNode        = $positionInNode;
         $prop->declaringNamespace    = $declaringNamespace;
         $prop->declaringClass        = $declaringClass;
         $prop->implementingClass     = $implementingClass;
@@ -185,7 +193,7 @@ class ReflectionProperty implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->props[0]->name;
+        return $this->node->props[$this->positionInNode]->name;
     }
 
     /**
@@ -288,7 +296,7 @@ class ReflectionProperty implements CoreReflector
      */
     public function getDefaultValue()
     {
-        $defaultValueNode = $this->node->props[0]->default;
+        $defaultValueNode = $this->node->props[$this->positionInNode]->default;
 
         if (null === $defaultValueNode) {
             return null;
@@ -336,6 +344,11 @@ class ReflectionProperty implements CoreReflector
     public function getAst() : PropertyNode
     {
         return $this->node;
+    }
+
+    public function getPositionInAst() : int
+    {
+        return $this->positionInNode;
     }
 
     /**

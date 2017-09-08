@@ -372,6 +372,31 @@ class ReflectionClassTest extends TestCase
         self::assertCount(4, $properties);
     }
 
+    public function testGetPropertiesDeclaredWithOneKeyword() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    public $a = 0,
+           $b = 1;
+    protected $c = 'c',
+              $d = 'd';
+    private $e = bool,
+            $f = false;                
+}
+PHP;
+
+        $expectedPropertiesNames = ['a', 'b', 'c', 'd', 'e', 'f'];
+
+        $classInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+
+        $properties = $classInfo->getProperties();
+
+        self::assertCount(6, $properties);
+        self::assertSame($expectedPropertiesNames, \array_keys($properties));
+    }
+
     public function getPropertiesWithFilterDataProvider() : array
     {
         return [
@@ -1592,5 +1617,29 @@ class ReflectionClassTest extends TestCase
         self::assertArrayHasKey('F', $reflectionConstants);
         self::assertInstanceOf(ReflectionClassConstant::class, $reflectionConstants['F']);
         self::assertSame('ff', $reflectionConstants['F']->getValue());
+    }
+
+    public function testGetConstantsDeclaredWithOneKeyword() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    const A = 0,
+          B = 1;
+}
+PHP;
+
+        $expectedConstants = [
+            'A' => 0,
+            'B' => 1,
+        ];
+
+        $classInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+
+        $constants = $classInfo->getConstants();
+
+        self::assertCount(2, $constants);
+        self::assertSame($expectedConstants, $constants);
     }
 }

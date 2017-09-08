@@ -494,15 +494,24 @@ class ReflectionClass implements Reflection, CoreReflector
             return $this->cachedReflectionConstants;
         }
 
-        $constants = \array_map(
-            function (ConstNode $constantNode) : ReflectionClassConstant {
-                return ReflectionClassConstant::createFromNode($this->reflector, $constantNode, $this);
-            },
-            \array_filter(
-                $this->node->stmts,
-                function (Node\Stmt $stmt) : bool {
-                    return $stmt instanceof ConstNode;
-                }
+        $constants = \array_merge(
+            [],
+            ...\array_map(
+                function (ConstNode $constNode) : array {
+                    $constants = [];
+
+                    foreach ($constNode->consts as $constantPositionInNode => $constantNode) {
+                        $constants[] = ReflectionClassConstant::createFromNode($this->reflector, $constNode, $constantPositionInNode, $this);
+                    }
+
+                    return $constants;
+                },
+                \array_filter(
+                    $this->node->stmts,
+                    function (Node\Stmt $stmt) : bool {
+                        return $stmt instanceof ConstNode;
+                    }
+                )
             )
         );
 
@@ -595,14 +604,17 @@ class ReflectionClass implements Reflection, CoreReflector
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
                 if ($stmt instanceof PropertyNode) {
-                    $prop                         = ReflectionProperty::createFromNode(
-                        $this->reflector,
-                        $stmt,
-                        $this->declaringNamespace,
-                        $this,
-                        $this
-                    );
-                    $properties[$prop->getName()] = $prop;
+                    foreach ($stmt->props as $propertyPositionInNode => $propertyNode) {
+                        $prop                         = ReflectionProperty::createFromNode(
+                            $this->reflector,
+                            $stmt,
+                            $propertyPositionInNode,
+                            $this->declaringNamespace,
+                            $this,
+                            $this
+                        );
+                        $properties[$prop->getName()] = $prop;
+                    }
                 }
             }
 
@@ -659,6 +671,7 @@ class ReflectionClass implements Reflection, CoreReflector
                                 return ReflectionProperty::createFromNode(
                                     $this->reflector,
                                     $property->getAst(),
+                                    $property->getPositionInAst(),
                                     $trait->declaringNamespace,
                                     $property->getDeclaringClass(),
                                     $this

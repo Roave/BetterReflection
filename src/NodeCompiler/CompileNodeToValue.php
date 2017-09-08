@@ -144,8 +144,10 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
+        $reflectionConstant = $classInfo->getReflectionConstant($node->name);
+
         return $this->__invoke(
-            $classInfo->getReflectionConstant($node->name)->getAst()->consts[0]->value,
+            $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
             new CompilerContext($context->getReflector(), $classInfo)
         );
     }
