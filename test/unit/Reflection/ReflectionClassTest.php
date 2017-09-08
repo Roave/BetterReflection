@@ -1282,15 +1282,6 @@ class ReflectionClassTest extends TestCase
         self::assertSame([], $traitReflection->getInterfaces());
     }
 
-    public function testClassToString() : void
-    {
-        $reflection = ReflectionClass::createFromName(ExampleClass::class);
-        self::assertStringMatchesFormat(
-            \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
-            $reflection->__toString()
-        );
-    }
-
     public function testImplementsReflector() : void
     {
         $php = '<?php class Foo {}';
@@ -1301,53 +1292,21 @@ class ReflectionClassTest extends TestCase
         self::assertInstanceOf(CoreReflector::class, $classInfo);
     }
 
-    public function testExportMatchesFormat() : void
+    public function testToString() : void
+    {
+        $reflection = ReflectionClass::createFromName(ExampleClass::class);
+        self::assertStringMatchesFormat(
+            \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            $reflection->__toString()
+        );
+    }
+
+    public function testExport() : void
     {
         self::assertStringMatchesFormat(
             \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             ReflectionClass::export(ExampleClass::class)
         );
-    }
-
-    public function testToStringWhenImplementingInterface() : void
-    {
-        $php = '<?php
-            namespace Qux;
-            interface Foo {}
-            class Bar implements Foo {}
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Qux\Bar');
-
-        self::assertStringStartsWith('Class [ <user> class Qux\Bar implements Qux\Foo ] {', $reflection->__toString());
-    }
-
-    public function testToStringWhenExtending() : void
-    {
-        $php = '<?php
-            namespace Qux;
-            class Foo {}
-            class Bar extends Foo {}
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Qux\Bar');
-
-        self::assertStringStartsWith('Class [ <user> class Qux\Bar extends Qux\Foo ] {', $reflection->__toString());
-    }
-
-    public function testToStringWhenExtendingAndImplementing() : void
-    {
-        $php = '<?php
-            namespace Qux;
-            interface Foo {}
-            interface Bar {}
-            class Bat {}
-            class Baz extends Bat implements Foo, Bar {}
-        ';
-
-        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Qux\Baz');
-
-        self::assertStringStartsWith('Class [ <user> class Qux\Baz extends Qux\Bat implements Qux\Foo, Qux\Bar ] {', $reflection->__toString());
     }
 
     public function testCannotClone() : void

@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
@@ -159,50 +160,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return $val;
     }
 
-    /**
-     * Return string representation of this parameter
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
-
-        return \sprintf(
-            "Method [ <user%s%s>%s%s%s %s method %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
-            $this->isConstructor() ? ', ctor' : '',
-            $this->isDestructor() ? ', dtor' : '',
-            $this->isFinal() ? ' final' : '',
-            $this->isStatic() ? ' static' : '',
-            $this->isAbstract() ? ' abstract' : '',
-            $this->getVisibilityAsString(),
-            $this->getName(),
-            $this->getFileName(),
-            $this->getStartLine(),
-            $this->getEndLine(),
-            \count($this->getParameters()),
-            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) : string {
-                return $str . "\n    " . $param;
-            }, '')
-        );
-    }
-
-    /**
-     * Get the visibility of this method as a string (private/protected/public)
-     *
-     * @return string
-     */
-    private function getVisibilityAsString() : string
-    {
-        if ($this->isPrivate()) {
-            return 'private';
-        }
-
-        if ($this->isProtected()) {
-            return 'protected';
-        }
-
-        return 'public';
+        return ReflectionMethodStringCast::toString($this);
     }
 
     public function inNamespace() : bool

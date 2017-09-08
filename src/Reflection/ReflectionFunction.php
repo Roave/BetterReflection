@@ -9,6 +9,7 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionFunctionStringCast;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -45,27 +46,9 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         ))->reflect(self::CLOSURE_NAME);
     }
 
-    /**
-     * Check to see if a flag is set on this method.
-     * Return string representation of this parameter
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $paramFormat = ($this->getNumberOfParameters() > 0) ? "\n\n  - Parameters [%d] {%s\n  }" : '';
-
-        return \sprintf(
-            "Function [ <user> function %s ] {\n  @@ %s %d - %d{$paramFormat}\n}",
-            $this->getName(),
-            $this->getFileName(),
-            $this->getStartLine(),
-            $this->getEndLine(),
-            \count($this->getParameters()),
-            \array_reduce($this->getParameters(), function ($str, ReflectionParameter $param) : string {
-                return $str . "\n    " . $param;
-            }, '')
-        );
+        return ReflectionFunctionStringCast::toString($this);
     }
 
     /**

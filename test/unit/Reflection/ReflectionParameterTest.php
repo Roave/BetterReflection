@@ -217,7 +217,7 @@ class ReflectionParameterTest extends TestCase
         self::assertInstanceOf(Types\Float_::class, $param2Types[1]);
     }
 
-    public function testStringCast() : void
+    public function testToString() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodWithOptionalParameters');

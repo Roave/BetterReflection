@@ -53,24 +53,9 @@ class ReflectionClassConstantTest extends TestCase
         $this->assertTrue($const->isPrivate());
     }
 
-    /**
-     * @param string $const
-     * @param string $expected
-     * @dataProvider toStringProvider
-     */
-    public function testToString(string $const, string $expected) : void
+    public function testToString() : void
     {
-        $this->assertSame($expected, (string) $this->getExampleConstant($const));
-    }
-
-    public function toStringProvider() : array
-    {
-        return [
-            ['MY_CONST_1', 'Constant [ public integer MY_CONST_1 ] { 123 }' . \PHP_EOL],
-            ['MY_CONST_3', 'Constant [ public integer MY_CONST_3 ] { 345 }' . \PHP_EOL],
-            ['MY_CONST_4', 'Constant [ protected integer MY_CONST_4 ] { 456 }' . \PHP_EOL],
-            ['MY_CONST_5', 'Constant [ private integer MY_CONST_5 ] { 567 }' . \PHP_EOL],
-        ];
+        $this->assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
     /**

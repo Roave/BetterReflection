@@ -26,6 +26,7 @@ Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
     Method [ <user, ctor> public method __construct ] {
       @@ %s/test/unit/Fixture/ExampleClass.php 36 - 38
     }
+
     Method [ <user> public method someMethod ] {
       @@ %s/test/unit/Fixture/ExampleClass.php 40 - 42
     }

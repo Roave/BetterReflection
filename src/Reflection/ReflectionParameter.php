@@ -16,6 +16,7 @@ use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
@@ -168,28 +169,9 @@ class ReflectionParameter implements CoreReflector
         throw new InvalidArgumentException('Could not create reflection from the spec given');
     }
 
-    /**
-     * Return string representation of this parameter.
-     *
-     * @return string
-     */
     public function __toString() : string
     {
-        $isNullableObjectParam = $this->hasType() && null !== $this->getClassName() && $this->isOptional();
-
-        return \sprintf(
-            'Parameter #%d [ %s %s%s%s%s$%s%s ]',
-            $this->parameterIndex,
-            ($this->isVariadic() || $this->isOptional()) ? '<optional>' : '<required>',
-            $this->hasType() ? (string) $this->getType() . ' ' : '',
-            $isNullableObjectParam ? 'or NULL ' : '',
-            $this->isVariadic() ? '...' : '',
-            $this->isPassedByReference() ? '&' : '',
-            $this->getName(),
-            ($this->isOptional() && $this->isDefaultValueAvailable())
-                ? (' = ' . \var_export($this->getDefaultValue(), true))
-                : ''
-        );
+        return ReflectionParameterStringCast::toString($this);
     }
 
     /**
