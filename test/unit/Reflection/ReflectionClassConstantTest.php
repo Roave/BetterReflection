@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PhpParser\Node\Stmt\ClassConst;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
@@ -146,5 +147,25 @@ class ReflectionClassConstantTest extends TestCase
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
+    }
+
+    public function testGetAst() : void
+    {
+        $php = <<<'PHP'
+<?php
+class Foo
+{
+    const TEST = 'test';
+}
+PHP;
+
+        $reflector          = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
+        $classReflection    = $reflector->reflect('Foo');
+        $constantReflection = $classReflection->getReflectionConstant('TEST');
+
+        $ast = $constantReflection->getAst();
+
+        self::assertInstanceOf(ClassConst::class, $ast);
+        self::assertSame('TEST', $ast->consts[0]->name);
     }
 }

@@ -205,4 +205,9 @@ class ReflectionClassConstant implements CoreReflector
     {
         throw new Exception('Unable to export statically');
     }
+
+    public function getAst() : ClassConst
+    {
+        return $this->node;
+    }
 }
