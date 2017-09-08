@@ -18,9 +18,9 @@ matrix:
   fast_finish: true
 clone_folder: c:\projects\better-reflection
 cache:
-  - c:\tools\composer
-  - '%LOCALAPPDATA%\Composer'
-  - c:\tools\php71
+  - c:\tools\composer -> appveyor.yml
+  - '%LOCALAPPDATA%\Composer -> appveyor.yml'
+  - c:\tools\php71 -> appveyor.yml
 init:
   - ps: $Env:PATH = $Env:php_directory + ';' + $Env:composer_directory + ';' + $Env:PATH
   - ps: $Env:ANSICON = '121x90 (121x90)'
