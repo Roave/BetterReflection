@@ -247,6 +247,7 @@ class ReflectionPropertyTest extends TestCase
             ReflectionProperty::createFromNode(
                 $this->reflector,
                 new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
+                0,
                 null,
                 $classInfo,
                 $classInfo,
@@ -371,23 +372,42 @@ class ReflectionPropertyTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    public function testGetAst() : void
+    public function getAstProvider() : array
+    {
+        return [
+            ['a', 0],
+            ['b', 1],
+            ['c', 0],
+            ['d', 1],
+        ];
+    }
+
+    /**
+     * @param string $propertyName
+     * @param int $positionInAst
+     * @dataProvider getAstProvider
+     */
+    public function testGetAst(string $propertyName, int $positionInAst) : void
     {
         $php = <<<'PHP'
 <?php
 class Foo
 {
-    private $test = 0;
+    private $a = 0,
+            $b = 1;
+    protected $c = 3,
+              $d = 4;         
 }
 PHP;
 
         $classReflection    = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
-        $propertyReflection = $classReflection->getProperty('test');
+        $propertyReflection = $classReflection->getProperty($propertyName);
 
         $ast = $propertyReflection->getAst();
 
         self::assertInstanceOf(Property::class, $ast);
-        self::assertSame('test', $ast->props[0]->name);
+        self::assertSame($positionInAst, $propertyReflection->getPositionInAst());
+        self::assertSame($propertyName, $ast->props[$positionInAst]->name);
     }
 
     public function testGetDeclaringAndImplementingClassWithPropertyFromTrait() : void

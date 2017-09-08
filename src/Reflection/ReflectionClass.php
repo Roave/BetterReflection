@@ -604,14 +604,17 @@ class ReflectionClass implements Reflection, CoreReflector
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
                 if ($stmt instanceof PropertyNode) {
-                    $prop                         = ReflectionProperty::createFromNode(
-                        $this->reflector,
-                        $stmt,
-                        $this->declaringNamespace,
-                        $this,
-                        $this
-                    );
-                    $properties[$prop->getName()] = $prop;
+                    foreach ($stmt->props as $propertyPositionInNode => $propertyNode) {
+                        $prop                         = ReflectionProperty::createFromNode(
+                            $this->reflector,
+                            $stmt,
+                            $propertyPositionInNode,
+                            $this->declaringNamespace,
+                            $this,
+                            $this
+                        );
+                        $properties[$prop->getName()] = $prop;
+                    }
                 }
             }
 
@@ -668,6 +671,7 @@ class ReflectionClass implements Reflection, CoreReflector
                                 return ReflectionProperty::createFromNode(
                                     $this->reflector,
                                     $property->getAst(),
+                                    $property->getPositionInAst(),
                                     $trait->declaringNamespace,
                                     $property->getDeclaringClass(),
                                     $this
