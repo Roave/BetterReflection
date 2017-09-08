@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 
@@ -12,16 +13,17 @@ use Roave\BetterReflection\Reflection\ReflectionParameter;
  */
 final class ReflectionMethodStringCast
 {
-    public static function toString(ReflectionMethod $methodReflection) : string
+    public static function toString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection = null) : string
     {
         $parametersFormat = $methodReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
         return \sprintf(
-            "Method [ <%s%s%s%s%s>%s%s%s %s method %s ] {%s{$parametersFormat}\n}",
+            "Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s{$parametersFormat}\n}",
             self::sourceToString($methodReflection),
             $methodReflection->isConstructor() ? ', ctor' : '',
             $methodReflection->isDestructor() ? ', dtor' : '',
             self::overwritesToString($methodReflection),
+            self::inheritsToString($methodReflection, $rootClassReflection),
             self::prototypeToString($methodReflection),
             $methodReflection->isFinal() ? ' final' : '',
             $methodReflection->isStatic() ? ' static' : '',
@@ -56,6 +58,19 @@ final class ReflectionMethodStringCast
         }
 
         return \sprintf(', overwrites %s', $parentClass->getName());
+    }
+
+    private static function inheritsToString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection) : string
+    {
+        if ( ! $rootClassReflection) {
+            return '';
+        }
+
+        if ($methodReflection->getDeclaringClass()->getName() === $rootClassReflection->getName()) {
+            return '';
+        }
+
+        return \sprintf(', inherits %s', $methodReflection->getDeclaringClass()->getName());
     }
 
     private static function prototypeToString(ReflectionMethod $methodReflection) : string

@@ -9,11 +9,16 @@ interface StringCastClassInterface
 
 interface StringCastClassInterface2
 {
+    public function inheritedMethod();
 }
 
-abstract class StringCastClassParent
+abstract class StringCastClassParent implements StringCastClassInterface2
 {
     public function overwrittenMethod()
+    {
+    }
+
+    public function inheritedMethod()
     {
     }
 }
