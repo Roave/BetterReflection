@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use Closure;
 use DOMNamedNodeMap;
 use IntlChar;
 use IntlGregorianCalendar;
@@ -369,7 +370,11 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
-        self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
+        if ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable') {
+            // Bug in PHP: https://3v4l.org/EeHXS
+        } else {
+            self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
+        }
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);

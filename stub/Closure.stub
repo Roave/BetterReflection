@@ -16,4 +16,8 @@ class Closure
     public function call($newthis, ...$parameters)
     {
     }
+
+    public static function fromCallable(callable $callable) : self
+    {
+    }
 }
