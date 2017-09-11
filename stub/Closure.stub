@@ -20,4 +20,8 @@ class Closure
     public static function fromCallable(callable $callable) : self
     {
     }
+
+    public function __invoke(...$parameters)
+    {
+    }
 }

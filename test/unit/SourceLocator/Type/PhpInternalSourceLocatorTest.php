@@ -277,7 +277,11 @@ class PhpInternalSourceLocatorTest extends TestCase
             ));
         }
 
-        self::assertSame($originalMethodNames, $stubbedMethodNames);
+        if ($original->getName() === Closure::class) {
+            // https://bugs.php.net/bug.php?id=75186
+        } else {
+            self::assertSame($originalMethodNames, $stubbedMethodNames);
+        }
 
         foreach ($originalMethods as $method) {
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
