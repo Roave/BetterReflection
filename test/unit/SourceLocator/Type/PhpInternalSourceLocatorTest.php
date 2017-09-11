@@ -277,7 +277,11 @@ class PhpInternalSourceLocatorTest extends TestCase
             ));
         }
 
-        self::assertSame($originalMethodNames, $stubbedMethodNames);
+        if ($original->getName() === Closure::class) {
+            // https://bugs.php.net/bug.php?id=75186
+        } else {
+            self::assertSame($originalMethodNames, $stubbedMethodNames);
+        }
 
         foreach ($originalMethods as $method) {
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
@@ -290,21 +294,18 @@ class PhpInternalSourceLocatorTest extends TestCase
             ));
         }
 
-        // See https://bugs.php.net/bug.php?id=75090
-        if ($original->getName() !== IntlGregorianCalendar::class) {
-            $originalConstants = $original->getConstants();
-            $stubConstants     = $stubbed->getConstants();
+        $originalConstants = $original->getConstants();
+        $stubConstants     = $stubbed->getConstants();
 
-            if (\count($originalConstants) > \count($stubConstants)) {
-                self::markTestIncomplete(\sprintf(
-                    'New constants detected in class "%s" which are not present in the stubs: %s',
-                    $original->getName(),
-                    "\n\n" . \implode("\n", \array_diff($originalConstants, $stubConstants))
-                ));
-            }
-
-            self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        if (\count($originalConstants) > \count($stubConstants)) {
+            self::markTestIncomplete(\sprintf(
+                'New constants detected in class "%s" which are not present in the stubs: %s',
+                $original->getName(),
+                "\n\n" . \implode("\n", \array_diff($originalConstants, $stubConstants))
+            ));
         }
+
+        self::assertEquals($original->getConstants(), $stubbed->getConstants());
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed) : void
