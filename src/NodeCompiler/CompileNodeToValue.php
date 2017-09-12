@@ -128,7 +128,7 @@ class CompileNodeToValue
     {
         $className = $node->class->toString();
 
-        if ($node->name === 'class') {
+        if ('class' === $node->name) {
             return $className;
         }
 

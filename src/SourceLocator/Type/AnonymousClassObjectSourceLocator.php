@@ -85,7 +85,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $fileName = $this->coreClassReflection->getFileName();
 
-        if (\strpos($fileName, 'eval()\'d code') !== false) {
+        if (false !== \strpos($fileName, 'eval()\'d code')) {
             throw EvaledAnonymousClassCannotBeLocated::create();
         }
 

@@ -36,7 +36,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
+        if (IdentifierType::IDENTIFIER_CLASS !== $identifier->getType()->getName()) {
             return null;
         }
 

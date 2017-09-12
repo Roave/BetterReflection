@@ -237,7 +237,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isConstructor() : bool
     {
-        if (\strtolower($this->getName()) === '__construct') {
+        if ('__construct' === \strtolower($this->getName())) {
             return true;
         }
 
@@ -256,7 +256,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isDestructor() : bool
     {
-        return \strtolower($this->getName()) === '__destruct';
+        return '__destruct' === \strtolower($this->getName());
     }
 
     /**
