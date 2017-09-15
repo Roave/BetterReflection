@@ -109,7 +109,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $overallOptionalFlag = true;
         $lastParamIndex      = (\count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
-            $hasDefault = ($this->node->params[$i]->default !== null);
+            $hasDefault = (null !== $this->node->params[$i]->default);
 
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional

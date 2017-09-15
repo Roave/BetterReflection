@@ -41,12 +41,12 @@ class IdentifierType
 
     public function isClass() : bool
     {
-        return $this->name === self::IDENTIFIER_CLASS;
+        return self::IDENTIFIER_CLASS === $this->name;
     }
 
     public function isFunction() : bool
     {
-        return $this->name === self::IDENTIFIER_FUNCTION;
+        return self::IDENTIFIER_FUNCTION === $this->name;
     }
 
     /**
@@ -57,11 +57,11 @@ class IdentifierType
      */
     public function isMatchingReflector(Reflection $reflector) : bool
     {
-        if ($this->name === self::IDENTIFIER_CLASS) {
+        if (self::IDENTIFIER_CLASS === $this->name) {
             return $reflector instanceof ReflectionClass;
         }
 
-        if ($this->name === self::IDENTIFIER_FUNCTION) {
+        if (self::IDENTIFIER_FUNCTION === $this->name) {
             return $reflector instanceof ReflectionFunction;
         }
 

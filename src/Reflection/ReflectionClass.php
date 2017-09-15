@@ -1350,7 +1350,7 @@ class ReflectionClass implements Reflection, CoreReflector
             throw NotAClassReflection::fromReflectionClass($this);
         }
 
-        if ($isFinal === true) {
+        if (true === $isFinal) {
             $this->node->flags |= ClassNode::MODIFIER_FINAL;
             return;
         }

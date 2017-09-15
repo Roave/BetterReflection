@@ -71,7 +71,7 @@ final class ClosureSourceLocator implements SourceLocator
 
         $fileName = $this->coreFunctionReflection->getFileName();
 
-        if (\strpos($fileName, 'eval()\'d code') !== false) {
+        if (false !== \strpos($fileName, 'eval()\'d code')) {
             throw EvaledClosureCannotBeLocated::create();
         }
 

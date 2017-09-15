@@ -277,7 +277,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             ));
         }
 
-        if ($original->getName() === Closure::class) {
+        if (Closure::class === $original->getName()) {
             // https://bugs.php.net/bug.php?id=75186
         } else {
             self::assertSame($originalMethodNames, $stubbedMethodNames);
@@ -371,7 +371,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
-        if ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable') {
+        if (Closure::class === $original->getDeclaringClass()->getName() && 'fromCallable' === $originalMethod->getName()) {
             // Bug in PHP: https://3v4l.org/EeHXS
         } else {
             self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);

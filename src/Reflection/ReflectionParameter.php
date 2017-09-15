@@ -150,7 +150,7 @@ class ReflectionParameter implements CoreReflector
      */
     public static function createFromSpec($spec, string $parameterName) : self
     {
-        if (\is_array($spec) && \count($spec) === 2) {
+        if (\is_array($spec) && 2 === \count($spec)) {
             if (\is_object($spec[0])) {
                 return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
             }
@@ -356,7 +356,7 @@ class ReflectionParameter implements CoreReflector
             return false;
         }
 
-        return $this->getDefaultValue() === null;
+        return null === $this->getDefaultValue();
     }
 
     /**

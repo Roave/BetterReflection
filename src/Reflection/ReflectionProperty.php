@@ -408,7 +408,7 @@ class ReflectionProperty implements CoreReflector
 
             Closure::bind(function (string $declaringClassName, string $propertyName, $value) : void {
                 $declaringClassName::${$propertyName} = $value;
-            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), \func_num_args() === 2 ? $value : $object);
+            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), 2 === \func_num_args() ? $value : $object);
 
             return;
         }
