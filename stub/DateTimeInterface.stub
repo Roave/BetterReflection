@@ -1,8 +1,0 @@
-interface DateTimeInterface {
-    public function diff ( $object, $absolute = false);
-    public function format ($format);
-    public function getOffset ();
-    public function getTimestamp ();
-    public function getTimezone ();
-    public function __wakeup ();
-}

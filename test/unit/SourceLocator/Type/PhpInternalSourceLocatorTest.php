@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use Closure;
-use DOMNamedNodeMap;
-use IntlChar;
-use IntlGregorianCalendar;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
+use RecursiveArrayIterator;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
@@ -26,27 +24,16 @@ use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use ZipArchive;
 use const PHP_VERSION_ID;
-use function array_combine;
-use function array_diff;
 use function array_filter;
 use function array_map;
 use function array_merge;
-use function class_exists;
-use function count;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
-use function implode;
 use function in_array;
-use function interface_exists;
-use function scandir;
 use function sort;
 use function sprintf;
-use function str_replace;
-use function trait_exists;
-use function trim;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
@@ -96,7 +83,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             self::assertNotEmpty($source->getSource());
         } catch (ReflectionException $e) {
             self::markTestIncomplete(sprintf(
-                'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
+                'Can\'t reflect class "%s" due to an internal reflection exception: "%s".',
                 $className,
                 $e->getMessage()
             ));
@@ -113,19 +100,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
         $reflector                = new ClassReflector($phpInternalSourceLocator);
 
-        try {
-            $class = $reflector->reflect($className);
-        } catch (ReflectionException $e) {
-            if ($phpInternalSourceLocator->hasStub($className)) {
-                throw $e;
-            }
-
-            self::markTestIncomplete(sprintf(
-                'Can\'t reflect class "%s" due to an internal reflection exception: "%s". Consider adding a stub class',
-                $className,
-                $e->getMessage()
-            ));
-        }
+        $class = $reflector->reflect($className);
 
         self::assertInstanceOf(ReflectionClass::class, $class);
         self::assertSame($className, $class->getName());
@@ -136,10 +111,12 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         self::assertSame($internalReflection->isInterface(), $class->isInterface());
         self::assertSame($internalReflection->isTrait(), $class->isTrait());
+
+        $this->assertSameClassAttributes($internalReflection, $class);
     }
 
     /**
-     * @return string[] internal symbols
+     * @return string[][] internal symbols
      */
     public function internalSymbolsProvider() : array
     {
@@ -149,14 +126,12 @@ class PhpInternalSourceLocatorTest extends TestCase
             get_declared_traits()
         );
 
-        $indexedSymbols = array_combine($allSymbols, $allSymbols);
-
         return array_map(
             static function (string $symbol) : array {
                 return [$symbol];
             },
             array_filter(
-                $indexedSymbols,
+                $allSymbols,
                 static function (string $symbol) : bool {
                     $reflection = new CoreReflectionClass($symbol);
 
@@ -194,48 +169,6 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider stubbedClassesProvider
-     * @coversNothing
-     */
-    public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
-    {
-        if (! (
-            class_exists($className, false)
-            || interface_exists($className, false)
-            || trait_exists($className, false)
-        )) {
-            $this->markTestSkipped(sprintf('Class "%s" is not available in this environment', $className));
-        }
-
-        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber));
-
-        $this->assertSameClassAttributes(new CoreReflectionClass($className), $reflector->reflect($className));
-    }
-
-    /**
-     * @return string[][]
-     */
-    public function stubbedClassesProvider() : array
-    {
-        $classNames = array_filter(
-            str_replace('.stub', '', scandir(__DIR__ . '/../../../../stub', 0)),
-            static function (string $fileName) : string {
-                return trim($fileName, '.');
-            }
-        );
-
-        return array_combine(
-            $classNames,
-            array_map(
-                static function (string $fileName) : array {
-                    return [$fileName];
-                },
-                $classNames
-            )
-        );
-    }
-
     private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed) : void
     {
         $originalParentClass = $original->getParentClass();
@@ -249,12 +182,6 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed) : void
     {
-        $className = $original->getName();
-
-        if (PHP_VERSION_ID < 70200 && in_array($className, [DOMNamedNodeMap::class, ZipArchive::class], true)) {
-            self::markTestSkipped(sprintf('"%s" changed between PHP 7.1 and PHP 7.2', $className));
-        }
-
         $originalInterfacesNames = $original->getInterfaceNames();
         $stubbedInterfacesNames  = $stubbed->getInterfaceNames();
 
@@ -271,57 +198,17 @@ class PhpInternalSourceLocatorTest extends TestCase
         $this->assertSameParentClass($original, $stubbed);
         $this->assertSameInterfaces($original, $stubbed);
 
-        $originalMethods = $original->getMethods();
-
-        $originalMethodNames = array_map(
-            static function (CoreReflectionMethod $method) : string {
-                return $method->getName();
-            },
-            $originalMethods
-        );
-
-        $stubbedMethodNames = array_map(
-            static function (ReflectionMethod $method) : string {
-                return $method->getName();
-            },
-            $stubbed->getMethods() // @TODO see #107
-        );
-
-        sort($originalMethodNames);
-        sort($stubbedMethodNames);
-
-        if (count($originalMethodNames) > count($stubbedMethodNames)) {
-            self::markTestIncomplete(sprintf(
-                'New methods detected in class "%s" which are not present in the stubs: %s',
-                $original->getName(),
-                "\n\n" . implode("\n", array_diff($originalMethodNames, $stubbedMethodNames))
-            ));
-        }
-
-        if ($original->getName() !== Closure::class) {
-            // https://bugs.php.net/bug.php?id=75186
-            self::assertSame($originalMethodNames, $stubbedMethodNames);
-        }
-
-        foreach ($originalMethods as $method) {
+        foreach ($original->getMethods() as $method) {
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
-        if (in_array($original->getName(), [IntlGregorianCalendar::class, IntlChar::class], true)) {
-            self::markTestSkipped(sprintf(
-                'Constants for "%s" change depending on environment: not testing them, as it\'s a suicide',
-                $original->getName()
-            ));
-        }
-
-        $originalConstants = $original->getConstants();
-        $stubConstants     = $stubbed->getConstants();
-
-        if (count($originalConstants) > count($stubConstants)) {
+        if ($original->getName() === RecursiveArrayIterator::class
+            && (PHP_VERSION_ID < 70114 || (PHP_VERSION_ID >= 70200 && PHP_VERSION_ID < 70202))
+        ) {
+            // https://bugs.php.net/bug.php?id=75242
             self::markTestIncomplete(sprintf(
-                'New constants detected in class "%s" which are not present in the stubs: %s',
-                $original->getName(),
-                "\n\n" . implode("\n", array_diff($originalConstants, $stubConstants))
+                'Constants of "%s" missing because of bug #75242.',
+                $original->getName()
             ));
         }
 
@@ -343,30 +230,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             $stubbed->getParameters()
         );
 
-        $methodName = sprintf('%s#%s', $original->getDeclaringClass()->getName(), $original->getName());
-
-        if (count($originalParameterNames) > count($stubParameterNames)) {
-            self::markTestIncomplete(sprintf(
-                'New parameters found in method "%s": %s',
-                $methodName,
-                "\n" . implode("\n", array_diff($originalParameterNames, $stubParameterNames))
-            ));
-        }
-
-        if ((PHP_VERSION_ID < 70117 || (PHP_VERSION_ID >= 70200 && PHP_VERSION_ID < 70205))
-            && in_array(
-                $methodName,
-                [
-                    'DateTime#__construct',
-                    'DateTimeImmutable#__construct',
-                ],
-                true
-            )
-        ) {
-            self::markTestSkipped('Argument name was changed in PHP 7.1.17 and 7.2.5 for ' . $methodName);
-        } else {
-            self::assertSame($originalParameterNames, $stubParameterNames);
-        }
+        self::assertSame($originalParameterNames, $stubParameterNames);
 
         foreach ($original->getParameters() as $parameter) {
             $this->assertSameParameterAttributes(
@@ -393,42 +257,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             . '#' . $originalMethod->getName()
             . '.' . $original->getName();
 
-        if (PHP_VERSION_ID < 70200
-            && in_array(
-                $parameterName,
-                [
-                    'DateTime#createFromFormat.object',
-                    'DateTimeImmutable#createFromFormat.object',
-                    'UConverter#getAliases.name',
-                ],
-                true
-            )
-        ) {
-            self::markTestSkipped('New type hints were introduced in PHP 7.2 for ' . $parameterName);
-        }
-
-        if (PHP_VERSION_ID < 70300
-            && in_array(
-                $parameterName,
-                ['SoapServer#setClass.args'],
-                true
-            )
-        ) {
-            self::markTestSkipped('New type hints were introduced in PHP 7.3 for ' . $parameterName);
-        }
-
-        if (in_array(
-            $parameterName,
-            [
-                'DateTime#__construct.object',
-                'DateTimeImmutable#__construct.object',
-            ],
-            true
-        )) {
-            self::markTestSkipped('Argument name was changed in PHP 7.1.17 and 7.2.5 for ' . $parameterName);
-        } else {
-            self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
-        }
+        self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
 
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
         if (! ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable')) {
@@ -437,12 +266,10 @@ class PhpInternalSourceLocatorTest extends TestCase
         }
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-
-        if (! ($parameterName === 'SoapClient#__setSoapHeaders.soapheaders' && PHP_VERSION_ID < 70112)) {
-            // https://bugs.php.net/bug.php?id=75464 fixed in PHP 7.1.2
+        if (! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)) {
+            // Parameters are variadic but not optinal
             self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         }
-
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 

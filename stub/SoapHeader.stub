@@ -1,9 +1,0 @@
-class SoapHeader
-{
-
-    public function SoapHeader($namespace, $name, $data = null, $mustunderstand = false, $actor = null)
-    {
-    }
-
-
-}

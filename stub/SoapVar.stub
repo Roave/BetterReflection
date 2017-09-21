@@ -1,9 +1,0 @@
-class SoapVar
-{
-
-    public function SoapVar($data, $encoding, $type_name = null, $type_namespace = null, $node_name = null, $node_namespace = null)
-    {
-    }
-
-
-}
