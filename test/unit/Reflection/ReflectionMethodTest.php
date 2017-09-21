@@ -26,6 +26,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -54,12 +55,18 @@ class ReflectionMethodTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var SourceStubber */
+    private $sourceStubber;
+
     public function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->reflector  = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->astLocator    = $betterReflection->astLocator();
+        $this->sourceStubber = $betterReflection->sourceStubber();
+        $this->reflector     = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromName() : void
@@ -383,7 +390,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetExtensionName() : void
     {
-        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(ReflectionClass::class);
+        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(ReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
 
         self::assertSame('Reflection', $method->getExtensionName());
@@ -391,7 +398,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsInternal() : void
     {
-        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(ReflectionClass::class);
+        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(ReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
 
         self::assertTrue($method->isInternal());

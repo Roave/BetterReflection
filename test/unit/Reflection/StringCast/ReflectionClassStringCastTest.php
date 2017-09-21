@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -25,11 +26,17 @@ class ReflectionClassStringCastTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var SourceStubber */
+    private $sourceStubber;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->astLocator    = $betterReflection->astLocator();
+        $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
     public function testToString() : void
@@ -55,7 +62,7 @@ class ReflectionClassStringCastTest extends TestCase
 
     public function testInternalClassToString() : void
     {
-        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
+        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber));
 
         // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
         $classReflection = $reflector->reflect(Exception::class);

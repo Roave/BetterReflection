@@ -8,6 +8,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -21,11 +22,17 @@ class ReflectionMethodStringCastTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var SourceStubber */
+    private $sourceStubber;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->astLocator    = $betterReflection->astLocator();
+        $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
     public function toStringProvider() : array
@@ -60,7 +67,7 @@ class ReflectionMethodStringCastTest extends TestCase
     public function testToStringForInternal() : void
     {
         // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
-        $classReflection = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(Exception::class);
+        $classReflection = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(Exception::class);
         // phpcs:enable
 
         self::assertSame("Method [ <internal:Core, prototype Throwable> final public method getMessage ] {\n}", (string) $classReflection->getMethod('getMessage'));

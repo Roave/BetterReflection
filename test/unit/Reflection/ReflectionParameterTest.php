@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -47,12 +48,18 @@ class ReflectionParameterTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var SourceStubber */
+    private $sourceStubber;
+
     public function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->reflector  = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->astLocator    = $betterReflection->astLocator();
+        $this->sourceStubber = $betterReflection->sourceStubber();
+        $this->reflector     = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromClassNameAndMethod() : void
@@ -591,7 +598,7 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
             new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');
@@ -635,7 +642,7 @@ class ReflectionParameterTest extends TestCase
         $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
 
         $reflector  = new ClassReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
             new StringSourceLocator($content, $this->astLocator),
         ]));
         $classInfo  = $reflector->reflect('Foo');

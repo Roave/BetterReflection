@@ -12,6 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use function class_exists;
 use function file_exists;
 use function interface_exists;
@@ -19,14 +20,14 @@ use function trait_exists;
 
 final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
-    /** @var ReflectionSourceStubber */
+    /** @var SourceStubber */
     private $stubber;
 
-    public function __construct(Locator $astLocator)
+    public function __construct(Locator $astLocator, ?SourceStubber $stubber = null)
     {
         parent::__construct($astLocator);
 
-        $this->stubber = new ReflectionSourceStubber();
+        $this->stubber = $stubber ?? new ReflectionSourceStubber();
     }
 
     /**
