@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Reflection;
+namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 use PhpParser\Builder;
 use PhpParser\Builder\Class_;
