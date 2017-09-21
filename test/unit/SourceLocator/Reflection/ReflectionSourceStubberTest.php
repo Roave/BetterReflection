@@ -7,7 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Reflection;
 use ClassWithoutNamespaceForSourceStubber;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
-use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use Roave\BetterReflection\SourceLocator\Reflection\ReflectionSourceStubber;
 use Roave\BetterReflectionTest\Fixture\ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
@@ -15,11 +15,11 @@ use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
 use Traversable;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Reflection\SourceStubber
+ * @covers \Roave\BetterReflection\SourceLocator\Reflection\ReflectionSourceStubber
  */
-class SourceStubberTest extends TestCase
+class ReflectionSourceStubberTest extends TestCase
 {
-    /** @var SourceStubber */
+    /** @var ReflectionSourceStubber */
     private $stubber;
 
     /**
@@ -29,7 +29,7 @@ class SourceStubberTest extends TestCase
     {
         parent::setUp();
 
-        $this->stubber = new SourceStubber();
+        $this->stubber = new ReflectionSourceStubber();
     }
 
     public function testCanStubClass() : void

@@ -38,11 +38,11 @@ use function explode;
 use function in_array;
 
 /**
- * Function that generates a stub source from a given reflection instance.
+ * Function that generates a stub source from a given class reflection instance.
  *
  * @internal
  */
-final class SourceStubber
+final class ReflectionSourceStubber
 {
     /** @var BuilderFactory */
     private $builderFactory;
