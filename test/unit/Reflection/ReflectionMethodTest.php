@@ -57,6 +57,8 @@ class ReflectionMethodTest extends TestCase
 
     public function setUp() : void
     {
+        parent::setUp();
+
         global $loader;
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
         $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));

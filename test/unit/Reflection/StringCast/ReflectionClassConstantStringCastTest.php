@@ -22,6 +22,8 @@ class ReflectionClassConstantStringCastTest extends TestCase
 
     protected function setUp() : void
     {
+        parent::setUp();
+
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 

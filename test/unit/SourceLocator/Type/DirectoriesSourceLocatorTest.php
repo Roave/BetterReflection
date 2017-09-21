@@ -27,6 +27,8 @@ class DirectoriesSourceLocatorTest extends TestCase
 
     public function setUp() : void
     {
+        parent::setUp();
+
         $this->sourceLocator = new DirectoriesSourceLocator(
             [
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',

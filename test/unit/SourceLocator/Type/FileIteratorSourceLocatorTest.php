@@ -29,6 +29,8 @@ class FileIteratorSourceLocatorTest extends TestCase
      */
     public function setUp() : void
     {
+        parent::setUp();
+
         $this->sourceLocator = new FileIteratorSourceLocator(
             new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
