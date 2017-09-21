@@ -36,7 +36,7 @@ class ReflectionSourceStubberTest extends TestCase
     {
         self::assertStringMatchesFormat(
             '%Aclass stdClass%A{%A}%A',
-            $this->stubber->__invoke(new CoreReflectionClass('stdClass'))
+            $this->stubber->generateClassStub(new CoreReflectionClass('stdClass'))
         );
     }
 
@@ -44,7 +44,7 @@ class ReflectionSourceStubberTest extends TestCase
     {
         self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
-            $this->stubber->__invoke(new CoreReflectionClass(Traversable::class))
+            $this->stubber->generateClassStub(new CoreReflectionClass(Traversable::class))
         );
     }
 
@@ -52,32 +52,32 @@ class ReflectionSourceStubberTest extends TestCase
     {
         self::assertStringMatchesFormat(
             '%Atrait EmptyTrait%A{%A}%A',
-            $this->stubber->__invoke(new CoreReflectionClass(EmptyTrait::class))
+            $this->stubber->generateClassStub(new CoreReflectionClass(EmptyTrait::class))
         );
     }
 
     public function testClassStub() : void
     {
         $classReflection = new CoreReflectionClass(ClassForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', "<?php\n" . $this->stubber->__invoke($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
     }
 
     public function testClassWithoutNamespaceStub() : void
     {
         require __DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubber.php';
         $classReflection = new CoreReflectionClass(ClassWithoutNamespaceForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', "<?php\n" . $this->stubber->__invoke($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
     }
 
     public function testInterfaceStub() : void
     {
         $classReflection = new CoreReflectionClass(InterfaceForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/InterfaceForSourceStubberExpected.php', "<?php\n" . $this->stubber->__invoke($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/InterfaceForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
     }
 
     public function testTraitStub() : void
     {
         $classReflection = new CoreReflectionClass(TraitForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/TraitForSourceStubberExpected.php', "<?php\n" . $this->stubber->__invoke($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/TraitForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
     }
 }

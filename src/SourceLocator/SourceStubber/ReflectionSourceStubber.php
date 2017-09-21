@@ -38,11 +38,11 @@ use function explode;
 use function in_array;
 
 /**
- * Function that generates a stub source from a given class reflection instance.
+ * It generates a stub source from a given reflection instance.
  *
  * @internal
  */
-final class ReflectionSourceStubber
+final class ReflectionSourceStubber implements SourceStubber
 {
     private const BUILDER_OPTIONS = ['shortArraySyntax' => true];
 
@@ -58,7 +58,7 @@ final class ReflectionSourceStubber
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
     }
 
-    public function __invoke(CoreReflectionClass $classReflection) : string
+    public function generateClassStub(CoreReflectionClass $classReflection) : ?string
     {
         $classNode = $this->createClass($classReflection);
 

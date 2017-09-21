@@ -58,10 +58,14 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return new InternalLocatedSource("<?php\n\n" . $stub, $extensionName);
         }
 
-        $stubber = $this->stubber;
+        $stub = $this->stubber->generateClassStub($classReflection);
+
+        if ($stub === null) {
+            return null;
+        }
 
         return new InternalLocatedSource(
-            "<?php\n\n" . $stubber($classReflection),
+            "<?php\n\n" . $stub,
             $extensionName
         );
     }
