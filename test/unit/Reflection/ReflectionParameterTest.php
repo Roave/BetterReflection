@@ -51,6 +51,8 @@ class ReflectionParameterTest extends TestCase
 
     public function setUp() : void
     {
+        parent::setUp();
+
         global $loader;
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
