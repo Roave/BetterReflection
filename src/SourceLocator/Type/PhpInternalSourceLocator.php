@@ -57,7 +57,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         }
 
         return new InternalLocatedSource(
-            "<?php\n\n" . $stub,
+            $stub,
             $classReflection->getExtensionName()
         );
     }
@@ -94,7 +94,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         }
 
         return new InternalLocatedSource(
-            "<?php\n\n" . $stub,
+            $stub,
             $functionReflection->getExtensionName()
         );
     }

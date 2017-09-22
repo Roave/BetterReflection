@@ -84,13 +84,13 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->addMethods($classNode, $classReflection);
 
         if (! $classReflection->inNamespace()) {
-            return $this->prettyPrinter->prettyPrint([$classNode->getNode()]);
+            return $this->generateStub($classNode);
         }
 
         $namespaceNode = $this->builderFactory->namespace($classReflection->getNamespaceName());
         $namespaceNode->addStmt($classNode);
 
-        return $this->prettyPrinter->prettyPrint([$namespaceNode->getNode()]);
+        return $this->generateStub($namespaceNode);
     }
 
     public function generateFunctionStub(CoreReflectionFunction $functionReflection) : ?string
@@ -100,7 +100,7 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->addDocComment($functionNode, $functionReflection);
         $this->addParameters($functionNode, $functionReflection);
 
-        return $this->prettyPrinter->prettyPrint([$functionNode->getNode()]);
+        return $this->generateStub($functionNode);
     }
 
     /**
@@ -415,5 +415,10 @@ final class ReflectionSourceStubber implements SourceStubber
         $name     = (string) $type;
         $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
+    }
+
+    private function generateStub(Builder $builder) : string
+    {
+        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$builder->getNode()]) . "\n";
     }
 }

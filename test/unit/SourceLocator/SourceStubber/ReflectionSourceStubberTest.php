@@ -59,25 +59,25 @@ class ReflectionSourceStubberTest extends TestCase
     public function testClassStub() : void
     {
         $classReflection = new CoreReflectionClass(ClassForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
     }
 
     public function testClassWithoutNamespaceStub() : void
     {
         require __DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubber.php';
         $classReflection = new CoreReflectionClass(ClassWithoutNamespaceForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
     }
 
     public function testInterfaceStub() : void
     {
         $classReflection = new CoreReflectionClass(InterfaceForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/InterfaceForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/InterfaceForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
     }
 
     public function testTraitStub() : void
     {
         $classReflection = new CoreReflectionClass(TraitForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/TraitForSourceStubberExpected.php', "<?php\n" . $this->stubber->generateClassStub($classReflection) . "\n");
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/TraitForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
     }
 }
