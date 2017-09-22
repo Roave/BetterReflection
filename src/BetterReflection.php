@@ -11,6 +11,8 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
+use Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
@@ -94,6 +96,9 @@ final class BetterReflection
     public function sourceStubber() : SourceStubber
     {
         return $this->sourceStubber
-            ?? $this->sourceStubber = new ReflectionSourceStubber();
+            ?? $this->sourceStubber = new AggregateSourceStubber(
+                new PhpStormStubsSourceStubber($this->phpParser()),
+                new ReflectionSourceStubber()
+            );
     }
 }
