@@ -44,6 +44,8 @@ use function in_array;
  */
 final class ReflectionSourceStubber
 {
+    private const BUILDER_OPTIONS = ['shortArraySyntax' => true];
+
     /** @var BuilderFactory */
     private $builderFactory;
 
@@ -53,7 +55,7 @@ final class ReflectionSourceStubber
     public function __construct()
     {
         $this->builderFactory = new BuilderFactory();
-        $this->prettyPrinter  = new Standard(['shortArraySyntax' => true]);
+        $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
     }
 
     public function __invoke(CoreReflectionClass $classReflection) : string
