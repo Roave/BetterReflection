@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Util;
+namespace Rector\BetterReflection\Util;
 
 class FileHelper
 {

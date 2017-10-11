@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Autoload\ClassPrinter;
+namespace Rector\BetterReflectionTest\Util\Autoload\ClassPrinter;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
-use Roave\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
+use Rector\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
 
 /**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter
+ * @covers \Rector\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter
  */
 final class PhpParserPrinterTest extends TestCase
 {
@@ -17,13 +17,13 @@ final class PhpParserPrinterTest extends TestCase
     {
         self::assertSame(
             <<<'PHP'
-namespace Roave\BetterReflectionTest\Fixture;
+namespace Rector\BetterReflectionTest\Fixture;
 
 class TestClassForPhpParserPrinterTest
 {
-    public function foo() : \Roave\BetterReflection\TypesFinder\FindReturnType
+    public function foo() : \Rector\BetterReflection\TypesFinder\FindReturnType
     {
-        return new \Roave\BetterReflection\TypesFinder\FindReturnType();
+        return new \Rector\BetterReflection\TypesFinder\FindReturnType();
     }
 }
 PHP

@@ -25,7 +25,7 @@ See [AST extraction documentation](https://github.com/Roave/BetterReflection/tre
 ## PHP 7 Parameter Type Declarations and Return Type Declarations
 
 These act in the same way as the core reflection API, except they return a
-`\Roave\BetterReflection\Reflection\ReflectionType` instance (which does not
+`\Rector\BetterReflection\Reflection\ReflectionType` instance (which does not
 extend `\ReflectionType`).
 
 ```

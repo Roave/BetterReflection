@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave\BetterReflectionTest\Fixture {
+namespace Rector\BetterReflectionTest\Fixture {
     /**
      * Some comments here
      */
@@ -67,7 +67,7 @@ namespace Roave\BetterReflectionTest\Fixture {
     }
 }
 
-namespace Roave\BetterReflectionTest\FixtureOther {
+namespace Rector\BetterReflectionTest\FixtureOther {
     class AnotherClass
     {
     }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use A\Foo;
 use ClassWithMethodsAndTraitMethods;
@@ -15,33 +15,33 @@ use Reflection;
 use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Reflector;
-use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture\ClassWithNonStaticMethod;
-use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
-use Roave\BetterReflectionTest\Fixture\ExampleClass;
-use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
-use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
+use Rector\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Rector\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionType;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture\ClassWithNonStaticMethod;
+use Rector\BetterReflectionTest\Fixture\ClassWithStaticMethod;
+use Rector\BetterReflectionTest\Fixture\ExampleClass;
+use Rector\BetterReflectionTest\Fixture\Methods;
+use Rector\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
+use Rector\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
 use TraitWithMethod;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
+ * @covers \Rector\BetterReflection\Reflection\ReflectionMethod
  */
 class ReflectionMethodTest extends TestCase
 {

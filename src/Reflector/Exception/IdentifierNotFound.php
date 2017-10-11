@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflector\Exception;
+namespace Rector\BetterReflection\Reflector\Exception;
 
-use Roave\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\Identifier;
 use RuntimeException;
 
 class IdentifierNotFound extends RuntimeException

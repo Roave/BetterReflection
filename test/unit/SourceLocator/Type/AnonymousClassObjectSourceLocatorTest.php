@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use InvalidArgumentException;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
-use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
-use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
-use Roave\BetterReflection\Util\FileHelper;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
+use Rector\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
+use Rector\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
+use Rector\BetterReflection\Util\FileHelper;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
  */
 class AnonymousClassObjectSourceLocatorTest extends TestCase
 {

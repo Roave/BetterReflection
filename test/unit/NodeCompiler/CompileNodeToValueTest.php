@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\NodeCompiler;
+namespace Rector\BetterReflectionTest\NodeCompiler;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
@@ -11,16 +11,16 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
-use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Rector\BetterReflection\NodeCompiler\CompilerContext;
+use Rector\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
+ * @covers \Rector\BetterReflection\NodeCompiler\CompileNodeToValue
  */
 class CompileNodeToValueTest extends TestCase
 {

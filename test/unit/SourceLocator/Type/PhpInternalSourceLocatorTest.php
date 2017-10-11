@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use Closure;
 use DOMNamedNodeMap;
@@ -12,21 +12,21 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 use ZipArchive;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
  */
 class PhpInternalSourceLocatorTest extends TestCase
 {

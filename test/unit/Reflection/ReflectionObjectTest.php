@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Node;
@@ -11,18 +11,18 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionObject;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
-use Roave\BetterReflection\Util\FileHelper;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionObject;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Rector\BetterReflection\Util\FileHelper;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture\ClassForHinting;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionObject
+ * @covers \Rector\BetterReflection\Reflection\ReflectionObject
  */
 class ReflectionObjectTest extends TestCase
 {
@@ -267,7 +267,7 @@ class ReflectionObjectTest extends TestCase
         $foo->bar = 'huzzah';
 
         $expectedExport = <<<'BLAH'
-Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHinting ] {
+Object of class [ <user> class Rector\BetterReflectionTest\Fixture\ClassForHinting ] {
   @@ %s
 
   - Constants [0] {

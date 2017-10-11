@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector;
+namespace Rector\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\Reflector\ClassReflector
+ * @covers \Rector\BetterReflection\Reflector\ClassReflector
  */
 class ClassReflectorTest extends TestCase
 {

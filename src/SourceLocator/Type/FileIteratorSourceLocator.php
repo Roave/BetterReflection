@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
 use Iterator;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
-use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
+use Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use SplFileInfo;
 
 /**

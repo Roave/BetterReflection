@@ -15,6 +15,6 @@ check () {
 }
 
 check demo/basic-reflection/example1.php $'stdClass\ninternal'
-check demo/basic-reflection/example2.php $'Roave\BetterReflection\Reflection\ReflectionClass\nnot internal'
+check demo/basic-reflection/example2.php $'Rector\BetterReflection\Reflection\ReflectionClass\nnot internal'
 check demo/basic-reflection/example3.php $'MyClass\nprivate\nstring\nstring'
 check demo/monkey-patching/index.php $'4'

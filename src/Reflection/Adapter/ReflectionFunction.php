@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Adapter;
+namespace Rector\BetterReflection\Reflection\Adapter;
 
 use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Throwable;
 
 class ReflectionFunction extends CoreReflectionFunction

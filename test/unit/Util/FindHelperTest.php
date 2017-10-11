@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util;
+namespace Rector\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\FileHelper;
+use Rector\BetterReflection\Util\FileHelper;
 
 /**
- * @covers \Roave\BetterReflection\Util\FileHelper
+ * @covers \Rector\BetterReflection\Util\FileHelper
  */
 class FindHelperTest extends TestCase
 {

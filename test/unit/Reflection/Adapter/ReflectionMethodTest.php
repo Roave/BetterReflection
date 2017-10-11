@@ -1,27 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Adapter;
+namespace Rector\BetterReflectionTest\Reflection\Adapter;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Rector\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionMethod
+ * @covers \Rector\BetterReflection\Reflection\Adapter\ReflectionMethod
  */
 class ReflectionMethodTest extends TestCase
 {

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Exception;
+namespace Rector\BetterReflectionTest\Util\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
+use Rector\BetterReflection\Util\Exception\InvalidNodePosition;
 
 /**
- * @covers \Roave\BetterReflection\Util\Exception\InvalidNodePosition
+ * @covers \Rector\BetterReflection\Util\Exception\InvalidNodePosition
  */
 class InvalidNodePositionTest extends TestCase
 {

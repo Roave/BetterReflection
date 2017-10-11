@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use Exception;
 use Foo;
@@ -12,30 +12,30 @@ use PhpParser\Node\Param;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflector;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
-use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
-use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
-use Roave\BetterReflectionTest\FixtureOther\OtherClass;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionType;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture\ClassForHinting;
+use Rector\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
+use Rector\BetterReflectionTest\Fixture\Methods;
+use Rector\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
+use Rector\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
+use Rector\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
+ * @covers \Rector\BetterReflection\Reflection\ReflectionParameter
  */
 class ReflectionParameterTest extends TestCase
 {
@@ -104,7 +104,7 @@ class ReflectionParameterTest extends TestCase
     public function testCreateFromSpecWithFunctionName() : void
     {
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
-        $parameterInfo = ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'param1');
+        $parameterInfo = ReflectionParameter::createFromSpec('Rector\BetterReflectionTest\Fixture\testFunction', 'param1');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('param1', $parameterInfo->getName());
@@ -552,10 +552,10 @@ class ReflectionParameterTest extends TestCase
         $method    = $classInfo->getMethod('method');
 
         $param4 = $method->getParameter('param4');
-        self::assertSame('Roave\BetterReflectionTest\Fixture\THIS_NAMESPACE_CONST', $param4->getDefaultValueConstantName());
+        self::assertSame('Rector\BetterReflectionTest\Fixture\THIS_NAMESPACE_CONST', $param4->getDefaultValueConstantName());
 
         $param5 = $method->getParameter('param5');
-        self::assertSame('Roave\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST', $param5->getDefaultValueConstantName());
+        self::assertSame('Rector\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST', $param5->getDefaultValueConstantName());
     }
 
     public function testGetDeclaringFunction() : void

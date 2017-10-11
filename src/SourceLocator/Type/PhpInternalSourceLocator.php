@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
 use ReflectionClass;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\SourceLocator\Reflection\SourceStubber;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator
 {
@@ -27,7 +27,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

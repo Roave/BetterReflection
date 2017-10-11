@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\StringCast;
+namespace Rector\BetterReflection\Reflection\StringCast;
 
-use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
 
 /**
  * @internal

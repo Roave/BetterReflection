@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use Bar;
 use Baz;
@@ -19,43 +19,43 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
-use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionClassConstant;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\ClassesImplementingIterators;
-use Roave\BetterReflectionTest\ClassesWithCloneMethod;
-use Roave\BetterReflectionTest\ClassWithInterfaces;
-use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
-use Roave\BetterReflectionTest\ClassWithInterfacesOther;
-use Roave\BetterReflectionTest\Fixture;
-use Roave\BetterReflectionTest\Fixture\AbstractClass;
-use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use Roave\BetterReflectionTest\Fixture\ExampleClass;
-use Roave\BetterReflectionTest\Fixture\ExampleInterface;
-use Roave\BetterReflectionTest\Fixture\ExampleTrait;
-use Roave\BetterReflectionTest\Fixture\FinalClass;
-use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
-use Roave\BetterReflectionTest\Fixture\MethodsOrder;
-use Roave\BetterReflectionTest\Fixture\StaticProperties;
-use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
-use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
-use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
+use Rector\BetterReflection\Reflection\Exception\NotAClassReflection;
+use Rector\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionClassConstant;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\ClassesImplementingIterators;
+use Rector\BetterReflectionTest\ClassesWithCloneMethod;
+use Rector\BetterReflectionTest\ClassWithInterfaces;
+use Rector\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
+use Rector\BetterReflectionTest\ClassWithInterfacesOther;
+use Rector\BetterReflectionTest\Fixture;
+use Rector\BetterReflectionTest\Fixture\AbstractClass;
+use Rector\BetterReflectionTest\Fixture\ClassForHinting;
+use Rector\BetterReflectionTest\Fixture\ExampleClass;
+use Rector\BetterReflectionTest\Fixture\ExampleInterface;
+use Rector\BetterReflectionTest\Fixture\ExampleTrait;
+use Rector\BetterReflectionTest\Fixture\FinalClass;
+use Rector\BetterReflectionTest\Fixture\InvalidInheritances;
+use Rector\BetterReflectionTest\Fixture\MethodsOrder;
+use Rector\BetterReflectionTest\Fixture\StaticProperties;
+use Rector\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use Rector\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
+use Rector\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionClass
+ * @covers \Rector\BetterReflection\Reflection\ReflectionClass
  */
 class ReflectionClassTest extends TestCase
 {
@@ -111,7 +111,7 @@ class ReflectionClassTest extends TestCase
 
         self::assertTrue($classInfo->inNamespace());
         self::assertSame(ExampleClass::class, $classInfo->getName());
-        self::assertSame('Roave\BetterReflectionTest\Fixture', $classInfo->getNamespaceName());
+        self::assertSame('Rector\BetterReflectionTest\Fixture', $classInfo->getNamespaceName());
         self::assertSame('ExampleClass', $classInfo->getShortName());
     }
 
@@ -523,7 +523,7 @@ PHP;
             $this->astLocator
         )))->reflect(Fixture\ClassWithTwoParents::class);
 
-        self::assertSame(['Roave\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Roave\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
+        self::assertSame(['Rector\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Rector\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
     }
 
     public function startEndLineProvider() : array
@@ -798,7 +798,7 @@ PHP;
             $this->astLocator
         ));
 
-        $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\\' . $className);
+        $classInfo = $reflector->reflect('\Rector\BetterReflectionTest\Fixture\\' . $className);
 
         self::assertSame($expectedModifier, $classInfo->getModifiers());
         self::assertSame(

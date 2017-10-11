@@ -7,12 +7,12 @@ the class is an invokable class:
 ```php
 <?php
 
-$finder = (new \Roave\BetterReflection\BetterReflection())->findReflectionsOnLine();
+$finder = (new \Rector\BetterReflection\BetterReflection())->findReflectionsOnLine();
 $reflection = $finder('path/to/my/file.php', 10);
 ```
 
 The helper will return `null` if no reflection is found, or may return one of:
 
-* `\Roave\BetterReflection\Reflection\ReflectionClass` (for interfaces, classes, traits)
-* `\Roave\BetterReflection\Reflection\ReflectionMethod`
-* `\Roave\BetterReflection\Reflection\ReflectionFunction`
+* `\Rector\BetterReflection\Reflection\ReflectionClass` (for interfaces, classes, traits)
+* `\Rector\BetterReflection\Reflection\ReflectionMethod`
+* `\Rector\BetterReflection\Reflection\ReflectionFunction`

@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Adapter;
+namespace Rector\BetterReflectionTest\Reflection\Adapter;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunctionAdapter;
-use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Rector\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunctionAdapter;
+use Rector\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction
+ * @covers \Rector\BetterReflection\Reflection\Adapter\ReflectionFunction
  */
 class ReflectionFunctionTest extends TestCase
 {

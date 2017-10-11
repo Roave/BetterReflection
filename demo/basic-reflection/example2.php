@@ -2,8 +2,8 @@
 
 // Load an autoloadable class
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflection\ReflectionClass;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 

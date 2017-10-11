@@ -11,7 +11,7 @@
         </whitelist>
     </filter>
     <listeners>
-        <listener class="Roave\BetterReflectionTest\TestListener" file="test/unit/TestListener.php" />
+        <listener class="Rector\BetterReflectionTest\TestListener" file="test/unit/TestListener.php" />
     </listeners>
     <php>
         <ini name="error_reporting" value="E_ALL"/>

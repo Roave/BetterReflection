@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector;
+namespace Rector\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
+use Rector\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
+ * @covers \Rector\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
  */
 class FindReflectionsInTreeTest extends TestCase
 {

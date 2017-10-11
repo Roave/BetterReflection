@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Rector\BetterReflection\Reflection;
 
 use Closure;
 use Exception;
@@ -13,14 +13,14 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
-use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\TypesFinder\FindParameterType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Rector\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Rector\BetterReflection\NodeCompiler\CompilerContext;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\TypesFinder\FindParameterType;
+use Rector\BetterReflection\Util\CalculateReflectionColum;
 use RuntimeException;
 
 class ReflectionParameter implements CoreReflector
@@ -262,7 +262,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->name;
+        return $this->node->var->name;
     }
 
     /**

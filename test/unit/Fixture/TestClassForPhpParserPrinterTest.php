@@ -1,8 +1,8 @@
 <?php
 
-namespace Roave\BetterReflectionTest\Fixture;
+namespace Rector\BetterReflectionTest\Fixture;
 
-use Roave\BetterReflection\TypesFinder\FindReturnType;
+use Rector\BetterReflection\TypesFinder\FindReturnType;
 
 class TestClassForPhpParserPrinterTest
 {

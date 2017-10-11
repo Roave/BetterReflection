@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection;
+namespace Rector\BetterReflection;
 
 use PhpParser\Lexer\Emulative;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
-use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
-use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
-use Roave\BetterReflection\Util\FindReflectionOnLine;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Rector\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
+use Rector\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SourceLocator;
+use Rector\BetterReflection\Util\FindReflectionOnLine;
 
 final class BetterReflection
 {

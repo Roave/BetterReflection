@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Exception;
+namespace Rector\BetterReflectionTest\Reflection\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass
+ * @covers \Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass
  */
 class ObjectNotInstanceOfClassTest extends TestCase
 {

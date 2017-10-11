@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Util\Autoload\ClassPrinter;
+namespace Rector\BetterReflection\Util\Autoload\ClassPrinter;
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionClass;
 
 interface ClassPrinterInterface
 {

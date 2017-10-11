@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Adapter;
+namespace Rector\BetterReflection\Reflection\Adapter;
 
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Throwable;
 
 class ReflectionMethod extends CoreReflectionMethod

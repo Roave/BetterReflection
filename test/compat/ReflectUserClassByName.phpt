@@ -4,7 +4,7 @@ Reflecting a user-defined class by name
 <?php
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionClass;
 
 $classInfo = ReflectionClass::createFromName(ReflectionClass::class);
 
@@ -12,5 +12,5 @@ var_dump($classInfo->getName());
 var_dump($classInfo->isInternal());
 ?>
 --EXPECT--
-string(49) "Roave\BetterReflection\Reflection\ReflectionClass"
+string(49) "Rector\BetterReflection\Reflection\ReflectionClass"
 bool(false)

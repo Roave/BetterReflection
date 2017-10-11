@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionType;
+use Rector\BetterReflection\Reflection\ReflectionType;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionType
+ * @covers \Rector\BetterReflection\Reflection\ReflectionType
  */
 class ReflectionTypeTest extends TestCase
 {

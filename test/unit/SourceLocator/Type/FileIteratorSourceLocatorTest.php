@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
-use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
+use Rector\BetterReflectionTest\Assets\DirectoryScannerAssets;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
  */
 class FileIteratorSourceLocatorTest extends TestCase
 {

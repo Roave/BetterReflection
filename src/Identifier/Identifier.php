@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Identifier;
+namespace Rector\BetterReflection\Identifier;
 
-use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Rector\BetterReflection\Identifier\Exception\InvalidIdentifierName;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 class Identifier
 {

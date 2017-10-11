@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector;
+namespace Rector\BetterReflectionTest\Reflector;
 
 use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection
+ * @covers \Rector\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection
  */
 class NodeToReflectionTest extends TestCase
 {

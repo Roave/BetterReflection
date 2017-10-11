@@ -6,7 +6,7 @@ namespace
     interface Traversable {}
 }
 
-namespace Roave\BetterReflectionTest\ClassesImplementingIterators
+namespace Rector\BetterReflectionTest\ClassesImplementingIterators
 {
     class TraversableImplementation implements \Traversable
     {

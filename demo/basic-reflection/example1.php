@@ -4,7 +4,7 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $reflection = (new BetterReflection())->classReflector()->reflect(\stdClass::class);
 

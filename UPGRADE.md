@@ -9,14 +9,14 @@ or backwards compatibility (BC) breakages occur.
 ### Namespace change
 
 The base namespace of the library changed from `BetterReflection`
-to `Roave\BetterReflection`.
+to `Rector\BetterReflection`.
 You may search for usages of the previous namespace with following
 regular expressions:
 
  * `/\s*use\s+(\\)?BetterReflection/`
  * `/[^A-Za-z0-9]+(\\)?BetterReflection/`
  
-The found imports should be replaced with `Roave\BetterReflection`
+The found imports should be replaced with `Rector\BetterReflection`
 imports.
  
 ### PHP Version requirement raised to PHP 7.1.* and PHP 7.2.*
@@ -28,31 +28,31 @@ only supports PHP 7.1.x and PHP 7.2.x
 ### Source locators now require additional dependencies
 
 Due to major design and performance improvements, many of the
-existing existing `Roave\BetterReflection\SourceLocator\Type\SourceLocator`
+existing existing `Rector\BetterReflection\SourceLocator\Type\SourceLocator`
 implementations now require you to pass in more parameters.
 
 Following classes have a changed constructor signature:
 
- * `Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator`
- * `Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator`
+ * `Rector\BetterReflection\SourceLocator\Type\AbstractSourceLocator`
+ * `Rector\BetterReflection\SourceLocator\Type\AutoloadSourceLocator`
 
 In order to easily comply with the new constructor signatures, you
-can use the newly introduced `Roave\BetterReflection\BetterReflection`
+can use the newly introduced `Rector\BetterReflection\BetterReflection`
 kernel object:
 
 ```php
 <?php
 
 use Composer\Autoload\ClassLoader;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $betterReflection = new BetterReflection();
 $astLocator       = $betterReflection->astLocator();
@@ -68,7 +68,7 @@ new SingleFileSourceLocator(__FILE__, $astLocator);
 ```
 
 Classes that you may have implemented and that
-extend `Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator`
+extend `Rector\BetterReflection\SourceLocator\Type\AbstractSourceLocator`
 also need to adapt to the parent constructor signature.
 
 ### `BetterReflection\Reflection\Exception\NotAString` removed
@@ -76,24 +76,24 @@ also need to adapt to the parent constructor signature.
 The `BetterReflection\Reflection\Exception\NotAString` exception was
 removed, as we now rely on PHP7's `declare(strict_types=1)`
 
-### `Roave\BetterReflection\Util\FindReflectionOnLine` constructor changed
+### `Rector\BetterReflection\Util\FindReflectionOnLine` constructor changed
 
-`Roave\BetterReflection\Util\FindReflectionOnLine` now requires additional
+`Rector\BetterReflection\Util\FindReflectionOnLine` now requires additional
 parameters. It is advisable to simply use
-the `Roave\BetterReflection\BetterReflection` kernel to get an instance of
+the `Rector\BetterReflection\BetterReflection` kernel to get an instance of
 this class instead:
 
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $findReflectionOnLine = (new BetterReflection())->findReflectionsOnLine();
 ```
 
-### `Roave\BetterReflection\Identifier\Identifier` constructor changed
+### `Rector\BetterReflection\Identifier\Identifier` constructor changed
 
-`Roave\BetterReflection\Identifier\Identifier::__construct()` now requires
+`Rector\BetterReflection\Identifier\Identifier::__construct()` now requires
 the `$name` parameter to be a `string`.
 
 A `BetterReflection\Reflection\Exception\NotAString` will no longer be thrown,
@@ -101,14 +101,14 @@ while you will get a `TypeError` instead, should you not comply with this
 signature at call time.
 
 
-### `Roave\BetterReflection\NodeCompiler` constructor changed
+### `Rector\BetterReflection\NodeCompiler` constructor changed
 
-The internal `Roave\BetterReflection\NodeCompiler` class now requires
+The internal `Rector\BetterReflection\NodeCompiler` class now requires
 a second mandatory constructor argument.
 
-### `Roave\BetterReflection\Reflector\Reflector#reflect()` interface changed
+### `Rector\BetterReflection\Reflector\Reflector#reflect()` interface changed
 
-The `Roave\BetterReflection\Reflector\Reflector#reflect()` now requires
+The `Rector\BetterReflection\Reflector\Reflector#reflect()` now requires
 a `string` argument for `$identifierName`. You will need to change
 your own implementations of the interface.
 
@@ -124,7 +124,7 @@ instead, assuming that you know its intended usage context:
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 function myFunction($myParameter = 'default value') {
     // ...
@@ -177,81 +177,81 @@ The `BetterReflection\Reflection\ReflectionFunctionAbstract#setReturnType()` met
 now requires a `string` argument to be passed to it. The type will be
 detected from the given string.
 
-### `Roave\BetterReflection\SourceLocator\Reflection\SourceStubber` now works with core `ReflectionClass`
+### `Rector\BetterReflection\SourceLocator\Reflection\SourceStubber` now works with core `ReflectionClass`
 
-The `Roave\BetterReflection\SourceLocator\Reflection\SourceStubber` is 
+The `Rector\BetterReflection\SourceLocator\Reflection\SourceStubber` is 
 now capable of working with just `ReflectionClass` instances from PHP
 core: it is no longer required to use `Zend\Code` instances, but the
 type hints also changed accordingly.
 
-### `Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` dropped
+### `Rector\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` dropped
 
-Since the `Roave\BetterReflection\BetterReflection` kernel was introduced,
-`Roave\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was
+Since the `Rector\BetterReflection\BetterReflection` kernel was introduced,
+`Rector\BetterReflection\Reflector\ClassReflector::buildDefaultReflector()` was
 removed. The equivalent API is following:
 
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $reflector = (new BetterReflection())->classReflector();
 ```
 
-### `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` dropped
+### `Rector\BetterReflection\Reflection\Exception\PropertyNotPublic` dropped
 
-The `Roave\BetterReflection\Reflection\Exception\PropertyNotPublic` was
+The `Rector\BetterReflection\Reflection\Exception\PropertyNotPublic` was
 thrown when a non-accessible reflection property is being read or written
 to. Since this is "better" reflection, there is no need for calling anything
-like `setAccessible` on a `Roave\BetterReflection\Reflection\ReflectionProperty`
+like `setAccessible` on a `Rector\BetterReflection\Reflection\ReflectionProperty`
 instance. All properties are directly accessible, even if `private`, `protected`
 or dynamically defined.
 
-### `Roave\BetterReflection\Reflector\FunctionReflector` constructor changed
+### `Rector\BetterReflection\Reflector\FunctionReflector` constructor changed
 
-The constructor of `Roave\BetterReflection\Reflector\FunctionReflector`
+The constructor of `Rector\BetterReflection\Reflector\FunctionReflector`
 changed in its required parameters. For generic `BetterReflection` usage,
-it is advisable to simply obtain a `Roave\BetterReflection\Reflector\FunctionReflector`
-from the `Roave\BetterReflection\BetterReflection` kernel:
+it is advisable to simply obtain a `Rector\BetterReflection\Reflector\FunctionReflector`
+from the `Rector\BetterReflection\BetterReflection` kernel:
 
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $reflector = (new BetterReflection())->functionReflector();
 ```
 
-### `Roave\BetterReflection\SourceLocator\Ast\Locator` constructor changed
+### `Rector\BetterReflection\SourceLocator\Ast\Locator` constructor changed
 
-The constructor of `Roave\BetterReflection\SourceLocator\Ast\Locator`
+The constructor of `Rector\BetterReflection\SourceLocator\Ast\Locator`
 changed in its required parameters. For generic `BetterReflection` usage,
-it is advisable to simply obtain a `Roave\BetterReflection\SourceLocator\Ast\Locator`
-from the `Roave\BetterReflection\BetterReflection` kernel:
+it is advisable to simply obtain a `Rector\BetterReflection\SourceLocator\Ast\Locator`
+from the `Rector\BetterReflection\BetterReflection` kernel:
 
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 $astLocator = (new BetterReflection())->astLocator();
 ```
 
-### `Roave\BetterReflection\Reflection\Reflection*::createFromNode()` changes
+### `Rector\BetterReflection\Reflection\Reflection*::createFromNode()` changes
 
 Due to performance and type introspection requirements, the following methods
 changed their signature completely:
 
- * `Roave\BetterReflection\Reflection\ReflectionMethod::createFromNode()`
- * `Roave\BetterReflection\Reflection\ReflectionParameter::createFromNode()`
- * `Roave\BetterReflection\Reflection\ReflectionProperty::createFromNode()`
+ * `Rector\BetterReflection\Reflection\ReflectionMethod::createFromNode()`
+ * `Rector\BetterReflection\Reflection\ReflectionParameter::createFromNode()`
+ * `Rector\BetterReflection\Reflection\ReflectionProperty::createFromNode()`
 
 It is advisable to not call these methods directly, as they are likely to change
 in future as well. Instead, please use a
-corresponding `Roave\BetterReflection\Reflector\Reflector` object to
+corresponding `Rector\BetterReflection\Reflector\Reflector` object to
 instantiate them.
 
-### `Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource` constructor changed
+### `Rector\BetterReflection\SourceLocator\Located\InternalLocatedSource` constructor changed
 
 In order to aid in detecting the source of a located internal class or function,
-the `Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource` now has
+the `Rector\BetterReflection\SourceLocator\Located\InternalLocatedSource` now has
 an additional mandatory `$extensionName` parameter.

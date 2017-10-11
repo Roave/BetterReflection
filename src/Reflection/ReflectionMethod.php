@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Rector\BetterReflection\Reflection;
 
 use Closure;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Namespace_;
 use ReflectionMethod as CoreReflectionMethod;
-use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
-use Roave\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
+use Rector\BetterReflection\Reflector\Reflector;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
@@ -39,7 +39,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param ReflectionClass $declaringClass
      * @param ReflectionClass $implementingClass
      *
-     * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
+     * @throws \Rector\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -64,7 +64,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @param string $className
      * @param string $methodName
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      * @throws \OutOfBoundsException
      */
     public static function createFromName(string $className, string $methodName) : self
@@ -80,7 +80,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      * @throws \OutOfBoundsException
      */
     public static function createFromInstance($instance, string $methodName) : self

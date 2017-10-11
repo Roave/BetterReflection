@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Adapter;
+namespace Rector\BetterReflectionTest\Reflection\Adapter;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
-use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
-use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Rector\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
+use Rector\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
+use Rector\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionObject
+ * @covers \Rector\BetterReflection\Reflection\Adapter\ReflectionObject
  */
 class ReflectionObjectTest extends TestCase
 {

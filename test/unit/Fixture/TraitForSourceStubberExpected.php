@@ -1,9 +1,9 @@
 <?php
-namespace Roave\BetterReflectionTest\Fixture;
+namespace Rector\BetterReflectionTest\Fixture;
 
 trait TraitForSourceStubber
 {
-    use \Roave\BetterReflectionTest\Fixture\OtherTraitForSourceStubber;
+    use \Rector\BetterReflectionTest\Fixture\OtherTraitForSourceStubber;
     public function methodFromTrait()
     {
     }

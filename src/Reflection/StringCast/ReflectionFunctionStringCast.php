@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\StringCast;
+namespace Rector\BetterReflection\Reflection\StringCast;
 
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
 
 /**
  * @internal

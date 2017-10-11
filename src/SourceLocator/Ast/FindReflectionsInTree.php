@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Ast;
+namespace Rector\BetterReflection\SourceLocator\Ast;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * @internal
@@ -36,7 +36,7 @@ final class FindReflectionsInTree
      * @param IdentifierType $identifierType
      * @param LocatedSource  $locatedSource
      *
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
+     * @return \Rector\BetterReflection\Reflection\Reflection[]
      */
     public function __invoke(
         Reflector $reflector,
@@ -48,7 +48,7 @@ final class FindReflectionsInTree
             extends NodeVisitorAbstract
         {
             /**
-             * @var \Roave\BetterReflection\Reflection\Reflection[]
+             * @var \Rector\BetterReflection\Reflection\Reflection[]
              */
             private $reflections = [];
 
@@ -125,7 +125,7 @@ final class FindReflectionsInTree
             }
 
             /**
-             * @return \Roave\BetterReflection\Reflection\Reflection[]
+             * @return \Rector\BetterReflection\Reflection\Reflection[]
              */
             public function getReflections() : array
             {

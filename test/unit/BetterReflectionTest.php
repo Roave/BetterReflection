@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest;
+namespace Rector\BetterReflectionTest;
 
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
-use Roave\BetterReflection\Util\FindReflectionOnLine;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\SourceLocator;
+use Rector\BetterReflection\Util\FindReflectionOnLine;
 
 /**
- * @covers \Roave\BetterReflection\BetterReflection
+ * @covers \Rector\BetterReflection\BetterReflection
  */
 final class BetterReflectionTest extends TestCase
 {

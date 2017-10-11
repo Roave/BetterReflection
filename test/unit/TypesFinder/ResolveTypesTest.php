@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\TypesFinder;
+namespace Rector\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\TypesFinder\ResolveTypes;
+use Rector\BetterReflection\TypesFinder\ResolveTypes;
 
 /**
- * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes
+ * @covers \Rector\BetterReflection\TypesFinder\ResolveTypes
  */
 class ResolveTypesTest extends TestCase
 {

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\StringCast;
+namespace Rector\BetterReflection\Reflection\StringCast;
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionClassConstant;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionObject;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionClassConstant;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionObject;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
 
 /**
  * @internal

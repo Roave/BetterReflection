@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Exception;
+namespace Rector\BetterReflectionTest\Reflection\Exception;
 
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Rector\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
+use Rector\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
+ * @covers \Rector\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
  */
 class InvalidAbstractFunctionNodeTypeTest extends TestCase
 {

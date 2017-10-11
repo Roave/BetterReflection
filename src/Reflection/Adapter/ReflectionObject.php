@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Adapter;
+namespace Rector\BetterReflection\Reflection\Adapter;
 
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
-use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
+use Rector\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 
 class ReflectionObject extends CoreReflectionObject
 {

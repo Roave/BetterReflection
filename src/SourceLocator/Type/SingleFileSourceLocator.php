@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\FileChecker;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\FileChecker;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator loads an entire file, specified in the constructor
@@ -24,7 +24,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     private $fileName;
 
     /**
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     public function __construct(string $fileName, Locator $astLocator)
     {
@@ -38,7 +38,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

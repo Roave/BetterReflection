@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
 use Composer\Autoload\ClassLoader;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.
@@ -32,7 +32,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

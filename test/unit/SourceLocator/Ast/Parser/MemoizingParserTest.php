@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector;
+namespace Rector\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
+use Rector\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser
+ * @covers \Rector\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser
  */
 class MemoizingParserTest extends TestCase
 {

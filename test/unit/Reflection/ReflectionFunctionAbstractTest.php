@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use Exception;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -16,24 +16,24 @@ use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionType;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 use TypeError;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
+ * @covers \Rector\BetterReflection\Reflection\ReflectionFunctionAbstract
  */
 class ReflectionFunctionAbstractTest extends TestCase
 {
@@ -103,8 +103,8 @@ class ReflectionFunctionAbstractTest extends TestCase
             $this->classReflector
         ))->reflect('foo');
 
-        self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
-        self::assertSame('Roave\BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
+        self::assertSame('Rector\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
+        self::assertSame('Rector\BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
         self::assertSame(ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getShortName());
     }
 
@@ -366,7 +366,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', $this->astLocator),
             $this->classReflector
-        ))->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
+        ))->reflect('Rector\BetterReflectionTest\Fixture\myFunction');
 
         self::assertContains('Fixture/Functions.php', $functionInfo->getFileName());
     }

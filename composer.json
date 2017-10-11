@@ -1,10 +1,10 @@
 {
-    "name": "roave/better-reflection",
+    "name": "rector/better-reflection",
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
         "php": ">7.1.0,<7.3.0",
-        "nikic/php-parser": "^3.1.1",
+        "nikic/php-parser": "dev-master as 3.1.1",
         "phpdocumentor/reflection-docblock": "^4.1.1",
         "phpdocumentor/type-resolver": "^0.4.0",
         "roave/signature": "^1.0"
@@ -37,13 +37,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Roave\\BetterReflection\\": "src"
+            "Rector\\BetterReflection\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Roave\\BetterReflectionTest\\": "test/unit",
-            "Roave\\BetterReflectionBenchmark\\": "test/benchmark"
+            "Rector\\BetterReflectionTest\\": "test/unit",
+            "Rector\\BetterReflectionBenchmark\\": "test/benchmark"
         }
     },
     "suggest": {

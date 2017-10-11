@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Visitor;
+namespace Rector\BetterReflectionTest\Util\Visitor;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
+use Rector\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 /**
- * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor
+ * @covers \Rector\BetterReflection\Util\Visitor\ReturnNodeVisitor
  */
 class ReturnNodeVisitorTest extends TestCase
 {

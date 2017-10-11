@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Util;
+namespace Rector\BetterReflection\Util;
 
 use InvalidArgumentException;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SourceLocator;
 
 final class FindReflectionOnLine
 {
@@ -41,8 +41,8 @@ final class FindReflectionOnLine
      * @param string $filename
      * @param int $lineNumber
      * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      * @throws \InvalidArgumentException
      */
     public function __invoke(string $filename, int $lineNumber)
@@ -72,8 +72,8 @@ final class FindReflectionOnLine
      *
      * @return Reflection[]
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     private function computeReflections(string $filename) : array
     {

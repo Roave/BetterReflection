@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave\BetterReflectionTest\Fixture;
+namespace Rector\BetterReflectionTest\Fixture;
 
 \define('SOME_DEFINED_VALUE', 1);
 
@@ -57,7 +57,7 @@ abstract class Methods
     public function methodWithExplicitTypedParameters(
         \stdClass $stdClassParameter,
         ClassForHinting $namespaceClassParameter,
-        \Roave\BetterReflectionTest\Fixture\ClassForHinting $fullyQualifiedClassParameter,
+        \Rector\BetterReflectionTest\Fixture\ClassForHinting $fullyQualifiedClassParameter,
         array $arrayParameter,
         callable $callableParameter
     ) {

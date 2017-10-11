@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Rector\BetterReflection\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
@@ -10,11 +10,11 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -34,8 +34,8 @@ class ReflectionObject extends ReflectionClass
     private $reflector;
 
     /**
-     * @param \Roave\BetterReflection\Reflector\Reflector $reflector
-     * @param \Roave\BetterReflection\Reflection\ReflectionClass $reflectionClass
+     * @param \Rector\BetterReflection\Reflector\Reflector $reflector
+     * @param \Rector\BetterReflection\Reflection\ReflectionClass $reflectionClass
      * @param object $object
      */
     private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
@@ -50,7 +50,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @param object $instance
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      */
@@ -72,7 +72,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromInstance($object) : ReflectionClass
     {

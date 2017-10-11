@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
+namespace Rector\BetterReflection\Util\Autoload\ClassLoaderMethod;
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
 final class EvalLoader implements LoaderMethodInterface
 {

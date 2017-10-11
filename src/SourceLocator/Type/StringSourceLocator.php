@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * This source locator simply parses the string given in the constructor as
@@ -23,7 +23,7 @@ class StringSourceLocator extends AbstractSourceLocator
     private $source;
 
     /**
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode
      */
     public function __construct(string $source, Locator $astLocator)
     {
@@ -44,7 +44,7 @@ class StringSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

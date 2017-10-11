@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Located;
+namespace Rector\BetterReflectionTest\SourceLocator\Located;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\Util\FileHelper;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Util\FileHelper;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource
+ * @covers \Rector\BetterReflection\SourceLocator\Located\LocatedSource
  */
 class LocatedSourceTest extends TestCase
 {

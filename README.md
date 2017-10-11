@@ -34,7 +34,7 @@ $ composer require roave/better-reflection
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $classInfo = (new BetterReflection())
     ->classReflector()

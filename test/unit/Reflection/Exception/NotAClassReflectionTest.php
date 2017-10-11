@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Exception;
+namespace Rector\BetterReflectionTest\Reflection\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture;
+use Rector\BetterReflection\Reflection\Exception\NotAClassReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
+ * @covers \Rector\BetterReflection\Reflection\Exception\NotAClassReflection
  */
 class NotAClassReflectionTest extends TestCase
 {

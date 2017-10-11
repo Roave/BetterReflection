@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest;
+namespace Rector\BetterReflectionTest;
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 abstract class BetterReflectionSingleton
 {
