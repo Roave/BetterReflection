@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util;
+namespace Rector\BetterReflectionTest\Util;
 
 use PhpParser\Comment;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt\Function_;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Rector\BetterReflection\Util\GetFirstDocComment;
 
 /**
- * @covers \Roave\BetterReflection\Util\GetFirstDocComment
+ * @covers \Rector\BetterReflection\Util\GetFirstDocComment
  */
 class GetFirstDocCommentTest extends TestCase
 {

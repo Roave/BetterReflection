@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Exception;
+namespace Rector\BetterReflection\Reflection\Exception;
 
 use InvalidArgumentException;
 use PhpParser\Node;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Rector\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 class InvalidAbstractFunctionNodeType extends InvalidArgumentException
 {

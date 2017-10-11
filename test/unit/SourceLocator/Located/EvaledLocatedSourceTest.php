@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Located;
+namespace Rector\BetterReflectionTest\SourceLocator\Located;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Rector\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource
+ * @covers \Rector\BetterReflection\SourceLocator\Located\EvaledLocatedSource
  */
 class EvaledLocatedSourceTest extends TestCase
 {

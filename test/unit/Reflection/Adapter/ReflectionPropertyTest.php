@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Adapter;
+namespace Rector\BetterReflectionTest\Reflection\Adapter;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
+ * @covers \Rector\BetterReflection\Reflection\Adapter\ReflectionProperty
  */
 class ReflectionPropertyTest extends TestCase
 {

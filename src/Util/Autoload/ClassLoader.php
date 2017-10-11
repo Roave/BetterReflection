@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Util\Autoload;
+namespace Rector\BetterReflection\Util\Autoload;
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
 
 final class ClassLoader
 {
@@ -27,8 +27,8 @@ final class ClassLoader
     /**
      * @param ReflectionClass $reflectionClass
      * @return void
-     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
-     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
+     * @throws \Rector\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
+     * @throws \Rector\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
      */
     public function addClass(ReflectionClass $reflectionClass) : void
     {
@@ -46,7 +46,7 @@ final class ClassLoader
     /**
      * @param string $classToLoad
      * @return bool
-     * @throws \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
+     * @throws \Rector\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
      */
     public function __invoke(string $classToLoad) : bool
     {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\TypesFinder;
+namespace Rector\BetterReflectionTest\TypesFinder;
 
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
@@ -11,13 +11,13 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\TypesFinder\FindReturnType;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\TypesFinder\FindReturnType;
 
 /**
- * @covers \Roave\BetterReflection\TypesFinder\FindReturnType
+ * @covers \Rector\BetterReflection\TypesFinder\FindReturnType
  */
 class FindReturnTypeTest extends TestCase
 {

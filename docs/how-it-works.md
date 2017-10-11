@@ -13,7 +13,7 @@ The first entry point is a minimal service locator provided by the library:
 ```php
 <?php
 
-$betterReflection = new \Roave\BetterReflection\BetterReflection();
+$betterReflection = new \Rector\BetterReflection\BetterReflection();
 
 $class    = $betterReflection->classReflector()->reflect('ClassName');
 $function = $betterReflection->functionReflector()->reflect('functionName');

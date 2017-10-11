@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
+namespace Rector\BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
 
 /**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
+ * @covers \Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
  */
 final class SignatureCheckFailedTest extends TestCase
 {

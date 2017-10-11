@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
 use Closure;
 use PhpParser\Node;
@@ -10,17 +10,17 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use ReflectionFunction as CoreFunctionReflection;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
-use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
-use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
-use Roave\BetterReflection\SourceLocator\FileChecker;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\Util\FileHelper;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
+use Rector\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Rector\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
+use Rector\BetterReflection\SourceLocator\FileChecker;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Util\FileHelper;
 
 /**
  * @internal
@@ -46,7 +46,7 @@ final class ClosureSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
@@ -56,7 +56,7 @@ final class ClosureSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {

@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Rector\BetterReflection\Reflection;
 
 use Closure;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
-use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
-use Roave\BetterReflection\Reflection\StringCast\ReflectionFunctionStringCast;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Rector\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
+use Rector\BetterReflection\Reflection\StringCast\ReflectionFunctionStringCast;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
@@ -22,7 +22,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      *
      * @return ReflectionFunction
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromName(string $functionName) : self
     {
@@ -34,7 +34,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      *
      * @return ReflectionFunction
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromClosure(Closure $closure) : self
     {

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Adapter;
+namespace Rector\BetterReflection\Reflection\Adapter;
 
 use ReflectionType as CoreReflectionType;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Rector\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 class ReflectionType extends CoreReflectionType
 {

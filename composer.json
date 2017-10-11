@@ -1,5 +1,5 @@
 {
-    "name": "roave/better-reflection",
+    "name": "rector/better-reflection",
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
@@ -37,13 +37,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Roave\\BetterReflection\\": "src"
+            "Rector\\BetterReflection\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Roave\\BetterReflectionTest\\": "test/unit",
-            "Roave\\BetterReflectionBenchmark\\": "test/benchmark"
+            "Rector\\BetterReflectionTest\\": "test/unit",
+            "Rector\\BetterReflectionBenchmark\\": "test/benchmark"
         }
     },
     "suggest": {

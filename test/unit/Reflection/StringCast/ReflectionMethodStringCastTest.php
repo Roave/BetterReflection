@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\StringCast;
+namespace Rector\BetterReflectionTest\Reflection\StringCast;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture\StringCastMethods;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture\StringCastMethods;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast
+ * @covers \Rector\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast
  */
 class ReflectionMethodStringCastTest extends TestCase
 {
@@ -41,8 +41,8 @@ class ReflectionMethodStringCastTest extends TestCase
             ['abstractPublicMethod', "Method [ <user> abstract public method abstractPublicMethod ] {\n  @@ %s/Fixture/StringCastMethods.php 43 - 43\n}"],
             ['staticPublicMethod', "Method [ <user> static public method staticPublicMethod ] {\n  @@ %s/Fixture/StringCastMethods.php 45 - 47\n}"],
             ['noVisibility', "Method [ <user> public method noVisibility ] {\n  @@ %s/Fixture/StringCastMethods.php 49 - 51\n}"],
-            ['overwrittenMethod', "Method [ <user, overwrites Roave\BetterReflectionTest\Fixture\StringCastMethodsParent, prototype Roave\BetterReflectionTest\Fixture\StringCastMethodsParent> public method overwrittenMethod ] {\n  @@ %s/Fixture/StringCastMethods.php 53 - 55\n}"],
-            ['prototypeMethod', "Method [ <user, prototype Roave\BetterReflectionTest\Fixture\StringCastMethodsInterface> public method prototypeMethod ] {\n  @@ %s/Fixture/StringCastMethods.php 57 - 59\n}"],
+            ['overwrittenMethod', "Method [ <user, overwrites Rector\BetterReflectionTest\Fixture\StringCastMethodsParent, prototype Rector\BetterReflectionTest\Fixture\StringCastMethodsParent> public method overwrittenMethod ] {\n  @@ %s/Fixture/StringCastMethods.php 53 - 55\n}"],
+            ['prototypeMethod', "Method [ <user, prototype Rector\BetterReflectionTest\Fixture\StringCastMethodsInterface> public method prototypeMethod ] {\n  @@ %s/Fixture/StringCastMethods.php 57 - 59\n}"],
             ['methodWithParameters', "Method [ <user> public method methodWithParameters ] {\n  @@ %s/Fixture/StringCastMethods.php 61 - 63\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
         ];
     }

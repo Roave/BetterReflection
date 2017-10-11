@@ -1,9 +1,9 @@
 <?php
 
-namespace Roave\BetterReflectionTest\Fixture {
+namespace Rector\BetterReflectionTest\Fixture {
 
-    use Roave\BetterReflectionTest\FixtureOther\OtherClass;
-    use Roave\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST;
+    use Rector\BetterReflectionTest\FixtureOther\OtherClass;
+    use Rector\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST;
 
     const THIS_NAMESPACE_CONST = 'this_namespace';
 
@@ -24,7 +24,7 @@ namespace Roave\BetterReflectionTest\Fixture {
     }
 }
 
-namespace Roave\BetterReflectionTest\FixtureOther {
+namespace Rector\BetterReflectionTest\FixtureOther {
 
     const OTHER_NAMESPACE_CONST = 'other_namespace';
 

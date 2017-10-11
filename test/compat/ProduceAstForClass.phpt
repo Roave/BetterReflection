@@ -15,12 +15,12 @@ class MyClassInString extends AnotherClass
 }
 EOF;
 
-$sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
+$sourceLocator = new Rector\BetterReflection\SourceLocator\Type\StringSourceLocator(
     $source,
-    (new Roave\BetterReflection\BetterReflection())->astLocator()
+    (new Rector\BetterReflection\BetterReflection())->astLocator()
 );
 
-$reflector = new \Roave\BetterReflection\Reflector\ClassReflector($sourceLocator);
+$reflector = new \Rector\BetterReflection\Reflector\ClassReflector($sourceLocator);
 
 $classInfo = $reflector->reflect(MyClassInString::class);
 var_dump($classInfo->getAst() instanceof \PhpParser\Node\Stmt\Class_);

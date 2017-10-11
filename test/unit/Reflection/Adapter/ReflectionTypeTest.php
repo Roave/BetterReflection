@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Adapter;
+namespace Rector\BetterReflectionTest\Reflection\Adapter;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
+use Rector\BetterReflection\Reflection\Adapter\ReflectionType;
+use Rector\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType
+ * @covers \Rector\BetterReflection\Reflection\Adapter\ReflectionType
  */
 class ReflectionTypeTest extends TestCase
 {

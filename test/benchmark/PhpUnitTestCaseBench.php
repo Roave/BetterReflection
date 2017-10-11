@@ -1,15 +1,15 @@
 <?php
 
-namespace Roave\BetterReflectionBenchmark;
+namespace Rector\BetterReflectionBenchmark;
 
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\Subject;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\Reflector\ClassReflector;
 
 /**
  * @Iterations(5)

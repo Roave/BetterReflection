@@ -10,10 +10,10 @@ $source = <<<EOF
 class MyClassInString {}
 EOF;
 
-$reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
-    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
+$reflector = new \Rector\BetterReflection\Reflector\ClassReflector(
+    new Rector\BetterReflection\SourceLocator\Type\StringSourceLocator(
         $source,
-        (new Roave\BetterReflection\BetterReflection())->astLocator()
+        (new Rector\BetterReflection\BetterReflection())->astLocator()
     )
 );
 

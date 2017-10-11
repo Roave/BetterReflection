@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Exception;
+namespace Rector\BetterReflectionTest\SourceLocator\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Rector\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated
+ * @covers \Rector\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated
  */
 class EvaledClosureCannotBeLocatedTest extends TestCase
 {

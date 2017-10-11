@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
 use ReflectionClass;
 use ReflectionFunction;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -52,7 +52,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws \Rector\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

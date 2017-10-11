@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Identifier\Exception;
+namespace Rector\BetterReflection\Identifier\Exception;
 
 use InvalidArgumentException;
 

@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Exception;
+namespace Rector\BetterReflectionTest\SourceLocator\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
+use Rector\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory
+ * @covers \Rector\BetterReflection\SourceLocator\Exception\InvalidDirectory
  */
 class InvalidDirectoryTest extends TestCase
 {

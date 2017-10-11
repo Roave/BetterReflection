@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Identifier;
+namespace Rector\BetterReflection\Identifier;
 
 use InvalidArgumentException;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
 
 class IdentifierType
 {

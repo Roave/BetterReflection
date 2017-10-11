@@ -23,6 +23,6 @@ interface SomeFooInterface
 {
 }
 
-class SomeFooClassWithImplementedInterface implements \Roave\BetterReflectionTest\Fixture\AutoloadableInterface
+class SomeFooClassWithImplementedInterface implements \Rector\BetterReflectionTest\Fixture\AutoloadableInterface
 {
 }

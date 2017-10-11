@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector\Exception;
+namespace Rector\BetterReflectionTest\Reflector\Exception;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+ * @covers \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
  */
 class ParseToAstFailureTest extends TestCase
 {

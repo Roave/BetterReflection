@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SourceLocator;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\MemoizingSourceLocator
  */
 class MemoizingSourceLocatorTest extends TestCase
 {

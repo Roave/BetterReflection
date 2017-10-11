@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util;
+namespace Rector\BetterReflectionTest\Util;
 
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
-use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
-use Roave\BetterReflection\Util\Exception\NoNodePosition;
+use Rector\BetterReflection\Util\CalculateReflectionColum;
+use Rector\BetterReflection\Util\Exception\InvalidNodePosition;
+use Rector\BetterReflection\Util\Exception\NoNodePosition;
 
 /**
- * @covers \Roave\BetterReflection\Util\CalculateReflectionColum
+ * @covers \Rector\BetterReflection\Util\CalculateReflectionColum
  */
 class CalculateReflectionColumnTest extends TestCase
 {

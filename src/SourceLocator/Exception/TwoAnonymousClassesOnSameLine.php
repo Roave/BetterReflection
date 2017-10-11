@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Exception;
+namespace Rector\BetterReflection\SourceLocator\Exception;
 
 use LogicException;
 

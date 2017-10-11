@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave\BetterReflectionTest\Fixture;
+namespace Rector\BetterReflectionTest\Fixture;
 
 function functionWithoutParameters()
 {

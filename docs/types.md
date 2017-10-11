@@ -19,7 +19,7 @@ class MyClass
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $classInfo     = (new BetterReflection())->classReflector()->reflect('MyClass');
 $methodInfo    = $classInfo->getMethod('myMethod');
@@ -38,12 +38,12 @@ var_dump($parameterInfo->getDocBlockTypeStrings());
 ## `ReflectionParameter->getType()`
 
 This is compatible with the PHP 7 reflection API, and will return a
-`\Roave\BetterReflection\Reflection\ReflectionType` instance.
+`\Rector\BetterReflection\Reflection\ReflectionType` instance.
 
 ## `ReflectionFunction->getReturnType()` and `ReflectionMethod->getReturnType()`
 
 This is compatible with the PHP 7 reflection API, and will return a
-`\Roave\BetterReflection\Reflection\ReflectionType` instance.
+`\Rector\BetterReflection\Reflection\ReflectionType` instance.
 
 ## `getDocBlockTypes`
 

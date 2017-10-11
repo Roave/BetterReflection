@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type;
+namespace Rector\BetterReflection\SourceLocator\Type;
 
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
 
 abstract class AbstractSourceLocator implements SourceLocator
 {
@@ -38,7 +38,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
@@ -55,7 +55,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws \Rector\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      */
     final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {

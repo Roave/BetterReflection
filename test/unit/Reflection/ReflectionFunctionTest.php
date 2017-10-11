@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use Closure;
 use phpDocumentor\Reflection\Types\Boolean;
 use PHPUnit\Framework\TestCase;
 use Reflector;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
-use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Rector\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
+ * @covers \Rector\BetterReflection\Reflection\ReflectionFunction
  */
 class ReflectionFunctionTest extends TestCase
 {
@@ -115,7 +115,7 @@ class ReflectionFunctionTest extends TestCase
     public function testStaticCreationFromName() : void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
-        $reflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
+        $reflection = ReflectionFunction::createFromName('Rector\BetterReflectionTest\Fixture\myFunction');
         self::assertSame('myFunction', $reflection->getShortName());
     }
 
@@ -142,9 +142,9 @@ class ReflectionFunctionTest extends TestCase
     public function testToString() : void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
-        $functionInfo = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
+        $functionInfo = ReflectionFunction::createFromName('Rector\BetterReflectionTest\Fixture\myFunction');
 
-        self::assertStringMatchesFormat("Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}", (string) $functionInfo);
+        self::assertStringMatchesFormat("Function [ <user> function Rector\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}", (string) $functionInfo);
     }
 
     public function testGetDocBlockReturnTypes() : void
@@ -169,7 +169,7 @@ class ReflectionFunctionTest extends TestCase
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
 
-        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithParams');
+        $functionReflection = ReflectionFunction::createFromName('Rector\BetterReflectionTest\Fixture\myFunctionWithParams');
 
         $closure = $functionReflection->getClosure();
 
@@ -205,7 +205,7 @@ class ReflectionFunctionTest extends TestCase
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
 
-        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithParams');
+        $functionReflection = ReflectionFunction::createFromName('Rector\BetterReflectionTest\Fixture\myFunctionWithParams');
 
         self::assertSame(5, $functionReflection->invoke(2, 3));
         self::assertSame(10, $functionReflection->invokeArgs([3, 7]));

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\TypesFinder\PhpDocumentor;
+namespace Rector\BetterReflectionTest\TypesFinder\PhpDocumentor;
 
 use phpDocumentor\Reflection\Types\Context;
 use PhpParser\Builder\Use_;
@@ -12,10 +12,10 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PhpParser\Node\Stmt\UseUse;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
+use Rector\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
 /**
- * @covers \Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext
+ * @covers \Rector\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext
  */
 class NamespaceNodeToReflectionTypeContextTest extends TestCase
 {

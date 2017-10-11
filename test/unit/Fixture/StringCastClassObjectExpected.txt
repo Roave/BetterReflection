@@ -1,4 +1,4 @@
-Object of class [ <user> class Roave\BetterReflectionTest\Fixture\StringCastClassObject ] {
+Object of class [ <user> class Rector\BetterReflectionTest\Fixture\StringCastClassObject ] {
   @@ %s/Fixture/StringCastClassObject.php 5-7
 
   - Constants [0] {

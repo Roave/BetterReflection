@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Identifier;
+namespace Rector\BetterReflectionTest\Identifier;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Rector\BetterReflection\Identifier\Exception\InvalidIdentifierName;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 /**
- * @covers \Roave\BetterReflection\Identifier\Identifier
+ * @covers \Rector\BetterReflection\Identifier\Identifier
  */
 class IdentifierTest extends TestCase
 {

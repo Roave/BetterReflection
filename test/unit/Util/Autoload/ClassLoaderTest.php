@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Autoload;
+namespace Rector\BetterReflectionTest\Util\Autoload;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassLoader;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
-use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
-use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
-use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
-use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
-use Roave\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
-use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassLoader;
+use Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
+use Rector\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
+use Rector\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
+use Rector\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
+use Rector\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
+use Rector\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
+use Rector\BetterReflectionTest\Fixture\TestClassForAutoloader;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
+ * @covers \Rector\BetterReflection\Util\Autoload\ClassLoader
  */
 final class ClassLoaderTest extends TestCase
 {

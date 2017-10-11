@@ -19,10 +19,10 @@ class MyClassInString {
 }
 EOF;
 
-$reflector = new \Roave\BetterReflection\Reflector\ClassReflector(
-    new Roave\BetterReflection\SourceLocator\Type\StringSourceLocator(
+$reflector = new \Rector\BetterReflection\Reflector\ClassReflector(
+    new Rector\BetterReflection\SourceLocator\Type\StringSourceLocator(
         $source,
-        (new Roave\BetterReflection\BetterReflection())->astLocator()
+        (new Rector\BetterReflection\BetterReflection())->astLocator()
     )
 );
 
@@ -32,7 +32,7 @@ $methodInfo = $classInfo->getMethod('myMethod');
 
 var_dump($methodInfo->getDocBlockReturnTypes());
 
-array_map(function (\Roave\BetterReflection\Reflection\ReflectionParameter $param) {
+array_map(function (\Rector\BetterReflection\Reflection\ReflectionParameter $param) {
     var_dump($param->getDocBlockTypeStrings());
 }, $methodInfo->getParameters());
 

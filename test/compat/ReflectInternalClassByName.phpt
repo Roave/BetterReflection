@@ -4,7 +4,7 @@ Reflecting an internal class by name
 <?php
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$classInfo = \Roave\BetterReflection\Reflection\ReflectionClass::createFromName('stdClass');
+$classInfo = \Rector\BetterReflection\Reflection\ReflectionClass::createFromName('stdClass');
 
 var_dump($classInfo->getName());
 var_dump($classInfo->isInternal());

@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use Closure;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
-use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use Roave\BetterReflection\Util\FileHelper;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Rector\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
+use Rector\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Rector\BetterReflection\Util\FileHelper;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\ClosureSourceLocator
  */
 class ClosureSourceLocatorTest extends TestCase
 {
@@ -45,7 +45,7 @@ class ClosureSourceLocatorTest extends TestCase
         $fileWithClosureNoNamespace = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
 
         return [
-            [require $fileWithClosureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
+            [require $fileWithClosureInNamespace, 'Rector\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
             [require $fileWithClosureNoNamespace, '', $fileWithClosureNoNamespace, 3, 6],
         ];
     }

@@ -1,27 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
-use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
-use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Located\LocatedSource;
+use Rector\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture\AutoloadableInterface;
+use Rector\BetterReflectionTest\Fixture\AutoloadableTrait;
+use Rector\BetterReflectionTest\Fixture\ClassForHinting;
+use Rector\BetterReflectionTest\Fixture\ExampleClass;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
  */
 class AutoloadSourceLocatorTest extends TestCase
 {
@@ -153,7 +153,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
         require_once __DIR__ . '/../../Fixture/Functions.php';
-        $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
+        $classInfo = $reflector->reflect('Rector\BetterReflectionTest\Fixture\myFunction');
 
         self::assertSame('myFunction', $classInfo->getShortName());
     }

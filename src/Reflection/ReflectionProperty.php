@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Rector\BetterReflection\Reflection;
 
 use Closure;
 use Exception;
@@ -12,18 +12,18 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
-use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\TypesFinder\FindPropertyType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Rector\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Rector\BetterReflection\NodeCompiler\CompilerContext;
+use Rector\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\TypesFinder\FindPropertyType;
+use Rector\BetterReflection\Util\CalculateReflectionColum;
+use Rector\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionProperty implements CoreReflector
 {
@@ -87,7 +87,7 @@ class ReflectionProperty implements CoreReflector
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public static function createFromInstance($instance, string $propertyName) : self
     {

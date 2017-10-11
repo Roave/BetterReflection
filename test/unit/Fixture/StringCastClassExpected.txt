@@ -1,4 +1,4 @@
-Class [ <user> abstract class Roave\BetterReflectionTest\Fixture\StringCastClass extends Roave\BetterReflectionTest\Fixture\StringCastClassParent implements Roave\BetterReflectionTest\Fixture\StringCastClassInterface2, Roave\BetterReflectionTest\Fixture\StringCastClassInterface ] {
+Class [ <user> abstract class Rector\BetterReflectionTest\Fixture\StringCastClass extends Rector\BetterReflectionTest\Fixture\StringCastClassParent implements Rector\BetterReflectionTest\Fixture\StringCastClassInterface2, Rector\BetterReflectionTest\Fixture\StringCastClassInterface ] {
   @@ %s/Fixture/StringCastClass.php 26-83
 
   - Constants [4] {
@@ -57,11 +57,11 @@ Class [ <user> abstract class Roave\BetterReflectionTest\Fixture\StringCastClass
       @@ %s/Fixture/StringCastClass.php 68 - 70
     }
 
-    Method [ <user, overwrites Roave\BetterReflectionTest\Fixture\StringCastClassParent, prototype Roave\BetterReflectionTest\Fixture\StringCastClassParent> public method overwrittenMethod ] {
+    Method [ <user, overwrites Rector\BetterReflectionTest\Fixture\StringCastClassParent, prototype Rector\BetterReflectionTest\Fixture\StringCastClassParent> public method overwrittenMethod ] {
       @@ %s/Fixture/StringCastClass.php 72 - 74
     }
 
-    Method [ <user, prototype Roave\BetterReflectionTest\Fixture\StringCastClassInterface> public method prototypeMethod ] {
+    Method [ <user, prototype Rector\BetterReflectionTest\Fixture\StringCastClassInterface> public method prototypeMethod ] {
       @@ %s/Fixture/StringCastClass.php 76 - 78
     }
 
@@ -74,7 +74,7 @@ Class [ <user> abstract class Roave\BetterReflectionTest\Fixture\StringCastClass
       }
     }
 
-    Method [ <user, inherits Roave\BetterReflectionTest\Fixture\StringCastClassParent, prototype Roave\BetterReflectionTest\Fixture\StringCastClassInterface2> public method inheritedMethod ] {
+    Method [ <user, inherits Rector\BetterReflectionTest\Fixture\StringCastClassParent, prototype Rector\BetterReflectionTest\Fixture\StringCastClassInterface2> public method inheritedMethod ] {
       @@ %s/Fixture/StringCastClass.php 21 - 23
     }
   }

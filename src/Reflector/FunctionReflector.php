@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflector;
+namespace Rector\BetterReflection\Reflector;
 
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\Reflection;
+use Rector\BetterReflection\SourceLocator\Type\SourceLocator;
 
 class FunctionReflector implements Reflector
 {
@@ -30,8 +30,8 @@ class FunctionReflector implements Reflector
      * Create a ReflectionFunction for the specified $functionName.
      *
      * @param string $functionName
-     * @return \Roave\BetterReflection\Reflection\Reflection|\Roave\BetterReflection\Reflection\ReflectionFunction
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @return \Rector\BetterReflection\Reflection\Reflection|\Rector\BetterReflection\Reflection\ReflectionFunction
+     * @throws \Rector\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public function reflect(string $functionName) : Reflection
     {
@@ -49,11 +49,11 @@ class FunctionReflector implements Reflector
     /**
      * Get all the functions available in the scope specified by the SourceLocator.
      *
-     * @return \Roave\BetterReflection\Reflection\ReflectionFunction[]
+     * @return \Rector\BetterReflection\Reflection\ReflectionFunction[]
      */
     public function getAllFunctions() : array
     {
-        /** @var \Roave\BetterReflection\Reflection\ReflectionFunction[] $allFunctions */
+        /** @var \Rector\BetterReflection\Reflection\ReflectionFunction[] $allFunctions */
         $allFunctions = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)

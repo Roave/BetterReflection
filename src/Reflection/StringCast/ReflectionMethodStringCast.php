@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\StringCast;
+namespace Rector\BetterReflection\Reflection\StringCast;
 
-use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
 
 /**
  * @internal

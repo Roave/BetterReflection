@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave\BetterReflectionTest\Fixture\InvalidInheritances
+namespace Rector\BetterReflectionTest\Fixture\InvalidInheritances
 {
     interface AInterface {}
     class AClass {}

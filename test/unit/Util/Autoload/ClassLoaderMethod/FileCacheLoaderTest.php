@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
+namespace Rector\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
-use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
-use Roave\Signature\CheckerInterface;
-use Roave\Signature\SignerInterface;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
+use Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
+use Rector\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Rector\Signature\CheckerInterface;
+use Rector\Signature\SignerInterface;
 
 /**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
+ * @covers \Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
  */
 final class FileCacheLoaderTest extends TestCase
 {

@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util;
+namespace Rector\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Util\FindReflectionOnLine;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionFunction;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Util\FindReflectionOnLine;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\Util\FindReflectionOnLine
+ * @covers \Rector\BetterReflection\Util\FindReflectionOnLine
  */
 class FindReflectionOnLineTest extends TestCase
 {

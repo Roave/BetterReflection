@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type;
+namespace Rector\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
-use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
-use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
-use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\Identifier\Identifier;
+use Rector\BetterReflection\Identifier\IdentifierType;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Exception\InvalidDirectory;
+use Rector\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use Rector\BetterReflectionTest\Assets\DirectoryScannerAssets;
+use Rector\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
+ * @covers \Rector\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
  */
 class DirectoriesSourceLocatorTest extends TestCase
 {

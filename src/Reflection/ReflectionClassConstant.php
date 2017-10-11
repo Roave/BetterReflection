@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Rector\BetterReflection\Reflection;
 
 use Exception;
 use PhpParser\Node\Stmt\ClassConst;
 use ReflectionProperty;
 use Reflector as CoreReflector;
-use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
-use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Rector\BetterReflection\NodeCompiler\CompileNodeToValue;
+use Rector\BetterReflection\NodeCompiler\CompilerContext;
+use Rector\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
+use Rector\BetterReflection\Reflector\Reflector;
+use Rector\BetterReflection\Util\CalculateReflectionColum;
+use Rector\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant implements CoreReflector
 {

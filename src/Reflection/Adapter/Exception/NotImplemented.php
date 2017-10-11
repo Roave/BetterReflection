@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Adapter\Exception;
+namespace Rector\BetterReflection\Reflection\Adapter\Exception;
 
 use LogicException;
 

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Adapter;
+namespace Rector\BetterReflection\Reflection\Adapter;
 
 use ReflectionClassConstant as CoreReflectionClassConstant;
-use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use Rector\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {

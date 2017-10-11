@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\NodeCompiler;
+namespace Rector\BetterReflectionTest\NodeCompiler;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflection\Util\FileHelper;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflection\NodeCompiler\CompilerContext;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflection\Util\FileHelper;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
 use RuntimeException;
 
 /**
- * @covers \Roave\BetterReflection\NodeCompiler\CompilerContext
+ * @covers \Rector\BetterReflection\NodeCompiler\CompilerContext
  */
 class CompilerContextTest extends TestCase
 {

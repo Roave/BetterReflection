@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
+namespace Rector\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
-use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+use Rector\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
 /**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
+ * @covers \Rector\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
  */
 final class EvalLoaderTest extends TestCase
 {

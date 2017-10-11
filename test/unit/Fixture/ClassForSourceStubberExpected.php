@@ -1,15 +1,15 @@
 <?php
-namespace Roave\BetterReflectionTest\Fixture;
+namespace Rector\BetterReflectionTest\Fixture;
 
 /**
  * Class comment
  */
-abstract class ClassForSourceStubber extends \Roave\BetterReflectionTest\Fixture\ParentClassForSourceStubber implements \Roave\BetterReflectionTest\Fixture\ImplementedInterfaceForSourceStubber, \Serializable
+abstract class ClassForSourceStubber extends \Rector\BetterReflectionTest\Fixture\ParentClassForSourceStubber implements \Rector\BetterReflectionTest\Fixture\ImplementedInterfaceForSourceStubber, \Serializable
 {
-    use \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForSourceStubber {
-        \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForSourceStubber::methodFromTraitToAlias as aliasMethodFromTrait;
+    use \Rector\BetterReflectionTest\Fixture\UsedTraitToAliasForSourceStubber {
+        \Rector\BetterReflectionTest\Fixture\UsedTraitToAliasForSourceStubber::methodFromTraitToAlias as aliasMethodFromTrait;
     }
-    use \Roave\BetterReflectionTest\Fixture\UsedTraitForSourceStubber;
+    use \Rector\BetterReflectionTest\Fixture\UsedTraitForSourceStubber;
     /**
      * Constant comment
      */

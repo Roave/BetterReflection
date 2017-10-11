@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Reflection;
+namespace Rector\BetterReflectionTest\SourceLocator\Reflection;
 
 use ClassWithoutNamespaceForSourceStubber;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
-use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
-use Roave\BetterReflectionTest\Fixture\ClassForSourceStubber;
-use Roave\BetterReflectionTest\Fixture\EmptyTrait;
-use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
-use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
+use Rector\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use Rector\BetterReflectionTest\Fixture\ClassForSourceStubber;
+use Rector\BetterReflectionTest\Fixture\EmptyTrait;
+use Rector\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
+use Rector\BetterReflectionTest\Fixture\TraitForSourceStubber;
 use Traversable;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Reflection\SourceStubber
+ * @covers \Rector\BetterReflection\SourceLocator\Reflection\SourceStubber
  */
 class SourceStubberTest extends TestCase
 {

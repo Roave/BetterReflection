@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Rector\BetterReflectionTest\Reflection;
 
 use ClassWithPropertiesAndTraitProperties;
 use Exception;
@@ -16,27 +16,27 @@ use Reflection;
 use ReflectionFunctionAbstract;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector;
-use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
-use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Roave\BetterReflectionTest\Fixture\ClassForHinting;
-use Roave\BetterReflectionTest\Fixture\ExampleClass;
-use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
-use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use Rector\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Rector\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Rector\BetterReflection\Reflection\Exception\NotAnObject;
+use Rector\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Rector\BetterReflection\Reflection\Exception\Uncloneable;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Ast\Locator;
+use Rector\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflectionTest\BetterReflectionSingleton;
+use Rector\BetterReflectionTest\Fixture\ClassForHinting;
+use Rector\BetterReflectionTest\Fixture\ExampleClass;
+use Rector\BetterReflectionTest\Fixture\PropertyGetSet;
+use Rector\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use stdClass;
 use TraitWithProperty;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
+ * @covers \Rector\BetterReflection\Reflection\ReflectionProperty
  */
 class ReflectionPropertyTest extends TestCase
 {

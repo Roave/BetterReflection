@@ -2,7 +2,7 @@
 
 The starting point for creating a reflection class does not match the typical
 core reflection API. Instead of simply instantiating a `new \ReflectionClass`,
-you must use the appropriate helper `\Roave\BetterReflection\Reflector\ClassReflector`.
+you must use the appropriate helper `\Rector\BetterReflection\Reflector\ClassReflector`.
 
 All `*Reflector` classes require a class that implements the `SourceLocator`
 interface as a dependency.
@@ -19,7 +19,7 @@ work with this technique.
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
+use Rector\BetterReflection\BetterReflection;
 
 $classInfo = (new BetterReflection)
     ->classReflector()
@@ -40,10 +40,10 @@ They are as follows:
 ```php
 <?php
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Rector\BetterReflection\Reflection\ReflectionClass;
+use Rector\BetterReflection\Reflection\ReflectionMethod;
+use Rector\BetterReflection\Reflection\ReflectionParameter;
+use Rector\BetterReflection\Reflection\ReflectionProperty;
 
 ReflectionClass::createFromName(\stdClass::class);
 ReflectionClass::createFromInstance(new \stdClass);
@@ -135,9 +135,9 @@ $functionInfo = ReflectionFunction::createFromName('foo');
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 
 $classLoader = require 'vendor/autoload.php';
 
@@ -155,9 +155,9 @@ echo $reflectionClass->getNamespaceName(); // Foo\Bar
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $astLocator = (new BetterReflection())->astLocator();
 $reflector = new ClassReflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php', $astLocator));
@@ -173,9 +173,9 @@ echo $reflectionClass->getNamespaceName(); // MyApp
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 $code = '<?php class Foo {};';
 
@@ -191,9 +191,9 @@ echo $reflectionClass->getShortName(); // Foo
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $astLocator = (new BetterReflection())->astLocator();
 $reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php', $astLocator));
@@ -205,9 +205,9 @@ $classes = $reflector->getAllClasses();
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\ClassReflector;
+use Rector\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
 $astLocator = (new BetterReflection())->astLocator();
 $directoriesSourceLocator = new DirectoriesSourceLocator(['path/to/directory1'], $astLocator);
@@ -231,9 +231,9 @@ See example in "Reflecting Classes" section on the same subheading.
 ```php
 <?php
 
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\FunctionReflector;
-use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use Rector\BetterReflection\BetterReflection;
+use Rector\BetterReflection\Reflector\FunctionReflector;
+use Rector\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
 $configuration = new BetterReflection();
 $astLocator = $configuration->astLocator();
