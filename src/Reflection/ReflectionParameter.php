@@ -262,7 +262,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->name;
+        return $this->node->var->name;
     }
 
     /**
