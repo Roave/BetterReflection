@@ -33,6 +33,9 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
+use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\ClassesImplementingIterators;
 use Roave\BetterReflectionTest\ClassesWithCloneMethod;
@@ -1641,5 +1644,26 @@ PHP;
 
         self::assertCount(2, $constants);
         self::assertSame($expectedConstants, $constants);
+    }
+
+    public function testNewInstanceArgs() : void
+    {
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $reflection = $betterReflection->classReflector()->reflect(Fixture\TestClassForNewInstanceArgsTestRun::class);
+        $reflection->getMethod('addOne')->setBodyFromClosure(function (int $number) : int {
+            return $number + 2;
+        });
+
+        $randomValue = random_int(1, 100);
+
+        /** @var Fixture\TestClassForNewInstanceArgsTestRun $instance */
+        $instance = $reflection->newInstanceArgs(
+            [$randomValue],
+            new ClassLoader(new EvalLoader(new PhpParserPrinter()))
+        );
+
+        self::assertSame($randomValue, $instance->getValueInjectedToConstructor());
+        self::assertSame(10, $instance->addOne(8));
     }
 }

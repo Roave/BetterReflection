@@ -16,10 +16,12 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use stdClass;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject
@@ -174,6 +176,7 @@ class ReflectionObjectTest extends TestCase
             'createFromName',
             'createFromNode',
             'createFromInstance',
+            'newInstanceArgs',
             '__toString',
             'export',
             '__clone',

@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -664,5 +665,13 @@ class ReflectionObject extends ReflectionClass
         bool $static = false
     ) : void {
         $this->reflectionClass->addProperty($methodName, $visibility, $static);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function newInstanceArgs(array $constructorArguments, ClassLoader $classLoader)
+    {
+        return $this->reflectionClass->newInstanceArgs($constructorArguments, $classLoader);
     }
 }

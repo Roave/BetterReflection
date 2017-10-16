@@ -8,6 +8,7 @@ use ReflectionException as CoreReflectionException;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
 
 class ReflectionClass extends CoreReflectionClass
 {
@@ -366,10 +367,15 @@ class ReflectionClass extends CoreReflectionClass
 
     /**
      * {@inheritDoc}
+     * @throws \LogicException
      */
-    public function newInstanceArgs(?array $args = null)
+    public function newInstanceArgs(array $args = [], ClassLoader $classLoader = null)
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if (null === $classLoader) {
+            throw new \LogicException('You must specify a ClassLoader as parameter 2 when using a Better Reflection.');
+        }
+
+        $this->betterReflectionClass->newInstanceArgs($args, $classLoader);
     }
 
     /**

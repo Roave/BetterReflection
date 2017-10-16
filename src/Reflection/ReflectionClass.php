@@ -31,6 +31,7 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Traversable;
@@ -1453,5 +1454,28 @@ class ReflectionClass implements Reflection, CoreReflector
         }
 
         return false;
+    }
+
+    /**
+     * Create an instance of this reflection. Note that once loaded, the reflection can no longer be modified. You must
+     * specify a ClassLoader to be used to instantiate the instance.
+     *
+     * @example
+     *   $instance = $reflection->newInstanceArgs(
+     *     $argsForConstructor,
+     *     new ClassLoader(new EvalLoader(new PhpParserPrinter()))
+     *   );
+     *
+     * @param array $constructorArguments
+     * @param ClassLoader $classLoader
+     * @return object
+     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
+     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
+     */
+    public function newInstanceArgs(array $constructorArguments, ClassLoader $classLoader)
+    {
+        $classLoader->addClass($this);
+        $fullClassName = $this->getName();
+        return new $fullClassName(...$constructorArguments);
     }
 }
