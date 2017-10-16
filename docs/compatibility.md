@@ -47,8 +47,8 @@
 | isSubclassOf | :heavy_check_mark: Yes  |
 | isTrait | :heavy_check_mark: Yes |
 | isUserDefined | :heavy_check_mark: Yes |
-| newInstance | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
-| newInstanceArgs | :x: No - see ([#14](https://github.com/Roave/BetterReflection/issues/14)) |
+| newInstance | :x: No - use `newInstanceArgs` |
+| newInstanceArgs | :heavy_check_mark: Yes |
 | newInstanceWithoutConstructor | :x: No - see([#14](https://github.com/Roave/BetterReflection/issues/14)) |
 | setStaticPropertyValue | :heavy_check_mark: Yes |
 
