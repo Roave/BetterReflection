@@ -498,7 +498,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getBodyAst() : array
     {
-        return $this->node->stmts;
+        return $this->node->stmts ?: [];
     }
 
     /**
