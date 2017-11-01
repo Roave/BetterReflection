@@ -151,7 +151,7 @@ class UConverter
     {
     }
 
-    public static function getAliases($name = null)
+    public static function getAliases($name)
     {
     }
 
