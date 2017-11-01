@@ -362,7 +362,11 @@ class PhpInternalSourceLocatorTest extends TestCase
         if (\PHP_VERSION_ID < 70200
             && \in_array(
                 $parameterName,
-                ['DateTime#createFromFormat.object', 'DateTimeImmutable#createFromFormat.object'],
+                [
+                    'DateTime#createFromFormat.object',
+                    'DateTimeImmutable#createFromFormat.object',
+                    'UConverter#getAliases.name',
+                ],
                 true
             )
         ) {
