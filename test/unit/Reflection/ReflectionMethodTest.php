@@ -33,6 +33,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassWithNonStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\InterfaceWithMethod;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
@@ -614,5 +615,13 @@ PHP;
 
         self::assertSame(103, $methodReflection->invoke($object, 1, 2));
         self::assertSame(107, $methodReflection->invoke($object, 3, 4));
+    }
+
+    public function testInterfaceMethodBodyAst() : void
+    {
+        $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
+        $methodInfo = $classInfo->getMethod('someMethod');
+
+        self::assertSame([], $methodInfo->getBodyAst());
     }
 }
