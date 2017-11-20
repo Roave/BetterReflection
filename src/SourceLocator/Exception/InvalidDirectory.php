@@ -15,7 +15,7 @@ class InvalidDirectory extends RuntimeException
     public static function fromNonDirectory(string $nonDirectory) : self
     {
         if ( ! \file_exists($nonDirectory)) {
-            return new self(\sprintf('"%s" does not exists', $nonDirectory));
+            return new self(\sprintf('"%s" does not exist', $nonDirectory));
         }
 
         return new self(\sprintf('"%s" must be a directory, not a file', $nonDirectory));

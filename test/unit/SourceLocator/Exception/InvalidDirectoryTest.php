@@ -49,7 +49,7 @@ class InvalidDirectoryTest extends TestCase
         $exception = InvalidDirectory::fromNonDirectory($directory);
 
         self::assertInstanceOf(InvalidDirectory::class, $exception);
-        self::assertSame(\sprintf('"%s" does not exists', $directory), $exception->getMessage());
+        self::assertSame(\sprintf('"%s" does not exist', $directory), $exception->getMessage());
     }
 
     public function testFromNonDirectoryWithFile() : void
