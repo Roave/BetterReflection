@@ -12,6 +12,8 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Util\Autoload\ClassLoader;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
 use stdClass;
 
 /**
@@ -46,6 +48,9 @@ class ReflectionClassTest extends TestCase
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
         $mockConstant = $this->createMock(BetterReflectionClassConstant::class);
+
+        /** @var LoaderMethodInterface $mockClassLoader */
+        $mockClassLoader = $this->createMock(LoaderMethodInterface::class);
 
         return [
             ['__toString', null, '', []],
@@ -84,7 +89,7 @@ class ReflectionClassTest extends TestCase
             ['isInstance', null, true, [new stdClass()]],
             ['newInstance', NotImplemented::class, null, []],
             ['newInstanceWithoutConstructor', NotImplemented::class, null, []],
-            ['newInstanceArgs', NotImplemented::class, null, []],
+            ['newInstanceArgs', null, new stdClass(), [[], new ClassLoader($mockClassLoader)]],
             ['getParentClass', null, $mockClassLike, []],
             ['isSubclassOf', null, true, ['\stdClass']],
             ['getStaticProperties', null, [], []],
