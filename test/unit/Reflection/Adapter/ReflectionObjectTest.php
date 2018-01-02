@@ -245,6 +245,20 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($reflectionObjectAdapter->implementsInterface('foo'));
     }
 
+    public function testGetPropertyThrowsExceptionWhenPropertyDoesNotExist() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getProperty')
+            ->with('foo')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionObjectAdapter->getProperty('foo');
+    }
+
     public function testGetStaticPropertyValue() : void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
