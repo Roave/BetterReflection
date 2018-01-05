@@ -175,9 +175,11 @@ class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * {@inheritDoc}
+     * @param string $name
+     *
+     * @return ReflectionProperty|null
      */
-    public function getProperty($name) : ?ReflectionProperty
+    public function getProperty($name)
     {
         $property = $this->betterReflectionObject->getProperty($name);
 

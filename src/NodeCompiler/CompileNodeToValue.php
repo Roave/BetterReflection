@@ -130,10 +130,7 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        if ($node->class instanceof Node\Expr || $node->name instanceof Node\Expr\Error) {
-            throw new \LogicException('Found unexpected value when evaluating class constant');
-        }
-
+        /** @var Node\Name $node->class */
         $className = $node->class->toString();
 
         if ($node->name === 'class') {
@@ -152,6 +149,7 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
+        /** @var string $node->name */
         $reflectionConstant = $classInfo->getReflectionConstant($node->name);
 
         return $this->__invoke(
