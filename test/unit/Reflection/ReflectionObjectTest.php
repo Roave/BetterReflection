@@ -5,7 +5,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Node;
-use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
@@ -26,11 +25,6 @@ use stdClass;
  */
 class ReflectionObjectTest extends TestCase
 {
-    /**
-     * @var Parser
-     */
-    private $parser;
-
     /**
      * @return Node[]
      */

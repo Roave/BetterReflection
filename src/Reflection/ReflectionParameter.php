@@ -25,10 +25,6 @@ use RuntimeException;
 
 class ReflectionParameter implements CoreReflector
 {
-    private const CONST_TYPE_NOT_A_CONST = 0;
-    private const CONST_TYPE_CLASS       = 1;
-    private const CONST_TYPE_DEFINED     = 2;
-
     /**
      * @var ParamNode
      */
@@ -63,11 +59,6 @@ class ReflectionParameter implements CoreReflector
      * @var string|null
      */
     private $defaultValueConstantName;
-
-    /**
-     * @var int
-     */
-    private $defaultValueConstantType = self::CONST_TYPE_NOT_A_CONST;
 
     /**
      * @var Reflector
@@ -218,14 +209,12 @@ class ReflectionParameter implements CoreReflector
 
             $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name;
-            $this->defaultValueConstantType = self::CONST_TYPE_CLASS;
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
             && ! \in_array(\strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
             $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
-            $this->defaultValueConstantType = self::CONST_TYPE_DEFINED;
             $this->defaultValue             = null;
             return;
         }
