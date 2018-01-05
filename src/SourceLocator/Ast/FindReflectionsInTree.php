@@ -87,7 +87,7 @@ final class FindReflectionsInTree
                 $this->astConversionStrategy = $astConversionStrategy;
             }
 
-            public function enterNode(Node $node) : void
+            public function enterNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = $node;
@@ -115,7 +115,7 @@ final class FindReflectionsInTree
                 }
             }
 
-            public function leaveNode(Node $node) : void
+            public function leaveNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = null;

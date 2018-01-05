@@ -64,11 +64,20 @@ final class SourceStubber
     {
         $classNode = $this->createClass($classReflection);
 
-        $this->addClassModifiers($classNode, $classReflection);
+        if ($classNode instanceof Class_) {
+            $this->addClassModifiers($classNode, $classReflection);
+        }
+
+        if ($classNode instanceof Class_ || $classNode instanceof Interface_) {
+            $this->addExtendsAndImplements($classNode, $classReflection);
+        }
+
+        if ($classNode instanceof Class_ || $classNode instanceof Trait_) {
+            $this->addProperties($classNode, $classReflection);
+            $this->addTraitUse($classNode, $classReflection);
+        }
+
         $this->addDocComment($classNode, $classReflection);
-        $this->addExtendsAndImplements($classNode, $classReflection);
-        $this->addTraitUse($classNode, $classReflection);
-        $this->addProperties($classNode, $classReflection);
         $this->addConstants($classNode, $classReflection);
         $this->addMethods($classNode, $classReflection);
 
@@ -107,9 +116,9 @@ final class SourceStubber
     }
 
     /**
-     * @param Class_|Interface_|Trait_ $classNode
+     * @param Class_ $classNode
      */
-    private function addClassModifiers(Declaration $classNode, CoreReflectionClass $classReflection) : void
+    private function addClassModifiers(Class_ $classNode, CoreReflectionClass $classReflection) : void
     {
         if (! $classReflection->isInterface() && $classReflection->isAbstract()) {
             // Interface \Iterator is interface and abstract
@@ -122,7 +131,7 @@ final class SourceStubber
     }
 
     /**
-     * @param Class_|Interface_|Trait_ $classNode
+     * @param Class_|Interface_ $classNode
      */
     private function addExtendsAndImplements(Declaration $classNode, CoreReflectionClass $classReflection) : void
     {
@@ -139,7 +148,7 @@ final class SourceStubber
         }
 
         foreach ($interfaces as $interfaceName) {
-            if ($classReflection->isInterface()) {
+            if ($classNode instanceof Interface_) {
                 $classNode->extend(new FullyQualified($interfaceName));
             } else {
                 $classNode->implement(new FullyQualified($interfaceName));

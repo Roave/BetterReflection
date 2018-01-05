@@ -25,7 +25,7 @@ class ReflectionType
     ];
 
     /**
-     * @var $type
+     * @var string
      */
     private $type;
 

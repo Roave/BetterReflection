@@ -78,7 +78,7 @@ class ReflectionParameter implements CoreReflector
     {
     }
 
-    public static function export() : void
+    public static function export()
     {
         throw new Exception('Unable to export statically');
     }
@@ -192,6 +192,14 @@ class ReflectionParameter implements CoreReflector
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
+            if ($defaultValueNode->class instanceof Node\Expr) {
+                throw new LogicException('Class constant classes cannot be expressions');
+            }
+
+            if ($defaultValueNode->name instanceof Node\Expr\Error) {
+                throw new LogicException('Cannot deal with error nodes');
+            }
+
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {

@@ -71,7 +71,7 @@ class ReflectionProperty implements CoreReflector
     {
     }
 
-    public static function export() : void
+    public static function export()
     {
         throw new Exception('Unable to export statically');
     }

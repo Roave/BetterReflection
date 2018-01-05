@@ -27,7 +27,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public static function export($name, $return = null)
     {
-        BetterReflectionFunction::export(...func_get_args());
+        return BetterReflectionFunction::export(...func_get_args());
     }
 
     /**

@@ -34,7 +34,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public static function export($class, $name, $return = null)
     {
-        BetterReflectionMethod::export(...func_get_args());
+        return BetterReflectionMethod::export(...func_get_args());
     }
 
     /**
@@ -313,7 +313,7 @@ class ReflectionMethod extends CoreReflectionMethod
     public function getClosure($object = null)
     {
         try {
-            $this->betterReflectionMethod->getClosure($object);
+            return $this->betterReflectionMethod->getClosure($object);
         } catch (NoObjectProvided | NotAnObject $e) {
             return null;
         } catch (Throwable $e) {

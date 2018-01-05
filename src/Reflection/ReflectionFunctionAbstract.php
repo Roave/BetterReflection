@@ -39,7 +39,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public const CLOSURE_NAME = '{closure}';
 
     /**
-     * @var NamespaceNode
+     * @var ?NamespaceNode
      */
     private $declaringNamespace;
 
@@ -67,7 +67,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     {
     }
 
-    public static function export() : void
+    public static function export()
     {
         throw new Exception('Unable to export statically');
     }
@@ -75,7 +75,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Populate the common elements of the function abstract.
      *
-     * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
      * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
      */
@@ -515,7 +515,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
+        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody) ?: [];
     }
 
     /**

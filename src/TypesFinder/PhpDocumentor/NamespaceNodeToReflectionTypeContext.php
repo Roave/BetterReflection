@@ -35,17 +35,28 @@ class NamespaceNodeToReflectionTypeContext
     private function aliasesToFullyQualifiedNames(Namespace_ $namespace) : array
     {
         // flatten(flatten(map(stuff)))
-        return array_merge([], ...array_merge([], ...array_map(function ($use) : array {
-            /** @var $use Use_|GroupUse */
+        return array_merge(
+            [],
+            ...array_merge(
+                [],
+                ...array_map(
+                    /** @param Use_|GroupUse $use */
+                    function ($use) : array {
+                        return array_map(
+                            function (UseUse $useUse) use ($use) : array {
+                                if ($use instanceof GroupUse) {
+                                    return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
+                                }
 
-            return array_map(function (UseUse $useUse) use ($use) : array {
-                if ($use instanceof GroupUse) {
-                    return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
-                }
-
-                return [$useUse->alias => $useUse->name->toString()];
-            }, $use->uses);
-        }, $this->classAlikeUses($namespace))));
+                                return [$useUse->alias => $useUse->name->toString()];
+                            },
+                            $use->uses
+                        );
+                    },
+                    $this->classAlikeUses($namespace)
+                )
+            )
+        );
     }
 
     /**

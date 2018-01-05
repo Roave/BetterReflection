@@ -97,7 +97,7 @@ final class ClosureSourceLocator implements SourceLocator
             private $startLine;
 
             /**
-             * @var Node[][]
+             * @var (Node|null)[][]
              */
             private $closureNodes = [];
 
@@ -112,7 +112,7 @@ final class ClosureSourceLocator implements SourceLocator
                 $this->startLine = $startLine;
             }
 
-            public function enterNode(Node $node) : void
+            public function enterNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = $node;
@@ -125,7 +125,7 @@ final class ClosureSourceLocator implements SourceLocator
                 }
             }
 
-            public function leaveNode(Node $node) : void
+            public function leaveNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = null;
@@ -139,7 +139,7 @@ final class ClosureSourceLocator implements SourceLocator
              */
             public function getClosureNodes() : ?array
             {
-                /** @var Node[][] $closureNodesDataOnSameLine */
+                /** @var (Node|null)[][] $closureNodesDataOnSameLine */
                 $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, function (array $nodes) : bool {
                     return $nodes[0]->getLine() === $this->startLine;
                 }));

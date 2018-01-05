@@ -71,7 +71,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @param object $object
      *
-     * @return self
+     * @return ReflectionClass
      *
      * @throws \ReflectionException
      * @throws \InvalidArgumentException

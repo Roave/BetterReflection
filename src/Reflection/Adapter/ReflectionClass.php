@@ -186,7 +186,7 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getProperty($name)
+    public function getProperty($name) : ?ReflectionProperty
     {
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 

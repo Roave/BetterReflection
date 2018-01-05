@@ -123,7 +123,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                 $this->startLine = $startLine;
             }
 
-            public function enterNode(Node $node) : void
+            public function enterNode(Node $node)
             {
                 if ($node instanceof Node\Stmt\Class_ && $node->name === null) {
                     $this->anonymousClassNodes[] = $node;
