@@ -22,6 +22,13 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
+use function array_filter;
+use function array_values;
+use function file_get_contents;
+use function gettype;
+use function is_object;
+use function sprintf;
+use function strpos;
 
 /**
  * @internal
@@ -46,10 +53,10 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      */
     public function __construct($anonymousClassObject, Parser $parser)
     {
-        if (! \is_object($anonymousClassObject)) {
-            throw new InvalidArgumentException(\sprintf(
+        if (! is_object($anonymousClassObject)) {
+            throw new InvalidArgumentException(sprintf(
                 'Can only create from an instance of an object, "%s" given',
-                \gettype($anonymousClassObject)
+                gettype($anonymousClassObject)
             ));
         }
 
@@ -74,7 +81,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        return \array_filter([$this->getReflectionClass($reflector, $identifierType)]);
+        return array_filter([$this->getReflectionClass($reflector, $identifierType)]);
     }
 
     private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionClass
@@ -85,7 +92,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $fileName = $this->coreClassReflection->getFileName();
 
-        if (\strpos($fileName, 'eval()\'d code') !== false) {
+        if (strpos($fileName, 'eval()\'d code') !== false) {
             throw EvaledAnonymousClassCannotBeLocated::create();
         }
 
@@ -126,7 +133,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             public function getAnonymousClassNode() : ?Class_
             {
                 /** @var Class_[] $anonymousClassNodesOnSameLine */
-                $anonymousClassNodesOnSameLine = \array_values(\array_filter($this->anonymousClassNodes, function (Class_ $node) : bool {
+                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, function (Class_ $node) : bool {
                     return $node->getLine() === $this->startLine;
                 }));
 
@@ -142,7 +149,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             }
         };
 
-        $fileContents = \file_get_contents($fileName);
+        $fileContents = file_get_contents($fileName);
         $ast          = $this->parser->parse($fileContents);
 
         $nodeTraverser = new NodeTraverser();

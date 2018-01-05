@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Throwable;
+use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
@@ -33,7 +34,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public static function export($class, $name, $return = null)
     {
-        BetterReflectionMethod::export(...\func_get_args());
+        BetterReflectionMethod::export(...func_get_args());
     }
 
     /**
@@ -338,7 +339,7 @@ class ReflectionMethod extends CoreReflectionMethod
         }
 
         try {
-            return $this->betterReflectionMethod->invoke(...\func_get_args());
+            return $this->betterReflectionMethod->invoke(...func_get_args());
         } catch (NoObjectProvided | NotAnObject $e) {
             return null;
         } catch (Throwable $e) {

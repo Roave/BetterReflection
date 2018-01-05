@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use function reset;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection
@@ -25,7 +26,7 @@ class NodeToReflectionTest extends TestCase
             new Parser\Php7(new Lexer()),
             new Parser\Php5(new Lexer()),
         ]))->parse($php);
-        return \reset($nodes);
+        return reset($nodes);
     }
 
     public function testReturnsReflectionForClassNode() : void

@@ -10,6 +10,13 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use function class_exists;
+use function file_get_contents;
+use function interface_exists;
+use function is_file;
+use function is_readable;
+use function preg_match;
+use function trait_exists;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator
 {
@@ -65,7 +72,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
         $name = $identifier->getName();
 
-        if (! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
+        if (! (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false))) {
             return null; // not an available internal class
         }
 
@@ -87,7 +94,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return \file_get_contents($this->buildStubName($className));
+        return file_get_contents($this->buildStubName($className));
     }
 
     /**
@@ -95,7 +102,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     private function buildStubName(string $className) : ?string
     {
-        if (! \preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
+        if (! preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
             return null;
         }
 
@@ -113,6 +120,6 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return false;
         }
 
-        return \is_file($expectedStubName) && \is_readable($expectedStubName);
+        return is_file($expectedStubName) && is_readable($expectedStubName);
     }
 }

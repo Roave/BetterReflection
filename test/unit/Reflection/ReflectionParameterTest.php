@@ -34,6 +34,7 @@ use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
 use stdClass;
 use Throwable;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
@@ -162,7 +163,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testDefaultParametersTypes(string $defaultExpression, $expectedValue) : void
     {
-        $content = \sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
+        $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
 
         $reflector   = new ClassReflector(new StringSourceLocator($content, $this->astLocator));
         $classInfo   = $reflector->reflect('Foo');

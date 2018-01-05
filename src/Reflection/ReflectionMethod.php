@@ -14,6 +14,11 @@ use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
+use function class_exists;
+use function get_class;
+use function is_object;
+use function sprintf;
+use function strtolower;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
@@ -112,7 +117,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             }
         }
 
-        throw new Exception\MethodPrototypeNotFound(\sprintf(
+        throw new Exception\MethodPrototypeNotFound(sprintf(
             'Method %s::%s does not have a prototype',
             $this->getDeclaringClass()->getName(),
             $this->getName()
@@ -214,7 +219,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isConstructor() : bool
     {
-        if (\strtolower($this->getName()) === '__construct') {
+        if (strtolower($this->getName()) === '__construct') {
             return true;
         }
 
@@ -223,7 +228,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             return false;
         }
 
-        return \strtolower($this->getName()) === \strtolower($declaringClass->getShortName());
+        return strtolower($this->getName()) === strtolower($declaringClass->getShortName());
     }
 
     /**
@@ -231,7 +236,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isDestructor() : bool
     {
-        return \strtolower($this->getName()) === '__destruct';
+        return strtolower($this->getName()) === '__destruct';
     }
 
     /**
@@ -357,8 +362,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function assertClassExist(string $className) : void
     {
-        if (! \class_exists($className, false)) {
-            throw new ClassDoesNotExist(\sprintf('Method of class %s cannot be used as the class is not loaded', $className));
+        if (! class_exists($className, false)) {
+            throw new ClassDoesNotExist(sprintf('Method of class %s cannot be used as the class is not loaded', $className));
         }
     }
 
@@ -377,13 +382,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             throw NoObjectProvided::create();
         }
 
-        if (! \is_object($object)) {
+        if (! is_object($object)) {
             throw NotAnObject::fromNonObject($object);
         }
 
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        if (\get_class($object) !== $declaringClassName) {
+        if (get_class($object) !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
 

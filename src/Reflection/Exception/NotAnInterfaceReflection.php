@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use UnexpectedValueException;
+use function sprintf;
 
 class NotAnInterfaceReflection extends UnexpectedValueException
 {
@@ -17,6 +18,6 @@ class NotAnInterfaceReflection extends UnexpectedValueException
             $type = 'trait';
         }
 
-        return new self(\sprintf('Provided node "%s" is not interface, but "%s"', $class->getName(), $type));
+        return new self(sprintf('Provided node "%s" is not interface, but "%s"', $class->getName(), $type));
     }
 }

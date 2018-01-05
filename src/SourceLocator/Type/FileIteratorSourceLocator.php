@@ -13,6 +13,12 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use SplFileInfo;
+use const PATHINFO_EXTENSION;
+use function array_filter;
+use function array_map;
+use function array_values;
+use function iterator_to_array;
+use function pathinfo;
 
 /**
  * This source locator loads all php files from \FileSystemIterator
@@ -56,15 +62,15 @@ class FileIteratorSourceLocator implements SourceLocator
      */
     private function getAggregatedSourceLocator() : AggregateSourceLocator
     {
-        return $this->aggregateSourceLocator ?: new AggregateSourceLocator(\array_values(\array_filter(\array_map(
+        return $this->aggregateSourceLocator ?: new AggregateSourceLocator(array_values(array_filter(array_map(
             function (SplFileInfo $item) : ?SingleFileSourceLocator {
-                if (! ($item->isFile() && \pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
+                if (! ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) === 'php')) {
                     return null;
                 }
 
                 return new SingleFileSourceLocator($item->getRealPath(), $this->astLocator);
             },
-            \iterator_to_array($this->fileSystemIterator)
+            iterator_to_array($this->fileSystemIterator)
         ))));
     }
 

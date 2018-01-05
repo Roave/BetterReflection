@@ -25,6 +25,10 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
+use function class_exists;
+use function func_num_args;
+use function get_class;
+use function is_object;
 
 class ReflectionProperty implements CoreReflector
 {
@@ -369,7 +373,7 @@ class ReflectionProperty implements CoreReflector
 
             Closure::bind(function (string $declaringClassName, string $propertyName, $value) : void {
                 $declaringClassName::${$propertyName} = $value;
-            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), \func_num_args() === 2 ? $value : $object);
+            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
 
             return;
         }
@@ -386,7 +390,7 @@ class ReflectionProperty implements CoreReflector
      */
     private function assertClassExist(string $className) : void
     {
-        if (! \class_exists($className, false)) {
+        if (! class_exists($className, false)) {
             throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
     }
@@ -406,13 +410,13 @@ class ReflectionProperty implements CoreReflector
             throw NoObjectProvided::create();
         }
 
-        if (! \is_object($object)) {
+        if (! is_object($object)) {
             throw NotAnObject::fromNonObject($object);
         }
 
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        if (\get_class($object) !== $declaringClassName) {
+        if (get_class($object) !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
 

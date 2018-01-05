@@ -41,6 +41,7 @@ use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
 use TraitWithMethod;
+use function basename;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
@@ -218,7 +219,7 @@ class ReflectionMethodTest extends TestCase
 
         $detectedFilename = $method->getFileName();
 
-        self::assertSame('Methods.php', \basename($detectedFilename));
+        self::assertSame('Methods.php', basename($detectedFilename));
     }
 
     public function testMethodNameWithNamespace() : void

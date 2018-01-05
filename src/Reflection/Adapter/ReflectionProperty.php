@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Throwable;
+use function func_get_args;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
@@ -33,7 +34,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public static function export($class, $name, $return = null)
     {
-        BetterReflectionProperty::export(...\func_get_args());
+        BetterReflectionProperty::export(...func_get_args());
     }
 
     /**

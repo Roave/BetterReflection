@@ -8,6 +8,9 @@ use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+use function array_reduce;
+use function count;
+use function sprintf;
 
 /**
  * @internal
@@ -18,7 +21,7 @@ final class ReflectionMethodStringCast
     {
         $parametersFormat = $methodReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
-        return \sprintf(
+        return sprintf(
             'Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s' . $parametersFormat . "\n}",
             self::sourceToString($methodReflection),
             $methodReflection->isConstructor() ? ', ctor' : '',
@@ -32,7 +35,7 @@ final class ReflectionMethodStringCast
             self::visibilityToString($methodReflection),
             $methodReflection->getName(),
             self::fileAndLinesToString($methodReflection),
-            \count($methodReflection->getParameters()),
+            count($methodReflection->getParameters()),
             self::parametersToString($methodReflection)
         );
     }
@@ -43,7 +46,7 @@ final class ReflectionMethodStringCast
             return 'user';
         }
 
-        return \sprintf('internal:%s', $methodReflection->getExtensionName());
+        return sprintf('internal:%s', $methodReflection->getExtensionName());
     }
 
     private static function overwritesToString(ReflectionMethod $methodReflection) : string
@@ -58,7 +61,7 @@ final class ReflectionMethodStringCast
             return '';
         }
 
-        return \sprintf(', overwrites %s', $parentClass->getName());
+        return sprintf(', overwrites %s', $parentClass->getName());
     }
 
     private static function inheritsToString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection) : string
@@ -71,13 +74,13 @@ final class ReflectionMethodStringCast
             return '';
         }
 
-        return \sprintf(', inherits %s', $methodReflection->getDeclaringClass()->getName());
+        return sprintf(', inherits %s', $methodReflection->getDeclaringClass()->getName());
     }
 
     private static function prototypeToString(ReflectionMethod $methodReflection) : string
     {
         try {
-            return \sprintf(', prototype %s', $methodReflection->getPrototype()->getDeclaringClass()->getName());
+            return sprintf(', prototype %s', $methodReflection->getPrototype()->getDeclaringClass()->getName());
         } catch (MethodPrototypeNotFound $e) {
             return '';
         }
@@ -102,12 +105,12 @@ final class ReflectionMethodStringCast
             return '';
         }
 
-        return \sprintf("\n  @@ %s %d - %d", $methodReflection->getFileName(), $methodReflection->getStartLine(), $methodReflection->getEndLine());
+        return sprintf("\n  @@ %s %d - %d", $methodReflection->getFileName(), $methodReflection->getStartLine(), $methodReflection->getEndLine());
     }
 
     private static function parametersToString(ReflectionMethod $methodReflection) : string
     {
-        return \array_reduce($methodReflection->getParameters(), function (string $string, ReflectionParameter $parameterReflection) : string {
+        return array_reduce($methodReflection->getParameters(), function (string $string, ReflectionParameter $parameterReflection) : string {
             return $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection);
         }, '');
     }

@@ -10,6 +10,10 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use function class_exists;
+use function file_exists;
+use function interface_exists;
+use function trait_exists;
 
 final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
@@ -53,14 +57,14 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
 
         $name = $identifier->getName();
 
-        if (! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
+        if (! (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false))) {
             return null; // not an available internal class
         }
 
         $reflection = new ReflectionClass($name);
         $sourceFile = $reflection->getFileName();
 
-        return ($sourceFile && \file_exists($sourceFile))
+        return ($sourceFile && file_exists($sourceFile))
             ? null : $reflection;
     }
 }

@@ -28,6 +28,11 @@ use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
+use function array_filter;
+use function count;
+use function implode;
+use function is_array;
+use function strtolower;
 
 abstract class ReflectionFunctionAbstract implements CoreReflector
 {
@@ -105,7 +110,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
-        $lastParamIndex      = (\count($this->node->params) - 1);
+        $lastParamIndex      = (count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
             $hasDefault = ($this->node->params[$i]->default !== null);
 
@@ -156,7 +161,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
             return '';
         }
 
-        return \implode('\\', $this->declaringNamespace->name->parts);
+        return implode('\\', $this->declaringNamespace->name->parts);
     }
 
     /**
@@ -174,7 +179,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getNumberOfParameters() : int
     {
-        return \count($this->getParameters());
+        return count($this->getParameters());
     }
 
     /**
@@ -182,7 +187,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getNumberOfRequiredParameters() : int
     {
-        return \count(\array_filter(
+        return count(array_filter(
             $this->getParameters(),
             function (ReflectionParameter $p) : bool {
                 return ! $p->isOptional();
@@ -318,7 +323,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
                 return true;
             }
 
-            if (\is_array($nodeProperty)) {
+            if (is_array($nodeProperty)) {
                 foreach ($nodeProperty as $nodePropertyArrayItem) {
                     if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
                         return true;
@@ -546,10 +551,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function removeParameter(string $parameterName) : void
     {
-        $lowerName = \strtolower($parameterName);
+        $lowerName = strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
-            if (\strtolower($paramNode->name) === $lowerName) {
+            if (strtolower($paramNode->name) === $lowerName) {
                 unset($this->node->params[$key]);
             }
         }

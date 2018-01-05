@@ -43,7 +43,7 @@ class PhpUnitTestCaseBench
         $reflectionClass  = $this->reflector->reflect(TestCase::class);
         $this->methods    = $reflectionClass->getMethods();
         $this->properties = $reflectionClass->getProperties();
-        $this->parameters = \array_merge([], ...\array_map(function (ReflectionMethod $method) : array {
+        $this->parameters = array_merge([], ...array_map(function (ReflectionMethod $method) : array {
             return $method->getParameters();
         }, $this->methods));
     }

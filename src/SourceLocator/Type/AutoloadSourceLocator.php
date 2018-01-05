@@ -10,6 +10,20 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use function array_merge;
+use function array_values;
+use function class_exists;
+use function file_exists;
+use function file_get_contents;
+use function function_exists;
+use function interface_exists;
+use function is_string;
+use function set_error_handler;
+use function stream_wrapper_register;
+use function stream_wrapper_restore;
+use function stream_wrapper_unregister;
+use function time;
+use function trait_exists;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -59,12 +73,12 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
-        if (! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
+        if (! ($potentiallyLocatedFile && file_exists($potentiallyLocatedFile))) {
             return null;
         }
 
         return new LocatedSource(
-            \file_get_contents($potentiallyLocatedFile),
+            file_get_contents($potentiallyLocatedFile),
             $potentiallyLocatedFile
         );
     }
@@ -104,10 +118,10 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     private function locateClassByName(string $className) : ?string
     {
-        if (\class_exists($className, false) || \interface_exists($className, false) || \trait_exists($className, false)) {
+        if (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false)) {
             $filename = (new ReflectionClass($className))->getFileName();
 
-            if (! \is_string($filename)) {
+            if (! is_string($filename)) {
                 return null;
             }
 
@@ -116,13 +130,13 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         self::$autoloadLocatedFile = null;
         self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
-        $previousErrorHandler      = \set_error_handler(function () : void {
+        $previousErrorHandler      = set_error_handler(function () : void {
         });
-        \stream_wrapper_unregister('file');
-        \stream_wrapper_register('file', self::class);
-        \class_exists($className);
-        \stream_wrapper_restore('file');
-        \set_error_handler($previousErrorHandler);
+        stream_wrapper_unregister('file');
+        stream_wrapper_register('file', self::class);
+        class_exists($className);
+        stream_wrapper_restore('file');
+        set_error_handler($previousErrorHandler);
         return self::$autoloadLocatedFile;
     }
 
@@ -136,14 +150,14 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     private function locateFunctionByName(string $functionName) : ?string
     {
-        if (! \function_exists($functionName)) {
+        if (! function_exists($functionName)) {
             return null;
         }
 
         $reflection         = new ReflectionFunction($functionName);
         $reflectionFileName = $reflection->getFileName();
 
-        if (! \is_string($reflectionFileName)) {
+        if (! is_string($reflectionFileName)) {
             return null;
         }
 
@@ -190,13 +204,13 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             'gid' => 1000,
             'rdev' => 0,
             'size' => 1,
-            'atime' => \time(),
-            'mtime' => \time(),
-            'ctime' => \time(),
+            'atime' => time(),
+            'mtime' => time(),
+            'ctime' => time(),
             'blksize' => 4096,
             'blocks' => 8,
         ];
 
-        return \array_merge(\array_values($assoc), $assoc);
+        return array_merge(array_values($assoc), $assoc);
     }
 }

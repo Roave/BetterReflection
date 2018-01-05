@@ -7,6 +7,8 @@ namespace Roave\BetterReflectionTest\Util\Autoload\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
+use function sprintf;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
@@ -15,7 +17,7 @@ final class ClassAlreadyRegisteredTest extends TestCase
 {
     public function testFromReflectionClass() : void
     {
-        $className = \uniqid('class name', true);
+        $className = uniqid('class name', true);
 
         /** @var ReflectionClass|\PHPUnit_Framework_MockObject_MockObject $reflection */
         $reflection = $this->createMock(ReflectionClass::class);
@@ -25,7 +27,7 @@ final class ClassAlreadyRegisteredTest extends TestCase
 
         self::assertInstanceOf(ClassAlreadyRegistered::class, $exception);
         self::assertSame(
-            \sprintf('Class %s already registered', $className),
+            sprintf('Class %s already registered', $className),
             $exception->getMessage()
         );
     }

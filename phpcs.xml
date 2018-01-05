@@ -18,8 +18,11 @@
         <exclude-pattern>src/SourceLocator/Type/AutoloadSourceLocator.php</exclude-pattern>
     </rule>
 
-    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants"/>
-    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
+        <properties>
+            <property name="enableObjectTypeHint" value="false"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint">
         <exclude-pattern>src/Reflection/Adapter/*</exclude-pattern>
     </rule>

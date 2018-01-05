@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestSuite;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
+use function class_exists;
 
 class TestListener extends BaseTestListener
 {
@@ -41,7 +42,7 @@ class TestListener extends BaseTestListener
     private function assertClassNotLoaded(string $className, TestCase $test) : void
     {
         TestCase::assertFalse(
-            \class_exists($className, false),
+            class_exists($className, false),
             'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test)
         );
     }

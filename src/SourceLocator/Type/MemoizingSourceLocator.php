@@ -8,6 +8,9 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
+use function array_key_exists;
+use function get_class;
+use function spl_object_hash;
 
 final class MemoizingSourceLocator implements SourceLocator
 {
@@ -35,7 +38,7 @@ final class MemoizingSourceLocator implements SourceLocator
     {
         $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierToCacheKey($identifier);
 
-        if (\array_key_exists($cacheKey, $this->cacheByIdentifierKeyAndOid)) {
+        if (array_key_exists($cacheKey, $this->cacheByIdentifierKeyAndOid)) {
             return $this->cacheByIdentifierKeyAndOid[$cacheKey];
         }
 
@@ -50,7 +53,7 @@ final class MemoizingSourceLocator implements SourceLocator
     {
         $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierTypeToCacheKey($identifierType);
 
-        if (\array_key_exists($cacheKey, $this->cacheByIdentifierTypeKeyAndOid)) {
+        if (array_key_exists($cacheKey, $this->cacheByIdentifierTypeKeyAndOid)) {
             return $this->cacheByIdentifierTypeKeyAndOid[$cacheKey];
         }
 
@@ -60,8 +63,8 @@ final class MemoizingSourceLocator implements SourceLocator
 
     private function reflectorCacheKey(Reflector $reflector) : string
     {
-        return 'type:' . \get_class($reflector)
-            . '#oid:' . \spl_object_hash($reflector);
+        return 'type:' . get_class($reflector)
+            . '#oid:' . spl_object_hash($reflector);
     }
 
     private function identifierToCacheKey(Identifier $identifier) : string

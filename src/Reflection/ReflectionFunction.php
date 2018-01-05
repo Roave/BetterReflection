@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use function function_exists;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
@@ -158,7 +159,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     private function assertFunctionExist(string $functionName) : void
     {
-        if (! \function_exists($functionName)) {
+        if (! function_exists($functionName)) {
             throw FunctionDoesNotExist::fromName($functionName);
         }
     }

@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
@@ -20,7 +21,7 @@ class InvalidAbstractFunctionNodeTypeTest extends TestCase
         $exception = InvalidAbstractFunctionNodeType::fromNode($node);
 
         self::assertInstanceOf(InvalidAbstractFunctionNodeType::class, $exception);
-        self::assertSame(\sprintf(
+        self::assertSame(sprintf(
             'Node for "%s" must be "%s" or "%s", was a "%s"',
             ReflectionFunctionAbstract::class,
             Node\Stmt\ClassMethod::class,

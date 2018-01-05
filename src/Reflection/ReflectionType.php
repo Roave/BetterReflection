@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use function array_key_exists;
+use function ltrim;
+use function strtolower;
+
 class ReflectionType
 {
     private const BUILT_IN_TYPES = [
@@ -37,7 +41,7 @@ class ReflectionType
     public static function createFromType(string $type, bool $allowsNull) : self
     {
         $reflectionType             = new self();
-        $reflectionType->type       = \ltrim($type, '\\');
+        $reflectionType->type       = ltrim($type, '\\');
         $reflectionType->allowsNull = $allowsNull;
         return $reflectionType;
     }
@@ -57,7 +61,7 @@ class ReflectionType
      */
     public function isBuiltin() : bool
     {
-        return \array_key_exists(\strtolower($this->type), self::BUILT_IN_TYPES);
+        return array_key_exists(strtolower($this->type), self::BUILT_IN_TYPES);
     }
 
     /**

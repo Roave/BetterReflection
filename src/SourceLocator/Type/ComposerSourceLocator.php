@@ -9,6 +9,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use function file_get_contents;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.
@@ -48,7 +49,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
         }
 
         return new LocatedSource(
-            \file_get_contents($filename),
+            file_get_contents($filename),
             $filename
         );
     }
