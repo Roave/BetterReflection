@@ -39,7 +39,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public const CLOSURE_NAME = '{closure}';
 
     /**
-     * @var ?NamespaceNode
+     * @var NamespaceNode|null
      */
     private $declaringNamespace;
 
