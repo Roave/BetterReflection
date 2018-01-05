@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -79,7 +80,7 @@ class DirectoriesSourceLocatorTest extends TestCase
     /**
      * @dataProvider invalidDirectoriesProvider
      *
-     * @param array $directories
+     * @param string[] $directories
      */
     public function testInvalidDirectory(array $directories) : void
     {

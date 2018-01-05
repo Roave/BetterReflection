@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
@@ -48,8 +49,6 @@ class ReflectionMethodStringCastTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param string $expectedString
      * @dataProvider toStringProvider
      */
     public function testToString(string $methodName, string $expectedString) : void
@@ -62,7 +61,9 @@ class ReflectionMethodStringCastTest extends TestCase
 
     public function testToStringForInternal() : void
     {
+        // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
         $classReflection = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator)))->reflect(Exception::class);
+        // phpcs:enable
 
         self::assertSame("Method [ <internal:Core, prototype Throwable> final public method getMessage ] {\n}", (string) $classReflection->getMethod('getMessage'));
     }

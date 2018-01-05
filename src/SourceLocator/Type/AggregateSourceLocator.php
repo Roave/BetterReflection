@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -34,7 +35,9 @@ class AggregateSourceLocator implements SourceLocator
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         foreach ($this->sourceLocators as $sourceLocator) {
-            if ($located = $sourceLocator->locateIdentifier($reflector, $identifier)) {
+            $located = $sourceLocator->locateIdentifier($reflector, $identifier);
+
+            if ($located) {
                 return $located;
             }
         }

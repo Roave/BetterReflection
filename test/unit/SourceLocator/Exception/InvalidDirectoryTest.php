@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
@@ -15,10 +16,7 @@ class InvalidDirectoryTest extends TestCase
     /**
      * @dataProvider nonStringValuesProvider
      *
-     * @param string $expectedMessage
      * @param mixed $value
-     *
-     * @return void
      */
     public function testFromNonStringValue(string $expectedMessage, $value) : void
     {

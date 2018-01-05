@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Identifier;
@@ -24,8 +25,6 @@ class Identifier
     private $type;
 
     /**
-     * @param string $name
-     * @param IdentifierType $type
      *
      * @throws InvalidIdentifierName
      */
@@ -33,9 +32,9 @@ class Identifier
     {
         $this->type = $type;
 
-        if (self::WILDCARD === $name
-            || ReflectionFunctionAbstract::CLOSURE_NAME === $name
-            || 0 === \strpos($name, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX)
+        if ($name === self::WILDCARD
+            || $name === ReflectionFunctionAbstract::CLOSURE_NAME
+            || \strpos($name, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0
         ) {
             $this->name = $name;
             return;
@@ -43,7 +42,7 @@ class Identifier
 
         $name = \ltrim($name, '\\');
 
-        if ( ! \preg_match(self::VALID_NAME_REGEXP, $name)) {
+        if (! \preg_match(self::VALID_NAME_REGEXP, $name)) {
             throw InvalidIdentifierName::fromInvalidName($name);
         }
 

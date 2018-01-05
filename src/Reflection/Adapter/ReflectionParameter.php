@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -81,7 +82,7 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         $declaringClass = $this->betterReflectionParameter->getDeclaringClass();
 
-        if (null === $declaringClass) {
+        if ($declaringClass === null) {
             return null;
         }
 
@@ -95,7 +96,7 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         $class = $this->betterReflectionParameter->getClass();
 
-        if (null === $class) {
+        if ($class === null) {
             return null;
         }
 

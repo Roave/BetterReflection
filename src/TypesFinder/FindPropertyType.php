@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
@@ -43,7 +44,7 @@ class FindPropertyType
     {
         $docComment = $reflectionProperty->getDocComment();
 
-        if ('' === $docComment) {
+        if ($docComment === '') {
             return [];
         }
 

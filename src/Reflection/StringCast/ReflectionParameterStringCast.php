@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
@@ -26,7 +27,7 @@ final class ReflectionParameterStringCast
 
     private static function typeToString(ReflectionParameter $parameterReflection) : string
     {
-        if ( ! $parameterReflection->hasType()) {
+        if (! $parameterReflection->hasType()) {
             return '';
         }
 
@@ -39,7 +40,7 @@ final class ReflectionParameterStringCast
 
         $type = \array_key_exists($originalType, $mapping) ? $mapping[$originalType] : $originalType;
 
-        if ( ! $parameterReflection->allowsNull()) {
+        if (! $parameterReflection->allowsNull()) {
             return $type . ' ';
         }
 
@@ -48,7 +49,7 @@ final class ReflectionParameterStringCast
 
     private static function valueToString(ReflectionParameter $parameterReflection) : string
     {
-        if ( ! ($parameterReflection->isOptional() && $parameterReflection->isDefaultValueAvailable())) {
+        if (! ($parameterReflection->isOptional() && $parameterReflection->isDefaultValueAvailable())) {
             return '';
         }
 

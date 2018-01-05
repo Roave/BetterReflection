@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -36,13 +37,13 @@ class ComposerSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if (IdentifierType::IDENTIFIER_CLASS !== $identifier->getType()->getName()) {
+        if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
             return null;
         }
 
         $filename = $this->classLoader->findFile($identifier->getName());
 
-        if ( ! $filename) {
+        if (! $filename) {
             return null;
         }
 

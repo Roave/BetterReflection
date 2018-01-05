@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder\PhpDocumentor;
@@ -14,7 +15,7 @@ class NamespaceNodeToReflectionTypeContext
 {
     public function __invoke(?Namespace_ $namespace) : Context
     {
-        if ( ! $namespace) {
+        if (! $namespace) {
             return new Context('');
         }
 
@@ -44,7 +45,6 @@ class NamespaceNodeToReflectionTypeContext
     }
 
     /**
-     * @param null|Namespace_ $namespace
      *
      * @return Use_[]|GroupUse[]
      */

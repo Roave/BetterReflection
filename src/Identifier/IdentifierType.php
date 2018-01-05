@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Identifier;
@@ -25,7 +26,7 @@ class IdentifierType
 
     public function __construct(string $type = self::IDENTIFIER_CLASS)
     {
-        if ( ! \array_key_exists($type, self::VALID_TYPES)) {
+        if (! \array_key_exists($type, self::VALID_TYPES)) {
             throw new InvalidArgumentException(\sprintf(
                 '%s is not a valid identifier type',
                 $type
@@ -41,27 +42,24 @@ class IdentifierType
 
     public function isClass() : bool
     {
-        return self::IDENTIFIER_CLASS === $this->name;
+        return $this->name === self::IDENTIFIER_CLASS;
     }
 
     public function isFunction() : bool
     {
-        return self::IDENTIFIER_FUNCTION === $this->name;
+        return $this->name === self::IDENTIFIER_FUNCTION;
     }
 
     /**
      * Check to see if a reflector is of a valid type specified by this identifier.
-     *
-     * @param Reflection $reflector
-     * @return bool
      */
     public function isMatchingReflector(Reflection $reflector) : bool
     {
-        if (self::IDENTIFIER_CLASS === $this->name) {
+        if ($this->name === self::IDENTIFIER_CLASS) {
             return $reflector instanceof ReflectionClass;
         }
 
-        if (self::IDENTIFIER_FUNCTION === $this->name) {
+        if ($this->name === self::IDENTIFIER_FUNCTION) {
             return $reflector instanceof ReflectionFunction;
         }
 

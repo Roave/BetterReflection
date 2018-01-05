@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Located;
@@ -24,14 +25,12 @@ class LocatedSource
     private $filename;
 
     /**
-     * @param string $source
-     * @param string|null $filename
      * @throws \InvalidArgumentException
      * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      */
     public function __construct(string $source, ?string $filename)
     {
-        if (null !== $filename) {
+        if ($filename !== null) {
             FileChecker::assertReadableFile($filename);
 
             $filename = FileHelper::normalizeWindowsPath($filename);
@@ -41,17 +40,11 @@ class LocatedSource
         $this->filename = $filename;
     }
 
-    /**
-     * @return string
-     */
     public function getSource() : string
     {
         return $this->source;
     }
 
-    /**
-     * @return null|string
-     */
     public function getFileName() : ?string
     {
         return $this->filename;
@@ -59,8 +52,6 @@ class LocatedSource
 
     /**
      * Is the located source in PHP internals?
-     *
-     * @return bool
      */
     public function isInternal() : bool
     {
@@ -74,8 +65,6 @@ class LocatedSource
 
     /**
      * Is the located source produced by eval() or \function_create()?
-     *
-     * @return bool
      */
     public function isEvaled() : bool
     {

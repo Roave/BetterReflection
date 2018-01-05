@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Exception;
@@ -7,14 +8,9 @@ use RuntimeException;
 
 class InvalidDirectory extends RuntimeException
 {
-    /**
-     * @param string $nonDirectory
-     *
-     * @return InvalidDirectory
-     */
     public static function fromNonDirectory(string $nonDirectory) : self
     {
-        if ( ! \file_exists($nonDirectory)) {
+        if (! \file_exists($nonDirectory)) {
             return new self(\sprintf('"%s" does not exist', $nonDirectory));
         }
 
@@ -23,8 +19,6 @@ class InvalidDirectory extends RuntimeException
 
     /**
      * @param mixed $nonStringValue
-     *
-     * @return InvalidDirectory
      */
     public static function fromNonStringValue($nonStringValue) : self
     {

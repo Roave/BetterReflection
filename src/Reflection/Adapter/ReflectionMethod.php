@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -332,7 +333,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function invoke($object = null, $args = null)
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');
         }
 
@@ -350,7 +351,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function invokeArgs($object = null, array $args = [])
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');
         }
 

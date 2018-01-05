@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast\Exception;
@@ -12,11 +13,11 @@ class ParseToAstFailure extends RuntimeException
     public static function fromLocatedSource(LocatedSource $locatedSource, Throwable $previous) : self
     {
         $additionalInformation = '';
-        if (null !== $locatedSource->getFileName()) {
+        if ($locatedSource->getFileName() !== null) {
             $additionalInformation = \sprintf(' (in %s)', $locatedSource->getFileName());
         }
 
-        if ('' === $additionalInformation) {
+        if ($additionalInformation === '') {
             $additionalInformation = \sprintf(' (first 20 characters: %s)', \substr($locatedSource->getSource(), 0, 20));
         }
 

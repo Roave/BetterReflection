@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
@@ -80,9 +81,6 @@ class ReflectionParameterStringCastTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param string $parameterName
-     * @param string $expectedString
      * @dataProvider toStringProvider
      */
     public function testToString(string $methodName, string $parameterName, string $expectedString) : void

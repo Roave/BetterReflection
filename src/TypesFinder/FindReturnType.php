@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
@@ -42,7 +43,7 @@ class FindReturnType
     {
         $docComment = $function->getDocComment();
 
-        if ('' === $docComment) {
+        if ($docComment === '') {
             return [];
         }
 

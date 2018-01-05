@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Node;
-use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionObject as CoreReflectionObject;
@@ -26,11 +26,6 @@ use stdClass;
  */
 class ReflectionObjectTest extends TestCase
 {
-    /**
-     * @var Parser
-     */
-    private $parser;
-
     /**
      * @return Node[]
      */
@@ -59,9 +54,6 @@ class ReflectionObjectTest extends TestCase
 
     /**
      * @param object $anonymousClass
-     * @param string $file
-     * @param int $startLine
-     * @param int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
     public function testReflectionForAnonymousClass($anonymousClass, string $file, int $startLine, int $endLine) : void
@@ -181,7 +173,7 @@ class ReflectionObjectTest extends TestCase
 
         $filteredMethods = [];
         foreach ($publicClassMethods as $method) {
-            if ( ! \in_array($method, $ignoreMethods, true)) {
+            if (! \in_array($method, $ignoreMethods, true)) {
                 $filteredMethods[$method] = [$method];
             }
         }
@@ -195,7 +187,6 @@ class ReflectionObjectTest extends TestCase
      * and that when the method is called on ReflectionObject, the method of the
      * same name on ReflectionClass is also called.
      *
-     * @param string $methodName
      * @dataProvider reflectionClassMethodProvider
      */
     public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName) : void

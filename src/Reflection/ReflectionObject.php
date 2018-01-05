@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -34,8 +35,6 @@ class ReflectionObject extends ReflectionClass
     private $reflector;
 
     /**
-     * @param \Roave\BetterReflection\Reflector\Reflector $reflector
-     * @param \Roave\BetterReflection\Reflection\ReflectionClass $reflectionClass
      * @param object $object
      */
     private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
@@ -56,7 +55,7 @@ class ReflectionObject extends ReflectionClass
      */
     public static function export($instance = null) : string
     {
-        if (null === $instance) {
+        if ($instance === null) {
             throw new InvalidArgumentException('Class instance must be provided');
         }
 
@@ -76,13 +75,13 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromInstance($object) : ReflectionClass
     {
-        if ( ! \is_object($object)) {
+        if (! \is_object($object)) {
             throw new InvalidArgumentException('Can only create from an instance of an object');
         }
 
         $className = \get_class($object);
 
-        if (0 === \strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX)) {
+        if (\strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
                 $object,
                 (new BetterReflection())->phpParser()
@@ -97,13 +96,12 @@ class ReflectionObject extends ReflectionClass
     /**
      * Reflect on runtime properties for the current instance
      *
-     * @param int|null $filter
      * @see ReflectionClass::getProperties() for the usage of $filter
      * @return ReflectionProperty[]
      */
     private function getRuntimeProperties(?int $filter = null) : array
     {
-        if ( ! $this->reflectionClass->isInstance($this->object)) {
+        if (! $this->reflectionClass->isInstance($this->object)) {
             throw new InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
@@ -134,7 +132,7 @@ class ReflectionObject extends ReflectionClass
                 false
             );
 
-            if (null === $filter || $filter & $runtimeProperty->getModifiers()) {
+            if ($filter === null || $filter & $runtimeProperty->getModifiers()) {
                 $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
             }
         }
@@ -148,9 +146,7 @@ class ReflectionObject extends ReflectionClass
      * Note that we don't copy across DocBlock, protected, private or static
      * because runtime properties can't have these attributes.
      *
-     * @param \ReflectionProperty $property
      * @param object $instance
-     * @return PropertyNode
      */
     private function createPropertyNodeFromReflection(CoreReflectionProperty $property, $instance) : PropertyNode
     {

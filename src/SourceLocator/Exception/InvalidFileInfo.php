@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Exception;
@@ -9,8 +10,6 @@ class InvalidFileInfo extends RuntimeException
 {
     /**
      * @param mixed $nonSplFileInfo
-     *
-     * @return InvalidFileInfo
      */
     public static function fromNonSplFileInfo($nonSplFileInfo) : self
     {

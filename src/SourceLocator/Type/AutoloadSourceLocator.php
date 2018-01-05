@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -58,7 +59,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
-        if ( ! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
+        if (! ($potentiallyLocatedFile && \file_exists($potentiallyLocatedFile))) {
             return null;
         }
 
@@ -71,8 +72,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /**
      * Attempts to locate the specified identifier.
      *
-     * @param Identifier $identifier
-     * @return string|null
      * @throws \ReflectionException
      */
     private function attemptAutoloadForIdentifier(Identifier $identifier) : ?string
@@ -101,8 +100,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * that it cannot find the file, so we squelch the errors by overriding the
      * error handler temporarily.
      *
-     * @param string $className
-     * @return string|null
      * @throws \ReflectionException
      */
     private function locateClassByName(string $className) : ?string
@@ -110,7 +107,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         if (\class_exists($className, false) || \interface_exists($className, false) || \trait_exists($className, false)) {
             $filename = (new ReflectionClass($className))->getFileName();
 
-            if ( ! \is_string($filename)) {
+            if (! \is_string($filename)) {
                 return null;
             }
 
@@ -135,20 +132,18 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * internal reflection API to find the filename. If it doesn't we can do
      * nothing so throw an exception.
      *
-     * @param string $functionName
-     * @return string|null
      * @throws \ReflectionException
      */
     private function locateFunctionByName(string $functionName) : ?string
     {
-        if ( ! \function_exists($functionName)) {
+        if (! \function_exists($functionName)) {
             return null;
         }
 
         $reflection         = new ReflectionFunction($functionName);
         $reflectionFileName = $reflection->getFileName();
 
-        if ( ! \is_string($reflectionFileName)) {
+        if (! \is_string($reflectionFileName)) {
             return null;
         }
 
@@ -161,9 +156,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      *
      * @param string $path
      * @param string $mode
-     * @param int $options
+     * @param int    $options
      * @param string $opened_path
-     * @return bool
      * @see http://php.net/manual/en/class.streamwrapper.php
      * @see http://php.net/manual/en/streamwrapper.stream-open.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
@@ -177,8 +171,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /**
      * Must be implemented to return some data so that calls like is_file will work.
      *
-     * @param $path
-     * @param $flags
+     * @param string $path
+     * @param int    $flags
      * @return mixed[]
      * @see http://php.net/manual/en/class.streamwrapper.php
      * @see http://php.net/manual/en/streamwrapper.url-stat.php

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
@@ -24,7 +25,6 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @param string $methodName
      * @dataProvider coreReflectionMethodNamesProvider
      */
     public function testCoreReflectionMethods(string $methodName) : void
@@ -49,9 +49,8 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param mixed $returnValue
-     * @param array $args
+     * @param mixed   $returnValue
+     * @param mixed[] $args
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void

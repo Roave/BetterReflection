@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -85,13 +86,10 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Create a reflection and return the string representation of a named class
-     *
-     * @param string $className
-     * @return string
      */
     public static function export(?string $className) : string
     {
-        if (null === $className) {
+        if ($className === null) {
             throw new InvalidArgumentException('Class name must be provided');
         }
 
@@ -122,14 +120,13 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * @param object $instance
      *
-     * @return ReflectionClass
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      */
     public static function createFromInstance($instance) : self
     {
-        if ( ! \is_object($instance)) {
+        if (! \is_object($instance)) {
             throw new InvalidArgumentException('Instance must be an instance of an object');
         }
 
@@ -140,12 +137,8 @@ class ReflectionClass implements Reflection, CoreReflector
      * Create from a Class Node.
      *
      * @internal
-     * @param Reflector          $reflector
-     * @param ClassLikeNode      $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param LocatedSource      $locatedSource
+     * @param ClassLikeNode      $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
-     *
-     * @return ReflectionClass
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -159,7 +152,7 @@ class ReflectionClass implements Reflection, CoreReflector
         $class->locatedSource = $locatedSource;
         $class->node          = $node;
 
-        if (null !== $namespace) {
+        if ($namespace !== null) {
             $class->declaringNamespace = $namespace;
         }
 
@@ -169,18 +162,16 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the "short" name of the class (e.g. for A\B\Foo, this will return
      * "Foo").
-     *
-     * @return string
      */
     public function getShortName() : string
     {
-        if ( ! $this->isAnonymous()) {
+        if (! $this->isAnonymous()) {
             return $this->node->name;
         }
 
         $fileName = $this->getFileName();
 
-        if (null === $fileName) {
+        if ($fileName === null) {
             $fileName = \sha1($this->locatedSource->getSource());
         }
 
@@ -190,12 +181,10 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the "full" name of the class (e.g. for A\B\Foo, this will return
      * "A\B\Foo").
-     *
-     * @return string
      */
     public function getName() : string
     {
-        if ( ! $this->inNamespace()) {
+        if (! $this->inNamespace()) {
             return $this->getShortName();
         }
 
@@ -205,12 +194,10 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
      * return "A\B").
-     *
-     * @return string
      */
     public function getNamespaceName() : string
     {
-        if ( ! $this->inNamespace()) {
+        if (! $this->inNamespace()) {
             return '';
         }
 
@@ -220,13 +207,11 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Decide if this class is part of a namespace. Returns false if the class
      * is in the global namespace or does not have a specified namespace.
-     *
-     * @return bool
      */
     public function inNamespace() : bool
     {
-        return null !== $this->declaringNamespace
-            && null !== $this->declaringNamespace->name;
+        return $this->declaringNamespace !== null
+            && $this->declaringNamespace->name !== null;
     }
 
     public function getExtensionName() : ?string
@@ -293,7 +278,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     private function getMethodsIndexedByName() : array
     {
-        if (null !== $this->cachedMethods) {
+        if ($this->cachedMethods !== null) {
             return $this->cachedMethods;
         }
 
@@ -302,7 +287,7 @@ class ReflectionClass implements Reflection, CoreReflector
         foreach ($this->getAllMethods() as $method) {
             $methodName = $method->getName();
 
-            if ( ! isset($this->cachedMethods[$methodName])) {
+            if (! isset($this->cachedMethods[$methodName])) {
                 $this->cachedMethods[$methodName] = $method;
             }
         }
@@ -313,7 +298,6 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Fetch an array of all methods for this class.
      *
-     * @param int|null $filter
      * Filter the results to include only methods with certain attributes. Defaults
      * to no filtering.
      * Any combination of \ReflectionMethod::IS_STATIC,
@@ -328,7 +312,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getMethods(?int $filter = null) : array
     {
-        if (null === $filter) {
+        if ($filter === null) {
             return \array_values($this->getMethodsIndexedByName());
         }
 
@@ -346,7 +330,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get only the methods that this class implements (i.e. do not search
      * up parent classes etc.)
      *
-     * @param int|null $filter
      * @see ReflectionClass::getMethods for the usage of $filter
      * @return ReflectionMethod[]
      */
@@ -369,7 +352,7 @@ class ReflectionClass implements Reflection, CoreReflector
         $methodsByName = [];
 
         foreach ($methods as $method) {
-            if (null === $filter || $filter & $method->getModifiers()) {
+            if ($filter === null || $filter & $method->getModifiers()) {
                 $methodsByName[$method->getName()] = $method;
             }
         }
@@ -380,9 +363,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get a single method with the name $methodName.
      *
-     * @param string $methodName
      *
-     * @return ReflectionMethod
      *
      * @throws \OutOfBoundsException
      */
@@ -390,7 +371,7 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         $methods = $this->getMethodsIndexedByName();
 
-        if ( ! isset($methods[$methodName])) {
+        if (! isset($methods[$methodName])) {
             throw new OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
@@ -399,9 +380,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Does the class have the specified method method?
-     *
-     * @param string $methodName
-     * @return bool
      */
     public function hasMethod(string $methodName) : bool
     {
@@ -444,14 +422,13 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * Returns null if not specified.
      *
-     * @param string $name
      * @return mixed|null
      */
     public function getConstant(string $name)
     {
         $reflectionConstant = $this->getReflectionConstant($name);
 
-        if ( ! $reflectionConstant) {
+        if (! $reflectionConstant) {
             return null;
         }
 
@@ -460,22 +437,16 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Does this class have the specified constant?
-     *
-     * @param string $name
-     * @return bool
      */
     public function hasConstant(string $name) : bool
     {
-        return null !== $this->getReflectionConstant($name);
+        return $this->getReflectionConstant($name) !== null;
     }
 
     /**
      * Get the reflection object of the specified class constant.
      *
      * Returns null if not specified.
-     *
-     * @param string $name
-     * @return ReflectionClassConstant|null
      */
     public function getReflectionConstant(string $name) : ?ReflectionClassConstant
     {
@@ -490,7 +461,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getImmediateReflectionConstants() : array
     {
-        if (null !== $this->cachedReflectionConstants) {
+        if ($this->cachedReflectionConstants !== null) {
             return $this->cachedReflectionConstants;
         }
 
@@ -563,7 +534,7 @@ class ReflectionClass implements Reflection, CoreReflector
         foreach ($allReflectionConstants as $constant) {
             $constantName = $constant->getName();
 
-            if ( ! isset($reflectionConstants[$constantName])) {
+            if (! isset($reflectionConstants[$constantName])) {
                 $reflectionConstants[$constantName] = $constant;
             }
         }
@@ -574,7 +545,6 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the constructor method for this class.
      *
-     * @return ReflectionMethod
      * @throws \OutOfBoundsException
      */
     public function getConstructor() : ReflectionMethod
@@ -583,7 +553,7 @@ class ReflectionClass implements Reflection, CoreReflector
             return $method->isConstructor();
         });
 
-        if ( ! isset($constructors[0])) {
+        if (! isset($constructors[0])) {
             throw new OutOfBoundsException('Could not find method: __construct');
         }
 
@@ -594,13 +564,12 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get only the properties for this specific class (i.e. do not search
      * up parent classes etc.)
      *
-     * @param int|null $filter
      * @see ReflectionClass::getProperties() for the usage of filter
      * @return ReflectionProperty[]
      */
     public function getImmediateProperties(?int $filter = null) : array
     {
-        if (null === $this->cachedImmediateProperties) {
+        if ($this->cachedImmediateProperties === null) {
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
                 if ($stmt instanceof PropertyNode) {
@@ -621,7 +590,7 @@ class ReflectionClass implements Reflection, CoreReflector
             $this->cachedImmediateProperties = $properties;
         }
 
-        if (null === $filter) {
+        if ($filter === null) {
             return $this->cachedImmediateProperties;
         }
 
@@ -636,7 +605,6 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the properties for this class.
      *
-     * @param int|null $filter
      * Filter the results to include only properties with certain attributes. Defaults
      * to no filtering.
      * Any combination of \ReflectionProperty::IS_STATIC,
@@ -649,7 +617,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getProperties(?int $filter = null) : array
     {
-        if (null === $this->cachedProperties) {
+        if ($this->cachedProperties === null) {
             // merging together properties from parent class, traits, current class (in this precise order)
             $this->cachedProperties = \array_merge(
                 \array_merge(
@@ -685,7 +653,7 @@ class ReflectionClass implements Reflection, CoreReflector
             );
         }
 
-        if (null === $filter) {
+        if ($filter === null) {
             return $this->cachedProperties;
         }
 
@@ -701,15 +669,12 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the property called $name.
      *
      * Returns null if property does not exist.
-     *
-     * @param string $name
-     * @return ReflectionProperty|null
      */
     public function getProperty(string $name) : ?ReflectionProperty
     {
         $properties = $this->getProperties();
 
-        if ( ! isset($properties[$name])) {
+        if (! isset($properties[$name])) {
             return null;
         }
 
@@ -718,15 +683,15 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Does this class have the specified property?
-     *
-     * @param string $name
-     * @return bool
      */
     public function hasProperty(string $name) : bool
     {
-        return null !== $this->getProperty($name);
+        return $this->getProperty($name) !== null;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getDefaultProperties() : array
     {
         return \array_map(
@@ -739,17 +704,11 @@ class ReflectionClass implements Reflection, CoreReflector
         );
     }
 
-    /**
-     * @return string|null
-     */
     public function getFileName() : ?string
     {
         return $this->locatedSource->getFileName();
     }
 
-    /**
-     * @return LocatedSource
-     */
     public function getLocatedSource() : LocatedSource
     {
         return $this->locatedSource;
@@ -757,8 +716,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Get the line number that this class starts on.
-     *
-     * @return int
      */
     public function getStartLine() : int
     {
@@ -767,8 +724,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Get the line number that this class ends on.
-     *
-     * @return int
      */
     public function getEndLine() : int
     {
@@ -792,13 +747,12 @@ class ReflectionClass implements Reflection, CoreReflector
      * You may optionally specify a source locator that will be used to locate
      * the parent class. If no source locator is given, a default will be used.
      *
-     * @return ReflectionClass|null
      *
      * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
      */
     public function getParentClass() : ?ReflectionClass
     {
-        if ( ! ($this->node instanceof ClassNode) || null === $this->node->extends) {
+        if (! ($this->node instanceof ClassNode) || $this->node->extends === null) {
             return null;
         }
 
@@ -825,9 +779,6 @@ class ReflectionClass implements Reflection, CoreReflector
         }, \array_slice(\array_reverse($this->getInheritanceClassHierarchy()), 1));
     }
 
-    /**
-     * @return string
-     */
     public function getDocComment() : string
     {
         return GetFirstDocComment::forNode($this->node);
@@ -835,13 +786,11 @@ class ReflectionClass implements Reflection, CoreReflector
 
     public function isAnonymous() : bool
     {
-        return null === $this->node->name;
+        return $this->node->name === null;
     }
 
     /**
      * Is this an internal class?
-     *
-     * @return bool
      */
     public function isInternal() : bool
     {
@@ -851,8 +800,6 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Is this a user-defined function (will always return the opposite of
      * whatever isInternal returns).
-     *
-     * @return bool
      */
     public function isUserDefined() : bool
     {
@@ -861,8 +808,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Is this class an abstract class.
-     *
-     * @return bool
      */
     public function isAbstract() : bool
     {
@@ -871,8 +816,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Is this class a final class.
-     *
-     * @return bool
      */
     public function isFinal() : bool
     {
@@ -881,8 +824,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Get the core-reflection-compatible modifier values.
-     *
-     * @return int
      */
     public function getModifiers() : int
     {
@@ -894,8 +835,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Is this reflection a trait?
-     *
-     * @return bool
      */
     public function isTrait() : bool
     {
@@ -904,8 +843,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Is this reflection an interface?
-     *
-     * @return bool
      */
     public function isInterface() : bool
     {
@@ -943,9 +880,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Given an AST Node\Name, create a new ReflectionClass for the element.
-     *
-     * @param Node\Name $node
-     * @return ReflectionClass
      */
     private function reflectClassForNamedNode(Node\Name $node) : self
     {
@@ -1010,7 +944,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
             foreach ($adaptations as $adaptation) {
                 $usedTrait = $adaptation->trait;
-                if (null === $usedTrait) {
+                if ($usedTrait === null) {
                     $usedTrait = $traitNames[0];
                 }
 
@@ -1082,13 +1016,12 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * @param object $object
      *
-     * @return bool
      *
      * @throws NotAnObject
      */
     public function isInstance($object) : bool
     {
-        if ( ! \is_object($object)) {
+        if (! \is_object($object)) {
             throw NotAnObject::fromNonObject($object);
         }
 
@@ -1104,9 +1037,6 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * @link http://php.net/manual/en/reflectionclass.isinstance.php
      *
-     * @param string $className
-     *
-     * @return bool
      */
     public function isSubclassOf(string $className) : bool
     {
@@ -1127,9 +1057,6 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * @link http://php.net/manual/en/reflectionclass.implementsinterface.php
      *
-     * @param string $interfaceName
-     *
-     * @return bool
      */
     public function implementsInterface(string $interfaceName) : bool
     {
@@ -1140,8 +1067,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Checks whether this reflection is an instantiable class
      *
      * @link http://php.net/manual/en/reflectionclass.isinstantiable.php
-     *
-     * @return bool
      */
     public function isInstantiable() : bool
     {
@@ -1153,16 +1078,14 @@ class ReflectionClass implements Reflection, CoreReflector
      * Checks whether this is a reflection of a class that supports the clone operator
      *
      * @link http://php.net/manual/en/reflectionclass.iscloneable.php
-     *
-     * @return bool
      */
     public function isCloneable() : bool
     {
-        if ( ! $this->isInstantiable()) {
+        if (! $this->isInstantiable()) {
             return false;
         }
 
-        if ( ! $this->hasMethod('__clone')) {
+        if (! $this->hasMethod('__clone')) {
             return true;
         }
 
@@ -1173,8 +1096,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Checks if iterateable
      *
      * @link http://php.net/manual/en/reflectionclass.isiterateable.php
-     *
-     * @return bool
      */
     public function isIterateable() : bool
     {
@@ -1229,7 +1150,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     private function getInterfacesHierarchy() : array
     {
-        if ( ! $this->isInterface()) {
+        if (! $this->isInterface()) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
@@ -1262,7 +1183,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * PropertyDoesNotExist exception if it does not exist or is not static.
      * (note, differs very slightly from internal reflection behaviour)
      *
-     * @param string $propertyName
      *
      * @return mixed
      *
@@ -1275,7 +1195,7 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         $property = $this->getProperty($propertyName);
 
-        if ( ! $property || ! $property->isStatic()) {
+        if (! $property || ! $property->isStatic()) {
             throw PropertyDoesNotExist::fromName($propertyName);
         }
 
@@ -1285,9 +1205,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Set the value of a static property
      *
-     * @param string $propertyName
      * @param mixed $value
-     * @return void
      *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
@@ -1298,7 +1216,7 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         $property = $this->getProperty($propertyName);
 
-        if ( ! $property || ! $property->isStatic()) {
+        if (! $property || ! $property->isStatic()) {
             throw PropertyDoesNotExist::fromName($propertyName);
         }
 
@@ -1313,7 +1231,7 @@ class ReflectionClass implements Reflection, CoreReflector
         $staticProperties = [];
 
         foreach ($this->getProperties() as $property) {
-            if ( ! $property->isStatic()) {
+            if (! $property->isStatic()) {
                 continue;
             }
 
@@ -1325,8 +1243,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Retrieve the AST node for this class
-     *
-     * @return ClassLikeNode
      */
     public function getAst() : ClassLikeNode
     {
@@ -1341,16 +1257,15 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Set whether this class is final or not
      *
-     * @param bool $isFinal
      * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
      */
     public function setFinal(bool $isFinal) : void
     {
-        if ( ! $this->node instanceof ClassNode) {
+        if (! $this->node instanceof ClassNode) {
             throw NotAClassReflection::fromReflectionClass($this);
         }
 
-        if (true === $isFinal) {
+        if ($isFinal === true) {
             $this->node->flags |= ClassNode::MODIFIER_FINAL;
             return;
         }
@@ -1363,9 +1278,6 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * Returns true if method was successfully removed.
      * Returns false if method was not found, or could not be removed.
-     *
-     * @param string $methodName
-     * @return bool
      */
     public function removeMethod(string $methodName) : bool
     {
@@ -1381,8 +1293,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Add a new method to the class.
-     *
-     * @param string $methodName
      */
     public function addMethod(string $methodName) : void
     {
@@ -1394,10 +1304,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Add a new property to the class.
      *
      * Visibility defaults to \ReflectionProperty::IS_PUBLIC, or can be ::IS_PROTECTED or ::IS_PRIVATE.
-     *
-     * @param string $propertyName
-     * @param int $visibility
-     * @param bool $static
      */
     public function addProperty(
         string $propertyName,
@@ -1428,9 +1334,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Remove a property from the class.
-     *
-     * @param string $propertyName
-     * @return bool
      */
     public function removeProperty(string $propertyName) : bool
     {

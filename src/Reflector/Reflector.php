@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector;
@@ -14,8 +15,6 @@ interface Reflector
     /**
      * Create a reflection from the named identifier.
      *
-     * @param string $identifierName
-     * @return Reflection
      * @throws IdentifierNotFound
      */
     public function reflect(string $identifierName) : Reflection;

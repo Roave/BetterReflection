@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector\Exception;
@@ -20,9 +21,6 @@ class IdentifierNotFound extends RuntimeException
         $this->identifier = $identifier;
     }
 
-    /**
-     * @return Identifier
-     */
     public function getIdentifier() : Identifier
     {
         return $this->identifier;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
@@ -55,8 +56,11 @@ class ReflectionClassStringCastTest extends TestCase
 
     public function testInternalClassToString() : void
     {
-        $reflector       = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
+        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
+
+        // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
         $classReflection = $reflector->reflect(Exception::class);
+        // phpcs:enable
 
         self::assertStringStartsWith('Class [ <internal:Core> class Exception implements Throwable ]', (string) $classReflection);
     }

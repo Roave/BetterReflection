@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -33,7 +34,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
     {
         $classReflection = $this->getInternalReflectionClass($identifier);
 
-        if (null === $classReflection) {
+        if ($classReflection === null) {
             return null;
         }
 
@@ -46,13 +47,13 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
 
     private function getInternalReflectionClass(Identifier $identifier) : ?ReflectionClass
     {
-        if ( ! $identifier->isClass()) {
+        if (! $identifier->isClass()) {
             return null;
         }
 
         $name = $identifier->getName();
 
-        if ( ! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
+        if (! (\class_exists($name, false) || \interface_exists($name, false) || \trait_exists($name, false))) {
             return null; // not an available internal class
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -39,14 +40,13 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     /**
      * @param object $anonymousClassObject
-     * @param Parser $parser
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
      */
     public function __construct($anonymousClassObject, Parser $parser)
     {
-        if ( ! \is_object($anonymousClassObject)) {
+        if (! \is_object($anonymousClassObject)) {
             throw new InvalidArgumentException(\sprintf(
                 'Can only create from an instance of an object, "%s" given',
                 \gettype($anonymousClassObject)
@@ -79,13 +79,13 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
     private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionClass
     {
-        if ( ! $identifierType->isClass()) {
+        if (! $identifierType->isClass()) {
             return null;
         }
 
         $fileName = $this->coreClassReflection->getFileName();
 
-        if (false !== \strpos($fileName, 'eval()\'d code')) {
+        if (\strpos($fileName, 'eval()\'d code') !== false) {
             throw EvaledAnonymousClassCannotBeLocated::create();
         }
 
@@ -118,7 +118,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
             public function enterNode(Node $node) : void
             {
-                if ($node instanceof Node\Stmt\Class_ && null === $node->name) {
+                if ($node instanceof Node\Stmt\Class_ && $node->name === null) {
                     $this->anonymousClassNodes[] = $node;
                 }
             }
@@ -130,7 +130,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                     return $node->getLine() === $this->startLine;
                 }));
 
-                if ( ! $anonymousClassNodesOnSameLine) {
+                if (! $anonymousClassNodesOnSameLine) {
                     return null;
                 }
 

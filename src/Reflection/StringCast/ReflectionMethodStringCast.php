@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
@@ -18,7 +19,7 @@ final class ReflectionMethodStringCast
         $parametersFormat = $methodReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
         return \sprintf(
-            "Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s{$parametersFormat}\n}",
+            'Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s' . $parametersFormat . "\n}",
             self::sourceToString($methodReflection),
             $methodReflection->isConstructor() ? ', ctor' : '',
             $methodReflection->isDestructor() ? ', dtor' : '',
@@ -49,11 +50,11 @@ final class ReflectionMethodStringCast
     {
         $parentClass = $methodReflection->getDeclaringClass()->getParentClass();
 
-        if ( ! $parentClass) {
+        if (! $parentClass) {
             return '';
         }
 
-        if ( ! $parentClass->hasMethod($methodReflection->getName())) {
+        if (! $parentClass->hasMethod($methodReflection->getName())) {
             return '';
         }
 
@@ -62,7 +63,7 @@ final class ReflectionMethodStringCast
 
     private static function inheritsToString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection) : string
     {
-        if ( ! $rootClassReflection) {
+        if (! $rootClassReflection) {
             return '';
         }
 

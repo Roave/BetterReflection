@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
@@ -37,7 +38,6 @@ class FindPropertyTypeTest extends TestCase
     }
 
     /**
-     * @param string $docBlock
      * @param string[] $expectedInstances
      *
      * @dataProvider propertyTypeProvider
@@ -48,7 +48,7 @@ class FindPropertyTypeTest extends TestCase
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDocComment')
-            ->will($this->returnValue("/**\n * $docBlock\n */"));
+            ->will($this->returnValue(\sprintf("/**\n * %s\n */", $docBlock)));
 
         $foundTypes = (new FindPropertyType())->__invoke($property, null);
 
@@ -111,10 +111,8 @@ class FindPropertyTypeTest extends TestCase
     /**
      * @dataProvider aliasedVarTypesProvider
      *
-     * @param string|null $namespaceName
-     * @param string[]    $aliasesToFQCNs indexed by alias
-     * @param string      $docBlockType
-     * @param Type[]      $expectedTypes
+     * @param string[] $aliasesToFQCNs indexed by alias
+     * @param Type[]   $expectedTypes
      */
     public function testWillResolveAliasedTypes(
         ?string $namespaceName,
@@ -122,7 +120,7 @@ class FindPropertyTypeTest extends TestCase
         string $docBlockType,
         array $expectedTypes
     ) : void {
-        $docBlock = "/**\n * @var $docBlockType\n */";
+        $docBlock = \sprintf("/**\n * @var %s\n */", $docBlockType);
 
         /* @var $property ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
         $property = $this->createMock(ReflectionProperty::class);

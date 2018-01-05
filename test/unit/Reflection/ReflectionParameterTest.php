@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Exception;
 use Foo;
 use InvalidArgumentException;
 use LogicException;
@@ -33,6 +33,7 @@ use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
 use stdClass;
+use Throwable;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
@@ -53,10 +54,8 @@ class ReflectionParameterTest extends TestCase
     {
         parent::setUp();
 
-        global $loader;
-
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
+        $this->reflector  = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromClassNameAndMethod() : void
@@ -137,7 +136,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testExportThrowsException() : void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(Throwable::class);
         ReflectionParameter::export();
     }
 
@@ -158,13 +157,12 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @param string $defaultExpression
      * @param mixed $expectedValue
      * @dataProvider defaultParameterProvider
      */
     public function testDefaultParametersTypes(string $defaultExpression, $expectedValue) : void
     {
-        $content = "<?php class Foo { public function myMethod(\$var = $defaultExpression) {} }";
+        $content = \sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
 
         $reflector   = new ClassReflector(new StringSourceLocator($content, $this->astLocator));
         $classInfo   = $reflector->reflect('Foo');
@@ -261,7 +259,6 @@ class ReflectionParameterTest extends TestCase
 
     /**
      * @dataProvider typeProvider
-     * @param string $parameterToTest
      * @parem string $expectedType
      */
     public function testGetType(
@@ -328,8 +325,6 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @param string $parameterToReflect
-     * @param string $expectedType
      * @dataProvider nullableParameterTypeFunctionProvider
      */
     public function testGetNullableReturnTypeWithDeclaredType(string $parameterToReflect, string $expectedType) : void
@@ -683,7 +678,6 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @param string $php
      * @param int $expectedStart
      * @param int $expectedEnd
      * @dataProvider columnsProvider

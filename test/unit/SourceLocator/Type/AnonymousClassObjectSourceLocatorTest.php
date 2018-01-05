@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -64,8 +65,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
-     * @param string $file
-     * @param int $startLine
      * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
@@ -106,8 +105,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
-     * @param string $file
-     * @param int $startLine
      * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
@@ -155,7 +152,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param string $file
      * @param object $class
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */

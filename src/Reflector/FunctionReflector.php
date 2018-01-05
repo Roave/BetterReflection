@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector;
@@ -29,7 +30,6 @@ class FunctionReflector implements Reflector
     /**
      * Create a ReflectionFunction for the specified $functionName.
      *
-     * @param string $functionName
      * @return \Roave\BetterReflection\Reflection\Reflection|\Roave\BetterReflection\Reflection\ReflectionFunction
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
@@ -39,7 +39,7 @@ class FunctionReflector implements Reflector
 
         $functionInfo = $this->sourceLocator->locateIdentifier($this->classReflector, $identifier);
 
-        if (null === $functionInfo) {
+        if ($functionInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
@@ -18,12 +19,6 @@ class NodeToReflection implements AstConversionStrategy
     /**
      * Take an AST node in some located source (potentially in a namespace) and
      * convert it to a Reflection
-     *
-     * @param Reflector $reflector
-     * @param Node $node
-     * @param LocatedSource $locatedSource
-     * @param Node\Stmt\Namespace_|null $namespace
-     * @return Reflection|null
      */
     public function __invoke(
         Reflector $reflector,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
@@ -13,15 +14,12 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
 final class CalculateReflectionColum
 {
     /**
-     * @param string $source
-     * @param \PhpParser\Node $node
-     * @return int
      * @throws \Roave\BetterReflection\Util\Exception\InvalidNodePosition
      * @throws \Roave\BetterReflection\Util\Exception\NoNodePosition
      */
     public static function getStartColumn(string $source, Node $node) : int
     {
-        if ( ! $node->hasAttribute('startFilePos')) {
+        if (! $node->hasAttribute('startFilePos')) {
             throw NoNodePosition::fromNode($node);
         }
 
@@ -29,15 +27,12 @@ final class CalculateReflectionColum
     }
 
     /**
-     * @param string $source
-     * @param \PhpParser\Node $node
-     * @return int
      * @throws \Roave\BetterReflection\Util\Exception\InvalidNodePosition
      * @throws \Roave\BetterReflection\Util\Exception\NoNodePosition
      */
     public static function getEndColumn(string $source, Node $node) : int
     {
-        if ( ! $node->hasAttribute('endFilePos')) {
+        if (! $node->hasAttribute('endFilePos')) {
             throw NoNodePosition::fromNode($node);
         }
 
@@ -45,9 +40,6 @@ final class CalculateReflectionColum
     }
 
     /**
-     * @param string $source
-     * @param int $position
-     * @return int
      * @throws \Roave\BetterReflection\Util\Exception\InvalidNodePosition
      */
     private static function calculateColumn(string $source, int $position) : int
@@ -59,7 +51,7 @@ final class CalculateReflectionColum
         }
 
         $lineStartPosition = \strrpos($source, "\n", $position - $sourceLength);
-        if (false === $lineStartPosition) {
+        if ($lineStartPosition === false) {
             return $position + 1;
         }
 

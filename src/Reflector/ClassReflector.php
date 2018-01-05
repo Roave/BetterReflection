@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector;
@@ -15,9 +16,6 @@ class ClassReflector implements Reflector
      */
     private $sourceLocator;
 
-    /**
-     * @param SourceLocator $sourceLocator
-     */
     public function __construct(SourceLocator $sourceLocator)
     {
         $this->sourceLocator = $sourceLocator;
@@ -26,7 +24,6 @@ class ClassReflector implements Reflector
     /**
      * Create a ReflectionClass for the specified $className.
      *
-     * @param string $className
      * @return \Roave\BetterReflection\Reflection\ReflectionClass|Reflection
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
@@ -36,7 +33,7 @@ class ClassReflector implements Reflector
 
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
 
-        if (null === $classInfo) {
+        if ($classInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
 

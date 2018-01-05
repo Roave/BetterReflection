@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
@@ -24,7 +25,6 @@ class ReflectionTypeTest extends TestCase
     }
 
     /**
-     * @param string $methodName
      * @dataProvider coreReflectionTypeNamesProvider
      */
     public function testCoreReflectionTypes(string $methodName) : void
@@ -43,10 +43,8 @@ class ReflectionTypeTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param string|null $expectedException
-     * @param mixed $returnValue
-     * @param array $args
+     * @param mixed   $returnValue
+     * @param mixed[] $args
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
@@ -54,14 +52,14 @@ class ReflectionTypeTest extends TestCase
         /** @var BetterReflectionType|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionType::class);
 
-        if (null === $expectedException) {
+        if ($expectedException === null) {
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->will($this->returnValue($returnValue));
         }
 
-        if (null !== $expectedException) {
+        if ($expectedException !== null) {
             $this->expectException($expectedException);
         }
 

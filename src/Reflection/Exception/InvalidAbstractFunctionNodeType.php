@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Exception;
@@ -9,11 +10,6 @@ use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
 class InvalidAbstractFunctionNodeType extends InvalidArgumentException
 {
-    /**
-     * @param Node $node
-     *
-     * @return self
-     */
     public static function fromNode(Node $node) : self
     {
         return new self(\sprintf(

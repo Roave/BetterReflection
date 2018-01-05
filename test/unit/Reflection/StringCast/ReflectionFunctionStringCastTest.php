@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
@@ -44,8 +45,6 @@ class ReflectionFunctionStringCastTest extends TestCase
     }
 
     /**
-     * @param string $functionName
-     * @param string $expectedString
      * @dataProvider toStringProvider
      */
     public function testToString(string $functionName, string $expectedString) : void

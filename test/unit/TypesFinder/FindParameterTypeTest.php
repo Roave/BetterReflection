@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
@@ -68,15 +69,13 @@ class FindParameterTypeTest extends TestCase
     }
 
     /**
-     * @param string $docBlock
-     * @param string $nodeName
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
     public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
         $node     = new ParamNode($nodeName);
-        $docBlock = "/**\n * $docBlock\n */";
+        $docBlock = \sprintf("/**\n * %s\n */", $docBlock);
 
         /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunction::class);
@@ -96,15 +95,13 @@ class FindParameterTypeTest extends TestCase
     }
 
     /**
-     * @param string $docBlock
-     * @param string $nodeName
      * @param string[] $expectedInstances
      * @dataProvider parameterTypeProvider
      */
     public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
         $node     = new ParamNode($nodeName);
-        $docBlock = "/**\n * $docBlock\n */";
+        $docBlock = \sprintf("/**\n * %s\n */", $docBlock);
 
         /* @var $method ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
         $method = $this->createMock(ReflectionFunctionAbstract::class);
@@ -140,10 +137,8 @@ class FindParameterTypeTest extends TestCase
     /**
      * @dataProvider aliasedParameterTypesProvider
      *
-     * @param string|null $namespaceName
-     * @param string[]    $aliasesToFQCNs indexed by alias
-     * @param string      $docBlockType
-     * @param Type[]      $expectedTypes
+     * @param string[] $aliasesToFQCNs indexed by alias
+     * @param Type[]   $expectedTypes
      */
     public function testWillResolveAliasedTypes(
         ?string $namespaceName,
@@ -151,7 +146,7 @@ class FindParameterTypeTest extends TestCase
         string $docBlockType,
         array $expectedTypes
     ) : void {
-        $docBlock = "/**\n * @param $docBlockType \$foo\n */";
+        $docBlock = \sprintf("/**\n * @param %s \$foo\n */", $docBlockType);
 
         $parameterNode = new ParamNode('foo');
 

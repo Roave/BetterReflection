@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
@@ -87,7 +88,7 @@ final class ReflectionClassStringCast
 
     private static function extendsToString(ReflectionClass $classReflection) : string
     {
-        if ( ! $classReflection->getParentClass()) {
+        if (! $classReflection->getParentClass()) {
             return '';
         }
 
@@ -98,7 +99,7 @@ final class ReflectionClassStringCast
     {
         $interfaceNames = $classReflection->getInterfaceNames();
 
-        if ( ! $interfaceNames) {
+        if (! $interfaceNames) {
             return '';
         }
 
@@ -117,11 +118,10 @@ final class ReflectionClassStringCast
     /**
      * @param ReflectionClassConstant[] $constants
 
-     * @return string
      */
     private static function constantsToString(array $constants) : string
     {
-        if ( ! $constants) {
+        if (! $constants) {
             return '';
         }
 
@@ -133,11 +133,10 @@ final class ReflectionClassStringCast
     /**
      * @param ReflectionProperty[] $properties
 
-     * @return string
      */
     private static function propertiesToString(array $properties) : string
     {
-        if ( ! $properties) {
+        if (! $properties) {
             return '';
         }
 
@@ -147,15 +146,11 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClass $classReflection
      * @param ReflectionMethod[] $methods
-     * @param int $emptyLinesAmongItems
-     *
-     * @return string
      */
     private static function methodsToString(ReflectionClass $classReflection, array $methods, int $emptyLinesAmongItems = 1) : string
     {
-        if ( ! $methods) {
+        if (! $methods) {
             return '';
         }
 
@@ -166,9 +161,6 @@ final class ReflectionClassStringCast
 
     /**
      * @param string[] $items
-     * @param int $emptyLinesAmongItems
-
-     * @return string
      */
     private static function itemsToString(array $items, int $emptyLinesAmongItems = 1) : string
     {
@@ -182,8 +174,6 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClass $classReflection
-
      * @return ReflectionProperty[]
      */
     private static function getStaticProperties(ReflectionClass $classReflection) : array
@@ -194,8 +184,6 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClass $classReflection
-
      * @return ReflectionMethod[]
      */
     private static function getStaticMethods(ReflectionClass $classReflection) : array
@@ -206,8 +194,6 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClass $classReflection
-
      * @return ReflectionProperty[]
      */
     private static function getDefaultProperties(ReflectionClass $classReflection) : array
@@ -218,8 +204,6 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClass $classReflection
-
      * @return ReflectionProperty[]
      */
     private static function getDynamicProperties(ReflectionClass $classReflection) : array
@@ -230,8 +214,6 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClass $classReflection
-
      * @return ReflectionMethod[]
      */
     private static function getMethods(ReflectionClass $classReflection) : array
