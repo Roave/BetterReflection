@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Visitor;
@@ -46,7 +47,6 @@ class ReturnNodeVisitorTest extends TestCase
 
     /**
      * @param Node[] $statements
-     * @param int $expectedReturns
      * @dataProvider outOfScopeNodeTypeProvider
      */
     public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns) : void

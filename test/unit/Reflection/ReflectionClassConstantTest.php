@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
@@ -60,8 +61,6 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @param string $const
-     * @param int $expected
      * @dataProvider getModifiersProvider
      */
     public function testGetModifiers(string $const, int $expected) : void
@@ -100,9 +99,6 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param int $startLine
-     * @param int $endLine
      * @dataProvider startEndLineProvider
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine) : void
@@ -134,9 +130,6 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param int $startColumn
-     * @param int $endColumn
      * @dataProvider columsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
@@ -158,8 +151,6 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @param string $constantName
-     * @param int $positionInAst
      * @dataProvider getAstProvider
      */
     public function testGetAst(string $constantName, int $positionInAst) : void

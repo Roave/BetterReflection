@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -21,8 +22,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
-     *
-     * @return string
      */
     public function getName() : string
     {
@@ -41,8 +40,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Constant is public
-     *
-     * @return bool
      */
     public function isPublic() : bool
     {
@@ -51,8 +48,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Cosnstant is private
-     *
-     * @return bool
      */
     public function isPrivate() : bool
     {
@@ -61,8 +56,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Constant is protected
-     *
-     * @return bool
      */
     public function isProtected() : bool
     {
@@ -71,8 +64,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Returns a bitfield of the access modifiers for this constant
-     *
-     * @return int
      */
     public function getModifiers() : int
     {
@@ -81,8 +72,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Get the declaring class
-     *
-     * @return ReflectionClass
      */
     public function getDeclaringClass() : ReflectionClass
     {
@@ -104,7 +93,6 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
      *
      * @link http://php.net/manual/en/reflector.tostring.php
      * @return string
-     * @since 5.0
      */
     public function __toString()
     {

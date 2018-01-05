@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
@@ -16,7 +17,7 @@ final class ReflectionFunctionStringCast
         $parametersFormat = $functionReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
         return \sprintf(
-            "Function [ <%s> function %s ] {%s{$parametersFormat}\n}",
+            'Function [ <%s> function %s ] {%s' . $parametersFormat . "\n}",
             self::sourceToString($functionReflection),
             $functionReflection->getName(),
             self::fileAndLinesToString($functionReflection),

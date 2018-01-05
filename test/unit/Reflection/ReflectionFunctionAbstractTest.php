@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Exception;
 use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
@@ -30,6 +30,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
+use Throwable;
 use TypeError;
 
 /**
@@ -64,7 +65,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testExportThrowsException() : void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(Throwable::class);
         ReflectionFunctionAbstract::export();
     }
 
@@ -163,8 +164,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param bool $expectingVariadic
      * @dataProvider variadicProvider
      */
     public function testIsVariadic(string $php, bool $expectingVariadic) : void
@@ -205,8 +204,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param bool $expectingGenerator
      * @dataProvider generatorProvider
      */
     public function testIsGenerator(string $php, bool $expectingGenerator) : void
@@ -241,9 +238,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param int $expectedStart
-     * @param int $expectedEnd
      * @dataProvider startEndLineProvider
      */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd) : void
@@ -265,7 +259,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $php
      * @param int $expectedStart
      * @param int $expectedEnd
      * @dataProvider columnsProvider
@@ -288,8 +281,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param bool $expectingReturnsReference
      * @dataProvider returnsReferenceProvider
      */
     public function testReturnsReference(string $php, bool $expectingReturnsReference) : void
@@ -420,8 +411,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $functionToReflect
-     * @param string $expectedType
      * @dataProvider returnTypeFunctionProvider
      */
     public function testGetReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType) : void
@@ -476,8 +465,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param string $functionToReflect
-     * @param string $expectedType
      * @dataProvider nullableReturnTypeFunctionProvider
      */
     public function testGetNullableReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType) : void

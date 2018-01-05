@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -77,10 +78,6 @@ class ReflectionParameter implements CoreReflector
     /**
      * Create a reflection of a parameter using a class name
      *
-     * @param string $className
-     * @param string $methodName
-     * @param string $parameterName
-     * @return ReflectionParameter
      * @throws \OutOfBoundsException
      */
     public static function createFromClassNameAndMethod(
@@ -97,9 +94,6 @@ class ReflectionParameter implements CoreReflector
      * Create a reflection of a parameter using an instance
      *
      * @param object $instance
-     * @param string $methodName
-     * @param string $parameterName
-     * @return ReflectionParameter
      * @throws \OutOfBoundsException
      */
     public static function createFromClassInstanceAndMethod(
@@ -114,10 +108,6 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * Create a reflection of a parameter using a closure
-     *
-     * @param \Closure $closure
-     * @param string $parameterName
-     * @return ReflectionParameter
      */
     public static function createFromClosure(Closure $closure, string $parameterName) : ReflectionParameter
     {
@@ -134,14 +124,12 @@ class ReflectionParameter implements CoreReflector
      *  - [function () {}]
      *
      * @param string[]|string|\Closure $spec
-     * @param string $parameterName
-     * @return ReflectionParameter
      * @throws \Exception
      * @throws \InvalidArgumentException
      */
     public static function createFromSpec($spec, string $parameterName) : self
     {
-        if (\is_array($spec) && 2 === \count($spec)) {
+        if (\is_array($spec) && \count($spec) === 2) {
             if (\is_object($spec[0])) {
                 return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
             }
@@ -167,13 +155,8 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * @internal
-     * @param Reflector                  $reflector
-     * @param ParamNode                  $node               Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param Namespace_|null            $declaringNamespace namespace of the declaring function/method
-     * @param ReflectionFunctionAbstract $function
-     * @param int                        $parameterIndex
-     *
-     * @return ReflectionParameter
+     * @param ParamNode       $node               Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Namespace_|null $declaringNamespace namespace of the declaring function/method
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -194,7 +177,7 @@ class ReflectionParameter implements CoreReflector
 
     private function parseDefaultValueNode() : void
     {
-        if ( ! $this->isDefaultValueAvailable()) {
+        if (! $this->isDefaultValueAvailable()) {
             throw new LogicException('This parameter does not have a default value available');
         }
 
@@ -203,7 +186,7 @@ class ReflectionParameter implements CoreReflector
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
             $className = $defaultValueNode->class->toString();
 
-            if ('self' === $className || 'static' === $className) {
+            if ($className === 'self' || $className === 'static') {
                 $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
             }
 
@@ -238,16 +221,16 @@ class ReflectionParameter implements CoreReflector
             if ($class->hasConstant($constantName)) {
                 return $class->getName();
             }
-        } while ($class = $class->getParentClass());
+
+            $class = $class->getParentClass();
+        } while ($class);
 
         // note: this code is theoretically unreachable, so don't expect any coverage on it
-        throw new LogicException("Failed to find parent class of constant '$constantName'.");
+        throw new LogicException(\sprintf('Failed to find parent class of constant "%s".', $constantName));
     }
 
     /**
      * Get the name of the parameter.
-     *
-     * @return string
      */
     public function getName() : string
     {
@@ -256,8 +239,6 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * Get the function (or method) that declared this parameter.
-     *
-     * @return ReflectionFunctionAbstract
      */
     public function getDeclaringFunction() : ReflectionFunctionAbstract
     {
@@ -269,8 +250,6 @@ class ReflectionParameter implements CoreReflector
      * exists.
      *
      * This will return null if the declaring function is not a method.
-     *
-     * @return ReflectionClass|null
      */
     public function getDeclaringClass() : ?ReflectionClass
     {
@@ -289,8 +268,6 @@ class ReflectionParameter implements CoreReflector
      * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
      *
      * @example someMethod($foo = 'foo', $bar)
-     *
-     * @return bool
      */
     public function isOptional() : bool
     {
@@ -305,12 +282,10 @@ class ReflectionParameter implements CoreReflector
      * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
      *
      * @example someMethod($foo = 'foo', $bar)
-     *
-     * @return bool
      */
     public function isDefaultValueAvailable() : bool
     {
-        return null !== $this->node->default;
+        return $this->node->default !== null;
     }
 
     /**
@@ -328,12 +303,10 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * Does this method allow null for a parameter?
-     *
-     * @return bool
      */
     public function allowsNull() : bool
     {
-        if ( ! $this->hasType()) {
+        if (! $this->hasType()) {
             return true;
         }
 
@@ -341,11 +314,11 @@ class ReflectionParameter implements CoreReflector
             return true;
         }
 
-        if ( ! $this->isDefaultValueAvailable()) {
+        if (! $this->isDefaultValueAvailable()) {
             return false;
         }
 
-        return null === $this->getDefaultValue();
+        return $this->getDefaultValue() === null;
     }
 
     /**
@@ -374,13 +347,11 @@ class ReflectionParameter implements CoreReflector
      */
     public function getDocBlockTypes() : array
     {
-        return  (new FindParameterType())->__invoke($this->function, $this->declaringNamespace, $this->node);
+        return (new FindParameterType())->__invoke($this->function, $this->declaringNamespace, $this->node);
     }
 
     /**
      * Find the position of the parameter, left to right, starting at zero.
-     *
-     * @return int
      */
     public function getPosition() : int
     {
@@ -392,14 +363,12 @@ class ReflectionParameter implements CoreReflector
      * this parameter
      *
      * (note: this has nothing to do with DocBlocks).
-     *
-     * @return ReflectionType|null
      */
     public function getType() : ?ReflectionType
     {
         $type = $this->node->type;
 
-        if (null === $type) {
+        if ($type === null) {
             return null;
         }
 
@@ -414,18 +383,14 @@ class ReflectionParameter implements CoreReflector
      * Does this parameter have a type declaration?
      *
      * (note: this has nothing to do with DocBlocks).
-     *
-     * @return bool
      */
     public function hasType() : bool
     {
-        return null !== $this->node->type;
+        return $this->node->type !== null;
     }
 
     /**
      * Set the parameter type declaration.
-     *
-     * @param string $newParameterType
      */
     public function setType(string $newParameterType) : void
     {
@@ -442,28 +407,22 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * Is this parameter an array?
-     *
-     * @return bool
      */
     public function isArray() : bool
     {
-        return 'array' === \strtolower((string) $this->getType());
+        return \strtolower((string) $this->getType()) === 'array';
     }
 
     /**
      * Is this parameter a callable?
-     *
-     * @return bool
      */
     public function isCallable() : bool
     {
-        return 'callable' === \strtolower((string) $this->getType());
+        return \strtolower((string) $this->getType()) === 'callable';
     }
 
     /**
      * Is this parameter a variadic (denoted by ...$param).
-     *
-     * @return bool
      */
     public function isVariadic() : bool
     {
@@ -472,25 +431,17 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * Is this parameter passed by reference (denoted by &$param).
-     *
-     * @return bool
      */
     public function isPassedByReference() : bool
     {
         return $this->node->byRef;
     }
 
-    /**
-     * @return bool
-     */
     public function canBePassedByValue() : bool
     {
         return ! $this->isPassedByReference();
     }
 
-    /**
-     * @return bool
-     */
     public function isDefaultValueConstant() : bool
     {
         $this->parseDefaultValueNode();
@@ -499,12 +450,11 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * @throws \LogicException
-     * @return string
      */
     public function getDefaultValueConstantName() : string
     {
         $this->parseDefaultValueNode();
-        if ( ! $this->isDefaultValueConstant()) {
+        if (! $this->isDefaultValueConstant()) {
             throw new LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
@@ -514,18 +464,17 @@ class ReflectionParameter implements CoreReflector
     /**
      * Gets a ReflectionClass for the type hint (returns null if not a class)
      *
-     * @return ReflectionClass|null
      * @throws \RuntimeException
      */
     public function getClass() : ?ReflectionClass
     {
         $className = $this->getClassName();
 
-        if (null === $className) {
+        if ($className === null) {
             return null;
         }
 
-        if ( ! $this->reflector instanceof ClassReflector) {
+        if (! $this->reflector instanceof ClassReflector) {
             throw new RuntimeException(\sprintf(
                 'Unable to reflect class type because we were not given a "%s", but a "%s" instead',
                 ClassReflector::class,
@@ -538,18 +487,18 @@ class ReflectionParameter implements CoreReflector
 
     private function getClassName() : ?string
     {
-        if ( ! $this->hasType()) {
+        if (! $this->hasType()) {
             return null;
         }
 
         $type     = $this->getType();
         $typeHint = (string) $type;
 
-        if ('self' === $typeHint) {
+        if ($typeHint === 'self') {
             return $this->getDeclaringClass()->getName();
         }
 
-        if ('parent' === $typeHint) {
+        if ($typeHint === 'parent') {
             return $this->getDeclaringClass()->getParentClass()->getName();
         }
 

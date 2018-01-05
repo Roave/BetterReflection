@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
@@ -15,10 +16,7 @@ class InvalidFileInfoTest extends TestCase
     /**
      * @dataProvider nonSplFileInfoProvider
      *
-     * @param string $expectedMessage
-     * @param mixed  $value
-     *
-     * @return void
+     * @param mixed $value
      */
     public function testFromNonSplFileInfo(string $expectedMessage, $value) : void
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
@@ -34,12 +35,6 @@ final class FileCacheLoader implements LoaderMethodInterface
      */
     private $checker;
 
-    /**
-     * @param string $cacheDirectory
-     * @param ClassPrinterInterface $classPrinter
-     * @param SignerInterface $signer
-     * @param CheckerInterface $checker
-     */
     public function __construct(
         string $cacheDirectory,
         ClassPrinterInterface $classPrinter,
@@ -60,7 +55,7 @@ final class FileCacheLoader implements LoaderMethodInterface
     {
         $filename = $this->cacheDirectory . '/' . \sha1($classInfo->getName());
 
-        if ( ! \file_exists($filename)) {
+        if (! \file_exists($filename)) {
             $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);
             \file_put_contents(
                 $filename,
@@ -68,7 +63,7 @@ final class FileCacheLoader implements LoaderMethodInterface
             );
         }
 
-        if ( ! $this->checker->check(\file_get_contents($filename))) {
+        if (! $this->checker->check(\file_get_contents($filename))) {
             throw Exception\SignatureCheckFailed::fromReflectionClass($classInfo);
         }
 
@@ -76,10 +71,6 @@ final class FileCacheLoader implements LoaderMethodInterface
         require_once $filename;
     }
 
-    /**
-     * @param string $cacheDirectory
-     * @return self
-     */
     public static function defaultFileCacheLoader(string $cacheDirectory) : self
     {
         return new self(

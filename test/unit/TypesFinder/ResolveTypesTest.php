@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
@@ -66,8 +67,6 @@ class ResolveTypesTest extends TestCase
     }
 
     /**
-     * @param string $inputType
-     * @param string $expectedType
      * @dataProvider contextualTypesToResolveProvider
      */
     public function testResolveTypesWithContextualTypes(string $inputType, string $expectedType) : void

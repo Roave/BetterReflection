@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
@@ -29,7 +30,6 @@ class ReflectionObjectTest extends TestCase
     }
 
     /**
-     * @param string $methodName
      * @dataProvider coreReflectionMethodNamesProvider
      */
     public function testCoreReflectionMethods(string $methodName) : void
@@ -96,10 +96,8 @@ class ReflectionObjectTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param string|null $expectedException
-     * @param mixed $returnValue
-     * @param array $args
+     * @param mixed   $returnValue
+     * @param mixed[] $args
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
@@ -107,14 +105,14 @@ class ReflectionObjectTest extends TestCase
         /** @var BetterReflectionObject|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
 
-        if (null === $expectedException) {
+        if ($expectedException === null) {
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->will($this->returnValue($returnValue));
         }
 
-        if (null !== $expectedException) {
+        if ($expectedException !== null) {
             $this->expectException($expectedException);
         }
 
@@ -176,9 +174,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
             ->method('getMethods')
-            ->willReturn([
-                $betterReflectionMethod,
-            ]);
+            ->willReturn([$betterReflectionMethod]);
         $betterReflectionObject
             ->method('hasMethod')
             ->with('foo')
@@ -200,9 +196,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
             ->method('getMethods')
-            ->willReturn([
-                $betterReflectionMethod,
-            ]);
+            ->willReturn([$betterReflectionMethod]);
         $betterReflectionObject
             ->method('getMethod')
             ->with('foo')

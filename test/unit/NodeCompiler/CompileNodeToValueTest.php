@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
@@ -43,10 +44,6 @@ class CompileNodeToValueTest extends TestCase
         $this->astLocator = $configuration->astLocator();
     }
 
-    /**
-     * @param string $phpCode
-     * @return \PhpParser\Node
-     */
     private function parseCode(string $phpCode) : Node
     {
         return $this->parser->parse('<?php ' . $phpCode . ';')[0];
@@ -157,7 +154,6 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /**
-     * @param string $phpCode
      * @param mixed $expectedValue
      * @dataProvider nodeProvider
      */

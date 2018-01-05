@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -22,7 +23,7 @@ class ReflectionClassConstant implements CoreReflector
     private $valueWasCached = false;
 
     /**
-     * @var int|float|array|string|bool|null const value
+     * @var int|float|mixed[]|string|bool|null const value
      */
     private $value;
 
@@ -54,11 +55,7 @@ class ReflectionClassConstant implements CoreReflector
      * Create a reflection of a class's constant by Const Node
      *
      * @internal
-     * @param Reflector $reflector
      * @param ClassConst $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param int $positionInNode
-     * @param ReflectionClass $owner
-     * @return ReflectionClassConstant
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -77,8 +74,6 @@ class ReflectionClassConstant implements CoreReflector
     /**
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
-     *
-     * @return string
      */
     public function getName() : string
     {
@@ -92,7 +87,7 @@ class ReflectionClassConstant implements CoreReflector
      */
     public function getValue()
     {
-        if (false !== $this->valueWasCached) {
+        if ($this->valueWasCached !== false) {
             return $this->value;
         }
 
@@ -106,8 +101,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Constant is public
-     *
-     * @return bool
      */
     public function isPublic() : bool
     {
@@ -116,8 +109,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Cosnstant is private
-     *
-     * @return bool
      */
     public function isPrivate() : bool
     {
@@ -126,8 +117,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Constant is protected
-     *
-     * @return bool
      */
     public function isProtected() : bool
     {
@@ -136,8 +125,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Returns a bitfield of the access modifiers for this constant
-     *
-     * @return int
      */
     public function getModifiers() : int
     {
@@ -150,8 +137,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Get the line number that this constant starts on.
-     *
-     * @return int
      */
     public function getStartLine() : int
     {
@@ -160,8 +145,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Get the line number that this constant ends on.
-     *
-     * @return int
      */
     public function getEndLine() : int
     {
@@ -180,8 +163,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Get the declaring class
-     *
-     * @return ReflectionClass
      */
     public function getDeclaringClass() : ReflectionClass
     {
@@ -190,8 +171,6 @@ class ReflectionClassConstant implements CoreReflector
 
     /**
      * Returns the doc comment for this constant
-     *
-     * @return string
      */
     public function getDocComment() : string
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
@@ -31,10 +32,7 @@ final class FindReflectionsInTree
     /**
      * Find all reflections of a given type in an Abstract Syntax Tree
      *
-     * @param Reflector      $reflector
-     * @param Node[]         $ast
-     * @param IdentifierType $identifierType
-     * @param LocatedSource  $locatedSource
+     * @param Node[] $ast
      *
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      */
@@ -98,7 +96,7 @@ final class FindReflectionsInTree
                 }
 
                 if ($node instanceof Node\Stmt\ClassLike) {
-                    $classNamespace = null === $node->name ? null : $this->currentNamespace;
+                    $classNamespace = $node->name === null ? null : $this->currentNamespace;
                     $reflection     = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
 
                     if ($this->identifierType->isMatchingReflector($reflection)) {

@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use stdClass;
+use Throwable;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
@@ -31,7 +32,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $methodName
      * @dataProvider coreReflectionPropertyNamesProvider
      */
     public function testCoreReflectionPropertys(string $methodName) : void
@@ -56,9 +56,8 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param mixed $returnValue
-     * @param array $args
+     * @param mixed   $returnValue
+     * @param mixed[] $args
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
@@ -77,7 +76,7 @@ class ReflectionPropertyTest extends TestCase
 
     public function testExport() : void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionPropertyAdapter::export('foo', 0);
     }

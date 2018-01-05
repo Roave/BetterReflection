@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -43,8 +44,6 @@ class ReflectionType
 
     /**
      * Does the parameter allow null?
-     *
-     * @return bool
      */
     public function allowsNull() : bool
     {
@@ -55,7 +54,6 @@ class ReflectionType
      * Checks if it is a built-in type (i.e., it's not an object...)
      *
      * @see http://php.net/manual/en/reflectiontype.isbuiltin.php
-     * @return bool
      */
     public function isBuiltin() : bool
     {
@@ -66,7 +64,6 @@ class ReflectionType
      * Convert this string type to a string
      *
      * @see https://github.com/php/php-src/blob/master/ext/reflection/php_reflection.c#L2993
-     * @return string
      */
     public function __toString() : string
     {

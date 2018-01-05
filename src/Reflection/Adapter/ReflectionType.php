@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -20,7 +21,7 @@ class ReflectionType extends CoreReflectionType
 
     public static function fromReturnTypeOrNull(?BetterReflectionType $betterReflectionType) : ?self
     {
-        if (null === $betterReflectionType) {
+        if ($betterReflectionType === null) {
             return null;
         }
 
@@ -50,7 +51,7 @@ class ReflectionType extends CoreReflectionType
     {
         $type = (string) $this->betterReflectionType;
 
-        if ('self' === $type || 'parent' === $type) {
+        if ($type === 'self' || $type === 'parent') {
             return false;
         }
 

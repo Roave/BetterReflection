@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
@@ -38,8 +39,6 @@ final class FindReflectionOnLine
      *
      * Returns null if no reflections found on the line.
      *
-     * @param string $filename
-     * @param int $lineNumber
      * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
      * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
@@ -90,17 +89,15 @@ final class FindReflectionOnLine
      * Check to see if the line is within the boundaries of the reflection specified.
      *
      * @param ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection
-     * @param int $lineNumber
-     * @return bool
      * @throws \InvalidArgumentException
      */
     private function containsLine($reflection, int $lineNumber) : bool
     {
-        if ( ! \method_exists($reflection, 'getStartLine')) {
+        if (! \method_exists($reflection, 'getStartLine')) {
             throw new InvalidArgumentException('Reflection does not have getStartLine method');
         }
 
-        if ( ! \method_exists($reflection, 'getEndLine')) {
+        if (! \method_exists($reflection, 'getEndLine')) {
             throw new InvalidArgumentException('Reflection does not have getEndLine method');
         }
 

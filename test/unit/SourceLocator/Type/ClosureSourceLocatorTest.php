@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -51,10 +52,6 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param Closure $closure
-     * @param string $namespace
-     * @param string $file
-     * @param int $startLine
      * @paran int $endLine
      * @dataProvider closuresProvider
      */
@@ -99,10 +96,6 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param Closure $closure
-     * @param string $namespace
-     * @param string $file
-     * @param int $startLine
      * @paran int $endLine
      * @dataProvider closuresProvider
      */
@@ -152,8 +145,6 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param string $file
-     * @param Closure $closure
      * @dataProvider exceptionIfTwoClosuresOnSameLineProvider
      */
     public function testTwoClosuresSameLineFails(string $file, Closure $closure) : void

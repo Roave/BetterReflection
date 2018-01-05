@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -65,13 +66,13 @@ final class ClosureSourceLocator implements SourceLocator
 
     private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionFunction
     {
-        if ( ! $identifierType->isFunction()) {
+        if (! $identifierType->isFunction()) {
             return null;
         }
 
         $fileName = $this->coreFunctionReflection->getFileName();
 
-        if (false !== \strpos($fileName, 'eval()\'d code')) {
+        if (\strpos($fileName, 'eval()\'d code') !== false) {
             throw EvaledClosureCannotBeLocated::create();
         }
 
@@ -139,7 +140,7 @@ final class ClosureSourceLocator implements SourceLocator
                     return $nodes[0]->getLine() === $this->startLine;
                 }));
 
-                if ( ! $closureNodesDataOnSameLine) {
+                if (! $closureNodesDataOnSameLine) {
                     return null;
                 }
 

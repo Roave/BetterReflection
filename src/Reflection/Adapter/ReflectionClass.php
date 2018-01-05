@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -183,7 +184,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
-        if (null === $betterReflectionProperty) {
+        if ($betterReflectionProperty === null) {
             return null;
         }
 
@@ -379,7 +380,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $parentClass = $this->betterReflectionClass->getParentClass();
 
-        if (null === $parentClass) {
+        if ($parentClass === null) {
             return false;
         }
 
@@ -417,19 +418,19 @@ class ReflectionClass extends CoreReflectionClass
     {
         $property = $this->getProperty($name);
 
-        if (null === $property) {
-            if (2 === \func_num_args()) {
+        if ($property === null) {
+            if (\func_num_args() === 2) {
                 return $default;
             }
 
             throw new CoreReflectionException(\sprintf('Property "%s" does not exist', $name));
         }
 
-        if ( ! $property->isAccessible()) {
+        if (! $property->isAccessible()) {
             throw new CoreReflectionException(\sprintf('Property "%s" is not accessible', $name));
         }
 
-        if ( ! $property->isStatic()) {
+        if (! $property->isStatic()) {
             throw new CoreReflectionException(\sprintf('Property "%s" is not static', $name));
         }
 
@@ -443,15 +444,15 @@ class ReflectionClass extends CoreReflectionClass
     {
         $property = $this->getProperty($name);
 
-        if (null === $property) {
+        if ($property === null) {
             throw new CoreReflectionException(\sprintf('Property "%s" does not exist', $name));
         }
 
-        if ( ! $property->isAccessible()) {
+        if (! $property->isAccessible()) {
             throw new CoreReflectionException(\sprintf('Property "%s" is not accessible', $name));
         }
 
-        if ( ! $property->isStatic()) {
+        if (! $property->isStatic()) {
             throw new CoreReflectionException(\sprintf('Property "%s" is not static', $name));
         }
 

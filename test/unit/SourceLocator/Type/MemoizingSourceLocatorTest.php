@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -183,7 +184,6 @@ class MemoizingSourceLocatorTest extends TestCase
 
     /**
      * @param Identifier[] $identifiers
-     * @param int          $expectedFetchOperationsCount
      * @param Reflector[]  $reflectors
      */
     private function assertMemoization(

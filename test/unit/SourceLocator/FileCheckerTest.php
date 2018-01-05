@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\FileChecker;
@@ -36,7 +36,7 @@ class FileCheckerTest extends TestCase
 
     public function testCheckFileThrowsExceptionIfFileIsNotReadable() : void
     {
-        if (0 === \strpos(\PHP_OS, 'WIN')) {
+        if (\strpos(\PHP_OS, 'WIN') === 0) {
             self::markTestSkipped('It\'s not possible to change file mode on Windows');
         }
 
@@ -50,7 +50,7 @@ class FileCheckerTest extends TestCase
 
         try {
             FileChecker::assertReadableFile($file);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw $e;
         } finally {
             \chmod($file, $originalPermission);

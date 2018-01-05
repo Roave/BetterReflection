@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -56,7 +57,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function getValue($object = null)
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Property not accessible');
         }
 
@@ -74,7 +75,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function setValue($object, $value = null)
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Property not accessible');
         }
 

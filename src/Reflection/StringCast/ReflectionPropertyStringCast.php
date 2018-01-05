@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
@@ -14,7 +15,7 @@ final class ReflectionPropertyStringCast
     {
         $stateModifier = '';
 
-        if ( ! $propertyReflection->isStatic()) {
+        if (! $propertyReflection->isStatic()) {
             $stateModifier = $propertyReflection->isDefault() ? ' <default>' : ' <dynamic>';
         }
 

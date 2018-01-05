@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -36,12 +37,12 @@ class FileIteratorSourceLocator implements SourceLocator
     /**
      * @param \Iterator|\SplFileInfo[] $fileInfoIterator note: only \SplFileInfo allowed in this iterator
      *
-     * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo
+     * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo.
      */
     public function __construct(Iterator $fileInfoIterator, Locator $astLocator)
     {
         foreach ($fileInfoIterator as $fileInfo) {
-            if ( ! $fileInfo instanceof SplFileInfo) {
+            if (! $fileInfo instanceof SplFileInfo) {
                 throw InvalidFileInfo::fromNonSplFileInfo($fileInfo);
             }
         }
@@ -51,14 +52,13 @@ class FileIteratorSourceLocator implements SourceLocator
     }
 
     /**
-     * @return AggregateSourceLocator
      * @throws InvalidFileLocation
      */
     private function getAggregatedSourceLocator() : AggregateSourceLocator
     {
         return $this->aggregateSourceLocator ?: new AggregateSourceLocator(\array_values(\array_filter(\array_map(
             function (SplFileInfo $item) : ?SingleFileSourceLocator {
-                if ( ! ($item->isFile() && 'php' === \pathinfo($item->getRealPath(), \PATHINFO_EXTENSION))) {
+                if (! ($item->isFile() && \pathinfo($item->getRealPath(), \PATHINFO_EXTENSION) === 'php')) {
                     return null;
                 }
 

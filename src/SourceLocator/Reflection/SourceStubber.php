@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Reflection;
@@ -67,7 +68,7 @@ final class SourceStubber
         $this->addConstants($classNode, $classReflection);
         $this->addMethods($classNode, $classReflection);
 
-        if ( ! $classReflection->inNamespace()) {
+        if (! $classReflection->inNamespace()) {
             return $this->prettyPrinter->prettyPrint([$classNode->getNode()]);
         }
 
@@ -91,23 +92,22 @@ final class SourceStubber
     }
 
     /**
-     * @param Class_|Interface_|Trait_|Method|Property $node
+     * @param Class_|Interface_|Trait_|Method|Property                        $node
      * @param CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty $reflection
      */
     private function addDocComment(BuilderAbstract $node, CoreReflector $reflection) : void
     {
-        if (false !== $reflection->getDocComment()) {
+        if ($reflection->getDocComment() !== false) {
             $node->setDocComment(new Doc($reflection->getDocComment()));
         }
     }
 
     /**
      * @param Class_|Interface_|Trait_ $classNode
-     * @param CoreReflectionClass $classReflection
      */
     private function addClassModifiers(Declaration $classNode, CoreReflectionClass $classReflection) : void
     {
-        if ( ! $classReflection->isInterface() && $classReflection->isAbstract()) {
+        if (! $classReflection->isInterface() && $classReflection->isAbstract()) {
             // Interface \Iterator is interface and abstract
             $classNode->makeAbstract();
         }
@@ -119,7 +119,6 @@ final class SourceStubber
 
     /**
      * @param Class_|Interface_|Trait_ $classNode
-     * @param CoreReflectionClass $classReflection
      */
     private function addExtendsAndImplements(Declaration $classNode, CoreReflectionClass $classReflection) : void
     {
@@ -170,7 +169,7 @@ final class SourceStubber
         $defaultProperties = $classReflection->getDefaultProperties();
 
         foreach ($classReflection->getProperties() as $propertyReflection) {
-            if ( ! $this->isPropertyDeclaredInClass($propertyReflection, $classReflection)) {
+            if (! $this->isPropertyDeclaredInClass($propertyReflection, $classReflection)) {
                 continue;
             }
 
@@ -233,7 +232,7 @@ final class SourceStubber
                 $this->constantVisibilityFlags($constantReflection)
             );
 
-            if (false !== $constantReflection->getDocComment()) {
+            if ($constantReflection->getDocComment() !== false) {
                 $classConstantNode->setDocComment(new Doc($constantReflection->getDocComment()));
             }
 
@@ -271,7 +270,7 @@ final class SourceStubber
     private function addMethods(Declaration $classNode, CoreReflectionClass $classReflection) : void
     {
         foreach ($classReflection->getMethods() as $methodReflection) {
-            if ( ! $this->isMethodDeclaredInClass($methodReflection, $classReflection)) {
+            if (! $this->isMethodDeclaredInClass($methodReflection, $classReflection)) {
                 continue;
             }
 
@@ -283,7 +282,7 @@ final class SourceStubber
 
             $returnType = $methodReflection->getReturnType();
 
-            if (null !== $methodReflection->getReturnType()) {
+            if ($methodReflection->getReturnType() !== null) {
                 $methodNode->setReturnType($this->formatType($returnType));
             }
 
@@ -368,7 +367,7 @@ final class SourceStubber
 
         $parameterType = $parameterReflection->getType();
 
-        if (null !== $parameterReflection->getType()) {
+        if ($parameterReflection->getType() !== null) {
             $parameterNode->setTypeHint($this->formatType($parameterType));
         }
 
@@ -389,10 +388,6 @@ final class SourceStubber
         return $parameterReflection->getDefaultValue();
     }
 
-    /**
-     * @param CoreReflectionType $type
-     * @return NodeAbstract
-     */
     private function formatType(CoreReflectionType $type) : NodeAbstract
     {
         $name     = (string) $type;

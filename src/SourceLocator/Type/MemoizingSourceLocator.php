@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -42,6 +43,9 @@ final class MemoizingSourceLocator implements SourceLocator
             = $this->wrappedSourceLocator->locateIdentifier($reflector, $identifier);
     }
 
+    /**
+     * @return \Roave\BetterReflection\Reflection\Reflection[]
+     */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
         $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierTypeToCacheKey($identifierType);

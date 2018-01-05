@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -69,10 +70,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Populate the common elements of the function abstract.
      *
-     * @param Reflector                                              $reflector
      * @param Node\Stmt\ClassMethod|Node\FunctionLike|Node\Stmt|Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param LocatedSource                                          $locatedSource
-     * @param NamespaceNode|null                                     $declaringNamespace
      *
      * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
      */
@@ -109,12 +107,12 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $overallOptionalFlag = true;
         $lastParamIndex      = (\count($this->node->params) - 1);
         for ($i = $lastParamIndex; $i >= 0; $i--) {
-            $hasDefault = (null !== $this->node->params[$i]->default);
+            $hasDefault = ($this->node->params[$i]->default !== null);
 
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional
             // EVEN if they have a default value
-            if ( ! $hasDefault) {
+            if (! $hasDefault) {
                 $overallOptionalFlag = false;
             }
 
@@ -125,12 +123,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Get the "full" name of the function (e.g. for A\B\foo, this will return
      * "A\B\foo").
-     *
-     * @return string
      */
     public function getName() : string
     {
-        if ( ! $this->inNamespace()) {
+        if (! $this->inNamespace()) {
             return $this->getShortName();
         }
 
@@ -140,8 +136,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Get the "short" name of the function (e.g. for A\B\foo, this will return
      * "foo").
-     *
-     * @return string
      */
     public function getShortName() : string
     {
@@ -155,12 +149,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
      * return "A\B").
-     *
-     * @return string
      */
     public function getNamespaceName() : string
     {
-        if ( ! $this->inNamespace()) {
+        if (! $this->inNamespace()) {
             return '';
         }
 
@@ -170,19 +162,15 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Decide if this function is part of a namespace. Returns false if the class
      * is in the global namespace or does not have a specified namespace.
-     *
-     * @return bool
      */
     public function inNamespace() : bool
     {
-        return null !== $this->declaringNamespace
-            && null !== $this->declaringNamespace->name;
+        return $this->declaringNamespace !== null
+            && $this->declaringNamespace->name !== null;
     }
 
     /**
      * Get the number of parameters for this class.
-     *
-     * @return int
      */
     public function getNumberOfParameters() : int
     {
@@ -191,8 +179,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Get the number of required parameters for this method.
-     *
-     * @return int
      */
     public function getNumberOfRequiredParameters() : int
     {
@@ -230,9 +216,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Get a single parameter by name. Returns null if parameter not found for
      * the function.
-     *
-     * @param string $parameterName
-     * @return ReflectionParameter|null
      */
     public function getParameter(string $parameterName) : ?ReflectionParameter
     {
@@ -244,25 +227,16 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         return null;
     }
 
-    /**
-     * @return string
-     */
     public function getDocComment() : string
     {
         return GetFirstDocComment::forNode($this->node);
     }
 
-    /**
-     * @return string|null
-     */
     public function getFileName() : ?string
     {
         return $this->locatedSource->getFileName();
     }
 
-    /**
-     * @return LocatedSource
-     */
     public function getLocatedSource() : LocatedSource
     {
         return $this->locatedSource;
@@ -270,8 +244,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Is this function a closure?
-     *
-     * @return bool
      */
     public function isClosure() : bool
     {
@@ -286,7 +258,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * from this function.
      *
      * @see https://github.com/Roave/BetterReflection/issues/38
-     * @return bool
      */
     public function isDeprecated() : bool
     {
@@ -301,7 +272,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * from this function.
      *
      * @see https://github.com/Roave/BetterReflection/issues/38
-     * @return bool
      */
     public function isInternal() : bool
     {
@@ -311,8 +281,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Is this a user-defined function (will always return the opposite of
      * whatever isInternal returns).
-     *
-     * @return bool
      */
     public function isUserDefined() : bool
     {
@@ -321,8 +289,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Check if the function has a variadic parameter.
-     *
-     * @return bool
      */
     public function isVariadic() : bool
     {
@@ -340,9 +306,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Recursively search an array of statements (PhpParser nodes) to find if a
      * yield expression exists anywhere (thus indicating this is a generator).
-     *
-     * @param \PhpParser\Node $node
-     * @return bool
      */
     private function nodeIsOrContainsYield(Node $node) : bool
     {
@@ -370,12 +333,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Check if this function can be used as a generator (i.e. contains the
      * "yield" keyword).
-     *
-     * @return bool
      */
     public function isGenerator() : bool
     {
-        if (null === $this->node) {
+        if ($this->node === null) {
             return false;
         }
 
@@ -384,8 +345,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Get the line number that this function starts on.
-     *
-     * @return int
      */
     public function getStartLine() : int
     {
@@ -394,8 +353,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Get the line number that this function ends on.
-     *
-     * @return int
      */
     public function getEndLine() : int
     {
@@ -414,8 +371,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Is this function declared as a reference.
-     *
-     * @return bool
      */
     public function returnsReference() : bool
     {
@@ -432,19 +387,17 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getDocBlockReturnTypes() : array
     {
-        return  (new FindReturnType())->__invoke($this, $this->declaringNamespace);
+        return (new FindReturnType())->__invoke($this, $this->declaringNamespace);
     }
 
     /**
      * Get the return type declaration (only for PHP 7+ code)
-     *
-     * @return ReflectionType|null
      */
     public function getReturnType() : ?ReflectionType
     {
         $returnType = $this->node->getReturnType();
 
-        if (null === $returnType) {
+        if ($returnType === null) {
             return null;
         }
 
@@ -457,18 +410,14 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Do we have a return type declaration (only for PHP 7+ code)
-     *
-     * @return bool
      */
     public function hasReturnType() : bool
     {
-        return null !== $this->getReturnType();
+        return $this->getReturnType() !== null;
     }
 
     /**
      * Set the return type declaration.
-     *
-     * @param string $newReturnType
      */
     public function setReturnType(string $newReturnType) : void
     {
@@ -510,13 +459,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * Note that the formatting of the code may not be the same as the original
      * function. If specific formatting is required, you should provide your
      * own implementation of a PrettyPrinter to unparse the AST.
-     *
-     * @param PrettyPrinterAbstract|null $printer
-     * @return string
      */
     public function getBodyCode(?PrettyPrinterAbstract $printer = null) : string
     {
-        if (null === $printer) {
+        if ($printer === null) {
             $printer = new StandardPrettyPrinter();
         }
 
@@ -540,7 +486,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * @example
      * $reflectionFunction->setBodyFromClosure(function () { return true; });
      *
-     * @param \Closure $newBody
      *
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
      * @throws \Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName
@@ -562,8 +507,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      *
      * @example
      * $reflectionFunction->setBodyFromString('return true;');
-     *
-     * @param string $newBody
      */
     public function setBodyFromString(string $newBody) : void
     {
@@ -592,8 +535,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Add a new parameter to the method/function.
-     *
-     * @param string $parameterName
      */
     public function addParameter(string $parameterName) : void
     {
@@ -602,9 +543,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     /**
      * Remove a parameter from the method/function.
-     *
-     * @param string $parameterName
-     * @return void
      */
     public function removeParameter(string $parameterName) : void
     {

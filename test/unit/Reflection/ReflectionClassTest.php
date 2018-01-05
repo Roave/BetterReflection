@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
@@ -73,8 +74,7 @@ class ReflectionClassTest extends TestCase
 
     private function getComposerLocator() : ComposerSourceLocator
     {
-        global $loader;
-        return new ComposerSourceLocator($loader, $this->astLocator);
+        return new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator);
     }
 
     public function testCanReflectInternalClassWithDefaultLocator() : void
@@ -536,9 +536,6 @@ PHP;
     }
 
     /**
-     * @param string $php
-     * @param int $expectedStart
-     * @param int $expectedEnd
      * @dataProvider startEndLineProvider
      */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd) : void
@@ -560,7 +557,6 @@ PHP;
     }
 
     /**
-     * @param string $php
      * @param int $expectedStart
      * @param int $expectedEnd
      * @dataProvider columnsProvider
@@ -786,8 +782,6 @@ PHP;
     }
 
     /**
-     * @param string $className
-     * @param int $expectedModifier
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
@@ -871,9 +865,7 @@ PHP;
         ));
 
         self::assertSame(
-            [
-                'TraitFixtureTraitA',
-            ],
+            ['TraitFixtureTraitA'],
             $reflector->reflect('TraitFixtureA')->getTraitNames()
         );
     }

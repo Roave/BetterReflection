@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
@@ -13,7 +14,7 @@ final class GetFirstDocComment
 {
     public static function forNode(NodeAbstract $node) : string
     {
-        if ( ! $node->hasAttribute('comments')) {
+        if (! $node->hasAttribute('comments')) {
             return '';
         }
 

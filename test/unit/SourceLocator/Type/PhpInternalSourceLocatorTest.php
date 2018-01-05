@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -52,8 +53,6 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     /**
      * @dataProvider internalSymbolsProvider
-     *
-     * @param string $className
      */
     public function testCanFetchInternalLocatedSource(string $className) : void
     {
@@ -81,7 +80,6 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @dataProvider internalSymbolsProvider
      *
-     * @param string $className
      * @throws \ReflectionException
      */
     public function testCanReflectInternalClasses(string $className) : void
@@ -173,13 +171,12 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @dataProvider stubbedClassesProvider
      *
-     * @param string $className
      *
      * @coversNothing
      */
     public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
     {
-        if ( ! (
+        if (! (
             \class_exists($className, false)
             || \interface_exists($className, false)
             || \trait_exists($className, false)
@@ -277,9 +274,8 @@ class PhpInternalSourceLocatorTest extends TestCase
             ));
         }
 
-        if (Closure::class === $original->getName()) {
+        if ($original->getName() !== Closure::class) {
             // https://bugs.php.net/bug.php?id=75186
-        } else {
             self::assertSame($originalMethodNames, $stubbedMethodNames);
         }
 
@@ -375,9 +371,8 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
-        if (Closure::class === $original->getDeclaringClass()->getName() && 'fromCallable' === $originalMethod->getName()) {
+        if (! ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable')) {
             // Bug in PHP: https://3v4l.org/EeHXS
-        } else {
             self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
         }
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
@@ -386,7 +381,9 @@ class PhpInternalSourceLocatorTest extends TestCase
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
-        if ($class = $original->getClass()) {
+        $class = $original->getClass();
+
+        if ($class) {
             $stubbedClass = $stubbed->getClass();
 
             self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
