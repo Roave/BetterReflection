@@ -35,6 +35,7 @@ use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use stdClass;
 use Throwable;
 use TraitWithProperty;
+use function count;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
@@ -155,7 +156,7 @@ class ReflectionPropertyTest extends TestCase
 
         $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
 
-        self::assertCount(\count($expectedTypes), $foundTypes);
+        self::assertCount(count($expectedTypes), $foundTypes);
 
         foreach ($expectedTypes as $i => $expectedType) {
             self::assertInstanceOf($expectedType, $foundTypes[$i]);

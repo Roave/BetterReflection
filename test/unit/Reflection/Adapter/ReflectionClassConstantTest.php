@@ -10,6 +10,9 @@ use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use function array_combine;
+use function array_map;
+use function get_class_methods;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant
@@ -18,8 +21,8 @@ class ReflectionClassConstantTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
-        $methods = \get_class_methods(CoreReflectionClassConstant::class);
-        return \array_combine($methods, \array_map(function (string $i) : array {
+        $methods = get_class_methods(CoreReflectionClassConstant::class);
+        return array_combine($methods, array_map(function (string $i) : array {
             return [$i];
         }, $methods));
     }

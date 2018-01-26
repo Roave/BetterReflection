@@ -9,6 +9,15 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
+use function array_filter;
+use function array_map;
+use function count;
+use function implode;
+use function preg_replace;
+use function sprintf;
+use function str_repeat;
+use function strtolower;
+use function trim;
 
 /**
  * @internal
@@ -38,28 +47,28 @@ final class ReflectionClassStringCast
         $dynamicProperties = self::getDynamicProperties($classReflection);
         $methods           = self::getMethods($classReflection);
 
-        return \sprintf(
+        return sprintf(
             $format,
             $isObject ? 'Object of class' : $type,
             self::sourceToString($classReflection),
             $classReflection->isFinal() ? 'final ' : '',
             $classReflection->isAbstract() ? 'abstract ' : '',
-            \strtolower($type),
+            strtolower($type),
             $classReflection->getName(),
             self::extendsToString($classReflection),
             self::implementsToString($classReflection),
             self::fileAndLinesToString($classReflection),
-            \count($constants),
+            count($constants),
             self::constantsToString($constants),
-            \count($staticProperties),
+            count($staticProperties),
             self::propertiesToString($staticProperties),
-            \count($staticMethods),
+            count($staticMethods),
             self::methodsToString($classReflection, $staticMethods),
-            \count($defaultProperties),
+            count($defaultProperties),
             self::propertiesToString($defaultProperties),
-            $isObject ? \count($dynamicProperties) : '',
+            $isObject ? count($dynamicProperties) : '',
             $isObject ? self::propertiesToString($dynamicProperties) : '',
-            \count($methods),
+            count($methods),
             self::methodsToString($classReflection, $methods, 2)
         );
     }
@@ -83,7 +92,7 @@ final class ReflectionClassStringCast
             return 'user';
         }
 
-        return \sprintf('internal:%s', $classReflection->getExtensionName());
+        return sprintf('internal:%s', $classReflection->getExtensionName());
     }
 
     private static function extendsToString(ReflectionClass $classReflection) : string
@@ -103,7 +112,7 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return ' implements ' . \implode(', ', $interfaceNames);
+        return ' implements ' . implode(', ', $interfaceNames);
     }
 
     private static function fileAndLinesToString(ReflectionClass $classReflection) : string
@@ -112,7 +121,7 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return \sprintf("  @@ %s %d-%d\n", $classReflection->getFileName(), $classReflection->getStartLine(), $classReflection->getEndLine());
+        return sprintf("  @@ %s %d-%d\n", $classReflection->getFileName(), $classReflection->getStartLine(), $classReflection->getEndLine());
     }
 
     /**
@@ -125,8 +134,8 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return self::itemsToString(\array_map(function (ReflectionClassConstant $constantReflection) : string {
-            return \trim(ReflectionClassConstantStringCast::toString($constantReflection));
+        return self::itemsToString(array_map(function (ReflectionClassConstant $constantReflection) : string {
+            return trim(ReflectionClassConstantStringCast::toString($constantReflection));
         }, $constants));
     }
 
@@ -140,7 +149,7 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return self::itemsToString(\array_map(function (ReflectionProperty $propertyReflection) : string {
+        return self::itemsToString(array_map(function (ReflectionProperty $propertyReflection) : string {
             return ReflectionPropertyStringCast::toString($propertyReflection);
         }, $properties));
     }
@@ -154,7 +163,7 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return self::itemsToString(\array_map(function (ReflectionMethod $method) use ($classReflection) : string {
+        return self::itemsToString(array_map(function (ReflectionMethod $method) use ($classReflection) : string {
             return ReflectionMethodStringCast::toString($method, $classReflection);
         }, $methods), $emptyLinesAmongItems);
     }
@@ -164,13 +173,13 @@ final class ReflectionClassStringCast
      */
     private static function itemsToString(array $items, int $emptyLinesAmongItems = 1) : string
     {
-        $string = \implode(\str_repeat("\n", $emptyLinesAmongItems), $items);
-        return "\n" . \preg_replace('/(^|\n)(?!\n)/', '\1' . self::indent(), $string);
+        $string = implode(str_repeat("\n", $emptyLinesAmongItems), $items);
+        return "\n" . preg_replace('/(^|\n)(?!\n)/', '\1' . self::indent(), $string);
     }
 
     private static function indent() : string
     {
-        return \str_repeat(' ', 4);
+        return str_repeat(' ', 4);
     }
 
     /**
@@ -178,7 +187,7 @@ final class ReflectionClassStringCast
      */
     private static function getStaticProperties(ReflectionClass $classReflection) : array
     {
-        return \array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
+        return array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
             return $propertyReflection->isStatic();
         });
     }
@@ -188,7 +197,7 @@ final class ReflectionClassStringCast
      */
     private static function getStaticMethods(ReflectionClass $classReflection) : array
     {
-        return \array_filter($classReflection->getMethods(), function (ReflectionMethod $methodReflection) : bool {
+        return array_filter($classReflection->getMethods(), function (ReflectionMethod $methodReflection) : bool {
             return $methodReflection->isStatic();
         });
     }
@@ -198,7 +207,7 @@ final class ReflectionClassStringCast
      */
     private static function getDefaultProperties(ReflectionClass $classReflection) : array
     {
-        return \array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
+        return array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
             return ! $propertyReflection->isStatic() && $propertyReflection->isDefault();
         });
     }
@@ -208,7 +217,7 @@ final class ReflectionClassStringCast
      */
     private static function getDynamicProperties(ReflectionClass $classReflection) : array
     {
-        return \array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
+        return array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
             return ! $propertyReflection->isStatic() && ! $propertyReflection->isDefault();
         });
     }
@@ -218,7 +227,7 @@ final class ReflectionClassStringCast
      */
     private static function getMethods(ReflectionClass $classReflection) : array
     {
-        return \array_filter($classReflection->getMethods(), function (ReflectionMethod $methodReflection) : bool {
+        return array_filter($classReflection->getMethods(), function (ReflectionMethod $methodReflection) : bool {
             return ! $methodReflection->isStatic();
         });
     }

@@ -8,6 +8,8 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
+use function array_map;
+use function array_merge;
 
 class AggregateSourceLocator implements SourceLocator
 {
@@ -50,9 +52,9 @@ class AggregateSourceLocator implements SourceLocator
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        return \array_merge(
+        return array_merge(
             [],
-            ...\array_map(function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
+            ...array_map(function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
                 return $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
             }, $this->sourceLocators)
         );

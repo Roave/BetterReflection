@@ -23,6 +23,14 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use RuntimeException;
+use function count;
+use function get_class;
+use function in_array;
+use function is_array;
+use function is_object;
+use function is_string;
+use function sprintf;
+use function strtolower;
 
 class ReflectionParameter implements CoreReflector
 {
@@ -129,15 +137,15 @@ class ReflectionParameter implements CoreReflector
      */
     public static function createFromSpec($spec, string $parameterName) : self
     {
-        if (\is_array($spec) && \count($spec) === 2) {
-            if (\is_object($spec[0])) {
+        if (is_array($spec) && count($spec) === 2) {
+            if (is_object($spec[0])) {
                 return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
             }
 
             return self::createFromClassNameAndMethod($spec[0], $spec[1], $parameterName);
         }
 
-        if (\is_string($spec)) {
+        if (is_string($spec)) {
             return ReflectionFunction::createFromName($spec)->getParameter($parameterName);
         }
 
@@ -195,7 +203,7 @@ class ReflectionParameter implements CoreReflector
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
-            && ! \in_array(\strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
+            && ! in_array(strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)) {
             $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValue             = null;
@@ -226,7 +234,7 @@ class ReflectionParameter implements CoreReflector
         } while ($class);
 
         // note: this code is theoretically unreachable, so don't expect any coverage on it
-        throw new LogicException(\sprintf('Failed to find parent class of constant "%s".', $constantName));
+        throw new LogicException(sprintf('Failed to find parent class of constant "%s".', $constantName));
     }
 
     /**
@@ -410,7 +418,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function isArray() : bool
     {
-        return \strtolower((string) $this->getType()) === 'array';
+        return strtolower((string) $this->getType()) === 'array';
     }
 
     /**
@@ -418,7 +426,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function isCallable() : bool
     {
-        return \strtolower((string) $this->getType()) === 'callable';
+        return strtolower((string) $this->getType()) === 'callable';
     }
 
     /**
@@ -475,10 +483,10 @@ class ReflectionParameter implements CoreReflector
         }
 
         if (! $this->reflector instanceof ClassReflector) {
-            throw new RuntimeException(\sprintf(
+            throw new RuntimeException(sprintf(
                 'Unable to reflect class type because we were not given a "%s", but a "%s" instead',
                 ClassReflector::class,
-                \get_class($this->reflector)
+                get_class($this->reflector)
             ));
         }
 

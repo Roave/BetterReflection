@@ -20,6 +20,12 @@ use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use stdClass;
+use function array_map;
+use function get_class_methods;
+use function in_array;
+use function random_int;
+use function realpath;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionObject
@@ -42,7 +48,7 @@ class ReflectionObjectTest extends TestCase
 
     public function anonymousClassInstancesProvider() : array
     {
-        $file = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
+        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
 
         $anonymousClasses = require $file;
 
@@ -160,7 +166,7 @@ class ReflectionObjectTest extends TestCase
      */
     public function reflectionClassMethodProvider() : array
     {
-        $publicClassMethods = \get_class_methods(ReflectionClass::class);
+        $publicClassMethods = get_class_methods(ReflectionClass::class);
 
         $ignoreMethods = [
             'createFromName',
@@ -173,7 +179,7 @@ class ReflectionObjectTest extends TestCase
 
         $filteredMethods = [];
         foreach ($publicClassMethods as $method) {
-            if (! \in_array($method, $ignoreMethods, true)) {
+            if (! in_array($method, $ignoreMethods, true)) {
                 $filteredMethods[$method] = [$method];
             }
         }
@@ -192,7 +198,7 @@ class ReflectionObjectTest extends TestCase
     public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName) : void
     {
         // First, ensure the expected method even exists
-        $publicObjectMethods = \get_class_methods(ReflectionObject::class);
+        $publicObjectMethods = get_class_methods(ReflectionObject::class);
         self::assertContains($methodName, $publicObjectMethods);
 
         // Create a mock that will be used to assert that the named method will
@@ -230,17 +236,17 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectReflectionClassPropertyReflection->setValue($reflectionObject, $mockReflectionClass);
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
-        $fakeParams                       = \array_map(
+        $fakeParams                       = array_map(
             function (ReflectionParameter $parameter) {
                 switch ((string) $parameter->getType()) {
                     case 'int':
-                        return \random_int(1, 1000);
+                        return random_int(1, 1000);
                     case 'null':
                         return null;
                     case 'bool':
-                        return (bool) \random_int(0, 1);
+                        return (bool) random_int(0, 1);
                     default:
-                        return \uniqid('stringParam', true);
+                        return uniqid('stringParam', true);
                 }
             },
             $reflectionObjectReflectionMethod->getParameters()

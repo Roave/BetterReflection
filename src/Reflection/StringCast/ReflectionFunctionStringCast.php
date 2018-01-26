@@ -6,6 +6,9 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+use function array_reduce;
+use function count;
+use function sprintf;
 
 /**
  * @internal
@@ -16,12 +19,12 @@ final class ReflectionFunctionStringCast
     {
         $parametersFormat = $functionReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
 
-        return \sprintf(
+        return sprintf(
             'Function [ <%s> function %s ] {%s' . $parametersFormat . "\n}",
             self::sourceToString($functionReflection),
             $functionReflection->getName(),
             self::fileAndLinesToString($functionReflection),
-            \count($functionReflection->getParameters()),
+            count($functionReflection->getParameters()),
             self::parametersToString($functionReflection)
         );
     }
@@ -32,7 +35,7 @@ final class ReflectionFunctionStringCast
             return 'user';
         }
 
-        return \sprintf('internal:%s', $functionReflection->getExtensionName());
+        return sprintf('internal:%s', $functionReflection->getExtensionName());
     }
 
     private static function fileAndLinesToString(ReflectionFunction $functionReflection) : string
@@ -41,12 +44,12 @@ final class ReflectionFunctionStringCast
             return '';
         }
 
-        return \sprintf("\n  @@ %s %d - %d", $functionReflection->getFileName(), $functionReflection->getStartLine(), $functionReflection->getEndLine());
+        return sprintf("\n  @@ %s %d - %d", $functionReflection->getFileName(), $functionReflection->getStartLine(), $functionReflection->getEndLine());
     }
 
     private static function parametersToString(ReflectionFunction $functionReflection) : string
     {
-        return \array_reduce($functionReflection->getParameters(), function (string $string, ReflectionParameter $parameterReflection) : string {
+        return array_reduce($functionReflection->getParameters(), function (string $string, ReflectionParameter $parameterReflection) : string {
             return $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection);
         }, '');
     }

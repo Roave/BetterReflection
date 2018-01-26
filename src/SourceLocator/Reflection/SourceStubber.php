@@ -32,6 +32,10 @@ use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use ReflectionType as CoreReflectionType;
 use Reflector as CoreReflector;
+use function array_diff;
+use function array_key_exists;
+use function explode;
+use function in_array;
 
 /**
  * Function that generates a stub source from a given reflection instance.
@@ -127,11 +131,11 @@ final class SourceStubber
 
         if ($parentClass) {
             $classNode->extend(new FullyQualified($parentClass->getName()));
-            $interfaces = \array_diff($interfaces, $parentClass->getInterfaceNames());
+            $interfaces = array_diff($interfaces, $parentClass->getInterfaceNames());
         }
 
         foreach ($classReflection->getInterfaces() as $interface) {
-            $interfaces = \array_diff($interfaces, $interface->getInterfaceNames());
+            $interfaces = array_diff($interfaces, $interface->getInterfaceNames());
         }
 
         foreach ($interfaces as $interfaceName) {
@@ -148,7 +152,7 @@ final class SourceStubber
         $alreadyUsedTraitNames = [];
 
         foreach ($classReflection->getTraitAliases() as $methodNameAlias => $methodInfo) {
-            [$traitName, $methodName] = \explode('::', $methodInfo);
+            [$traitName, $methodName] = explode('::', $methodInfo);
             $traitUseNode             = new TraitUse(
                 [new FullyQualified($traitName)],
                 [new TraitUseAdaptation\Alias(new FullyQualified($traitName), $methodName, null, $methodNameAlias)]
@@ -159,7 +163,7 @@ final class SourceStubber
             $alreadyUsedTraitNames[] = $traitName;
         }
 
-        foreach (\array_diff($classReflection->getTraitNames(), $alreadyUsedTraitNames) as $traitName) {
+        foreach (array_diff($classReflection->getTraitNames(), $alreadyUsedTraitNames) as $traitName) {
             $classNode->addStmt(new TraitUse([new FullyQualified($traitName)]));
         }
     }
@@ -178,7 +182,7 @@ final class SourceStubber
             $this->addPropertyModifiers($propertyNode, $propertyReflection);
             $this->addDocComment($propertyNode, $propertyReflection);
 
-            if (\array_key_exists($propertyReflection->getName(), $defaultProperties)) {
+            if (array_key_exists($propertyReflection->getName(), $defaultProperties)) {
                 $propertyNode->setDefault($defaultProperties[$propertyReflection->getName()]);
             }
 
@@ -296,7 +300,7 @@ final class SourceStubber
             return false;
         }
 
-        if (\array_key_exists($methodReflection->getName(), $classReflection->getTraitAliases())) {
+        if (array_key_exists($methodReflection->getName(), $classReflection->getTraitAliases())) {
             return false;
         }
 
@@ -391,7 +395,7 @@ final class SourceStubber
     private function formatType(CoreReflectionType $type) : NodeAbstract
     {
         $name     = (string) $type;
-        $nameNode = $type->isBuiltin() || \in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
+        $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
     }
 }

@@ -7,6 +7,8 @@ namespace Roave\BetterReflection\Util;
 use PhpParser\Node;
 use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
+use function strlen;
+use function strrpos;
 
 /**
  * @internal
@@ -44,13 +46,13 @@ final class CalculateReflectionColum
      */
     private static function calculateColumn(string $source, int $position) : int
     {
-        $sourceLength = \strlen($source);
+        $sourceLength = strlen($source);
 
         if ($position > $sourceLength) {
             throw InvalidNodePosition::fromPosition($position);
         }
 
-        $lineStartPosition = \strrpos($source, "\n", $position - $sourceLength);
+        $lineStartPosition = strrpos($source, "\n", $position - $sourceLength);
         if ($lineStartPosition === false) {
             return $position + 1;
         }

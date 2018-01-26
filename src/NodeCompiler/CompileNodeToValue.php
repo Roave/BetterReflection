@@ -8,6 +8,15 @@ use PhpParser\Node;
 use ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\FileHelper;
+use function array_combine;
+use function array_map;
+use function constant;
+use function defined;
+use function dirname;
+use function get_class;
+use function realpath;
+use function reset;
+use function sprintf;
 
 class CompileNodeToValue
 {
@@ -62,7 +71,7 @@ class CompileNodeToValue
             return $this->compileClassConstant($context);
         }
 
-        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . \get_class($node));
+        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
     }
 
     /**
@@ -94,7 +103,7 @@ class CompileNodeToValue
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode)
     {
-        $firstName = \reset($constNode->name->parts);
+        $firstName = reset($constNode->name->parts);
         switch ($firstName) {
             case 'null':
                 return null;
@@ -103,13 +112,13 @@ class CompileNodeToValue
             case 'true':
                 return true;
             default:
-                if (! \defined($firstName)) {
+                if (! defined($firstName)) {
                     throw new Exception\UnableToCompileNode(
-                        \sprintf('Constant "%s" has not been defined', $firstName)
+                        sprintf('Constant "%s" has not been defined', $firstName)
                     );
                 }
 
-                return \constant($firstName);
+                return constant($firstName);
         }
     }
 
@@ -158,10 +167,10 @@ class CompileNodeToValue
     private function compileBinaryOperator(Node\Expr\BinaryOp $node, CompilerContext $context)
     {
         $evaluators = self::loadEvaluators();
-        $nodeClass  = \get_class($node);
+        $nodeClass  = get_class($node);
 
         if (! isset($evaluators[$nodeClass])) {
-            throw new Exception\UnableToCompileNode(\sprintf(
+            throw new Exception\UnableToCompileNode(sprintf(
                 'Unable to compile binary operator: %s',
                 $nodeClass
             ));
@@ -176,7 +185,7 @@ class CompileNodeToValue
      */
     private function compileDirConstant(CompilerContext $context) : string
     {
-        return FileHelper::normalizeWindowsPath(\dirname(\realpath($context->getFileName())));
+        return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
     }
 
     /**
@@ -209,8 +218,8 @@ class CompileNodeToValue
 
         $evaluators = self::makeEvaluators();
 
-        return self::$nodeEvaluators = \array_combine(
-            \array_map(function (callable $nodeEvaluator) : string {
+        return self::$nodeEvaluators = array_combine(
+            array_map(function (callable $nodeEvaluator) : string {
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 /** @noinspection NullPointerExceptionInspection */
                 return (new ReflectionFunction($nodeEvaluator))->getParameters()[0]->getType()->getName();

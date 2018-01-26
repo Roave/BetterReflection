@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use function func_get_args;
 
 class ReflectionParameter extends CoreReflectionParameter
 {
@@ -25,7 +26,7 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public static function export($function, $parameter, $return = null)
     {
-        BetterReflectionParameter::export(...\func_get_args());
+        BetterReflectionParameter::export(...func_get_args());
     }
 
     /**

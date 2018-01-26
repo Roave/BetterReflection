@@ -17,6 +17,8 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function count;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindPropertyType
@@ -48,11 +50,11 @@ class FindPropertyTypeTest extends TestCase
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDocComment')
-            ->will($this->returnValue(\sprintf("/**\n * %s\n */", $docBlock)));
+            ->will($this->returnValue(sprintf("/**\n * %s\n */", $docBlock)));
 
         $foundTypes = (new FindPropertyType())->__invoke($property, null);
 
-        self::assertCount(\count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
@@ -120,7 +122,7 @@ class FindPropertyTypeTest extends TestCase
         string $docBlockType,
         array $expectedTypes
     ) : void {
-        $docBlock = \sprintf("/**\n * @var %s\n */", $docBlockType);
+        $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 
         /* @var $property ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
         $property = $this->createMock(ReflectionProperty::class);

@@ -15,6 +15,8 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function array_merge;
+use function method_exists;
 
 final class FindReflectionOnLine
 {
@@ -79,7 +81,7 @@ final class FindReflectionOnLine
         $singleFileSourceLocator = new SingleFileSourceLocator($filename, $this->astLocator);
         $reflector               = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
-        return \array_merge(
+        return array_merge(
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
@@ -93,11 +95,11 @@ final class FindReflectionOnLine
      */
     private function containsLine($reflection, int $lineNumber) : bool
     {
-        if (! \method_exists($reflection, 'getStartLine')) {
+        if (! method_exists($reflection, 'getStartLine')) {
             throw new InvalidArgumentException('Reflection does not have getStartLine method');
         }
 
-        if (! \method_exists($reflection, 'getEndLine')) {
+        if (! method_exists($reflection, 'getEndLine')) {
             throw new InvalidArgumentException('Reflection does not have getEndLine method');
         }
 

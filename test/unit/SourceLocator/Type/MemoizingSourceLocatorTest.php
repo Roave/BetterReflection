@@ -11,6 +11,16 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_unique;
+use function count;
+use function in_array;
+use function random_int;
+use function range;
+use function spl_object_hash;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator
@@ -55,24 +65,24 @@ class MemoizingSourceLocatorTest extends TestCase
         $this->reflector2       = $this->createMock(Reflector::class);
         $this->wrappedLocator   = $this->createMock(SourceLocator::class);
         $this->memoizingLocator = new MemoizingSourceLocator($this->wrappedLocator);
-        $this->identifierNames  = \array_unique(\array_map(
+        $this->identifierNames  = array_unique(array_map(
             function () : string {
-                return \uniqid('identifer', true);
+                return uniqid('identifer', true);
             },
-            \range(1, 20)
+            range(1, 20)
         ));
-        $this->identifierCount = \count($this->identifierNames);
+        $this->identifierCount = count($this->identifierNames);
     }
 
     public function testLocateIdentifierIsMemoized() : void
     {
         $this->assertMemoization(
-            \array_map(
+            array_map(
                 function (string $identifier) : Identifier {
                     return new Identifier(
                         $identifier,
                         new IdentifierType(
-                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][\random_int(0, 1)]
+                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)]
                         )
                     );
                 },
@@ -85,13 +95,13 @@ class MemoizingSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersDistinguishesBetweenIdentifierTypes() : void
     {
-        $classIdentifiers = \array_map(
+        $classIdentifiers = array_map(
             function (string $identifier) : Identifier {
                 return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
             },
             $this->identifierNames
         );
-        $functionIdentifiers = \array_map(
+        $functionIdentifiers = array_map(
             function (string $identifier) : Identifier {
                 return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
             },
@@ -99,7 +109,7 @@ class MemoizingSourceLocatorTest extends TestCase
         );
 
         $this->assertMemoization(
-            \array_merge($classIdentifiers, $functionIdentifiers),
+            array_merge($classIdentifiers, $functionIdentifiers),
             $this->identifierCount * 2,
             [$this->reflector1]
         );
@@ -109,12 +119,12 @@ class MemoizingSourceLocatorTest extends TestCase
     public function testLocateIdentifiersDistinguishesBetweenReflectorInstances() : void
     {
         $this->assertMemoization(
-            \array_map(
+            array_map(
                 function (string $identifier) : Identifier {
                     return new Identifier(
                         $identifier,
                         new IdentifierType(
-                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][\random_int(0, 1)]
+                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)]
                         )
                     );
                 },
@@ -200,7 +210,7 @@ class MemoizingSourceLocatorTest extends TestCase
             ->with(
                 self::logicalOr(...$reflectors),
                 self::callback(function (Identifier $identifier) use ($identifiers) {
-                    return \in_array($identifier, $identifiers, true);
+                    return in_array($identifier, $identifiers, true);
                 })
             )
             ->willReturnCallback(function (
@@ -209,8 +219,8 @@ class MemoizingSourceLocatorTest extends TestCase
             ) use (
                 & $fetchedSymbolsCount
             ) : ?Reflection {
-                $identifierId = \spl_object_hash($identifier);
-                $reflectorId  = \spl_object_hash($reflector);
+                $identifierId = spl_object_hash($identifier);
+                $reflectorId  = spl_object_hash($reflector);
                 $hash         = $reflectorId . $identifierId;
 
                 $fetchedSymbolsCount[$hash] = ($fetchedSymbolsCount[$hash] ?? 0) + 1;
@@ -218,7 +228,7 @@ class MemoizingSourceLocatorTest extends TestCase
                 return [
                     $this->createMock(Reflection::class),
                     null,
-                ][\random_int(0, 1)];
+                ][random_int(0, 1)];
             });
 
         $memoizedSymbols = $this->locateIdentifiers($reflectors, $identifiers);
@@ -232,8 +242,8 @@ class MemoizingSourceLocatorTest extends TestCase
 
         self::assertSame($memoizedSymbols, $cachedSymbols);
 
-        $memoizedSymbolsIds = \array_map('spl_object_hash', \array_filter($memoizedSymbols));
-        self::assertCount(\count($memoizedSymbolsIds), \array_unique($memoizedSymbolsIds), 'No duplicate symbols');
+        $memoizedSymbolsIds = array_map('spl_object_hash', array_filter($memoizedSymbols));
+        self::assertCount(count($memoizedSymbolsIds), array_unique($memoizedSymbolsIds), 'No duplicate symbols');
     }
 
     /**

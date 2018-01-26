@@ -8,6 +8,8 @@ use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
+use function count;
+use function reset;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\ResolveTypes
@@ -45,7 +47,7 @@ class ResolveTypesTest extends TestCase
     {
         $resolvedTypes = (new ResolveTypes())->__invoke($inputTypes, new Context(''));
 
-        self::assertCount(\count($expectedInstances), $resolvedTypes);
+        self::assertCount(count($expectedInstances), $resolvedTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $resolvedTypes[$i]);
@@ -82,7 +84,7 @@ class ResolveTypesTest extends TestCase
         $resolvedTypes = (new ResolveTypes())->__invoke([$inputType], $context);
         self::assertCount(1, $resolvedTypes);
 
-        $resolvedType = \reset($resolvedTypes);
+        $resolvedType = reset($resolvedTypes);
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
         /** @var $resolvedType Types\Object_ */

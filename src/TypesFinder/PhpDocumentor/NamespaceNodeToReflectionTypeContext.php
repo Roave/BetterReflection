@@ -10,6 +10,10 @@ use PhpParser\Node\Stmt\GroupUse;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function in_array;
 
 class NamespaceNodeToReflectionTypeContext
 {
@@ -31,10 +35,10 @@ class NamespaceNodeToReflectionTypeContext
     private function aliasesToFullyQualifiedNames(Namespace_ $namespace) : array
     {
         // flatten(flatten(map(stuff)))
-        return \array_merge([], ...\array_merge([], ...\array_map(function ($use) : array {
+        return array_merge([], ...array_merge([], ...array_map(function ($use) : array {
             /** @var $use Use_|GroupUse */
 
-            return \array_map(function (UseUse $useUse) use ($use) : array {
+            return array_map(function (UseUse $useUse) use ($use) : array {
                 if ($use instanceof GroupUse) {
                     return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
                 }
@@ -50,13 +54,13 @@ class NamespaceNodeToReflectionTypeContext
      */
     private function classAlikeUses(Namespace_ $namespace) : array
     {
-        return \array_filter(
+        return array_filter(
             $namespace->stmts ?? [],
             function (Node $node) : bool {
                 return (
                     $node instanceof Use_
                     || $node instanceof GroupUse
-                ) && \in_array($node->type, [Use_::TYPE_UNKNOWN, Use_::TYPE_NORMAL], true);
+                ) && in_array($node->type, [Use_::TYPE_UNKNOWN, Use_::TYPE_NORMAL], true);
             }
         );
     }

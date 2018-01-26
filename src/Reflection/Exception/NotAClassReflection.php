@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use UnexpectedValueException;
+use function sprintf;
 
 class NotAClassReflection extends UnexpectedValueException
 {
@@ -17,6 +18,6 @@ class NotAClassReflection extends UnexpectedValueException
             $type = 'trait';
         }
 
-        return new self(\sprintf('Provided node "%s" is not class, but "%s"', $class->getName(), $type));
+        return new self(sprintf('Provided node "%s" is not class, but "%s"', $class->getName(), $type));
     }
 }

@@ -14,6 +14,9 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use stdClass;
+use function array_combine;
+use function array_map;
+use function get_class_methods;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClass
@@ -22,8 +25,8 @@ class ReflectionClassTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
-        $methods = \get_class_methods(CoreReflectionClass::class);
-        return \array_combine($methods, \array_map(function (string $i) : array {
+        $methods = get_class_methods(CoreReflectionClass::class);
+        return array_combine($methods, array_map(function (string $i) : array {
             return [$i];
         }, $methods));
     }

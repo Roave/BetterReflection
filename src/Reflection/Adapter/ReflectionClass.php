@@ -9,6 +9,12 @@ use ReflectionException as CoreReflectionException;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use function array_combine;
+use function array_map;
+use function func_get_args;
+use function func_num_args;
+use function sprintf;
+use function strtolower;
 
 class ReflectionClass extends CoreReflectionClass
 {
@@ -27,7 +33,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public static function export($argument, $return = false)
     {
-        return BetterReflectionClass::export(...\func_get_args());
+        return BetterReflectionClass::export(...func_get_args());
     }
 
     /**
@@ -144,15 +150,15 @@ class ReflectionClass extends CoreReflectionClass
 
     private function getMethodRealName(string $name) : string
     {
-        $realMethodNames = \array_map(function (BetterReflectionMethod $method) : string {
+        $realMethodNames = array_map(function (BetterReflectionMethod $method) : string {
             return $method->getName();
         }, $this->betterReflectionClass->getMethods());
 
-        $methodNames = \array_combine(\array_map(function (string $methodName) : string {
-            return \strtolower($methodName);
+        $methodNames = array_combine(array_map(function (string $methodName) : string {
+            return strtolower($methodName);
         }, $realMethodNames), $realMethodNames);
 
-        return $methodNames[\strtolower($name)] ?? $name;
+        return $methodNames[strtolower($name)] ?? $name;
     }
 
     /**
@@ -244,7 +250,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants()
     {
-        return \array_map(function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
+        return array_map(function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
         }, $this->betterReflectionClass->getReflectionConstants());
     }
@@ -394,11 +400,11 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
 
-        $parentClassNames = \array_combine(\array_map(function (string $parentClassName) : string {
-            return \strtolower($parentClassName);
+        $parentClassNames = array_combine(array_map(function (string $parentClassName) : string {
+            return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
-        $realParentClassName = $parentClassNames[\strtolower($class)] ?? $class;
+        $realParentClassName = $parentClassNames[strtolower($class)] ?? $class;
 
         return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($class);
     }
@@ -419,19 +425,19 @@ class ReflectionClass extends CoreReflectionClass
         $property = $this->getProperty($name);
 
         if ($property === null) {
-            if (\func_num_args() === 2) {
+            if (func_num_args() === 2) {
                 return $default;
             }
 
-            throw new CoreReflectionException(\sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
         }
 
         if (! $property->isAccessible()) {
-            throw new CoreReflectionException(\sprintf('Property "%s" is not accessible', $name));
+            throw new CoreReflectionException(sprintf('Property "%s" is not accessible', $name));
         }
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(\sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
         }
 
         return $property->getValue();
@@ -445,15 +451,15 @@ class ReflectionClass extends CoreReflectionClass
         $property = $this->getProperty($name);
 
         if ($property === null) {
-            throw new CoreReflectionException(\sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
         }
 
         if (! $property->isAccessible()) {
-            throw new CoreReflectionException(\sprintf('Property "%s" is not accessible', $name));
+            throw new CoreReflectionException(sprintf('Property "%s" is not accessible', $name));
         }
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(\sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
         }
 
         $property->setValue($value);
@@ -482,11 +488,11 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
 
-        $interfaceNames = \array_combine(\array_map(function (string $interfaceName) : string {
-            return \strtolower($interfaceName);
+        $interfaceNames = array_combine(array_map(function (string $interfaceName) : string {
+            return strtolower($interfaceName);
         }, $realInterfaceNames), $realInterfaceNames);
 
-        $realInterfaceName = $interfaceNames[\strtolower($interface)] ?? $interface;
+        $realInterfaceName = $interfaceNames[strtolower($interface)] ?? $interface;
 
         return $this->betterReflectionClass->implementsInterface($realInterfaceName);
     }

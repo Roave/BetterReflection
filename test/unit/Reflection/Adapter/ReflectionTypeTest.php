@@ -10,6 +10,9 @@ use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use function array_combine;
+use function array_map;
+use function get_class_methods;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType
@@ -18,8 +21,8 @@ class ReflectionTypeTest extends TestCase
 {
     public function coreReflectionTypeNamesProvider() : array
     {
-        $methods = \get_class_methods(CoreReflectionType::class);
-        return \array_combine($methods, \array_map(function (string $i) : array {
+        $methods = get_class_methods(CoreReflectionType::class);
+        return array_combine($methods, array_map(function (string $i) : array {
             return [$i];
         }, $methods));
     }

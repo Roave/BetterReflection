@@ -8,6 +8,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use function file_get_contents;
 
 /**
  * This source locator loads an entire file, specified in the constructor
@@ -44,7 +45,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
         return new LocatedSource(
-            \file_get_contents($this->fileName),
+            file_get_contents($this->fileName),
             $this->fileName
         );
     }

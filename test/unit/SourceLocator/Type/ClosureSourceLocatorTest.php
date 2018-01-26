@@ -16,6 +16,8 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function realpath;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator
@@ -42,8 +44,8 @@ class ClosureSourceLocatorTest extends TestCase
 
     public function closuresProvider() : array
     {
-        $fileWithClosureInNamespace = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
-        $fileWithClosureNoNamespace = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
+        $fileWithClosureInNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
+        $fileWithClosureNoNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
 
         return [
             [require $fileWithClosureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
@@ -135,7 +137,7 @@ class ClosureSourceLocatorTest extends TestCase
 
     public function exceptionIfTwoClosuresOnSameLineProvider() : array
     {
-        $file     = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
+        $file     = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
         $closures = require $file;
 
         return [
@@ -150,7 +152,7 @@ class ClosureSourceLocatorTest extends TestCase
     public function testTwoClosuresSameLineFails(string $file, Closure $closure) : void
     {
         $this->expectException(TwoClosuresOnSameLine::class);
-        $this->expectExceptionMessage(\sprintf('Two closures on line 3 in %s', $file));
+        $this->expectExceptionMessage(sprintf('Two closures on line 3 in %s', $file));
 
         (new ClosureSourceLocator($closure, $this->parser))->locateIdentifier(
             $this->reflector,

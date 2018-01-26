@@ -16,6 +16,10 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
+use function array_merge;
+use function get_class;
+use function is_object;
+use function strpos;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -75,13 +79,13 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromInstance($object) : ReflectionClass
     {
-        if (! \is_object($object)) {
+        if (! is_object($object)) {
             throw new InvalidArgumentException('Can only create from an instance of an object');
         }
 
-        $className = \get_class($object);
+        $className = get_class($object);
 
-        if (\strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
+        if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
                 $object,
                 (new BetterReflection())->phpParser()
@@ -298,7 +302,7 @@ class ReflectionObject extends ReflectionClass
      */
     public function getProperties(?int $filter = null) : array
     {
-        return \array_merge(
+        return array_merge(
             $this->reflectionClass->getProperties($filter),
             $this->getRuntimeProperties($filter)
         );
@@ -309,7 +313,7 @@ class ReflectionObject extends ReflectionClass
      */
     public function getImmediateProperties(?int $filter = null) : array
     {
-        return \array_merge(
+        return array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
             $this->getRuntimeProperties($filter)
         );
