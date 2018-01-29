@@ -515,7 +515,8 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody) ?: [];
+        /** @var Node[] */
+        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
     }
 
     /**
