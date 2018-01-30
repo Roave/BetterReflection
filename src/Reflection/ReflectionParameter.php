@@ -78,6 +78,9 @@ class ReflectionParameter implements CoreReflector
     {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function export()
     {
         throw new Exception('Unable to export statically');
@@ -200,7 +203,7 @@ class ReflectionParameter implements CoreReflector
                 $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
             }
 
-            $this->isDefaultValueConstant   = true;
+            $this->isDefaultValueConstant = true;
             /** @var string $defaultValueNode->name */
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name;
         }

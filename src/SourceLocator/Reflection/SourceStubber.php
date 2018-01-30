@@ -115,9 +115,6 @@ final class SourceStubber
         }
     }
 
-    /**
-     * @param Class_ $classNode
-     */
     private function addClassModifiers(Class_ $classNode, CoreReflectionClass $classReflection) : void
     {
         if (! $classReflection->isInterface() && $classReflection->isAbstract()) {

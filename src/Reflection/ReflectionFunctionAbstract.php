@@ -67,6 +67,9 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function export()
     {
         throw new Exception('Unable to export statically');
@@ -515,7 +518,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function setBodyFromString(string $newBody) : void
     {
-        /** @var Node[] */
+        /** @var Node[] $this->node->stmts */
         $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
     }
 

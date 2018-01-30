@@ -71,6 +71,9 @@ class ReflectionProperty implements CoreReflector
     {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function export()
     {
         throw new Exception('Unable to export statically');

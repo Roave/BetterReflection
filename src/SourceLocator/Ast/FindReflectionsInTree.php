@@ -87,6 +87,9 @@ final class FindReflectionsInTree
                 $this->astConversionStrategy = $astConversionStrategy;
             }
 
+            /**
+             * {@inheritDoc}
+             */
             public function enterNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
@@ -115,6 +118,9 @@ final class FindReflectionsInTree
                 }
             }
 
+            /**
+             * {@inheritDoc}
+             */
             public function leaveNode(Node $node)
             {
                 if ($node instanceof Namespace_) {

@@ -112,6 +112,9 @@ final class ClosureSourceLocator implements SourceLocator
                 $this->startLine = $startLine;
             }
 
+            /**
+             * {@inheritDoc}
+             */
             public function enterNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
@@ -125,6 +128,9 @@ final class ClosureSourceLocator implements SourceLocator
                 }
             }
 
+            /**
+             * {@inheritDoc}
+             */
             public function leaveNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
