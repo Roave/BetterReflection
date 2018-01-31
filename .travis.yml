@@ -96,9 +96,6 @@ jobs:
         - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
         - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
-  allow_failures:
-    - php: 7.2
-
 cache:
   directories:
     - $HOME/.composer/cache

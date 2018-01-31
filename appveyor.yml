@@ -8,26 +8,34 @@ environment:
       php_version: 7.1
     - dependencies: highest
       php_version: 7.1
+    - dependencies: lowest
+      php_version: 7.2
+    - dependencies: highest
+      php_version: 7.2
 
   project_directory: c:\projects\better-reflection
   composer_directory: c:\tools\composer
   composer_executable: c:\tools\composer\composer.phar
   composer_installer: c:\tools\composer\installer.php
-  php_directory: c:\tools\php71
+  php_root_directory: c:\tools\php
 matrix:
   fast_finish: true
 clone_folder: c:\projects\better-reflection
 cache:
   - c:\tools\composer -> appveyor.yml
   - '%LOCALAPPDATA%\Composer -> appveyor.yml'
-  - c:\tools\php71 -> appveyor.yml
+  - c:\tools\php -> appveyor.yml
 init:
+  - ps: $Env:php_directory = $Env:php_root_directory + '\' + $Env:php_version
+  - ps: $Env:exact_php_version = (((choco search php --exact --all-versions --limit-output | Select-String -pattern $Env:php_version) -replace '[php|]', '') | %{ New-Object System.Version $_ } | Sort-Object | Select-Object -Last 1).ToString()
   - ps: $Env:PATH = $Env:php_directory + ';' + $Env:composer_directory + ';' + $Env:PATH
   - ps: $Env:ANSICON = '121x90 (121x90)'
 install:
   # Install PHP
-  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y OpenSSL.Light } Else { appveyor-retry choco upgrade OpenSSL.Light }
-  - ps: If ((Test-Path $Env:php_directory) -eq $False) { appveyor-retry cinst -y php } Else { appveyor-retry choco upgrade php }
+  - ps: If ((Test-Path $Env:php_directory) -eq $False) { New-Item -Path $Env:php_directory -ItemType 'directory' }
+  - ps: appveyor-retry choco upgrade OpenSSL.Light --yes
+  - ps: $php_install_parameters = '"/DontAddToPath /InstallDir:' + $Env:php_directory + '"'
+  - ps: appveyor-retry choco upgrade php --yes --version=$Env:exact_php_version --params=$php_install_parameters
 
   # Prepare PHP
   - ps: cd $Env:php_directory

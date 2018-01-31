@@ -397,7 +397,12 @@ class PhpInternalSourceLocatorTest extends TestCase
         }
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-        self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
+
+        if (! ($parameterName === 'SoapClient#__setSoapHeaders.soapheaders' && PHP_VERSION_ID < 70112)) {
+            // https://bugs.php.net/bug.php?id=75464 fixed in PHP 7.1.2
+            self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
+        }
+
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
