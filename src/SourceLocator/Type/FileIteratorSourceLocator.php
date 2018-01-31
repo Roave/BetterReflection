@@ -31,7 +31,7 @@ class FileIteratorSourceLocator implements SourceLocator
     private $aggregateSourceLocator;
 
     /**
-     * @var \Iterator<\SplFileInfo>
+     * @var \Iterator|\SplFileInfo[]
      */
     private $fileSystemIterator;
 
@@ -41,7 +41,7 @@ class FileIteratorSourceLocator implements SourceLocator
     private $astLocator;
 
     /**
-     * @param \Iterator<\SplFileInfo> $fileInfoIterator note: only \SplFileInfo allowed in this iterator
+     * @param \Iterator|\SplFileInfo[] $fileInfoIterator note: only \SplFileInfo allowed in this iterator
      *
      * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo.
      */
