@@ -185,10 +185,7 @@ class ReflectionClassConstant implements CoreReflector
         return ReflectionClassConstantStringCast::toString($this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public static function export()
+    public static function export() : void
     {
         throw new Exception('Unable to export statically');
     }

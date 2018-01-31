@@ -78,10 +78,7 @@ class ReflectionParameter implements CoreReflector
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public static function export()
+    public static function export() : void
     {
         throw new Exception('Unable to export statically');
     }

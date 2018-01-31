@@ -112,10 +112,7 @@ final class ClosureSourceLocator implements SourceLocator
                 $this->startLine = $startLine;
             }
 
-            /**
-             * {@inheritDoc}
-             */
-            public function enterNode(Node $node)
+            public function enterNode(Node $node) : void
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = $node;
@@ -128,10 +125,7 @@ final class ClosureSourceLocator implements SourceLocator
                 }
             }
 
-            /**
-             * {@inheritDoc}
-             */
-            public function leaveNode(Node $node)
+            public function leaveNode(Node $node) : void
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = null;
