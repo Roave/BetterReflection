@@ -125,7 +125,7 @@ class ReflectionObjectTest extends TestCase
 
     public function testExport() : void
     {
-        $exported = ReflectionObjectAdapter::export(new stdClass());
+        $exported = ReflectionObjectAdapter::export(new stdClass(), true);
 
         self::assertInternalType('string', $exported);
         self::assertContains('stdClass', $exported);

@@ -102,13 +102,24 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Create a reflection and return the string representation of a named class
      */
-    public static function export(?string $className) : string
+    public static function export($argument, bool $return = false) : ?string
     {
-        if ($className === null) {
-            throw new InvalidArgumentException('Class name must be provided');
+        if (is_string($argument) || is_object($argument)) {
+            if (is_string($argument)) {
+                $output = self::createFromName($argument)->__toString();
+            } else {
+                $output = ReflectionObject::createFromInstance($argument)->__toString();
+            }
+
+            if ($return) {
+                return $output;
+            }
+
+            echo $output;
+            return null;
         }
 
-        return self::createFromName($className)->__toString();
+        throw new InvalidArgumentException('Class name must be provided');
     }
 
     public function __toString() : string

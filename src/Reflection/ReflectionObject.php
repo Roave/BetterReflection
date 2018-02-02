@@ -57,13 +57,16 @@ class ReflectionObject extends ReflectionClass
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      */
-    public static function export($instance = null) : string
+    public static function export($instance, bool $return = false) : ?string
     {
-        if ($instance === null) {
-            throw new InvalidArgumentException('Class instance must be provided');
+        $output = self::createFromInstance($instance)->__toString();
+
+        if ($return) {
+            return $output;
         }
 
-        return self::createFromInstance($instance)->__toString();
+        echo $output;
+        return null;
     }
 
     /**

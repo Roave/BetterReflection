@@ -1331,7 +1331,7 @@ PHP;
     {
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
-            ReflectionClass::export(ExampleClass::class)
+            ReflectionClass::export(ExampleClass::class, true)
         );
     }
 
