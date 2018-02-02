@@ -133,7 +133,7 @@ class ReflectionClassTest extends TestCase
 
     public function testExport() : void
     {
-        $exported = ReflectionClassAdapter::export('\stdClass');
+        $exported = ReflectionClassAdapter::export('\stdClass', true);
 
         self::assertIsString($exported);
         self::assertStringContainsString('stdClass', $exported);

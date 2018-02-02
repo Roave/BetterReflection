@@ -307,7 +307,7 @@ Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHintin
   }
 }
 BLAH;
-        $actualExport   = ReflectionObject::export($foo);
+        $actualExport   = ReflectionObject::export($foo, true);
 
         self::assertStringMatchesFormat($expectedExport, $actualExport);
     }
