@@ -46,6 +46,7 @@ use function get_class;
 use function implode;
 use function in_array;
 use function is_object;
+use function is_string;
 use function ltrim;
 use function sha1;
 use function sprintf;
@@ -101,6 +102,8 @@ class ReflectionClass implements Reflection, CoreReflector
 
     /**
      * Create a reflection and return the string representation of a named class
+     *
+     * @param string|object $argument
      */
     public static function export($argument, bool $return = false) : ?string
     {
