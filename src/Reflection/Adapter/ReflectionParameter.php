@@ -26,7 +26,7 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public static function export($function, $parameter, $return = null)
     {
-        return BetterReflectionParameter::export(...func_get_args());
+        BetterReflectionParameter::export(...func_get_args());
     }
 
     /**

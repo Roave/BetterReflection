@@ -34,7 +34,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public static function export($class, $name, $return = null)
     {
-        return BetterReflectionProperty::export(...func_get_args());
+        BetterReflectionProperty::export(...func_get_args());
     }
 
     /**
