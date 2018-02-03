@@ -318,7 +318,9 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
             return true;
         }
 
-        foreach ($node as $nodeProperty) {
+        foreach ($node->getSubNodeNames() as $nodeName) {
+            $nodeProperty = $node->$nodeName;
+
             if ($nodeProperty instanceof Node && $this->nodeIsOrContainsYield($nodeProperty)) {
                 return true;
             }
@@ -379,7 +381,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function returnsReference() : bool
     {
-        return (bool) $this->node->byRef;
+        return $this->node->byRef;
     }
 
     /**
@@ -503,7 +505,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
             new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
 
-        $this->node->stmts = $closureReflection->getNode()->stmts;
+        /** @var Node\Stmt\Function_ $functionNode */
+        $functionNode = $closureReflection->getNode();
+
+        $this->node->stmts = $functionNode->stmts;
     }
 
     /**

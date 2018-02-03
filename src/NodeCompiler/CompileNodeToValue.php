@@ -130,10 +130,11 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        /** @var Node\Name $node->class */
+        /** @var string $nodeName */
+        $nodeName  = $node->name;
         $className = $node->class->toString();
 
-        if ($node->name === 'class') {
+        if ($nodeName === 'class') {
             return $className;
         }
 
@@ -141,7 +142,7 @@ class CompileNodeToValue
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
-            $classInfo = $this->getConstantDeclaringClass($node->name, $context->getSelf());
+            $classInfo = $this->getConstantDeclaringClass($nodeName, $context->getSelf());
         }
 
         if ($classInfo === null) {
@@ -149,8 +150,7 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
-        /** @var string $node->name */
-        $reflectionConstant = $classInfo->getReflectionConstant($node->name);
+        $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
 
         return $this->__invoke(
             $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
