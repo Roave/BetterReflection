@@ -175,9 +175,7 @@ class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * @param string $name
-     *
-     * @return ReflectionProperty|null
+     * {@inheritDoc}
      */
     public function getProperty($name)
     {

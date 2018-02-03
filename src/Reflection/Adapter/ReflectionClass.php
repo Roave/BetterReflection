@@ -184,9 +184,7 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * @param string $name
-     *
-     * @return ReflectionProperty|null
+     * {@inheritDoc}
      */
     public function getProperty($name)
     {
