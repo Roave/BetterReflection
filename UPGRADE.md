@@ -4,6 +4,15 @@ This document serves as a reference to upgrade your current
 BetterReflection installation if improvements, deprecations
 or backwards compatibility (BC) breakages occur.
 
+## 3.0.0
+
+### BC breaks
+
+* Method `Roave\BetterReflection\Reflection\Adapter\ReflectionClass#getProperty()` throws exception
+when property does not exist to be compatible with core reflection.
+* Method `Roave\BetterReflection\Reflection\Adapter\ReflectionObject#getProperty()` throws exception
+when property does not exist to be compatible with core reflection.
+
 ## 2.0.0
 
 ### Namespace change

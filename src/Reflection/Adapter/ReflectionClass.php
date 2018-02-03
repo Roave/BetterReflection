@@ -191,7 +191,7 @@ class ReflectionClass extends CoreReflectionClass
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            return null;
+            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
         }
 
         return new ReflectionProperty($betterReflectionProperty);
@@ -422,15 +422,17 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getStaticPropertyValue($name, $default = null)
     {
-        $property = $this->getProperty($name);
+        $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
-        if ($property === null) {
+        if ($betterReflectionProperty === null) {
             if (func_num_args() === 2) {
                 return $default;
             }
 
             throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
         }
+
+        $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isAccessible()) {
             throw new CoreReflectionException(sprintf('Property "%s" is not accessible', $name));
@@ -448,11 +450,13 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function setStaticPropertyValue($name, $value)
     {
-        $property = $this->getProperty($name);
+        $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
-        if ($property === null) {
+        if ($betterReflectionProperty === null) {
             throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
         }
+
+        $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isAccessible()) {
             throw new CoreReflectionException(sprintf('Property "%s" is not accessible', $name));

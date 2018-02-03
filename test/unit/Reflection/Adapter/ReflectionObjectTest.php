@@ -245,6 +245,20 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($reflectionObjectAdapter->implementsInterface('foo'));
     }
 
+    public function testGetPropertyThrowsExceptionWhenPropertyDoesNotExist() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getProperty')
+            ->with('foo')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionObjectAdapter->getProperty('foo');
+    }
+
     public function testGetStaticPropertyValue() : void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
@@ -332,7 +346,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyPropertyDoesNotExist() : void
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
@@ -345,7 +359,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
-    public function testGetStaticPropertyValueReturnsDefaultValueWhenPropertyPropertyDoesNotExist() : void
+    public function testGetStaticPropertyValueReturnsDefaultValueWhenPropertyDoesNotExist() : void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
@@ -357,7 +371,7 @@ class ReflectionObjectTest extends TestCase
         self::assertSame('default', $reflectionObjectAdapter->getStaticPropertyValue('foo', 'default'));
     }
 
-    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyPropertyDoesNotExist() : void
+    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist() : void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
