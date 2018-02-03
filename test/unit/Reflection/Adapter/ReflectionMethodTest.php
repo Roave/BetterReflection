@@ -11,6 +11,8 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
@@ -67,7 +69,7 @@ class ReflectionMethodTest extends TestCase
             ['isUserDefined', null, true, []],
             ['getClosureThis', NotImplemented::class, null, []],
             ['getClosureScopeClass', NotImplemented::class, null, []],
-            ['getDocComment', null, '', []],
+            ['getDocComment', null, false, []],
             ['getStartLine', null, 123, []],
             ['getEndLine', null, 123, []],
             ['getExtension', NotImplemented::class, null, []],
@@ -121,8 +123,25 @@ class ReflectionMethodTest extends TestCase
             $this->expectException($expectedException);
         }
 
-        $adapter = new ReflectionMethodAdapter($reflectionStub);
-        $adapter->{$methodName}(...$args);
+        $adapter            = new ReflectionMethodAdapter($reflectionStub);
+        $adapterReturnValue = $adapter->{$methodName}(...$args);
+
+        switch ($methodName) {
+            case 'getParameters':
+                $this->assertContainsOnly(ReflectionParameterAdapter::class, $adapterReturnValue);
+                break;
+
+            case 'getReturnType':
+                $this->assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
+                break;
+
+            case 'getPrototype':
+                $this->assertInstanceOf(ReflectionMethodAdapter::class, $adapterReturnValue);
+                break;
+
+            default:
+                $this->assertEquals($returnValue, $adapterReturnValue);
+        }
     }
 
     public function testExport() : void
