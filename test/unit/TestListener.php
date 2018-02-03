@@ -6,17 +6,20 @@ namespace Roave\BetterReflectionTest;
 
 use ClassWithExplicitGlobalNamespace;
 use ClassWithNoNamespace;
-use PHPUnit\Framework\BaseTestListener;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestListener as BaseTestListener;
+use PHPUnit\Framework\TestListenerDefaultImplementation;
 use PHPUnit\Framework\TestSuite;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use function class_exists;
 
-class TestListener extends BaseTestListener
+class TestListener implements BaseTestListener
 {
+    use TestListenerDefaultImplementation;
+
     /**
      * @var \PHPUnit\Framework\TestSuite|null
      */
@@ -50,11 +53,10 @@ class TestListener extends BaseTestListener
     /**
      * Ensure the fixture classes have not actually been loaded (where applicable)
      *
-     * @param float $time
      * @throws \PHPUnit\Framework\AssertionFailedError
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function endTest(Test $test, $time) : void
+    public function endTest(Test $test, float $time) : void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
         if (! ($test instanceof TestCase)) {
