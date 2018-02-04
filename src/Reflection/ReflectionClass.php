@@ -759,10 +759,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the parent class, if it is defined. If this class does not have a
      * specified parent class, this will throw an exception.
      *
-     * You may optionally specify a source locator that will be used to locate
-     * the parent class. If no source locator is given, a default will be used.
-     *
-     *
      * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
      */
     public function getParentClass() : ?ReflectionClass
@@ -868,9 +864,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the traits used, if any are defined. If this class does not have any
      * defined traits, this will return an empty array.
      *
-     * You may optionally specify a source locator that will be used to locate
-     * the traits. If no source locator is given, a default will be used.
-     *
      * @return ReflectionClass[]
      */
     public function getTraits() : array
@@ -909,9 +902,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the names of the traits used as an array of strings, if any are
      * defined. If this class does not have any defined traits, this will
      * return an empty array.
-     *
-     * You may optionally specify a source locator that will be used to locate
-     * the traits. If no source locator is given, a default will be used.
      *
      * @return string[]
      */
