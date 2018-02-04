@@ -299,8 +299,21 @@ class ReflectionClass implements Reflection, CoreReflector
 
         $this->cachedMethods = [];
 
+        $traitAliases = $this->getTraitAliases();
+
         foreach ($this->getAllMethods() as $method) {
-            $methodName = $method->getName();
+            $methodName              = $method->getName();
+            $methodNameWithClassName = sprintf('%s::%s', $method->getDeclaringClass()->getName(), $methodName);
+
+            foreach ($traitAliases as $methodAlias => $traitMethodNameWithTraitName) {
+                if ($methodNameWithClassName !== $traitMethodNameWithTraitName) {
+                    continue;
+                }
+
+                if (! isset($this->cachedMethods[$methodAlias])) {
+                    $this->cachedMethods[$methodAlias] = $method;
+                }
+            }
 
             if (! isset($this->cachedMethods[$methodName])) {
                 $this->cachedMethods[$methodName] = $method;
@@ -953,7 +966,11 @@ class ReflectionClass implements Reflection, CoreReflector
                     $usedTrait = $traitNames[0];
                 }
 
-                if (empty($adaptation->newName)) {
+                if (! ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias)) {
+                    continue;
+                }
+
+                if (! $adaptation->newName) {
                     continue;
                 }
 
