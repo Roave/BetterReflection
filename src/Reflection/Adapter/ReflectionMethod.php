@@ -313,7 +313,7 @@ class ReflectionMethod extends CoreReflectionMethod
     public function getClosure($object = null)
     {
         try {
-            $this->betterReflectionMethod->getClosure($object);
+            return $this->betterReflectionMethod->getClosure($object);
         } catch (NoObjectProvided | NotAnObject $e) {
             return null;
         } catch (Throwable $e) {

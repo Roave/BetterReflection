@@ -107,6 +107,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         $this->assertFunctionExist($functionName);
 
         return function (...$args) use ($functionName) {
+            /** @var callable $functionName */
             return $functionName(...$args);
         };
     }
@@ -140,6 +141,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
         $this->assertFunctionExist($functionName);
 
+        /** @var callable $functionName */
         return $functionName(...$args);
     }
 

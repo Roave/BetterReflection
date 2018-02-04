@@ -350,7 +350,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getImmediateMethods(?int $filter = null) : array
     {
-        /** @var \ReflectionMethod[] $methods */
+        /** @var ReflectionMethod[] $methods */
         $methods = array_map(
             function (ClassMethod $methodNode) : ReflectionMethod {
                 return ReflectionMethod::createFromNode(

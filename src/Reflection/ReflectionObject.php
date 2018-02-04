@@ -71,8 +71,6 @@ class ReflectionObject extends ReflectionClass
      *
      * @param object $object
      *
-     * @return self
-     *
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound

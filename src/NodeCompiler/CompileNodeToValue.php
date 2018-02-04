@@ -130,6 +130,7 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
+        /** @var Node\Name $node->class */
         $className = $node->class->toString();
 
         if ($node->name === 'class') {
@@ -148,6 +149,7 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
+        /** @var string $node->name */
         $reflectionConstant = $classInfo->getReflectionConstant($node->name);
 
         return $this->__invoke(
