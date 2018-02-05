@@ -24,13 +24,14 @@ class ClassReflector implements Reflector
     /**
      * Create a ReflectionClass for the specified $className.
      *
-     * @return \Roave\BetterReflection\Reflection\ReflectionClass|Reflection
+     * @return \Roave\BetterReflection\Reflection\ReflectionClass
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     public function reflect(string $className) : Reflection
     {
         $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
+        /** @var \Roave\BetterReflection\Reflection\ReflectionClass|null $classInfo */
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
 
         if ($classInfo === null) {

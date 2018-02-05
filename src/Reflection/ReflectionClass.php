@@ -259,9 +259,12 @@ class ReflectionClass implements Reflection, CoreReflector
             ...array_map(
                 function (ReflectionClass $trait) : array {
                     return array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
+                        /** @var ClassMethod $methodAst */
+                        $methodAst = $method->getAst();
+
                         return ReflectionMethod::createFromNode(
                             $this->reflector,
-                            $method->getAst(),
+                            $methodAst,
                             $this->declaringNamespace,
                             $trait,
                             $this
@@ -961,6 +964,7 @@ class ReflectionClass implements Reflection, CoreReflector
             $adaptations = $traitUsage->adaptations;
 
             foreach ($adaptations as $adaptation) {
+                /** @var Node\Name|null $usedTrait */
                 $usedTrait = $adaptation->trait;
                 if ($usedTrait === null) {
                     $usedTrait = $traitNames[0];

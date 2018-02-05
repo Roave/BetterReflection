@@ -131,7 +131,7 @@ class ReflectionParameter implements CoreReflector
      *  - ['foo']
      *  - [function () {}]
      *
-     * @param string[]|string|\Closure $spec
+     * @param object[]|string[]|string|\Closure $spec
      * @throws \Exception
      * @throws \InvalidArgumentException
      */
@@ -196,8 +196,9 @@ class ReflectionParameter implements CoreReflector
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {
-                /** @var string $defaultValueNode->name */
-                $className = $this->findParentClassDeclaringConstant($defaultValueNode->name);
+                /** @var string $constantName */
+                $constantName = $defaultValueNode->name;
+                $className    = $this->findParentClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant = true;
