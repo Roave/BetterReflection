@@ -299,8 +299,21 @@ class ReflectionClass implements Reflection, CoreReflector
 
         $this->cachedMethods = [];
 
+        $traitAliases = $this->getTraitAliases();
+
         foreach ($this->getAllMethods() as $method) {
-            $methodName = $method->getName();
+            $methodName              = $method->getName();
+            $methodNameWithClassName = sprintf('%s::%s', $method->getDeclaringClass()->getName(), $methodName);
+
+            foreach ($traitAliases as $methodAlias => $traitMethodNameWithTraitName) {
+                if ($methodNameWithClassName !== $traitMethodNameWithTraitName) {
+                    continue;
+                }
+
+                if (! isset($this->cachedMethods[$methodAlias])) {
+                    $this->cachedMethods[$methodAlias] = $method;
+                }
+            }
 
             if (! isset($this->cachedMethods[$methodName])) {
                 $this->cachedMethods[$methodName] = $method;
@@ -759,10 +772,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the parent class, if it is defined. If this class does not have a
      * specified parent class, this will throw an exception.
      *
-     * You may optionally specify a source locator that will be used to locate
-     * the parent class. If no source locator is given, a default will be used.
-     *
-     *
      * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
      */
     public function getParentClass() : ?ReflectionClass
@@ -868,9 +877,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the traits used, if any are defined. If this class does not have any
      * defined traits, this will return an empty array.
      *
-     * You may optionally specify a source locator that will be used to locate
-     * the traits. If no source locator is given, a default will be used.
-     *
      * @return ReflectionClass[]
      */
     public function getTraits() : array
@@ -909,9 +915,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the names of the traits used as an array of strings, if any are
      * defined. If this class does not have any defined traits, this will
      * return an empty array.
-     *
-     * You may optionally specify a source locator that will be used to locate
-     * the traits. If no source locator is given, a default will be used.
      *
      * @return string[]
      */
@@ -963,7 +966,11 @@ class ReflectionClass implements Reflection, CoreReflector
                     $usedTrait = $traitNames[0];
                 }
 
-                if (empty($adaptation->newName)) {
+                if (! ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias)) {
+                    continue;
+                }
+
+                if (! $adaptation->newName) {
                     continue;
                 }
 

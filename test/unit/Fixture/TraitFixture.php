@@ -34,6 +34,8 @@ class TraitFixtureC
 trait TraitFixtureTraitD1
 {
     public function foo() {}
+    public function boo() {}
+    public function hoo() {}
 }
 trait TraitFixtureTraitD2
 {
@@ -43,5 +45,9 @@ class TraitFixtureD
 {
     use TraitFixtureTraitD1, TraitFixtureTraitD2 {
         TraitFixtureTraitD1::foo insteadof TraitFixtureTraitD2;
+        TraitFixtureTraitD1::hoo as hooFirstAlias;
+        TraitFixtureTraitD1::hoo as hooSecondAlias;
     }
+
+    public function boo() {}
 }
