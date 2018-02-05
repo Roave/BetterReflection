@@ -1,9 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
+use function gettype;
+use function sprintf;
 
 /**
  * @internal
@@ -14,10 +17,10 @@ final class ReflectionClassConstantStringCast
     {
         $value = $constantReflection->getValue();
 
-        return \sprintf(
+        return sprintf(
             "Constant [ %s %s %s ] { %s }\n",
             self::visibilityToString($constantReflection),
-            \gettype($value),
+            gettype($value),
             $constantReflection->getName(),
             $value
         );

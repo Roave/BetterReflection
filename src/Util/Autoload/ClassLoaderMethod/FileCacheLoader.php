@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
@@ -11,6 +12,11 @@ use Roave\Signature\Encoder\Sha1SumEncoder;
 use Roave\Signature\FileContentChecker;
 use Roave\Signature\FileContentSigner;
 use Roave\Signature\SignerInterface;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function sha1;
+use function str_replace;
 
 final class FileCacheLoader implements LoaderMethodInterface
 {
@@ -34,12 +40,6 @@ final class FileCacheLoader implements LoaderMethodInterface
      */
     private $checker;
 
-    /**
-     * @param string $cacheDirectory
-     * @param ClassPrinterInterface $classPrinter
-     * @param SignerInterface $signer
-     * @param CheckerInterface $checker
-     */
     public function __construct(
         string $cacheDirectory,
         ClassPrinterInterface $classPrinter,
@@ -58,17 +58,17 @@ final class FileCacheLoader implements LoaderMethodInterface
      */
     public function __invoke(ReflectionClass $classInfo) : void
     {
-        $filename = $this->cacheDirectory . '/' . \sha1($classInfo->getName());
+        $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
 
-        if ( ! \file_exists($filename)) {
+        if (! file_exists($filename)) {
             $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);
-            \file_put_contents(
+            file_put_contents(
                 $filename,
-                \str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code)
+                str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code)
             );
         }
 
-        if ( ! $this->checker->check(\file_get_contents($filename))) {
+        if (! $this->checker->check(file_get_contents($filename))) {
             throw Exception\SignatureCheckFailed::fromReflectionClass($classInfo);
         }
 
@@ -76,10 +76,6 @@ final class FileCacheLoader implements LoaderMethodInterface
         require_once $filename;
     }
 
-    /**
-     * @param string $cacheDirectory
-     * @return self
-     */
     public static function defaultFileCacheLoader(string $cacheDirectory) : self
     {
         return new self(

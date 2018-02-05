@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
@@ -9,6 +10,7 @@ use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
+use function explode;
 
 class FindParameterType
 {
@@ -43,7 +45,7 @@ class FindParameterType
     {
         $docComment = $function->getDocComment();
 
-        if ('' === $docComment) {
+        if ($docComment === '') {
             return [];
         }
 
@@ -57,7 +59,7 @@ class FindParameterType
 
         foreach ($paramTags as $paramTag) {
             if ($paramTag->getVariableName() === $node->name) {
-                return $this->resolveTypes->__invoke(\explode('|', (string) $paramTag->getType()), $context);
+                return $this->resolveTypes->__invoke(explode('|', (string) $paramTag->getType()), $context);
             }
         }
 

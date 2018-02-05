@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -6,6 +7,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use function func_get_args;
 
 class ReflectionParameter extends CoreReflectionParameter
 {
@@ -24,7 +26,7 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public static function export($function, $parameter, $return = null)
     {
-        BetterReflectionParameter::export(...\func_get_args());
+        BetterReflectionParameter::export(...func_get_args());
     }
 
     /**
@@ -81,7 +83,7 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         $declaringClass = $this->betterReflectionParameter->getDeclaringClass();
 
-        if (null === $declaringClass) {
+        if ($declaringClass === null) {
             return null;
         }
 
@@ -95,7 +97,7 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         $class = $this->betterReflectionParameter->getClass();
 
-        if (null === $class) {
+        if ($class === null) {
             return null;
         }
 

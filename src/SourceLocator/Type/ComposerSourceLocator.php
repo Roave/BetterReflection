@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -8,6 +9,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use function file_get_contents;
 
 /**
  * This source locator uses Composer's built-in ClassLoader to locate files.
@@ -36,18 +38,18 @@ class ComposerSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        if (IdentifierType::IDENTIFIER_CLASS !== $identifier->getType()->getName()) {
+        if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
             return null;
         }
 
         $filename = $this->classLoader->findFile($identifier->getName());
 
-        if ( ! $filename) {
+        if (! $filename) {
             return null;
         }
 
         return new LocatedSource(
-            \file_get_contents($filename),
+            file_get_contents($filename),
             $filename
         );
     }

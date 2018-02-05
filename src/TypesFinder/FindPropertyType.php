@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
@@ -9,6 +10,9 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
+use function array_map;
+use function array_merge;
+use function explode;
 
 class FindPropertyType
 {
@@ -43,7 +47,7 @@ class FindPropertyType
     {
         $docComment = $reflectionProperty->getDocComment();
 
-        if ('' === $docComment) {
+        if ($docComment === '') {
             return [];
         }
 
@@ -51,10 +55,10 @@ class FindPropertyType
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
         $varTags = $this->docBlockFactory->create($docComment, $context)->getTagsByName('var');
 
-        return \array_merge(
+        return array_merge(
             [],
-            ...\array_map(function (Var_ $varTag) use ($context) {
-                return $this->resolveTypes->__invoke(\explode('|', (string) $varTag->getType()), $context);
+            ...array_map(function (Var_ $varTag) use ($context) {
+                return $this->resolveTypes->__invoke(explode('|', (string) $varTag->getType()), $context);
             }, $varTags)
         );
     }

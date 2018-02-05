@@ -53,7 +53,7 @@ class SoapClient
     {
     }
 
-    public function __setSoapHeaders($soapheaders)
+    public function __setSoapHeaders($soapheaders = null)
     {
     }
 

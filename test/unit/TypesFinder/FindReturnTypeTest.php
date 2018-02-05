@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\TypesFinder;
@@ -15,6 +16,8 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
+use function count;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\TypesFinder\FindReturnType
@@ -37,13 +40,12 @@ class FindReturnTypeTest extends TestCase
     }
 
     /**
-     * @param string $docBlock
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
     public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances) : void
     {
-        $docBlock = "/**\n * $docBlock\n */";
+        $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
         /* @var $function ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunction::class);
@@ -55,7 +57,7 @@ class FindReturnTypeTest extends TestCase
 
         $foundTypes = (new FindReturnType())->__invoke($function, null);
 
-        self::assertCount(\count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
@@ -63,13 +65,12 @@ class FindReturnTypeTest extends TestCase
     }
 
     /**
-     * @param string $docBlock
      * @param string[] $expectedInstances
      * @dataProvider returnTypeProvider
      */
     public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances) : void
     {
-        $docBlock = "/**\n * $docBlock\n */";
+        $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
         /* @var $method ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject */
         $method = $this->createMock(ReflectionMethod::class);
@@ -81,7 +82,7 @@ class FindReturnTypeTest extends TestCase
 
         $foundTypes = (new FindReturnType())->__invoke($method, null);
 
-        self::assertCount(\count($expectedInstances), $foundTypes);
+        self::assertCount(count($expectedInstances), $foundTypes);
 
         foreach ($expectedInstances as $i => $expectedInstance) {
             self::assertInstanceOf($expectedInstance, $foundTypes[$i]);
@@ -104,10 +105,8 @@ class FindReturnTypeTest extends TestCase
     /**
      * @dataProvider aliasedReturnTypesProvider
      *
-     * @param string|null $namespaceName
-     * @param string[]    $aliasesToFQCNs indexed by alias
-     * @param string      $returnType
-     * @param Type[]      $expectedTypes
+     * @param string[] $aliasesToFQCNs indexed by alias
+     * @param Type[]   $expectedTypes
      */
     public function testWillResolveAliasedTypes(
         ?string $namespaceName,
@@ -115,7 +114,7 @@ class FindReturnTypeTest extends TestCase
         string $returnType,
         array $expectedTypes
     ) : void {
-        $docBlock = "/**\n * @return $returnType\n */";
+        $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 
         /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunctionAbstract::class);

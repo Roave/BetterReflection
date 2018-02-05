@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -21,6 +22,10 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
+use function array_filter;
+use function array_values;
+use function file_get_contents;
+use function strpos;
 
 /**
  * @internal
@@ -60,18 +65,18 @@ final class ClosureSourceLocator implements SourceLocator
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        return \array_filter([$this->getReflectionFunction($reflector, $identifierType)]);
+        return array_filter([$this->getReflectionFunction($reflector, $identifierType)]);
     }
 
     private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionFunction
     {
-        if ( ! $identifierType->isFunction()) {
+        if (! $identifierType->isFunction()) {
             return null;
         }
 
         $fileName = $this->coreFunctionReflection->getFileName();
 
-        if (false !== \strpos($fileName, 'eval()\'d code')) {
+        if (strpos($fileName, 'eval()\'d code') !== false) {
             throw EvaledClosureCannotBeLocated::create();
         }
 
@@ -135,11 +140,11 @@ final class ClosureSourceLocator implements SourceLocator
             public function getClosureNodes() : ?array
             {
                 /** @var Node[][] $closureNodesDataOnSameLine */
-                $closureNodesDataOnSameLine = \array_values(\array_filter($this->closureNodes, function (array $nodes) : bool {
+                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, function (array $nodes) : bool {
                     return $nodes[0]->getLine() === $this->startLine;
                 }));
 
-                if ( ! $closureNodesDataOnSameLine) {
+                if (! $closureNodesDataOnSameLine) {
                     return null;
                 }
 
@@ -151,7 +156,7 @@ final class ClosureSourceLocator implements SourceLocator
             }
         };
 
-        $fileContents = \file_get_contents($fileName);
+        $fileContents = file_get_contents($fileName);
         $ast          = $this->parser->parse($fileContents);
 
         $nodeTraverser = new NodeTraverser();

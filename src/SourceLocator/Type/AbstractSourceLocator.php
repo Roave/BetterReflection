@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
@@ -25,9 +26,6 @@ abstract class AbstractSourceLocator implements SourceLocator
      * @example
      *   return new LocatedSource(['<?php class Foo {}', null]);
      *   return new LocatedSource([\file_get_contents('Foo.php'), 'Foo.php']);
-     *
-     * @param Identifier $identifier
-     * @return LocatedSource|null
      */
     abstract protected function createLocatedSource(Identifier $identifier) : ?LocatedSource;
 
@@ -42,7 +40,9 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
-        if ( ! ($locatedSource = $this->createLocatedSource($identifier))) {
+        $locatedSource = $this->createLocatedSource($identifier);
+
+        if (! $locatedSource) {
             return null;
         }
 
@@ -59,7 +59,9 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
-        if ( ! ($locatedSource = $this->createLocatedSource(new Identifier(Identifier::WILDCARD, $identifierType)))) {
+        $locatedSource = $this->createLocatedSource(new Identifier(Identifier::WILDCARD, $identifierType));
+
+        if (! $locatedSource) {
             return [];
         }
 

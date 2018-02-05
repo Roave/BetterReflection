@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
@@ -14,6 +15,8 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function array_merge;
+use function method_exists;
 
 final class FindReflectionOnLine
 {
@@ -38,8 +41,6 @@ final class FindReflectionOnLine
      *
      * Returns null if no reflections found on the line.
      *
-     * @param string $filename
-     * @param int $lineNumber
      * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
      * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
      * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
@@ -80,7 +81,7 @@ final class FindReflectionOnLine
         $singleFileSourceLocator = new SingleFileSourceLocator($filename, $this->astLocator);
         $reflector               = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
-        return \array_merge(
+        return array_merge(
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
@@ -90,17 +91,15 @@ final class FindReflectionOnLine
      * Check to see if the line is within the boundaries of the reflection specified.
      *
      * @param ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection
-     * @param int $lineNumber
-     * @return bool
      * @throws \InvalidArgumentException
      */
     private function containsLine($reflection, int $lineNumber) : bool
     {
-        if ( ! \method_exists($reflection, 'getStartLine')) {
+        if (! method_exists($reflection, 'getStartLine')) {
             throw new InvalidArgumentException('Reflection does not have getStartLine method');
         }
 
-        if ( ! \method_exists($reflection, 'getEndLine')) {
+        if (! method_exists($reflection, 'getEndLine')) {
             throw new InvalidArgumentException('Reflection does not have getEndLine method');
         }
 

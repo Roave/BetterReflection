@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -19,6 +20,10 @@ use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use function class_exists;
+use function interface_exists;
+use function trait_exists;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
@@ -56,9 +61,9 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
 
-        self::assertFalse(\class_exists(ExampleClass::class, false));
+        self::assertFalse(class_exists(ExampleClass::class, false));
         $classInfo = $reflector->reflect(ExampleClass::class);
-        self::assertFalse(\class_exists(ExampleClass::class, false));
+        self::assertFalse(class_exists(ExampleClass::class, false));
 
         self::assertSame('ExampleClass', $classInfo->getShortName());
     }
@@ -69,7 +74,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         // Ensure class is loaded first
         new ClassForHinting();
-        self::assertTrue(\class_exists(ClassForHinting::class, false));
+        self::assertTrue(class_exists(ClassForHinting::class, false));
 
         $classInfo = $reflector->reflect(ClassForHinting::class);
 
@@ -81,7 +86,7 @@ class AutoloadSourceLocatorTest extends TestCase
      */
     public function testCanLocateAutoloadableInterface() : void
     {
-        self::assertFalse(\interface_exists(AutoloadableInterface::class, false));
+        self::assertFalse(interface_exists(AutoloadableInterface::class, false));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -92,7 +97,7 @@ class AutoloadSourceLocatorTest extends TestCase
                 ))->getLocatedSource()
         );
 
-        self::assertFalse(\interface_exists(AutoloadableInterface::class, false));
+        self::assertFalse(interface_exists(AutoloadableInterface::class, false));
     }
 
     /**
@@ -100,7 +105,7 @@ class AutoloadSourceLocatorTest extends TestCase
      */
     public function testCanLocateAutoloadedInterface() : void
     {
-        self::assertTrue(\interface_exists(AutoloadableInterface::class));
+        self::assertTrue(interface_exists(AutoloadableInterface::class));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -117,7 +122,7 @@ class AutoloadSourceLocatorTest extends TestCase
      */
     public function testCanLocateAutoloadableTrait() : void
     {
-        self::assertFalse(\trait_exists(AutoloadableTrait::class, false));
+        self::assertFalse(trait_exists(AutoloadableTrait::class, false));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -128,7 +133,7 @@ class AutoloadSourceLocatorTest extends TestCase
                 ))->getLocatedSource()
         );
 
-        self::assertFalse(\trait_exists(AutoloadableTrait::class, false));
+        self::assertFalse(trait_exists(AutoloadableTrait::class, false));
     }
 
     /**
@@ -136,7 +141,7 @@ class AutoloadSourceLocatorTest extends TestCase
      */
     public function testCanLocateAutoloadedTrait() : void
     {
-        self::assertTrue(\trait_exists(AutoloadableTrait::class));
+        self::assertTrue(trait_exists(AutoloadableTrait::class));
 
         self::assertInstanceOf(
             LocatedSource::class,
@@ -192,7 +197,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testShouldNotConsiderEvaledSources() : void
     {
-        $className = \uniqid('generatedClassName', false);
+        $className = uniqid('generatedClassName', false);
 
         eval('class ' . $className . '{}');
 

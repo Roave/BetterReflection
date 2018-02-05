@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -14,8 +15,6 @@ interface Reflection
     /**
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
-     *
-     * @return string
      */
     public function getName() : string;
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -13,6 +14,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
@@ -41,7 +43,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testCanReflectEvaledClass() : void
     {
-        $className = \uniqid('foo', false);
+        $className = uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo(){}}');
 
@@ -60,7 +62,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testCanReflectEvaledInterface() : void
     {
-        $interfaceName = \uniqid('foo', false);
+        $interfaceName = uniqid('foo', false);
 
         eval('interface ' . $interfaceName . ' {function foo();}');
 
@@ -77,7 +79,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testCanReflectEvaledTrait() : void
     {
-        $traitName = \uniqid('foo', false);
+        $traitName = uniqid('foo', false);
 
         eval('trait ' . $traitName . ' {function foo(){}}');
 
@@ -95,7 +97,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
     public function testCanReflectEvaledLocatedSourceClass() : void
     {
         $reflector = new ClassReflector(new EvaledCodeSourceLocator($this->astLocator));
-        $className = \uniqid('foo', false);
+        $className = uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo($bar = "baz") {}}');
 

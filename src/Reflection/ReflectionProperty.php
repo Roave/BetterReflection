@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -24,6 +25,10 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
+use function class_exists;
+use function func_num_args;
+use function get_class;
+use function is_object;
 
 class ReflectionProperty implements CoreReflector
 {
@@ -83,7 +88,6 @@ class ReflectionProperty implements CoreReflector
      * Create a reflection of an instance's property by its name
      *
      * @param object $instance
-     * @param string $propertyName
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
@@ -101,15 +105,7 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @internal
-     * @param Reflector       $reflector
-     * @param PropertyNode    $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param int             $positionInNode
-     * @param Namespace_      $declaringNamespace
-     * @param ReflectionClass $declaringClass
-     * @param ReflectionClass $implementingClass
-     * @param bool            $declaredAtCompileTime
-     *
-     * @return self
+     * @param PropertyNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -135,7 +131,6 @@ class ReflectionProperty implements CoreReflector
     /**
      * Set the default visibility of this property. Use the core \ReflectionProperty::IS_* values as parameters, e.g.:
      *
-     * @param int $newVisibility
      * @throws \InvalidArgumentException
      */
     public function setVisibility(int $newVisibility) : void
@@ -163,8 +158,6 @@ class ReflectionProperty implements CoreReflector
      * Note that unless the property is static, this is hard coded to return
      * true, because we are unable to reflect instances of classes, therefore
      * we can be sure that all properties are always declared at compile-time.
-     *
-     * @return bool
      */
     public function isDefault() : bool
     {
@@ -173,8 +166,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Get the core-reflection-compatible modifier values.
-     *
-     * @return int
      */
     public function getModifiers() : int
     {
@@ -188,8 +179,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Get the name of the property.
-     *
-     * @return string
      */
     public function getName() : string
     {
@@ -198,8 +187,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Is the property private?
-     *
-     * @return bool
      */
     public function isPrivate() : bool
     {
@@ -208,8 +195,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Is the property protected?
-     *
-     * @return bool
      */
     public function isProtected() : bool
     {
@@ -218,8 +203,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Is the property public?
-     *
-     * @return bool
      */
     public function isPublic() : bool
     {
@@ -228,8 +211,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Is the property static?
-     *
-     * @return bool
      */
     public function isStatic() : bool
     {
@@ -264,25 +245,16 @@ class ReflectionProperty implements CoreReflector
         return (new FindPropertyType())->__invoke($this, $this->declaringNamespace);
     }
 
-    /**
-     * @return ReflectionClass
-     */
     public function getDeclaringClass() : ReflectionClass
     {
         return $this->declaringClass;
     }
 
-    /**
-     * @return ReflectionClass
-     */
     public function getImplementingClass() : ReflectionClass
     {
         return $this->implementingClass;
     }
 
-    /**
-     * @return string
-     */
     public function getDocComment() : string
     {
         return GetFirstDocComment::forNode($this->node);
@@ -298,7 +270,7 @@ class ReflectionProperty implements CoreReflector
     {
         $defaultValueNode = $this->node->props[$this->positionInNode]->default;
 
-        if (null === $defaultValueNode) {
+        if ($defaultValueNode === null) {
             return null;
         }
 
@@ -310,8 +282,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Get the line number that this property starts on.
-     *
-     * @return int
      */
     public function getStartLine() : int
     {
@@ -320,8 +290,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * Get the line number that this property ends on.
-     *
-     * @return int
      */
     public function getEndLine() : int
     {
@@ -338,9 +306,6 @@ class ReflectionProperty implements CoreReflector
         return CalculateReflectionColum::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
-    /**
-     * @return PropertyNode
-     */
     public function getAst() : PropertyNode
     {
         return $this->node;
@@ -390,7 +355,7 @@ class ReflectionProperty implements CoreReflector
     }
 
     /**
-     * @param object $object
+     * @param object     $object
      *
      * @param mixed|null $value
      *
@@ -408,7 +373,7 @@ class ReflectionProperty implements CoreReflector
 
             Closure::bind(function (string $declaringClassName, string $propertyName, $value) : void {
                 $declaringClassName::${$propertyName} = $value;
-            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), 2 === \func_num_args() ? $value : $object);
+            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
 
             return;
         }
@@ -425,7 +390,7 @@ class ReflectionProperty implements CoreReflector
      */
     private function assertClassExist(string $className) : void
     {
-        if ( ! \class_exists($className, false)) {
+        if (! class_exists($className, false)) {
             throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
     }
@@ -441,17 +406,17 @@ class ReflectionProperty implements CoreReflector
      */
     private function assertObject($object)
     {
-        if (null === $object) {
+        if ($object === null) {
             throw NoObjectProvided::create();
         }
 
-        if ( ! \is_object($object)) {
+        if (! is_object($object)) {
             throw NotAnObject::fromNonObject($object);
         }
 
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        if (\get_class($object) !== $declaringClassName) {
+        if (get_class($object) !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
 

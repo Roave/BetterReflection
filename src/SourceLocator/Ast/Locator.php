@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
@@ -36,10 +37,6 @@ class Locator
     }
 
     /**
-     * @param Reflector $reflector
-     * @param LocatedSource $locatedSource
-     * @param Identifier $identifier
-     * @return Reflection
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      * @throws Exception\ParseToAstFailure
      */
@@ -61,9 +58,6 @@ class Locator
     /**
      * Get an array of reflections found in some code.
      *
-     * @param Reflector $reflector
-     * @param LocatedSource $locatedSource
-     * @param IdentifierType $identifierType
      * @return \Roave\BetterReflection\Reflection\Reflection[]
      * @throws Exception\ParseToAstFailure
      */
@@ -88,8 +82,6 @@ class Locator
      * Given an array of Reflections, try to find the identifier.
      *
      * @param Reflection[] $reflections
-     * @param Identifier $identifier
-     * @return Reflection
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     private function findInArray(array $reflections, Identifier $identifier) : Reflection

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
@@ -14,13 +15,12 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use function function_exists;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
     /**
-     * @param string $functionName
      *
-     * @return ReflectionFunction
      *
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
@@ -30,9 +30,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     * @param \Closure $closure
      *
-     * @return ReflectionFunction
      *
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
@@ -53,11 +51,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
     /**
      * @internal
-     * @param Reflector $reflector
      * @param FunctionNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param LocatedSource $locatedSource
-     * @param NamespaceNode|null $namespaceNode
-     * @return ReflectionFunction
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -82,7 +76,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      *
      * @todo https://github.com/Roave/BetterReflection/issues/14
      * @see http://php.net/manual/en/ini.core.php#ini.disable-functions
-     * @return bool
      */
     public function isDisabled() : bool
     {
@@ -94,7 +87,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * code we can access. This means, at present, we can only EVER return null
      * from this function.
 
-     * @return string|null
      */
     public function getExtensionName() : ?string
     {
@@ -102,7 +94,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     * @return Closure
      *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
@@ -163,13 +154,12 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     * @param string $functionName
      *
      * @throws FunctionDoesNotExist
      */
     private function assertFunctionExist(string $functionName) : void
     {
-        if ( ! \function_exists($functionName)) {
+        if (! function_exists($functionName)) {
             throw FunctionDoesNotExist::fromName($functionName);
         }
     }

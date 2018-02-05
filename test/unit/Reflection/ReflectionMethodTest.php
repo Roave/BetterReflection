@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
@@ -40,6 +41,7 @@ use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
 use TraitWithMethod;
+use function basename;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionMethod
@@ -60,9 +62,8 @@ class ReflectionMethodTest extends TestCase
     {
         parent::setUp();
 
-        global $loader;
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
+        $this->reflector  = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromName() : void
@@ -106,13 +107,6 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param bool $shouldBePublic
-     * @param bool $shouldBePrivate
-     * @param bool $shouldBeProtected
-     * @param bool $shouldBeFinal
-     * @param bool $shouldBeAbstract
-     * @param bool $shouldBeStatic
      * @dataProvider visibilityProvider
      */
     public function testVisibilityOfMethods(
@@ -225,7 +219,7 @@ class ReflectionMethodTest extends TestCase
 
         $detectedFilename = $method->getFileName();
 
-        self::assertSame('Methods.php', \basename($detectedFilename));
+        self::assertSame('Methods.php', basename($detectedFilename));
     }
 
     public function testMethodNameWithNamespace() : void
@@ -294,8 +288,6 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param int $expectedModifier
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
@@ -326,9 +318,6 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param string $class
-     * @param string $method
-     * @param string|null $expectedPrototype
      * @dataProvider prototypeProvider
      */
     public function testGetPrototype(string $class, string $method, ?string $expectedPrototype) : void
@@ -336,7 +325,7 @@ class ReflectionMethodTest extends TestCase
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture, $this->astLocator));
 
-        if (null === $expectedPrototype) {
+        if ($expectedPrototype === null) {
             $this->expectException(MethodPrototypeNotFound::class);
         }
 

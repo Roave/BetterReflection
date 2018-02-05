@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -7,6 +8,7 @@ use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Throwable;
+use function func_get_args;
 
 class ReflectionFunction extends CoreReflectionFunction
 {
@@ -25,7 +27,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public static function export($name, $return = null)
     {
-        BetterReflectionFunction::export(...\func_get_args());
+        BetterReflectionFunction::export(...func_get_args());
     }
 
     /**
@@ -248,7 +250,7 @@ class ReflectionFunction extends CoreReflectionFunction
     public function invoke($args = null)
     {
         try {
-            return $this->betterReflectionFunction->invoke(...\func_get_args());
+            return $this->betterReflectionFunction->invoke(...func_get_args());
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
         }

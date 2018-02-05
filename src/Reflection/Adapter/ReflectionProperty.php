@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -9,6 +10,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Throwable;
+use function func_get_args;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
@@ -32,7 +34,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public static function export($class, $name, $return = null)
     {
-        BetterReflectionProperty::export(...\func_get_args());
+        BetterReflectionProperty::export(...func_get_args());
     }
 
     /**
@@ -56,7 +58,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function getValue($object = null)
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Property not accessible');
         }
 
@@ -74,7 +76,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function setValue($object, $value = null)
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Property not accessible');
         }
 

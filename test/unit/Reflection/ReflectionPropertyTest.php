@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
 use ClassWithPropertiesAndTraitProperties;
-use Exception;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Types;
@@ -33,7 +33,9 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use stdClass;
+use Throwable;
 use TraitWithProperty;
+use function count;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
@@ -54,10 +56,8 @@ class ReflectionPropertyTest extends TestCase
     {
         parent::setUp();
 
-        global $loader;
-
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->reflector  = new ClassReflector(new ComposerSourceLocator($loader, $this->astLocator));
+        $this->reflector  = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromName() : void
@@ -122,7 +122,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $propertyName
      * @param string[] $expectedTypes
      * @dataProvider stringTypesDataProvider
      */
@@ -148,7 +147,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $propertyName
      * @param string[] $expectedTypes
      * @dataProvider typesDataProvider
      */
@@ -158,7 +156,7 @@ class ReflectionPropertyTest extends TestCase
 
         $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
 
-        self::assertCount(\count($expectedTypes), $foundTypes);
+        self::assertCount(count($expectedTypes), $foundTypes);
 
         foreach ($expectedTypes as $i => $expectedType) {
             self::assertInstanceOf($expectedType, $foundTypes[$i]);
@@ -201,7 +199,7 @@ class ReflectionPropertyTest extends TestCase
 
     public function testExportThrowsException() : void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(Throwable::class);
         ReflectionProperty::export();
     }
 
@@ -216,8 +214,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $propertyName
-     * @param int $expectedModifier
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
@@ -325,9 +321,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param int $startLine
-     * @param int $endLine
      * @dataProvider startEndLineProvider
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine) : void
@@ -359,9 +352,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $php
-     * @param int $startColumn
-     * @param int $endColumn
      * @dataProvider columsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
@@ -385,8 +375,6 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param string $propertyName
-     * @param int $positionInAst
      * @dataProvider getAstProvider
      */
     public function testGetAst(string $propertyName, int $positionInAst) : void

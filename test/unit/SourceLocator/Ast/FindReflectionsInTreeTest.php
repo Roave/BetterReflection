@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
@@ -90,9 +91,7 @@ class FindReflectionsInTreeTest extends TestCase
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
         self::assertSame(
-            [
-                $mockReflection,
-            ],
+            [$mockReflection],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
@@ -118,9 +117,7 @@ class FindReflectionsInTreeTest extends TestCase
         $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', null);
 
         self::assertSame(
-            [
-                $mockReflection,
-            ],
+            [$mockReflection],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
@@ -146,9 +143,7 @@ class FindReflectionsInTreeTest extends TestCase
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
 
         self::assertSame(
-            [
-                $mockReflection,
-            ],
+            [$mockReflection],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
@@ -175,9 +170,7 @@ class FindReflectionsInTreeTest extends TestCase
         $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);
 
         self::assertSame(
-            [
-                $mockReflectionClass,
-            ],
+            [$mockReflectionClass],
             (new FindReflectionsInTree($strategy))->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),

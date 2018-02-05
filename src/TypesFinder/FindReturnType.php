@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
@@ -8,6 +9,7 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
+use function explode;
 
 class FindReturnType
 {
@@ -42,7 +44,7 @@ class FindReturnType
     {
         $docComment = $function->getDocComment();
 
-        if ('' === $docComment) {
+        if ($docComment === '') {
             return [];
         }
 
@@ -55,7 +57,7 @@ class FindReturnType
             ->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
-            return $this->resolveTypes->__invoke(\explode('|', (string) $returnTag->getType()), $context);
+            return $this->resolveTypes->__invoke(explode('|', (string) $returnTag->getType()), $context);
         }
 
         return [];

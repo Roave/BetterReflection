@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload;
@@ -14,6 +15,10 @@ use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use Roave\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
 use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 use stdClass;
+use function class_exists;
+use function count;
+use function spl_autoload_functions;
+use function spl_autoload_unregister;
 
 /**
  * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
@@ -22,23 +27,23 @@ final class ClassLoaderTest extends TestCase
 {
     public function testAutoloadSelfRegisters() : void
     {
-        $initialAutoloaderCount = \count(\spl_autoload_functions());
+        $initialAutoloaderCount = count(spl_autoload_functions());
 
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
-        self::assertCount($initialAutoloaderCount + 1, \spl_autoload_functions());
+        self::assertCount($initialAutoloaderCount + 1, spl_autoload_functions());
 
-        \spl_autoload_unregister($loader);
+        spl_autoload_unregister($loader);
 
-        self::assertCount($initialAutoloaderCount, \spl_autoload_functions());
+        self::assertCount($initialAutoloaderCount, spl_autoload_functions());
     }
 
     public function testAutoloadTriggersLoaderMethod() : void
     {
         $reflection = ReflectionClass::createFromName(TestClassForAutoloader::class);
-        self::assertFalse(\class_exists(TestClassForAutoloader::class, false));
+        self::assertFalse(class_exists(TestClassForAutoloader::class, false));
 
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
@@ -54,7 +59,7 @@ final class ClassLoaderTest extends TestCase
 
         new TestClassForAutoloader();
 
-        \spl_autoload_unregister($loader);
+        spl_autoload_unregister($loader);
     }
 
     public function testAddClassThrowsExceptionWhenClassAlreadyRegisteredInAutoload() : void
@@ -70,7 +75,7 @@ final class ClassLoaderTest extends TestCase
         $this->expectException(ClassAlreadyRegistered::class);
         $loader->addClass($reflection);
 
-        \spl_autoload_unregister($loader);
+        spl_autoload_unregister($loader);
     }
 
     public function testAddClassThrowsExceptionWhenClassAlreadyLoaded() : void
@@ -82,7 +87,7 @@ final class ClassLoaderTest extends TestCase
         $this->expectException(ClassAlreadyLoaded::class);
         $loader->addClass(ReflectionClass::createFromName(stdClass::class));
 
-        \spl_autoload_unregister($loader);
+        spl_autoload_unregister($loader);
     }
 
     /**
@@ -92,7 +97,7 @@ final class ClassLoaderTest extends TestCase
     public function testAutoloadThrowsExceptionWhenClassIsNotLoadedCorrectlyAfterAttemptingToLoad() : void
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
-        self::assertFalse(\class_exists(AnotherTestClassForAutoloader::class, false));
+        self::assertFalse(class_exists(AnotherTestClassForAutoloader::class, false));
 
         /** @var LoaderMethodInterface|\PHPUnit_Framework_MockObject_MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
@@ -106,6 +111,6 @@ final class ClassLoaderTest extends TestCase
         $this->expectException(FailedToLoadClass::class);
         new AnotherTestClassForAutoloader();
 
-        \spl_autoload_unregister($loader);
+        spl_autoload_unregister($loader);
     }
 }

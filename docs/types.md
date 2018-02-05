@@ -7,9 +7,9 @@ ways:
 class MyClass
 {
     /**
-     * @param array $myMethod
+     * @param array $myParameter
      */
-    public function myMethod(array $myMethod = [])
+    public function myMethod(array $myParameter = [])
     {
         // ... stuff ...
     }

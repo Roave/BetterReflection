@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
@@ -26,7 +27,6 @@ class IdentifierTypeTest extends TestCase
     }
 
     /**
-     * @param string $full
      * @dataProvider possibleIdentifierTypesProvider
      */
     public function testPossibleIdentifierTypes(string $full) : void

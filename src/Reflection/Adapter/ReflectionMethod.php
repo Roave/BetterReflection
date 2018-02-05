@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
@@ -9,6 +10,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Throwable;
+use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
@@ -32,7 +34,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public static function export($class, $name, $return = null)
     {
-        BetterReflectionMethod::export(...\func_get_args());
+        BetterReflectionMethod::export(...func_get_args());
     }
 
     /**
@@ -332,12 +334,12 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function invoke($object = null, $args = null)
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');
         }
 
         try {
-            return $this->betterReflectionMethod->invoke(...\func_get_args());
+            return $this->betterReflectionMethod->invoke(...func_get_args());
         } catch (NoObjectProvided | NotAnObject $e) {
             return null;
         } catch (Throwable $e) {
@@ -350,7 +352,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function invokeArgs($object = null, array $args = [])
     {
-        if ( ! $this->isAccessible()) {
+        if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');
         }
 

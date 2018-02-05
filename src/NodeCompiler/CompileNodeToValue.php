@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
@@ -7,6 +8,15 @@ use PhpParser\Node;
 use ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\FileHelper;
+use function array_combine;
+use function array_map;
+use function constant;
+use function defined;
+use function dirname;
+use function get_class;
+use function realpath;
+use function reset;
+use function sprintf;
 
 class CompileNodeToValue
 {
@@ -18,8 +28,7 @@ class CompileNodeToValue
     /**
      * Compile an expression from a node into a value.
      *
-     * @param Node            $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param CompilerContext $context
+     * @param Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
      * @return mixed
      *
@@ -62,15 +71,13 @@ class CompileNodeToValue
             return $this->compileClassConstant($context);
         }
 
-        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . \get_class($node));
+        throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
     }
 
     /**
      * Compile arrays
      *
-     * @param Node\Expr\Array_ $arrayNode
-     * @param CompilerContext $context
-     * @return array
+     * @return mixed[]
      */
     private function compileArray(Node\Expr\Array_ $arrayNode, CompilerContext $context) : array
     {
@@ -78,7 +85,7 @@ class CompileNodeToValue
         foreach ($arrayNode->items as $arrayItem) {
             $compiledValue = $this($arrayItem->value, $context);
 
-            if (null === $arrayItem->key) {
+            if ($arrayItem->key === null) {
                 $compiledArray[] = $compiledValue;
                 continue;
             }
@@ -91,13 +98,12 @@ class CompileNodeToValue
     /**
      * Compile constant expressions
      *
-     * @param Node\Expr\ConstFetch $constNode
      * @return bool|mixed|null
      * @throws \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode)
     {
-        $firstName = \reset($constNode->name->parts);
+        $firstName = reset($constNode->name->parts);
         switch ($firstName) {
             case 'null':
                 return null;
@@ -106,40 +112,38 @@ class CompileNodeToValue
             case 'true':
                 return true;
             default:
-                if ( ! \defined($firstName)) {
+                if (! defined($firstName)) {
                     throw new Exception\UnableToCompileNode(
-                        \sprintf('Constant "%s" has not been defined', $firstName)
+                        sprintf('Constant "%s" has not been defined', $firstName)
                     );
                 }
 
-                return \constant($firstName);
+                return constant($firstName);
         }
     }
 
     /**
      * Compile class constants
      *
-     * @param Node\Expr\ClassConstFetch $node
-     * @param CompilerContext $context
-     * @return string|int|float|bool|array|null
+     * @return string|int|float|bool|mixed[]|null
      * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
         $className = $node->class->toString();
 
-        if ('class' === $node->name) {
+        if ($node->name === 'class') {
             return $className;
         }
 
         /** @var ReflectionClass|null $classInfo */
         $classInfo = null;
 
-        if ('self' === $className || 'static' === $className) {
+        if ($className === 'self' || $className === 'static') {
             $classInfo = $this->getConstantDeclaringClass($node->name, $context->getSelf());
         }
 
-        if (null === $classInfo) {
+        if ($classInfo === null) {
             /** @var ReflectionClass $classInfo */
             $classInfo = $context->getReflector()->reflect($className);
         }
@@ -155,8 +159,6 @@ class CompileNodeToValue
     /**
      * Compile a binary operator node
      *
-     * @param Node\Expr\BinaryOp $node
-     * @param CompilerContext    $context
      *
      * @return mixed
      *
@@ -165,10 +167,10 @@ class CompileNodeToValue
     private function compileBinaryOperator(Node\Expr\BinaryOp $node, CompilerContext $context)
     {
         $evaluators = self::loadEvaluators();
-        $nodeClass  = \get_class($node);
+        $nodeClass  = get_class($node);
 
-        if ( ! isset($evaluators[$nodeClass])) {
-            throw new Exception\UnableToCompileNode(\sprintf(
+        if (! isset($evaluators[$nodeClass])) {
+            throw new Exception\UnableToCompileNode(sprintf(
                 'Unable to compile binary operator: %s',
                 $nodeClass
             ));
@@ -183,7 +185,7 @@ class CompileNodeToValue
      */
     private function compileDirConstant(CompilerContext $context) : string
     {
-        return FileHelper::normalizeWindowsPath(\dirname(\realpath($context->getFileName())));
+        return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
     }
 
     /**
@@ -216,8 +218,8 @@ class CompileNodeToValue
 
         $evaluators = self::makeEvaluators();
 
-        return self::$nodeEvaluators = \array_combine(
-            \array_map(function (callable $nodeEvaluator) : string {
+        return self::$nodeEvaluators = array_combine(
+            array_map(function (callable $nodeEvaluator) : string {
                 /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                 /** @noinspection NullPointerExceptionInspection */
                 return (new ReflectionFunction($nodeEvaluator))->getParameters()[0]->getType()->getName();
@@ -264,7 +266,9 @@ class CompileNodeToValue
             },
             function (Node\Expr\BinaryOp\Equal $node, CompilerContext $context, self $next) {
                 /** @noinspection TypeUnsafeComparisonInspection */
+                // phpcs:disable SlevomatCodingStandard.ControlStructures.DisallowEqualOperators
                 return $next($node->left, $context) == $next($node->right, $context);
+                // phpcs:enable
             },
             function (Node\Expr\BinaryOp\Greater $node, CompilerContext $context, self $next) {
                 return $next($node->left, $context) > $next($node->right, $context);
@@ -276,10 +280,14 @@ class CompileNodeToValue
                 return $next($node->left, $context) === $next($node->right, $context);
             },
             function (Node\Expr\BinaryOp\LogicalAnd $node, CompilerContext $context, self $next) {
+                // phpcs:disable Squiz.Operators.ValidLogicalOperators.NotAllowed
                 return $next($node->left, $context) and $next($node->right, $context);
+                // phpcs:enable
             },
             function (Node\Expr\BinaryOp\LogicalOr $node, CompilerContext $context, self $next) {
+                // phpcs:disable Squiz.Operators.ValidLogicalOperators.NotAllowed
                 return $next($node->left, $context) or $next($node->right, $context);
+                // phpcs:enable
             },
             function (Node\Expr\BinaryOp\LogicalXor $node, CompilerContext $context, self $next) {
                 return $next($node->left, $context) xor $next($node->right, $context);
@@ -289,7 +297,9 @@ class CompileNodeToValue
             },
             function (Node\Expr\BinaryOp\NotEqual $node, CompilerContext $context, self $next) {
                 /** @noinspection TypeUnsafeComparisonInspection */
+                // phpcs:disable SlevomatCodingStandard.ControlStructures.DisallowEqualOperators
                 return $next($node->left, $context) != $next($node->right, $context);
+                // phpcs:enable
             },
             function (Node\Expr\BinaryOp\NotIdentical $node, CompilerContext $context, self $next) {
                 return $next($node->left, $context) !== $next($node->right, $context);

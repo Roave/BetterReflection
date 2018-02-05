@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
@@ -15,6 +16,9 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function get_class;
+use function realpath;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
@@ -47,8 +51,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     public function anonymousClassInstancesProvider() : array
     {
-        $fileWithClasses                = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
-        $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
+        $fileWithClasses                = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
+        $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
 
         $classes                = require $fileWithClasses;
         $classWithNestedClasses = require $fileWithClassWithNestedClasses;
@@ -64,8 +68,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
-     * @param string $file
-     * @param int $startLine
      * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
@@ -75,7 +77,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
-                \get_class($class),
+                get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );
@@ -106,8 +108,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
-     * @param string $file
-     * @param int $startLine
      * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
@@ -145,7 +145,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider() : array
     {
-        $file    = FileHelper::normalizeWindowsPath(\realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+        $file    = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
 
         return [
@@ -155,19 +155,18 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param string $file
      * @param object $class
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void
     {
         $this->expectException(TwoAnonymousClassesOnSameLine::class);
-        $this->expectExceptionMessage(\sprintf('Two anonymous classes on line 3 in %s', $file));
+        $this->expectExceptionMessage(sprintf('Two anonymous classes on line 3 in %s', $file));
 
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
-                \get_class($class),
+                get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );
@@ -194,7 +193,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
-                \get_class($class),
+                get_class($class),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );

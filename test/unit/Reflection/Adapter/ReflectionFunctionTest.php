@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
@@ -13,6 +14,10 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFu
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Throwable;
+use function array_combine;
+use function array_map;
+use function get_class_methods;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction
@@ -21,14 +26,13 @@ class ReflectionFunctionTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider() : array
     {
-        $methods = \get_class_methods(CoreReflectionFunction::class);
-        return \array_combine($methods, \array_map(function (string $i) : array {
+        $methods = get_class_methods(CoreReflectionFunction::class);
+        return array_combine($methods, array_map(function (string $i) : array {
             return [$i];
         }, $methods));
     }
 
     /**
-     * @param string $methodName
      * @dataProvider coreReflectionMethodNamesProvider
      */
     public function testCoreReflectionMethods(string $methodName) : void
@@ -83,10 +87,8 @@ class ReflectionFunctionTest extends TestCase
     }
 
     /**
-     * @param string $methodName
-     * @param string|null $expectedException
-     * @param mixed $returnValue
-     * @param array $args
+     * @param mixed   $returnValue
+     * @param mixed[] $args
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
@@ -94,14 +96,14 @@ class ReflectionFunctionTest extends TestCase
         /** @var BetterReflectionFunction|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
 
-        if (null === $expectedException) {
+        if ($expectedException === null) {
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->will($this->returnValue($returnValue));
         }
 
-        if (null !== $expectedException) {
+        if ($expectedException !== null) {
             $this->expectException($expectedException);
         }
 
@@ -111,7 +113,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testExport() : void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionFunctionAdapter::export('str_replace');
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
@@ -87,8 +88,6 @@ class IdentifierTest extends TestCase
     }
 
     /**
-     * @param string $name
-     * @param string $expectedName
      * @dataProvider validNamesProvider
      */
     public function testValidName(string $name, string $expectedName) : void
@@ -108,7 +107,6 @@ class IdentifierTest extends TestCase
     }
 
     /**
-     * @param string $invalidName
      * @dataProvider invalidNamesProvider
      */
     public function testThrowExceptionForInvalidName(string $invalidName) : void

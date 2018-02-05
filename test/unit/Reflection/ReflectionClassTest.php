@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
@@ -53,6 +54,15 @@ use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
+use function array_keys;
+use function array_map;
+use function array_walk;
+use function basename;
+use function class_exists;
+use function count;
+use function file_get_contents;
+use function sort;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionClass
@@ -73,8 +83,7 @@ class ReflectionClassTest extends TestCase
 
     private function getComposerLocator() : ComposerSourceLocator
     {
-        global $loader;
-        return new ComposerSourceLocator($loader, $this->astLocator);
+        return new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator);
     }
 
     public function testCanReflectInternalClassWithDefaultLocator() : void
@@ -97,7 +106,7 @@ class ReflectionClassTest extends TestCase
 
     public function testCanReflectEvaledClassWithDefaultLocator() : void
     {
-        $className = \uniqid('foo', false);
+        $className = uniqid('foo', false);
 
         eval('class ' . $className . '{}');
 
@@ -146,12 +155,12 @@ class ReflectionClassTest extends TestCase
      */
     public function testReflectingAClassDoesNotLoadTheClass() : void
     {
-        self::assertFalse(\class_exists(ExampleClass::class, false));
+        self::assertFalse(class_exists(ExampleClass::class, false));
 
         $reflector = new ClassReflector($this->getComposerLocator());
         $reflector->reflect(ExampleClass::class);
 
-        self::assertFalse(\class_exists(ExampleClass::class, false));
+        self::assertFalse(class_exists(ExampleClass::class, false));
     }
 
     public function testGetMethods() : void
@@ -231,7 +240,7 @@ class ReflectionClassTest extends TestCase
             $this->astLocator
         )))->reflect(MethodsOrder::class);
 
-        $actualMethodNames = \array_map(function (ReflectionMethod $method) : string {
+        $actualMethodNames = array_map(function (ReflectionMethod $method) : string {
             return $method->getName();
         }, $classInfo->getMethods());
 
@@ -394,7 +403,7 @@ PHP;
         $properties = $classInfo->getProperties();
 
         self::assertCount(6, $properties);
-        self::assertSame($expectedPropertiesNames, \array_keys($properties));
+        self::assertSame($expectedPropertiesNames, array_keys($properties));
     }
 
     public function getPropertiesWithFilterDataProvider() : array
@@ -489,7 +498,7 @@ PHP;
 
         $detectedFilename = $classInfo->getFileName();
 
-        self::assertSame('ExampleClass.php', \basename($detectedFilename));
+        self::assertSame('ExampleClass.php', basename($detectedFilename));
     }
 
     public function testStaticCreation() : void
@@ -536,9 +545,6 @@ PHP;
     }
 
     /**
-     * @param string $php
-     * @param int $expectedStart
-     * @param int $expectedEnd
      * @dataProvider startEndLineProvider
      */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd) : void
@@ -560,7 +566,6 @@ PHP;
     }
 
     /**
-     * @param string $php
      * @param int $expectedStart
      * @param int $expectedEnd
      * @dataProvider columnsProvider
@@ -786,8 +791,6 @@ PHP;
     }
 
     /**
-     * @param string $className
-     * @param int $expectedModifier
      * @param string[] $expectedModifierNames
      * @dataProvider modifierProvider
      */
@@ -871,9 +874,7 @@ PHP;
         ));
 
         self::assertSame(
-            [
-                'TraitFixtureTraitA',
-            ],
+            ['TraitFixtureTraitA'],
             $reflector->reflect('TraitFixtureA')->getTraitNames()
         );
     }
@@ -891,6 +892,80 @@ PHP;
             'a_protected' => 'TraitFixtureTraitC::a',
             'b_renamed' => 'TraitFixtureTraitC::b',
         ], $classInfo->getTraitAliases());
+    }
+
+    public function testMethodsFromTraits() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixture.php',
+            $this->astLocator
+        ));
+
+        $classInfo = $reflector->reflect('TraitFixtureC');
+
+        self::assertTrue($classInfo->hasMethod('a'));
+        self::assertTrue($classInfo->hasMethod('a_protected'));
+
+        $a          = $classInfo->getMethod('a');
+        $aProtected = $classInfo->getMethod('a_protected');
+
+        self::assertSame('a', $a->getName());
+        self::assertSame($a->getName(), $aProtected->getName());
+        self::assertSame('TraitFixtureTraitC', $a->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureTraitC', $aProtected->getDeclaringClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('b'));
+        self::assertTrue($classInfo->hasMethod('b_renamed'));
+
+        $b        = $classInfo->getMethod('b');
+        $bRenamed = $classInfo->getMethod('b_renamed');
+
+        self::assertSame('b', $b->getName());
+        self::assertSame($b->getName(), $bRenamed->getName());
+        self::assertSame('TraitFixtureTraitC', $b->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureTraitC', $bRenamed->getDeclaringClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('c'));
+
+        $c = $classInfo->getMethod('c');
+
+        self::assertSame('c', $c->getName());
+        self::assertSame('TraitFixtureTraitC', $c->getDeclaringClass()->getName());
+    }
+
+    public function testMethodsFromTraitsWithConflicts() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixture.php',
+            $this->astLocator
+        ));
+
+        $classInfo = $reflector->reflect('TraitFixtureD');
+
+        self::assertTrue($classInfo->hasMethod('boo'));
+        self::assertSame('TraitFixtureD', $classInfo->getMethod('boo')->getDeclaringClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('foo'));
+
+        $foo = $classInfo->getMethod('foo');
+
+        self::assertSame('TraitFixtureTraitD1', $foo->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureD', $foo->getImplementingClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('hoo'));
+        self::assertTrue($classInfo->hasMethod('hooFirstAlias'));
+        self::assertTrue($classInfo->hasMethod('hooSecondAlias'));
+
+        $hoo            = $classInfo->getMethod('hoo');
+        $hooFirstAlias  = $classInfo->getMethod('hooFirstAlias');
+        $hooSecondAlias = $classInfo->getMethod('hooSecondAlias');
+
+        self::assertSame('TraitFixtureTraitD1', $hoo->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureTraitD1', $hooFirstAlias->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureTraitD1', $hooSecondAlias->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureD', $hoo->getImplementingClass()->getName());
+        self::assertSame('TraitFixtureD', $hooFirstAlias->getImplementingClass()->getName());
+        self::assertSame('TraitFixtureD', $hooSecondAlias->getImplementingClass()->getName());
     }
 
     public function testGetInterfaceNames() : void
@@ -933,7 +1008,7 @@ PHP;
             E::class,
         ];
 
-        self::assertCount(\count($expectedInterfaces), $interfaces);
+        self::assertCount(count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -983,7 +1058,7 @@ PHP;
             E::class,
         ];
 
-        self::assertCount(\count($expectedInterfaces), $interfaces);
+        self::assertCount(count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -1034,7 +1109,7 @@ PHP;
             ClassWithInterfaces\B::class,
         ];
 
-        self::assertCount(\count($expectedInterfaces), $interfaces);
+        self::assertCount(count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -1060,7 +1135,7 @@ PHP;
             ClassWithInterfacesExtendingInterfaces\A::class,
         ];
 
-        self::assertCount(\count($expectedInterfaces), $interfaces);
+        self::assertCount(count($expectedInterfaces), $interfaces);
 
         foreach ($expectedInterfaces as $expectedInterface) {
             self::assertArrayHasKey($expectedInterface, $interfaces);
@@ -1276,21 +1351,21 @@ PHP;
             $this->astLocator
         ));
 
-        $cInterfaces = \array_map(
+        $cInterfaces = array_map(
             function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces()
         );
-        $dInterfaces = \array_map(
+        $dInterfaces = array_map(
             function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces()
         );
 
-        \sort($cInterfaces);
-        \sort($dInterfaces);
+        sort($cInterfaces);
+        sort($dInterfaces);
 
         self::assertSame(['B'], $cInterfaces);
         self::assertSame(['A', 'B', 'C'], $dInterfaces);
@@ -1321,7 +1396,7 @@ PHP;
     {
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertStringMatchesFormat(
-            \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             $reflection->__toString()
         );
     }
@@ -1329,7 +1404,7 @@ PHP;
     public function testExport() : void
     {
         self::assertStringMatchesFormat(
-            \file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
+            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             ReflectionClass::export(ExampleClass::class)
         );
     }
@@ -1529,7 +1604,7 @@ PHP;
 
         self::assertSame($expectedConstants, $reflection->getConstants());
 
-        \array_walk(
+        array_walk(
             $expectedConstants,
             function ($constantValue, string $constantName) use ($reflection) : void {
                 self::assertTrue($reflection->hasConstant($constantName), 'Constant ' . $constantName . ' not set');
@@ -1589,9 +1664,9 @@ PHP;
 
         self::assertCount(5, $reflectionConstants);
         self::assertContainsOnlyInstancesOf(ReflectionClassConstant::class, $reflectionConstants);
-        self::assertSame(\array_keys($expectedConstants), \array_keys($reflectionConstants));
+        self::assertSame(array_keys($expectedConstants), array_keys($reflectionConstants));
 
-        \array_walk(
+        array_walk(
             $expectedConstants,
             function ($constantValue, string $constantName) use ($reflectionConstants) : void {
                 self::assertArrayHasKey($constantName, $reflectionConstants, 'Constant ' . $constantName . ' not set');

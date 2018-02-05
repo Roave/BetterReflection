@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
@@ -14,6 +15,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastClass;
 use Roave\BetterReflectionTest\Fixture\StringCastClassObject;
+use function file_get_contents;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast
@@ -38,7 +40,7 @@ class ReflectionClassStringCastTest extends TestCase
         $classReflection = $reflector->reflect(StringCastClass::class);
 
         self::assertStringMatchesFormat(
-            \file_get_contents(__DIR__ . '/../../Fixture/StringCastClassExpected.txt'),
+            file_get_contents(__DIR__ . '/../../Fixture/StringCastClassExpected.txt'),
             $classReflection->__toString()
         );
     }
@@ -55,8 +57,11 @@ class ReflectionClassStringCastTest extends TestCase
 
     public function testInternalClassToString() : void
     {
-        $reflector       = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
+        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator));
+
+        // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
         $classReflection = $reflector->reflect(Exception::class);
+        // phpcs:enable
 
         self::assertStringStartsWith('Class [ <internal:Core> class Exception implements Throwable ]', (string) $classReflection);
     }
@@ -96,7 +101,7 @@ class ReflectionClassStringCastTest extends TestCase
         $objectReflection = ReflectionObject::createFromInstance($object);
 
         self::assertStringMatchesFormat(
-            \file_get_contents(__DIR__ . '/../../Fixture/StringCastClassObjectExpected.txt'),
+            file_get_contents(__DIR__ . '/../../Fixture/StringCastClassObjectExpected.txt'),
             $objectReflection->__toString()
         );
     }

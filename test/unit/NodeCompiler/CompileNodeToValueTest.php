@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
@@ -18,6 +19,10 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use const PHP_EOL;
+use const PHP_INT_MAX;
+use function define;
+use function uniqid;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
@@ -43,10 +48,6 @@ class CompileNodeToValueTest extends TestCase
         $this->astLocator = $configuration->astLocator();
     }
 
-    /**
-     * @param string $phpCode
-     * @return \PhpParser\Node
-     */
     private function parseCode(string $phpCode) : Node
     {
         return $this->parser->parse('<?php ' . $phpCode . ';')[0];
@@ -148,8 +149,8 @@ class CompileNodeToValueTest extends TestCase
             ['1 <= 2', true],
             ['2 <= 2', true],
             ['3 <= 2', false],
-            ['PHP_INT_MAX', \PHP_INT_MAX],
-            ['PHP_EOL', \PHP_EOL],
+            ['PHP_INT_MAX', PHP_INT_MAX],
+            ['PHP_EOL', PHP_EOL],
             ['1 <=> 4', -1],
             ['4 <=> 1', 1],
             ['1 <=> 1', 0],
@@ -157,7 +158,6 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /**
-     * @param string $phpCode
      * @param mixed $expectedValue
      * @dataProvider nodeProvider
      */
@@ -193,8 +193,8 @@ class CompileNodeToValueTest extends TestCase
 
     public function testConstantValueCompiled() : void
     {
-        $constName = \uniqid('BETTER_REFLECTION_TEST_CONST_', true);
-        \define($constName, 123);
+        $constName = uniqid('BETTER_REFLECTION_TEST_CONST_', true);
+        define($constName, 123);
 
         self::assertSame(
             123,

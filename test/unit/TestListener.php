@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest;
@@ -12,6 +13,7 @@ use PHPUnit\Framework\TestSuite;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
+use function class_exists;
 
 class TestListener extends BaseTestListener
 {
@@ -22,13 +24,10 @@ class TestListener extends BaseTestListener
 
     /**
      * Determine the "full" test name (including the suite name if it is set)
-     *
-     * @param TestCase $test
-     * @return string
      */
     private function getCurrentTestName(TestCase $test) : string
     {
-        if (null === $this->currentSuite) {
+        if ($this->currentSuite === null) {
             return $test->getName(true);
         }
         return $this->currentSuite->getName() . '::' . $test->getName(true);
@@ -38,14 +37,12 @@ class TestListener extends BaseTestListener
      * Create an additional assertion to ensure the specified class is not
      * loaded when executing a test
      *
-     * @param string $className
-     * @param TestCase $test
      * @throws \PHPUnit\Framework\AssertionFailedError
      */
     private function assertClassNotLoaded(string $className, TestCase $test) : void
     {
         TestCase::assertFalse(
-            \class_exists($className, false),
+            class_exists($className, false),
             'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test)
         );
     }
@@ -53,7 +50,6 @@ class TestListener extends BaseTestListener
     /**
      * Ensure the fixture classes have not actually been loaded (where applicable)
      *
-     * @param \PHPUnit\Framework\Test $test
      * @param float $time
      * @throws \PHPUnit\Framework\AssertionFailedError
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
@@ -61,7 +57,7 @@ class TestListener extends BaseTestListener
     public function endTest(Test $test, $time) : void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
-        if ( ! ($test instanceof TestCase)) {
+        if (! ($test instanceof TestCase)) {
             return;
         }
 
@@ -75,8 +71,6 @@ class TestListener extends BaseTestListener
     /**
      * Simply record the "current" test suite being run
      * Used by getCurrentTestName().
-     *
-     * @param \PHPUnit\Framework\TestSuite $suite
      */
     public function startTestSuite(TestSuite $suite) : void
     {
@@ -86,8 +80,6 @@ class TestListener extends BaseTestListener
     /**
      * Unset the "current" test suite being run at the end.
      * Used by getCurrentTestName().
-     *
-     * @param \PHPUnit\Framework\TestSuite $suite
      */
     public function endTestSuite(TestSuite $suite) : void
     {

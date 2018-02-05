@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionProperty;
+use function sprintf;
 
 /**
  * @internal
@@ -14,11 +16,11 @@ final class ReflectionPropertyStringCast
     {
         $stateModifier = '';
 
-        if ( ! $propertyReflection->isStatic()) {
+        if (! $propertyReflection->isStatic()) {
             $stateModifier = $propertyReflection->isDefault() ? ' <default>' : ' <dynamic>';
         }
 
-        return \sprintf(
+        return sprintf(
             'Property [%s %s%s $%s ]',
             $stateModifier,
             self::visibilityToString($propertyReflection),
