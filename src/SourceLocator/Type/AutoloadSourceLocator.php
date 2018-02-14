@@ -172,8 +172,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @param string $mode
      * @param int    $options
      * @param string $opened_path
-     * @see http://php.net/manual/en/class.streamwrapper.php
-     * @see http://php.net/manual/en/streamwrapper.stream-open.php
+     * @see https://php.net/manual/en/class.streamwrapper.php
+     * @see https://php.net/manual/en/streamwrapper.stream-open.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function stream_open($path, $mode, $options, &$opened_path) : bool
@@ -188,8 +188,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @param string $path
      * @param int    $flags
      * @return mixed[]
-     * @see http://php.net/manual/en/class.streamwrapper.php
-     * @see http://php.net/manual/en/streamwrapper.url-stat.php
+     * @see https://php.net/manual/en/class.streamwrapper.php
+     * @see https://php.net/manual/en/streamwrapper.url-stat.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function url_stat($path, $flags) : array

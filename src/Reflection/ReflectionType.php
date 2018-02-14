@@ -57,7 +57,7 @@ class ReflectionType
     /**
      * Checks if it is a built-in type (i.e., it's not an object...)
      *
-     * @see http://php.net/manual/en/reflectiontype.isbuiltin.php
+     * @see https://php.net/manual/en/reflectiontype.isbuiltin.php
      */
     public function isBuiltin() : bool
     {

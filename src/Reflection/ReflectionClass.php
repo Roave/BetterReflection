@@ -992,7 +992,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Gets the interfaces.
      *
-     * @link http://php.net/manual/en/reflectionclass.getinterfaces.php
+     * @link https://php.net/manual/en/reflectionclass.getinterfaces.php
      *
      * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
      *                           values as {@see ReflectionClass} objects.
@@ -1021,7 +1021,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Gets the interface names.
      *
-     * @link http://php.net/manual/en/reflectionclass.getinterfacenames.php
+     * @link https://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
      * @return string[] A numerical array with interface names as the values.
      */
@@ -1038,7 +1038,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Checks whether the given object is an instance.
      *
-     * @link http://php.net/manual/en/reflectionclass.isinstance.php
+     * @link https://php.net/manual/en/reflectionclass.isinstance.php
      *
      * @param object $object
      *
@@ -1061,7 +1061,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Checks whether the given class string is a subclass of this class.
      *
-     * @link http://php.net/manual/en/reflectionclass.isinstance.php
+     * @link https://php.net/manual/en/reflectionclass.isinstance.php
      *
      */
     public function isSubclassOf(string $className) : bool
@@ -1081,7 +1081,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Checks whether this class implements the given interface.
      *
-     * @link http://php.net/manual/en/reflectionclass.implementsinterface.php
+     * @link https://php.net/manual/en/reflectionclass.implementsinterface.php
      *
      */
     public function implementsInterface(string $interfaceName) : bool
@@ -1092,7 +1092,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Checks whether this reflection is an instantiable class
      *
-     * @link http://php.net/manual/en/reflectionclass.isinstantiable.php
+     * @link https://php.net/manual/en/reflectionclass.isinstantiable.php
      */
     public function isInstantiable() : bool
     {
@@ -1103,7 +1103,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Checks whether this is a reflection of a class that supports the clone operator
      *
-     * @link http://php.net/manual/en/reflectionclass.iscloneable.php
+     * @link https://php.net/manual/en/reflectionclass.iscloneable.php
      */
     public function isCloneable() : bool
     {
@@ -1121,7 +1121,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Checks if iterateable
      *
-     * @link http://php.net/manual/en/reflectionclass.isiterateable.php
+     * @link https://php.net/manual/en/reflectionclass.isiterateable.php
      */
     public function isIterateable() : bool
     {

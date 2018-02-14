@@ -91,7 +91,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * To string
      *
-     * @link http://php.net/manual/en/reflector.tostring.php
+     * @link https://php.net/manual/en/reflector.tostring.php
      * @return string
      */
     public function __toString()
