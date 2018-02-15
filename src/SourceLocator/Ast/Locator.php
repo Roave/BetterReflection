@@ -86,8 +86,10 @@ class Locator
      */
     private function findInArray(array $reflections, Identifier $identifier) : Reflection
     {
+        $identifierName = strtolower($identifier->getName());
+
         foreach ($reflections as $reflection) {
-            if ($reflection->getName() === $identifier->getName()) {
+            if (strtolower($reflection->getName()) === $identifierName) {
                 return $reflection;
             }
         }
