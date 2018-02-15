@@ -585,7 +585,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         return $visitor->getReturnNodes();
     }
 
-    final private function loadStaticParser() : Parser
+    private function loadStaticParser() : Parser
     {
         return self::$parser ?? self::$parser = (new BetterReflection())->phpParser();
     }
