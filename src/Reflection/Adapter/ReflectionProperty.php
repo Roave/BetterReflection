@@ -156,7 +156,7 @@ class ReflectionProperty extends CoreReflectionProperty
     /**
      * {@inheritDoc}
      */
-    public function setAccessible($accesible)
+    public function setAccessible($accessible)
     {
         $this->accessible = true;
     }

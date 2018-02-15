@@ -47,7 +47,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     }
 
     /**
-     * Cosnstant is private
+     * Constant is private
      */
     public function isPrivate() : bool
     {

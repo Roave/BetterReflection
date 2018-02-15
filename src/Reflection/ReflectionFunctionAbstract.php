@@ -460,7 +460,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Retrieves the body of this function as code.
      *
-     * If a PrettyPrinter is provided as a paramter, it will be used, otherwise
+     * If a PrettyPrinter is provided as a parameter, it will be used, otherwise
      * a default will be used.
      *
      * Note that the formatting of the code may not be the same as the original
