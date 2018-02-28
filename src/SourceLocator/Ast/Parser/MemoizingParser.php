@@ -36,7 +36,7 @@ final class MemoizingParser implements Parser
      *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function parse($code, ?ErrorHandler $errorHandler = null) : ?array
+    public function parse(string $code, ?ErrorHandler $errorHandler = null) : ?array
     {
         // note: this code is mathematically buggy by default, as we are using a hash to identify
         //       cache entries. The string length is added to further reduce likeliness (although

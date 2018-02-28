@@ -182,7 +182,7 @@ class ReflectionProperty implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->props[$this->positionInNode]->name;
+        return $this->node->props[$this->positionInNode]->name->toString();
     }
 
     /**

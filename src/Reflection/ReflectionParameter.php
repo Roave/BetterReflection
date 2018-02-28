@@ -197,13 +197,13 @@ class ReflectionParameter implements CoreReflector
 
             if ($className === 'self' || $className === 'static') {
                 /** @var string $constantName */
-                $constantName = $defaultValueNode->name;
+                $constantName = $defaultValueNode->name->toString();
                 $className    = $this->findParentClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant = true;
             /** @var string $defaultValueNode->name */
-            $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name;
+            $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name->toString();
         }
 
         if ($defaultValueNode instanceof Node\Expr\ConstFetch
@@ -246,7 +246,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->name;
+        return $this->node->var->name;
     }
 
     /**

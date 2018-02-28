@@ -77,7 +77,7 @@ class ReflectionClassConstant implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->consts[$this->positionInNode]->name;
+        return $this->node->consts[$this->positionInNode]->name->toString();
     }
 
     /**

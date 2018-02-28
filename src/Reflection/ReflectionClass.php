@@ -181,7 +181,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getShortName() : string
     {
         if (! $this->isAnonymous()) {
-            return $this->node->name;
+            return $this->node->name->toString();
         }
 
         $fileName = $this->getFileName();
@@ -1368,7 +1368,7 @@ class ReflectionClass implements Reflection, CoreReflector
         foreach ($this->node->stmts as $key => $stmt) {
             if ($stmt instanceof PropertyNode) {
                 $propertyNames = array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
-                    return strtolower($propertyProperty->name);
+                    return strtolower($propertyProperty->name->toString());
                 }, $stmt->props);
 
                 if (in_array($lowerName, $propertyNames, true)) {
