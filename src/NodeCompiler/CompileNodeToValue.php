@@ -131,7 +131,7 @@ class CompileNodeToValue
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
         /** @var string $nodeName */
-        $nodeName  = $node->name;
+        $nodeName  = $node->name->toString();
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {

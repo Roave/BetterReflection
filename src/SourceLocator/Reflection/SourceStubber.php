@@ -11,7 +11,7 @@ use PhpParser\Builder\Method;
 use PhpParser\Builder\Param;
 use PhpParser\Builder\Property;
 use PhpParser\Builder\Trait_;
-use PhpParser\BuilderAbstract;
+use PhpParser\Builder;
 use PhpParser\BuilderFactory;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Const_;
@@ -108,7 +108,7 @@ final class SourceStubber
      * @param Class_|Interface_|Trait_|Method|Property                        $node
      * @param CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty $reflection
      */
-    private function addDocComment(BuilderAbstract $node, CoreReflector $reflection) : void
+    private function addDocComment(Builder $node, CoreReflector $reflection) : void
     {
         if ($reflection->getDocComment() !== false) {
             $node->setDocComment(new Doc($reflection->getDocComment()));
@@ -251,7 +251,7 @@ final class SourceStubber
     }
 
     /**
-     * A little hack so we don't have to copy the code in PhpParser\BuilderAbstract::normalizeValue()
+     * A little hack so we don't have to copy the code in PhpParser\Builder::normalizeValue()
      */
     private function constantValueNode(ReflectionClassConstant $constant) : ?Expr
     {
