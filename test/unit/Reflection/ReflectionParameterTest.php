@@ -700,6 +700,6 @@ class ReflectionParameterTest extends TestCase
         $ast = $parameter->getAst();
 
         self::assertInstanceOf(Param::class, $ast);
-        self::assertSame('boo', $ast->name);
+        self::assertSame('boo', $ast->var->name);
     }
 }

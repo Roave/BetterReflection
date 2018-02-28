@@ -25,8 +25,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('startFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('startFilePos')
+            ->method('getStartFilePos')
             ->willReturn(10);
 
         self::assertSame(5, CalculateReflectionColum::getStartColumn($source, $node));
@@ -42,8 +41,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('startFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('startFilePos')
+            ->method('getStartFilePos')
             ->willReturn(6);
 
         self::assertSame(1, CalculateReflectionColum::getStartColumn($source, $node));
@@ -59,8 +57,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('startFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('startFilePos')
+            ->method('getStartFilePos')
             ->willReturn(6);
 
         self::assertSame(7, CalculateReflectionColum::getStartColumn($source, $node));
@@ -76,8 +73,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('startFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('startFilePos')
+            ->method('getStartFilePos')
             ->willReturn(10000);
 
         CalculateReflectionColum::getStartColumn('', $node);
@@ -106,8 +102,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('endFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('endFilePos')
+            ->method('getEndFilePos')
             ->willReturn(21);
 
         self::assertSame(16, CalculateReflectionColum::getEndColumn($source, $node));
@@ -123,8 +118,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('endFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('endFilePos')
+            ->method('getEndFilePos')
             ->willReturn(17);
 
         self::assertSame(12, CalculateReflectionColum::getEndColumn($source, $node));
@@ -140,8 +134,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('endFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('endFilePos')
+            ->method('getEndFilePos')
             ->willReturn(17);
 
         self::assertSame(18, CalculateReflectionColum::getEndColumn($source, $node));
@@ -157,8 +150,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('endFilePos')
             ->willReturn(true);
         $node
-            ->method('getAttribute')
-            ->with('endFilePos')
+            ->method('getEndFilePos')
             ->willReturn(10000);
 
         CalculateReflectionColum::getEndColumn('', $node);

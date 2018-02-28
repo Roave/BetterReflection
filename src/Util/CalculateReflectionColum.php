@@ -25,7 +25,7 @@ final class CalculateReflectionColum
             throw NoNodePosition::fromNode($node);
         }
 
-        return self::calculateColumn($source, $node->getAttribute('startFilePos'));
+        return self::calculateColumn($source, $node->getStartFilePos());
     }
 
     /**
@@ -38,7 +38,7 @@ final class CalculateReflectionColum
             throw NoNodePosition::fromNode($node);
         }
 
-        return self::calculateColumn($source, $node->getAttribute('endFilePos'));
+        return self::calculateColumn($source, $node->getEndFilePos());
     }
 
     /**

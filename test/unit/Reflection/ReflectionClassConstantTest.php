@@ -172,6 +172,6 @@ PHP;
 
         self::assertInstanceOf(ClassConst::class, $ast);
         self::assertSame($positionInAst, $constantReflection->getPositionInAst());
-        self::assertSame($constantName, $ast->consts[$positionInAst]->name);
+        self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
     }
 }

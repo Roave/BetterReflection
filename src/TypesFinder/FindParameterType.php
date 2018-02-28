@@ -53,7 +53,7 @@ class FindParameterType
             ->getTagsByName('param');
 
         foreach ($paramTags as $paramTag) {
-            if ($paramTag->getVariableName() === $node->name) {
+            if ($paramTag->getVariableName() === $node->var->name) {
                 return $this->resolveTypes->__invoke(explode('|', (string) $paramTag->getType()), $context);
             }
         }

@@ -36,6 +36,10 @@ class CompileNodeToValue
      */
     public function __invoke(Node $node, CompilerContext $context)
     {
+        if ($node instanceof Node\Stmt\Expression) {
+            return $this($node->expr, $context);
+        }
+
         if ($node instanceof Node\Scalar\String_
             || $node instanceof Node\Scalar\DNumber
             || $node instanceof Node\Scalar\LNumber) {
@@ -131,7 +135,7 @@ class CompileNodeToValue
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
         /** @var string $nodeName */
-        $nodeName  = $node->name;
+        $nodeName  = $node->name->name;
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {
