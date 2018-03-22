@@ -122,7 +122,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testCreateFromClosure() : void
     {
-        $myClosure = function () {
+        $myClosure  = function () {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
@@ -131,7 +131,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testCreateFromClosureCanReflectTypeHints() : void
     {
-        $myClosure = function (stdClass $theParam) : int {
+        $myClosure  = function (stdClass $theParam) : int {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);

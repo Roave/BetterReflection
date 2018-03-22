@@ -1097,7 +1097,24 @@ class ReflectionClass implements Reflection, CoreReflector
     public function isInstantiable() : bool
     {
         // @TODO doesn't consider internal non-instantiable classes yet.
-        return ! ($this->isAbstract() || $this->isInterface() || $this->isTrait());
+
+        if ($this->isAbstract()) {
+            return false;
+        }
+
+        if ($this->isInterface()) {
+            return false;
+        }
+
+        if ($this->isTrait()) {
+            return false;
+        }
+
+        try {
+            return $this->getConstructor()->isPublic();
+        } catch (OutOfBoundsException $e) {
+            return true;
+        }
     }
 
     /**
