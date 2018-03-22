@@ -332,7 +332,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             },
             $original->getParameters()
         );
-        $stubParameterNames = array_map(
+        $stubParameterNames     = array_map(
             function (ReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },

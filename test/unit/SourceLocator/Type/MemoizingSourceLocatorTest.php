@@ -71,7 +71,7 @@ class MemoizingSourceLocatorTest extends TestCase
             },
             range(1, 20)
         ));
-        $this->identifierCount = count($this->identifierNames);
+        $this->identifierCount  = count($this->identifierNames);
     }
 
     public function testLocateIdentifierIsMemoized() : void
@@ -95,7 +95,7 @@ class MemoizingSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersDistinguishesBetweenIdentifierTypes() : void
     {
-        $classIdentifiers = array_map(
+        $classIdentifiers    = array_map(
             function (string $identifier) : Identifier {
                 return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
             },

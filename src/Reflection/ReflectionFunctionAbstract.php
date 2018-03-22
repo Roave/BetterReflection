@@ -537,7 +537,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator = function (Node ...$node) : array {
+        $validator         = function (Node ...$node) : array {
             return $node;
         };
         $this->node->stmts = $validator(...$nodes);
