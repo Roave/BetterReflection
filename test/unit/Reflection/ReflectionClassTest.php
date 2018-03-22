@@ -37,6 +37,11 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\ClassesImplementingIterators;
 use Roave\BetterReflectionTest\ClassesWithCloneMethod;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithExtendedConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithoutConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithPrivateConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithProtectedConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithPublicConstructor;
 use Roave\BetterReflectionTest\ClassWithInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesOther;
@@ -1219,6 +1224,17 @@ PHP;
         self::assertFalse($reflector->reflect(ExampleTrait::class)->isInstantiable());
         self::assertFalse($reflector->reflect(AbstractClass::class)->isInstantiable());
         self::assertFalse($reflector->reflect(ExampleInterface::class)->isInstantiable());
+
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassesWithPublicOrNonPublicContructor.php',
+            $this->astLocator
+        ));
+
+        self::assertTrue($reflector->reflect(ClassWithPublicConstructor::class)->isInstantiable());
+        self::assertTrue($reflector->reflect(ClassWithoutConstructor::class)->isInstantiable());
+        self::assertFalse($reflector->reflect(ClassWithPrivateConstructor::class)->isInstantiable());
+        self::assertFalse($reflector->reflect(ClassWithProtectedConstructor::class)->isInstantiable());
+        self::assertFalse($reflector->reflect(ClassWithExtendedConstructor::class)->isInstantiable());
     }
 
     public function testIsCloneable() : void
