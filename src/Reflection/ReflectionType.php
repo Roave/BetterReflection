@@ -80,11 +80,9 @@ class ReflectionType
     }
 
     /**
-     * @return ReflectionClass
-     *
-     * @throws IdentifierNotFound if the target type could not be resolved
-     * @throws ReflectionTypeDoesNotPointToAClassAlikeType if the type is not pointing to a class-alike symbol
-     * @throws ClassDoesNotExist if the target type is not a class
+     * @throws IdentifierNotFound The target type could not be resolved.
+     * @throws ReflectionTypeDoesNotPointToAClassAlikeType The type is not pointing to a class-alike symbol.
+     * @throws ClassDoesNotExist The target type is not a class.
      */
     public function targetReflectionClass() : ReflectionClass
     {
