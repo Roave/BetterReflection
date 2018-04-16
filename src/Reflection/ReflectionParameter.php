@@ -388,7 +388,7 @@ class ReflectionParameter implements CoreReflector
             $type = $type->type;
         }
 
-        return ReflectionType::createFromType((string) $type, $this->allowsNull());
+        return ReflectionType::createFromTypeAndReflector((string) $type, $this->allowsNull(), $this->reflector);
     }
 
     /**

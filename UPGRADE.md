@@ -4,6 +4,13 @@ This document serves as a reference to upgrade your current
 BetterReflection installation if improvements, deprecations
 or backwards compatibility (BC) breakages occur.
 
+## 4.0.0
+
+### BC breaks
+
+* Method `Roave\BetterReflection\Reflection\ReflectionType::createFromType()` has been removed,
+do use `Roave\BetterReflection\Reflection\ReflectionType::createFromTypeAndReflector()` instead.
+
 ## 3.0.0
 
 ### BC breaks

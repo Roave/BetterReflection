@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
+use Roave\BetterReflection\Reflector\Reflector;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType
@@ -82,7 +83,9 @@ class ReflectionTypeTest extends TestCase
 
     public function testSelfIsNotBuiltin() : void
     {
-        $betterReflectionType  = BetterReflectionType::createFromType('self', false);
+        /** @var $reflector Reflector */
+        $reflector             = $this->createMock(Reflector::class);
+        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('self', false, $reflector);
         $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
 
         self::assertFalse($reflectionTypeAdapter->isBuiltin());
@@ -90,7 +93,9 @@ class ReflectionTypeTest extends TestCase
 
     public function testParentIsNotBuiltin() : void
     {
-        $betterReflectionType  = BetterReflectionType::createFromType('parent', false);
+        /** @var $reflector Reflector */
+        $reflector             = $this->createMock(Reflector::class);
+        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('parent', false, $reflector);
         $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
 
         self::assertFalse($reflectionTypeAdapter->isBuiltin());
