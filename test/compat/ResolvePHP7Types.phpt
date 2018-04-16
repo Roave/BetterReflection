@@ -43,20 +43,20 @@ array_map(function (\Roave\BetterReflection\Reflection\ReflectionParameter $para
 ?>
 --EXPECTF--
 array(2) {
-  'builtIn' =>
+  ["builtIn"]=>
   bool(true)
-  'type' =>
+  ["type"]=>
   string(4) "bool"
 }
 array(2) {
-  'builtIn' =>
+  ["builtIn"]=>
   bool(true)
-  'type' =>
+  ["type"]=>
   string(3) "int"
 }
 array(2) {
-  'builtIn' =>
+  ["builtIn"]=>
   bool(true)
-  'type' =>
+  ["type"]=>
   string(6) "string"
 }
