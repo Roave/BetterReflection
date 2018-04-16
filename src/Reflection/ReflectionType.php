@@ -47,20 +47,6 @@ class ReflectionType
     {
     }
 
-    /**
-     * @deprecated please use {@see \Roave\BetterReflection\Reflection\ReflectionType::createFromTypeAndReflector()}
-     *             instead
-     */
-    public static function createFromType(string $type, bool $allowsNull) : self
-    {
-        $reflectionType             = new self();
-
-        $reflectionType->type       = ltrim($type, '\\');
-        $reflectionType->allowsNull = $allowsNull;
-
-        return $reflectionType;
-    }
-
     public static function createFromTypeAndReflector(
         string $type,
         bool $allowsNull,
