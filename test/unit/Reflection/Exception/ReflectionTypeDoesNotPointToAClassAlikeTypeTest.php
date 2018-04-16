@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\Reflection\Exception;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\ReflectionTypeDoesNotPointToAClassAlikeType;
 use Roave\BetterReflection\Reflection\ReflectionType;
 
