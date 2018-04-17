@@ -8,6 +8,8 @@ or backwards compatibility (BC) breakages occur.
 
 ### BC breaks
 
+* Method `Roave\BetterReflection\Reflection\ReflectionType::createFromType()` has been removed,
+do use `Roave\BetterReflection\Reflection\ReflectionType::createFromTypeAndReflector()` instead.
 * Method `Roave\BetterReflection\Reflection\Adapter\ReflectionClass#getProperty()` throws exception
 when property does not exist to be compatible with core reflection.
 * Method `Roave\BetterReflection\Reflection\Adapter\ReflectionObject#getProperty()` throws exception

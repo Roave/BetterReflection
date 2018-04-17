@@ -7,9 +7,10 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflector\Reflector;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -82,7 +83,9 @@ class ReflectionTypeTest extends TestCase
 
     public function testSelfIsNotBuiltin() : void
     {
-        $betterReflectionType  = BetterReflectionType::createFromType('self', false);
+        /** @var Reflector $reflector */
+        $reflector             = $this->createMock(Reflector::class);
+        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('self', false, $reflector);
         $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
 
         self::assertFalse($reflectionTypeAdapter->isBuiltin());
@@ -90,7 +93,9 @@ class ReflectionTypeTest extends TestCase
 
     public function testParentIsNotBuiltin() : void
     {
-        $betterReflectionType  = BetterReflectionType::createFromType('parent', false);
+        /** @var Reflector $reflector */
+        $reflector             = $this->createMock(Reflector::class);
+        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('parent', false, $reflector);
         $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
 
         self::assertFalse($reflectionTypeAdapter->isBuiltin());

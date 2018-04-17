@@ -409,10 +409,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         }
 
         if ($returnType instanceof NullableType) {
-            return ReflectionType::createFromType((string) $returnType->type, true);
+            return ReflectionType::createFromTypeAndReflector((string) $returnType->type, true, $this->reflector);
         }
 
-        return ReflectionType::createFromType((string) $returnType, false);
+        return ReflectionType::createFromTypeAndReflector((string) $returnType, false, $this->reflector);
     }
 
     /**

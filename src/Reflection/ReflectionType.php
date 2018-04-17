@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\ReflectionTypeDoesNotPointToAClassAlikeType;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\Reflector\Reflector;
 use function array_key_exists;
 use function ltrim;
 use function strtolower;
@@ -34,15 +38,26 @@ class ReflectionType
      */
     private $allowsNull;
 
+    /**
+     * @var Reflector
+     */
+    private $reflector;
+
     private function __construct()
     {
     }
 
-    public static function createFromType(string $type, bool $allowsNull) : self
-    {
-        $reflectionType             = new self();
+    public static function createFromTypeAndReflector(
+        string $type,
+        bool $allowsNull,
+        Reflector $classReflector
+    ) : self {
+        $reflectionType = new self();
+
         $reflectionType->type       = ltrim($type, '\\');
         $reflectionType->allowsNull = $allowsNull;
+        $reflectionType->reflector  = $classReflector;
+
         return $reflectionType;
     }
 
@@ -62,6 +77,26 @@ class ReflectionType
     public function isBuiltin() : bool
     {
         return array_key_exists(strtolower($this->type), self::BUILT_IN_TYPES);
+    }
+
+    /**
+     * @throws IdentifierNotFound The target type could not be resolved.
+     * @throws ReflectionTypeDoesNotPointToAClassAlikeType The type is not pointing to a class-alike symbol.
+     * @throws ClassDoesNotExist The target type is not a class.
+     */
+    public function targetReflectionClass() : ReflectionClass
+    {
+        if ($this->isBuiltin()) {
+            throw ReflectionTypeDoesNotPointToAClassAlikeType::for($this);
+        }
+
+        $reflectionClass = $this->reflector->reflect($this->type);
+
+        if (! $reflectionClass instanceof ReflectionClass) {
+            throw ClassDoesNotExist::forDifferentReflectionType($reflectionClass);
+        }
+
+        return $reflectionClass;
     }
 
     /**

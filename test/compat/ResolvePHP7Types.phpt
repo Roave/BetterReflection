@@ -24,29 +24,39 @@ $reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
 
 $functionInfo = $reflector->reflect('myFunction');
 
-var_dump($functionInfo->getReturnType());
+$returnType = $functionInfo->getReturnType();
+
+var_dump([
+    'builtIn' => $returnType->isBuiltin(),
+    'type' => $returnType->__toString(),
+]);
 
 array_map(function (\Roave\BetterReflection\Reflection\ReflectionParameter $param) {
-    var_dump($param->getType());
+    $type = $param->getType();
+
+    var_dump([
+        'builtIn' => $type->isBuiltin(),
+        'type' => $type->__toString(),
+    ]);
 }, $functionInfo->getParameters());
 
 ?>
 --EXPECTF--
-object(Roave\BetterReflection\Reflection\ReflectionType)#%d (2) {
-  ["type":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  string(4) "bool"
-  ["allowsNull":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  bool(false)
-}
-object(Roave\BetterReflection\Reflection\ReflectionType)#%d (2) {
-  ["type":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  string(3) "int"
-  ["allowsNull":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  bool(false)
-}
-object(Roave\BetterReflection\Reflection\ReflectionType)#%d (2) {
-  ["type":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
-  string(6) "string"
-  ["allowsNull":"Roave\BetterReflection\Reflection\ReflectionType":private]=>
+array(2) {
+  ["builtIn"]=>
   bool(true)
+  ["type"]=>
+  string(4) "bool"
+}
+array(2) {
+  ["builtIn"]=>
+  bool(true)
+  ["type"]=>
+  string(3) "int"
+}
+array(2) {
+  ["builtIn"]=>
+  bool(true)
+  ["type"]=>
+  string(6) "string"
 }
