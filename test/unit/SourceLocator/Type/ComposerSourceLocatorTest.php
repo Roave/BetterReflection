@@ -19,9 +19,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class ComposerSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

@@ -22,9 +22,7 @@ use function file_get_contents;
  */
 class ReflectionClassStringCastTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

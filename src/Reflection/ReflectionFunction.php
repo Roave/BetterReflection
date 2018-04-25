@@ -11,6 +11,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionFunctionStringCast;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -22,7 +23,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      *
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     public static function createFromName(string $functionName) : self
     {
@@ -32,7 +33,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      *
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     public static function createFromClosure(Closure $closure) : self
     {

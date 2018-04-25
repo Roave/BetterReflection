@@ -30,6 +30,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
@@ -55,44 +56,28 @@ class ReflectionClass implements Reflection, CoreReflector
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
 
-    /**
-     * @var Reflector
-     */
+    /** @var Reflector */
     private $reflector;
 
-    /**
-     * @var NamespaceNode|null
-     */
+    /** @var NamespaceNode|null */
     private $declaringNamespace;
 
-    /**
-     * @var LocatedSource
-     */
+    /** @var LocatedSource */
     private $locatedSource;
 
-    /**
-     * @var ClassLikeNode
-     */
+    /** @var ClassLikeNode */
     private $node;
 
-    /**
-     * @var ReflectionClassConstant[]|null indexed by name, when present
-     */
+    /** @var ReflectionClassConstant[]|null indexed by name, when present */
     private $cachedReflectionConstants;
 
-    /**
-     * @var ReflectionProperty[]|null
-     */
+    /** @var ReflectionProperty[]|null */
     private $cachedImmediateProperties;
 
-    /**
-     * @var ReflectionProperty[]|null
-     */
+    /** @var ReflectionProperty[]|null */
     private $cachedProperties;
 
-    /**
-     * @var ReflectionMethod[]|null
-     */
+    /** @var ReflectionMethod[]|null */
     private $cachedMethods;
 
     private function __construct()
@@ -119,7 +104,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Create a ReflectionClass by name, using default reflectors etc.
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     public static function createFromName(string $className) : self
     {
@@ -135,7 +120,7 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      * @param object $instance
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      */
@@ -313,14 +298,18 @@ class ReflectionClass implements Reflection, CoreReflector
                     continue;
                 }
 
-                if (! isset($this->cachedMethods[$methodAlias])) {
-                    $this->cachedMethods[$methodAlias] = $method;
+                if (isset($this->cachedMethods[$methodAlias])) {
+                    continue;
                 }
+
+                $this->cachedMethods[$methodAlias] = $method;
             }
 
-            if (! isset($this->cachedMethods[$methodName])) {
-                $this->cachedMethods[$methodName] = $method;
+            if (isset($this->cachedMethods[$methodName])) {
+                continue;
             }
+
+            $this->cachedMethods[$methodName] = $method;
         }
 
         return $this->cachedMethods;
@@ -383,9 +372,11 @@ class ReflectionClass implements Reflection, CoreReflector
         $methodsByName = [];
 
         foreach ($methods as $method) {
-            if ($filter === null || $filter & $method->getModifiers()) {
-                $methodsByName[$method->getName()] = $method;
+            if ($filter !== null && ! ($filter & $method->getModifiers())) {
+                continue;
             }
+
+            $methodsByName[$method->getName()] = $method;
         }
 
         return $methodsByName;
@@ -565,9 +556,11 @@ class ReflectionClass implements Reflection, CoreReflector
         foreach ($allReflectionConstants as $constant) {
             $constantName = $constant->getName();
 
-            if (! isset($reflectionConstants[$constantName])) {
-                $reflectionConstants[$constantName] = $constant;
+            if (isset($reflectionConstants[$constantName])) {
+                continue;
             }
+
+            $reflectionConstants[$constantName] = $constant;
         }
 
         return $reflectionConstants;
@@ -603,18 +596,20 @@ class ReflectionClass implements Reflection, CoreReflector
         if ($this->cachedImmediateProperties === null) {
             $properties = [];
             foreach ($this->node->stmts as $stmt) {
-                if ($stmt instanceof PropertyNode) {
-                    foreach ($stmt->props as $propertyPositionInNode => $propertyNode) {
-                        $prop                         = ReflectionProperty::createFromNode(
-                            $this->reflector,
-                            $stmt,
-                            $propertyPositionInNode,
-                            $this->declaringNamespace,
-                            $this,
-                            $this
-                        );
-                        $properties[$prop->getName()] = $prop;
-                    }
+                if (! ($stmt instanceof PropertyNode)) {
+                    continue;
+                }
+
+                foreach ($stmt->props as $propertyPositionInNode => $propertyNode) {
+                    $prop                         = ReflectionProperty::createFromNode(
+                        $this->reflector,
+                        $stmt,
+                        $propertyPositionInNode,
+                        $this->declaringNamespace,
+                        $this,
+                        $this
+                    );
+                    $properties[$prop->getName()] = $prop;
                 }
             }
 
@@ -775,7 +770,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * Get the parent class, if it is defined. If this class does not have a
      * specified parent class, this will throw an exception.
      *
-     * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
+     * @throws NotAClassReflection
      */
     public function getParentClass() : ?ReflectionClass
     {
@@ -1300,7 +1295,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Set whether this class is final or not
      *
-     * @throws \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
+     * @throws NotAClassReflection
      */
     public function setFinal(bool $isFinal) : void
     {
@@ -1383,18 +1378,20 @@ class ReflectionClass implements Reflection, CoreReflector
         $lowerName = strtolower($propertyName);
 
         foreach ($this->node->stmts as $key => $stmt) {
-            if ($stmt instanceof PropertyNode) {
-                $propertyNames = array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
-                    return strtolower($propertyProperty->name);
-                }, $stmt->props);
+            if (! ($stmt instanceof PropertyNode)) {
+                continue;
+            }
 
-                if (in_array($lowerName, $propertyNames, true)) {
-                    $this->cachedProperties          = null;
-                    $this->cachedImmediateProperties = null;
-                    unset($this->node->stmts[$key]);
+            $propertyNames = array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
+                return strtolower($propertyProperty->name);
+            }, $stmt->props);
 
-                    return true;
-                }
+            if (in_array($lowerName, $propertyNames, true)) {
+                $this->cachedProperties          = null;
+                $this->cachedImmediateProperties = null;
+                unset($this->node->stmts[$key]);
+
+                return true;
             }
         }
 

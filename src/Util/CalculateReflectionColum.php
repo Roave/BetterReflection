@@ -16,8 +16,8 @@ use function strrpos;
 final class CalculateReflectionColum
 {
     /**
-     * @throws \Roave\BetterReflection\Util\Exception\InvalidNodePosition
-     * @throws \Roave\BetterReflection\Util\Exception\NoNodePosition
+     * @throws InvalidNodePosition
+     * @throws NoNodePosition
      */
     public static function getStartColumn(string $source, Node $node) : int
     {
@@ -29,8 +29,8 @@ final class CalculateReflectionColum
     }
 
     /**
-     * @throws \Roave\BetterReflection\Util\Exception\InvalidNodePosition
-     * @throws \Roave\BetterReflection\Util\Exception\NoNodePosition
+     * @throws InvalidNodePosition
+     * @throws NoNodePosition
      */
     public static function getEndColumn(string $source, Node $node) : int
     {
@@ -42,7 +42,7 @@ final class CalculateReflectionColum
     }
 
     /**
-     * @throws \Roave\BetterReflection\Util\Exception\InvalidNodePosition
+     * @throws InvalidNodePosition
      */
     private static function calculateColumn(string $source, int $position) : int
     {

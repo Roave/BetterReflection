@@ -13,9 +13,7 @@ use function array_merge;
 
 class AggregateSourceLocator implements SourceLocator
 {
-    /**
-     * @var SourceLocator[]
-     */
+    /** @var SourceLocator[] */
     private $sourceLocators;
 
     /**

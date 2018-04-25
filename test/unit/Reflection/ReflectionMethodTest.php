@@ -48,14 +48,10 @@ use function basename;
  */
 class ReflectionMethodTest extends TestCase
 {
-    /**
-     * @var ClassReflector
-     */
+    /** @var ClassReflector */
     private $reflector;
 
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     public function setUp() : void

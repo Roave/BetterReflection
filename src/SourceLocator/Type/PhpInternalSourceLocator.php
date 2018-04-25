@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 use ReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
@@ -20,9 +21,7 @@ use function trait_exists;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator
 {
-    /**
-     * @var SourceStubber
-     */
+    /** @var SourceStubber */
     private $stubber;
 
     public function __construct(Locator $astLocator)
@@ -35,7 +34,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

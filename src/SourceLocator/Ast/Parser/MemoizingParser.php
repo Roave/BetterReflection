@@ -16,14 +16,10 @@ use function strlen;
  */
 final class MemoizingParser implements Parser
 {
-    /**
-     * @var Node[][]|null[] indexed by source hash
-     */
+    /** @var Node[][]|null[] indexed by source hash */
     private $sourceHashToAst = [];
 
-    /**
-     * @var Parser
-     */
+    /** @var Parser */
     private $wrappedParser;
 
     public function __construct(Parser $wrappedParser)

@@ -16,9 +16,7 @@ use Roave\BetterReflectionTest\Fixture\StringCastProperties;
  */
 class ReflectionPropertyStringCastTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

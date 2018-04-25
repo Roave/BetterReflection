@@ -17,9 +17,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class SingleFileSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

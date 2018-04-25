@@ -12,9 +12,7 @@ use function func_get_args;
 
 class ReflectionFunction extends CoreReflectionFunction
 {
-    /**
-     * @var BetterReflectionFunction
-     */
+    /** @var BetterReflectionFunction */
     private $betterReflectionFunction;
 
     public function __construct(BetterReflectionFunction $betterReflectionFunction)

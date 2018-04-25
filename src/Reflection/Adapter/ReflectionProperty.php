@@ -14,14 +14,10 @@ use function func_get_args;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
-    /**
-     * @var BetterReflectionProperty
-     */
+    /** @var BetterReflectionProperty */
     private $betterReflectionProperty;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $accessible = false;
 
     public function __construct(BetterReflectionProperty $betterReflectionProperty)

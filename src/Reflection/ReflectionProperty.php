@@ -21,6 +21,7 @@ use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
@@ -32,39 +33,25 @@ use function is_object;
 
 class ReflectionProperty implements CoreReflector
 {
-    /**
-     * @var ReflectionClass
-     */
+    /** @var ReflectionClass */
     private $declaringClass;
 
-    /**
-     * @var ReflectionClass
-     */
+    /** @var ReflectionClass */
     private $implementingClass;
 
-    /**
-     * @var PropertyNode
-     */
+    /** @var PropertyNode */
     private $node;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $positionInNode;
 
-    /**
-     * @var Namespace_|null
-     */
+    /** @var Namespace_|null */
     private $declaringNamespace;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $declaredAtCompileTime = true;
 
-    /**
-     * @var Reflector
-     */
+    /** @var Reflector */
     private $reflector;
 
     private function __construct()
@@ -91,7 +78,7 @@ class ReflectionProperty implements CoreReflector
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     public static function createFromInstance($instance, string $propertyName) : self
     {

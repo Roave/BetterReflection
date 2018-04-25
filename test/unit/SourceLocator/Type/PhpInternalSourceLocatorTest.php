@@ -51,9 +51,7 @@ use function trim;
  */
 class PhpInternalSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

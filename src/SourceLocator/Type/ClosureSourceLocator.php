@@ -16,6 +16,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
@@ -32,14 +33,10 @@ use function strpos;
  */
 final class ClosureSourceLocator implements SourceLocator
 {
-    /**
-     * @var CoreFunctionReflection
-     */
+    /** @var CoreFunctionReflection */
     private $coreFunctionReflection;
 
-    /**
-     * @var Parser
-     */
+    /** @var Parser */
     private $parser;
 
     public function __construct(Closure $closure, Parser $parser)
@@ -51,7 +48,7 @@ final class ClosureSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws ParseToAstFailure
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
@@ -61,7 +58,7 @@ final class ClosureSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws ParseToAstFailure
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
@@ -86,24 +83,16 @@ final class ClosureSourceLocator implements SourceLocator
 
         $nodeVisitor = new class($fileName, $this->coreFunctionReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            /**
-             * @var string
-             */
+            /** @var string */
             private $fileName;
 
-            /**
-             * @var int
-             */
+            /** @var int */
             private $startLine;
 
-            /**
-             * @var (Node|null)[][]
-             */
+            /** @var (Node|null)[][] */
             private $closureNodes = [];
 
-            /**
-             * @var Namespace_|null
-             */
+            /** @var Namespace_|null */
             private $currentNamespace;
 
             public function __construct(string $fileName, int $startLine)
@@ -120,16 +109,20 @@ final class ClosureSourceLocator implements SourceLocator
                     return;
                 }
 
-                if ($node instanceof Node\Expr\Closure) {
-                    $this->closureNodes[] = [$node, $this->currentNamespace];
+                if (! ($node instanceof Node\Expr\Closure)) {
+                    return;
                 }
+
+                $this->closureNodes[] = [$node, $this->currentNamespace];
             }
 
             public function leaveNode(Node $node) : void
             {
-                if ($node instanceof Namespace_) {
-                    $this->currentNamespace = null;
+                if (! ($node instanceof Namespace_)) {
+                    return;
                 }
+
+                $this->currentNamespace = null;
             }
 
             /**

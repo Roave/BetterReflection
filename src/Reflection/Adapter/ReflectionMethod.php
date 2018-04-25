@@ -14,14 +14,10 @@ use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
-    /**
-     * @var BetterReflectionMethod
-     */
+    /** @var BetterReflectionMethod */
     private $betterReflectionMethod;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $accessible = false;
 
     public function __construct(BetterReflectionMethod $betterReflectionMethod)

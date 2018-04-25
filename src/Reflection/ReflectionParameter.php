@@ -34,44 +34,28 @@ use function strtolower;
 
 class ReflectionParameter implements CoreReflector
 {
-    /**
-     * @var ParamNode
-     */
+    /** @var ParamNode */
     private $node;
 
-    /**
-     * @var Namespace_|null
-     */
+    /** @var Namespace_|null */
     private $declaringNamespace;
 
-    /**
-     * @var ReflectionFunctionAbstract
-     */
+    /** @var ReflectionFunctionAbstract */
     private $function;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $parameterIndex;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $defaultValue;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isDefaultValueConstant = false;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $defaultValueConstantName;
 
-    /**
-     * @var Reflector
-     */
+    /** @var Reflector */
     private $reflector;
 
     private function __construct()

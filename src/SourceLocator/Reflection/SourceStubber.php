@@ -44,14 +44,10 @@ use function in_array;
  */
 final class SourceStubber
 {
-    /**
-     * @var BuilderFactory
-     */
+    /** @var BuilderFactory */
     private $builderFactory;
 
-    /**
-     * @var Standard
-     */
+    /** @var Standard */
     private $prettyPrinter;
 
     public function __construct()
@@ -110,9 +106,11 @@ final class SourceStubber
      */
     private function addDocComment(BuilderAbstract $node, CoreReflector $reflection) : void
     {
-        if ($reflection->getDocComment() !== false) {
-            $node->setDocComment(new Doc($reflection->getDocComment()));
+        if ($reflection->getDocComment() === false) {
+            return;
         }
+
+        $node->setDocComment(new Doc($reflection->getDocComment()));
     }
 
     private function addClassModifiers(Class_ $classNode, CoreReflectionClass $classReflection) : void
@@ -122,9 +120,11 @@ final class SourceStubber
             $classNode->makeAbstract();
         }
 
-        if ($classReflection->isFinal()) {
-            $classNode->makeFinal();
+        if (! $classReflection->isFinal()) {
+            return;
         }
+
+        $classNode->makeFinal();
     }
 
     /**
@@ -225,9 +225,11 @@ final class SourceStubber
             $propertyNode->makeProtected();
         }
 
-        if ($propertyReflection->isPrivate()) {
-            $propertyNode->makePrivate();
+        if (! $propertyReflection->isPrivate()) {
+            return;
         }
+
+        $propertyNode->makePrivate();
     }
 
     private function addConstants(Declaration $classNode, CoreReflectionClass $classReflection) : void
@@ -345,9 +347,11 @@ final class SourceStubber
             $methodNode->makePrivate();
         }
 
-        if ($methodReflection->returnsReference()) {
-            $methodNode->makeReturnByRef();
+        if (! $methodReflection->returnsReference()) {
+            return;
         }
+
+        $methodNode->makeReturnByRef();
     }
 
     private function addParameters(Method $methodNode, CoreReflectionMethod $methodReflection) : void

@@ -179,9 +179,11 @@ class ReflectionObjectTest extends TestCase
 
         $filteredMethods = [];
         foreach ($publicClassMethods as $method) {
-            if (! in_array($method, $ignoreMethods, true)) {
-                $filteredMethods[$method] = [$method];
+            if (in_array($method, $ignoreMethods, true)) {
+                continue;
             }
+
+            $filteredMethods[$method] = [$method];
         }
 
         return $filteredMethods;

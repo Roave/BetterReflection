@@ -8,6 +8,7 @@ use Composer\Autoload\ClassLoader;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use function file_get_contents;
 
@@ -20,9 +21,7 @@ use function file_get_contents;
  */
 class ComposerSourceLocator extends AbstractSourceLocator
 {
-    /**
-     * @var ClassLoader
-     */
+    /** @var ClassLoader */
     private $classLoader;
 
     public function __construct(ClassLoader $classLoader, Locator $astLocator)
@@ -34,7 +33,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

@@ -11,9 +11,7 @@ use function func_get_args;
 
 class ReflectionParameter extends CoreReflectionParameter
 {
-    /**
-     * @var BetterReflectionParameter
-     */
+    /** @var BetterReflectionParameter */
     private $betterReflectionParameter;
 
     public function __construct(BetterReflectionParameter $betterReflectionParameter)

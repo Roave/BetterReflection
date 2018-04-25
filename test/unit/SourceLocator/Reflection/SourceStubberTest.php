@@ -19,9 +19,7 @@ use Traversable;
  */
 class SourceStubberTest extends TestCase
 {
-    /**
-     * @var SourceStubber
-     */
+    /** @var SourceStubber */
     private $stubber;
 
     /**

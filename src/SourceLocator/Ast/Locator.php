@@ -19,14 +19,10 @@ use Throwable;
  */
 class Locator
 {
-    /**
-     * @var FindReflectionsInTree
-     */
+    /** @var FindReflectionsInTree */
     private $findReflectionsInTree;
 
-    /**
-     * @var Parser
-     */
+    /** @var Parser */
     private $parser;
 
     public function __construct(Parser $parser)
@@ -37,7 +33,7 @@ class Locator
     }
 
     /**
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      * @throws Exception\ParseToAstFailure
      */
     public function findReflection(
@@ -58,7 +54,7 @@ class Locator
     /**
      * Get an array of reflections found in some code.
      *
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
+     * @return Reflection[]
      * @throws Exception\ParseToAstFailure
      */
     public function findReflectionsOfType(
@@ -82,7 +78,7 @@ class Locator
      * Given an array of Reflections, try to find the identifier.
      *
      * @param Reflection[] $reflections
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     private function findInArray(array $reflections, Identifier $identifier) : Reflection
     {

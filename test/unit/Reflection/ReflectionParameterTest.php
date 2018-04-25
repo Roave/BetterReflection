@@ -41,14 +41,10 @@ use function sprintf;
  */
 class ReflectionParameterTest extends TestCase
 {
-    /**
-     * @var ClassReflector
-     */
+    /** @var ClassReflector */
     private $reflector;
 
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     public function setUp() : void

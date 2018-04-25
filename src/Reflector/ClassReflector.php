@@ -7,13 +7,13 @@ namespace Roave\BetterReflection\Reflector;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 class ClassReflector implements Reflector
 {
-    /**
-     * @var SourceLocator
-     */
+    /** @var SourceLocator */
     private $sourceLocator;
 
     public function __construct(SourceLocator $sourceLocator)
@@ -24,14 +24,14 @@ class ClassReflector implements Reflector
     /**
      * Create a ReflectionClass for the specified $className.
      *
-     * @return \Roave\BetterReflection\Reflection\ReflectionClass
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @return ReflectionClass
+     * @throws IdentifierNotFound
      */
     public function reflect(string $className) : Reflection
     {
         $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        /** @var \Roave\BetterReflection\Reflection\ReflectionClass|null $classInfo */
+        /** @var ReflectionClass|null $classInfo */
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
 
         if ($classInfo === null) {
@@ -44,11 +44,11 @@ class ClassReflector implements Reflector
     /**
      * Get all the classes available in the scope specified by the SourceLocator.
      *
-     * @return \Roave\BetterReflection\Reflection\ReflectionClass[]
+     * @return ReflectionClass[]
      */
     public function getAllClasses() : array
     {
-        /** @var \Roave\BetterReflection\Reflection\ReflectionClass[] $allClasses */
+        /** @var ReflectionClass[] $allClasses */
         $allClasses = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS)

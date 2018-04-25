@@ -21,9 +21,7 @@ use function uniqid;
  */
 class EvaledCodeSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

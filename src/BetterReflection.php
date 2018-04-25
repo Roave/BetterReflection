@@ -21,34 +21,22 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
 
 final class BetterReflection
 {
-    /**
-     * @var SourceLocator|null
-     */
+    /** @var SourceLocator|null */
     private $sourceLocator;
 
-    /**
-     * @var ClassReflector|null
-     */
+    /** @var ClassReflector|null */
     private $classReflector;
 
-    /**
-     * @var FunctionReflector|null
-     */
+    /** @var FunctionReflector|null */
     private $functionReflector;
 
-    /**
-     * @var Parser|null
-     */
+    /** @var Parser|null */
     private $phpParser;
 
-    /**
-     * @var AstLocator|null
-     */
+    /** @var AstLocator|null */
     private $astLocator;
 
-    /**
-     * @var FindReflectionOnLine|null
-     */
+    /** @var FindReflectionOnLine|null */
     private $findReflectionOnLine;
 
     public function sourceLocator() : SourceLocator

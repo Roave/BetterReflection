@@ -9,6 +9,7 @@ use ReflectionFunction;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use function array_merge;
 use function array_values;
@@ -33,9 +34,7 @@ use function trait_exists;
  */
 class AutoloadSourceLocator extends AbstractSourceLocator
 {
-    /**
-     * @var AstLocator
-     */
+    /** @var AstLocator */
     private $astLocator;
 
     /**
@@ -59,15 +58,13 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     private static $autoloadLocatedFile;
 
-    /**
-     * @var AstLocator
-     */
+    /** @var AstLocator */
     private static $currentAstLocator;
 
     /**
      * {@inheritDoc}
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {

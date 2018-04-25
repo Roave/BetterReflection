@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
 use Roave\Signature\CheckerInterface;
@@ -20,24 +21,16 @@ use function str_replace;
 
 final class FileCacheLoader implements LoaderMethodInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $cacheDirectory;
 
-    /**
-     * @var ClassPrinterInterface
-     */
+    /** @var ClassPrinterInterface */
     private $classPrinter;
 
-    /**
-     * @var SignerInterface
-     */
+    /** @var SignerInterface */
     private $signer;
 
-    /**
-     * @var CheckerInterface
-     */
+    /** @var CheckerInterface */
     private $checker;
 
     public function __construct(
@@ -54,7 +47,7 @@ final class FileCacheLoader implements LoaderMethodInterface
 
     /**
      * {@inheritdoc}
-     * @throws \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
+     * @throws SignatureCheckFailed
      */
     public function __invoke(ReflectionClass $classInfo) : void
     {

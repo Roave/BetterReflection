@@ -14,19 +14,13 @@ use function spl_object_hash;
 
 final class MemoizingSourceLocator implements SourceLocator
 {
-    /**
-     * @var SourceLocator
-     */
+    /** @var SourceLocator */
     private $wrappedSourceLocator;
 
-    /**
-     * @var Reflection[] indexed by reflector key and identifier cache key
-     */
+    /** @var Reflection[] indexed by reflector key and identifier cache key */
     private $cacheByIdentifierKeyAndOid = [];
 
-    /**
-     * @var Reflection[][] indexed by reflector key and identifier type cache key
-     */
+    /** @var Reflection[][] indexed by reflector key and identifier type cache key */
     private $cacheByIdentifierTypeKeyAndOid = [];
 
     public function __construct(SourceLocator $wrappedSourceLocator)
@@ -47,7 +41,7 @@ final class MemoizingSourceLocator implements SourceLocator
     }
 
     /**
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
+     * @return Reflection[]
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {

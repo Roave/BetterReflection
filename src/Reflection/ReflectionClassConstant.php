@@ -17,34 +17,22 @@ use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant implements CoreReflector
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $valueWasCached = false;
 
-    /**
-     * @var int|float|mixed[]|string|bool|null const value
-     */
+    /** @var int|float|mixed[]|string|bool|null const value */
     private $value;
 
-    /**
-     * @var Reflector
-     */
+    /** @var Reflector */
     private $reflector;
 
-    /**
-     * @var ReflectionClass Constant owner
-     */
+    /** @var ReflectionClass Constant owner */
     private $owner;
 
-    /**
-     * @var ClassConst
-     */
+    /** @var ClassConst */
     private $node;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $positionInNode;
 
     private function __construct()

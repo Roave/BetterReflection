@@ -18,9 +18,7 @@ use function strtolower;
 
 class ReflectionClass extends CoreReflectionClass
 {
-    /**
-     * @var BetterReflectionClass
-     */
+    /** @var BetterReflectionClass */
     private $betterReflectionClass;
 
     public function __construct(BetterReflectionClass $betterReflectionClass)
