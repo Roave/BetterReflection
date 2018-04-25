@@ -29,14 +29,10 @@ use function uniqid;
  */
 class CompileNodeToValueTest extends TestCase
 {
-    /**
-     * @var Parser
-     */
+    /** @var Parser */
     private $parser;
 
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

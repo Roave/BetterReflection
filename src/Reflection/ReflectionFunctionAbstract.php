@@ -18,10 +18,13 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
@@ -38,29 +41,19 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 {
     public const CLOSURE_NAME = '{closure}';
 
-    /**
-     * @var NamespaceNode|null
-     */
+    /** @var NamespaceNode|null */
     private $declaringNamespace;
 
-    /**
-     * @var LocatedSource
-     */
+    /** @var LocatedSource */
     private $locatedSource;
 
-    /**
-     * @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure
-     */
+    /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure */
     private $node;
 
-    /**
-     * @var Reflector
-     */
+    /** @var Reflector */
     private $reflector;
 
-    /**
-     * @var Parser
-     */
+    /** @var Parser */
     private static $parser;
 
     protected function __construct()
@@ -77,7 +70,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      *
      * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
-     * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
+     * @throws InvalidAbstractFunctionNodeType
      */
     protected function populateFunctionAbstract(
         Reflector $reflector,
@@ -325,11 +318,13 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
                 return true;
             }
 
-            if (is_array($nodeProperty)) {
-                foreach ($nodeProperty as $nodePropertyArrayItem) {
-                    if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
-                        return true;
-                    }
+            if (! is_array($nodeProperty)) {
+                continue;
+            }
+
+            foreach ($nodeProperty as $nodePropertyArrayItem) {
+                if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
+                    return true;
                 }
             }
         }
@@ -494,8 +489,8 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * $reflectionFunction->setBodyFromClosure(function () { return true; });
      *
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
-     * @throws \Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName
+     * @throws ParseToAstFailure
+     * @throws InvalidIdentifierName
      */
     public function setBodyFromClosure(Closure $newBody) : void
     {
@@ -559,9 +554,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $lowerName = strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
-            if (strtolower($paramNode->name) === $lowerName) {
-                unset($this->node->params[$key]);
+            if (strtolower($paramNode->name) !== $lowerName) {
+                continue;
             }
+
+            unset($this->node->params[$key]);
         }
     }
 

@@ -21,9 +21,7 @@ class IdentifierType
         self::IDENTIFIER_FUNCTION => null,
     ];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
     public function __construct(string $type = self::IDENTIFIER_CLASS)

@@ -16,19 +16,13 @@ use function explode;
 
 class FindPropertyType
 {
-    /**
-     * @var ResolveTypes
-     */
+    /** @var ResolveTypes */
     private $resolveTypes;
 
-    /**
-     * @var DocBlockFactory
-     */
+    /** @var DocBlockFactory */
     private $docBlockFactory;
 
-    /**
-     * @var NamespaceNodeToReflectionTypeContext
-     */
+    /** @var NamespaceNodeToReflectionTypeContext */
     private $makeContext;
 
     public function __construct()
@@ -52,7 +46,7 @@ class FindPropertyType
         }
 
         $context = $this->makeContext->__invoke($namespace);
-        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Var_[] $varTags */
+        /** @var Var_[] $varTags */
         $varTags = $this->docBlockFactory->create($docComment, $context)->getTagsByName('var');
 
         return array_merge(

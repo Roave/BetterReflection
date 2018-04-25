@@ -16,6 +16,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
@@ -35,14 +36,10 @@ use function strpos;
  */
 final class AnonymousClassObjectSourceLocator implements SourceLocator
 {
-    /**
-     * @var CoreReflectionClass
-     */
+    /** @var CoreReflectionClass */
     private $coreClassReflection;
 
-    /**
-     * @var \PhpParser\Parser
-     */
+    /** @var Parser */
     private $parser;
 
     /**
@@ -67,7 +64,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws ParseToAstFailure
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
@@ -77,7 +74,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
     /**
      * {@inheritDoc}
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws ParseToAstFailure
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
     {
@@ -102,19 +99,13 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $nodeVisitor = new class($fileName, $this->coreClassReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            /**
-             * @var string
-             */
+            /** @var string */
             private $fileName;
 
-            /**
-             * @var int
-             */
+            /** @var int */
             private $startLine;
 
-            /**
-             * @var Class_[]
-             */
+            /** @var Class_[] */
             private $anonymousClassNodes = [];
 
             public function __construct(string $fileName, int $startLine)
@@ -125,9 +116,11 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
             public function enterNode(Node $node) : void
             {
-                if ($node instanceof Node\Stmt\Class_ && $node->name === null) {
-                    $this->anonymousClassNodes[] = $node;
+                if (! ($node instanceof Node\Stmt\Class_) || $node->name !== null) {
+                    return;
                 }
+
+                $this->anonymousClassNodes[] = $node;
             }
 
             public function getAnonymousClassNode() : ?Class_

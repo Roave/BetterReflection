@@ -14,7 +14,7 @@ class FileChecker
 {
     /**
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws InvalidFileLocation
      */
     public static function assertReadableFile(string $filename) : void
     {

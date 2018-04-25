@@ -30,14 +30,10 @@ use function uniqid;
  */
 class AutoloadSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
-    /**
-     * @var ClassReflector
-     */
+    /** @var ClassReflector */
     private $classReflector;
 
     protected function setUp() : void

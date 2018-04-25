@@ -6,7 +6,9 @@ namespace Roave\BetterReflection\NodeCompiler;
 
 use PhpParser\Node;
 use ReflectionFunction;
+use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
 use function array_combine;
 use function array_map;
@@ -20,9 +22,7 @@ use function sprintf;
 
 class CompileNodeToValue
 {
-    /**
-     * @var callable[]|null indexed by supported expression node class name
-     */
+    /** @var callable[]|null indexed by supported expression node class name */
     private static $nodeEvaluators;
 
     /**
@@ -99,7 +99,7 @@ class CompileNodeToValue
      * Compile constant expressions
      *
      * @return bool|mixed|null
-     * @throws \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
+     * @throws UnableToCompileNode
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode)
     {
@@ -126,7 +126,7 @@ class CompileNodeToValue
      * Compile class constants
      *
      * @return string|int|float|bool|mixed[]|null
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
@@ -164,7 +164,7 @@ class CompileNodeToValue
      *
      * @return mixed
      *
-     * @throws \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
+     * @throws UnableToCompileNode
      */
     private function compileBinaryOperator(Node\Expr\BinaryOp $node, CompilerContext $context)
     {

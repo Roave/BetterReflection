@@ -17,9 +17,7 @@ use Roave\BetterReflectionTest\Fixture;
  */
 class NotAClassReflectionTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

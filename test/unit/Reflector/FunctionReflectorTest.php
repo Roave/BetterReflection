@@ -17,9 +17,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class FunctionReflectorTest extends TestCase
 {
-    /**
-     * @var ClassReflector
-     */
+    /** @var ClassReflector */
     private $classReflector;
 
     protected function setUp() : void

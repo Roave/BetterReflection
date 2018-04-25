@@ -9,10 +9,12 @@ use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Namespace_;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use function class_exists;
 use function get_class;
@@ -22,26 +24,20 @@ use function strtolower;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
-    /**
-     * @var ReflectionClass
-     */
+    /** @var ReflectionClass */
     private $declaringClass;
 
-    /**
-     * @var ReflectionClass
-     */
+    /** @var ReflectionClass */
     private $implementingClass;
 
-    /**
-     * @var MethodNode
-     */
+    /** @var MethodNode */
     private $methodNode;
 
     /**
      * @internal
      * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
-     * @throws \Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType
+     * @throws InvalidAbstractFunctionNodeType
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -64,7 +60,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * Create a reflection of a method by it's name using a named class
      *
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      * @throws \OutOfBoundsException
      */
     public static function createFromName(string $className, string $methodName) : self
@@ -79,7 +75,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      * @throws \OutOfBoundsException
      */
     public static function createFromInstance($instance, string $methodName) : self

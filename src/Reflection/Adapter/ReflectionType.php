@@ -9,9 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 class ReflectionType extends CoreReflectionType
 {
-    /**
-     * @var BetterReflectionType
-     */
+    /** @var BetterReflectionType */
     private $betterReflectionType;
 
     public function __construct(BetterReflectionType $betterReflectionType)

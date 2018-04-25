@@ -11,7 +11,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
@@ -20,14 +22,10 @@ use function method_exists;
 
 final class FindReflectionOnLine
 {
-    /**
-     * @var SourceLocator
-     */
+    /** @var SourceLocator */
     private $sourceLocator;
 
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     public function __construct(SourceLocator $sourceLocator, Locator $astLocator)
@@ -42,8 +40,8 @@ final class FindReflectionOnLine
      * Returns null if no reflections found on the line.
      *
      * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
+     * @throws InvalidFileLocation
+     * @throws ParseToAstFailure
      * @throws \InvalidArgumentException
      */
     public function __invoke(string $filename, int $lineNumber)
@@ -73,8 +71,8 @@ final class FindReflectionOnLine
      *
      * @return Reflection[]
      *
-     * @throws \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
-     * @throws \Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation
+     * @throws ParseToAstFailure
+     * @throws InvalidFileLocation
      */
     private function computeReflections(string $filename) : array
     {

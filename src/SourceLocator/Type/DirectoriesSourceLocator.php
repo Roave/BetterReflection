@@ -23,9 +23,7 @@ use function is_string;
  */
 class DirectoriesSourceLocator implements SourceLocator
 {
-    /**
-     * @var AggregateSourceLocator
-     */
+    /** @var AggregateSourceLocator */
     private $aggregateSourceLocator;
 
     /**

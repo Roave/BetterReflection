@@ -24,9 +24,7 @@ use function uniqid;
  */
 class DirectoriesSourceLocatorTest extends TestCase
 {
-    /**
-     * @var DirectoriesSourceLocator
-     */
+    /** @var DirectoriesSourceLocator */
     private $sourceLocator;
 
     public function setUp() : void

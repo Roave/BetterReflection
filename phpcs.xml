@@ -11,6 +11,8 @@
 
     <rule ref="vendor/doctrine/coding-standard/lib/Doctrine/ruleset.xml">
         <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>
     </rule>
 
     <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">

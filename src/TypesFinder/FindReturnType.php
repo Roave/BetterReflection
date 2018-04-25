@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Namespace_;
@@ -13,19 +14,13 @@ use function explode;
 
 class FindReturnType
 {
-    /**
-     * @var ResolveTypes
-     */
+    /** @var ResolveTypes */
     private $resolveTypes;
 
-    /**
-     * @var DocBlockFactory
-     */
+    /** @var DocBlockFactory */
     private $docBlockFactory;
 
-    /**
-     * @var NamespaceNodeToReflectionTypeContext
-     */
+    /** @var NamespaceNodeToReflectionTypeContext */
     private $makeContext;
 
     public function __construct()
@@ -50,7 +45,7 @@ class FindReturnType
 
         $context = $this->makeContext->__invoke($namespace);
 
-        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_[] $returnTags */
+        /** @var Return_[] $returnTags */
         $returnTags = $this
             ->docBlockFactory
             ->create($docComment, $context)

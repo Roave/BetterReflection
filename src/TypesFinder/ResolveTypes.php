@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Context;
 
 class ResolveTypes
 {
-    /**
-     * @var TypeResolver
-     */
+    /** @var TypeResolver */
     private $typeResolver;
 
     public function __construct()
@@ -21,7 +20,7 @@ class ResolveTypes
 
     /**
      * @param string[] $stringTypes
-     * @return \phpDocumentor\Reflection\Type[]
+     * @return Type[]
      */
     public function __invoke(array $stringTypes, Context $context) : array
     {

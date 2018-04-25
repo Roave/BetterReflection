@@ -18,9 +18,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class StringSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

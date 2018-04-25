@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest;
 
 use ClassWithExplicitGlobalNamespace;
 use ClassWithNoNamespace;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestListener as BaseTestListener;
@@ -20,9 +21,7 @@ class TestListener implements BaseTestListener
 {
     use TestListenerDefaultImplementation;
 
-    /**
-     * @var \PHPUnit\Framework\TestSuite|null
-     */
+    /** @var TestSuite|null */
     private $currentSuite;
 
     /**
@@ -40,7 +39,7 @@ class TestListener implements BaseTestListener
      * Create an additional assertion to ensure the specified class is not
      * loaded when executing a test
      *
-     * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws AssertionFailedError
      */
     private function assertClassNotLoaded(string $className, TestCase $test) : void
     {
@@ -53,7 +52,7 @@ class TestListener implements BaseTestListener
     /**
      * Ensure the fixture classes have not actually been loaded (where applicable)
      *
-     * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws AssertionFailedError
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function endTest(Test $test, float $time) : void

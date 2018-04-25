@@ -23,14 +23,10 @@ use stdClass;
  */
 class ReflectionFunctionTest extends TestCase
 {
-    /**
-     * @var ClassReflector
-     */
+    /** @var ClassReflector */
     private $classReflector;
 
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void

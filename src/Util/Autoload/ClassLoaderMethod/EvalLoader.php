@@ -9,9 +9,7 @@ use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
 final class EvalLoader implements LoaderMethodInterface
 {
-    /**
-     * @var ClassPrinterInterface
-     */
+    /** @var ClassPrinterInterface */
     private $classPrinter;
 
     public function __construct(ClassPrinterInterface $classPrinter)

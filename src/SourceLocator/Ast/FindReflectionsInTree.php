@@ -10,6 +10,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -19,9 +20,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 final class FindReflectionsInTree
 {
-    /**
-     * @var AstConversionStrategy
-     */
+    /** @var AstConversionStrategy */
     private $astConversionStrategy;
 
     public function __construct(AstConversionStrategy $astConversionStrategy)
@@ -34,7 +33,7 @@ final class FindReflectionsInTree
      *
      * @param Node[] $ast
      *
-     * @return \Roave\BetterReflection\Reflection\Reflection[]
+     * @return Reflection[]
      */
     public function __invoke(
         Reflector $reflector,
@@ -45,34 +44,22 @@ final class FindReflectionsInTree
         $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy)
             extends NodeVisitorAbstract
         {
-            /**
-             * @var \Roave\BetterReflection\Reflection\Reflection[]
-             */
+            /** @var Reflection[] */
             private $reflections = [];
 
-            /**
-             * @var Reflector
-             */
+            /** @var Reflector */
             private $reflector;
 
-            /**
-             * @var IdentifierType
-             */
+            /** @var IdentifierType */
             private $identifierType;
 
-            /**
-             * @var LocatedSource
-             */
+            /** @var LocatedSource */
             private $locatedSource;
 
-            /**
-             * @var AstConversionStrategy
-             */
+            /** @var AstConversionStrategy */
             private $astConversionStrategy;
 
-            /**
-             * @var Namespace_|null
-             */
+            /** @var Namespace_|null */
             private $currentNamespace;
 
             public function __construct(
@@ -106,24 +93,30 @@ final class FindReflectionsInTree
                     return;
                 }
 
-                if ($node instanceof Node\Stmt\Function_) {
-                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
-
-                    if ($this->identifierType->isMatchingReflector($reflection)) {
-                        $this->reflections[] = $reflection;
-                    }
+                if (! ($node instanceof Node\Stmt\Function_)) {
+                    return;
                 }
+
+                $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
+
+                if (! $this->identifierType->isMatchingReflector($reflection)) {
+                    return;
+                }
+
+                $this->reflections[] = $reflection;
             }
 
             public function leaveNode(Node $node) : void
             {
-                if ($node instanceof Namespace_) {
-                    $this->currentNamespace = null;
+                if (! ($node instanceof Namespace_)) {
+                    return;
                 }
+
+                $this->currentNamespace = null;
             }
 
             /**
-             * @return \Roave\BetterReflection\Reflection\Reflection[]
+             * @return Reflection[]
              */
             public function getReflections() : array
             {

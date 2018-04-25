@@ -20,9 +20,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class AggregateSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     protected function setUp() : void
@@ -105,7 +103,7 @@ class AggregateSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersByTypeAggregatesSource() : void
     {
-        $identifierType = new IdentifierType;
+        $identifierType = new IdentifierType();
 
         $locator1 = $this->createMock(SourceLocator::class);
         $locator2 = $this->createMock(SourceLocator::class);

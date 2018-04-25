@@ -6,6 +6,9 @@ namespace Roave\BetterReflection\Util\Autoload;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
+use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
+use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
+use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use function array_key_exists;
 use function class_exists;
 use function interface_exists;
@@ -14,14 +17,10 @@ use function trait_exists;
 
 final class ClassLoader
 {
-    /**
-     * @var ReflectionClass[]
-     */
+    /** @var ReflectionClass[] */
     private $reflections = [];
 
-    /**
-     * @var LoaderMethodInterface
-     */
+    /** @var LoaderMethodInterface */
     private $loaderMethod;
 
     public function __construct(LoaderMethodInterface $loaderMethod)
@@ -31,8 +30,8 @@ final class ClassLoader
     }
 
     /**
-     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded
-     * @throws \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
+     * @throws ClassAlreadyLoaded
+     * @throws ClassAlreadyRegistered
      */
     public function addClass(ReflectionClass $reflectionClass) : void
     {
@@ -48,7 +47,7 @@ final class ClassLoader
     }
 
     /**
-     * @throws \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
+     * @throws FailedToLoadClass
      */
     public function __invoke(string $classToLoad) : bool
     {

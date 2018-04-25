@@ -25,19 +25,13 @@ use function pathinfo;
  */
 class FileIteratorSourceLocator implements SourceLocator
 {
-    /**
-     * @var AggregateSourceLocator|null
-     */
+    /** @var AggregateSourceLocator|null */
     private $aggregateSourceLocator;
 
-    /**
-     * @var \Iterator|\SplFileInfo[]
-     */
+    /** @var \Iterator|\SplFileInfo[] */
     private $fileSystemIterator;
 
-    /**
-     * @var Locator
-     */
+    /** @var Locator */
     private $astLocator;
 
     /**

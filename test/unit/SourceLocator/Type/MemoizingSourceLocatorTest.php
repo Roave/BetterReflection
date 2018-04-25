@@ -27,34 +27,22 @@ use function uniqid;
  */
 class MemoizingSourceLocatorTest extends TestCase
 {
-    /**
-     * @var Reflector|\PHPUnit_Framework_MockObject_MockObject
-     */
+    /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject */
     private $reflector1;
 
-    /**
-     * @var Reflector|\PHPUnit_Framework_MockObject_MockObject
-     */
+    /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject */
     private $reflector2;
 
-    /**
-     * @var SourceLocator|\PHPUnit_Framework_MockObject_MockObject
-     */
+    /** @var SourceLocator|\PHPUnit_Framework_MockObject_MockObject */
     private $wrappedLocator;
 
-    /**
-     * @var MemoizingSourceLocator
-     */
+    /** @var MemoizingSourceLocator */
     private $memoizingLocator;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $identifierNames;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $identifierCount;
 
     protected function setUp() : void

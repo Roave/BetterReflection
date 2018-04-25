@@ -9,9 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-    /**
-     * @var BetterReflectionClassConstant
-     */
+    /** @var BetterReflectionClassConstant */
     private $betterClassConstant;
 
     public function __construct(BetterReflectionClassConstant $betterClassConstant)

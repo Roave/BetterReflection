@@ -10,9 +10,7 @@ use PhpParser\NodeVisitorAbstract;
 
 class ReturnNodeVisitor extends NodeVisitorAbstract
 {
-    /**
-     * @var Node\Stmt\Return_[]
-     */
+    /** @var Node\Stmt\Return_[] */
     private $returnNodes = [];
 
     public function enterNode(Node $node) : ?int

@@ -13,6 +13,7 @@ use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
@@ -23,19 +24,13 @@ use function strpos;
 
 class ReflectionObject extends ReflectionClass
 {
-    /**
-     * @var ReflectionClass
-     */
+    /** @var ReflectionClass */
     private $reflectionClass;
 
-    /**
-     * @var object
-     */
+    /** @var object */
     private $object;
 
-    /**
-     * @var Reflector
-     */
+    /** @var Reflector */
     private $reflector;
 
     /**
@@ -53,7 +48,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @param object $instance
      *
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      */
@@ -73,7 +68,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
-     * @throws \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
+     * @throws IdentifierNotFound
      */
     public static function createFromInstance($object) : ReflectionClass
     {
@@ -134,9 +129,11 @@ class ReflectionObject extends ReflectionClass
                 false
             );
 
-            if ($filter === null || $filter & $runtimeProperty->getModifiers()) {
-                $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
+            if ($filter !== null && ! ($filter & $runtimeProperty->getModifiers())) {
+                continue;
             }
+
+            $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
         }
 
         return $runtimeProperties;

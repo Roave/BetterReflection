@@ -9,9 +9,7 @@ namespace Roave\BetterReflection\SourceLocator\Located;
  */
 class InternalLocatedSource extends LocatedSource
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $extensionName;
 
     /**
