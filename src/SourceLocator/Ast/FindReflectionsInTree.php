@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
 use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeVisitor\NameResolver;
-use PhpParser\NodeVisitorAbstract;
-use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
+use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 
 /**
  * @internal
@@ -41,94 +43,64 @@ final class FindReflectionsInTree
         IdentifierType $identifierType,
         LocatedSource $locatedSource
     ) : array {
-        $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy)
-            extends NodeVisitorAbstract
-        {
-            /** @var Reflection[] */
-            private $reflections = [];
-
-            /** @var Reflector */
-            private $reflector;
-
-            /** @var IdentifierType */
-            private $identifierType;
-
-            /** @var LocatedSource */
-            private $locatedSource;
-
-            /** @var AstConversionStrategy */
-            private $astConversionStrategy;
-
-            /** @var Namespace_|null */
-            private $currentNamespace;
-
-            public function __construct(
-                Reflector $reflector,
-                IdentifierType $identifierType,
-                LocatedSource $locatedSource,
-                AstConversionStrategy $astConversionStrategy
-            ) {
-                $this->reflector             = $reflector;
-                $this->identifierType        = $identifierType;
-                $this->locatedSource         = $locatedSource;
-                $this->astConversionStrategy = $astConversionStrategy;
-            }
-
-            public function enterNode(Node $node) : void
-            {
-                if ($node instanceof Namespace_) {
-                    $this->currentNamespace = $node;
-
-                    return;
-                }
-
-                if ($node instanceof Node\Stmt\ClassLike) {
-                    $classNamespace = $node->name === null ? null : $this->currentNamespace;
-                    $reflection     = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
-
-                    if ($this->identifierType->isMatchingReflector($reflection)) {
-                        $this->reflections[] = $reflection;
-                    }
-
-                    return;
-                }
-
-                if (! ($node instanceof Node\Stmt\Function_)) {
-                    return;
-                }
-
-                $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
-
-                if (! $this->identifierType->isMatchingReflector($reflection)) {
-                    return;
-                }
-
-                $this->reflections[] = $reflection;
-            }
-
-            public function leaveNode(Node $node) : void
-            {
-                if (! ($node instanceof Namespace_)) {
-                    return;
-                }
-
-                $this->currentNamespace = null;
-            }
-
-            /**
-             * @return Reflection[]
-             */
-            public function getReflections() : array
-            {
-                return $this->reflections;
-            }
-        };
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor(new NameResolver());
-        $nodeTraverser->addVisitor($nodeVisitor);
-        $nodeTraverser->traverse($ast);
+        $ast = $nodeTraverser->traverse($ast);
 
-        return $nodeVisitor->getReflections();
+        static $collectNamespaceOrphanSymbols;
+        static $collectNamespacedSymbols;
+
+        if($collectNamespacedSymbols === null){
+
+            $collectNamespaceOrphanSymbols = [
+                // do not enter Namespace_ but do collect it
+                new CollectByTypeInstructions(Namespace_::CLASS, true, []),
+
+                // collect ClassLike and keep searching in its stmts
+                new CollectByTypeInstructions(ClassLike::CLASS, true, ['stmts']),
+
+                // collect Function_ and keep searching in its stmts
+                new CollectByTypeInstructions(Function_::CLASS, true, ['stmts']),
+
+                // @TODO can add more instructions to blacklist bits of the AST where not to
+                // look, for example constant expressions, function arguments and parameters,
+                // etc.
+            ];
+
+            $collectNamespacedSymbols = [
+                new CollectByTypeInstructions(ClassLike::CLASS, true, ['stmts']),
+                new CollectByTypeInstructions(Function_::CLASS, true, ['stmts']),
+
+                // @TODO same as above
+            ];
+        }
+
+        $collectByType = new CollectByType();
+        $rootNodes = $collectByType->collect($collectNamespaceOrphanSymbols, [$ast]);
+        /** @var Namespace_[]|ClassLike[]|Function_ $rootNodes */
+
+        $reflections = [];
+        foreach ($rootNodes as $node) {
+            if ($node instanceof Namespace_) {
+                $namespacedFunctionsAndClassLikes = $collectByType->collect($collectNamespacedSymbols, [$node->stmts]);
+                foreach($namespacedFunctionsAndClassLikes as $NSedNode){
+                    assert($NSedNode instanceof Function_ || $NSedNode instanceof ClassLike);
+                    $useNamespace = $NSedNode instanceof Class_ && $NSedNode->isAnonymous() ? null : $node;
+                    $reflection = $this->astConversionStrategy->__invoke($reflector, $NSedNode, $locatedSource, $useNamespace);
+                    if ($identifierType->isMatchingReflector($reflection)) {
+                        $reflections[] = $reflection;
+                    }
+                }
+                continue;
+            }
+            assert($node instanceof Function_ || $node instanceof ClassLike);
+            $reflection = $this->astConversionStrategy->__invoke($reflector, $node, $locatedSource, null);
+            if ($identifierType->isMatchingReflector($reflection)) {
+                $reflections[] = $reflection;
+            }
+        }
+
+        return $reflections;
     }
 }
