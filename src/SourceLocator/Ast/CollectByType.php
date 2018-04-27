@@ -27,7 +27,10 @@ class CollectByType
     {
         $collect = [];
 
+        // PHPCS thinks it's a constant but it's actually a goto label
+        // @codingStandardsIgnoreStart
         TRAVERSE:
+        // @codingStandardsIgnoreEnd
 
         $newNodesList = [];
         foreach ($nodesList as $nodes) {
