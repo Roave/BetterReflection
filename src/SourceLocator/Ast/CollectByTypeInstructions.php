@@ -8,19 +8,13 @@ use PhpParser\Node;
 
 class CollectByTypeInstructions
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $ifType;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $collectSelf;
 
-    /**
-     * @var array|string[]
-     */
+    /** @var array|string[] */
     public $alsoSearchInSubNodesNames;
 
     /**
@@ -41,8 +35,7 @@ class CollectByTypeInstructions
         string $ifType,
         bool $collectSelf,
         ?array $alsoSearchInSubNodesNames
-    )
-    {
+    ) {
         $this->ifType                    = $ifType;
         $this->collectSelf               = $collectSelf;
         $this->alsoSearchInSubNodesNames = $alsoSearchInSubNodesNames;

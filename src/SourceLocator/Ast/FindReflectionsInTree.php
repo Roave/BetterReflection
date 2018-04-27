@@ -44,7 +44,6 @@ final class FindReflectionsInTree
         IdentifierType $identifierType,
         LocatedSource $locatedSource
     ) : array {
-
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor(new NameResolver());
         $ast = $nodeTraverser->traverse($ast);
@@ -53,7 +52,6 @@ final class FindReflectionsInTree
         static $collectNamespacedSymbols;
 
         if ($collectNamespacedSymbols === null) {
-
             $collectNamespaceOrphanSymbols = [
                 // do not enter Namespace_ but do collect it
                 new CollectByTypeInstructions(Namespace_::CLASS, true, []),
@@ -78,7 +76,7 @@ final class FindReflectionsInTree
         }
 
         $collectByType = new CollectByType();
-        $rootNodes = $collectByType->collect($collectNamespaceOrphanSymbols, [$ast]);
+        $rootNodes     = $collectByType->collect($collectNamespaceOrphanSymbols, [$ast]);
         /** @var Namespace_[]|ClassLike[]|Function_ $rootNodes */
 
         $reflections = [];
@@ -88,7 +86,7 @@ final class FindReflectionsInTree
                 foreach ($namespacedFunctionsAndClassLikes as $NSedNode) {
                     assert($NSedNode instanceof Function_ || $NSedNode instanceof ClassLike);
                     $useNamespace = $NSedNode instanceof Class_ && $NSedNode->isAnonymous() ? null : $node;
-                    $reflection = $this->astConversionStrategy->__invoke($reflector, $NSedNode, $locatedSource, $useNamespace);
+                    $reflection   = $this->astConversionStrategy->__invoke($reflector, $NSedNode, $locatedSource, $useNamespace);
                     if ($identifierType->isMatchingReflector($reflection)) {
                         $reflections[] = $reflection;
                     }
