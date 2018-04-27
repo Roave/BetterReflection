@@ -22,7 +22,6 @@ class CollectByType
      * Returns the list of collected {@see Node}s.
      */
     function collect(array $collectInstructions, array $nodesList){
-        /** @var CollectByTypeInstructions[] $collectInstructions */
         $collect = [];
 
         TRAVERSE:
@@ -58,9 +57,9 @@ class CollectByType
 
         if($newNodesList === []){
             return $collect;
-        }else{
-            $nodesList = $newNodesList;
-            goto TRAVERSE;
         }
+
+        $nodesList = $newNodesList;
+        goto TRAVERSE;
     }
 }
