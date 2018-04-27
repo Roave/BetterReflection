@@ -14,7 +14,7 @@ class CollectByType
      * @param CollectByTypeInstructions[] $collectInstructions
      * Defines how {@see Node}s are to be collected and traversed.
      *
-     * @param array $nodesList
+     * @param Node[][]|mixed $nodesList
      * Must be `Iterable<Mixed, Iterable<Mixed, Mixed|Node>>`; `Mixed|Node` means that it
      * will ignore anything that is not `Node`s.
      *
@@ -32,7 +32,6 @@ class CollectByType
 
             foreach($nodes as $node){
                 if(!$node instanceof Node){ continue; }
-                assert($node instanceof Node);
 
                 $subNodeNames = NULL;
 
