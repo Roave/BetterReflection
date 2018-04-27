@@ -23,7 +23,7 @@ class CollectByType
      * @return Node[]
      * Returns the list of collected {@see Node}s.
      */
-    public function collect(array $collectInstructions, array $nodesList): array
+    public function collect(array $collectInstructions, array $nodesList) : array
     {
         $collect = [];
 
@@ -34,7 +34,7 @@ class CollectByType
             assert(is_array($nodes));
 
             foreach ($nodes as $node) {
-                if (!$node instanceof Node) {
+                if (! $node instanceof Node) {
                     continue;
                 }
 
@@ -53,13 +53,13 @@ class CollectByType
                 $subNodeNames = $subNodeNames ?? $node->getSubNodeNames();
 
                 foreach ($subNodeNames as $subNodeName) {
-                    $subNodes = $node->{$subNodeName};
+                    $subNodes       = $node->{$subNodeName};
                     $newNodesList[] = is_array($subNodes) ? $subNodes : [$subNodes];
                 }
             }
         }
 
-        if($newNodesList === []) {
+        if ($newNodesList === []) {
             return $collect;
         }
 
