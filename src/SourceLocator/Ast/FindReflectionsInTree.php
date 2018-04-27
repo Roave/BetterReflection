@@ -6,16 +6,16 @@ namespace Roave\BetterReflection\SourceLocator\Ast;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Function_;
-use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\NodeVisitor\NameResolver;
-use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use function assert;
 
 /**
@@ -43,8 +43,7 @@ final class FindReflectionsInTree
         array $ast,
         IdentifierType $identifierType,
         LocatedSource $locatedSource
-    ) : array
-    {
+    ) : array {
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor(new NameResolver());

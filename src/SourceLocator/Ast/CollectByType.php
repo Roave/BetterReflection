@@ -23,7 +23,7 @@ class CollectByType
      * @return Node[]
      * Returns the list of collected {@see Node}s.
      */
-    function collect(array $collectInstructions, array $nodesList): array
+    public function collect(array $collectInstructions, array $nodesList): array
     {
         $collect = [];
 
