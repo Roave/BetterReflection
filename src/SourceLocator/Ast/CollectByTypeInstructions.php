@@ -10,7 +10,8 @@ class CollectByTypeInstructions
     public $collectSelf;
     public $alsoSearchInSubNodesNames;
 
-    function __construct(string $ifType, bool $collectSelf, ?array $alsoSearchInSubNodesNames){
+    function __construct(string $ifType, bool $collectSelf, ?array $alsoSearchInSubNodesNames)
+    {
         $this->ifType = $ifType;
         $this->collectSelf = $collectSelf;
         $this->alsoSearchInSubNodesNames = $alsoSearchInSubNodesNames;

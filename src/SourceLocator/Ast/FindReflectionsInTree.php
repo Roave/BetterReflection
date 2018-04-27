@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
+use function assert;
 
 /**
  * @internal
@@ -42,7 +43,8 @@ final class FindReflectionsInTree
         array $ast,
         IdentifierType $identifierType,
         LocatedSource $locatedSource
-    ) : array {
+    ) : array
+    {
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor(new NameResolver());
@@ -51,7 +53,7 @@ final class FindReflectionsInTree
         static $collectNamespaceOrphanSymbols;
         static $collectNamespacedSymbols;
 
-        if($collectNamespacedSymbols === null){
+        if ($collectNamespacedSymbols === null) {
 
             $collectNamespaceOrphanSymbols = [
                 // do not enter Namespace_ but do collect it
@@ -84,7 +86,7 @@ final class FindReflectionsInTree
         foreach ($rootNodes as $node) {
             if ($node instanceof Namespace_) {
                 $namespacedFunctionsAndClassLikes = $collectByType->collect($collectNamespacedSymbols, [$node->stmts]);
-                foreach($namespacedFunctionsAndClassLikes as $NSedNode){
+                foreach ($namespacedFunctionsAndClassLikes as $NSedNode) {
                     assert($NSedNode instanceof Function_ || $NSedNode instanceof ClassLike);
                     $useNamespace = $NSedNode instanceof Class_ && $NSedNode->isAnonymous() ? null : $node;
                     $reflection = $this->astConversionStrategy->__invoke($reflector, $NSedNode, $locatedSource, $useNamespace);
