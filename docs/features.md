@@ -2,13 +2,12 @@
 
 ## Reflecting on classes not yet loaded
 
-In most cases, creating reflections using a built-in `SourceLocator` or the
-`ReflectionClass::createFromName()` technique don't attempt to load code. This
-means if a class has not already been declared, you can safely assume that
+In most cases, creating reflections using a built-in `SourceLocator` or the `ReflectionClass::createFromName()` 
+technique doesn't attempt to load code. This means if a class has not already been declared, you can safely assume that
 Better Reflection won't load the class.
 
-Note that if the class is *already* loaded, then this Better Reflection does
-not then *unload* that class - this is not currently possible in PHP.
+Note that if the class is *already* loaded, then this Better Reflection does not then *unload* that class - this is not 
+currently possible in PHP.
 
 ## Reflecting on things within a string
 
@@ -24,19 +23,16 @@ See [AST extraction documentation](https://github.com/Roave/BetterReflection/tre
 
 ## PHP 7 Parameter Type Declarations and Return Type Declarations
 
-These act in the same way as the core reflection API, except they return a
-`\Roave\BetterReflection\Reflection\ReflectionType` instance (which does not
-extend `\ReflectionType`).
+These act in the same way as the core reflection API, except they return a 
+`\Roave\BetterReflection\Reflection\ReflectionType` instance (which does not extend `\ReflectionType`).
 
 ```
 $reflectionType = $parameterInfo->getType();
 ```
 
-However, Better Reflection also gives the ability to change, and remove type
-declarations. Removing these types might be useful if you want to make code
-written for PHP 7 work in PHP 5 for example, and setting new types might
-do the opposite. For instance, you might want to set the PHP 7 return type
-declaration to that defined in the PHP DocBlock.
+However, Better Reflection also gives the ability to change, and remove type declarations. Removing these types might 
+be useful if you want to make code written for PHP 7 work in PHP 5 for example, or setting new types to do the 
+opposite. For example, you might want to set the PHP 7 return type declaration to that defined in the PHP DocBlock.
 
 ```
 // Change a function to ensure it returns an integer
