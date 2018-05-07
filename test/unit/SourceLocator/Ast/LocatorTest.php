@@ -56,6 +56,22 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
+    public function testTheReflectionLookupIsCaseInsensitive() : void
+    {
+        $php = '<?php
+        namespace Foo;
+        class Bar {}
+        ';
+
+        $classInfo = $this->locator->findReflection(
+            new ClassReflector(new StringSourceLocator($php, $this->locator)),
+            new LocatedSource($php, null),
+            $this->getIdentifier('Foo\BAR', IdentifierType::IDENTIFIER_CLASS)
+        );
+
+        self::assertInstanceOf(ReflectionClass::class, $classInfo);
+    }
+
     public function testReflectingTopLevelClass() : void
     {
         $php = '<?php
