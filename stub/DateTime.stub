@@ -27,7 +27,7 @@ class DateTime implements DateTimeInterface
 
     const W3C = 'Y-m-d\\TH:i:sP';
 
-    public function __construct($time = 'now', $object = null)
+    public function __construct($time = 'now', $timezone = null)
     {
     }
 
