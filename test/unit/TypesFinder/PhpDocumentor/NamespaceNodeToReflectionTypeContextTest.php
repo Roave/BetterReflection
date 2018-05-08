@@ -61,7 +61,7 @@ class NamespaceNodeToReflectionTypeContextTest extends TestCase
                 new Context(''),
             ],
             'Empty namespace' => [
-                new Namespace_(new Name('')),
+                new Namespace_(),
                 new Context(''),
             ],
             'Actual namespace' => [

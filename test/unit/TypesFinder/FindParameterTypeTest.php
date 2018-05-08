@@ -8,6 +8,7 @@ use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Builder\Use_;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
@@ -76,7 +77,7 @@ class FindParameterTypeTest extends TestCase
      */
     public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
-        $node     = new ParamNode($nodeName);
+        $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
         /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
@@ -102,7 +103,7 @@ class FindParameterTypeTest extends TestCase
      */
     public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
     {
-        $node     = new ParamNode($nodeName);
+        $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
         /* @var $method ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
@@ -124,7 +125,7 @@ class FindParameterTypeTest extends TestCase
 
     public function testFindParameterTypeForFunctionWithNoDocBlock() : void
     {
-        $node = new ParamNode('foo');
+        $node = new ParamNode(new Variable('foo'));
 
         /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
@@ -150,7 +151,7 @@ class FindParameterTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @param %s \$foo\n */", $docBlockType);
 
-        $parameterNode = new ParamNode('foo');
+        $parameterNode = new ParamNode(new Variable('foo'));
 
         /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
         $function = $this->createMock(ReflectionFunctionAbstract::class);

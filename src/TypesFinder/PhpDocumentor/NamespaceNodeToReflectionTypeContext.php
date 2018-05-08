@@ -45,10 +45,10 @@ class NamespaceNodeToReflectionTypeContext
                         return array_map(
                             function (UseUse $useUse) use ($use) : array {
                                 if ($use instanceof GroupUse) {
-                                    return [$useUse->alias => $use->prefix->toString() . '\\' . $useUse->name->toString()];
+                                    return [$useUse->getAlias()->toString() => $use->prefix->toString() . '\\' . $useUse->name->toString()];
                                 }
 
-                                return [$useUse->alias => $useUse->name->toString()];
+                                return [$useUse->getAlias()->toString() => $useUse->name->toString()];
                             },
                             $use->uses
                         );

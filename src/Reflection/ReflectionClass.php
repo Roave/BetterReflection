@@ -166,7 +166,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getShortName() : string
     {
         if (! $this->isAnonymous()) {
-            return $this->node->name;
+            return $this->node->name->name;
         }
 
         $fileName = $this->getFileName();
@@ -745,7 +745,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getStartLine() : int
     {
-        return (int) $this->node->getAttribute('startLine', -1);
+        return $this->node->getStartLine();
     }
 
     /**
@@ -753,7 +753,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getEndLine() : int
     {
-        return (int) $this->node->getAttribute('endLine', -1);
+        return $this->node->getEndLine();
     }
 
     public function getStartColumn() : int
@@ -973,7 +973,7 @@ class ReflectionClass implements Reflection, CoreReflector
                     continue;
                 }
 
-                $resolvedAliases[$adaptation->newName] = sprintf(
+                $resolvedAliases[$adaptation->newName->name] = sprintf(
                     '%s::%s',
                     $usedTrait->toString(),
                     $adaptation->method
@@ -1321,7 +1321,7 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         $lowerName = strtolower($methodName);
         foreach ($this->node->stmts as $key => $stmt) {
-            if ($stmt instanceof ClassMethod && $lowerName === strtolower($stmt->name)) {
+            if ($stmt instanceof ClassMethod && $lowerName === $stmt->name->toLowerString()) {
                 unset($this->node->stmts[$key], $this->cachedMethods);
                 return true;
             }
@@ -1383,7 +1383,7 @@ class ReflectionClass implements Reflection, CoreReflector
             }
 
             $propertyNames = array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
-                return strtolower($propertyProperty->name);
+                return $propertyProperty->name->toLowerString();
             }, $stmt->props);
 
             if (in_array($lowerName, $propertyNames, true)) {
