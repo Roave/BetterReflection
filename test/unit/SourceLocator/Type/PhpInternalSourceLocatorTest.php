@@ -337,16 +337,30 @@ class PhpInternalSourceLocatorTest extends TestCase
             $stubbed->getParameters()
         );
 
+        $methodName = sprintf('%s#%s', $original->getDeclaringClass()->getName(), $original->getName());
+
         if (count($originalParameterNames) > count($stubParameterNames)) {
             self::markTestIncomplete(sprintf(
-                'New parameters found in method "%s#%s": %s',
-                $original->getDeclaringClass()->getName(),
-                $original->getName(),
+                'New parameters found in method "%s": %s',
+                $methodName,
                 "\n" . implode("\n", array_diff($originalParameterNames, $stubParameterNames))
             ));
         }
 
-        self::assertSame($originalParameterNames, $stubParameterNames);
+        if ((PHP_VERSION_ID < 70117 || (PHP_VERSION_ID >= 70200 && PHP_VERSION_ID < 70205))
+            && in_array(
+                $methodName,
+                [
+                    'DateTime#__construct',
+                    'DateTimeImmutable#__construct',
+                ],
+                true
+            )
+        ) {
+            self::markTestSkipped('Argument name was changed in PHP 7.1.17 and 7.2.5 for ' . $methodName);
+        } else {
+            self::assertSame($originalParameterNames, $stubParameterNames);
+        }
 
         foreach ($original->getParameters() as $parameter) {
             $this->assertSameParameterAttributes(
@@ -387,7 +401,19 @@ class PhpInternalSourceLocatorTest extends TestCase
             self::markTestSkipped('New type hints were introduced in PHP 7.2 for ' . $parameterName);
         }
 
-        self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
+        if (in_array(
+            $parameterName,
+            [
+                'DateTime#__construct.object',
+                'DateTimeImmutable#__construct.object',
+            ],
+            true
+        )) {
+            self::markTestSkipped('Argument name was changed in PHP 7.1.17 and 7.2.5 for ' . $parameterName);
+        } else {
+            self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
+        }
+
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
         if (! ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable')) {
             // Bug in PHP: https://3v4l.org/EeHXS
