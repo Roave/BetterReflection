@@ -393,7 +393,7 @@ PHP;
 
         self::assertInstanceOf(Property::class, $ast);
         self::assertSame($positionInAst, $propertyReflection->getPositionInAst());
-        self::assertSame($propertyName, $ast->props[$positionInAst]->name);
+        self::assertSame($propertyName, $ast->props[$positionInAst]->name->name);
     }
 
     public function testGetDeclaringAndImplementingClassWithPropertyFromTrait() : void

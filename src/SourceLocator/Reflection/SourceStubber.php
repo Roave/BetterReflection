@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Reflection;
 
+use PhpParser\Builder;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\Declaration;
 use PhpParser\Builder\Interface_;
@@ -11,11 +12,10 @@ use PhpParser\Builder\Method;
 use PhpParser\Builder\Param;
 use PhpParser\Builder\Property;
 use PhpParser\Builder\Trait_;
-use PhpParser\BuilderAbstract;
 use PhpParser\BuilderFactory;
+use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Const_;
-use PhpParser\Node\Expr;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\NullableType;
@@ -104,7 +104,7 @@ final class SourceStubber
      * @param Class_|Interface_|Trait_|Method|Property                        $node
      * @param CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty $reflection
      */
-    private function addDocComment(BuilderAbstract $node, CoreReflector $reflection) : void
+    private function addDocComment(Builder $node, CoreReflector $reflection) : void
     {
         if ($reflection->getDocComment() === false) {
             return;
@@ -240,7 +240,7 @@ final class SourceStubber
             }
 
             $classConstantNode = new ClassConst(
-                [new Const_($constantReflection->getName(), $this->constantValueNode($constantReflection))],
+                [new Const_($constantReflection->getName(), BuilderHelpers::normalizeValue($constantReflection->getValue()))],
                 $this->constantVisibilityFlags($constantReflection)
             );
 
@@ -250,20 +250,6 @@ final class SourceStubber
 
             $classNode->addStmt($classConstantNode);
         }
-    }
-
-    /**
-     * A little hack so we don't have to copy the code in PhpParser\BuilderAbstract::normalizeValue()
-     */
-    private function constantValueNode(ReflectionClassConstant $constant) : ?Expr
-    {
-        return $this
-            ->builderFactory
-            ->property('')
-            ->setDefault($constant->getValue())
-            ->getNode()
-            ->props[0]
-            ->default;
     }
 
     private function constantVisibilityFlags(ReflectionClassConstant $constant) : int

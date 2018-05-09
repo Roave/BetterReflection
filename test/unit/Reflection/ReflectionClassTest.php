@@ -1486,7 +1486,7 @@ PHP;
         $ast = $reflection->getAst();
 
         self::assertInstanceOf(Class_::class, $ast);
-        self::assertSame('Foo', $ast->name);
+        self::assertSame('Foo', $ast->name->name);
     }
 
     public function testSetIsFinal() : void

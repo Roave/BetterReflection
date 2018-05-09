@@ -1,8 +1,7 @@
 # Find a reflection on specified line
 
-Purely an ease-of-use API, the `FindReflectionOnLine` helper simplifies usage
-when you want to find a reflection on a specific line. Usage is very simple, as
-the class is an invokable class:
+Purely an ease-of-use API, the `FindReflectionOnLine` helper simplifies usage when you want to find a reflection on a 
+specific line. Usage is clean, as the class is an invokable class:
 
 ```php
 <?php

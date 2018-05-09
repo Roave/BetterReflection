@@ -16,7 +16,7 @@ use function strlen;
  */
 final class MemoizingParser implements Parser
 {
-    /** @var Node[][]|null[] indexed by source hash */
+    /** @var Node\Stmt[][]|null[] indexed by source hash */
     private $sourceHashToAst = [];
 
     /** @var Parser */
@@ -29,10 +29,8 @@ final class MemoizingParser implements Parser
 
     /**
      * {@inheritDoc}
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function parse($code, ?ErrorHandler $errorHandler = null) : ?array
+    public function parse(string $code, ?ErrorHandler $errorHandler = null) : ?array
     {
         // note: this code is mathematically buggy by default, as we are using a hash to identify
         //       cache entries. The string length is added to further reduce likeliness (although

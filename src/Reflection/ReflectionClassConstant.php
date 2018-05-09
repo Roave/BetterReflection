@@ -65,7 +65,7 @@ class ReflectionClassConstant implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->consts[$this->positionInNode]->name;
+        return $this->node->consts[$this->positionInNode]->name->name;
     }
 
     /**
@@ -128,7 +128,7 @@ class ReflectionClassConstant implements CoreReflector
      */
     public function getStartLine() : int
     {
-        return (int) $this->node->getAttribute('startLine', -1);
+        return $this->node->getStartLine();
     }
 
     /**
@@ -136,7 +136,7 @@ class ReflectionClassConstant implements CoreReflector
      */
     public function getEndLine() : int
     {
-        return (int) $this->node->getAttribute('endLine', -1);
+        return $this->node->getEndLine();
     }
 
     public function getStartColumn() : int

@@ -141,7 +141,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
             return self::CLOSURE_NAME;
         }
 
-        return $this->node->name;
+        return $this->node->name->name;
     }
 
     /**
@@ -350,7 +350,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getStartLine() : int
     {
-        return (int) $this->node->getAttribute('startLine', -1);
+        return $this->node->getStartLine();
     }
 
     /**
@@ -358,7 +358,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getEndLine() : int
     {
-        return (int) $this->node->getAttribute('endLine', -1);
+        return $this->node->getEndLine();
     }
 
     public function getStartColumn() : int
@@ -543,7 +543,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function addParameter(string $parameterName) : void
     {
-        $this->node->params[] = new ParamNode($parameterName);
+        $this->node->params[] = new ParamNode(new Node\Expr\Variable($parameterName));
     }
 
     /**
@@ -554,7 +554,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $lowerName = strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
-            if (strtolower($paramNode->name) !== $lowerName) {
+            if (strtolower($paramNode->var->name) !== $lowerName) {
                 continue;
             }
 

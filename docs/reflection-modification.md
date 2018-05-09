@@ -2,8 +2,8 @@
 
 ## Replacing a function or method body
 
-It is possible in Better Reflection to replace the body statements of a function
-in the reflection - in essence, giving the ability to monkey patch the code.
+It is possible in Better Reflection to replace the body statements of a function in the reflection - in essence, giving 
+the ability to monkey patch the code.
 
 Given the following class under reflection:
 
@@ -31,12 +31,10 @@ $classInfo->getMethod('foo')->setBody(function () {
 });
 ```
 
-This does not take immediate effect on execution - and in fact, if the class is
-already loaded, it is impossible to overwrite the in-memory class (this is a
-restriction in PHP itself). However, if you have reflected on this class in
-such a way that it is not already in memory, it is possible to load this class
-using Better Reflection's own autoload system (make sure this is added *after*
-any other autoloader, otherwise it may not behave correctly.
+This does not take immediate effect on execution - and in fact, if the class is already loaded, it is impossible to 
+overwrite the in-memory class (this is a restriction in PHP itself). However, if you have reflected on this class in
+such a way that it is not already in memory, it is possible to load this class using Better Reflection's own autoload 
+system (make sure this is added *after* any other autoloader, otherwise it may not behave correctly.
 
 ```php
 <?php
@@ -58,9 +56,8 @@ But, you probably shouldn't do this ;)
 
 Loader methods available are:
 
- * `FileCacheLoader` - cache the file contents (no cache invalidation). Example
-   usage is above; it's recommended to use the `defaultFileCacheLoader` static
-   constructor to simplify creation. Pass the directory to store cached files
+ * `FileCacheLoader` - cache the file contents (no cache invalidation). Example usage is above; it's recommended to use 
+   the `defaultFileCacheLoader` static constructor to simplify creation. Pass the directory to store cached files
    as the parameter.
- * `EvalCacheLoader` - as the naming suggests, uses `eval` to bring the class
-   into scope. This is not ideal if you're after performance.
+ * `EvalCacheLoader` - as the naming suggests, uses `eval` to bring the class into scope. This is not ideal if you're 
+   after performance.

@@ -3,8 +3,8 @@ Better Reflection
 
 [![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection) [![Build Status](https://ci.appveyor.com/api/projects/status/github/Roave/BetterReflection?svg=true&branch=master)](https://ci.appveyor.com/project/Ocramius/betterreflection-4jx2w) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Latest Stable Version](https://poser.pugx.org/roave/better-reflection/v/stable)](https://packagist.org/packages/roave/better-reflection) [![License](https://poser.pugx.org/roave/better-reflection/license)](https://packagist.org/packages/roave/better-reflection)
 
-Better Reflection is a reflection API that aims to improve and provide more
-features than PHP's built-in [reflection API](https://php.net/manual/en/book.reflection.php).
+Better Reflection is a reflection API that aims to improve and provide more features than PHP's built-in 
+[reflection API](https://php.net/manual/en/book.reflection.php).
 
 ## Why is it better?
 
@@ -14,7 +14,7 @@ features than PHP's built-in [reflection API](https://php.net/manual/en/book.ref
 * Reflecting directly on closures
 * Ability to extract AST from methods and functions
 * Ability to return AST representation of a class or function
-* Fetch return type declaration and parameter type declarations in PHP 7 code (even when running PHP 5!)
+* Fetch return type declaration and parameter type declarations in PHP 7 code
 * Change or remove PHP 7 parameter type and return type declarations from methods and functions
 * Change the body of a function or method to do something different
 * *Moar stuff coming soon!*
@@ -23,7 +23,7 @@ Be sure to read more in the [feature documentation](docs/features.md).
 
 ## Installation
 
-Simply require using composer:
+Require using composer:
 
 ```shell
 $ composer require roave/better-reflection
@@ -53,8 +53,8 @@ $classInfo = (new BetterReflection())
 
 ## Upgrading
 
-Please refer to the [Upgrade Documentation](UPGRADE.md) documentation to see
-what is required to upgrade your installed `BetterReflection` version.
+Please refer to the [Upgrade Documentation](UPGRADE.md) documentation to see what is required to upgrade your installed 
+`BetterReflection` version.
 
 ## Limitations
 

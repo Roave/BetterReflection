@@ -560,7 +560,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $ast = $function->getAst();
 
         self::assertInstanceOf(Function_::class, $ast);
-        self::assertSame('foo', $ast->name);
+        self::assertSame('foo', $ast->name->name);
     }
 
     public function testSetBodyFromClosure() : void
@@ -699,7 +699,7 @@ PHP;
         $first = current($nodes);
 
         self::assertInstanceOf(Closure::class, $first->expr);
-        self::assertSame(8, $first->getAttribute('startLine'));
-        self::assertSame(10, $first->getAttribute('endLine'));
+        self::assertSame(8, $first->getStartLine());
+        self::assertSame(10, $first->getEndLine());
     }
 }
