@@ -67,6 +67,8 @@ class CollectByType
         }
 
         $nodesList = $newNodesList;
+        // @codingStandardsIgnoreStart
         goto TRAVERSE;
+        // @codingStandardsIgnoreEnd
     }
 }
