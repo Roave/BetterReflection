@@ -344,7 +344,7 @@ class ReflectionClass implements Reflection, CoreReflector
         return array_values(
             array_filter(
                 $this->getMethodsIndexedByName(),
-                function (ReflectionMethod $method) use ($filter) {
+                function (ReflectionMethod $method) use ($filter) : bool {
                     return (bool) ($filter & $method->getModifiers());
                 }
             )
@@ -627,7 +627,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
         return array_filter(
             $this->cachedImmediateProperties,
-            function (ReflectionProperty $property) use ($filter) {
+            function (ReflectionProperty $property) use ($filter) : bool {
                 return (bool) ($filter & $property->getModifiers());
             }
         );
@@ -690,7 +690,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
         return array_filter(
             $this->cachedProperties,
-            function (ReflectionProperty $property) use ($filter) {
+            function (ReflectionProperty $property) use ($filter) : bool {
                 return (bool) ($filter & $property->getModifiers());
             }
         );
