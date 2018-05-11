@@ -69,6 +69,8 @@ class ReflectionObject extends ReflectionClass
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
      * @throws IdentifierNotFound
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public static function createFromInstance($object) : ReflectionClass
     {

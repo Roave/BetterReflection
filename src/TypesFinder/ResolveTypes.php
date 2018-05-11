@@ -30,6 +30,7 @@ class ResolveTypes
             $resolvedTypes[] = $this->typeResolver->resolve($stringType, $context);
         }
 
+        /** @var Type[] */
         return $resolvedTypes;
     }
 }

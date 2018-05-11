@@ -123,6 +123,8 @@ class ReflectionClass implements Reflection, CoreReflector
      * @throws IdentifierNotFound
      * @throws \ReflectionException
      * @throws \InvalidArgumentException
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public static function createFromInstance($instance) : self
     {
@@ -166,6 +168,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getShortName() : string
     {
         if (! $this->isAnonymous()) {
+            /** @var \PhpParser\Node\Identifier $this->node->name */
             return $this->node->name->name;
         }
 
@@ -194,6 +197,8 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
      * return "A\B").
+     *
+     * @psalm-suppress PossiblyNullPropertyFetch
      */
     public function getNamespaceName() : string
     {
@@ -340,7 +345,7 @@ class ReflectionClass implements Reflection, CoreReflector
             array_filter(
                 $this->getMethodsIndexedByName(),
                 function (ReflectionMethod $method) use ($filter) {
-                    return $filter & $method->getModifiers();
+                    return (bool) ($filter & $method->getModifiers());
                 }
             )
         );
@@ -623,7 +628,7 @@ class ReflectionClass implements Reflection, CoreReflector
         return array_filter(
             $this->cachedImmediateProperties,
             function (ReflectionProperty $property) use ($filter) {
-                return $filter & $property->getModifiers();
+                return (bool) ($filter & $property->getModifiers());
             }
         );
     }
@@ -686,7 +691,7 @@ class ReflectionClass implements Reflection, CoreReflector
         return array_filter(
             $this->cachedProperties,
             function (ReflectionProperty $property) use ($filter) {
-                return $filter & $property->getModifiers();
+                return (bool) ($filter & $property->getModifiers());
             }
         );
     }
@@ -1039,6 +1044,8 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      *
      * @throws NotAnObject
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function isInstance($object) : bool
     {

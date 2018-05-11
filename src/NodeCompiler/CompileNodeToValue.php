@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\NodeCompiler;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
 use function constant;
@@ -92,8 +93,9 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        /** @var string $nodeName */
+        /** @var \PhpParser\Node\Identifier $node->name */
         $nodeName  = $node->name->name;
+        /** @var \PhpParser\Node\Name $node->class */
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {
@@ -112,6 +114,7 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
+        /** @var ReflectionClassConstant */
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
 
         return $this->__invoke(

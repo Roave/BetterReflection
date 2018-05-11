@@ -121,7 +121,7 @@ class ReflectionParameter implements CoreReflector
      */
     public static function createFromSpec($spec, string $parameterName) : self
     {
-        if (is_array($spec) && count($spec) === 2) {
+        if (is_array($spec) && count($spec) === 2 && is_string($spec[1])) {
             if (is_object($spec[0])) {
                 return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
             }
@@ -180,13 +180,13 @@ class ReflectionParameter implements CoreReflector
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {
-                /** @var string $constantName */
+                /** @var \PhpParser\Node\Identifier $defaultValueNode->name */
                 $constantName = $defaultValueNode->name->name;
                 $className    = $this->findParentClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant = true;
-            /** @var string $defaultValueNode->name */
+            /** @var \PhpParser\Node\Identifier $defaultValueNode->name */
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name->name;
         }
 
@@ -230,6 +230,7 @@ class ReflectionParameter implements CoreReflector
      */
     public function getName() : string
     {
+        /** @var string $this->node->var->name */
         return $this->node->var->name;
     }
 
@@ -487,15 +488,24 @@ class ReflectionParameter implements CoreReflector
             return null;
         }
 
+        /** @var ReflectionType */
         $type     = $this->getType();
         $typeHint = (string) $type;
 
         if ($typeHint === 'self') {
-            return $this->getDeclaringClass()->getName();
+            /** @var ReflectionClass */
+            $declaringClass = $this->getDeclaringClass();
+
+            return $declaringClass->getName();
         }
 
         if ($typeHint === 'parent') {
-            return $this->getDeclaringClass()->getParentClass()->getName();
+            /** @var ReflectionClass */
+            $declaringClass = $this->getDeclaringClass();
+            /** @var ReflectionClass */
+            $parentClass = $declaringClass->getParentClass();
+
+            return $parentClass->getName();
         }
 
         if ($type->isBuiltin()) {
