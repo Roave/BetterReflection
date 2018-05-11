@@ -28,7 +28,7 @@ class ResolveTypes
 
         foreach ($stringTypes as $stringType) {
             /** @var Type $resolvedType */
-            $resolvedType = $this->typeResolver->resolve($stringType, $context);
+            $resolvedType    = $this->typeResolver->resolve($stringType, $context);
             $resolvedTypes[] = $resolvedType;
         }
 
