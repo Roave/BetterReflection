@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<psalm
+    name="Example Psalm config with recommended defaults"
+    useDocblockTypes="true"
+    totallyTyped="false"
+    allowPhpStormGenerics="true"
+>
+    <projectFiles>
+        <directory name="src" />
+    </projectFiles>
+
+    <issueHandlers>
+        <LessSpecificReturnType errorLevel="suppress" />
+
+        <MissingClosureReturnType errorLevel="suppress" />
+        <MissingReturnType errorLevel="suppress" />
+
+        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <MissingParamType errorLevel="suppress" />
+        <MissingClosureParamType errorLevel="suppress" />
+
+        <NullableReturnStatement errorLevel="suppress" />
+        <InvalidNullableReturnType errorLevel="suppress" />
+
+        <FalsableReturnStatement errorLevel="suppress" />
+        <InvalidFalsableReturnType errorLevel="suppress" />
+
+        <MoreSpecificReturnType errorLevel="suppress" />
+        <LessSpecificReturnStatement errorLevel="suppress" />
+
+        <PossiblyFalseArgument errorLevel="suppress" />
+        <PossiblyNullArgument errorLevel="suppress" />
+
+        <TypeCoercion errorLevel="suppress" />
+
+        <TooManyArguments>
+            <errorLevel type="suppress">
+                <directory name="src/Reflection/Adapter" />
+            </errorLevel>
+        </TooManyArguments>
+
+        <UnresolvableInclude errorLevel="suppress" />
+
+        <RawObjectIteration errorLevel="suppress" />
+
+        <MoreSpecificImplementedParamType>
+            <errorLevel type="suppress">
+                <file name="src/Reflection/ReflectionObject.php" />
+            </errorLevel>
+        </MoreSpecificImplementedParamType>
+
+        <LessSpecificImplementedReturnType>
+            <errorLevel type="suppress">
+                <file name="src/SourceLocator/Ast/Parser/MemoizingParser.php" />
+            </errorLevel>
+        </LessSpecificImplementedReturnType>
+
+        <ImplementedReturnTypeMismatch>
+            <errorLevel type="suppress">
+                <file name="src/Reflection/Adapter/ReflectionClassConstant.php" />
+            </errorLevel>
+        </ImplementedReturnTypeMismatch>
+
+        <UndefinedPropertyAssignment>
+            <errorLevel type="suppress">
+                <referencedProperty name="PhpParser\Node\Stmt\ClassLike::$namespacedName" />
+                <referencedProperty name="PhpParser\Node\Param::$isOptional" />
+            </errorLevel>
+        </UndefinedPropertyAssignment>
+
+        <UndefinedPropertyFetch>
+            <errorLevel type="suppress">
+                <referencedProperty name="PhpParser\Node\Stmt\ClassLike::$namespacedName" />
+                <referencedProperty name="PhpParser\Node\Param::$isOptional" />
+            </errorLevel>
+        </UndefinedPropertyFetch>
+
+        <PossiblyNullPropertyAssignmentValue>
+            <errorLevel type="suppress">
+                <referencedProperty name="PhpParser\Node\Expr\Closure::$stmts" />
+                <referencedProperty name="PhpParser\Node\Stmt\Function_::$stmts" />
+                <referencedProperty name="PhpParser\Node\Stmt\ClassMethod::$stmts" />
+            </errorLevel>
+        </PossiblyNullPropertyAssignmentValue>
+    </issueHandlers>
+</psalm>

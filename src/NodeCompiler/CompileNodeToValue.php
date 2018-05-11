@@ -93,9 +93,9 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        /** @var \PhpParser\Node\Identifier $node->name */
-        $nodeName  = $node->name->name;
-        /** @var \PhpParser\Node\Name $node->class */
+        /** @var Node\Identifier $node->name */
+        $nodeName = $node->name->name;
+        /** @var Node\Name $node->class */
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {
@@ -114,7 +114,7 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
-        /** @var ReflectionClassConstant */
+        /** @var ReflectionClassConstant $reflectionConstant */
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
 
         return $this->__invoke(

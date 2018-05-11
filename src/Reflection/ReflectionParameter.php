@@ -180,13 +180,13 @@ class ReflectionParameter implements CoreReflector
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {
-                /** @var \PhpParser\Node\Identifier $defaultValueNode->name */
+                /** @var Node\Identifier $defaultValueNode->name */
                 $constantName = $defaultValueNode->name->name;
                 $className    = $this->findParentClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant = true;
-            /** @var \PhpParser\Node\Identifier $defaultValueNode->name */
+            /** @var Node\Identifier $defaultValueNode->name */
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name->name;
         }
 
@@ -488,21 +488,21 @@ class ReflectionParameter implements CoreReflector
             return null;
         }
 
-        /** @var ReflectionType */
+        /** @var ReflectionType $type */
         $type     = $this->getType();
         $typeHint = (string) $type;
 
         if ($typeHint === 'self') {
-            /** @var ReflectionClass */
+            /** @var ReflectionClass $declaringClass */
             $declaringClass = $this->getDeclaringClass();
 
             return $declaringClass->getName();
         }
 
         if ($typeHint === 'parent') {
-            /** @var ReflectionClass */
+            /** @var ReflectionClass $declaringClass */
             $declaringClass = $this->getDeclaringClass();
-            /** @var ReflectionClass */
+            /** @var ReflectionClass $parentClass */
             $parentClass = $declaringClass->getParentClass();
 
             return $parentClass->getName();
