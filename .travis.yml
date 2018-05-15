@@ -83,7 +83,7 @@ jobs:
       php: 7.1
       env: DEPENDENCIES=""
       before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable vimeo/psalm:dev-master
+        - travis_retry composer require --dev --prefer-dist --prefer-stable vimeo/psalm:2.0.0
       script: vendor/bin/psalm
 
     - stage: Run benchmarks
