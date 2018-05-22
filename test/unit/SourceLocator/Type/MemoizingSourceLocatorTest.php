@@ -125,7 +125,7 @@ class MemoizingSourceLocatorTest extends TestCase
 
     public function testMemoizationByTypeDistinguishesBetweenSourceLocatorsAndType() : void
     {
-        /* @var $types IdentifierType[] */
+        /** @var IdentifierType[] $types */
         $types    = [
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),

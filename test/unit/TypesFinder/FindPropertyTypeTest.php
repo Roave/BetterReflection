@@ -46,7 +46,7 @@ class FindPropertyTypeTest extends TestCase
      */
     public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
     {
-        /* @var $property ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDocComment')
@@ -86,7 +86,7 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
     {
-        /* @var $property ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDocComment')
@@ -99,7 +99,7 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent() : void
     {
-        /* @var $property ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects(self::once())->method('getDocComment')
@@ -124,7 +124,7 @@ class FindPropertyTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 
-        /* @var $property ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property
