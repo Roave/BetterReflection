@@ -80,7 +80,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -106,7 +106,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /* @var $method ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $method */
         $method = $this->createMock(ReflectionFunctionAbstract::class);
 
         $method
@@ -127,7 +127,7 @@ class FindParameterTypeTest extends TestCase
     {
         $node = new ParamNode(new Variable('foo'));
 
-        /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function
@@ -153,7 +153,7 @@ class FindParameterTypeTest extends TestCase
 
         $parameterNode = new ParamNode(new Variable('foo'));
 
-        /* @var $function ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function

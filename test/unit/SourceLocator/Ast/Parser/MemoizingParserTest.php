@@ -22,7 +22,7 @@ class MemoizingParserTest extends TestCase
 {
     public function testParse() : void
     {
-        /* @var $wrappedParser Parser|\PHPUnit_Framework_MockObject_MockObject */
+        /** @var Parser|\PHPUnit_Framework_MockObject_MockObject $wrappedParser */
         $wrappedParser = $this->createMock(Parser::class);
 
         $randomCodeStrings = array_unique(array_map(
