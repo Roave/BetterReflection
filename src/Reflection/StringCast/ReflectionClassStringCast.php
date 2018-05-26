@@ -97,11 +97,13 @@ final class ReflectionClassStringCast
 
     private static function extendsToString(ReflectionClass $classReflection) : string
     {
-        if (! $classReflection->getParentClass()) {
+        $parentClass = $classReflection->getParentClass();
+
+        if (! $parentClass) {
             return '';
         }
 
-        return ' extends ' . $classReflection->getParentClass()->getName();
+        return ' extends ' . $parentClass->getName();
     }
 
     private static function implementsToString(ReflectionClass $classReflection) : string

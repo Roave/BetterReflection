@@ -156,6 +156,7 @@ final class ClosureSourceLocator implements SourceLocator
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
+        /** @var array $closureNodes */
         $closureNodes = $nodeVisitor->getClosureNodes();
 
         /** @var ReflectionFunction|null $reflectionFunction */

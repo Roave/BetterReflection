@@ -35,6 +35,7 @@ use function array_filter;
 use function count;
 use function implode;
 use function is_array;
+use function is_string;
 use function strtolower;
 
 abstract class ReflectionFunctionAbstract implements CoreReflector
@@ -147,6 +148,8 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
      * return "A\B").
+     *
+     * @psalm-suppress PossiblyNullPropertyFetch
      */
     public function getNamespaceName() : string
     {
@@ -554,7 +557,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $lowerName = strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
-            if (strtolower($paramNode->var->name) !== $lowerName) {
+            if (! is_string($paramNode->var->name) || strtolower($paramNode->var->name) !== $lowerName) {
                 continue;
             }
 

@@ -17,7 +17,7 @@ final class MemoizingSourceLocator implements SourceLocator
     /** @var SourceLocator */
     private $wrappedSourceLocator;
 
-    /** @var Reflection[] indexed by reflector key and identifier cache key */
+    /** @var Reflection[]|null[] indexed by reflector key and identifier cache key */
     private $cacheByIdentifierKeyAndOid = [];
 
     /** @var Reflection[][] indexed by reflector key and identifier type cache key */

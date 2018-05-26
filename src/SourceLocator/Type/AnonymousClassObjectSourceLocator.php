@@ -47,6 +47,8 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct($anonymousClassObject, Parser $parser)
     {
