@@ -21,6 +21,8 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Identifier\ClassIdentifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -784,8 +786,12 @@ class ReflectionClass implements Reflection, CoreReflector
         }
 
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
+        $identifier = new ClassIdentifier(
+            $this->node->extends->toString(),
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+        );
         /** @var self $parent */
-        $parent = $this->reflector->reflect($this->node->extends->toString());
+        $parent = $this->reflector->reflectIdentifier($identifier);
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);
