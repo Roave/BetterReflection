@@ -32,6 +32,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
+use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -58,7 +59,7 @@ class ReflectionClass implements Reflection, CoreReflector
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
 
-    /** @var Reflector */
+    /** @var ClassReflector */
     private $reflector;
 
     /** @var NamespaceNode|null */
