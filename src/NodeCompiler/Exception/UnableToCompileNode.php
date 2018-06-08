@@ -29,7 +29,7 @@ class UnableToCompileNode extends LogicException
         ReflectionClass $targetClass,
         Node\Expr\ClassConstFetch $constantFetch
     ) : self {
-        /** @var Node\Identifier $constantFetch ->name */
+        /** @var Node\Identifier $constantFetch->name */
         return new self(sprintf(
             'Could not locate constant %s::%s while trying to evaluate constant expression in %s at line %s',
             $targetClass->getName(),
@@ -43,7 +43,7 @@ class UnableToCompileNode extends LogicException
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch
     ) : self {
-        /** @var Node\Identifier $constantFetch ->name */
+        /** @var Node\Name $constantFetch->name */
         return new self(sprintf(
             'Could not locate constant "%s" while evaluating expression in %s at line %s',
             reset($constantFetch->name->parts),

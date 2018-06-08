@@ -112,7 +112,6 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
-        /** @var ReflectionClassConstant $reflectionConstant */
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
 
         if (! $reflectionConstant instanceof ReflectionClassConstant) {
