@@ -9,6 +9,7 @@ use PhpParser\Node;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use function get_class;
+use function reset;
 use function sprintf;
 
 class UnableToCompileNode extends LogicException

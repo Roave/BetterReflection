@@ -20,6 +20,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use const PHP_EOL;
 use const PHP_INT_MAX;
 use function define;
+use function sprintf;
 use function uniqid;
 
 /**

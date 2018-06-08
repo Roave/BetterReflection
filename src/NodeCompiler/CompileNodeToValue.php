@@ -87,7 +87,7 @@ class CompileNodeToValue
      * @return string|int|float|bool|mixed[]|null
      *
      * @throws IdentifierNotFound
-     * @throws Exception\UnableToCompileNode if a referenced constant could not be located on the expected referenced class
+     * @throws Exception\UnableToCompileNode If a referenced constant could not be located on the expected referenced class.
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
