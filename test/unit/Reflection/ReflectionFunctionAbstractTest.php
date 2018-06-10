@@ -310,6 +310,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $php = '<?php 
           function foo() {}
         ';
+
         $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
         $function->setDocCommentFromString('/**  * doc comment */');
