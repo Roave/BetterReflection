@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection;
 use Closure;
 use Exception;
 use phpDocumentor\Reflection\Type;
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\NullableType;
@@ -231,6 +232,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function getDocComment() : string
     {
         return GetFirstDocComment::forNode($this->node);
+    }
+
+    public function setDocCommentFromString(string $string) : void
+    {
+        $this->getAst()->setDocComment(new Doc($string));
     }
 
     public function getFileName() : ?string
