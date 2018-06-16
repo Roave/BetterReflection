@@ -557,6 +557,10 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         $lowerName = strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
+            if ($paramNode->var instanceof Node\Expr\Error) {
+                throw new \LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
+            }
+
             if (! is_string($paramNode->var->name) || strtolower($paramNode->var->name) !== $lowerName) {
                 continue;
             }

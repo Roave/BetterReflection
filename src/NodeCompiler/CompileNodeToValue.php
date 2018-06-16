@@ -13,10 +13,8 @@ use Roave\BetterReflection\Util\FileHelper;
 use function constant;
 use function defined;
 use function dirname;
-use function get_class;
 use function realpath;
 use function reset;
-use function sprintf;
 
 class CompileNodeToValue
 {
@@ -37,7 +35,7 @@ class CompileNodeToValue
 
         $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context) {
             if ($node instanceof Node\Expr\ConstFetch) {
-                return $this->compileConstFetch($node);
+                return $this->compileConstFetch($node, $context);
             }
 
             if ($node instanceof Node\Expr\ClassConstFetch) {
@@ -52,7 +50,7 @@ class CompileNodeToValue
                 return $this->compileClassConstant($context);
             }
 
-            throw new Exception\UnableToCompileNode('Unable to compile expression: ' . get_class($node));
+            throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
         });
 
         return $constExprEvaluator->evaluateDirectly($node);
@@ -62,9 +60,9 @@ class CompileNodeToValue
      * Compile constant expressions
      *
      * @return bool|mixed|null
-     * @throws UnableToCompileNode
+     * @throws Exception\UnableToCompileNode
      */
-    private function compileConstFetch(Node\Expr\ConstFetch $constNode)
+    private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context)
     {
         $firstName = reset($constNode->name->parts);
         switch ($firstName) {
@@ -76,9 +74,7 @@ class CompileNodeToValue
                 return true;
             default:
                 if (! defined($firstName)) {
-                    throw new Exception\UnableToCompileNode(
-                        sprintf('Constant "%s" has not been defined', $firstName)
-                    );
+                    throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode);
                 }
 
                 return constant($firstName);
@@ -89,7 +85,9 @@ class CompileNodeToValue
      * Compile class constants
      *
      * @return string|int|float|bool|mixed[]|null
+     *
      * @throws IdentifierNotFound
+     * @throws Exception\UnableToCompileNode If a referenced constant could not be located on the expected referenced class.
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
@@ -114,8 +112,11 @@ class CompileNodeToValue
             $classInfo = $context->getReflector()->reflect($className);
         }
 
-        /** @var ReflectionClassConstant $reflectionConstant */
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
+
+        if (! $reflectionConstant instanceof ReflectionClassConstant) {
+            throw Exception\UnableToCompileNode::becauseOfNotFoundClassConstantReference($context, $classInfo, $node);
+        }
 
         return $this->__invoke(
             $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,

@@ -20,6 +20,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use const PHP_EOL;
 use const PHP_INT_MAX;
 use function define;
+use function sprintf;
 use function uniqid;
 
 /**
@@ -50,6 +51,14 @@ class CompileNodeToValueTest extends TestCase
     private function getDummyContext() : CompilerContext
     {
         return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php', $this->astLocator)), null);
+    }
+
+    private function getDummyContextWithEmptyClass() : CompilerContext
+    {
+        return new CompilerContext(
+            new ClassReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
+            null
+        );
     }
 
     public function nodeProvider() : array
@@ -168,15 +177,35 @@ class CompileNodeToValueTest extends TestCase
     public function testExceptionThrownWhenInvalidNodeGiven() : void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Unable to compile expression: ' . Yield_::class);
+        $this->expectExceptionMessage(sprintf(
+            'Unable to compile expression in unknown context (probably a function): unrecognized node type %s at line -1',
+            Yield_::class
+        ));
+
         (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContext());
     }
 
     public function testExceptionThrownWhenUndefinedConstUsed() : void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Constant "FOO" has not been defined');
+        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context (probably a function) at line -1');
+
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
+    }
+
+    public function testExceptionThrownWhenUndefinedClassConstUsed() : void
+    {
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context (probably a function) at line -1');
+
+        (new CompileNodeToValue())
+            ->__invoke(
+                new Node\Expr\ClassConstFetch(
+                    new Name\FullyQualified('EmptyClass'),
+                    new Node\Identifier('FOO')
+                ),
+                $this->getDummyContextWithEmptyClass()
+            );
     }
 
     public function testConstantValueCompiled() : void
