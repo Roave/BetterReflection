@@ -909,7 +909,11 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         /** @var self $class */
-        $class = $this->reflector->reflect($node->toString());
+        if ($this->isAnonymous()) {
+            $class = (new BetterReflection())->classReflector()->reflect($node->toString());
+        } else {
+            $class = $this->reflector->reflect($node->toString());
+        }
 
         return $class;
     }

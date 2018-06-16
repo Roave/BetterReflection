@@ -74,6 +74,21 @@ class ReflectionObjectTest extends TestCase
         self::assertSame($endLine, $classInfo->getEndLine());
     }
 
+    public function testReflectionForAnonymousClassWithInterface() : void
+    {
+        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstanceWithInterface.php'));
+
+        $anonymousClass = require $file;
+
+        $classInfo = ReflectionObject::createFromInstance($anonymousClass);
+
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
+        self::assertContains(\FixtureInterface::class, $classInfo->getInterfaceNames());
+        self::assertTrue($classInfo->isInstantiable());
+    }
+
     public function testReflectionWorksWithInternalClasses() : void
     {
         $foo = new stdClass();
