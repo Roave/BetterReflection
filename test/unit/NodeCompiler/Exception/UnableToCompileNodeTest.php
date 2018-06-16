@@ -27,7 +27,7 @@ final class UnableToCompileNodeTest extends TestCase
     /** @dataProvider supportedContextTypes */
     public function testBecauseOfNotFoundConstantReference(CompilerContext $context) : void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context';
+        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         self::assertSame(
             'Could not locate constant "FOO" while evaluating expression in ' . $contextName . ' at line -1',
@@ -41,7 +41,7 @@ final class UnableToCompileNodeTest extends TestCase
     /** @dataProvider supportedContextTypes */
     public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context) : void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context';
+        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         /** @var ReflectionClass|MockObject $targetClass */
         $targetClass = $this->createMock(ReflectionClass::class);
@@ -68,7 +68,7 @@ final class UnableToCompileNodeTest extends TestCase
     /** @dataProvider supportedContextTypes */
     public function testForUnRecognizedExpressionInContext(CompilerContext $context) : void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context';
+        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         self::assertSame(
             'Unable to compile expression in ' . $contextName

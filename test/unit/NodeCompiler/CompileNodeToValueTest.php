@@ -178,7 +178,7 @@ class CompileNodeToValueTest extends TestCase
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage(sprintf(
-            'Unable to compile expression in unknown context: unrecognized node type %s at line -1',
+            'Unable to compile expression in unknown context (probably a function): unrecognized node type %s at line -1',
             Yield_::class
         ));
 
@@ -188,7 +188,7 @@ class CompileNodeToValueTest extends TestCase
     public function testExceptionThrownWhenUndefinedConstUsed() : void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context at line -1');
+        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context (probably a function) at line -1');
 
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
     }
@@ -196,7 +196,7 @@ class CompileNodeToValueTest extends TestCase
     public function testExceptionThrownWhenUndefinedClassConstUsed() : void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context at line -1');
+        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context (probably a function) at line -1');
 
         (new CompileNodeToValue())
             ->__invoke(
