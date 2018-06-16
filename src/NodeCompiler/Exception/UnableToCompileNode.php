@@ -39,7 +39,7 @@ class UnableToCompileNode extends LogicException
         ));
     }
 
-    public static function becauseOfOfNotFoundConstantReference(
+    public static function becauseOfNotFoundConstantReference(
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch
     ) : self {

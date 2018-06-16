@@ -74,7 +74,7 @@ class CompileNodeToValue
                 return true;
             default:
                 if (! defined($firstName)) {
-                    throw Exception\UnableToCompileNode::becauseOfOfNotFoundConstantReference($context, $constNode);
+                    throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode);
                 }
 
                 return constant($firstName);

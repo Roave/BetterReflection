@@ -25,13 +25,13 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 final class UnableToCompileNodeTest extends TestCase
 {
     /** @dataProvider supportedContextTypes */
-    public function testBecauseOfOfNotFoundConstantReference(CompilerContext $context) : void
+    public function testBecauseOfNotFoundConstantReference(CompilerContext $context) : void
     {
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context';
 
         self::assertSame(
             'Could not locate constant "FOO" while evaluating expression in ' . $contextName . ' at line -1',
-            UnableToCompileNode::becauseOfOfNotFoundConstantReference(
+            UnableToCompileNode::becauseOfNotFoundConstantReference(
                 $context,
                 new ConstFetch(new Name('FOO'))
             )->getMessage()
