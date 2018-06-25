@@ -3,4 +3,5 @@ parameters:
         # Some parent constructors are explicitly to be ignored
         - '#does not call parent constructor#'
         - '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
-        - '#Access to an undefined property PhpParser\\Node\\Stmt\\ClassLike::\$namespacedName#'
+        # PHPStan bug reported to author privatly
+        - '#Parameter \#1 \.\.\.\$(sourceLocator|node) of closure expects#'

@@ -35,7 +35,10 @@ class NodeToReflection implements AstConversionStrategy
             );
         }
 
-        if ($node instanceof Node\FunctionLike) {
+        if ($node instanceof Node\Stmt\ClassMethod
+            || $node instanceof Node\Stmt\Function_
+            || $node instanceof Node\Expr\Closure
+        ) {
             return ReflectionFunction::createFromNode(
                 $reflector,
                 $node,

@@ -87,6 +87,9 @@ final class SourceStubber
         return $this->prettyPrinter->prettyPrint([$namespaceNode->getNode()]);
     }
 
+    /**
+     * @return Class_|Interface_|Trait_
+     */
     private function createClass(CoreReflectionClass $classReflection) : Declaration
     {
         if ($classReflection->isTrait()) {
@@ -388,6 +391,9 @@ final class SourceStubber
         return $parameterReflection->getDefaultValue();
     }
 
+    /**
+     * @return Name|FullyQualified|NullableType
+     */
     private function formatType(CoreReflectionType $type) : NodeAbstract
     {
         $name     = (string) $type;

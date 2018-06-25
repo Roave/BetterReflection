@@ -21,7 +21,7 @@ class CompileNodeToValue
     /**
      * Compile an expression from a node into a value.
      *
-     * @param Node $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Node\Stmt\Expression|Node\Expr $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
      * @return mixed
      *

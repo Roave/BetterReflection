@@ -908,10 +908,11 @@ class ReflectionClass implements Reflection, CoreReflector
     private function reflectClassForNamedNode(Node\Name $node) : self
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        /** @var self $class */
         if ($this->isAnonymous()) {
+            /** @var self $class */
             $class = (new BetterReflection())->classReflector()->reflect($node->toString());
         } else {
+            /** @var self $class */
             $class = $this->reflector->reflect($node->toString());
         }
 
@@ -985,7 +986,7 @@ class ReflectionClass implements Reflection, CoreReflector
                 $resolvedAliases[$adaptation->newName->name] = sprintf(
                     '%s::%s',
                     $usedTrait->toString(),
-                    $adaptation->method
+                    $adaptation->method->toString()
                 );
             }
         }
