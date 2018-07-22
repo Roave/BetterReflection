@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use phpDocumentor\Reflection\DocBlock\ExampleFinder;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -210,6 +211,17 @@ class AutoloadSourceLocatorTest extends TestCase
                 ->locateIdentifier(
                     $this->getMockReflector(),
                     new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+                )
+        );
+    }
+
+    public function testCanAutoloadPsr4ClassesInpotentiallyMultipleDirectories() : void
+    {
+        self::assertNotNull(
+            (new AutoloadSourceLocator($this->astLocator))
+                ->locateIdentifier(
+                    $this->getMockReflector(),
+                    new Identifier(ExampleFinder::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
                 )
         );
     }
