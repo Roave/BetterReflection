@@ -183,31 +183,30 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * Must be implemented to return some data so that calls like is_file will work.
      *
      * @param string $path
-     * @param int    $flags
+     * @param int    $flags|false
      * @return mixed[]
      * @see https://php.net/manual/en/class.streamwrapper.php
      * @see https://php.net/manual/en/streamwrapper.url-stat.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function url_stat($path, $flags) : array
+    public function url_stat($path, $flags)
     {
-        // This is just dummy file stat data to fool stat calls
-        $assoc = [
-            'dev' => 2056,
-            'ino' => 19679399,
-            'mode' => 33204,
-            'nlink' => 1,
-            'uid' => 1000,
-            'gid' => 1000,
-            'rdev' => 0,
-            'size' => 1,
-            'atime' => time(),
-            'mtime' => time(),
-            'ctime' => time(),
-            'blksize' => 4096,
-            'blocks' => 8,
-        ];
+        stream_wrapper_restore('file');
 
-        return array_merge(array_values($assoc), $assoc);
+        if ($flags & STREAM_URL_STAT_QUIET) {
+            set_error_handler(function () {
+                // Use native error handler
+                return false;
+            });
+            $result = @stat($path);
+            restore_error_handler();
+        } else {
+            $result = stat($path);
+        }
+
+        stream_wrapper_unregister('file');
+        stream_wrapper_register('file', self::class);
+
+        return $result;
     }
 }
