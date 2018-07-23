@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use phpDocumentor\Reflection\DocBlock\ExampleFinder;
+use Foo\Bar\AutoloadableClassWithTwoDirectories;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -217,12 +217,31 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories() : void
     {
+        spl_autoload_register([$this, 'autoload']);
+
         self::assertNotNull(
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
-                    new Identifier(ExampleFinder::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+                    new Identifier(AutoloadableClassWithTwoDirectories::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
                 )
         );
+
+        spl_autoload_unregister([$this, 'autoload']);
+    }
+
+    /**
+     * A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace.
+     */
+    public function autoload(string $className) : bool {
+        if ($className !== AutoloadableClassWithTwoDirectories::class) {
+            return false;
+        }
+
+        self::assertFalse(file_exists(__DIR__.'/AutoloadableClassWithTwoDirectories.php'));
+        self::assertTrue(file_exists(__DIR__.'/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
+
+        include __DIR__.'/../../Fixture/AutoloadableClassWithTwoDirectories.php';
+        return true;
     }
 }
