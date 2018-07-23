@@ -22,7 +22,10 @@ use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use function class_exists;
+use function file_exists;
 use function interface_exists;
+use function spl_autoload_register;
+use function spl_autoload_unregister;
 use function trait_exists;
 use function uniqid;
 
@@ -235,15 +238,16 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace.
      */
-    public function autoload(string $className) : bool {
+    public function autoload(string $className) : bool
+    {
         if ($className !== AutoloadableClassWithTwoDirectories::class) {
             return false;
         }
 
-        self::assertFalse(file_exists(__DIR__.'/AutoloadableClassWithTwoDirectories.php'));
-        self::assertTrue(file_exists(__DIR__.'/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
+        self::assertFalse(file_exists(__DIR__ . '/AutoloadableClassWithTwoDirectories.php'));
+        self::assertTrue(file_exists(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
 
-        include __DIR__.'/../../Fixture/AutoloadableClassWithTwoDirectories.php';
+        include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
         return true;
     }
 }
