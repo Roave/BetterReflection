@@ -180,7 +180,9 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     }
 
     /**
-     * Must be implemented to return some data so that calls like is_file will work.
+     * url_stat is triggered by calls like "file_exists". The call to "file_exists" must not be overloaded.
+     * This function restores the original "file" stream, issues a call to "stat" to get the real results,
+     * and then re-registers the AutoloadSourceLocator stream wrapper.
      *
      * @param string $path
      * @param int    $flags
