@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use Foo\Bar\AutoloadableClassWithTwoDirectories;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -21,7 +22,10 @@ use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use function class_exists;
+use function file_exists;
 use function interface_exists;
+use function spl_autoload_register;
+use function spl_autoload_unregister;
 use function trait_exists;
 use function uniqid;
 
@@ -212,5 +216,38 @@ class AutoloadSourceLocatorTest extends TestCase
                     new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
                 )
         );
+    }
+
+    public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories() : void
+    {
+        spl_autoload_register([$this, 'autoload']);
+
+        self::assertNotNull(
+            (new AutoloadSourceLocator($this->astLocator))
+                ->locateIdentifier(
+                    $this->getMockReflector(),
+                    new Identifier(AutoloadableClassWithTwoDirectories::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+                )
+        );
+
+        spl_autoload_unregister([$this, 'autoload']);
+
+        self::assertFalse(class_exists(AutoloadableClassWithTwoDirectories::class, false));
+    }
+
+    /**
+     * A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace.
+     */
+    public function autoload(string $className) : bool
+    {
+        if ($className !== AutoloadableClassWithTwoDirectories::class) {
+            return false;
+        }
+
+        self::assertFalse(file_exists(__DIR__ . '/AutoloadableClassWithTwoDirectories.php'));
+        self::assertTrue(file_exists(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
+
+        include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
+        return true;
     }
 }

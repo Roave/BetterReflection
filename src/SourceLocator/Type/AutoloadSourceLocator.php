@@ -11,19 +11,19 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use function array_merge;
-use function array_values;
+use const STREAM_URL_STAT_QUIET;
 use function class_exists;
 use function file_exists;
 use function file_get_contents;
 use function function_exists;
 use function interface_exists;
 use function is_string;
+use function restore_error_handler;
 use function set_error_handler;
+use function stat;
 use function stream_wrapper_register;
 use function stream_wrapper_restore;
 use function stream_wrapper_unregister;
-use function time;
 use function trait_exists;
 
 /**
@@ -180,34 +180,35 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     }
 
     /**
-     * Must be implemented to return some data so that calls like is_file will work.
+     * url_stat is triggered by calls like "file_exists". The call to "file_exists" must not be overloaded.
+     * This function restores the original "file" stream, issues a call to "stat" to get the real results,
+     * and then re-registers the AutoloadSourceLocator stream wrapper.
      *
      * @param string $path
      * @param int    $flags
-     * @return mixed[]
+     * @return mixed[]|bool
      * @see https://php.net/manual/en/class.streamwrapper.php
      * @see https://php.net/manual/en/streamwrapper.url-stat.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function url_stat($path, $flags) : array
+    public function url_stat($path, $flags)
     {
-        // This is just dummy file stat data to fool stat calls
-        $assoc = [
-            'dev' => 2056,
-            'ino' => 19679399,
-            'mode' => 33204,
-            'nlink' => 1,
-            'uid' => 1000,
-            'gid' => 1000,
-            'rdev' => 0,
-            'size' => 1,
-            'atime' => time(),
-            'mtime' => time(),
-            'ctime' => time(),
-            'blksize' => 4096,
-            'blocks' => 8,
-        ];
+        stream_wrapper_restore('file');
 
-        return array_merge(array_values($assoc), $assoc);
+        if ($flags & STREAM_URL_STAT_QUIET) {
+            set_error_handler(function () {
+                // Use native error handler
+                return false;
+            });
+            $result = @stat($path);
+            restore_error_handler();
+        } else {
+            $result = stat($path);
+        }
+
+        stream_wrapper_unregister('file');
+        stream_wrapper_register('file', self::class);
+
+        return $result;
     }
 }
