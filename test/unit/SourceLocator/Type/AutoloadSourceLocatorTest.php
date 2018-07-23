@@ -215,7 +215,7 @@ class AutoloadSourceLocatorTest extends TestCase
         );
     }
 
-    public function testCanAutoloadPsr4ClassesInpotentiallyMultipleDirectories() : void
+    public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories() : void
     {
         self::assertNotNull(
             (new AutoloadSourceLocator($this->astLocator))

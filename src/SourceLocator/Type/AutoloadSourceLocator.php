@@ -11,19 +11,19 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use function array_merge;
-use function array_values;
+use const STREAM_URL_STAT_QUIET;
 use function class_exists;
 use function file_exists;
 use function file_get_contents;
 use function function_exists;
 use function interface_exists;
 use function is_string;
+use function restore_error_handler;
 use function set_error_handler;
+use function stat;
 use function stream_wrapper_register;
 use function stream_wrapper_restore;
 use function stream_wrapper_unregister;
-use function time;
 use function trait_exists;
 
 /**
@@ -183,8 +183,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * Must be implemented to return some data so that calls like is_file will work.
      *
      * @param string $path
-     * @param int    $flags|false
-     * @return mixed[]
+     * @param int    $flags
+     * @return mixed[]|false
      * @see https://php.net/manual/en/class.streamwrapper.php
      * @see https://php.net/manual/en/streamwrapper.url-stat.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
