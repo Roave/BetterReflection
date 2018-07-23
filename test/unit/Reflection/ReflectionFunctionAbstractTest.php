@@ -305,6 +305,20 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertContains('Some function comment', $functionInfo->getDocComment());
     }
 
+    public function testSetDocCommentFromString() : void
+    {
+        $php = '<?php 
+          function foo() {}
+        ';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $function  = $reflector->reflect('foo');
+        $function->setDocCommentFromString('/**  * doc comment */');
+
+        self::assertSame('/**  * doc comment */', $function->getDocComment());
+    }
+
+
     public function testGetDocReturnsEmptyStringWithNoComment() : void
     {
         $php = '<?php function foo() {}';
