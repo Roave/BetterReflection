@@ -228,6 +228,8 @@ class AutoloadSourceLocatorTest extends TestCase
         );
 
         spl_autoload_unregister([$this, 'autoload']);
+
+        self::assertFalse(class_exists(AutoloadableClassWithTwoDirectories::class, false));
     }
 
     /**
