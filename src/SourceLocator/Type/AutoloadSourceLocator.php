@@ -186,7 +186,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      *
      * @param string $path
      * @param int    $flags
-     * @return mixed[]|false
+     * @return mixed[]|bool
      * @see https://php.net/manual/en/class.streamwrapper.php
      * @see https://php.net/manual/en/streamwrapper.url-stat.php
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
