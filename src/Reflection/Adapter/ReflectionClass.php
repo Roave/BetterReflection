@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -127,7 +128,11 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getConstructor()
     {
-        return new ReflectionMethod($this->betterReflectionClass->getConstructor());
+        try {
+            return new ReflectionMethod($this->betterReflectionClass->getConstructor());
+        } catch (OutOfBoundsException $e) {
+            return null;
+        }
     }
 
     /**

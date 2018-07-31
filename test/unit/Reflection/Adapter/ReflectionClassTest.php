@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -424,5 +425,17 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertFalse($reflectionClassAdapter->getExtensionName());
+    }
+
+    public function testGetConstructorReturnsNullWhenNoConstructorExists() : void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getConstructor')
+            ->willThrowException(new OutOfBoundsException());
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertNull($reflectionClassAdapter->getConstructor());
     }
 }
