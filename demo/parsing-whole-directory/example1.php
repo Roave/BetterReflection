@@ -18,3 +18,5 @@ $sourceLocator = new DirectoriesSourceLocator(
 $classReflector = new ClassReflector($sourceLocator);
 
 $classReflections = $classReflector->getAllClasses();
+
+!empty($classReflections) && print 'success';

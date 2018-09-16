@@ -24,3 +24,5 @@ $sourceLocator = new AggregateSourceLocator([
 $classReflector = new ClassReflector($sourceLocator);
 
 $classReflections = $classReflector->getAllClasses();
+
+!empty($classReflections) && print 'success';
