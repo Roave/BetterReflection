@@ -2,13 +2,13 @@
 
 # parse all classes in a directory
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
-$directories = [__DIR__ . '/src'];
+$directories = [__DIR__ . '/../../src'];
 
 $sourceLocator = new DirectoriesSourceLocator(
     $directories,
@@ -18,3 +18,5 @@ $sourceLocator = new DirectoriesSourceLocator(
 $classReflector = new ClassReflector($sourceLocator);
 
 $classReflections = $classReflector->getAllClasses();
+
+!empty($classReflections) && print 'success';

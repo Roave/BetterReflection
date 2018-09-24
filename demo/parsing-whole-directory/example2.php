@@ -2,7 +2,7 @@
 
 # parse all classes in a directory that use some dependencies from /vendor
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -10,7 +10,7 @@ use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
-$directories = [__DIR__ . '/src'];
+$directories = [__DIR__ . '/../../src'];
 
 $sourceLocator = new AggregateSourceLocator([
     new DirectoriesSourceLocator(
@@ -24,3 +24,5 @@ $sourceLocator = new AggregateSourceLocator([
 $classReflector = new ClassReflector($sourceLocator);
 
 $classReflections = $classReflector->getAllClasses();
+
+!empty($classReflections) && print 'success';
