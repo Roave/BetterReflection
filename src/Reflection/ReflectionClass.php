@@ -168,8 +168,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getShortName() : string
     {
         if (! $this->isAnonymous()) {
-            /** @var Node\Identifier $this->node->name */
-            return $this->node->name->name;
+            return (string)$this->node->name;
         }
 
         $fileName = $this->getFileName();
