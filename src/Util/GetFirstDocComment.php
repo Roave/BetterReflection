@@ -14,7 +14,8 @@ final class GetFirstDocComment
 {
     public static function forNode(NodeAbstract $node) : string
     {
-        foreach ($node->getComments() as $comment) {
+        $comments = $node->getAttributes()['comments'] ?? [];
+        foreach ($comments as $comment) {
             if ($comment instanceof Doc) {
                 return $comment->getReformattedText();
             }
