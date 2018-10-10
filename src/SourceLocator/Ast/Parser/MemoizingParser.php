@@ -30,7 +30,7 @@ final class MemoizingParser implements Parser
     /**
      * {@inheritDoc}
      */
-    public function parse(string $code, ?ErrorHandler $errorHandler = null)
+    public function parse($code, ?ErrorHandler $errorHandler = null)
     {
         // note: this code is mathematically buggy by default, as we are using a hash to identify
         //       cache entries. The string length is added to further reduce likeliness (although
