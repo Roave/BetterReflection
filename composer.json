@@ -1,5 +1,5 @@
 {
-    "name": "roave/better-reflection",
+    "name": "gvanbeck/better-reflection",
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {

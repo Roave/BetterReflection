@@ -143,7 +143,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
             return self::CLOSURE_NAME;
         }
 
-        return $this->node->name->name;
+        if(is_object($this->node->name)) {
+            return $this->node->name->name;
+        }
+
+        return (string)$this->node->name;
     }
 
     /**
@@ -359,7 +363,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getStartLine() : int
     {
-        return $this->node->getStartLine();
+        return $this->node->getAttributes()['startLine'] ?? -1;
     }
 
     /**
@@ -367,7 +371,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getEndLine() : int
     {
-        return $this->node->getEndLine();
+        return $this->node->getAttributes()['endLine'] ?? -1;
     }
 
     public function getStartColumn() : int

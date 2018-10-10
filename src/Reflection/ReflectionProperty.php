@@ -169,7 +169,11 @@ class ReflectionProperty implements CoreReflector
      */
     public function getName() : string
     {
-        return $this->node->props[$this->positionInNode]->name->name;
+        if(is_object($this->node->props[$this->positionInNode]->name)) {
+            return $this->node->props[$this->positionInNode]->name->name;
+        }
+
+        return (string)$this->node->props[$this->positionInNode]->name;
     }
 
     /**
@@ -272,7 +276,7 @@ class ReflectionProperty implements CoreReflector
      */
     public function getStartLine() : int
     {
-        return $this->node->getStartLine();
+        return $this->node->getAttributes()['startLine'] ?? -1;
     }
 
     /**
@@ -280,7 +284,7 @@ class ReflectionProperty implements CoreReflector
      */
     public function getEndLine() : int
     {
-        return $this->node->getEndLine();
+        return $this->node->getAttributes()['endLine'] ?? -1;
     }
 
     public function getStartColumn() : int
