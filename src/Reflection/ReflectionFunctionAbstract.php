@@ -363,7 +363,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getStartLine() : int
     {
-        return $this->node->getStartLine();
+        return $this->node->getAttributes()['startLine'] ?? -1;
     }
 
     /**
@@ -371,7 +371,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function getEndLine() : int
     {
-        return $this->node->getEndLine();
+        return $this->node->getAttributes()['endLine'] ?? -1;
     }
 
     public function getStartColumn() : int
