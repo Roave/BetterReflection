@@ -143,7 +143,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
             return self::CLOSURE_NAME;
         }
 
-        return $this->node->name->name;
+        if(is_object($this->node->name)) {
+            return $this->node->name->name;
+        }
+
+        return (string)$this->node->name;
     }
 
     /**
