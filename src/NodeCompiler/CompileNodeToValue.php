@@ -60,6 +60,7 @@ class CompileNodeToValue
      * Compile constant expressions
      *
      * @return bool|mixed|null
+     *
      * @throws Exception\UnableToCompileNode
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context)

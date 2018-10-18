@@ -1,39 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Roave\BetterReflectionBenchmark;
 
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
-use PhpBench\Benchmark\Metadata\Annotations\Subject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use function array_map;
+use function array_merge;
 
 /**
  * @Iterations(5)
  */
 class PhpUnitTestCaseBench
 {
-    /**
-     * @var ClassReflector
-     */
+    /** @var ClassReflector */
     private $reflector;
 
-    /**
-     * @var ReflectionProperty[]
-     */
+    /** @var ReflectionProperty[] */
     private $properties;
 
-    /**
-     * @var ReflectionMethod[]
-     */
+    /** @var ReflectionMethod[] */
     private $methods;
 
-    /**
-     * @var ReflectionParameter[]
-     */
+    /** @var ReflectionParameter[] */
     private $parameters = [];
 
     public function __construct()
@@ -43,22 +38,16 @@ class PhpUnitTestCaseBench
         $reflectionClass  = $this->reflector->reflect(TestCase::class);
         $this->methods    = $reflectionClass->getMethods();
         $this->properties = $reflectionClass->getProperties();
-        $this->parameters = array_merge([], ...array_map(function (ReflectionMethod $method) : array {
+        $this->parameters = array_merge([], ...array_map(static function (ReflectionMethod $method) : array {
             return $method->getParameters();
         }, $this->methods));
     }
 
-    /**
-     * @Subject()
-     */
     public function reflect_class() : void
     {
         $this->reflector->reflect(TestCase::class);
     }
 
-    /**
-     * @Subject()
-     */
     public function reflect_properties_doc_types() : void
     {
         foreach ($this->properties as $property) {
@@ -66,9 +55,6 @@ class PhpUnitTestCaseBench
         }
     }
 
-    /**
-     * @Subject()
-     */
     public function reflect_method_parameters() : void
     {
         foreach ($this->parameters as $parameter) {
@@ -76,9 +62,6 @@ class PhpUnitTestCaseBench
         }
     }
 
-    /**
-     * @Subject()
-     */
     public function reflect_methods_parameter_doc_types() : void
     {
         foreach ($this->parameters as $parameter) {
@@ -86,9 +69,6 @@ class PhpUnitTestCaseBench
         }
     }
 
-    /**
-     * @Subject()
-     */
     public function reflect_methods_doc_return_types() : void
     {
         foreach ($this->methods as $method) {

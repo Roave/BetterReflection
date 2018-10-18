@@ -3,13 +3,14 @@
     <arg value="p"/>
     <arg value="s"/>
     <arg name="colors"/>
+    <arg name="cache" value=".phpcs-cache"/>
 
     <file>src</file>
     <file>test/unit</file>
     <exclude-pattern>test/unit/Assets/*</exclude-pattern>
     <exclude-pattern>test/unit/Fixture/*</exclude-pattern>
 
-    <rule ref="vendor/doctrine/coding-standard/lib/Doctrine/ruleset.xml">
+    <rule ref="Doctrine">
         <exclude name="Generic.Files.LineLength.TooLong"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>

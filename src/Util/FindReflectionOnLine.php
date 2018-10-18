@@ -40,9 +40,10 @@ final class FindReflectionOnLine
      * Returns null if no reflections found on the line.
      *
      * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
+     *
      * @throws InvalidFileLocation
      * @throws ParseToAstFailure
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __invoke(string $filename, int $lineNumber)
     {
@@ -89,7 +90,8 @@ final class FindReflectionOnLine
      * Check to see if the line is within the boundaries of the reflection specified.
      *
      * @param ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     private function containsLine($reflection, int $lineNumber) : bool
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
@@ -22,7 +23,7 @@ class ReflectionClassConstantTest extends TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionClassConstant::class);
-        return array_combine($methods, array_map(function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));
     }
@@ -54,11 +55,12 @@ class ReflectionClassConstantTest extends TestCase
     /**
      * @param mixed   $returnValue
      * @param mixed[] $args
+     *
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionClassConstant|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionClassConstant|PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
         $reflectionStub->expects($this->once())

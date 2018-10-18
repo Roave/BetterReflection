@@ -64,6 +64,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
+     *
      * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
@@ -104,6 +105,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
+     *
      * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
@@ -152,6 +154,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     /**
      * @param object $class
+     *
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void

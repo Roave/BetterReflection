@@ -25,6 +25,7 @@ class ClassReflector implements Reflector
      * Create a ReflectionClass for the specified $className.
      *
      * @return ReflectionClass
+     *
      * @throws IdentifierNotFound
      */
     public function reflect(string $className) : Reflection

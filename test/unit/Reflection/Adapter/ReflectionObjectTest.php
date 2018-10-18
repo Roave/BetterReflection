@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
@@ -27,7 +28,7 @@ class ReflectionObjectTest extends TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionObject::class);
-        return array_combine($methods, array_map(function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));
     }
@@ -101,11 +102,12 @@ class ReflectionObjectTest extends TestCase
     /**
      * @param mixed   $returnValue
      * @param mixed[] $args
+     *
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionObject|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionObject|PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
 
         if ($expectedException === null) {

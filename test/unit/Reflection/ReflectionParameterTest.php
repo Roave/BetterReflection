@@ -73,7 +73,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromCallable() : void
     {
-        $parameterInfo = ReflectionParameter::createFromClosure(function ($a) : void {
+        $parameterInfo = ReflectionParameter::createFromClosure(static function ($a) : void {
         }, 'a');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
@@ -108,7 +108,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromSpecWithClosure() : void
     {
-        $parameterInfo = ReflectionParameter::createFromSpec(function ($a) : void {
+        $parameterInfo = ReflectionParameter::createFromSpec(static function ($a) : void {
         }, 'a');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
@@ -155,6 +155,7 @@ class ReflectionParameterTest extends TestCase
 
     /**
      * @param mixed $expectedValue
+     *
      * @dataProvider defaultParameterProvider
      */
     public function testDefaultParametersTypes(string $defaultExpression, $expectedValue) : void
@@ -677,6 +678,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @param int $expectedStart
      * @param int $expectedEnd
+     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void

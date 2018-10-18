@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Located;
 
+use InvalidArgumentException;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\Util\FileHelper;
@@ -22,7 +23,7 @@ class LocatedSource
     private $filename;
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
     public function __construct(string $source, ?string $filename)

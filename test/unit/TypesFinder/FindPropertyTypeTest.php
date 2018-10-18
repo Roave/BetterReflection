@@ -12,6 +12,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -46,7 +47,7 @@ class FindPropertyTypeTest extends TestCase
      */
     public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
     {
-        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
+        /** @var ReflectionProperty|PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDocComment')
@@ -86,7 +87,7 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
     {
-        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
+        /** @var ReflectionProperty|PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects($this->any())->method('getDocComment')
@@ -99,7 +100,7 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent() : void
     {
-        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
+        /** @var ReflectionProperty|PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property->expects(self::once())->method('getDocComment')
@@ -111,10 +112,10 @@ class FindPropertyTypeTest extends TestCase
     }
 
     /**
-     * @dataProvider aliasedVarTypesProvider
-     *
      * @param string[] $aliasesToFQCNs indexed by alias
      * @param Type[]   $expectedTypes
+     *
+     * @dataProvider aliasedVarTypesProvider
      */
     public function testWillResolveAliasedTypes(
         ?string $namespaceName,
@@ -124,7 +125,7 @@ class FindPropertyTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 
-        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $property */
+        /** @var ReflectionProperty|PHPUnit_Framework_MockObject_MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
 
         $property

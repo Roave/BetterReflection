@@ -43,6 +43,7 @@ class ReflectionClassConstant implements CoreReflector
      * Create a reflection of a class's constant by Const Node
      *
      * @internal
+     *
      * @param ClassConst $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(

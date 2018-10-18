@@ -1,6 +1,7 @@
 language: php
 
 before_script:
+  - rm composer.lock
   - travis_retry composer update --prefer-dist $DEPENDENCIES
 
 jobs:
@@ -66,10 +67,10 @@ jobs:
       script: test/demo/check-demo.sh
 
     - stage: Check Coding Standard
-      php: 7.1
+      php: 7.2
       env: DEPENDENCIES=""
       before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable doctrine/coding-standard:^4.0.0
+        - travis_retry composer install
       script: vendor/bin/phpcs
 
     - stage: Static Analysis

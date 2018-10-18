@@ -20,6 +20,7 @@ class ResolveTypes
 
     /**
      * @param string[] $stringTypes
+     *
      * @return Type[]
      */
     public function __invoke(array $stringTypes, Context $context) : array

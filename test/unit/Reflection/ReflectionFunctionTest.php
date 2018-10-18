@@ -118,7 +118,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testCreateFromClosure() : void
     {
-        $myClosure  = function () {
+        $myClosure  = static function () {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
@@ -127,7 +127,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testCreateFromClosureCanReflectTypeHints() : void
     {
-        $myClosure  = function (stdClass $theParam) : int {
+        $myClosure  = static function (stdClass $theParam) : int {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
@@ -176,7 +176,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testGetClosureThrowsExceptionWhenFunctionIsClosure() : void
     {
-        $closure = function () : void {
+        $closure = static function () : void {
         };
 
         $functionReflection = ReflectionFunction::createFromClosure($closure);
@@ -210,7 +210,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testInvokeThrowsExceptionWhenFunctionIsClosure() : void
     {
-        $closure = function () : void {
+        $closure = static function () : void {
         };
 
         $functionReflection = ReflectionFunction::createFromClosure($closure);
@@ -222,7 +222,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testInvokeArgsThrowsExceptionWhenFunctionIsClosure() : void
     {
-        $closure = function () : void {
+        $closure = static function () : void {
         };
 
         $functionReflection = ReflectionFunction::createFromClosure($closure);

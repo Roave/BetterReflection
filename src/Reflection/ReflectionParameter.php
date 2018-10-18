@@ -8,6 +8,7 @@ use Closure;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use OutOfBoundsException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
@@ -70,7 +71,7 @@ class ReflectionParameter implements CoreReflector
     /**
      * Create a reflection of a parameter using a class name
      *
-     * @throws \OutOfBoundsException
+     * @throws OutOfBoundsException
      */
     public static function createFromClassNameAndMethod(
         string $className,
@@ -86,7 +87,8 @@ class ReflectionParameter implements CoreReflector
      * Create a reflection of a parameter using an instance
      *
      * @param object $instance
-     * @throws \OutOfBoundsException
+     *
+     * @throws OutOfBoundsException
      */
     public static function createFromClassInstanceAndMethod(
         $instance,
@@ -115,9 +117,10 @@ class ReflectionParameter implements CoreReflector
      *  - ['foo']
      *  - [function () {}]
      *
-     * @param object[]|string[]|string|\Closure $spec
-     * @throws \Exception
-     * @throws \InvalidArgumentException
+     * @param object[]|string[]|string|Closure $spec
+     *
+     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public static function createFromSpec($spec, string $parameterName) : self
     {
@@ -147,6 +150,7 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * @internal
+     *
      * @param ParamNode       $node               Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param Namespace_|null $declaringNamespace namespace of the declaring function/method
      */
@@ -205,7 +209,7 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * @throws \LogicException
+     * @throws LogicException
      */
     private function findParentClassDeclaringConstant(string $constantName) : string
     {
@@ -289,7 +293,8 @@ class ReflectionParameter implements CoreReflector
      * Get the default value of the parameter.
      *
      * @return mixed
-     * @throws \LogicException
+     *
+     * @throws LogicException
      */
     public function getDefaultValue()
     {
@@ -340,6 +345,7 @@ class ReflectionParameter implements CoreReflector
      * would return an array of Type objects, one for string, one for null.
      *
      * @see getTypeHint()
+     *
      * @return Type[]
      */
     public function getDocBlockTypes() : array
@@ -446,7 +452,7 @@ class ReflectionParameter implements CoreReflector
     }
 
     /**
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function getDefaultValueConstantName() : string
     {
@@ -461,7 +467,7 @@ class ReflectionParameter implements CoreReflector
     /**
      * Gets a ReflectionClass for the type hint (returns null if not a class)
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function getClass() : ?ReflectionClass
     {
@@ -517,11 +523,12 @@ class ReflectionParameter implements CoreReflector
 
     /**
      * {@inheritdoc}
+     *
      * @throws Uncloneable
      */
     public function __clone()
     {
-        throw Uncloneable::fromClass(__CLASS__);
+        throw Uncloneable::fromClass(self::class);
     }
 
     public function getStartColumn() : int

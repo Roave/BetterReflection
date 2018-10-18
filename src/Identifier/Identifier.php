@@ -24,7 +24,6 @@ class Identifier
     private $type;
 
     /**
-     *
      * @throws InvalidIdentifierName
      */
     public function __construct(string $name, IdentifierType $type)

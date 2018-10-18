@@ -49,7 +49,7 @@ final class ReflectionFunctionStringCast
 
     private static function parametersToString(ReflectionFunction $functionReflection) : string
     {
-        return array_reduce($functionReflection->getParameters(), function (string $string, ReflectionParameter $parameterReflection) : string {
+        return array_reduce($functionReflection->getParameters(), static function (string $string, ReflectionParameter $parameterReflection) : string {
             return $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection);
         }, '');
     }

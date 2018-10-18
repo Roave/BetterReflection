@@ -35,6 +35,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     *
      * @throws ParseToAstFailure
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
@@ -54,6 +55,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     *
      * @throws ParseToAstFailure
      */
     final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array

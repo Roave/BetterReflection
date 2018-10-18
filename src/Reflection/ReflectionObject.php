@@ -9,6 +9,7 @@ use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use ReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
@@ -49,8 +50,8 @@ class ReflectionObject extends ReflectionClass
      * @param object $instance
      *
      * @throws IdentifierNotFound
-     * @throws \ReflectionException
-     * @throws \InvalidArgumentException
+     * @throws ReflectionException
+     * @throws InvalidArgumentException
      */
     public static function export($instance = null) : string
     {
@@ -66,8 +67,8 @@ class ReflectionObject extends ReflectionClass
      *
      * @param object $object
      *
-     * @throws \ReflectionException
-     * @throws \InvalidArgumentException
+     * @throws ReflectionException
+     * @throws InvalidArgumentException
      * @throws IdentifierNotFound
      *
      * @psalm-suppress DocblockTypeContradiction
@@ -96,6 +97,7 @@ class ReflectionObject extends ReflectionClass
      * Reflect on runtime properties for the current instance
      *
      * @see ReflectionClass::getProperties() for the usage of $filter
+     *
      * @return ReflectionProperty[]
      */
     private function getRuntimeProperties(?int $filter = null) : array

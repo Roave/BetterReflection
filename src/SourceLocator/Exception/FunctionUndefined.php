@@ -13,6 +13,7 @@ use RuntimeException;
  * You were probably looking to catch \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound instead.
  *
  * @deprecated You're probably looking for `IdentifierNotFound`
+ *
  * @see \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
  */
 class FunctionUndefined extends RuntimeException

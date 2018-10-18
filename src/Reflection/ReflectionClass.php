@@ -18,6 +18,7 @@ use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
@@ -43,7 +44,6 @@ use function array_merge;
 use function array_reverse;
 use function array_slice;
 use function array_values;
-use function get_class;
 use function implode;
 use function in_array;
 use function is_object;
@@ -121,8 +121,8 @@ class ReflectionClass implements Reflection, CoreReflector
      * @param object $instance
      *
      * @throws IdentifierNotFound
-     * @throws \ReflectionException
-     * @throws \InvalidArgumentException
+     * @throws ReflectionException
+     * @throws InvalidArgumentException
      *
      * @psalm-suppress DocblockTypeContradiction
      */
@@ -139,6 +139,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * Create from a Class Node.
      *
      * @internal
+     *
      * @param ClassLikeNode      $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
      */
@@ -264,7 +265,7 @@ class ReflectionClass implements Reflection, CoreReflector
                 $this->getTraits()
             ),
             ...array_map(
-                function (ReflectionClass $ancestor) : array {
+                static function (ReflectionClass $ancestor) : array {
                     return $ancestor->getMethods();
                 },
                 array_values(array_merge(
@@ -333,6 +334,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * \ReflectionMethod::IS_FINAL.
      * For example if $filter = \ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_FINAL
      * the only the final public methods will be returned
+     *
      * @return ReflectionMethod[]
      */
     public function getMethods(?int $filter = null) : array
@@ -344,7 +346,7 @@ class ReflectionClass implements Reflection, CoreReflector
         return array_values(
             array_filter(
                 $this->getMethodsIndexedByName(),
-                function (ReflectionMethod $method) use ($filter) : bool {
+                static function (ReflectionMethod $method) use ($filter) : bool {
                     return (bool) ($filter & $method->getModifiers());
                 }
             )
@@ -356,6 +358,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * up parent classes etc.)
      *
      * @see ReflectionClass::getMethods for the usage of $filter
+     *
      * @return ReflectionMethod[]
      */
     public function getImmediateMethods(?int $filter = null) : array
@@ -390,9 +393,7 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get a single method with the name $methodName.
      *
-     *
-     *
-     * @throws \OutOfBoundsException
+     * @throws OutOfBoundsException
      */
     public function getMethod(string $methodName) : ReflectionMethod
     {
@@ -426,7 +427,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getImmediateConstants() : array
     {
-        return array_map(function (ReflectionClassConstant $classConstant) {
+        return array_map(static function (ReflectionClassConstant $classConstant) {
             return $classConstant->getValue();
         }, $this->getImmediateReflectionConstants());
     }
@@ -439,7 +440,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getConstants() : array
     {
-        return array_map(function (ReflectionClassConstant $classConstant) {
+        return array_map(static function (ReflectionClassConstant $classConstant) {
             return $classConstant->getValue();
         }, $this->getReflectionConstants());
     }
@@ -506,7 +507,7 @@ class ReflectionClass implements Reflection, CoreReflector
                 },
                 array_filter(
                     $this->node->stmts,
-                    function (Node\Stmt $stmt) : bool {
+                    static function (Node\Stmt $stmt) : bool {
                         return $stmt instanceof ConstNode;
                     }
                 )
@@ -515,7 +516,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
         return $this->cachedReflectionConstants = array_combine(
             array_map(
-                function (ReflectionClassConstant $constant) : string {
+                static function (ReflectionClassConstant $constant) : string {
                     return $constant->getName();
                 },
                 $constants
@@ -538,10 +539,10 @@ class ReflectionClass implements Reflection, CoreReflector
         $allReflectionConstants = array_merge(
             array_values($this->getImmediateReflectionConstants()),
             ...array_map(
-                function (ReflectionClass $ancestor) : array {
+                static function (ReflectionClass $ancestor) : array {
                     return array_filter(
                         array_values($ancestor->getReflectionConstants()),
-                        function (ReflectionClassConstant $classConstant) : bool {
+                        static function (ReflectionClassConstant $classConstant) : bool {
                             return ! $classConstant->isPrivate();
                         }
                     );
@@ -549,7 +550,7 @@ class ReflectionClass implements Reflection, CoreReflector
                 array_filter([$this->getParentClass()])
             ),
             ...array_map(
-                function (ReflectionClass $interface) : array {
+                static function (ReflectionClass $interface) : array {
                     return array_values($interface->getReflectionConstants());
                 },
                 array_values($this->getInterfaces())
@@ -574,11 +575,11 @@ class ReflectionClass implements Reflection, CoreReflector
     /**
      * Get the constructor method for this class.
      *
-     * @throws \OutOfBoundsException
+     * @throws OutOfBoundsException
      */
     public function getConstructor() : ReflectionMethod
     {
-        $constructors = array_filter($this->getMethods(), function (ReflectionMethod $method) : bool {
+        $constructors = array_filter($this->getMethods(), static function (ReflectionMethod $method) : bool {
             return $method->isConstructor();
         });
 
@@ -594,6 +595,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * up parent classes etc.)
      *
      * @see ReflectionClass::getProperties() for the usage of filter
+     *
      * @return ReflectionProperty[]
      */
     public function getImmediateProperties(?int $filter = null) : array
@@ -627,7 +629,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
         return array_filter(
             $this->cachedImmediateProperties,
-            function (ReflectionProperty $property) use ($filter) : bool {
+            static function (ReflectionProperty $property) use ($filter) : bool {
                 return (bool) ($filter & $property->getModifiers());
             }
         );
@@ -644,6 +646,7 @@ class ReflectionClass implements Reflection, CoreReflector
      * \ReflectionProperty::IS_PRIVATE.
      * For example if $filter = \ReflectionProperty::IS_STATIC | \ReflectionProperty::IS_PUBLIC
      * only the static public properties will be returned
+     *
      * @return ReflectionProperty[]
      */
     public function getProperties(?int $filter = null) : array
@@ -654,10 +657,10 @@ class ReflectionClass implements Reflection, CoreReflector
                 array_merge(
                     [],
                     ...array_map(
-                        function (ReflectionClass $ancestor) use ($filter) : array {
+                        static function (ReflectionClass $ancestor) use ($filter) : array {
                             return array_filter(
                                 $ancestor->getProperties($filter),
-                                function (ReflectionProperty $property) : bool {
+                                static function (ReflectionProperty $property) : bool {
                                     return ! $property->isPrivate();
                                 }
                             );
@@ -690,7 +693,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
         return array_filter(
             $this->cachedProperties,
-            function (ReflectionProperty $property) use ($filter) : bool {
+            static function (ReflectionProperty $property) use ($filter) : bool {
                 return (bool) ($filter & $property->getModifiers());
             }
         );
@@ -726,10 +729,10 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getDefaultProperties() : array
     {
         return array_map(
-            function (ReflectionProperty $property) {
+            static function (ReflectionProperty $property) {
                 return $property->getDefaultValue();
             },
-            array_filter($this->getProperties(), function (ReflectionProperty $property) : bool {
+            array_filter($this->getProperties(), static function (ReflectionProperty $property) : bool {
                 return $property->isDefault();
             })
         );
@@ -801,7 +804,7 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function getParentClassNames() : array
     {
-        return array_map(function (self $parentClass) : string {
+        return array_map(static function (self $parentClass) : string {
             return $parentClass->getName();
         }, array_slice(array_reverse($this->getInheritanceClassHierarchy()), 1));
     }
@@ -891,10 +894,10 @@ class ReflectionClass implements Reflection, CoreReflector
             array_merge(
                 [],
                 ...array_map(
-                    function (TraitUse $traitUse) : array {
+                    static function (TraitUse $traitUse) : array {
                         return $traitUse->traits;
                     },
-                    array_filter($this->node->stmts, function (Node $node) : bool {
+                    array_filter($this->node->stmts, static function (Node $node) : bool {
                         return $node instanceof TraitUse;
                     })
                 )
@@ -929,7 +932,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getTraitNames() : array
     {
         return array_map(
-            function (ReflectionClass $trait) : string {
+            static function (ReflectionClass $trait) : string {
                 return $trait->getName();
             },
             $this->getTraits()
@@ -942,6 +945,8 @@ class ReflectionClass implements Reflection, CoreReflector
      *
      *   'aliasedMethodName' => 'ActualClass::actualMethod'
      *
+     * @return string[]
+     *
      * @example
      * // When reflecting a class such as:
      * class Foo
@@ -952,13 +957,11 @@ class ReflectionClass implements Reflection, CoreReflector
      * }
      * // This method would return
      * //   ['myAliasedMethod' => 'MyTrait::myTraitMethod']
-     *
-     * @return string[]
      */
     public function getTraitAliases() : array
     {
         /** @var Node\Stmt\TraitUse[] $traitUsages */
-        $traitUsages = array_filter($this->node->stmts, function (Node $node) : bool {
+        $traitUsages = array_filter($this->node->stmts, static function (Node $node) : bool {
             return $node instanceof TraitUse;
         });
 
@@ -1005,7 +1008,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getInterfaces() : array
     {
         return array_merge(...array_map(
-            function (self $reflectionClass) : array {
+            static function (self $reflectionClass) : array {
                 return $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName();
             },
             $this->getInheritanceClassHierarchy()
@@ -1033,7 +1036,7 @@ class ReflectionClass implements Reflection, CoreReflector
     public function getInterfaceNames() : array
     {
         return array_values(array_map(
-            function (self $interface) : string {
+            static function (self $interface) : string {
                 return $interface->getName();
             },
             $this->getInterfaces()
@@ -1046,7 +1049,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * @link https://php.net/manual/en/reflectionclass.isinstance.php
      *
      * @param object $object
-     *
      *
      * @throws NotAnObject
      *
@@ -1069,14 +1071,13 @@ class ReflectionClass implements Reflection, CoreReflector
      * Checks whether the given class string is a subclass of this class.
      *
      * @link https://php.net/manual/en/reflectionclass.isinstance.php
-     *
      */
     public function isSubclassOf(string $className) : bool
     {
         return in_array(
             ltrim($className, '\\'),
             array_map(
-                function (self $reflectionClass) : string {
+                static function (self $reflectionClass) : string {
                     return $reflectionClass->getName();
                 },
                 array_slice(array_reverse($this->getInheritanceClassHierarchy()), 1)
@@ -1089,7 +1090,6 @@ class ReflectionClass implements Reflection, CoreReflector
      * Checks whether this class implements the given interface.
      *
      * @link https://php.net/manual/en/reflectionclass.implementsinterface.php
-     *
      */
     public function implementsInterface(string $interfaceName) : bool
     {
@@ -1225,14 +1225,13 @@ class ReflectionClass implements Reflection, CoreReflector
      */
     public function __clone()
     {
-        throw Uncloneable::fromClass(get_class($this));
+        throw Uncloneable::fromClass(static::class);
     }
 
     /**
      * Get the value of a static property, if it exists. Throws a
      * PropertyDoesNotExist exception if it does not exist or is not static.
      * (note, differs very slightly from internal reflection behaviour)
-     *
      *
      * @return mixed
      *
@@ -1394,7 +1393,7 @@ class ReflectionClass implements Reflection, CoreReflector
                 continue;
             }
 
-            $propertyNames = array_map(function (Node\Stmt\PropertyProperty $propertyProperty) : string {
+            $propertyNames = array_map(static function (Node\Stmt\PropertyProperty $propertyProperty) : string {
                 return $propertyProperty->name->toLowerString();
             }, $stmt->props);
 

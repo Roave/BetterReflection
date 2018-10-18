@@ -8,6 +8,7 @@ use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -31,7 +32,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForClassNode() : void
     {
-        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
+        /** @var Reflector|PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
@@ -49,7 +50,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForTraitNode() : void
     {
-        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
+        /** @var Reflector|PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php trait Foo {}', null);
@@ -68,7 +69,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForInterfaceNode() : void
     {
-        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
+        /** @var Reflector|PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php interface Foo {}', null);
@@ -87,7 +88,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForFunctionNode() : void
     {
-        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
+        /** @var Reflector|PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php function foo(){}', null);
@@ -105,7 +106,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsNullWhenIncompatibleNodeFound() : void
     {
-        /** @var Reflector|\PHPUnit_Framework_MockObject_MockObject $reflector */
+        /** @var Reflector|PHPUnit_Framework_MockObject_MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);

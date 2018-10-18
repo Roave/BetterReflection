@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -29,7 +30,7 @@ class StringSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     * @return Reflector|PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockReflector()
     {

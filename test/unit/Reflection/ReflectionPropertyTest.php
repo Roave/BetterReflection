@@ -119,6 +119,7 @@ class ReflectionPropertyTest extends TestCase
 
     /**
      * @param string[] $expectedTypes
+     *
      * @dataProvider stringTypesDataProvider
      */
     public function testGetDocBlockTypeStrings(string $propertyName, array $expectedTypes) : void
@@ -144,6 +145,7 @@ class ReflectionPropertyTest extends TestCase
 
     /**
      * @param string[] $expectedTypes
+     *
      * @dataProvider typesDataProvider
      */
     public function testGetDocBlockTypes(string $propertyName, array $expectedTypes) : void
@@ -211,6 +213,7 @@ class ReflectionPropertyTest extends TestCase
 
     /**
      * @param string[] $expectedModifierNames
+     *
      * @dataProvider modifierProvider
      */
     public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames) : void

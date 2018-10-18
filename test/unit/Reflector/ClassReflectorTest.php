@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -31,7 +32,7 @@ class ClassReflectorTest extends TestCase
     {
         $reflection = $this->createMock(ReflectionClass::class);
 
-        /** @var StringSourceLocator|\PHPUnit_Framework_MockObject_MockObject $sourceLocator */
+        /** @var StringSourceLocator|PHPUnit_Framework_MockObject_MockObject $sourceLocator */
         $sourceLocator = $this
             ->getMockBuilder(StringSourceLocator::class)
             ->disableOriginalConstructor()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use InvalidArgumentException;
 use ReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -30,7 +31,8 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
@@ -63,7 +65,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         $reflection = new ReflectionClass($name);
         $sourceFile = $reflection->getFileName();
 
-        return ($sourceFile && file_exists($sourceFile))
+        return $sourceFile && file_exists($sourceFile)
             ? null : $reflection;
     }
 }

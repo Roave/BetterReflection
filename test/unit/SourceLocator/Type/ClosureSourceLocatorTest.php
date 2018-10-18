@@ -119,7 +119,7 @@ class ClosureSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersByTypeWithClassIdentifier() : void
     {
-        $closure = function () : void {
+        $closure = static function () : void {
         };
 
         /** @var ReflectionFunction[] $reflections */

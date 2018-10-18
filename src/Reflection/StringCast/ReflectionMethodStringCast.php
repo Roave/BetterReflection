@@ -110,7 +110,7 @@ final class ReflectionMethodStringCast
 
     private static function parametersToString(ReflectionMethod $methodReflection) : string
     {
-        return array_reduce($methodReflection->getParameters(), function (string $string, ReflectionParameter $parameterReflection) : string {
+        return array_reduce($methodReflection->getParameters(), static function (string $string, ReflectionParameter $parameterReflection) : string {
             return $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection);
         }, '');
     }

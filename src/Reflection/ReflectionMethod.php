@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Closure;
+use InvalidArgumentException;
+use OutOfBoundsException;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Namespace_;
+use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
@@ -35,6 +38,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
     /**
      * @internal
+     *
      * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
      * @throws InvalidAbstractFunctionNodeType
@@ -59,9 +63,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /**
      * Create a reflection of a method by it's name using a named class
      *
-     *
      * @throws IdentifierNotFound
-     * @throws \OutOfBoundsException
+     * @throws OutOfBoundsException
      */
     public static function createFromName(string $className, string $methodName) : self
     {
@@ -73,10 +76,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      *
      * @param object $instance
      *
-     * @throws \InvalidArgumentException
-     * @throws \ReflectionException
+     * @throws InvalidArgumentException
+     * @throws ReflectionException
      * @throws IdentifierNotFound
-     * @throws \OutOfBoundsException
+     * @throws OutOfBoundsException
      */
     public static function createFromInstance($instance, string $methodName) : self
     {
@@ -261,7 +264,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /**
      * @param object|null $object
      *
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -366,11 +368,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /**
      * @param mixed $object
      *
+     * @return object
+     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
-     *
-     * @return object
      */
     private function assertObject($object)
     {

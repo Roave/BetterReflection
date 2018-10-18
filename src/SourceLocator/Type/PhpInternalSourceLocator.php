@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use InvalidArgumentException;
 use ReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -33,7 +34,8 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
@@ -49,8 +51,9 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
         if ($stub) {
             /**
-             * @todo this code path looks never used, and disagrees with the contract anyway...?
              * @see https://github.com/Roave/BetterReflection/issues/257
+             *
+             * @todo this code path looks never used, and disagrees with the contract anyway...?
              */
             return new InternalLocatedSource("<?php\n\n" . $stub, $extensionName);
         }

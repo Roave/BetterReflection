@@ -41,9 +41,9 @@ class NamespaceNodeToReflectionTypeContext
                 [],
                 ...array_map(
                     /** @param Use_|GroupUse $use */
-                    function ($use) : array {
+                    static function ($use) : array {
                         return array_map(
-                            function (UseUse $useUse) use ($use) : array {
+                            static function (UseUse $useUse) use ($use) : array {
                                 if ($use instanceof GroupUse) {
                                     return [$useUse->getAlias()->toString() => $use->prefix->toString() . '\\' . $useUse->name->toString()];
                                 }
@@ -60,14 +60,13 @@ class NamespaceNodeToReflectionTypeContext
     }
 
     /**
-     *
      * @return Use_[]|GroupUse[]
      */
     private function classAlikeUses(Namespace_ $namespace) : array
     {
         return array_filter(
             $namespace->stmts ?? [],
-            function (Node $node) : bool {
+            static function (Node $node) : bool {
                 return (
                     $node instanceof Use_
                     || $node instanceof GroupUse
