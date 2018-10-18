@@ -12,6 +12,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -41,13 +42,14 @@ class FindReturnTypeTest extends TestCase
 
     /**
      * @param string[] $expectedInstances
+     *
      * @dataProvider returnTypeProvider
      */
     public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances) : void
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionMethod|PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -66,13 +68,14 @@ class FindReturnTypeTest extends TestCase
 
     /**
      * @param string[] $expectedInstances
+     *
      * @dataProvider returnTypeProvider
      */
     public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances) : void
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject $method */
+        /** @var ReflectionMethod|PHPUnit_Framework_MockObject_MockObject $method */
         $method = $this->createMock(ReflectionMethod::class);
 
         $method
@@ -91,7 +94,7 @@ class FindReturnTypeTest extends TestCase
 
     public function testFindReturnTypeForFunctionWithNoDocBlock() : void
     {
-        /** @var ReflectionFunction|\PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunction|PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -103,10 +106,10 @@ class FindReturnTypeTest extends TestCase
     }
 
     /**
-     * @dataProvider aliasedReturnTypesProvider
-     *
      * @param string[] $aliasesToFQCNs indexed by alias
      * @param Type[]   $expectedTypes
+     *
+     * @dataProvider aliasedReturnTypesProvider
      */
     public function testWillResolveAliasedTypes(
         ?string $namespaceName,
@@ -116,7 +119,7 @@ class FindReturnTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 
-        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function

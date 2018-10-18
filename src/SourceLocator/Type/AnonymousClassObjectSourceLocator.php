@@ -11,6 +11,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionException;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
@@ -45,8 +46,8 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
     /**
      * @param object $anonymousClassObject
      *
-     * @throws \InvalidArgumentException
-     * @throws \ReflectionException
+     * @throws InvalidArgumentException
+     * @throws ReflectionException
      *
      * @psalm-suppress DocblockTypeContradiction
      */

@@ -47,6 +47,7 @@ final class FileCacheLoader implements LoaderMethodInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws SignatureCheckFailed
      */
     public function __invoke(ReflectionClass $classInfo) : void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Type;
 
 use Composer\Autoload\ClassLoader;
+use InvalidArgumentException;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -32,7 +33,8 @@ class ComposerSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource

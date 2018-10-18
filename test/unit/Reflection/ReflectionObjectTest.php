@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use FixtureInterface;
 use InvalidArgumentException;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
@@ -60,6 +61,7 @@ class ReflectionObjectTest extends TestCase
 
     /**
      * @param object $anonymousClass
+     *
      * @dataProvider anonymousClassInstancesProvider
      */
     public function testReflectionForAnonymousClass($anonymousClass, string $file, int $startLine, int $endLine) : void
@@ -85,7 +87,7 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
-        self::assertContains(\FixtureInterface::class, $classInfo->getInterfaceNames());
+        self::assertContains(FixtureInterface::class, $classInfo->getInterfaceNames());
         self::assertTrue($classInfo->isInstantiable());
     }
 
@@ -254,7 +256,7 @@ class ReflectionObjectTest extends TestCase
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
         $fakeParams                       = array_map(
-            function (ReflectionParameter $parameter) {
+            static function (ReflectionParameter $parameter) {
                 switch ((string) $parameter->getType()) {
                     case 'int':
                         return random_int(1, 1000);

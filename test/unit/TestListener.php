@@ -53,6 +53,7 @@ class TestListener implements BaseTestListener
      * Ensure the fixture classes have not actually been loaded (where applicable)
      *
      * @throws AssertionFailedError
+     *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function endTest(Test $test, float $time) : void

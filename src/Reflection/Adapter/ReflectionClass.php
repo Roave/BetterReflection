@@ -153,11 +153,11 @@ class ReflectionClass extends CoreReflectionClass
 
     private function getMethodRealName(string $name) : string
     {
-        $realMethodNames = array_map(function (BetterReflectionMethod $method) : string {
+        $realMethodNames = array_map(static function (BetterReflectionMethod $method) : string {
             return $method->getName();
         }, $this->betterReflectionClass->getMethods());
 
-        $methodNames = array_combine(array_map(function (string $methodName) : string {
+        $methodNames = array_combine(array_map(static function (string $methodName) : string {
             return strtolower($methodName);
         }, $realMethodNames), $realMethodNames);
 
@@ -253,7 +253,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants()
     {
-        return array_map(function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
+        return array_map(static function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
         }, $this->betterReflectionClass->getReflectionConstants());
     }
@@ -403,7 +403,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
 
-        $parentClassNames = array_combine(array_map(function (string $parentClassName) : string {
+        $parentClassNames = array_combine(array_map(static function (string $parentClassName) : string {
             return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
@@ -495,7 +495,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
 
-        $interfaceNames = array_combine(array_map(function (string $interfaceName) : string {
+        $interfaceNames = array_combine(array_map(static function (string $interfaceName) : string {
             return strtolower($interfaceName);
         }, $realInterfaceNames), $realInterfaceNames);
 

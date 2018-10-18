@@ -17,9 +17,9 @@ use function uniqid;
 class InvalidDirectoryTest extends TestCase
 {
     /**
-     * @dataProvider nonStringValuesProvider
-     *
      * @param mixed $value
+     *
+     * @dataProvider nonStringValuesProvider
      */
     public function testFromNonStringValue(string $expectedMessage, $value) : void
     {

@@ -56,6 +56,7 @@ class Locator
      * Get an array of reflections found in some code.
      *
      * @return Reflection[]
+     *
      * @throws Exception\ParseToAstFailure
      */
     public function findReflectionsOfType(
@@ -79,6 +80,7 @@ class Locator
      * Given an array of Reflections, try to find the identifier.
      *
      * @param Reflection[] $reflections
+     *
      * @throws IdentifierNotFound
      */
     private function findInArray(array $reflections, Identifier $identifier) : Reflection

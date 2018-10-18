@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
@@ -27,7 +28,7 @@ class ReflectionFunctionTest extends TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionFunction::class);
-        return array_combine($methods, array_map(function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));
     }
@@ -47,7 +48,7 @@ class ReflectionFunctionTest extends TestCase
 
         $mockType = $this->createMock(BetterReflectionType::class);
 
-        $closure = function () : void {
+        $closure = static function () : void {
         };
 
         return [
@@ -89,11 +90,12 @@ class ReflectionFunctionTest extends TestCase
     /**
      * @param mixed   $returnValue
      * @param mixed[] $args
+     *
      * @dataProvider methodExpectationProvider
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionFunction|\PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionFunction|PHPUnit_Framework_MockObject_MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
 
         if ($expectedException === null) {

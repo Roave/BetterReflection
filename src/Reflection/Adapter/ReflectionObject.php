@@ -139,11 +139,11 @@ class ReflectionObject extends CoreReflectionObject
 
     private function getMethodRealName(string $name) : string
     {
-        $realMethodNames = array_map(function (BetterReflectionMethod $method) : string {
+        $realMethodNames = array_map(static function (BetterReflectionMethod $method) : string {
             return $method->getName();
         }, $this->betterReflectionObject->getMethods());
 
-        $methodNames = array_combine(array_map(function (string $methodName) : string {
+        $methodNames = array_combine(array_map(static function (string $methodName) : string {
             return strtolower($methodName);
         }, $realMethodNames), $realMethodNames);
 
@@ -368,7 +368,7 @@ class ReflectionObject extends CoreReflectionObject
     {
         $realParentClassNames = $this->betterReflectionObject->getParentClassNames();
 
-        $parentClassNames = array_combine(array_map(function (string $parentClassName) : string {
+        $parentClassNames = array_combine(array_map(static function (string $parentClassName) : string {
             return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
@@ -460,7 +460,7 @@ class ReflectionObject extends CoreReflectionObject
     {
         $realInterfaceNames = $this->betterReflectionObject->getInterfaceNames();
 
-        $interfaceNames = array_combine(array_map(function (string $interfaceName) : string {
+        $interfaceNames = array_combine(array_map(static function (string $interfaceName) : string {
             return strtolower($interfaceName);
         }, $realInterfaceNames), $realInterfaceNames);
 

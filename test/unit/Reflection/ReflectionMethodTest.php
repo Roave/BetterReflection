@@ -285,6 +285,7 @@ class ReflectionMethodTest extends TestCase
 
     /**
      * @param string[] $expectedModifierNames
+     *
      * @dataProvider modifierProvider
      */
     public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames) : void

@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use Exception;
+use LogicException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -186,7 +187,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     {
         return count(array_filter(
             $this->getParameters(),
-            function (ReflectionParameter $p) : bool {
+            static function (ReflectionParameter $p) : bool {
                 return ! $p->isOptional();
             }
         ));
@@ -448,7 +449,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      */
     public function __clone()
     {
-        throw Uncloneable::fromClass(__CLASS__);
+        throw Uncloneable::fromClass(self::class);
     }
 
     /**
@@ -494,12 +495,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * Override the method or function's body of statements with an entirely new
      * body of statements within the reflection.
      *
-     * @example
-     * $reflectionFunction->setBodyFromClosure(function () { return true; });
-     *
-     *
      * @throws ParseToAstFailure
      * @throws InvalidIdentifierName
+     *
+     * @example
+     * $reflectionFunction->setBodyFromClosure(function () { return true; });
      */
     public function setBodyFromClosure(Closure $newBody) : void
     {
@@ -531,17 +531,17 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
      * Override the method or function's body of statements with an entirely new
      * body of statements within the reflection.
      *
+     * @param Node[] $nodes
+     *
      * @example
      * // $ast should be an array of Nodes
      * $reflectionFunction->setBodyFromAst($ast);
-     *
-     * @param Node[] $nodes
      */
     public function setBodyFromAst(array $nodes) : void
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator         = function (Node ...$node) : array {
+        $validator         = static function (Node ...$node) : array {
             return $node;
         };
         $this->node->stmts = $validator(...$nodes);
@@ -564,7 +564,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
         foreach ($this->node->params as $key => $paramNode) {
             if ($paramNode->var instanceof Node\Expr\Error) {
-                throw new \LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
+                throw new LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
             }
 
             if (! is_string($paramNode->var->name) || strtolower($paramNode->var->name) !== $lowerName) {

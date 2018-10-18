@@ -243,7 +243,7 @@ class ReflectionClassTest extends TestCase
             $this->astLocator
         )))->reflect(MethodsOrder::class);
 
-        $actualMethodNames = array_map(function (ReflectionMethod $method) : string {
+        $actualMethodNames = array_map(static function (ReflectionMethod $method) : string {
             return $method->getName();
         }, $classInfo->getMethods());
 
@@ -571,6 +571,7 @@ PHP;
     /**
      * @param int $expectedStart
      * @param int $expectedEnd
+     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
@@ -795,6 +796,7 @@ PHP;
 
     /**
      * @param string[] $expectedModifierNames
+     *
      * @dataProvider modifierProvider
      */
     public function testGetModifiers(string $className, int $expectedModifier, array $expectedModifierNames) : void
@@ -1366,13 +1368,13 @@ PHP;
         ));
 
         $cInterfaces = array_map(
-            function (ReflectionClass $interface) : string {
+            static function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces()
         );
         $dInterfaces = array_map(
-            function (ReflectionClass $interface) : string {
+            static function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces()
@@ -1620,7 +1622,7 @@ PHP;
 
         array_walk(
             $expectedConstants,
-            function ($constantValue, string $constantName) use ($reflection) : void {
+            static function ($constantValue, string $constantName) use ($reflection) : void {
                 self::assertTrue($reflection->hasConstant($constantName), 'Constant ' . $constantName . ' not set');
                 self::assertSame(
                     $constantValue,
@@ -1682,7 +1684,7 @@ PHP;
 
         array_walk(
             $expectedConstants,
-            function ($constantValue, string $constantName) use ($reflectionConstants) : void {
+            static function ($constantValue, string $constantName) use ($reflectionConstants) : void {
                 self::assertArrayHasKey($constantName, $reflectionConstants, 'Constant ' . $constantName . ' not set');
                 self::assertSame(
                     $constantValue,

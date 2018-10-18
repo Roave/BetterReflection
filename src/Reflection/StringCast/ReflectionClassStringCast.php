@@ -128,7 +128,6 @@ final class ReflectionClassStringCast
 
     /**
      * @param ReflectionClassConstant[] $constants
-
      */
     private static function constantsToString(array $constants) : string
     {
@@ -136,14 +135,13 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return self::itemsToString(array_map(function (ReflectionClassConstant $constantReflection) : string {
+        return self::itemsToString(array_map(static function (ReflectionClassConstant $constantReflection) : string {
             return trim(ReflectionClassConstantStringCast::toString($constantReflection));
         }, $constants));
     }
 
     /**
      * @param ReflectionProperty[] $properties
-
      */
     private static function propertiesToString(array $properties) : string
     {
@@ -151,7 +149,7 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return self::itemsToString(array_map(function (ReflectionProperty $propertyReflection) : string {
+        return self::itemsToString(array_map(static function (ReflectionProperty $propertyReflection) : string {
             return ReflectionPropertyStringCast::toString($propertyReflection);
         }, $properties));
     }
@@ -165,7 +163,7 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return self::itemsToString(array_map(function (ReflectionMethod $method) use ($classReflection) : string {
+        return self::itemsToString(array_map(static function (ReflectionMethod $method) use ($classReflection) : string {
             return ReflectionMethodStringCast::toString($method, $classReflection);
         }, $methods), $emptyLinesAmongItems);
     }
@@ -189,7 +187,7 @@ final class ReflectionClassStringCast
      */
     private static function getStaticProperties(ReflectionClass $classReflection) : array
     {
-        return array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
+        return array_filter($classReflection->getProperties(), static function (ReflectionProperty $propertyReflection) : bool {
             return $propertyReflection->isStatic();
         });
     }
@@ -199,7 +197,7 @@ final class ReflectionClassStringCast
      */
     private static function getStaticMethods(ReflectionClass $classReflection) : array
     {
-        return array_filter($classReflection->getMethods(), function (ReflectionMethod $methodReflection) : bool {
+        return array_filter($classReflection->getMethods(), static function (ReflectionMethod $methodReflection) : bool {
             return $methodReflection->isStatic();
         });
     }
@@ -209,7 +207,7 @@ final class ReflectionClassStringCast
      */
     private static function getDefaultProperties(ReflectionClass $classReflection) : array
     {
-        return array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
+        return array_filter($classReflection->getProperties(), static function (ReflectionProperty $propertyReflection) : bool {
             return ! $propertyReflection->isStatic() && $propertyReflection->isDefault();
         });
     }
@@ -219,7 +217,7 @@ final class ReflectionClassStringCast
      */
     private static function getDynamicProperties(ReflectionClass $classReflection) : array
     {
-        return array_filter($classReflection->getProperties(), function (ReflectionProperty $propertyReflection) : bool {
+        return array_filter($classReflection->getProperties(), static function (ReflectionProperty $propertyReflection) : bool {
             return ! $propertyReflection->isStatic() && ! $propertyReflection->isDefault();
         });
     }
@@ -229,7 +227,7 @@ final class ReflectionClassStringCast
      */
     private static function getMethods(ReflectionClass $classReflection) : array
     {
-        return array_filter($classReflection->getMethods(), function (ReflectionMethod $methodReflection) : bool {
+        return array_filter($classReflection->getMethods(), static function (ReflectionMethod $methodReflection) : bool {
             return ! $methodReflection->isStatic();
         });
     }

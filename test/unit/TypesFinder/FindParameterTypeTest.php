@@ -14,6 +14,7 @@ use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -73,6 +74,7 @@ class FindParameterTypeTest extends TestCase
 
     /**
      * @param string[] $expectedInstances
+     *
      * @dataProvider parameterTypeProvider
      */
     public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
@@ -80,7 +82,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -99,6 +101,7 @@ class FindParameterTypeTest extends TestCase
 
     /**
      * @param string[] $expectedInstances
+     *
      * @dataProvider parameterTypeProvider
      */
     public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
@@ -106,7 +109,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $method */
+        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $method */
         $method = $this->createMock(ReflectionFunctionAbstract::class);
 
         $method
@@ -127,7 +130,7 @@ class FindParameterTypeTest extends TestCase
     {
         $node = new ParamNode(new Variable('foo'));
 
-        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function
@@ -138,10 +141,10 @@ class FindParameterTypeTest extends TestCase
         self::assertEmpty((new FindParameterType())->__invoke($function, null, $node));
     }
     /**
-     * @dataProvider aliasedParameterTypesProvider
-     *
      * @param string[] $aliasesToFQCNs indexed by alias
      * @param Type[]   $expectedTypes
+     *
+     * @dataProvider aliasedParameterTypesProvider
      */
     public function testWillResolveAliasedTypes(
         ?string $namespaceName,
@@ -153,7 +156,7 @@ class FindParameterTypeTest extends TestCase
 
         $parameterNode = new ParamNode(new Variable('foo'));
 
-        /** @var ReflectionFunctionAbstract|\PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function

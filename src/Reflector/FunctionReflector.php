@@ -29,6 +29,7 @@ class FunctionReflector implements Reflector
      * Create a ReflectionFunction for the specified $functionName.
      *
      * @return ReflectionFunction
+     *
      * @throws IdentifierNotFound
      */
     public function reflect(string $functionName) : Reflection

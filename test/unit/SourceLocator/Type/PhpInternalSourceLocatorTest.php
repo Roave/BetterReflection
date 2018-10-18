@@ -9,6 +9,7 @@ use DOMNamedNodeMap;
 use IntlChar;
 use IntlGregorianCalendar;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
@@ -62,7 +63,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return Reflector|\PHPUnit_Framework_MockObject_MockObject
+     * @return Reflector|PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockReflector()
     {
@@ -96,9 +97,9 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @dataProvider internalSymbolsProvider
+     * @throws ReflectionException
      *
-     * @throws \ReflectionException
+     * @dataProvider internalSymbolsProvider
      */
     public function testCanReflectInternalClasses(string $className) : void
     {
@@ -144,12 +145,12 @@ class PhpInternalSourceLocatorTest extends TestCase
         $indexedSymbols = array_combine($allSymbols, $allSymbols);
 
         return array_map(
-            function (string $symbol) : array {
+            static function (string $symbol) : array {
                 return [$symbol];
             },
             array_filter(
                 $indexedSymbols,
-                function (string $symbol) : bool {
+                static function (string $symbol) : bool {
                     $reflection = new CoreReflectionClass($symbol);
 
                     return $reflection->isInternal();
@@ -188,8 +189,6 @@ class PhpInternalSourceLocatorTest extends TestCase
 
     /**
      * @dataProvider stubbedClassesProvider
-     *
-     *
      * @coversNothing
      */
     public function testAllGeneratedStubsAreInSyncWithInternalReflectionClasses(string $className) : void
@@ -214,7 +213,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     {
         $classNames = array_filter(
             str_replace('.stub', '', scandir(__DIR__ . '/../../../../stub', 0)),
-            function (string $fileName) : string {
+            static function (string $fileName) : string {
                 return trim($fileName, '.');
             }
         );
@@ -222,7 +221,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         return array_combine(
             $classNames,
             array_map(
-                function (string $fileName) : array {
+                static function (string $fileName) : array {
                     return [$fileName];
                 },
                 $classNames
@@ -268,14 +267,14 @@ class PhpInternalSourceLocatorTest extends TestCase
         $originalMethods = $original->getMethods();
 
         $originalMethodNames = array_map(
-            function (CoreReflectionMethod $method) : string {
+            static function (CoreReflectionMethod $method) : string {
                 return $method->getName();
             },
             $originalMethods
         );
 
         $stubbedMethodNames = array_map(
-            function (ReflectionMethod $method) : string {
+            static function (ReflectionMethod $method) : string {
                 return $method->getName();
             },
             $stubbed->getMethods() // @TODO see #107
@@ -325,13 +324,13 @@ class PhpInternalSourceLocatorTest extends TestCase
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed) : void
     {
         $originalParameterNames = array_map(
-            function (CoreReflectionParameter $parameter) : string {
+            static function (CoreReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
             $original->getParameters()
         );
         $stubParameterNames     = array_map(
-            function (ReflectionParameter $parameter) : string {
+            static function (ReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
             $stubbed->getParameters()

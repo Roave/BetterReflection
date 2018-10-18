@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
+use LogicException;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
@@ -55,7 +56,7 @@ class FindParameterType
 
         foreach ($paramTags as $paramTag) {
             if ($node->var instanceof Error) {
-                throw new \LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
+                throw new LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
             }
             if ($paramTag->getVariableName() === $node->var->name) {
                 return $this->resolveTypes->__invoke(explode('|', (string) $paramTag->getType()), $context);

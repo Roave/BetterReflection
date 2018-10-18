@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflector;
 use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use function array_map;
 use function array_unique;
@@ -22,11 +23,11 @@ class MemoizingParserTest extends TestCase
 {
     public function testParse() : void
     {
-        /** @var Parser|\PHPUnit_Framework_MockObject_MockObject $wrappedParser */
+        /** @var Parser|PHPUnit_Framework_MockObject_MockObject $wrappedParser */
         $wrappedParser = $this->createMock(Parser::class);
 
         $randomCodeStrings = array_unique(array_map(
-            function () : string {
+            static function () : string {
                 return uniqid('code', true);
             },
             range(0, 100)
@@ -53,7 +54,7 @@ class MemoizingParserTest extends TestCase
         }
 
         $nodeIdentifiers = array_map(
-            function (array $nodes) : string {
+            static function (array $nodes) : string {
                 return spl_object_hash($nodes[0]);
             },
             $producedNodes

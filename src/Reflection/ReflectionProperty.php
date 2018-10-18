@@ -11,6 +11,7 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -76,8 +77,8 @@ class ReflectionProperty implements CoreReflector
      *
      * @param object $instance
      *
-     * @throws \InvalidArgumentException
-     * @throws \ReflectionException
+     * @throws InvalidArgumentException
+     * @throws ReflectionException
      * @throws IdentifierNotFound
      */
     public static function createFromInstance($instance, string $propertyName) : self
@@ -92,6 +93,7 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @internal
+     *
      * @param PropertyNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
@@ -118,7 +120,7 @@ class ReflectionProperty implements CoreReflector
     /**
      * Set the default visibility of this property. Use the core \ReflectionProperty::IS_* values as parameters, e.g.:
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setVisibility(int $newVisibility) : void
     {
@@ -305,11 +307,12 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * {@inheritdoc}
+     *
      * @throws Uncloneable
      */
     public function __clone()
     {
-        throw Uncloneable::fromClass(__CLASS__);
+        throw Uncloneable::fromClass(self::class);
     }
 
     /**
@@ -343,7 +346,6 @@ class ReflectionProperty implements CoreReflector
 
     /**
      * @param object     $object
-     *
      * @param mixed|null $value
      *
      * @throws ClassDoesNotExist
@@ -385,11 +387,11 @@ class ReflectionProperty implements CoreReflector
     /**
      * @param mixed $object
      *
+     * @return object
+     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
-     *
-     * @return object
      */
     private function assertObject($object)
     {

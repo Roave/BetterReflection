@@ -22,8 +22,6 @@ use function function_exists;
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
     /**
-     *
-     *
      * @throws IdentifierNotFound
      */
     public static function createFromName(string $functionName) : self
@@ -32,8 +30,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     *
-     *
      * @throws IdentifierNotFound
      */
     public static function createFromClosure(Closure $closure) : self
@@ -53,6 +49,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
     /**
      * @internal
+     *
      * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
@@ -76,8 +73,9 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * code we can access. This means, at present, we can only EVER return false
      * from this function, because you cannot disable user-defined functions.
      *
-     * @todo https://github.com/Roave/BetterReflection/issues/14
      * @see https://php.net/manual/en/ini.core.php#ini.disable-functions
+     *
+     * @todo https://github.com/Roave/BetterReflection/issues/14
      */
     public function isDisabled() : bool
     {
@@ -88,7 +86,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * Note - we cannot reflect on internal functions (as there is no PHP source
      * code we can access. This means, at present, we can only EVER return null
      * from this function.
-
      */
     public function getExtensionName() : ?string
     {
@@ -96,7 +93,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
      */
@@ -108,7 +104,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
         $this->assertFunctionExist($functionName);
 
-        return function (...$args) use ($functionName) {
+        return static function (...$args) use ($functionName) {
             /** @var callable $functionName */
             return $functionName(...$args);
         };
@@ -158,7 +154,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     *
      * @throws FunctionDoesNotExist
      */
     private function assertFunctionExist(string $functionName) : void

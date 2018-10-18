@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionFunction;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -63,7 +65,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
@@ -83,7 +86,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /**
      * Attempts to locate the specified identifier.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function attemptAutoloadForIdentifier(Identifier $identifier) : ?string
     {
@@ -111,7 +114,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * that it cannot find the file, so we squelch the errors by overriding the
      * error handler temporarily.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function locateClassByName(string $className) : ?string
     {
@@ -127,7 +130,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         self::$autoloadLocatedFile = null;
         self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
-        $previousErrorHandler      = set_error_handler(function () : void {
+        $previousErrorHandler      = set_error_handler(static function () : void {
         });
         stream_wrapper_unregister('file');
         stream_wrapper_register('file', self::class);
@@ -143,7 +146,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * internal reflection API to find the filename. If it doesn't we can do
      * nothing so throw an exception.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function locateFunctionByName(string $functionName) : ?string
     {
@@ -165,12 +168,14 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * Our wrapper simply records which file we tried to load and returns
      * boolean false indicating failure.
      *
+     * @see https://php.net/manual/en/class.streamwrapper.php
+     * @see https://php.net/manual/en/streamwrapper.stream-open.php
+     *
      * @param string $path
      * @param string $mode
      * @param int    $options
      * @param string $opened_path
-     * @see https://php.net/manual/en/class.streamwrapper.php
-     * @see https://php.net/manual/en/streamwrapper.stream-open.php
+     *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function stream_open($path, $mode, $options, &$opened_path) : bool
@@ -184,11 +189,14 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * This function restores the original "file" stream, issues a call to "stat" to get the real results,
      * and then re-registers the AutoloadSourceLocator stream wrapper.
      *
-     * @param string $path
-     * @param int    $flags
-     * @return mixed[]|bool
      * @see https://php.net/manual/en/class.streamwrapper.php
      * @see https://php.net/manual/en/streamwrapper.url-stat.php
+     *
+     * @param string $path
+     * @param int    $flags
+     *
+     * @return mixed[]|bool
+     *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     public function url_stat($path, $flags)
@@ -196,7 +204,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         stream_wrapper_restore('file');
 
         if ($flags & STREAM_URL_STAT_QUIET) {
-            set_error_handler(function () {
+            set_error_handler(static function () {
                 // Use native error handler
                 return false;
             });

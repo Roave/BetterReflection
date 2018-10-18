@@ -1,5 +1,7 @@
 <?php
 
-class B {
+declare(strict_types=1);
 
+class B
+{
 }

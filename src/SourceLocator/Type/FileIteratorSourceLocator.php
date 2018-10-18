@@ -28,14 +28,14 @@ class FileIteratorSourceLocator implements SourceLocator
     /** @var AggregateSourceLocator|null */
     private $aggregateSourceLocator;
 
-    /** @var \Iterator|\SplFileInfo[] */
+    /** @var Iterator|SplFileInfo[] */
     private $fileSystemIterator;
 
     /** @var Locator */
     private $astLocator;
 
     /**
-     * @param \Iterator|\SplFileInfo[] $fileInfoIterator note: only \SplFileInfo allowed in this iterator
+     * @param Iterator|SplFileInfo[] $fileInfoIterator note: only SplFileInfo allowed in this iterator
      *
      * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo.
      */
@@ -70,6 +70,7 @@ class FileIteratorSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     *
      * @throws InvalidFileLocation
      */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
@@ -79,6 +80,7 @@ class FileIteratorSourceLocator implements SourceLocator
 
     /**
      * {@inheritDoc}
+     *
      * @throws InvalidFileLocation
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array

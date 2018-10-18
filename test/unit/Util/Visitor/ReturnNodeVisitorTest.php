@@ -47,6 +47,7 @@ class ReturnNodeVisitorTest extends TestCase
 
     /**
      * @param Node[] $statements
+     *
      * @dataProvider outOfScopeNodeTypeProvider
      */
     public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns) : void

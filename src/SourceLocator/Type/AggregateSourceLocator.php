@@ -23,7 +23,7 @@ class AggregateSourceLocator implements SourceLocator
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator            = function (SourceLocator ...$sourceLocator) : array {
+        $validator            = static function (SourceLocator ...$sourceLocator) : array {
             return $sourceLocator;
         };
         $this->sourceLocators = $validator(...$sourceLocators);
@@ -52,7 +52,7 @@ class AggregateSourceLocator implements SourceLocator
     {
         return array_merge(
             [],
-            ...array_map(function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
+            ...array_map(static function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
                 return $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
             }, $this->sourceLocators)
         );

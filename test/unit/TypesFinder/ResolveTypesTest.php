@@ -41,6 +41,7 @@ class ResolveTypesTest extends TestCase
     /**
      * @param string[] $inputTypes
      * @param string[] $expectedInstances
+     *
      * @dataProvider basicTypesToResolveProvider
      */
     public function testResolveTypesWithBasicTypes(array $inputTypes, array $expectedInstances) : void

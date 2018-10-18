@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type;
 
+use InvalidArgumentException;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
@@ -38,7 +39,8 @@ class SingleFileSourceLocator extends AbstractSourceLocator
 
     /**
      * {@inheritDoc}
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource

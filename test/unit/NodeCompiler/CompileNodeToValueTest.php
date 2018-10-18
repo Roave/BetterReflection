@@ -163,6 +163,7 @@ class CompileNodeToValueTest extends TestCase
 
     /**
      * @param mixed $expectedValue
+     *
      * @dataProvider nodeProvider
      */
     public function testVariousNodeCompilations(string $phpCode, $expectedValue) : void

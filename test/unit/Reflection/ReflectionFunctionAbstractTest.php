@@ -94,7 +94,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new ClosureSourceLocator(
-                function () : void {
+                static function () : void {
                 },
                 $this->parser
             ),
@@ -120,7 +120,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $function = (new FunctionReflector(
             new ClosureSourceLocator(
-                function () : void {
+                static function () : void {
                 },
                 $this->parser
             ),
@@ -176,6 +176,7 @@ class ReflectionFunctionAbstractTest extends TestCase
      * you and credit to @nikic for this (and the awesome PHP-Parser library).
      *
      * @see https://github.com/nikic/PHP-Parser/blob/1.x/test/code/parser/stmt/function/generator.test
+     *
      * @return array
      */
     public function generatorProvider() : array
@@ -258,6 +259,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     /**
      * @param int $expectedStart
      * @param int $expectedEnd
+     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
@@ -584,7 +586,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
-        $function->setBodyFromClosure(function () : void {
+        $function->setBodyFromClosure(static function () : void {
             echo 'Hello world!';
         });
 
