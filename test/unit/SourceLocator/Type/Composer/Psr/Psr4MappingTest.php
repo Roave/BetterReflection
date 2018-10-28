@@ -24,15 +24,25 @@ class Psr4MappingTest extends TestCase
         self::assertEquals($expectedDirectories, Psr4Mapping::fromArrayMappings($mappings)->directories());
     }
 
+    /**
+     * @dataProvider mappings
+     *
+     * @param array[] $mappings
+     */
+    public function testIdempotentConstructor(array $mappings) : void
+    {
+        self::assertEquals(Psr4Mapping::fromArrayMappings($mappings), Psr4Mapping::fromArrayMappings($mappings));
+    }
+
     /** @return array<string, array<int, array<string, array<int, string>>|array<int, string>>> */
     public function mappings() : array
     {
         return [
-            'one directory, one prefix' => [
+            'one directory, one prefix'                  => [
                 ['foo' => [__DIR__]],
                 [__DIR__],
             ],
-            'two directories, one prefix' => [
+            'two directories, one prefix'                => [
                 ['foo' => [__DIR__, __DIR__ . '/../..']],
                 [__DIR__, __DIR__ . '/../..'],
             ],
@@ -40,7 +50,7 @@ class Psr4MappingTest extends TestCase
                 ['foo' => [__DIR__, __DIR__, __DIR__ . '/../..']],
                 [__DIR__, __DIR__ . '/../..'],
             ],
-            'two directories, two prefixes' => [
+            'two directories, two prefixes'              => [
                 [
                     'foo' => [__DIR__],
                     'bar' => [__DIR__ . '/../..'],
