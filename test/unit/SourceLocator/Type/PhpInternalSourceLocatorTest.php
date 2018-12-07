@@ -400,6 +400,16 @@ class PhpInternalSourceLocatorTest extends TestCase
             self::markTestSkipped('New type hints were introduced in PHP 7.2 for ' . $parameterName);
         }
 
+        if (PHP_VERSION_ID < 70300
+            && in_array(
+                $parameterName,
+                ['SoapServer#setClass.args'],
+                true
+            )
+        ) {
+            self::markTestSkipped('New type hints were introduced in PHP 7.3 for ' . $parameterName);
+        }
+
         if (in_array(
             $parameterName,
             [
