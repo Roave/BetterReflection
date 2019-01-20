@@ -395,7 +395,7 @@ class Foo
     protected $c = 'c',
               $d = 'd';
     private $e = bool,
-            $f = false;                
+            $f = false;
 }
 PHP;
 
@@ -993,6 +993,16 @@ PHP;
                 ->getInterfaceNames(),
             'Interfaces are retrieved in the correct numeric order (indexed by number)'
         );
+    }
+
+    public function testGetInterfaceNamesFromCustomExceptionClassThatExtendsNativeExceptionClass() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/CustomException.php',
+            $this->astLocator
+        ));
+
+        $this->assertContains(\Throwable::class, $reflector->reflect($reflector->getAllClasses()[0]->getName())->getInterfaceNames());
     }
 
     public function testGetInterfaces() : void
