@@ -97,6 +97,10 @@ A `SourceLocator` is a callable, which when invoked must be given an `Identifier
 > Note that using `EvaledCodeSourceLocator` and `PhpInternalSourceLocator` will result in specific types of 
   `LocatedSource` within the reflection - namely `EvaledLocatedSource` and `InternalLocatedSource` respectively.
 
+> Note that if you use a locator other than the default and the class you want to reflect extends a built-in PHP class (e.g. `\Exception`)
+  you'll have to specify `PhpInternalSourceLocator` in addition to your chosen locator for BetterReflection to detect the built-in class.
+  Example: `new AggregateSourceLocator([ new SingleFileSourceLocator(..), new PhpInternalSourceLocator(..)])`
+
 ## Reflecting Classes
 
 The `ClassReflector` is used to create Better Reflection `ReflectionClass` instances. You may pass it any 
