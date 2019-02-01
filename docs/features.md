@@ -26,7 +26,7 @@ See [AST extraction documentation](https://github.com/Roave/BetterReflection/tre
 These act in the same way as the core reflection API, except they return a 
 `\Roave\BetterReflection\Reflection\ReflectionType` instance (which does not extend `\ReflectionType`).
 
-```
+```php
 $reflectionType = $parameterInfo->getType();
 ```
 
@@ -34,7 +34,7 @@ However, Better Reflection also gives the ability to change, and remove type dec
 be useful if you want to make code written for PHP 7 work in PHP 5 for example, or setting new types to do the 
 opposite. For example, you might want to set the PHP 7 return type declaration to that defined in the PHP DocBlock.
 
-```
+```php
 // Change a function to ensure it returns an integer
 $functionInfo->setReturnType('int');
 
@@ -50,7 +50,7 @@ $functionInfo->removeReturnType();
 
 You can do similar things with parameter types also:
 
-```
+```php
 $parameterInfo->setType('int');
 $parameterInfo->removeType();
 ```
