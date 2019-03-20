@@ -18,12 +18,14 @@ final class LocatorForComposerJsonAndInstalledJson
 {
     public function __invoke(string $installationPath, Locator $astLocator)
     {
+        $trimmedInstallationPath = rtrim($installationPath, '/');
+
         Assert
-            ::that($installationPath)
+            ::that($trimmedInstallationPath)
             ->directory();
 
-        $composerJsonPath  = $installationPath . '/composer.json';
-        $installedJsonPath = $installationPath . '/vendor/composer/installed.json';
+        $composerJsonPath  = $trimmedInstallationPath . '/composer.json';
+        $installedJsonPath = $trimmedInstallationPath . '/vendor/composer/installed.json';
 
         Assert
             ::that([$composerJsonPath, $installedJsonPath])
@@ -39,46 +41,62 @@ final class LocatorForComposerJsonAndInstalledJson
             ->all()
             ->string();
 
-        $composer  = json_decode($composerJsonContents, true);
-        $installed = json_decode($installedJsonContents, true);
+        $composer  = json_decode($composerJsonContents, true, 100, \JSON_THROW_ON_ERROR);
+        $installed = json_decode($installedJsonContents, true, 100, \JSON_THROW_ON_ERROR);
 
         Assert
             ::that([$composer, $installed])
             ->all()
             ->isArray();
 
-        $installedPsr4       = array_merge(
-            $this->packageToPsr4AutoloadNamespaces($composer),
-            ...array_map([$this, 'packageToPsr4AutoloadNamespaces'], $installed)
-        );
-        $installedPsr0       = array_merge(
-            $this->packageToPsr0AutoloadNamespaces($composer),
-            ...array_map([$this, 'packageToPsr0AutoloadNamespaces'], $installed)
-        );
         $classMapPaths       = array_merge(
-            $this->packageToClassMapPaths($composer),
-            ...array_map([$this, 'packageToClassMapPaths'], $installed)
+            $this->prefixWithInstallationPath($this->packageToClassMapPaths($composer), $trimmedInstallationPath),
+            ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
+                return $this->prefixWithPackagePath(
+                    $this->packageToClassMapPaths($package),
+                    $trimmedInstallationPath,
+                    $package
+                );
+            }, $installed)
         );
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
         $filePaths           = array_merge(
-            $this->packageToFilePaths($composer),
-            ...array_map([$this, 'packageToFilePaths'], $installed)
+            $this->prefixWithInstallationPath($this->packageToFilePaths($composer), $trimmedInstallationPath),
+            ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
+                return $this->prefixWithPackagePath(
+                    $this->packageToFilePaths($package),
+                    $trimmedInstallationPath,
+                    $package
+                );
+            }, $installed)
         );
 
         return new AggregateSourceLocator(array_merge(
             [
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(array_merge(
-                        $this->packageToPsr4AutoloadNamespaces($composer),
-                        ...array_map([$this, 'packageToPsr4AutoloadNamespaces'], $installed)
+                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $trimmedInstallationPath),
+                        ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
+                            return $this->prefixWithPackagePath(
+                                $this->packageToPsr4AutoloadNamespaces($package),
+                                $trimmedInstallationPath,
+                                $package
+                            );
+                        }, $installed)
                     )),
                     $astLocator
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(array_merge(
-                        $this->packageToPsr0AutoloadNamespaces($composer),
-                        ...array_map([$this, 'packageToPsr0AutoloadNamespaces'], $installed)
+                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $trimmedInstallationPath),
+                        ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
+                            return $this->prefixWithPackagePath(
+                                $this->packageToPsr0AutoloadNamespaces($package),
+                                $trimmedInstallationPath,
+                                $package
+                            );
+                        }, $installed)
                     )),
                     $astLocator
                 ),
@@ -116,5 +134,42 @@ final class LocatorForComposerJsonAndInstalledJson
     private function packageToFilePaths(array $package) : array
     {
         return $package['autoload']['files'] ?? [];
+    }
+
+    /**
+     * @param array<int|string, string|array<string>> $paths
+     * @param array<string, string|array<string>>     $package
+     *
+     * @return array<int|string, string|array<string>>
+     */
+    private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
+    {
+        return $this->prefixPaths($paths, $trimmedInstallationPath . '/' . $package['name'] . '/');
+    }
+
+    /**
+     * @param array<int|string, string|array<string>> $paths
+     *
+     * @return array<int|string, string|array<string>>
+     */
+    private function prefixWithInstallationPath(array $paths, string $trimmedInstallationPath) : array
+    {
+        return $this->prefixPaths($paths, $trimmedInstallationPath . '/');
+    }
+
+    /**
+     * @param array<int|string, string|array<string>> $paths
+     *
+     * @return array<int|string, string|array<string>>
+     */
+    private function prefixPaths(array $paths, string $prefix) : array
+    {
+        return array_map(function ($paths) use ($prefix) {
+            if (is_array($paths)) {
+                return $this->prefixPaths($paths, $prefix);
+            }
+
+            return $prefix . $paths;
+        }, $paths);
     }
 }
