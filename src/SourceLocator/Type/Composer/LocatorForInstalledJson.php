@@ -96,8 +96,8 @@ final class LocatorForInstalledJson
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
-            ...array_map(function (string $file) use ($astLocator) : SourceLocator {
-                return new SingleFileSourceLocator($file, $astLocator);
+            ...array_map(function (string $file) use ($astLocator) : array {
+                return [new SingleFileSourceLocator($file, $astLocator)];
             }, array_merge($classMapFiles, $filePaths))
         ));
     }
