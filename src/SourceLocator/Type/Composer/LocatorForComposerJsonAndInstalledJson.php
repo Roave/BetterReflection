@@ -59,8 +59,8 @@ final class LocatorForComposerJsonAndInstalledJson
             $this->packageToClassMapPaths($composer),
             ...array_map([$this, 'packageToClassMapPaths'], $installed)
         );
-        $classMapFiles       = array_filter('is_file', $classMapPaths);
-        $classMapDirectories = array_filter('is_dir', $classMapPaths);
+        $classMapFiles       = array_filter($classMapPaths, 'is_file');
+        $classMapDirectories = array_filter($classMapPaths, 'is_dir');
         $filePaths           = array_merge(
             $this->packageToFilePaths($composer),
             ...array_map([$this, 'packageToFilePaths'], $installed)
