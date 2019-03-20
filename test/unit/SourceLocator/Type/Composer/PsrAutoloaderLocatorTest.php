@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Psr4Locator;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\PsrAutoloaderMapping;
+use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets\Bar\FooBar;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets\Foo;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Bar\FooBar as FooBar1;
@@ -18,29 +20,67 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Foo as Foo1;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr4Locator
+ * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator
  */
-class Psr4LocatorTest extends TestCase
+class PsrAutoloaderLocatorTest extends TestCase
 {
-    public function testWillLocateExistingFileWithMatchingClass() : void
+    /** @var PsrAutoloaderMapping&MockObject */
+    private $psrMapping;
+
+    /** @var ClassReflector */
+    private $reflector;
+
+    /** @var PsrAutoloaderLocator */
+    private $psrLocator;
+
+    protected function setUp() : void
     {
-        $astLocator = BetterReflectionSingleton
+        parent::setUp();
+
+        $astLocator       = BetterReflectionSingleton
             ::instance()
             ->astLocator();
 
-        $locator = new Psr4Locator(
-            Psr4Mapping::fromArrayMappings([
-                'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\' => [
-                    __DIR__ . '/../../../Assets/DirectoryScannerAssets',
-                ],
-            ]),
-            $astLocator
+        $this->psrMapping = $this->createMock(PsrAutoloaderMapping::class);
+        $this->psrLocator = new PsrAutoloaderLocator(
+            $this->psrMapping,
+            BetterReflectionSingleton
+                ::instance()
+                ->astLocator()
         );
+        $this->reflector  = new ClassReflector($this->psrLocator);
+        $this
+            ->psrMapping
+            ->method('directories')
+            ->willReturn([
+                __DIR__ . '/../../../Assets/DirectoryScannerAssets',
+                __DIR__ . '/../../../Assets/DirectoryScannerAssetsFoo',
+            ]);
 
-        $classReflector = new ClassReflector($locator);
+        $this
+            ->psrMapping
+            ->method('resolvePossibleFilePaths')
+            ->willReturnCallback(function (Identifier $identifier) : array {
+                if ($identifier->getName() === Foo::class) {
+                    return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foo.php'];
+                }
 
-        $located = $locator->locateIdentifier(
-            $classReflector,
+                if ($identifier->getName() === (Foo::class . 'potato')) {
+                    return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foopotato.php'];
+                }
+
+                if ($identifier->getName() === 'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\Bar\\Empty') {
+                    return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Bar/Empty.php'];
+                }
+
+                return [];
+            });
+    }
+
+    public function testWillLocateExistingFileWithMatchingClass() : void
+    {
+        $located = $this->psrLocator->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 Foo::class,
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -53,23 +93,8 @@ class Psr4LocatorTest extends TestCase
 
     public function testWillNotLocateNonExistingFileWithMatchingPsr4Class() : void
     {
-        $astLocator = BetterReflectionSingleton
-            ::instance()
-            ->astLocator();
-
-        $locator = new Psr4Locator(
-            Psr4Mapping::fromArrayMappings([
-                'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\' => [
-                    __DIR__ . '/../../../Assets/DirectoryScannerAssets',
-                ],
-            ]),
-            $astLocator
-        );
-
-        $classReflector = new ClassReflector($locator);
-
-        self::assertNull($locator->locateIdentifier(
-            $classReflector,
+        self::assertNull($this->psrLocator->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 Foo::class . 'potato',
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
@@ -79,25 +104,21 @@ class Psr4LocatorTest extends TestCase
 
     public function testWillNotLocateExistingFileWithMatchingPsr4ClassAndNoContents() : void
     {
-        $astLocator = BetterReflectionSingleton
-            ::instance()
-            ->astLocator();
-
-        $locator = new Psr4Locator(
-            Psr4Mapping::fromArrayMappings([
-                'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\' => [
-                    __DIR__ . '/../../../Assets/DirectoryScannerAssets',
-                ],
-            ]),
-            $astLocator
-        );
-
-        $classReflector = new ClassReflector($locator);
-
-        self::assertNull($locator->locateIdentifier(
-            $classReflector,
+        self::assertNull($this->psrLocator->locateIdentifier(
+            $this->reflector,
             new Identifier(
                 'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\Bar\\Empty',
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            )
+        ));
+    }
+
+    public function testWillNotLocateClassNotMatchingPsr4Mappings() : void
+    {
+        self::assertNull($this->psrLocator->locateIdentifier(
+            $this->reflector,
+            new Identifier(
+                'Blah',
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         ));
@@ -109,7 +130,7 @@ class Psr4LocatorTest extends TestCase
             ::instance()
             ->astLocator();
 
-        $locator = new Psr4Locator(
+        $locator = new PsrAutoloaderLocator(
             Psr4Mapping::fromArrayMappings([
                 'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\' => [
                     __DIR__ . '/../../../Assets/DirectoryScannerAssets',

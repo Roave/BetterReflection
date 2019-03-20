@@ -12,10 +12,11 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\PsrAutoloaderMapping;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
-final class Psr4Locator implements SourceLocator
+final class PsrAutoloaderLocator implements SourceLocator
 {
     /** @var Psr4Mapping */
     private $mapping;
@@ -23,7 +24,7 @@ final class Psr4Locator implements SourceLocator
     /** @var Locator */
     private $astLocator;
 
-    public function __construct(Psr4Mapping $mapping, Locator $astLocator)
+    public function __construct(PsrAutoloaderMapping $mapping, Locator $astLocator)
     {
         $this->mapping    = $mapping;
         $this->astLocator = $astLocator;
