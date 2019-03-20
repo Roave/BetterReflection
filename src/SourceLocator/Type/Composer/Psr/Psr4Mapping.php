@@ -8,7 +8,7 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Psr;
 use Assert\Assert;
 use Roave\BetterReflection\Identifier\Identifier;
 
-final class Psr4Mapping
+final class Psr4Mapping implements PsrAutoloaderMapping
 {
     /** @var array<string, array<int, string>> */
     private $mappings = [];

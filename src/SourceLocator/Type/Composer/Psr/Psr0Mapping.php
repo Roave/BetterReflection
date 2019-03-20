@@ -8,7 +8,7 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Psr;
 use Assert\Assert;
 use Roave\BetterReflection\Identifier\Identifier;
 
-final class Psr0Mapping
+final class Psr0Mapping implements PsrAutoloaderMapping
 {
     /** @var array<string, array<int, string>> */
     private $mappings = [];
@@ -50,7 +50,6 @@ final class Psr0Mapping
         return $instance;
     }
 
-    /** @return string[] */
     public function resolvePossibleFilePaths(Identifier $identifier) : array
     {
         if (! $identifier->isClass()) {
@@ -73,7 +72,6 @@ final class Psr0Mapping
         return [];
     }
 
-    /** @return string[] */
     public function directories() : array
     {
         return array_values(array_unique(array_merge([], ...array_values($this->mappings))));
