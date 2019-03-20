@@ -6,10 +6,12 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr
+ * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping
  */
 class Psr4MappingTest extends TestCase
 {
@@ -56,6 +58,59 @@ class Psr4MappingTest extends TestCase
                     'bar' => [__DIR__ . '/../..'],
                 ],
                 [__DIR__, __DIR__ . '/../..'],
+            ],
+            'trailing slash in directory is trimmed' => [
+                ['foo' => [__DIR__ . '/']],
+                [__DIR__],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider classLookupMappings
+     *
+     * @param array[]  $mappings
+     * @param string[] $expectedFiles
+     */
+    public function testClassLookups(array $mappings, Identifier $identifier, array $expectedFiles) : void
+    {
+        self::assertEquals(
+            $expectedFiles,
+            Psr4Mapping::fromArrayMappings($mappings)->resolvePossibleFilePaths($identifier)
+        );
+    }
+
+    /** @return array<string, array<int, array<string, array<int, string>>|array<int, string>>> */
+    public function classLookupMappings() : array
+    {
+        return [
+            'empty mappings, no match'                  => [
+                [],
+                new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                [],
+            ],
+            'one mapping, match'                        => [
+                ['Foo\\' => [__DIR__]],
+                new Identifier('Foo\\Bar', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                [__DIR__ . '/Bar.php'],
+            ],
+            'trailing and leading slash in mapping is trimmed'      => [
+                ['Foo' => [__DIR__ . '/']],
+                new Identifier('Foo\\Bar', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                [__DIR__ . '/Bar.php'],
+            ],
+            'one mapping, no match if class === prefix' => [
+                ['Foo' => [__DIR__]],
+                new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                [],
+            ],
+            'multiple mappings, match when class !== prefix' => [
+                [
+                    'Foo\\Bar' => [__DIR__ . '/../..'],
+                    'Foo' => [__DIR__ . '/..'],
+                ],
+                new Identifier('Foo\\Bar', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                [__DIR__ . '/../Bar.php'],
             ],
         ];
     }
