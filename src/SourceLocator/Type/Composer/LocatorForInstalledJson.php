@@ -138,7 +138,7 @@ final class LocatorForInstalledJson
      */
     private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
     {
-        return $this->prefixPaths($paths, $trimmedInstallationPath . '/' . $package['name'] . '/');
+        return $this->prefixPaths($paths, $trimmedInstallationPath . '/vendor/' . $package['name'] . '/');
     }
 
     /**
