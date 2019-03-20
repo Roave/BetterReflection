@@ -31,8 +31,8 @@ final class LocatorForComposerJsonAndInstalledJson
             ->file()
             ->readable();
 
-        $composerJsonContents = file_get_contents($composerJsonPath);
-        $installedJsonContents = file_get_contents($composerJsonPath);
+        $composerJsonContents  = file_get_contents($composerJsonPath);
+        $installedJsonContents = file_get_contents($installedJsonPath);
 
         Assert
             ::that([$composerJsonContents, $installedJsonContents])
