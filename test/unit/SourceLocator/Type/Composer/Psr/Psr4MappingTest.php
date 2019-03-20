@@ -89,6 +89,11 @@ class Psr4MappingTest extends TestCase
                 new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
                 [],
             ],
+            'one mapping, no match for function identifier'                        => [
+                ['Foo\\' => [__DIR__]],
+                new Identifier('Foo\\Bar', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
+                [],
+            ],
             'one mapping, match'                        => [
                 ['Foo\\' => [__DIR__]],
                 new Identifier('Foo\\Bar', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
