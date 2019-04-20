@@ -272,18 +272,9 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
         return false;
     }
 
-    /**
-     * Is this an internal function?
-     *
-     * Note - we cannot reflect on internal functions (as there is no PHP source
-     * code we can access. This means, at present, we can only EVER return false
-     * from this function.
-     *
-     * @see https://github.com/Roave/BetterReflection/issues/38
-     */
     public function isInternal() : bool
     {
-        return false;
+        return $this->locatedSource->isInternal();
     }
 
     /**
@@ -293,6 +284,11 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     public function isUserDefined() : bool
     {
         return ! $this->isInternal();
+    }
+
+    public function getExtensionName() : ?string
+    {
+        return $this->locatedSource->getExtensionName();
     }
 
     /**

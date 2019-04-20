@@ -1,9 +1,0 @@
-class DOMProcessingInstruction extends DOMNode
-{
-
-    public function __construct($name, $value = null)
-    {
-    }
-
-
-}

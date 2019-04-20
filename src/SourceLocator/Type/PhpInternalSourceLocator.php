@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Type;
 
 use InvalidArgumentException;
-use ReflectionClass;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Reflection\SourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use function class_exists;
-use function file_get_contents;
+use function function_exists;
 use function interface_exists;
-use function is_file;
-use function is_readable;
-use function preg_match;
 use function trait_exists;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator
@@ -25,11 +24,11 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
     /** @var SourceStubber */
     private $stubber;
 
-    public function __construct(Locator $astLocator)
+    public function __construct(Locator $astLocator, ?SourceStubber $stubber = null)
     {
         parent::__construct($astLocator);
 
-        $this->stubber = new SourceStubber();
+        $this->stubber = $stubber ?? new ReflectionSourceStubber();
     }
 
     /**
@@ -40,33 +39,30 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
+        return $this->getClassSource($identifier) ?? $this->getFunctionSource($identifier);
+    }
+
+    private function getClassSource(Identifier $identifier) : ?InternalLocatedSource
+    {
         $classReflection = $this->getInternalReflectionClass($identifier);
 
         if ($classReflection === null) {
             return null;
         }
 
-        $extensionName = $classReflection->getExtensionName();
-        $stub          = $this->getStub($classReflection->getName());
+        $stub = $this->stubber->generateClassStub($classReflection);
 
-        if ($stub) {
-            /**
-             * @see https://github.com/Roave/BetterReflection/issues/257
-             *
-             * @todo this code path looks never used, and disagrees with the contract anyway...?
-             */
-            return new InternalLocatedSource("<?php\n\n" . $stub, $extensionName);
+        if ($stub === null) {
+            return null;
         }
 
-        $stubber = $this->stubber;
-
         return new InternalLocatedSource(
-            "<?php\n\n" . $stubber($classReflection),
-            $extensionName
+            $stub,
+            $classReflection->getExtensionName()
         );
     }
 
-    private function getInternalReflectionClass(Identifier $identifier) : ?ReflectionClass
+    private function getInternalReflectionClass(Identifier $identifier) : ?CoreReflectionClass
     {
         if (! $identifier->isClass()) {
             return null;
@@ -78,50 +74,45 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null; // not an available internal class
         }
 
-        $reflection = new ReflectionClass($name);
+        $reflection = new CoreReflectionClass($name);
 
         return $reflection->isInternal() ? $reflection : null;
     }
 
-    /**
-     * Get the stub source code for an internal class.
-     *
-     * Returns null if nothing is found.
-     *
-     * @param string $className Should only contain [A-Za-z]
-     */
-    private function getStub(string $className) : ?string
+    private function getFunctionSource(Identifier $identifier) : ?InternalLocatedSource
     {
-        if (! $this->hasStub($className)) {
+        $functionReflection = $this->getInternalReflectionFunction($identifier);
+
+        if ($functionReflection === null) {
             return null;
         }
 
-        return file_get_contents($this->buildStubName($className));
-    }
+        $stub = $this->stubber->generateFunctionStub($functionReflection);
 
-    /**
-     * Determine the stub name
-     */
-    private function buildStubName(string $className) : ?string
-    {
-        if (! preg_match('/^[a-zA-Z_][a-zA-Z_\d]*$/', $className)) {
+        if ($stub === null) {
             return null;
         }
 
-        return __DIR__ . '/../../../stub/' . $className . '.stub';
+        return new InternalLocatedSource(
+            $stub,
+            $functionReflection->getExtensionName()
+        );
     }
 
-    /**
-     * Determine if a stub exists for specified class name
-     */
-    public function hasStub(string $className) : bool
+    private function getInternalReflectionFunction(Identifier $identifier) : ?CoreReflectionFunction
     {
-        $expectedStubName = $this->buildStubName($className);
-
-        if ($expectedStubName === null) {
-            return false;
+        if (! $identifier->isFunction()) {
+            return null;
         }
 
-        return is_file($expectedStubName) && is_readable($expectedStubName);
+        $name = $identifier->getName();
+
+        if (! function_exists($name)) {
+            return null;
+        }
+
+        $functionReflection = new CoreReflectionFunction($name);
+
+        return $functionReflection->isInternal() ? $functionReflection : null;
     }
 }

@@ -3,3 +3,5 @@ parameters:
         # Some parent constructors are explicitly to be ignored
         - '#does not call parent constructor#'
         - '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
+        # Impossible to define type hint for anonymous class
+        - '#Call to an undefined method PhpParser\\NodeVisitorAbstract::getNode\(\)#'

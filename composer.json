@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.1.0,<7.4.0",
+        "jetbrains/phpstorm-stubs": "2019.1",
         "nikic/php-parser": "^4.0.4",
         "phpdocumentor/reflection-docblock": "^4.1.1",
         "phpdocumentor/type-resolver": "^0.4.0",

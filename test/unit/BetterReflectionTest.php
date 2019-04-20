@@ -10,6 +10,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
 
@@ -28,6 +29,7 @@ final class BetterReflectionTest extends TestCase
         self::assertInstanceOf(FindReflectionOnLine::class, $betterReflection->findReflectionsOnLine());
         self::assertInstanceOf(SourceLocator::class, $betterReflection->sourceLocator());
         self::assertInstanceOf(Parser::class, $betterReflection->phpParser());
+        self::assertInstanceOf(SourceStubber::class, $betterReflection->sourceStubber());
     }
 
     public function testProducedInstancesAreMemoized() : void
@@ -40,6 +42,7 @@ final class BetterReflectionTest extends TestCase
         self::assertSame($betterReflection->findReflectionsOnLine(), $betterReflection->findReflectionsOnLine());
         self::assertSame($betterReflection->sourceLocator(), $betterReflection->sourceLocator());
         self::assertSame($betterReflection->phpParser(), $betterReflection->phpParser());
+        self::assertSame($betterReflection->sourceStubber(), $betterReflection->sourceStubber());
     }
 
     public function testProducedInstancesAreNotMemoizedAcrossInstances() : void
@@ -53,5 +56,6 @@ final class BetterReflectionTest extends TestCase
         self::assertNotSame($betterReflection1->findReflectionsOnLine(), $betterReflection2->findReflectionsOnLine());
         self::assertNotSame($betterReflection1->sourceLocator(), $betterReflection2->sourceLocator());
         self::assertNotSame($betterReflection1->phpParser(), $betterReflection2->phpParser());
+        self::assertNotSame($betterReflection1->sourceStubber(), $betterReflection2->sourceStubber());
     }
 }
