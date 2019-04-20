@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionParameter;
-use function array_key_exists;
 use function is_array;
 use function is_string;
 use function sprintf;
@@ -45,7 +44,7 @@ final class ReflectionParameterStringCast
 
         $originalType = (string) $parameterReflection->getType();
 
-        $type = array_key_exists($originalType, $mapping) ? $mapping[$originalType] : $originalType;
+        $type = $mapping[$originalType] ?? $originalType;
 
         if (! $parameterReflection->allowsNull()) {
             return $type . ' ';
