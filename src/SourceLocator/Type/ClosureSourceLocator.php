@@ -101,25 +101,31 @@ final class ClosureSourceLocator implements SourceLocator
                 $this->startLine = $startLine;
             }
 
-            public function enterNode(Node $node) : void
+            /**
+             * {@inheritDoc}
+             */
+            public function enterNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = $node;
 
-                    return;
+                    return null;
                 }
 
                 if (! ($node instanceof Node\Expr\Closure)) {
-                    return;
+                    return null;
                 }
 
                 $this->closureNodes[] = [$node, $this->currentNamespace];
             }
 
-            public function leaveNode(Node $node) : void
+            /**
+             * {@inheritDoc}
+             */
+            public function leaveNode(Node $node)
             {
                 if (! ($node instanceof Namespace_)) {
-                    return;
+                    return null;
                 }
 
                 $this->currentNamespace = null;

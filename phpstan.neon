@@ -1,4 +1,9 @@
 parameters:
+    level: 5
+
+    paths:
+        - src
+
     ignoreErrors:
         # Some parent constructors are explicitly to be ignored
         - '#does not call parent constructor#'

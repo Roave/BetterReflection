@@ -74,12 +74,15 @@ final class FindReflectionsInTree
                 $this->astConversionStrategy = $astConversionStrategy;
             }
 
-            public function enterNode(Node $node) : void
+            /**
+             * {@inheritDoc}
+             */
+            public function enterNode(Node $node)
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = $node;
 
-                    return;
+                    return null;
                 }
 
                 if ($node instanceof Node\Stmt\ClassLike) {
@@ -90,26 +93,29 @@ final class FindReflectionsInTree
                         $this->reflections[] = $reflection;
                     }
 
-                    return;
+                    return null;
                 }
 
                 if (! ($node instanceof Node\Stmt\Function_)) {
-                    return;
+                    return null;
                 }
 
                 $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
 
                 if (! $this->identifierType->isMatchingReflector($reflection)) {
-                    return;
+                    return null;
                 }
 
                 $this->reflections[] = $reflection;
             }
 
-            public function leaveNode(Node $node) : void
+            /**
+             * {@inheritDoc}
+             */
+            public function leaveNode(Node $node)
             {
                 if (! ($node instanceof Namespace_)) {
-                    return;
+                    return null;
                 }
 
                 $this->currentNamespace = null;
