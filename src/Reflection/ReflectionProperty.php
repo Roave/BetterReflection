@@ -163,6 +163,7 @@ class ReflectionProperty implements CoreReflector
         $val += $this->isPublic() ? CoreReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? CoreReflectionProperty::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? CoreReflectionProperty::IS_PRIVATE : 0;
+
         return $val;
     }
 
@@ -218,6 +219,7 @@ class ReflectionProperty implements CoreReflector
         foreach ($this->getDocBlockTypes() as $type) {
             $stringTypes[] = (string) $type;
         }
+
         return $stringTypes;
     }
 

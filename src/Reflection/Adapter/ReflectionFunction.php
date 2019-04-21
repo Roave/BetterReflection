@@ -175,6 +175,7 @@ class ReflectionFunction extends CoreReflectionFunction
         foreach ($parameters as $key => $parameter) {
             $wrappedParameters[$key] = new ReflectionParameter($parameter);
         }
+
         return $wrappedParameters;
     }
 

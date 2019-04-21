@@ -387,7 +387,6 @@ PHP;
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
-
     public function testClassConstantResolutionFromParentParent() : void
     {
         $phpCode = '<?php

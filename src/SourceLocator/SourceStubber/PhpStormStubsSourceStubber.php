@@ -140,6 +140,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                 if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName->toString() === $this->className) {
                     $this->node = $node;
+
                     return NodeTraverser::STOP_TRAVERSAL;
                 }
 
@@ -177,6 +178,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 /** @psalm-suppress UndefinedPropertyFetch */
                 if ($node instanceof Node\Stmt\Function_ && $node->namespacedName->toString() === $this->functionName) {
                     $this->node = $node;
+
                     return NodeTraverser::STOP_TRAVERSAL;
                 }
 

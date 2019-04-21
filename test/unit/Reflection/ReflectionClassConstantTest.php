@@ -28,6 +28,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
+
         return $classInfo->getReflectionConstant($name);
     }
 

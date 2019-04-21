@@ -247,7 +247,6 @@ class ReflectionFunctionTest extends TestCase
         $functionReflection->invokeArgs();
     }
 
-
     public function testInvokeThrowsExceptionWhenFunctionDoesNotExist() : void
     {
         $php = '<?php function foo() {}';

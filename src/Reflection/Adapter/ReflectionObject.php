@@ -161,6 +161,7 @@ class ReflectionObject extends CoreReflectionObject
         foreach ($methods as $key => $method) {
             $wrappedMethods[$key] = new ReflectionMethod($method);
         }
+
         return $wrappedMethods;
     }
 
@@ -197,6 +198,7 @@ class ReflectionObject extends CoreReflectionObject
         foreach ($properties as $key => $property) {
             $wrappedProperties[$key] = new ReflectionProperty($property);
         }
+
         return $wrappedProperties;
     }
 
@@ -235,6 +237,7 @@ class ReflectionObject extends CoreReflectionObject
         foreach ($interfaces as $key => $interface) {
             $wrappedInterfaces[$key] = new ReflectionClass($interface);
         }
+
         return $wrappedInterfaces;
     }
 
@@ -265,6 +268,7 @@ class ReflectionObject extends CoreReflectionObject
         foreach ($traits as $key => $trait) {
             $wrappedTraits[$key] = new ReflectionClass($trait);
         }
+
         return $wrappedTraits;
     }
 
@@ -361,6 +365,7 @@ class ReflectionObject extends CoreReflectionObject
 
         return new ReflectionClass($parentClass);
     }
+
     /**
      * {@inheritDoc}
      */

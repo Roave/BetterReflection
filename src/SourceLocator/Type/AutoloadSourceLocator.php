@@ -137,6 +137,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         class_exists($className);
         stream_wrapper_restore('file');
         set_error_handler($previousErrorHandler);
+
         return self::$autoloadLocatedFile;
     }
 
@@ -181,6 +182,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     public function stream_open($path, $mode, $options, &$opened_path) : bool
     {
         self::$autoloadLocatedFile = $path;
+
         return false;
     }
 

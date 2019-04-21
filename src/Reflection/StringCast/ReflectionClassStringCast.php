@@ -174,6 +174,7 @@ final class ReflectionClassStringCast
     private static function itemsToString(array $items, int $emptyLinesAmongItems = 1) : string
     {
         $string = implode(str_repeat("\n", $emptyLinesAmongItems), $items);
+
         return "\n" . preg_replace('/(^|\n)(?!\n)/', '\1' . self::indent(), $string);
     }
 

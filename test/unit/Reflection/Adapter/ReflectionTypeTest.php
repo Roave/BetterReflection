@@ -24,6 +24,7 @@ class ReflectionTypeTest extends TestCase
     public function coreReflectionTypeNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionType::class);
+
         return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));

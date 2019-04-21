@@ -180,6 +180,7 @@ class ReflectionMethod extends CoreReflectionMethod
         foreach ($parameters as $key => $parameter) {
             $wrappedParameters[$key] = new ReflectionParameter($parameter);
         }
+
         return $wrappedParameters;
     }
 

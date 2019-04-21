@@ -30,6 +30,7 @@ class ReflectionPropertyTest extends TestCase
     public function coreReflectionPropertyNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionProperty::class);
+
         return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));

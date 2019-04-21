@@ -171,6 +171,7 @@ class ReflectionMethodTest extends TestCase
         $method = $classInfo->getMethod('Php4StyleConstructInNamespace');
         self::assertFalse($method->isConstructor());
     }
+
     public function testIsConstructorWhenPhp4StyleCaseInsensitive() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php', $this->astLocator));
@@ -179,6 +180,7 @@ class ReflectionMethodTest extends TestCase
         $method = $classInfo->getMethod('PHP4STYLECASEINSENSITIVECONSTRUCT');
         self::assertTrue($method->isConstructor());
     }
+
     public function testGetParameters() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);

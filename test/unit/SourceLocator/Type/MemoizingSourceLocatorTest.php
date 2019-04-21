@@ -104,7 +104,6 @@ class MemoizingSourceLocatorTest extends TestCase
         );
     }
 
-
     public function testLocateIdentifiersDistinguishesBetweenReflectorInstances() : void
     {
         $this->assertMemoization(

@@ -32,6 +32,7 @@ class TestListener implements BaseTestListener
         if ($this->currentSuite === null) {
             return $test->getName(true);
         }
+
         return $this->currentSuite->getName() . '::' . $test->getName(true);
     }
 

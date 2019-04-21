@@ -320,7 +320,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame('/**  * doc comment */', $function->getDocComment());
     }
 
-
     public function testGetDocReturnsEmptyStringWithNoComment() : void
     {
         $php = '<?php function foo() {}';

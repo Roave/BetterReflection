@@ -413,6 +413,7 @@ class ReflectionClass implements Reflection, CoreReflector
     {
         try {
             $this->getMethod($methodName);
+
             return true;
         } catch (OutOfBoundsException $exception) {
             return false;
@@ -860,6 +861,7 @@ class ReflectionClass implements Reflection, CoreReflector
         $val  = 0;
         $val += $this->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $val += $this->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
+
         return $val;
     }
 
@@ -1316,6 +1318,7 @@ class ReflectionClass implements Reflection, CoreReflector
 
         if ($isFinal === true) {
             $this->node->flags |= ClassNode::MODIFIER_FINAL;
+
             return;
         }
 
@@ -1334,9 +1337,11 @@ class ReflectionClass implements Reflection, CoreReflector
         foreach ($this->node->stmts as $key => $stmt) {
             if ($stmt instanceof ClassMethod && $lowerName === $stmt->name->toLowerString()) {
                 unset($this->node->stmts[$key], $this->cachedMethods);
+
                 return true;
             }
         }
+
         return false;
     }
 
