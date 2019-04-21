@@ -154,7 +154,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($internalReflection->isInterface(), $class->isInterface());
         self::assertSame($internalReflection->isTrait(), $class->isTrait());
 
-        $this->assertSameClassAttributes($internalReflection, $class);
+        self::assertSameClassAttributes($internalReflection, $class);
     }
 
     private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed) : void

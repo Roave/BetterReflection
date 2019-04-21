@@ -28,6 +28,7 @@ class ReflectionClassTest extends TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionClass::class);
+
         return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));
@@ -134,8 +135,8 @@ class ReflectionClassTest extends TestCase
     {
         $exported = ReflectionClassAdapter::export('\stdClass');
 
-        self::assertInternalType('string', $exported);
-        self::assertContains('stdClass', $exported);
+        self::assertIsString($exported);
+        self::assertStringContainsString('stdClass', $exported);
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName() : void

@@ -23,6 +23,7 @@ class ReflectionClassConstantTest extends TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionClassConstant::class);
+
         return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));

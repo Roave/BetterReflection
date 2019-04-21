@@ -199,6 +199,7 @@ class ReflectionParameter implements CoreReflector
             $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
             $this->defaultValue             = null;
+
             return;
         }
 
@@ -335,6 +336,7 @@ class ReflectionParameter implements CoreReflector
         foreach ($this->getDocBlockTypes() as $type) {
             $stringTypes[] = (string) $type;
         }
+
         return $stringTypes;
     }
 
@@ -448,6 +450,7 @@ class ReflectionParameter implements CoreReflector
     public function isDefaultValueConstant() : bool
     {
         $this->parseDefaultValueNode();
+
         return $this->isDefaultValueConstant;
     }
 

@@ -140,6 +140,7 @@ class FindParameterTypeTest extends TestCase
 
         self::assertEmpty((new FindParameterType())->__invoke($function, null, $node));
     }
+
     /**
      * @param string[] $aliasesToFQCNs indexed by alias
      * @param Type[]   $expectedTypes

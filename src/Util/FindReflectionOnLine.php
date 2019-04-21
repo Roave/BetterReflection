@@ -56,6 +56,7 @@ final class FindReflectionOnLine
                         return $method;
                     }
                 }
+
                 return $reflection;
             }
 

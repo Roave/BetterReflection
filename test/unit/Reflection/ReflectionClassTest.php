@@ -300,7 +300,7 @@ class ReflectionClassTest extends TestCase
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        $this->assertCount(5, $classInfo->getReflectionConstants());
+        self::assertCount(5, $classInfo->getReflectionConstants());
     }
 
     public function testGetReflectionConstant() : void
@@ -588,7 +588,7 @@ PHP;
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
 
-        self::assertContains('Some comments here', $classInfo->getDocComment());
+        self::assertStringContainsString('Some comments here', $classInfo->getDocComment());
     }
 
     public function testGetDocCommentBetweeenComments() : void
@@ -601,7 +601,7 @@ PHP;
         ';
         $reflector = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Bar');
 
-        self::assertContains('Class description', $reflector->getDocComment());
+        self::assertStringContainsString('Class description', $reflector->getDocComment());
     }
 
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void

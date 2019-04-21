@@ -414,6 +414,7 @@ final class ReflectionSourceStubber implements SourceStubber
     {
         $name     = (string) $type;
         $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
+
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
     }
 

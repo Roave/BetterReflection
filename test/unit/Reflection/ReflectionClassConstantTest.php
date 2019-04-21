@@ -28,36 +28,37 @@ class ReflectionClassConstantTest extends TestCase
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
+
         return $classInfo->getReflectionConstant($name);
     }
 
     public function testDefaultVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
-        $this->assertTrue($const->isPublic());
+        self::assertTrue($const->isPublic());
     }
 
     public function testPublicVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_3');
-        $this->assertTrue($const->isPublic());
+        self::assertTrue($const->isPublic());
     }
 
     public function testProtectedVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_4');
-        $this->assertTrue($const->isProtected());
+        self::assertTrue($const->isProtected());
     }
 
     public function testPrivateVisibility() : void
     {
         $const = $this->getExampleConstant('MY_CONST_5');
-        $this->assertTrue($const->isPrivate());
+        self::assertTrue($const->isPrivate());
     }
 
     public function testToString() : void
     {
-        $this->assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
+        self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
     /**
@@ -65,7 +66,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testGetModifiers(string $const, int $expected) : void
     {
-        $this->assertSame($expected, $this->getExampleConstant($const)->getModifiers());
+        self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
     public function getModifiersProvider() : array
@@ -81,13 +82,13 @@ class ReflectionClassConstantTest extends TestCase
     public function testGetDocComment() : void
     {
         $const = $this->getExampleConstant('MY_CONST_2');
-        $this->assertContains('Documentation for constant', $const->getDocComment());
+        self::assertStringContainsString('Documentation for constant', $const->getDocComment());
     }
 
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
-        $this->assertSame('', $const->getDocComment());
+        self::assertSame('', $const->getDocComment());
     }
 
     public function testGetDeclaringClass() : void
@@ -95,7 +96,7 @@ class ReflectionClassConstantTest extends TestCase
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
         $const     = $classInfo->getReflectionConstant('MY_CONST_1');
-        $this->assertSame($classInfo, $const->getDeclaringClass());
+        self::assertSame($classInfo, $const->getDeclaringClass());
     }
 
     /**
@@ -106,8 +107,8 @@ class ReflectionClassConstantTest extends TestCase
         $reflector       = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection = $reflector->reflect('\T');
         $constReflection = $classReflection->getReflectionConstant('TEST');
-        $this->assertEquals($startLine, $constReflection->getStartLine());
-        $this->assertEquals($endLine, $constReflection->getEndLine());
+        self::assertEquals($startLine, $constReflection->getStartLine());
+        self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
     public function startEndLineProvider() : array

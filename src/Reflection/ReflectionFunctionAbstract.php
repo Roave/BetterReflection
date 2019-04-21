@@ -106,7 +106,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
     private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
-        $lastParamIndex      = (count($this->node->params) - 1);
+        $lastParamIndex      = count($this->node->params) - 1;
         for ($i = $lastParamIndex; $i >= 0; $i--) {
             $hasDefault = ($this->node->params[$i]->default !== null);
 
@@ -227,6 +227,7 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
                 return $parameter;
             }
         }
+
         return null;
     }
 

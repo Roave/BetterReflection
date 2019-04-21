@@ -35,6 +35,7 @@ class ReflectionMethodTest extends TestCase
     public function coreReflectionMethodNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionMethod::class);
+
         return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));
@@ -130,19 +131,19 @@ class ReflectionMethodTest extends TestCase
 
         switch ($methodName) {
             case 'getParameters':
-                $this->assertContainsOnly(ReflectionParameterAdapter::class, $adapterReturnValue);
+                self::assertContainsOnly(ReflectionParameterAdapter::class, $adapterReturnValue);
                 break;
 
             case 'getReturnType':
-                $this->assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
+                self::assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
                 break;
 
             case 'getPrototype':
-                $this->assertInstanceOf(ReflectionMethodAdapter::class, $adapterReturnValue);
+                self::assertInstanceOf(ReflectionMethodAdapter::class, $adapterReturnValue);
                 break;
 
             default:
-                $this->assertEquals($returnValue, $adapterReturnValue);
+                self::assertEquals($returnValue, $adapterReturnValue);
         }
     }
 
@@ -216,7 +217,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertNull($reflectionMethodAdapter->getClosure());
+        self::assertNull($reflectionMethodAdapter->getClosure());
     }
 
     public function testGetClosureReturnsNullWhenNotAnObject() : void
@@ -228,7 +229,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertNull($reflectionMethodAdapter->getClosure('string'));
+        self::assertNull($reflectionMethodAdapter->getClosure('string'));
     }
 
     public function testGetClosureThrowsExceptionWhenObjectNotInstanceOfClass() : void
@@ -257,7 +258,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertSame(123, $reflectionMethodAdapter->invoke(null, 100, 23));
+        self::assertSame(123, $reflectionMethodAdapter->invoke(null, 100, 23));
     }
 
     public function testInvokeArgs() : void
@@ -273,7 +274,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertSame(123, $reflectionMethodAdapter->invokeArgs(null, [100, 23]));
+        self::assertSame(123, $reflectionMethodAdapter->invokeArgs(null, [100, 23]));
     }
 
     public function testInvokeArgsReturnsNullWhenNoObject() : void
@@ -288,7 +289,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertNull($reflectionMethodAdapter->invokeArgs(null, []));
+        self::assertNull($reflectionMethodAdapter->invokeArgs(null, []));
     }
 
     public function testInvokeReturnsNullWhenNotAnObject() : void
@@ -303,7 +304,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertNull($reflectionMethodAdapter->invoke('string'));
+        self::assertNull($reflectionMethodAdapter->invoke('string'));
     }
 
     public function testInvokeArgsReturnsNullWhenNotAnObject() : void
@@ -318,7 +319,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        $this->assertNull($reflectionMethodAdapter->invokeArgs('string', []));
+        self::assertNull($reflectionMethodAdapter->invokeArgs('string', []));
     }
 
     public function testInvokeThrowsExceptionWhenObjectNotInstanceOfClass() : void

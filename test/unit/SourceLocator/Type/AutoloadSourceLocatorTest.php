@@ -249,6 +249,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertTrue(file_exists(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
 
         include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
+
         return true;
     }
 }

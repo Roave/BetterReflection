@@ -43,33 +43,33 @@ class PhpUnitTestCaseBench
         }, $this->methods));
     }
 
-    public function reflect_class() : void
+    public function benchReflectClass() : void
     {
         $this->reflector->reflect(TestCase::class);
     }
 
-    public function reflect_properties_doc_types() : void
+    public function benchReflectPropertiesDocTypes() : void
     {
         foreach ($this->properties as $property) {
             $property->getDocBlockTypes();
         }
     }
 
-    public function reflect_method_parameters() : void
+    public function benchReflectMethodParameters() : void
     {
         foreach ($this->parameters as $parameter) {
             $parameter->getType();
         }
     }
 
-    public function reflect_methods_parameter_doc_types() : void
+    public function benchReflectMethodsParameterDocTypes() : void
     {
         foreach ($this->parameters as $parameter) {
             $parameter->getDocBlockTypes();
         }
     }
 
-    public function reflect_methods_doc_return_types() : void
+    public function benchReflectMethodsDocReturnTypes() : void
     {
         foreach ($this->methods as $method) {
             $method->getDocBlockReturnTypes();

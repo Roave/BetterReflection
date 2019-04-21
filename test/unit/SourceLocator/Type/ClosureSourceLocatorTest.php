@@ -72,7 +72,7 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertSame($file, $reflection->getFileName());
         self::assertSame($startLine, $reflection->getStartLine());
         self::assertSame($endLine, $reflection->getEndLine());
-        self::assertContains('Hello world!', $reflection->getLocatedSource()->getSource());
+        self::assertStringContainsString('Hello world!', $reflection->getLocatedSource()->getSource());
     }
 
     public function testEvaledClosureThrowsInvalidFileLocation() : void
@@ -114,7 +114,7 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertSame($file, $reflections[0]->getFileName());
         self::assertSame($startLine, $reflections[0]->getStartLine());
         self::assertSame($endLine, $reflections[0]->getEndLine());
-        self::assertContains('Hello world!', $reflections[0]->getLocatedSource()->getSource());
+        self::assertStringContainsString('Hello world!', $reflections[0]->getLocatedSource()->getSource());
     }
 
     public function testLocateIdentifiersByTypeWithClassIdentifier() : void

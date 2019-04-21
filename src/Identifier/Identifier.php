@@ -35,6 +35,7 @@ class Identifier
             || strpos($name, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0
         ) {
             $this->name = $name;
+
             return;
         }
 

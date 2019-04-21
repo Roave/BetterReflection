@@ -304,7 +304,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionInfo = $reflector->reflect('foo');
 
-        self::assertContains('Some function comment', $functionInfo->getDocComment());
+        self::assertStringContainsString('Some function comment', $functionInfo->getDocComment());
     }
 
     public function testSetDocCommentFromString() : void
@@ -319,7 +319,6 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertSame('/**  * doc comment */', $function->getDocComment());
     }
-
 
     public function testGetDocReturnsEmptyStringWithNoComment() : void
     {
@@ -372,7 +371,7 @@ class ReflectionFunctionAbstractTest extends TestCase
             $this->classReflector
         ))->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
 
-        self::assertContains('Fixture/Functions.php', $functionInfo->getFileName());
+        self::assertStringContainsString('Fixture/Functions.php', $functionInfo->getFileName());
     }
 
     public function testGetFileNameOfUnlocatedSource() : void
@@ -407,7 +406,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         $types = $function->getDocBlockReturnTypes();
 
-        self::assertInternalType('array', $types);
+        self::assertIsArray($types);
         self::assertCount(1, $types);
         self::assertInstanceOf(Boolean::class, $types[0]);
     }
@@ -516,7 +515,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $functionInfo->removeReturnType();
 
         self::assertNull($functionInfo->getReturnType());
-        self::assertNotContains(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
+        self::assertStringNotContainsString(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
     }
 
     public function testCannotClone() : void
@@ -542,7 +541,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         $ast = $function->getBodyAst();
 
-        self::assertInternalType('array', $ast);
+        self::assertIsArray($ast);
         self::assertCount(1, $ast);
         self::assertInstanceOf(Echo_::class, $ast[0]);
     }

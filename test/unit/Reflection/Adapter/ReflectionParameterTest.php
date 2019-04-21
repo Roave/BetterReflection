@@ -27,6 +27,7 @@ class ReflectionParameterTest extends TestCase
     public function coreReflectionParameterNamesProvider() : array
     {
         $methods = get_class_methods(CoreReflectionParameter::class);
+
         return array_combine($methods, array_map(static function (string $i) : array {
             return [$i];
         }, $methods));

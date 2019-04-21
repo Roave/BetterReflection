@@ -57,6 +57,7 @@ class ReflectionClassConstant implements CoreReflector
         $ref->positionInNode = $positionInNode;
         $ref->owner          = $owner;
         $ref->reflector      = $reflector;
+
         return $ref;
     }
 
@@ -85,6 +86,7 @@ class ReflectionClassConstant implements CoreReflector
             new CompilerContext($this->reflector, $this->getDeclaringClass())
         );
         $this->valueWasCached = true;
+
         return $this->value;
     }
 
@@ -121,6 +123,7 @@ class ReflectionClassConstant implements CoreReflector
         $val += $this->isPublic() ? ReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? ReflectionProperty::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? ReflectionProperty::IS_PRIVATE : 0;
+
         return $val;
     }
 

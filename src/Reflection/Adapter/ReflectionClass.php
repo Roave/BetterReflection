@@ -175,6 +175,7 @@ class ReflectionClass extends CoreReflectionClass
         foreach ($methods as $key => $method) {
             $wrappedMethods[$key] = new ReflectionMethod($method);
         }
+
         return $wrappedMethods;
     }
 
@@ -211,6 +212,7 @@ class ReflectionClass extends CoreReflectionClass
         foreach ($properties as $key => $property) {
             $wrappedProperties[$key] = new ReflectionProperty($property);
         }
+
         return $wrappedProperties;
     }
 
@@ -269,6 +271,7 @@ class ReflectionClass extends CoreReflectionClass
         foreach ($interfaces as $key => $interface) {
             $wrappedInterfaces[$key] = new self($interface);
         }
+
         return $wrappedInterfaces;
     }
 
@@ -299,6 +302,7 @@ class ReflectionClass extends CoreReflectionClass
         foreach ($traits as $key => $trait) {
             $wrappedTraits[$key] = new self($trait);
         }
+
         return $wrappedTraits;
     }
 
