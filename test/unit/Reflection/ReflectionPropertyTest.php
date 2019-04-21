@@ -184,7 +184,7 @@ class ReflectionPropertyTest extends TestCase
         $reflector = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Bar');
         $property  = $reflector->getProperty('prop');
 
-        self::assertContains('Property description', $property->getDocComment());
+        self::assertStringContainsString('Property description', $property->getDocComment());
     }
 
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
@@ -327,8 +327,8 @@ class ReflectionPropertyTest extends TestCase
         $reflector       = new ClassReflector(new StringSourceLocator($php, $this->astLocator));
         $classReflection = $reflector->reflect('\T');
         $constReflection = $classReflection->getProperty('test');
-        $this->assertEquals($startLine, $constReflection->getStartLine());
-        $this->assertEquals($endLine, $constReflection->getEndLine());
+        self::assertEquals($startLine, $constReflection->getStartLine());
+        self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
     public function startEndLineProvider() : array

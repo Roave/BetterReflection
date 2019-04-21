@@ -166,7 +166,7 @@ class ReflectionFunctionTest extends TestCase
 
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
-        $this->assertNull($betterReflectionFunction->getClosure());
+        self::assertNull($betterReflectionFunction->getClosure());
     }
 
     public function testInvokeThrowsExceptionWhenError() : void

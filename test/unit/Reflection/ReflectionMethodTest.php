@@ -255,7 +255,7 @@ class ReflectionMethodTest extends TestCase
 
         $types = $methodInfo->getDocBlockReturnTypes();
 
-        self::assertInternalType('array', $types);
+        self::assertIsArray($types);
         self::assertCount(1, $types);
         self::assertInstanceOf(Integer::class, $types[0]);
     }

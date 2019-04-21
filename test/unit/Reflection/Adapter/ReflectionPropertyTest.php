@@ -129,7 +129,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        $this->assertNull($reflectionPropertyAdapter->getValue());
+        self::assertNull($reflectionPropertyAdapter->getValue());
     }
 
     public function testSetValueReturnsNullWhenNoObject() : void
@@ -144,7 +144,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        $this->assertNull($reflectionPropertyAdapter->setValue(null));
+        self::assertNull($reflectionPropertyAdapter->setValue(null));
     }
 
     public function testGetValueReturnsNullWhenNotAnObject() : void
@@ -159,7 +159,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        $this->assertNull($reflectionPropertyAdapter->getValue('string'));
+        self::assertNull($reflectionPropertyAdapter->getValue('string'));
     }
 
     public function testSetValueReturnsNullWhenNotAnObject() : void
@@ -174,7 +174,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        $this->assertNull($reflectionPropertyAdapter->setValue('string'));
+        self::assertNull($reflectionPropertyAdapter->setValue('string'));
     }
 
     public function testGetValueThrowsExceptionWhenPropertyNotAccessible() : void

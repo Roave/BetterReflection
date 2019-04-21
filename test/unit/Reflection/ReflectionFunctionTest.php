@@ -172,7 +172,7 @@ class ReflectionFunctionTest extends TestCase
 
         $types = $function->getDocBlockReturnTypes();
 
-        self::assertInternalType('array', $types);
+        self::assertIsArray($types);
         self::assertCount(1, $types);
         self::assertInstanceOf(Boolean::class, $types[0]);
     }

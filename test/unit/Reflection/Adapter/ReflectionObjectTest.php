@@ -130,8 +130,8 @@ class ReflectionObjectTest extends TestCase
     {
         $exported = ReflectionObjectAdapter::export(new stdClass());
 
-        self::assertInternalType('string', $exported);
-        self::assertContains('stdClass', $exported);
+        self::assertIsString($exported);
+        self::assertStringContainsString('stdClass', $exported);
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName() : void
