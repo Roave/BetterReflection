@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "A\\": "src/root_PSR-4_Sources"
+    },
+    "psr-0": {
+      "A_": "src/root_PSR-0_Sources"
+    }
+  }
+}

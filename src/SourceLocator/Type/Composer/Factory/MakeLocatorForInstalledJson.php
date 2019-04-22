@@ -12,9 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
-// @TODO testme, I'm sad and huge, and horrible, and I can't be left alone with your code
 final class MakeLocatorForInstalledJson
 {
     public function __invoke(string $installationPath, Locator $astLocator)
