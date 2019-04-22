@@ -19,6 +19,7 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Bar\FooBar as Fo
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Foo as Foo1;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function array_map;
+use function sort;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator
@@ -140,22 +141,27 @@ class PsrAutoloaderLocatorTest extends TestCase
             $astLocator
         );
 
-        self::assertSame(
-            [
-                FooBar::class,
-                Foo::class,
-                FooBar1::class,
-                Foo1::class,
-            ],
-            array_map(
-                static function (Reflection $reflection) : string {
-                    return $reflection->getName();
-                },
-                $locator->locateIdentifiersByType(
-                    new ClassReflector($locator),
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                )
+        $expected = [
+            FooBar::class,
+            Foo::class,
+            FooBar1::class,
+            Foo1::class,
+        ];
+
+        $actual = array_map(
+            static function (Reflection $reflection) : string {
+                return $reflection->getName();
+            },
+            $locator->locateIdentifiersByType(
+                new ClassReflector($locator),
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );
+
+        // Sorting may depend on filesystem here
+        sort($expected);
+        sort($actual);
+
+        self::assertSame($expected, $actual);
     }
 }
