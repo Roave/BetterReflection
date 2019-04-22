@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception;
 
 use UnexpectedValueException;
+use function sprintf;
 
 final class MissingInstalledJson extends UnexpectedValueException implements Exception
 {

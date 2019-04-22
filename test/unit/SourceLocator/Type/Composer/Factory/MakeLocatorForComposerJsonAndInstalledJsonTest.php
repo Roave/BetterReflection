@@ -18,6 +18,9 @@ use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function array_column;
+use function array_combine;
+use function realpath;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJsonAndInstalledJson

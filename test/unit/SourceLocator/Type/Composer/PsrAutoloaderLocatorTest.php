@@ -18,6 +18,7 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets\Foo;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Bar\FooBar as FooBar1;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Foo as Foo1;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function array_map;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator
@@ -37,15 +38,13 @@ class PsrAutoloaderLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $astLocator       = BetterReflectionSingleton
-            ::instance()
+        $astLocator = BetterReflectionSingleton::instance()
             ->astLocator();
 
         $this->psrMapping = $this->createMock(PsrAutoloaderMapping::class);
         $this->psrLocator = new PsrAutoloaderLocator(
             $this->psrMapping,
-            BetterReflectionSingleton
-                ::instance()
+            BetterReflectionSingleton::instance()
                 ->astLocator()
         );
         $this->reflector  = new ClassReflector($this->psrLocator);
@@ -60,7 +59,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         $this
             ->psrMapping
             ->method('resolvePossibleFilePaths')
-            ->willReturnCallback(function (Identifier $identifier) : array {
+            ->willReturnCallback(static function (Identifier $identifier) : array {
                 if ($identifier->getName() === Foo::class) {
                     return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foo.php'];
                 }
@@ -126,8 +125,7 @@ class PsrAutoloaderLocatorTest extends TestCase
 
     public function testWillLocateAllClassesInMappedPsr4Paths() : void
     {
-        $astLocator = BetterReflectionSingleton
-            ::instance()
+        $astLocator = BetterReflectionSingleton::instance()
             ->astLocator();
 
         $locator = new PsrAutoloaderLocator(
@@ -150,7 +148,7 @@ class PsrAutoloaderLocatorTest extends TestCase
                 Foo1::class,
             ],
             array_map(
-                function (Reflection $reflection) : string {
+                static function (Reflection $reflection) : string {
                     return $reflection->getName();
                 },
                 $locator->locateIdentifiersByType(

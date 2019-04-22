@@ -15,6 +15,8 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\PsrAutoloaderMapping;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function file_exists;
+use function file_get_contents;
 
 final class PsrAutoloaderLocator implements SourceLocator
 {

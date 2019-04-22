@@ -6,6 +6,14 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Psr;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
+use function array_map;
+use function array_merge;
+use function array_unique;
+use function array_values;
+use function is_dir;
+use function rtrim;
+use function str_replace;
+use function strpos;
 
 final class Psr0Mapping implements PsrAutoloaderMapping
 {
@@ -24,8 +32,8 @@ final class Psr0Mapping implements PsrAutoloaderMapping
         $instance = new self();
 
         $instance->mappings = array_map(
-            function (array $directories) : array {
-                return array_map(function (string $directory) : string {
+            static function (array $directories) : array {
+                return array_map(static function (string $directory) : string {
                     return rtrim($directory, '/');
                 }, $directories);
             },
@@ -35,6 +43,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
         return $instance;
     }
 
+    /** {@inheritDoc} */
     public function resolvePossibleFilePaths(Identifier $identifier) : array
     {
         if (! $identifier->isClass()) {
@@ -44,9 +53,9 @@ final class Psr0Mapping implements PsrAutoloaderMapping
         $className = $identifier->getName();
 
         foreach ($this->mappings as $prefix => $paths) {
-            if (0 === strpos($className, $prefix)) {
+            if (strpos($className, $prefix) === 0) {
                 return array_map(
-                    function (string $path) use ($className) : string {
+                    static function (string $path) use ($className) : string {
                         return rtrim($path, '/') . '/' . str_replace(['\\', '_'], '/', $className) . '.php';
                     },
                     $paths
@@ -57,6 +66,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
         return [];
     }
 
+    /** {@inheritDoc} */
     public function directories() : array
     {
         return array_values(array_unique(array_merge([], ...array_values($this->mappings))));
@@ -67,19 +77,19 @@ final class Psr0Mapping implements PsrAutoloaderMapping
      *
      * @throws InvalidPrefixMapping
      */
-    private static function assertValidMapping(array $prefixes) : void
+    private static function assertValidMapping(array $mappings) : void
     {
-        foreach ($prefixes as $prefix => $paths) {
-            if ('' === $prefix) {
+        foreach ($mappings as $prefix => $paths) {
+            if ($prefix === '') {
                 throw InvalidPrefixMapping::emptyPrefixGiven();
             }
 
-            if ([] === $paths) {
+            if ($paths === []) {
                 throw InvalidPrefixMapping::emptyPrefixMappingGiven($prefix);
             }
 
             foreach ($paths as $path) {
-                if (! \is_dir($path)) {
+                if (! is_dir($path)) {
                     throw InvalidPrefixMapping::prefixMappingIsNotADirectory($prefix, $path);
                 }
             }

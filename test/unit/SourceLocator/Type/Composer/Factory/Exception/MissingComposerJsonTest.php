@@ -16,8 +16,7 @@ class MissingComposerJsonTest extends TestCase
     {
         self::assertSame(
             'Could not locate a "composer.json" file in "foo/bar"',
-            MissingComposerJson
-                ::inProjectPath('foo/bar')
+            MissingComposerJson::inProjectPath('foo/bar')
                 ->getMessage()
         );
     }

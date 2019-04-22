@@ -14,13 +14,20 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function array_filter;
+use function array_map;
+use function array_merge;
 use function file_exists;
+use function file_get_contents;
+use function is_array;
 use function is_dir;
+use function json_decode;
 use function realpath;
 
 final class MakeLocatorForComposerJson
 {
-    public function __invoke(string $installationPath, Locator $astLocator)
+    public function __invoke(string $installationPath, Locator $astLocator) : SourceLocator
     {
         $realInstallationPath = (string) realpath($installationPath);
 
@@ -36,7 +43,7 @@ final class MakeLocatorForComposerJson
 
         $composer = json_decode((string) file_get_contents($composerJsonPath), true);
 
-        if (! \is_array($composer)) {
+        if (! is_array($composer)) {
             throw FailedToParseJson::inFile($composerJsonPath);
         }
 
@@ -61,35 +68,51 @@ final class MakeLocatorForComposerJson
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
-            ...array_map(function (string $file) use ($astLocator) : array {
+            ...array_map(static function (string $file) use ($astLocator) : array {
                 return [new SingleFileSourceLocator($file, $astLocator)];
             }, array_merge($classMapFiles, $filePaths))
         ));
     }
 
-    /** @return array<string, array<int, string>> */
+    /**
+     * @param mixed[] $package
+     *
+     * @return array<string, array<int, string>>
+     */
     private function packageToPsr4AutoloadNamespaces(array $package) : array
     {
-        return array_map(function ($namespacePaths) : array {
+        return array_map(static function ($namespacePaths) : array {
             return (array) $namespacePaths;
         }, $package['autoload']['psr-4'] ?? []);
     }
 
-    /** @return array<string, array<int, string>> */
+    /**
+     * @param mixed[] $package
+     *
+     * @return array<string, array<int, string>>
+     */
     private function packageToPsr0AutoloadNamespaces(array $package) : array
     {
-        return array_map(function ($namespacePaths) : array {
+        return array_map(static function ($namespacePaths) : array {
             return (array) $namespacePaths;
         }, $package['autoload']['psr-0'] ?? []);
     }
 
-    /** @return array<string, array<int, string>> */
+    /**
+     * @param mixed[] $package
+     *
+     * @return array<string, array<int, string>>
+     */
     private function packageToClassMapPaths(array $package) : array
     {
         return $package['autoload']['classmap'] ?? [];
     }
 
-    /** @return array<string, array<int, string>> */
+    /**
+     * @param mixed[] $package
+     *
+     * @return array<string, array<int, string>>
+     */
     private function packageToFilePaths(array $package) : array
     {
         return $package['autoload']['files'] ?? [];

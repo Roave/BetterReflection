@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory\Excepti
 
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson
@@ -17,8 +16,7 @@ class FailedToParseJsonTest extends TestCase
     {
         self::assertSame(
             'Could not parse JSON file "foo/bar"',
-            FailedToParseJson
-                ::inFile('foo/bar')
+            FailedToParseJson::inFile('foo/bar')
                 ->getMessage()
         );
     }

@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingInstalledJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForInstalledJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
@@ -18,6 +17,9 @@ use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function array_column;
+use function array_combine;
+use function realpath;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForInstalledJson

@@ -8,9 +8,9 @@ use Roave\BetterReflection\Identifier\Identifier;
 
 interface PsrAutoloaderMapping
 {
-    /** @return string[] */
+    /** @return array<int, string> */
     public function resolvePossibleFilePaths(Identifier $identifier) : array;
 
-    /** @return string[] */
+    /** @return array<int, string> */
     public function directories() : array;
 }
