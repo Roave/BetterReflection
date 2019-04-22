@@ -4,62 +4,58 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory;
 
-use Assert\Assert;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function file_exists;
+use function is_dir;
+use function realpath;
 
-// @TODO testme, I'm sad and huge, and horrible, and I can't be left alone with your code
 final class MakeLocatorForComposerJson
 {
     public function __invoke(string $installationPath, Locator $astLocator)
     {
-        $trimmedInstallationPath = rtrim($installationPath, '/');
+        $realInstallationPath = (string) realpath($installationPath);
 
-        Assert
-            ::that($trimmedInstallationPath)
-            ->directory();
+        if (! is_dir($realInstallationPath)) {
+            throw InvalidProjectDirectory::atPath($installationPath);
+        }
 
-        $composerJsonPath = $trimmedInstallationPath . '/composer.json';
+        $composerJsonPath = $realInstallationPath . '/composer.json';
 
-        Assert
-            ::that($composerJsonPath)
-            ->file()
-            ->readable();
+        if (! file_exists($composerJsonPath)) {
+            throw MissingComposerJson::inProjectPath($installationPath);
+        }
 
-        $composerJsonContents = file_get_contents($composerJsonPath);
+        $composer = json_decode((string) file_get_contents($composerJsonPath), true);
 
-        Assert
-            ::that($composerJsonContents)
-            ->string();
+        if (! \is_array($composer)) {
+            throw FailedToParseJson::inFile($composerJsonPath);
+        }
 
-        $composer = json_decode($composerJsonContents, true, 100, \JSON_THROW_ON_ERROR);
-
-        Assert
-            ::that($composer)
-            ->isArray();
-
-        $classMapPaths       = $this->prefixWithInstallationPath($this->packageToClassMapPaths($composer), $trimmedInstallationPath);
+        $classMapPaths       = $this->prefixWithInstallationPath($this->packageToClassMapPaths($composer), $realInstallationPath);
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
-        $filePaths           = $this->prefixWithInstallationPath($this->packageToFilePaths($composer), $trimmedInstallationPath);
+        $filePaths           = $this->prefixWithInstallationPath($this->packageToFilePaths($composer), $realInstallationPath);
 
         return new AggregateSourceLocator(array_merge(
             [
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $trimmedInstallationPath)
+                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $realInstallationPath)
                     ),
                     $astLocator
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $trimmedInstallationPath)
+                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $realInstallationPath)
                     ),
                     $astLocator
                 ),
