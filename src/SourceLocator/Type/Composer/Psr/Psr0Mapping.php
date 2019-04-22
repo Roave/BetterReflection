@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Type\Composer\Psr;
 
-// @TODO include assertion lib? Or leave it for later?
-use Assert\Assert;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
 
 final class Psr0Mapping implements PsrAutoloaderMapping
 {
@@ -20,21 +19,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
     /** @param array<string, array<int, string>> $mappings */
     public static function fromArrayMappings(array $mappings) : self
     {
-        Assert
-            ::thatAll($mappings)
-            ->isArray()
-            ->notEmpty();
-
-        Assert
-            ::thatAll(array_keys($mappings))
-            ->string()
-            ->notEmpty();
-
-        Assert
-            ::thatAll(array_merge([], ...array_values($mappings)))
-            ->string()
-            ->notEmpty()
-            ->directory();
+        self::assertValidMapping($mappings);
 
         $instance = new self();
 
@@ -75,5 +60,29 @@ final class Psr0Mapping implements PsrAutoloaderMapping
     public function directories() : array
     {
         return array_values(array_unique(array_merge([], ...array_values($this->mappings))));
+    }
+
+    /**
+     * @param array<string, array<int, string>> $mappings
+     *
+     * @throws InvalidPrefixMapping
+     */
+    private static function assertValidMapping(array $prefixes) : void
+    {
+        foreach ($prefixes as $prefix => $paths) {
+            if ('' === $prefix) {
+                throw InvalidPrefixMapping::emptyPrefixGiven();
+            }
+
+            if ([] === $paths) {
+                throw InvalidPrefixMapping::emptyPrefixMappingGiven($prefix);
+            }
+
+            foreach ($paths as $path) {
+                if (! \is_dir($path)) {
+                    throw InvalidPrefixMapping::prefixMappingIsNotADirectory($prefix, $path);
+                }
+            }
+        }
     }
 }

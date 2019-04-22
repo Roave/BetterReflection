@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
 
 /**
@@ -137,17 +137,15 @@ class Psr0MappingTest extends TestCase
      */
     public function testRejectsInvalidMappings(array $invalidMappings) : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidPrefixMapping::class);
 
         Psr0Mapping::fromArrayMappings($invalidMappings);
     }
 
-    /** @return array[][] */
+    /** @return array<string, array<int, array<string, array<int, string>>>> */
     public function invalidMappings() : array
     {
         return [
-            'array contains integer prefixes'                          => [[1 => ['foo']]],
-            'array contains non-array mappings'                        => [['foo' => 'bar']],
             'array contains empty prefixes'                            => [['' => 'bar']],
             'array contains empty paths'                               => [['foo' => ['']]],
             'array contains empty path list'                           => [['foo' => []]],
