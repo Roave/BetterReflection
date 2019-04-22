@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.2.0,<7.4.0",
+        "ext-json": "*",
         "beberei/assert": "^3.2.0",
         "jetbrains/phpstorm-stubs": "2019.1",
         "nikic/php-parser": "^4.0.4",
