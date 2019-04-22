@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type\Composer;
+namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory;
 
 use Assert\Assert;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
+use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 // @TODO testme, I'm sad and huge, and horrible, and I can't be left alone with your code
-final class LocatorForComposerJsonAndInstalledJson
+final class MakeLocatorForInstalledJson
 {
     public function __invoke(string $installationPath, Locator $astLocator)
     {
@@ -24,33 +25,27 @@ final class LocatorForComposerJsonAndInstalledJson
             ::that($trimmedInstallationPath)
             ->directory();
 
-        $composerJsonPath  = $trimmedInstallationPath . '/composer.json';
         $installedJsonPath = $trimmedInstallationPath . '/vendor/composer/installed.json';
 
         Assert
-            ::that([$composerJsonPath, $installedJsonPath])
-            ->all()
+            ::that($installedJsonPath)
             ->file()
             ->readable();
 
-        $composerJsonContents  = file_get_contents($composerJsonPath);
         $installedJsonContents = file_get_contents($installedJsonPath);
 
         Assert
-            ::that([$composerJsonContents, $installedJsonContents])
-            ->all()
+            ::that($installedJsonContents)
             ->string();
 
-        $composer  = json_decode($composerJsonContents, true, 100, \JSON_THROW_ON_ERROR);
         $installed = json_decode($installedJsonContents, true, 100, \JSON_THROW_ON_ERROR);
 
         Assert
-            ::that([$composer, $installed])
-            ->all()
+            ::that($installed)
             ->isArray();
 
         $classMapPaths       = array_merge(
-            $this->prefixWithInstallationPath($this->packageToClassMapPaths($composer), $trimmedInstallationPath),
+            [],
             ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
                 return $this->prefixWithPackagePath(
                     $this->packageToClassMapPaths($package),
@@ -62,7 +57,7 @@ final class LocatorForComposerJsonAndInstalledJson
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
         $filePaths           = array_merge(
-            $this->prefixWithInstallationPath($this->packageToFilePaths($composer), $trimmedInstallationPath),
+            [],
             ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
                 return $this->prefixWithPackagePath(
                     $this->packageToFilePaths($package),
@@ -76,7 +71,7 @@ final class LocatorForComposerJsonAndInstalledJson
             [
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(array_merge(
-                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $trimmedInstallationPath),
+                        [],
                         ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr4AutoloadNamespaces($package),
@@ -89,7 +84,7 @@ final class LocatorForComposerJsonAndInstalledJson
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(array_merge(
-                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $trimmedInstallationPath),
+                        [],
                         ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr0AutoloadNamespaces($package),
@@ -145,16 +140,6 @@ final class LocatorForComposerJsonAndInstalledJson
     private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
     {
         return $this->prefixPaths($paths, $trimmedInstallationPath . '/vendor/' . $package['name'] . '/');
-    }
-
-    /**
-     * @param array<int|string, string|array<string>> $paths
-     *
-     * @return array<int|string, string|array<string>>
-     */
-    private function prefixWithInstallationPath(array $paths, string $trimmedInstallationPath) : array
-    {
-        return $this->prefixPaths($paths, $trimmedInstallationPath . '/');
     }
 
     /**

@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Type\Composer;
+namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory;
 
 use Assert\Assert;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
+use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 // @TODO testme, I'm sad and huge, and horrible, and I can't be left alone with your code
-final class LocatorForInstalledJson
+final class MakeLocatorForComposerJson
 {
     public function __invoke(string $installationPath, Locator $astLocator)
     {
@@ -24,74 +25,42 @@ final class LocatorForInstalledJson
             ::that($trimmedInstallationPath)
             ->directory();
 
-        $installedJsonPath = $trimmedInstallationPath . '/vendor/composer/installed.json';
+        $composerJsonPath = $trimmedInstallationPath . '/composer.json';
 
         Assert
-            ::that($installedJsonPath)
+            ::that($composerJsonPath)
             ->file()
             ->readable();
 
-        $installedJsonContents = file_get_contents($installedJsonPath);
+        $composerJsonContents = file_get_contents($composerJsonPath);
 
         Assert
-            ::that($installedJsonContents)
+            ::that($composerJsonContents)
             ->string();
 
-        $installed = json_decode($installedJsonContents, true, 100, \JSON_THROW_ON_ERROR);
+        $composer = json_decode($composerJsonContents, true, 100, \JSON_THROW_ON_ERROR);
 
         Assert
-            ::that($installed)
+            ::that($composer)
             ->isArray();
 
-        $classMapPaths       = array_merge(
-            [],
-            ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
-                return $this->prefixWithPackagePath(
-                    $this->packageToClassMapPaths($package),
-                    $trimmedInstallationPath,
-                    $package
-                );
-            }, $installed)
-        );
+        $classMapPaths       = $this->prefixWithInstallationPath($this->packageToClassMapPaths($composer), $trimmedInstallationPath);
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
-        $filePaths           = array_merge(
-            [],
-            ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
-                return $this->prefixWithPackagePath(
-                    $this->packageToFilePaths($package),
-                    $trimmedInstallationPath,
-                    $package
-                );
-            }, $installed)
-        );
+        $filePaths           = $this->prefixWithInstallationPath($this->packageToFilePaths($composer), $trimmedInstallationPath);
 
         return new AggregateSourceLocator(array_merge(
             [
                 new PsrAutoloaderLocator(
-                    Psr4Mapping::fromArrayMappings(array_merge(
-                        [],
-                        ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
-                            return $this->prefixWithPackagePath(
-                                $this->packageToPsr4AutoloadNamespaces($package),
-                                $trimmedInstallationPath,
-                                $package
-                            );
-                        }, $installed)
-                    )),
+                    Psr4Mapping::fromArrayMappings(
+                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $trimmedInstallationPath)
+                    ),
                     $astLocator
                 ),
                 new PsrAutoloaderLocator(
-                    Psr0Mapping::fromArrayMappings(array_merge(
-                        [],
-                        ...array_map(function (array $package) use ($trimmedInstallationPath) : array {
-                            return $this->prefixWithPackagePath(
-                                $this->packageToPsr0AutoloadNamespaces($package),
-                                $trimmedInstallationPath,
-                                $package
-                            );
-                        }, $installed)
-                    )),
+                    Psr0Mapping::fromArrayMappings(
+                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $trimmedInstallationPath)
+                    ),
                     $astLocator
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
@@ -132,13 +101,12 @@ final class LocatorForInstalledJson
 
     /**
      * @param array<int|string, string|array<string>> $paths
-     * @param array<string, string|array<string>>     $package
      *
      * @return array<int|string, string|array<string>>
      */
-    private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
+    private function prefixWithInstallationPath(array $paths, string $trimmedInstallationPath) : array
     {
-        return $this->prefixPaths($paths, $trimmedInstallationPath . '/vendor/' . $package['name'] . '/');
+        return $this->prefixPaths($paths, $trimmedInstallationPath . '/');
     }
 
     /**
