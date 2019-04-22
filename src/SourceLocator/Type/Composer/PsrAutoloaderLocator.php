@@ -50,7 +50,7 @@ final class PsrAutoloaderLocator implements SourceLocator
                     $identifier
                 );
             } catch (IdentifierNotFound $exception) {
-                // empty, on purpose
+                // on purpose - autoloading is allowed to fail, and silently-failing autoloaders are normal/endorsed
             }
         }
 
