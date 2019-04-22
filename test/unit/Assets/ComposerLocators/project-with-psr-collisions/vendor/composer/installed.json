@@ -1,0 +1,34 @@
+[
+  {
+    "name": "a/b",
+    "autoload": {
+      "psr-4": {
+        "A\\": "src/ab_PSR-4_Sources",
+        "B\\": [
+          "src/ab_PSR-4_Sources"
+        ]
+      },
+      "psr-0": {
+        "A_": "src/ab_PSR-0_Sources",
+        "B_": [
+          "src/ab_PSR-0_Sources"
+        ]
+      }
+    }
+  },
+  {
+    "name": "e/f",
+    "autoload": {
+      "psr-4": {
+        "A\\": [
+          "src/ef_PSR-4_Sources"
+        ]
+      },
+      "psr-0": {
+        "A_": [
+          "src/ef_PSR-0_Sources"
+        ]
+      }
+    }
+  }
+]

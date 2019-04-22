@@ -118,6 +118,39 @@ $classInfo = ReflectionClass::createFromName('MyClass');
 $functionInfo = ReflectionFunction::createFromName('foo');
 ```
 
+### Inspecting code and dependencies of a composer-based project
+
+If you need to inspect code from a project that has a `composer.json` and
+its associated `vendor/` directory populated, this package offers some
+factories that ease the setup of the source locator. These are:
+
+ * `Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJsonAndInstalledJson` - if
+   you need to inspect project and dependencies
+ * `Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJson` - if you only want to
+   inspect project sources
+ * `Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForInstalledJson` - if you only want
+   to inspect project dependencies
+
+Here's an example of `MakeLocatorForComposerJsonAndInstalledJson` usage:
+
+```php
+<?php
+
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJsonAndInstalledJson;
+
+$astLocator = (new BetterReflection())->astLocator();
+$reflector  = new ClassReflector(new AggregateSourceLocator([
+    (new MakeLocatorForComposerJsonAndInstalledJson)('path/to/the/project', $astLocator),
+    new PhpInternalSourceLocator($astLocator)
+]));
+
+$classes = $reflector->getAllClasses();
+```
+
 ### Using the Composer autoloader directly
 
 ```php

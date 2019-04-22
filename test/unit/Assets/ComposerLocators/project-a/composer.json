@@ -1,0 +1,20 @@
+{
+  "autoload": {
+    "psr-4": {
+      "ProjectA\\": "src/root_PSR-4_Sources",
+      "ProjectA\\B\\": "src/root_PSR-4_Sources"
+    },
+    "psr-0": {
+      "ProjectA_A_": "src/root_PSR-0_Sources",
+      "ProjectA_B_": "src/root_PSR-0_Sources"
+    },
+    "classmap": [
+      "src/root_ClassmapDir",
+      "src/root_ClassmapFile"
+    ],
+    "files": [
+      "src/root_File1.php",
+      "src/root_File2.php"
+    ]
+  }
+}
