@@ -75,7 +75,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
         )));
     }
 
-    /** @return array<int, string> */
+    /** @return array<string, array<int, string>> */
     private function matchingPrefixes(string $className) : array
     {
         return array_filter(

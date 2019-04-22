@@ -11,7 +11,6 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\PsrAutoloaderMapping;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
@@ -20,7 +19,7 @@ use function file_get_contents;
 
 final class PsrAutoloaderLocator implements SourceLocator
 {
-    /** @var Psr4Mapping */
+    /** @var PsrAutoloaderMapping */
     private $mapping;
 
     /** @var Locator */

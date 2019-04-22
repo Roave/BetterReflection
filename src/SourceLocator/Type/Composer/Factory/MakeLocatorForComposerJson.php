@@ -47,22 +47,23 @@ final class MakeLocatorForComposerJson
             throw FailedToParseJson::inFile($composerJsonPath);
         }
 
-        $classMapPaths       = $this->prefixWithInstallationPath($this->packageToClassMapPaths($composer), $realInstallationPath);
+        $pathPrefix          = $realInstallationPath . '/';
+        $classMapPaths       = $this->prefixPaths($this->packageToClassMapPaths($composer), $pathPrefix);
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
-        $filePaths           = $this->prefixWithInstallationPath($this->packageToFilePaths($composer), $realInstallationPath);
+        $filePaths           = $this->prefixPaths($this->packageToFilePaths($composer), $pathPrefix);
 
         return new AggregateSourceLocator(array_merge(
             [
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $realInstallationPath)
+                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $pathPrefix)
                     ),
                     $astLocator
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $realInstallationPath)
+                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $pathPrefix)
                     ),
                     $astLocator
                 ),
@@ -101,7 +102,7 @@ final class MakeLocatorForComposerJson
     /**
      * @param mixed[] $package
      *
-     * @return array<string, array<int, string>>
+     * @return array<int, string>
      */
     private function packageToClassMapPaths(array $package) : array
     {
@@ -111,7 +112,7 @@ final class MakeLocatorForComposerJson
     /**
      * @param mixed[] $package
      *
-     * @return array<string, array<int, string>>
+     * @return array<int, string>
      */
     private function packageToFilePaths(array $package) : array
     {
@@ -119,28 +120,26 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array<int|string, string|array<string>> $paths
+     * @param array<string, array<int, string>> $paths
      *
-     * @return array<int|string, string|array<string>>
+     * @return array<string, array<int, string>>
      */
     private function prefixWithInstallationPath(array $paths, string $trimmedInstallationPath) : array
     {
-        return $this->prefixPaths($paths, $trimmedInstallationPath . '/');
+        return array_map(function (array $paths) use ($trimmedInstallationPath) : array {
+            return $this->prefixPaths($paths, $trimmedInstallationPath);
+        }, $paths);
     }
 
     /**
-     * @param array<int|string, string|array<string>> $paths
+     * @param array<int, string> $paths
      *
-     * @return array<int|string, string|array<string>>
+     * @return array<int, string>
      */
     private function prefixPaths(array $paths, string $prefix) : array
     {
-        return array_map(function ($paths) use ($prefix) {
-            if (is_array($paths)) {
-                return $this->prefixPaths($paths, $prefix);
-            }
-
-            return $prefix . $paths;
+        return array_map(static function (string $path) use ($prefix) {
+            return $prefix . $path;
         }, $paths);
     }
 }

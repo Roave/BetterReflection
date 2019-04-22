@@ -51,10 +51,9 @@ final class MakeLocatorForInstalledJson
         $classMapPaths       = array_merge(
             [],
             ...array_map(function (array $package) use ($realInstallationPath) : array {
-                return $this->prefixWithPackagePath(
+                return $this->prefixPaths(
                     $this->packageToClassMapPaths($package),
-                    $realInstallationPath,
-                    $package
+                    $this->packagePrefixPath($realInstallationPath, $package)
                 );
             }, $installed)
         );
@@ -63,10 +62,9 @@ final class MakeLocatorForInstalledJson
         $filePaths           = array_merge(
             [],
             ...array_map(function (array $package) use ($realInstallationPath) : array {
-                return $this->prefixWithPackagePath(
+                return $this->prefixPaths(
                     $this->packageToFilePaths($package),
-                    $realInstallationPath,
-                    $package
+                    $this->packagePrefixPath($realInstallationPath, $package)
                 );
             }, $installed)
         );
@@ -134,7 +132,7 @@ final class MakeLocatorForInstalledJson
     /**
      * @param mixed[] $package
      *
-     * @return array<string, array<int, string>>
+     * @return array<int, string>
      */
     private function packageToClassMapPaths(array $package) : array
     {
@@ -144,7 +142,7 @@ final class MakeLocatorForInstalledJson
     /**
      * @param mixed[] $package
      *
-     * @return array<string, array<int, string>>
+     * @return array<int, string>
      */
     private function packageToFilePaths(array $package) : array
     {
@@ -152,29 +150,41 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array<int|string, string|array<string>> $paths
-     * @param array<string, string|array<string>>     $package
+     * @param mixed[] $package
      *
-     * @return array<int|string, string|array<string>>
+     * @psalm-param array{name: string} $package
      */
-    private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
+    private function packagePrefixPath(string $trimmedInstallationPath, array $package) : string
     {
-        return $this->prefixPaths($paths, $trimmedInstallationPath . '/vendor/' . $package['name'] . '/');
+        return $trimmedInstallationPath . '/vendor/' . $package['name'] . '/';
     }
 
     /**
-     * @param array<int|string, string|array<string>> $paths
+     * @param array<int|string, array<string>> $paths
+     * @param array<string, array<string>>     $package
      *
      * @return array<int|string, string|array<string>>
+     *
+     * @psalm-param array{name: string} $package
+     */
+    private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
+    {
+        $prefix = $this->packagePrefixPath($trimmedInstallationPath, $package);
+
+        return array_map(function (array $paths) use ($prefix) : array {
+            return $this->prefixPaths($paths, $prefix);
+        }, $paths);
+    }
+
+    /**
+     * @param array<int|string, string> $paths
+     *
+     * @return array<int|string, string>
      */
     private function prefixPaths(array $paths, string $prefix) : array
     {
-        return array_map(function ($paths) use ($prefix) {
-            if (is_array($paths)) {
-                return $this->prefixPaths($paths, $prefix);
-            }
-
-            return $prefix . $paths;
+        return array_map(static function (string $path) use ($prefix) {
+            return $prefix . $path;
         }, $paths);
     }
 }
