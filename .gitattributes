@@ -1,4 +1,5 @@
-/.appveyor.yml export-ignore
+*.php text eol=lf
+*.phpt text eol=lf
 /.gitattributes export-ignore
 /.gitignore export-ignore
 /.scrutinizer.yml export-ignore

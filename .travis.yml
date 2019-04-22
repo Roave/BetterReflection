@@ -1,3 +1,5 @@
+os: linux
+dist: xenial
 language: php
 
 before_script:
@@ -17,6 +19,28 @@ jobs:
       script: vendor/bin/phpunit
 
     - stage: Test
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.2.17 DEPENDENCIES=""
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.2.17 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit
+
+    - stage: Test
       php: 7.3
       env: DEPENDENCIES=""
       script: vendor/bin/phpunit
@@ -26,6 +50,28 @@ jobs:
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit
 
+    - stage: Test
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.3.4 DEPENDENCIES=""
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.3.4 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit
+
     - stage: Test Compatibility
       php: 7.2
       env: DEPENDENCIES=""
@@ -37,6 +83,28 @@ jobs:
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.2.17 DEPENDENCIES=""
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.2.17 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
       php: 7.3
       env: DEPENDENCIES=""
       script: vendor/bin/phpunit test/compat
@@ -44,6 +112,28 @@ jobs:
     - stage: Test Compatibility
       php: 7.3
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.3.4 DEPENDENCIES=""
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.3.4 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
       script: vendor/bin/phpunit test/compat
 
     - stage: Check Demo Scripts
