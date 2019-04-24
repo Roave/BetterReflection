@@ -11,8 +11,8 @@ use PhpParser\Builder\Use_;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -49,7 +49,7 @@ class FindReturnTypeTest extends TestCase
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionMethod|PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionMethod|MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -75,7 +75,7 @@ class FindReturnTypeTest extends TestCase
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionMethod|PHPUnit_Framework_MockObject_MockObject $method */
+        /** @var ReflectionMethod|MockObject $method */
         $method = $this->createMock(ReflectionMethod::class);
 
         $method
@@ -94,7 +94,7 @@ class FindReturnTypeTest extends TestCase
 
     public function testFindReturnTypeForFunctionWithNoDocBlock() : void
     {
-        /** @var ReflectionFunction|PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunction|MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -119,7 +119,7 @@ class FindReturnTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 
-        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
@@ -32,7 +32,7 @@ class FunctionReflectorTest extends TestCase
     {
         $reflection = $this->createMock(ReflectionFunction::class);
 
-        /** @var StringSourceLocator|PHPUnit_Framework_MockObject_MockObject $sourceLocator */
+        /** @var StringSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this
             ->getMockBuilder(StringSourceLocator::class)
             ->disableOriginalConstructor()

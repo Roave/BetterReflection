@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
@@ -28,13 +28,13 @@ use function uniqid;
  */
 class MemoizingSourceLocatorTest extends TestCase
 {
-    /** @var Reflector|PHPUnit_Framework_MockObject_MockObject */
+    /** @var Reflector|MockObject */
     private $reflector1;
 
-    /** @var Reflector|PHPUnit_Framework_MockObject_MockObject */
+    /** @var Reflector|MockObject */
     private $reflector2;
 
-    /** @var SourceLocator|PHPUnit_Framework_MockObject_MockObject */
+    /** @var SourceLocator|MockObject */
     private $wrappedLocator;
 
     /** @var MemoizingSourceLocator */

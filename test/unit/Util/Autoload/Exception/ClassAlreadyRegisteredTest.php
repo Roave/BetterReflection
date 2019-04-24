@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\Exception;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
 use function sprintf;
@@ -20,7 +20,7 @@ final class ClassAlreadyRegisteredTest extends TestCase
     {
         $className = uniqid('class name', true);
 
-        /** @var ReflectionClass|PHPUnit_Framework_MockObject_MockObject $reflection */
+        /** @var ReflectionClass|MockObject $reflection */
         $reflection = $this->createMock(ReflectionClass::class);
         $reflection->expects(self::any())->method('getName')->willReturn($className);
 
