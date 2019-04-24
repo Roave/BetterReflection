@@ -13,8 +13,8 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -82,7 +82,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
 
         $function
@@ -109,7 +109,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $method */
+        /** @var ReflectionFunctionAbstract|MockObject $method */
         $method = $this->createMock(ReflectionFunctionAbstract::class);
 
         $method
@@ -130,7 +130,7 @@ class FindParameterTypeTest extends TestCase
     {
         $node = new ParamNode(new Variable('foo'));
 
-        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function
@@ -157,7 +157,7 @@ class FindParameterTypeTest extends TestCase
 
         $parameterNode = new ParamNode(new Variable('foo'));
 
-        /** @var ReflectionFunctionAbstract|PHPUnit_Framework_MockObject_MockObject $function */
+        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
 
         $function

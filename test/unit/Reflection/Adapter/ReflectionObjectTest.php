@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
@@ -108,7 +108,7 @@ class ReflectionObjectTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionObject|PHPUnit_Framework_MockObject_MockObject $reflectionStub */
+        /** @var BetterReflectionObject|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
 
         if ($expectedException === null) {

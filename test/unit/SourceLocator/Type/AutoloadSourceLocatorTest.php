@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use Foo\Bar\AutoloadableClassWithTwoDirectories;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -51,7 +51,7 @@ class AutoloadSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return Reflector|PHPUnit_Framework_MockObject_MockObject
+     * @return Reflector|MockObject
      */
     private function getMockReflector()
     {

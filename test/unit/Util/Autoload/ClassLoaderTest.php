@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoader;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface;
@@ -30,7 +30,7 @@ final class ClassLoaderTest extends TestCase
     {
         $initialAutoloaderCount = count(spl_autoload_functions());
 
-        /** @var LoaderMethodInterface|PHPUnit_Framework_MockObject_MockObject $loaderMethod */
+        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
@@ -46,7 +46,7 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(TestClassForAutoloader::class);
         self::assertFalse(class_exists(TestClassForAutoloader::class, false));
 
-        /** @var LoaderMethodInterface|PHPUnit_Framework_MockObject_MockObject $loaderMethod */
+        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loaderMethod->expects(self::once())
             ->method('__invoke')
@@ -67,7 +67,7 @@ final class ClassLoaderTest extends TestCase
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
 
-        /** @var LoaderMethodInterface|PHPUnit_Framework_MockObject_MockObject $loaderMethod */
+        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
@@ -81,7 +81,7 @@ final class ClassLoaderTest extends TestCase
 
     public function testAddClassThrowsExceptionWhenClassAlreadyLoaded() : void
     {
-        /** @var LoaderMethodInterface|PHPUnit_Framework_MockObject_MockObject $loaderMethod */
+        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
@@ -100,7 +100,7 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
         self::assertFalse(class_exists(AnotherTestClassForAutoloader::class, false));
 
-        /** @var LoaderMethodInterface|PHPUnit_Framework_MockObject_MockObject $loaderMethod */
+        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loaderMethod->expects(self::once())
             ->method('__invoke')
