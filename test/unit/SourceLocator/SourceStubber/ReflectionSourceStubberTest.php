@@ -191,7 +191,8 @@ class ReflectionSourceStubberTest extends TestCase
         }
 
         if ($original->getName() === RecursiveArrayIterator::class
-            && (PHP_VERSION_ID < 70114 || (PHP_VERSION_ID >= 70200 && PHP_VERSION_ID < 70202))
+            && PHP_VERSION_ID >= 70200
+            && PHP_VERSION_ID < 70202
         ) {
             // https://bugs.php.net/bug.php?id=75242
             self::markTestIncomplete(sprintf(
