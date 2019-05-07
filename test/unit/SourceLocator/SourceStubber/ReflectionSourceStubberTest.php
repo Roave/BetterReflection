@@ -64,51 +64,84 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testCanStubClass() : void
     {
+        $stubData = $this->stubber->generateClassStub('stdClass');
+
+        self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             '%Aclass stdClass%A{%A}%A',
-            $this->stubber->generateClassStub(new CoreReflectionClass('stdClass'))
+            $stubData->getStub()
         );
+        self::assertSame('Core', $stubData->getExtensionName());
     }
 
     public function testCanStubInterface() : void
     {
+        $stubData = $this->stubber->generateClassStub(Traversable::class);
+
+        self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
-            $this->stubber->generateClassStub(new CoreReflectionClass(Traversable::class))
+            $stubData->getStub()
         );
+        self::assertSame('Core', $stubData->getExtensionName());
     }
 
     public function testCanStubTraits() : void
     {
+        require __DIR__ . '/../../Fixture/EmptyTrait.php';
+
+        $stubData = $this->stubber->generateClassStub(EmptyTrait::class);
+
+        self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             '%Atrait EmptyTrait%A{%A}%A',
-            $this->stubber->generateClassStub(new CoreReflectionClass(EmptyTrait::class))
+            $stubData->getStub()
         );
+        self::assertNull($stubData->getExtensionName());
     }
 
     public function testClassStub() : void
     {
-        $classReflection = new CoreReflectionClass(ClassForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
+        require __DIR__ . '/../../Fixture/ClassForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(ClassForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
     }
 
     public function testClassWithoutNamespaceStub() : void
     {
         require __DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubber.php';
-        $classReflection = new CoreReflectionClass(ClassWithoutNamespaceForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
+
+        $stubData = $this->stubber->generateClassStub(ClassWithoutNamespaceForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
     }
 
     public function testInterfaceStub() : void
     {
-        $classReflection = new CoreReflectionClass(InterfaceForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/InterfaceForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
+        require __DIR__ . '/../../Fixture/InterfaceForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(InterfaceForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/InterfaceForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
     }
 
     public function testTraitStub() : void
     {
-        $classReflection = new CoreReflectionClass(TraitForSourceStubber::class);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/TraitForSourceStubberExpected.php', $this->stubber->generateClassStub($classReflection));
+        require __DIR__ . '/../../Fixture/TraitForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(TraitForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/TraitForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
     }
 
     /**

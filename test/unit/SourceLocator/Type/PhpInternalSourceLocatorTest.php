@@ -11,6 +11,7 @@ use ReflectionException;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -21,6 +22,7 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function get_defined_functions;
 use function sprintf;
 
 /**
@@ -52,9 +54,9 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @dataProvider internalSymbolsProvider
+     * @dataProvider internalClassesProvider
      */
-    public function testCanFetchInternalLocatedSource(string $className) : void
+    public function testCanFetchInternalLocatedSourceForClasses(string $className) : void
     {
         try {
             /** @var ReflectionClass $reflection */
@@ -76,9 +78,9 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return string[][] internal symbols
+     * @return string[][]
      */
-    public function internalSymbolsProvider() : array
+    public function internalClassesProvider() : array
     {
         $allSymbols = array_merge(
             get_declared_classes(),
@@ -101,7 +103,46 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentCode() : void
+    /**
+     * @dataProvider internalFunctionsProvider
+     */
+    public function testCanFetchInternalLocatedSourceForFunctions(string $functionName) : void
+    {
+        try {
+            /** @var ReflectionFunction $reflection */
+            $reflection = $this->phpInternalSourceLocator->locateIdentifier(
+                $this->getMockReflector(),
+                new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+            );
+            $source     = $reflection->getLocatedSource();
+
+            self::assertInstanceOf(InternalLocatedSource::class, $source);
+            self::assertNotEmpty($source->getSource());
+        } catch (ReflectionException $e) {
+            self::markTestIncomplete(sprintf(
+                'Can\'t reflect function "%s" due to an internal reflection exception: "%s".',
+                $functionName,
+                $e->getMessage()
+            ));
+        }
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function internalFunctionsProvider() : array
+    {
+        $allSymbols = get_defined_functions()['internal'];
+
+        return array_map(
+            static function (string $symbol) : array {
+                return [$symbol];
+            },
+            $allSymbols
+        );
+    }
+
+    public function testReturnsNullForNonExistentClass() : void
     {
         self::assertNull(
             $this->phpInternalSourceLocator->locateIdentifier(
@@ -114,7 +155,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForFunctions() : void
+    public function testReturnsNullForNonExistentFunction() : void
     {
         self::assertNull(
             $this->phpInternalSourceLocator->locateIdentifier(

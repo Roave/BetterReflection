@@ -72,20 +72,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             get_declared_traits()
         );
 
-        // Needs fixes in JetBrains/phpstorm-stubs
-        $missingClassesInStubs = ['Generator', 'ClosedGeneratorException', 'AssertionError'];
-
         return array_map(
             static function (string $className) : array {
                 return [$className];
             },
             array_filter(
                 $classNames,
-                static function (string $className) use ($missingClassesInStubs) : bool {
-                    if (in_array($className, $missingClassesInStubs, true)) {
-                        return false;
-                    }
-
+                static function (string $className) : bool {
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
@@ -154,6 +147,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSameInterfaces($original, $stubbed);
 
         foreach ($original->getMethods() as $method) {
+            // Needs fix in JetBrains/phpstorm-stubs
+            if ($original->getName() === 'Generator' && $method->getName() === 'throw') {
+                continue;
+            }
+
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
@@ -267,25 +265,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionNames = get_defined_functions()['internal'];
 
         // Needs fixes in JetBrains/phpstorm-stubs
-        $missingFunctionsInStubs = [
-            'get_resources',
-            'gc_mem_caches',
-            'error_clear_last',
-            'is_iterable',
-            'password_hash',
-            'password_get_info',
-            'password_needs_rehash',
-            'password_verify',
-            'random_bytes',
-            'random_int',
-            'sapi_windows_cp_conv',
-            'sapi_windows_cp_get',
-            'sapi_windows_cp_set',
-            'sapi_windows_cp_is_utf8',
-            'sapi_windows_vt100_support',
-            'utf8_encode',
-            'utf8_decode',
-        ];
+        $missingFunctionsInStubs = ['sapi_windows_vt100_support'];
 
         return array_map(
             static function (string $functionName) : array {
@@ -374,6 +354,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
             return;
         }
 
+        // Needs fixes in JetBrains/phpstorm-stubs or PHP
+        if (in_array($functionName, ['get_resources', 'sapi_windows_cp_get', 'stream_context_set_option'], true)) {
+            return;
+        }
+
         self::assertSame($originalReflection->getNumberOfParameters(), $stubbedReflection->getNumberOfParameters());
         self::assertSame($originalReflection->getNumberOfRequiredParameters(), $stubbedReflection->getNumberOfRequiredParameters());
 
@@ -417,71 +402,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testNoStubForUnknownClass() : void
     {
-        $reflection = $this->createMock(CoreReflectionClass::class);
-        $reflection->method('getName')
-            ->willReturn('SomeClass');
-        $reflection->method('isUserDefined')
-            ->willReturn(false);
-        $reflection->method('getExtensionName')
-            ->willReturn('Core');
-
-        self::assertNull($this->sourceStubber->generateClassStub($reflection));
+        self::assertNull($this->sourceStubber->generateClassStub('SomeClass'));
     }
 
     public function testNoStubForUnknownFunction() : void
     {
-        $reflection = $this->createMock(CoreReflectionFunction::class);
-        $reflection->method('getName')
-            ->willReturn('SomeFunction');
-        $reflection->method('isUserDefined')
-            ->willReturn(false);
-        $reflection->method('getExtensionName')
-            ->willReturn('Core');
-
-        self::assertNull($this->sourceStubber->generateFunctionStub($reflection));
-    }
-
-    public function testNoStubForClassOfUnknownExtension() : void
-    {
-        $reflection = $this->createMock(CoreReflectionClass::class);
-        $reflection->method('getName')
-            ->willReturn('SomeClass');
-        $reflection->method('isUserDefined')
-            ->willReturn(false);
-        $reflection->method('getExtensionName')
-            ->willReturn('UnknownExtension');
-
-        self::assertNull($this->sourceStubber->generateClassStub($reflection));
-    }
-
-    public function testNoStubForFunctionOfUnknownExtension() : void
-    {
-        $reflection = $this->createMock(CoreReflectionFunction::class);
-        $reflection->method('getName')
-            ->willReturn('SomeFunction');
-        $reflection->method('isUserDefined')
-            ->willReturn(false);
-        $reflection->method('getExtensionName')
-            ->willReturn('UnknownExtension');
-
-        self::assertNull($this->sourceStubber->generateFunctionStub($reflection));
-    }
-
-    public function testNoStubForUserDefinedClass() : void
-    {
-        $reflection = $this->createMock(CoreReflectionClass::class);
-        $reflection->method('isUserDefined')
-            ->willReturn(true);
-
-        self::assertNull($this->sourceStubber->generateClassStub($reflection));
-    }
-
-    public function testNoStubForUserDefinedFunction() : void
-    {
-        $reflection = $this->createMock(CoreReflectionFunction::class);
-        $reflection->method('isUserDefined')
-            ->willReturn(true);
-
-        self::assertNull($this->sourceStubber->generateFunctionStub($reflection));
+        self::assertNull($this->sourceStubber->generateFunctionStub('someFunction'));
     }
 }

@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
-use DirectoryIterator;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
-use ReflectionClass as CoreReflectionClass;
-use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Traversable;
 use function array_key_exists;
+use function explode;
 use function file_get_contents;
 use function is_dir;
 use function sprintf;
@@ -45,179 +43,158 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var string|null */
     private $stubsDirectory;
 
-    /** @var string[][] */
-    private $extensionStubsFiles = [];
+    /** @var NodeVisitorAbstract */
+    private $cachingVisitor;
+
+    /** @var array<string, Node\Stmt\ClassLike> */
+    private $classNodes = [];
+
+    /** @var array<string, Node\Stmt\Function_> */
+    private $functionNodes = [];
 
     public function __construct(Parser $phpParser)
     {
         $this->phpParser     = $phpParser;
         $this->prettyPrinter = new Standard(self::BUILDER_OPTIONS);
 
+        $this->cachingVisitor = $this->createCachingVisitor();
+
         $this->nodeTraverser = new NodeTraverser();
         $this->nodeTraverser->addVisitor(new NameResolver());
+        $this->nodeTraverser->addVisitor($this->cachingVisitor);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function generateClassStub(CoreReflectionClass $classReflection) : ?string
+    public function generateClassStub(string $className) : ?StubData
     {
-        if ($classReflection->isUserDefined()) {
+        if (! array_key_exists($className, PhpStormStubsMap::CLASSES)) {
             return null;
         }
 
-        $stub = $this->getStub($classReflection->getExtensionName(), $this->getClassNodeVisitor($classReflection));
+        $filePath = PhpStormStubsMap::CLASSES[$className];
 
-        if ($classReflection->getName() === Traversable::class) {
+        if (! array_key_exists($className, $this->classNodes)) {
+            $this->parseFile($filePath);
+        }
+
+        $stub = $this->createStub($this->classNodes[$className]);
+
+        if ($className === Traversable::class) {
             // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
             $stub = str_replace(' extends \iterable', '', $stub);
         }
 
-        return $stub;
+        return new StubData($stub, $this->getExtensionFromFilePath($filePath));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function generateFunctionStub(CoreReflectionFunction $functionReflection) : ?string
+    public function generateFunctionStub(string $functionName) : ?StubData
     {
-        if ($functionReflection->isUserDefined()) {
+        if (! array_key_exists($functionName, PhpStormStubsMap::FUNCTIONS)) {
             return null;
         }
 
-        return $this->getStub($functionReflection->getExtensionName(), $this->getFunctionNodeVisitor($functionReflection));
+        $filePath = PhpStormStubsMap::FUNCTIONS[$functionName];
+
+        if (! array_key_exists($functionName, $this->functionNodes)) {
+            $this->parseFile($filePath);
+        }
+
+        return new StubData($this->createStub($this->functionNodes[$functionName]), $this->getExtensionFromFilePath($filePath));
     }
 
-    private function getStub(string $extensionName, NodeVisitorAbstract $nodeVisitor) : ?string
+    private function parseFile(string $filePath) : void
     {
-        $node = null;
+        $absoluteFilePath = $this->getAbsoluteFilePath($filePath);
+        FileChecker::assertReadableFile($absoluteFilePath);
 
-        $this->nodeTraverser->addVisitor($nodeVisitor);
+        $ast = $this->phpParser->parse(file_get_contents($absoluteFilePath));
 
-        foreach ($this->getExtensionStubsFiles($extensionName) as $filePath) {
-            FileChecker::assertReadableFile($filePath);
+        /** @psalm-suppress UndefinedMethod */
+        $this->cachingVisitor->clearNodes();
 
-            $ast = $this->phpParser->parse(file_get_contents($filePath));
+        $this->nodeTraverser->traverse($ast);
 
-            $this->nodeTraverser->traverse($ast);
-
-            /** @psalm-suppress UndefinedMethod */
-            $node = $nodeVisitor->getNode();
-            if ($node !== null) {
-                break;
-            }
+        /** @psalm-suppress UndefinedMethod */
+        foreach ($this->cachingVisitor->getClassNodes() as $className => $classNode) {
+            $this->classNodes[$className] = $classNode;
         }
 
-        $this->nodeTraverser->removeVisitor($nodeVisitor);
-
-        if ($node === null) {
-            return null;
+        /** @psalm-suppress UndefinedMethod */
+        foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNode) {
+            $this->functionNodes[$functionName] = $functionNode;
         }
+    }
 
+    private function createStub(Node $node) : string
+    {
         return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . "\n";
     }
 
-    private function getClassNodeVisitor(CoreReflectionClass $classReflection) : NodeVisitorAbstract
+    private function createCachingVisitor() : NodeVisitorAbstract
     {
-        return new class($classReflection->getName()) extends NodeVisitorAbstract
+        return new class() extends NodeVisitorAbstract
         {
-            /** @var string */
-            private $className;
+            /** @var array<string, Node\Stmt\ClassLike> */
+            private $classNodes = [];
 
-            /** @var Node\Stmt\ClassLike|null */
-            private $node;
-
-            public function __construct(string $className)
-            {
-                $this->className = $className;
-            }
+            /** @var array<string, Node\Stmt\Function_> */
+            private $functionNodes = [];
 
             public function enterNode(Node $node) : ?int
             {
-                if ($node instanceof Node\Stmt\Namespace_) {
-                    return null;
+                if ($node instanceof Node\Stmt\ClassLike) {
+                    $this->classNodes[$node->namespacedName->toString()] = $node;
+
+                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
 
-                if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName->toString() === $this->className) {
-                    $this->node = $node;
+                if ($node instanceof Node\Stmt\Function_) {
+                    /** @psalm-suppress UndefinedPropertyFetch */
+                    $this->functionNodes[$node->namespacedName->toString()] = $node;
 
-                    return NodeTraverser::STOP_TRAVERSAL;
+                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
 
-                return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+                return null;
             }
 
-            public function getNode() : ?Node\Stmt\ClassLike
+            /**
+             * @return array<string, Node\Stmt\ClassLike>
+             */
+            public function getClassNodes() : array
             {
-                return $this->node;
+                return $this->classNodes;
+            }
+
+            /**
+             * @return array<string, Node\Stmt\Function_>
+             */
+            public function getFunctionNodes() : array
+            {
+                return $this->functionNodes;
+            }
+
+            public function clearNodes() : void
+            {
+                $this->classNodes    = [];
+                $this->functionNodes = [];
             }
         };
     }
 
-    private function getFunctionNodeVisitor(CoreReflectionFunction $functionReflection) : NodeVisitorAbstract
+    private function getExtensionFromFilePath(string $filePath) : string
     {
-        return new class($functionReflection->getName()) extends NodeVisitorAbstract
-        {
-            /** @var string */
-            private $functionName;
-
-            /** @var Node\Stmt\Function_|null */
-            private $node;
-
-            public function __construct(string $className)
-            {
-                $this->functionName = $className;
-            }
-
-            public function enterNode(Node $node) : ?int
-            {
-                if ($node instanceof Node\Stmt\Namespace_) {
-                    return null;
-                }
-
-                /** @psalm-suppress UndefinedPropertyFetch */
-                if ($node instanceof Node\Stmt\Function_ && $node->namespacedName->toString() === $this->functionName) {
-                    $this->node = $node;
-
-                    return NodeTraverser::STOP_TRAVERSAL;
-                }
-
-                return NodeTraverser::DONT_TRAVERSE_CHILDREN;
-            }
-
-            public function getNode() : ?Node\Stmt\Function_
-            {
-                return $this->node;
-            }
-        };
+        return explode('/', $filePath)[0];
     }
 
-    /**
-     * @return string[]
-     */
-    private function getExtensionStubsFiles(string $extensionName) : array
+    private function getAbsoluteFilePath(string $filePath) : string
     {
-        if (array_key_exists($extensionName, $this->extensionStubsFiles)) {
-            return $this->extensionStubsFiles[$extensionName];
-        }
-
-        $this->extensionStubsFiles[$extensionName] = [];
-
-        $extensionDirectory = sprintf('%s/%s', $this->getStubsDirectory(), $extensionName);
-
-        if (! is_dir($extensionDirectory)) {
-            return [];
-        }
-
-        foreach (new DirectoryIterator($extensionDirectory) as $fileInfo) {
-            if ($fileInfo->isDot()) {
-                continue;
-            }
-
-            $this->extensionStubsFiles[$extensionName][] = $fileInfo->getPathname();
-        }
-
-        return $this->extensionStubsFiles[$extensionName];
+        return sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
     }
 
     private function getStubsDirectory() : string
