@@ -22,7 +22,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.17 DEPENDENCIES=""
+      env: PHP_VERSION=7.2.18 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -34,7 +34,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.17 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.2.18 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -56,7 +56,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.4 DEPENDENCIES=""
+      env: PHP_VERSION=7.3.5 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -68,7 +68,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.4 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.3.5 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -90,7 +90,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.17 DEPENDENCIES=""
+      env: PHP_VERSION=7.2.18 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -102,7 +102,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.17 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.2.18 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -124,7 +124,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.4 DEPENDENCIES=""
+      env: PHP_VERSION=7.3.5 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -136,7 +136,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.4 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.3.5 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
