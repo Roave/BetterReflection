@@ -27,6 +27,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit
 
     - stage: Test
@@ -38,6 +39,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit
 
     - stage: Test
@@ -59,6 +61,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit
 
     - stage: Test
@@ -70,6 +73,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit
 
     - stage: Test Compatibility
@@ -91,6 +95,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
@@ -102,6 +107,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
@@ -123,6 +129,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
@@ -134,6 +141,7 @@ jobs:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
         - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit test/compat
 
     - stage: Check Demo Scripts
