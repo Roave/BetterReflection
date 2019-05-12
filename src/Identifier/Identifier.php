@@ -67,4 +67,9 @@ class Identifier
     {
         return $this->type->isFunction();
     }
+
+    public function isConstant() : bool
+    {
+        return $this->type->isConstant();
+    }
 }

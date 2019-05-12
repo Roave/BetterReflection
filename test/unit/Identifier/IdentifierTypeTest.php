@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 
 /**
@@ -23,6 +24,8 @@ class IdentifierTypeTest extends TestCase
     {
         return [
             [IdentifierType::IDENTIFIER_CLASS],
+            [IdentifierType::IDENTIFIER_FUNCTION],
+            [IdentifierType::IDENTIFIER_CONSTANT],
         ];
     }
 
@@ -60,6 +63,15 @@ class IdentifierTypeTest extends TestCase
         self::assertTrue($type->isMatchingReflector($reflectionFunction));
     }
 
+    public function testIsMatchingReflectorConstant() : void
+    {
+        $reflectionConstant = $this->createMock(ReflectionConstant::class);
+
+        $type = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
+
+        self::assertTrue($type->isMatchingReflector($reflectionConstant));
+    }
+
     public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid() : void
     {
         $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
@@ -82,6 +94,7 @@ class IdentifierTypeTest extends TestCase
 
         self::assertTrue($classType->isClass());
         self::assertFalse($classType->isFunction());
+        self::assertFalse($classType->isConstant());
     }
 
     public function testIsTypesForFunction() : void
@@ -90,5 +103,15 @@ class IdentifierTypeTest extends TestCase
 
         self::assertFalse($functionType->isClass());
         self::assertTrue($functionType->isFunction());
+        self::assertFalse($functionType->isConstant());
+    }
+
+    public function testIsTypesForConstant() : void
+    {
+        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
+
+        self::assertFalse($constantType->isClass());
+        self::assertFalse($constantType->isFunction());
+        self::assertTrue($constantType->isConstant());
     }
 }

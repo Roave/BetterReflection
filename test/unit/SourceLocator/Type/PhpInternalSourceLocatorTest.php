@@ -16,13 +16,18 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use const ARRAY_FILTER_USE_KEY;
 use function array_filter;
+use function array_keys;
 use function array_map;
 use function array_merge;
+use function array_values;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function get_defined_constants;
 use function get_defined_functions;
+use function in_array;
 use function sprintf;
 
 /**
@@ -142,6 +147,51 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider internalConstantsProvider
+     */
+    public function testCanFetchInternalLocatedSourceForConstants(string $constantName) : void
+    {
+        /** @var ReflectionFunction $reflection */
+        $reflection = $this->phpInternalSourceLocator->locateIdentifier(
+            $this->getMockReflector(),
+            new Identifier($constantName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT))
+        );
+        $source     = $reflection->getLocatedSource();
+
+        self::assertInstanceOf(InternalLocatedSource::class, $source);
+        self::assertNotEmpty($source->getSource());
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function internalConstantsProvider() : array
+    {
+        $allSymbols = get_defined_constants(true);
+
+        return array_map(
+            static function (string $symbol) : array {
+                return [$symbol];
+            },
+            array_filter(
+                array_keys(
+                    array_merge(
+                        ...array_values(
+                            array_filter($allSymbols, static function (string $extensionName) : bool {
+                                return $extensionName !== 'user';
+                            }, ARRAY_FILTER_USE_KEY)
+                        )
+                    )
+                ),
+                static function (string $constantName) : bool {
+                    // Not supported because of resource as value
+                    return ! in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true);
+                }
+            )
+        );
+    }
+
     public function testReturnsNullForNonExistentClass() : void
     {
         self::assertNull(
@@ -163,6 +213,19 @@ class PhpInternalSourceLocatorTest extends TestCase
                 new Identifier(
                     'foo',
                     new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+                )
+            )
+        );
+    }
+
+    public function testReturnsNullForNonExistentConstant() : void
+    {
+        self::assertNull(
+            $this->phpInternalSourceLocator->locateIdentifier(
+                $this->getMockReflector(),
+                new Identifier(
+                    'foo',
+                    new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT)
                 )
             )
         );

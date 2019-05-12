@@ -6,10 +6,13 @@ namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Lexer;
 use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
@@ -21,12 +24,30 @@ use function reset;
  */
 class NodeToReflectionTest extends TestCase
 {
-    private function getFirstAstNodeInString(string $php) : Node
+    /** @var Parser */
+    private $phpParser;
+
+    /** @var NodeTraverser */
+    private $nodeTraverser;
+
+    protected function setUp() : void
     {
-        $nodes = (new Parser\Multiple([
+        parent::setUp();
+
+        $this->phpParser = new Parser\Multiple([
             new Parser\Php7(new Lexer()),
             new Parser\Php5(new Lexer()),
-        ]))->parse($php);
+        ]);
+
+        $this->nodeTraverser = new NodeTraverser();
+        $this->nodeTraverser->addVisitor(new NameResolver());
+    }
+
+    private function getFirstAstNodeInString(string $php) : Node
+    {
+        $nodes = $this->phpParser->parse($php);
+
+        $this->nodeTraverser->traverse($nodes);
 
         return reset($nodes);
     }
@@ -103,6 +124,77 @@ class NodeToReflectionTest extends TestCase
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertSame('foo', $reflection->getName());
+    }
+
+    public function testReturnsReflectionForConstantNodeByConst() : void
+    {
+        /** @var Reflector|MockObject $reflector */
+        $reflector = $this->createMock(Reflector::class);
+
+        $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
+
+        $reflection = (new NodeToReflection())->__invoke(
+            $reflector,
+            $this->getFirstAstNodeInString($locatedSource->getSource()),
+            $locatedSource,
+            null,
+            0
+        );
+
+        self::assertInstanceOf(ReflectionConstant::class, $reflection);
+        self::assertSame('FOO', $reflection->getName());
+    }
+
+    public function testReturnsReflectionForConstantNodeByConstWithMoreConstants() : void
+    {
+        /** @var Reflector|MockObject $reflector */
+        $reflector        = $this->createMock(Reflector::class);
+        $nodeToReflection = new NodeToReflection();
+
+        $locatedSource = new LocatedSource('<?php const FOO = 1, BOO = 2;', null);
+
+        $firstAstNodeInString = $this->getFirstAstNodeInString($locatedSource->getSource());
+
+        $reflection1 = $nodeToReflection->__invoke(
+            $reflector,
+            $firstAstNodeInString,
+            $locatedSource,
+            null,
+            0
+        );
+        $reflection2 = $nodeToReflection->__invoke(
+            $reflector,
+            $firstAstNodeInString,
+            $locatedSource,
+            null,
+            1
+        );
+
+        self::assertInstanceOf(ReflectionConstant::class, $reflection1);
+        self::assertSame('FOO', $reflection1->getName());
+        self::assertInstanceOf(ReflectionConstant::class, $reflection2);
+        self::assertSame('BOO', $reflection2->getName());
+    }
+
+    public function testReturnsReflectionForConstantNodeByDefine() : void
+    {
+        /** @var Reflector|MockObject $reflector */
+        $reflector = $this->createMock(Reflector::class);
+
+        $locatedSource = new LocatedSource('<?php define("FOO", 1);', null);
+
+        $firstAstNodeInString = $this->getFirstAstNodeInString($locatedSource->getSource());
+        self::assertInstanceOf(Node\Stmt\Expression::class, $firstAstNodeInString);
+
+        $reflection = (new NodeToReflection())->__invoke(
+            $reflector,
+            $firstAstNodeInString->expr,
+            $locatedSource,
+            null
+        );
+
+        self::assertInstanceOf(ReflectionConstant::class, $reflection);
+        self::assertSame('FOO', $reflection->getName());
     }
 
     public function testReturnsNullWhenIncompatibleNodeFound() : void

@@ -17,6 +17,7 @@ use PhpParser\Builder\Trait_;
 use PhpParser\BuilderFactory;
 use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
+use PhpParser\Node;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
@@ -41,6 +42,7 @@ use function array_key_exists;
 use function class_exists;
 use function explode;
 use function function_exists;
+use function get_defined_constants;
 use function in_array;
 use function interface_exists;
 use function trait_exists;
@@ -92,11 +94,13 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->addConstants($classNode, $classReflection);
         $this->addMethods($classNode, $classReflection);
 
+        $extensionName = $classReflection->getExtensionName() ?: null;
+
         if (! $classReflection->inNamespace()) {
-            return $this->createStubData($this->generateStub($classNode), $classReflection);
+            return $this->createStubData($this->generateStub($classNode->getNode()), $extensionName);
         }
 
-        return $this->createStubData($this->generateStubInNamespace($classNode, $classReflection->getNamespaceName()), $classReflection);
+        return $this->createStubData($this->generateStubInNamespace($classNode->getNode(), $classReflection->getNamespaceName()), $extensionName);
     }
 
     public function generateFunctionStub(string $functionName) : ?StubData
@@ -111,11 +115,47 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->addDocComment($functionNode, $functionReflection);
         $this->addParameters($functionNode, $functionReflection);
 
+        $extensionName = $functionReflection->getExtensionName() ?: null;
+
         if (! $functionReflection->inNamespace()) {
-            return $this->createStubData($this->generateStub($functionNode), $functionReflection);
+            return $this->createStubData($this->generateStub($functionNode->getNode()), $extensionName);
         }
 
-        return $this->createStubData($this->generateStubInNamespace($functionNode, $functionReflection->getNamespaceName()), $functionReflection);
+        return $this->createStubData($this->generateStubInNamespace($functionNode->getNode(), $functionReflection->getNamespaceName()), $extensionName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateConstantStub(string $constantName) : ?StubData
+    {
+        // Not supported because of resource as value
+        if (in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)) {
+            return null;
+        }
+
+        $constants = get_defined_constants(true);
+
+        $found         = false;
+        $value         = null;
+        $extensionName = null;
+
+        foreach ($constants as $constantExtensionName => $extensionConstants) {
+            if (array_key_exists($constantName, $extensionConstants)) {
+                $found         = true;
+                $value         = $extensionConstants[$constantName];
+                $extensionName = $constantExtensionName !== 'user' ? $constantExtensionName : null;
+                break;
+            }
+        }
+
+        if (! $found) {
+            return null;
+        }
+
+        $constantNode = $this->builderFactory->funcCall('define', [$constantName, $value]);
+
+        return $this->createStubData($this->generateStub($constantNode), $extensionName);
     }
 
     /**
@@ -433,24 +473,21 @@ final class ReflectionSourceStubber implements SourceStubber
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
     }
 
-    private function generateStubInNamespace(Builder $node, string $namespaceName) : string
+    private function generateStubInNamespace(Node $node, string $namespaceName) : string
     {
-        $namespaceNode = $this->builderFactory->namespace($namespaceName);
-        $namespaceNode->addStmt($node);
+        $namespaceBuilder = $this->builderFactory->namespace($namespaceName);
+        $namespaceBuilder->addStmt($node);
 
-        return $this->generateStub($namespaceNode);
+        return $this->generateStub($namespaceBuilder->getNode());
     }
 
-    private function generateStub(Builder $builder) : string
+    private function generateStub(Node $node) : string
     {
-        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$builder->getNode()]) . "\n";
+        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
     }
 
-    /**
-     * @param CoreReflectionClass|CoreReflectionFunction $reflection
-     */
-    private function createStubData(string $stub, CoreReflector $reflection) : StubData
+    private function createStubData(string $stub, ?string $extensionName) : StubData
     {
-        return new StubData($stub, $reflection->getExtensionName() ?: null);
+        return new StubData($stub, $extensionName);
     }
 }

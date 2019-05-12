@@ -7,9 +7,11 @@ namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Util\ConstantNodeChecker;
 
 /**
  * @internal
@@ -24,7 +26,8 @@ class NodeToReflection implements AstConversionStrategy
         Reflector $reflector,
         Node $node,
         LocatedSource $locatedSource,
-        ?Node\Stmt\Namespace_ $namespace
+        ?Node\Stmt\Namespace_ $namespace,
+        ?int $positionInNode = null
     ) : ?Reflection {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
@@ -45,6 +48,16 @@ class NodeToReflection implements AstConversionStrategy
                 $locatedSource,
                 $namespace
             );
+        }
+
+        if ($node instanceof Node\Stmt\Const_) {
+            return ReflectionConstant::createFromNode($reflector, $node, $locatedSource, $namespace, $positionInNode);
+        }
+
+        if ($node instanceof Node\Expr\FuncCall
+            && ConstantNodeChecker::isValidDefineFunctionCall($node)
+        ) {
+            return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
         }
 
         return null;

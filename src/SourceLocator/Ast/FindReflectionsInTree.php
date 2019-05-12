@@ -14,6 +14,8 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Util\ConstantNodeChecker;
+use function count;
 
 /**
  * @internal
@@ -88,6 +90,36 @@ final class FindReflectionsInTree
                 if ($node instanceof Node\Stmt\ClassLike) {
                     $classNamespace = $node->name === null ? null : $this->currentNamespace;
                     $reflection     = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
+
+                    if ($this->identifierType->isMatchingReflector($reflection)) {
+                        $this->reflections[] = $reflection;
+                    }
+
+                    return null;
+                }
+
+                if ($node instanceof Node\Stmt\ClassConst) {
+                    return null;
+                }
+
+                if ($node instanceof Node\Stmt\Const_) {
+                    for ($i = 0; $i < count($node->consts); $i++) {
+                        $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace, $i);
+
+                        if (! $this->identifierType->isMatchingReflector($reflection)) {
+                            continue;
+                        }
+
+                        $this->reflections[] = $reflection;
+                    }
+
+                    return null;
+                }
+
+                if ($node instanceof Node\Expr\FuncCall
+                    && ConstantNodeChecker::isValidDefineFunctionCall($node)
+                ) {
+                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
 
                     if ($this->identifierType->isMatchingReflector($reflection)) {
                         $this->reflections[] = $reflection;

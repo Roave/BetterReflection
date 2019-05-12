@@ -39,6 +39,7 @@ class IdentifierTest extends TestCase
 
         self::assertTrue($identifier->isClass());
         self::assertFalse($identifier->isFunction());
+        self::assertFalse($identifier->isConstant());
     }
 
     public function testIsTypesForFunction() : void
@@ -47,6 +48,16 @@ class IdentifierTest extends TestCase
 
         self::assertFalse($identifier->isClass());
         self::assertTrue($identifier->isFunction());
+        self::assertFalse($identifier->isConstant());
+    }
+
+    public function testIsTypesForConstant() : void
+    {
+        $identifier = new Identifier('FOO', new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT));
+
+        self::assertFalse($identifier->isClass());
+        self::assertFalse($identifier->isFunction());
+        self::assertTrue($identifier->isConstant());
     }
 
     public function testGetNameForClosure() : void

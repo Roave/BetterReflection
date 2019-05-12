@@ -41,7 +41,7 @@ class ReflectionClassConstantStringCastTest extends TestCase
      */
     public function testToString(string $constantName, string $expectedString) : void
     {
-        $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastConstants.php', $this->astLocator));
+        $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClassConstants.php', $this->astLocator));
         $classReflection = $reflector->reflect(StringCastConstants::class);
 
         self::assertSame($expectedString, (string) $classReflection->getReflectionConstant($constantName));

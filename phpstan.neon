@@ -19,5 +19,8 @@ parameters:
                 - %currentWorkingDirectory%/src/Reflection/ReflectionParameter.php
         # Impossible to define type hint for anonymous class
         -
-            message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(clearNodes|getClassNodes|getFunctionNodes)\(\)#'
+            message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(clearNodes|getClassNodes|getFunctionNodes|getConstantNodes)\(\)#'
             path: %currentWorkingDirectory%/src/SourceLocator/SourceStubber/PhpStormStubsSourceStubber.php
+        -
+            message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
+            path: %currentWorkingDirectory%/src/SourceLocator/Type/AutoloadSourceLocator.php

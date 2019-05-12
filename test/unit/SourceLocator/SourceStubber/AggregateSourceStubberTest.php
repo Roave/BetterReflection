@@ -85,4 +85,40 @@ class AggregateSourceStubberTest extends TestCase
             ))->generateFunctionStub('someFunction')
         );
     }
+
+    public function testTraverseAllGivenSourceStubbersAndFailToGenerateConstantStub() : void
+    {
+        $sourceStubber1 = $this->createMock(SourceStubber::class);
+        $sourceStubber2 = $this->createMock(SourceStubber::class);
+
+        $sourceStubber1->expects($this->once())->method('generateConstantStub');
+        $sourceStubber2->expects($this->once())->method('generateConstantStub');
+
+        self::assertNull((new AggregateSourceStubber($sourceStubber1, $sourceStubber2))->generateConstantStub('SOME_CONSTANT'));
+    }
+
+    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateConstantStub() : void
+    {
+        $sourceStubber1 = $this->createMock(SourceStubber::class);
+        $sourceStubber2 = $this->createMock(SourceStubber::class);
+        $sourceStubber3 = $this->createMock(SourceStubber::class);
+        $sourceStubber4 = $this->createMock(SourceStubber::class);
+
+        $stubData = new StubData('<?php const SOME_CONSTANT = 1;', null);
+
+        $sourceStubber1->expects($this->once())->method('generateConstantStub');
+        $sourceStubber2->expects($this->once())->method('generateConstantStub');
+        $sourceStubber3->expects($this->once())->method('generateConstantStub')->willReturn($stubData);
+        $sourceStubber4->expects($this->never())->method('generateConstantStub');
+
+        self::assertSame(
+            $stubData,
+            (new AggregateSourceStubber(
+                $sourceStubber1,
+                $sourceStubber2,
+                $sourceStubber3,
+                $sourceStubber4
+            ))->generateConstantStub('SOME_CONSTANT')
+        );
+    }
 }

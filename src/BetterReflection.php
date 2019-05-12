@@ -8,6 +8,7 @@ use PhpParser\Lexer\Emulative;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
@@ -34,6 +35,9 @@ final class BetterReflection
     /** @var FunctionReflector|null */
     private $functionReflector;
 
+    /** @var ConstantReflector|null */
+    private $constantReflector;
+
     /** @var Parser|null */
     private $phpParser;
 
@@ -55,7 +59,7 @@ final class BetterReflection
             ?? $this->sourceLocator = new MemoizingSourceLocator(new AggregateSourceLocator([
                 new PhpInternalSourceLocator($astLocator, $sourceStubber),
                 new EvaledCodeSourceLocator($astLocator, $sourceStubber),
-                new AutoloadSourceLocator($astLocator),
+                new AutoloadSourceLocator($astLocator, $this->phpParser()),
             ]));
     }
 
@@ -69,6 +73,12 @@ final class BetterReflection
     {
         return $this->functionReflector
             ?? $this->functionReflector = new FunctionReflector($this->sourceLocator(), $this->classReflector());
+    }
+
+    public function constantReflector() : ConstantReflector
+    {
+        return $this->constantReflector
+            ?? $this->constantReflector = new ConstantReflector($this->sourceLocator(), $this->classReflector());
     }
 
     public function phpParser() : Parser

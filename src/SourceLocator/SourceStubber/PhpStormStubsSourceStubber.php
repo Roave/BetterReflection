@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
+use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
@@ -12,13 +13,19 @@ use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
+use Roave\BetterReflection\Util\ConstantNodeChecker;
 use Traversable;
 use function array_key_exists;
+use function constant;
+use function count;
+use function defined;
 use function explode;
 use function file_get_contents;
+use function in_array;
 use function is_dir;
 use function sprintf;
 use function str_replace;
+use function strtolower;
 
 /**
  * @internal
@@ -51,6 +58,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     /** @var array<string, Node\Stmt\Function_> */
     private $functionNodes = [];
+
+    /** @var array<string, Node\Const_|Node\Expr\FuncCall> */
+    private $constantNodes = [];
 
     public function __construct(Parser $phpParser)
     {
@@ -107,6 +117,29 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($this->createStub($this->functionNodes[$functionName]), $this->getExtensionFromFilePath($filePath));
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function generateConstantStub(string $constantName) : ?StubData
+    {
+        // https://github.com/JetBrains/phpstorm-stubs/pull/591
+        if (in_array($constantName, ['TRUE', 'FALSE', 'NULL'])) {
+            $constantName = strtolower($constantName);
+        }
+
+        if (! array_key_exists($constantName, PhpStormStubsMap::CONSTANTS)) {
+            return null;
+        }
+
+        $filePath = PhpStormStubsMap::CONSTANTS[$constantName];
+
+        if (! array_key_exists($constantName, $this->constantNodes)) {
+            $this->parseFile($filePath);
+        }
+
+        return new StubData($this->createStub($this->constantNodes[$constantName]), $this->getExtensionFromFilePath($filePath));
+    }
+
     private function parseFile(string $filePath) : void
     {
         $absoluteFilePath = $this->getAbsoluteFilePath($filePath);
@@ -128,11 +161,16 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNode) {
             $this->functionNodes[$functionName] = $functionNode;
         }
+
+        /** @psalm-suppress UndefinedMethod */
+        foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
+            $this->constantNodes[$constantName] = $constantNode;
+        }
     }
 
     private function createStub(Node $node) : string
     {
-        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . "\n";
+        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
     }
 
     private function createCachingVisitor() : NodeVisitorAbstract
@@ -145,6 +183,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /** @var array<string, Node\Stmt\Function_> */
             private $functionNodes = [];
 
+            /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
+            private $constantNodes = [];
+
             public function enterNode(Node $node) : ?int
             {
                 if ($node instanceof Node\Stmt\ClassLike) {
@@ -156,6 +197,40 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 if ($node instanceof Node\Stmt\Function_) {
                     /** @psalm-suppress UndefinedPropertyFetch */
                     $this->functionNodes[$node->namespacedName->toString()] = $node;
+
+                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+                }
+
+                if ($node instanceof Node\Stmt\Const_) {
+                    foreach ($node->consts as $constNode) {
+                        /** @psalm-suppress UndefinedPropertyFetch */
+                        $this->constantNodes[$constNode->namespacedName->toString()] = $node;
+                    }
+
+                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+                }
+
+                if ($node instanceof Node\Expr\FuncCall
+                    && ConstantNodeChecker::isValidDefineFunctionCall($node)
+                ) {
+                    /** @var Node\Scalar\String_ $nameNode */
+                    $nameNode     = $node->args[0]->value;
+                    $constantName = $nameNode->value;
+
+                    // Some constants has different values on different systems, some are not actual in stubs
+                    if (defined($constantName)) {
+                        $constantValue        = constant($constantName);
+                        $node->args[1]->value = BuilderHelpers::normalizeValue($constantValue);
+                    }
+
+                    $this->constantNodes[$constantName] = $node;
+
+                    if (count($node->args) === 3
+                        && $node->args[2]->value instanceof Node\Expr\ConstFetch
+                        && $node->args[2]->value->name->toLowerString() === 'true'
+                    ) {
+                        $this->constantNodes[strtolower($constantName)] = $node;
+                    }
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
@@ -179,10 +254,19 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 return $this->functionNodes;
             }
 
+            /**
+             * @return array<string, Node\Stmt\Const_|Node\Expr\FuncCall>
+             */
+            public function getConstantNodes() : array
+            {
+                return $this->constantNodes;
+            }
+
             public function clearNodes() : void
             {
                 $this->classNodes    = [];
                 $this->functionNodes = [];
+                $this->constantNodes = [];
             }
         };
     }

@@ -47,4 +47,20 @@ class AggregateSourceStubber implements SourceStubber
 
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateConstantStub(string $constantName) : ?StubData
+    {
+        foreach ($this->sourceStubbers as $sourceStubber) {
+            $stubData = $sourceStubber->generateConstantStub($constantName);
+
+            if ($stubData !== null) {
+                return $stubData;
+            }
+        }
+
+        return null;
+    }
 }
