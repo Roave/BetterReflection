@@ -8,6 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -57,5 +58,14 @@ class FunctionReflectorTest extends TestCase
 
         self::assertContainsOnlyInstancesOf(ReflectionFunction::class, $functions);
         self::assertCount(2, $functions);
+    }
+
+    public function testThrowsExceptionWhenIdentifierNotFound() : void
+    {
+        $defaultReflector = BetterReflectionSingleton::instance()->functionReflector();
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $defaultReflector->reflect('Something\That\Should\not_exist');
     }
 }
