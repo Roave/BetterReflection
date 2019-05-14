@@ -98,14 +98,16 @@ class CompileNodeToValue
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {
-            return $className;
+            return $this->resolveClassNameForClassNameConstant($className, $context);
         }
 
         /** @var ReflectionClass|null $classInfo */
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
-            $classInfo = $this->getConstantDeclaringClass($nodeName, $context->getSelf());
+            $classInfo = $context->getSelf()->hasConstant($nodeName) ? $context->getSelf() : null;
+        } elseif ($className === 'parent') {
+            $classInfo = $context->getSelf()->getParentClass();
         }
 
         if ($classInfo === null) {
@@ -141,14 +143,19 @@ class CompileNodeToValue
         return $context->hasSelf() ? $context->getSelf()->getName() : '';
     }
 
-    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
+    private function resolveClassNameForClassNameConstant(string $className, CompilerContext $context) : string
     {
-        if ($class->hasConstant($constantName)) {
-            return $class;
+        if ($className === 'self' || $className === 'static') {
+            return $context->getSelf()->getName();
         }
 
-        $parentClass = $class->getParentClass();
+        if ($className === 'parent') {
+            /** @var ReflectionClass $parentClass */
+            $parentClass = $context->getSelf()->getParentClass();
 
-        return $parentClass ? $this->getConstantDeclaringClass($constantName, $parentClass) : null;
+            return $parentClass->getName();
+        }
+
+        return $className;
     }
 }
