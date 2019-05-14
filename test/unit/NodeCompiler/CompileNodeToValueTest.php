@@ -441,4 +441,40 @@ PHP;
         $classInfo = $reflector->reflect('Bar');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
+
+    public function testSelfStaticOrParentAsPropertyDefaultValue() : void
+    {
+        $phpCode = <<<'PHP'
+        <?php
+        
+        class Baz {
+            const PARENT_CONSTANT = 'parentConstant';
+        }
+        
+        class Foo extends Baz {
+            const SELF_CONSTANT = 'selfConstant';
+            const STATIC_CONSTANT = 'staticConstant';
+            const PARENT_CONSTANT = 'selfConstant';
+
+            public $selfClass = self::class;
+            public $staticClass = static::class;
+            public $parentClass = parent::class;
+            
+            public $selfConstant = self::SELF_CONSTANT;
+            public $staticConstant = self::STATIC_CONSTANT;
+            public $parentConstant = parent::PARENT_CONSTANT;
+        }
+PHP;
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflect('Foo');
+
+        self::assertSame('Foo', $classInfo->getProperty('selfClass')->getDefaultValue());
+        self::assertSame('Foo', $classInfo->getProperty('staticClass')->getDefaultValue());
+        self::assertSame('Baz', $classInfo->getProperty('parentClass')->getDefaultValue());
+
+        self::assertSame('selfConstant', $classInfo->getProperty('selfConstant')->getDefaultValue());
+        self::assertSame('staticConstant', $classInfo->getProperty('staticConstant')->getDefaultValue());
+        self::assertSame('parentConstant', $classInfo->getProperty('parentConstant')->getDefaultValue());
+    }
 }
