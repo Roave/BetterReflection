@@ -105,7 +105,7 @@ class CompileNodeToValue
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
-            $classInfo = $this->getConstantDeclaringClass($nodeName, $context->getSelf());
+            $classInfo = $context->getSelf()->hasConstant($nodeName) ? $context->getSelf() : null;
         } elseif ($className === 'parent') {
             $classInfo = $context->getSelf()->getParentClass();
         }
@@ -157,16 +157,5 @@ class CompileNodeToValue
         }
 
         return $className;
-    }
-
-    private function getConstantDeclaringClass(string $constantName, ReflectionClass $class) : ?ReflectionClass
-    {
-        if ($class->hasConstant($constantName)) {
-            return $class;
-        }
-
-        $parentClass = $class->getParentClass();
-
-        return $parentClass ? $this->getConstantDeclaringClass($constantName, $parentClass) : null;
     }
 }
