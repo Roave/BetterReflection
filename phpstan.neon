@@ -2,6 +2,7 @@ parameters:
     level: 5
 
     paths:
+        - bin
         - src
 
     ignoreErrors:
@@ -9,4 +10,4 @@ parameters:
         - '#does not call parent constructor#'
         - '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
         # Impossible to define type hint for anonymous class
-        - '#Call to an undefined method PhpParser\\NodeVisitorAbstract::getNode\(\)#'
+        - '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(clearNodes|getClassNodes|getFunctionNodes)\(\)#'

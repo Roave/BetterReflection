@@ -38,11 +38,15 @@ use ReflectionType as CoreReflectionType;
 use Reflector as CoreReflector;
 use function array_diff;
 use function array_key_exists;
+use function class_exists;
 use function explode;
+use function function_exists;
 use function in_array;
+use function interface_exists;
+use function trait_exists;
 
 /**
- * It generates a stub source from a given reflection instance.
+ * It generates a stub source from internal reflection for given class or function name.
  *
  * @internal
  */
@@ -62,9 +66,14 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
     }
 
-    public function generateClassStub(CoreReflectionClass $classReflection) : ?string
+    public function generateClassStub(string $className) : ?StubData
     {
-        $classNode = $this->createClass($classReflection);
+        if (! (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false))) {
+            return null;
+        }
+
+        $classReflection = new CoreReflectionClass($className);
+        $classNode       = $this->createClass($classReflection);
 
         if ($classNode instanceof Class_) {
             $this->addClassModifiers($classNode, $classReflection);
@@ -84,23 +93,29 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->addMethods($classNode, $classReflection);
 
         if (! $classReflection->inNamespace()) {
-            return $this->generateStub($classNode);
+            return $this->createStubData($this->generateStub($classNode), $classReflection);
         }
 
-        $namespaceNode = $this->builderFactory->namespace($classReflection->getNamespaceName());
-        $namespaceNode->addStmt($classNode);
-
-        return $this->generateStub($namespaceNode);
+        return $this->createStubData($this->generateStubInNamespace($classNode, $classReflection->getNamespaceName()), $classReflection);
     }
 
-    public function generateFunctionStub(CoreReflectionFunction $functionReflection) : ?string
+    public function generateFunctionStub(string $functionName) : ?StubData
     {
-        $functionNode = $this->builderFactory->function($functionReflection->getName());
+        if (! function_exists($functionName)) {
+            return null;
+        }
+
+        $functionReflection = new CoreReflectionFunction($functionName);
+        $functionNode       = $this->builderFactory->function($functionReflection->getShortName());
 
         $this->addDocComment($functionNode, $functionReflection);
         $this->addParameters($functionNode, $functionReflection);
 
-        return $this->generateStub($functionNode);
+        if (! $functionReflection->inNamespace()) {
+            return $this->createStubData($this->generateStub($functionNode), $functionReflection);
+        }
+
+        return $this->createStubData($this->generateStubInNamespace($functionNode, $functionReflection->getNamespaceName()), $functionReflection);
     }
 
     /**
@@ -418,8 +433,24 @@ final class ReflectionSourceStubber implements SourceStubber
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
     }
 
+    private function generateStubInNamespace(Builder $node, string $namespaceName) : string
+    {
+        $namespaceNode = $this->builderFactory->namespace($namespaceName);
+        $namespaceNode->addStmt($node);
+
+        return $this->generateStub($namespaceNode);
+    }
+
     private function generateStub(Builder $builder) : string
     {
         return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$builder->getNode()]) . "\n";
+    }
+
+    /**
+     * @param CoreReflectionClass|CoreReflectionFunction $reflection
+     */
+    private function createStubData(string $stub, CoreReflector $reflection) : StubData
+    {
+        return new StubData($stub, $reflection->getExtensionName() ?: null);
     }
 }

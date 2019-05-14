@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
-use ReflectionClass as CoreReflectionClass;
-use ReflectionFunction as CoreReflectionFunction;
 use function array_merge;
 
 class AggregateSourceStubber implements SourceStubber
@@ -21,13 +19,13 @@ class AggregateSourceStubber implements SourceStubber
     /**
      * {@inheritDoc}
      */
-    public function generateClassStub(CoreReflectionClass $classReflection) : ?string
+    public function generateClassStub(string $className) : ?StubData
     {
         foreach ($this->sourceStubbers as $sourceStubber) {
-            $stub = $sourceStubber->generateClassStub($classReflection);
+            $stubData = $sourceStubber->generateClassStub($className);
 
-            if ($stub !== null) {
-                return $stub;
+            if ($stubData !== null) {
+                return $stubData;
             }
         }
 
@@ -37,13 +35,13 @@ class AggregateSourceStubber implements SourceStubber
     /**
      * {@inheritDoc}
      */
-    public function generateFunctionStub(CoreReflectionFunction $functionReflection) : ?string
+    public function generateFunctionStub(string $functionName) : ?StubData
     {
         foreach ($this->sourceStubbers as $sourceStubber) {
-            $stub = $sourceStubber->generateFunctionStub($functionReflection);
+            $stubData = $sourceStubber->generateFunctionStub($functionName);
 
-            if ($stub !== null) {
-                return $stub;
+            if ($stubData !== null) {
+                return $stubData;
             }
         }
 
