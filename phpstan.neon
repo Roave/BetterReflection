@@ -7,7 +7,17 @@ parameters:
 
     ignoreErrors:
         # Some parent constructors are explicitly to be ignored
-        - '#does not call parent constructor#'
-        - '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
+        -
+            message: '#does not call parent constructor#'
+            paths:
+                - %currentWorkingDirectory%/src/Reflection/Adapter/*
+                - %currentWorkingDirectory%/src/Reflection/ReflectionObject.php
+        -
+            message: '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
+            paths:
+                - %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php
+                - %currentWorkingDirectory%/src/Reflection/ReflectionParameter.php
         # Impossible to define type hint for anonymous class
-        - '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(clearNodes|getClassNodes|getFunctionNodes)\(\)#'
+        -
+            message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(clearNodes|getClassNodes|getFunctionNodes)\(\)#'
+            path: %currentWorkingDirectory%/src/SourceLocator/SourceStubber/PhpStormStubsSourceStubber.php
