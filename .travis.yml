@@ -76,6 +76,16 @@ jobs:
         - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit
 
+    - stage: Test
+      php: 7.4snapshot
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      php: 7.4snapshot
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit
+
     - stage: Test Compatibility
       php: 7.2
       env: DEPENDENCIES=""
@@ -144,6 +154,16 @@ jobs:
         - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit test/compat
 
+    - stage: Test Compatibility
+      php: 7.4snapshot
+      env: DEPENDENCIES=""
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      php: 7.4snapshot
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit test/compat
+
     - stage: Check Demo Scripts
       php: 7.2
       env: DEPENDENCIES=""
@@ -161,6 +181,16 @@ jobs:
 
     - stage: Check Demo Scripts
       php: 7.3
+      env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.4snapshot
+      env: DEPENDENCIES=""
+      script: test/demo/check-demo.sh
+
+    - stage: Check Demo Scripts
+      php: 7.4snapshot
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 

@@ -72,13 +72,20 @@ class PhpStormStubsSourceStubberTest extends TestCase
             get_declared_traits()
         );
 
+        // Needs fixes in JetBrains/phpstorm-stubs
+        $missingClassesInStubs = ['WeakReference'];
+
         return array_map(
             static function (string $className) : array {
                 return [$className];
             },
             array_filter(
                 $classNames,
-                static function (string $className) : bool {
+                static function (string $className) use ($missingClassesInStubs) : bool {
+                    if (in_array($className, $missingClassesInStubs, true)) {
+                        return false;
+                    }
+
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
@@ -150,6 +157,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
             // Needs fix in JetBrains/phpstorm-stubs
             if ($original->getName() === 'Generator' && $method->getName() === 'throw') {
                 continue;
+            }
+
+            // Added in PHP 7.4.0
+            if (PHP_VERSION_ID >= 70400 && $method->getShortName() === '__unserialize') {
+                return;
             }
 
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
@@ -265,7 +277,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionNames = get_defined_functions()['internal'];
 
         // Needs fixes in JetBrains/phpstorm-stubs
-        $missingFunctionsInStubs = ['sapi_windows_vt100_support'];
+        $missingFunctionsInStubs = ['password_algos', 'sapi_windows_vt100_support', 'sapi_windows_set_ctrl_handler', 'sapi_windows_generate_ctrl_event'];
 
         return array_map(
             static function (string $functionName) : array {
@@ -351,6 +363,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         // Changed in PHP 7.3.0
         if (PHP_VERSION_ID < 70300 && in_array($functionName, ['array_push', 'array_unshift'], true)) {
+            return;
+        }
+
+        // Changed in PHP 7.4.0
+        if (PHP_VERSION_ID >= 70400 && $functionName === 'preg_replace_callback') {
             return;
         }
 
