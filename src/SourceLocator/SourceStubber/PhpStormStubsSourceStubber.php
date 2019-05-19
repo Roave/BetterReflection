@@ -123,7 +123,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     public function generateConstantStub(string $constantName) : ?StubData
     {
         // https://github.com/JetBrains/phpstorm-stubs/pull/591
-        if (in_array($constantName, ['TRUE', 'FALSE', 'NULL'])) {
+        if (in_array($constantName, ['TRUE', 'FALSE', 'NULL'], true)) {
             $constantName = strtolower($constantName);
         }
 

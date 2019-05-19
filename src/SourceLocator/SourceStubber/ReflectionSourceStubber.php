@@ -134,28 +134,36 @@ final class ReflectionSourceStubber implements SourceStubber
             return null;
         }
 
-        $constants = get_defined_constants(true);
+        $constantData = $this->findConstantData($constantName);
 
-        $found         = false;
-        $value         = null;
-        $extensionName = null;
-
-        foreach ($constants as $constantExtensionName => $extensionConstants) {
-            if (array_key_exists($constantName, $extensionConstants)) {
-                $found         = true;
-                $value         = $extensionConstants[$constantName];
-                $extensionName = $constantExtensionName !== 'user' ? $constantExtensionName : null;
-                break;
-            }
-        }
-
-        if (! $found) {
+        if ($constantData === null) {
             return null;
         }
 
-        $constantNode = $this->builderFactory->funcCall('define', [$constantName, $value]);
+        [$constantValue, $extensionName] = $constantData;
+
+        $constantNode = $this->builderFactory->funcCall('define', [$constantName, $constantValue]);
 
         return $this->createStubData($this->generateStub($constantNode), $extensionName);
+    }
+
+    /**
+     * @return array<int, (mixed|string|null)>|null
+     */
+    private function findConstantData(string $constantName) : ?array
+    {
+        $constants = get_defined_constants(true);
+
+        foreach ($constants as $constantExtensionName => $extensionConstants) {
+            if (array_key_exists($constantName, $extensionConstants)) {
+                return [
+                    $extensionConstants[$constantName],
+                    $constantExtensionName !== 'user' ? $constantExtensionName : null,
+                ];
+            }
+        }
+
+        return null;
     }
 
     /**

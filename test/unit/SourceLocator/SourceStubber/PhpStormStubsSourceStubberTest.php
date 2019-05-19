@@ -449,7 +449,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertInstanceOf(ReflectionConstant::class, $constantReflection);
         // Needs fixes in JetBrains/phpstorm-stubs
-        if (! in_array($constantName, ['TRUE', 'FALSE', 'NULL'])) {
+        if (! in_array($constantName, ['TRUE', 'FALSE', 'NULL'], true)) {
             self::assertSame($constantName, $constantReflection->getName());
             self::assertSame($constantName, $constantReflection->getShortName());
         }
