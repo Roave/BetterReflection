@@ -3,7 +3,7 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": ">=7.2.0,<7.4.0",
+        "php": ">=7.2.0,<7.5.0",
         "ext-json": "*",
         "jetbrains/phpstorm-stubs": "2019.1",
         "nikic/php-parser": "^4.2.1",
