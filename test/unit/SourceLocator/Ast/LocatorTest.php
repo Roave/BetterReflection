@@ -32,7 +32,11 @@ class LocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->locator = new Locator(BetterReflectionSingleton::instance()->phpParser());
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->locator = new Locator($betterReflection->phpParser(), static function () use ($betterReflection) : FunctionReflector {
+            return $betterReflection->functionReflector();
+        });
     }
 
     private function getIdentifier(string $name, string $type) : Identifier

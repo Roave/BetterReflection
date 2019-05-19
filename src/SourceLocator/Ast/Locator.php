@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
+use Closure;
 use PhpParser\Parser;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -26,9 +27,9 @@ class Locator
     /** @var Parser */
     private $parser;
 
-    public function __construct(Parser $parser)
+    public function __construct(Parser $parser, Closure $functionReflectorGetter)
     {
-        $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection());
+        $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection(), $functionReflectorGetter);
 
         $this->parser = $parser;
     }

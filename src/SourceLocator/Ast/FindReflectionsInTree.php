@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
+use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
@@ -12,6 +13,8 @@ use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -26,9 +29,16 @@ final class FindReflectionsInTree
     /** @var AstConversionStrategy */
     private $astConversionStrategy;
 
-    public function __construct(AstConversionStrategy $astConversionStrategy)
+    /** @var FunctionReflector */
+    private $functionReflector;
+
+    /** @var Closure */
+    private $functionReflectorGetter;
+
+    public function __construct(AstConversionStrategy $astConversionStrategy, Closure $functionReflectorGetter)
     {
-        $this->astConversionStrategy = $astConversionStrategy;
+        $this->astConversionStrategy   = $astConversionStrategy;
+        $this->functionReflectorGetter = $functionReflectorGetter;
     }
 
     /**
@@ -44,7 +54,7 @@ final class FindReflectionsInTree
         IdentifierType $identifierType,
         LocatedSource $locatedSource
     ) : array {
-        $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy)
+        $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke())
             extends NodeVisitorAbstract
         {
             /** @var Reflection[] */
@@ -65,16 +75,21 @@ final class FindReflectionsInTree
             /** @var Namespace_|null */
             private $currentNamespace;
 
+            /** @var FunctionReflector */
+            private $functionReflector;
+
             public function __construct(
                 Reflector $reflector,
                 IdentifierType $identifierType,
                 LocatedSource $locatedSource,
-                AstConversionStrategy $astConversionStrategy
+                AstConversionStrategy $astConversionStrategy,
+                FunctionReflector $functionReflector
             ) {
                 $this->reflector             = $reflector;
                 $this->identifierType        = $identifierType;
                 $this->locatedSource         = $locatedSource;
                 $this->astConversionStrategy = $astConversionStrategy;
+                $this->functionReflector     = $functionReflector;
             }
 
             /**
@@ -122,6 +137,16 @@ final class FindReflectionsInTree
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
                     } catch (InvalidConstantNode $e) {
                         return null;
+                    }
+
+                    if ($node->name->hasAttribute('namespacedName') && count($node->name->getAttribute('namespacedName')->parts) > 1) {
+                        try {
+                            $this->functionReflector->reflect($node->name->getAttribute('namespacedName')->toString());
+
+                            return null;
+                        } catch (IdentifierNotFound $e) {
+                            // Global define()
+                        }
                     }
 
                     $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);

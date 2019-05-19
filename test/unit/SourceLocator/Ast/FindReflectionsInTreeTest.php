@@ -7,10 +7,13 @@ namespace Roave\BetterReflectionTest\Reflector;
 use PhpParser\Node;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
@@ -44,7 +47,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -67,7 +70,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -93,7 +96,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [$mockReflection],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -119,7 +122,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [$mockReflection],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -145,7 +148,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [$mockReflection],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
@@ -171,7 +174,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [$mockReflection],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
@@ -198,7 +201,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [$mockReflection1, $mockReflection2],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
@@ -220,11 +223,55 @@ class FindReflectionsInTreeTest extends TestCase
 
         /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php define("FOO", 1);', null);
+        $source        = <<<'PHP'
+<?php
+namespace Foo;
+
+define("FOO", 1);
+PHP;
+        $locatedSource = new LocatedSource($source, null);
 
         self::assertSame(
             [$mockReflection],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
+                $reflector,
+                $this->getAstForSource($locatedSource),
+                new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
+                $locatedSource
+            )
+        );
+    }
+
+    public function testInvokeCallsReflectNodesForNotGlobalDefine() : void
+    {
+        /** @var NodeToReflection|MockObject $strategy */
+        $strategy = $this->createMock(NodeToReflection::class);
+
+        $mockFunctionReflection = $this->createMock(ReflectionFunction::class);
+
+        $functionReflector = $this->createMock(FunctionReflector::class);
+        $functionReflector->method('reflect')
+            ->willReturn($mockFunctionReflection);
+
+        $strategy->expects($this->once())
+            ->method('__invoke')
+            ->willReturn($mockFunctionReflection);
+
+        /** @var Reflector|MockObject $reflector */
+        $reflector     = $this->createMock(Reflector::class);
+        $source        = <<<'PHP'
+<?php
+namespace Foo;
+
+function define() {}
+
+define("FOO", 1);
+PHP;
+        $locatedSource = new LocatedSource($source, null);
+
+        self::assertSame(
+            [],
+            $this->createFindReflectionsInTree($strategy, $functionReflector)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
@@ -250,7 +297,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
@@ -277,12 +324,26 @@ class FindReflectionsInTreeTest extends TestCase
 
         self::assertSame(
             [$mockReflectionClass],
-            (new FindReflectionsInTree($strategy))->__invoke(
+            $this->createFindReflectionsInTree($strategy)->__invoke(
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 $locatedSource
             )
         );
+    }
+
+    private function createFindReflectionsInTree(NodeToReflection $strategy, ?FunctionReflector $functionReflector = null) : FindReflectionsInTree
+    {
+        return new FindReflectionsInTree($strategy, function () use ($functionReflector) {
+            if ($functionReflector === null) {
+                $functionReflector = $this->createMock(FunctionReflector::class);
+                $functionReflector
+                    ->method('reflect')
+                    ->willThrowException(IdentifierNotFound::fromIdentifier(new Identifier('define', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))));
+            }
+
+            return $functionReflector;
+        });
     }
 }

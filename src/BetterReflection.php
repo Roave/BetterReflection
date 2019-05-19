@@ -94,7 +94,9 @@ final class BetterReflection
     public function astLocator() : AstLocator
     {
         return $this->astLocator
-            ?? $this->astLocator = new AstLocator($this->phpParser());
+            ?? $this->astLocator = new AstLocator($this->phpParser(), function () : FunctionReflector {
+                return $this->functionReflector();
+            });
     }
 
     public function findReflectionsOnLine() : FindReflectionOnLine
