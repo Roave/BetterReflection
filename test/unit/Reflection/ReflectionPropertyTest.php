@@ -11,6 +11,7 @@ use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionFunctionAbstract;
@@ -30,6 +31,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use stdClass;
@@ -600,5 +602,103 @@ PHP;
         $propertyReflection->setValue($object, 'batman');
 
         self::assertSame('batman', $propertyReflection->getValue($object));
+    }
+
+    public function testAllowsNull() : void
+    {
+        $classReflection = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
+
+        $integerPropertyReflection = $classReflection->getProperty('integerProperty');
+        self::assertFalse($integerPropertyReflection->allowsNull());
+
+        $noTypePropertyReflection = $classReflection->getProperty('noTypeProperty');
+        self::assertTrue($noTypePropertyReflection->allowsNull());
+
+        $nullableStringPropertyReflection = $classReflection->getProperty('nullableStringProperty');
+        self::assertTrue($nullableStringPropertyReflection->allowsNull());
+    }
+
+    /**
+     * @return array
+     */
+    public function hasTypeProvider() : array
+    {
+        return [
+            ['integerProperty', true],
+            ['classProperty', true],
+            ['noTypeProperty', false],
+            ['nullableStringProperty', true],
+            ['arrayProperty', true],
+        ];
+    }
+
+    /**
+     * @dataProvider hasTypeProvider
+     */
+    public function testHasType(
+        string $propertyName,
+        bool $expectedHasType
+    ) : void {
+        $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
+        $propertyReflection = $classReflection->getProperty($propertyName);
+
+        self::assertSame($expectedHasType, $propertyReflection->hasType());
+    }
+
+    /**
+     * @return array
+     */
+    public function getTypeProvider() : array
+    {
+        return [
+            ['integerProperty', 'int'],
+            ['classProperty', 'stdClass'],
+            ['noTypeProperty', ''],
+            ['nullableStringProperty', 'string'],
+            ['arrayProperty', 'array'],
+        ];
+    }
+
+    /**
+     * @dataProvider getTypeProvider
+     */
+    public function testGetType(
+        string $propertyName,
+        string $expectedType
+    ) : void {
+        $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
+        $propertyReflection = $classReflection->getProperty($propertyName);
+
+        $type = $propertyReflection->getType();
+
+        self::assertSame($expectedType, (string) $type);
+    }
+
+    public function testSetType() : void
+    {
+        $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
+        $propertyReflection = $classReflection->getProperty('integerProperty');
+
+        $propertyReflection->setType('string');
+
+        self::assertSame('string', (string) $propertyReflection->getType());
+        self::assertStringStartsWith(
+            'public string $integerProperty',
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+        );
+    }
+
+    public function testRemoveType() : void
+    {
+        $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
+        $propertyReflection = $classReflection->getProperty('integerProperty');
+
+        $propertyReflection->removeType();
+
+        self::assertNull($propertyReflection->getType());
+        self::assertStringStartsWith(
+            'public $integerProperty',
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+        );
     }
 }
