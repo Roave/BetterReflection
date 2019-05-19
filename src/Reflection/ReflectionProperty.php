@@ -8,6 +8,8 @@ use Closure;
 use Exception;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
+use PhpParser\Node;
+use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
@@ -374,6 +376,65 @@ class ReflectionProperty implements CoreReflector
         Closure::bind(function ($instance, string $propertyName, $value) : void {
             $instance->{$propertyName} = $value;
         }, $instance, $declaringClassName)->__invoke($instance, $this->getName(), $value);
+    }
+
+    /**
+     * Does this property allow null?
+     */
+    public function allowsNull() : bool
+    {
+        if (! $this->hasType()) {
+            return true;
+        }
+
+        return $this->node->type instanceof NullableType;
+    }
+
+    /**
+     * Get the ReflectionType instance representing the type declaration for
+     * this property
+     *
+     * (note: this has nothing to do with DocBlocks).
+     */
+    public function getType() : ?ReflectionType
+    {
+        $type = $this->node->type;
+
+        if ($type === null) {
+            return null;
+        }
+
+        if ($type instanceof NullableType) {
+            $type = $type->type;
+        }
+
+        return ReflectionType::createFromTypeAndReflector((string) $type, $this->allowsNull(), $this->reflector);
+    }
+
+    /**
+     * Does this property have a type declaration?
+     *
+     * (note: this has nothing to do with DocBlocks).
+     */
+    public function hasType() : bool
+    {
+        return $this->node->type !== null;
+    }
+
+    /**
+     * Set the property type declaration.
+     */
+    public function setType(string $newPropertyType) : void
+    {
+        $this->node->type = new Node\Name($newPropertyType);
+    }
+
+    /**
+     * Remove the property type declaration completely.
+     */
+    public function removeType() : void
+    {
+        $this->node->type = null;
     }
 
     /**
