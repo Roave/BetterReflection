@@ -11,6 +11,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use function array_map;
@@ -68,7 +69,11 @@ use function var_export;
             }
 
             if ($node instanceof Node\Expr\FuncCall) {
-                ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                try {
+                    ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                } catch (InvalidConstantNode $e) {
+                    return null;
+                }
 
                 /** @var Node\Scalar\String_ $nameNode */
                 $nameNode = $node->args[0]->value;
