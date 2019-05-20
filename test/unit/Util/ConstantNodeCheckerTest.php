@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Util;
 
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 
 /**
@@ -15,44 +16,56 @@ class ConstantNodeCheckerTest extends TestCase
 {
     public function testWithoutName() : void
     {
+        self::expectException(InvalidConstantNode::class);
+
         $node = new Node\Expr\FuncCall(new Node\Expr\Variable('foo'));
 
-        self::assertFalse(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     public function testDifferentName() : void
     {
+        self::expectException(InvalidConstantNode::class);
+
         $node = new Node\Expr\FuncCall(new Node\Name('foo'));
 
-        self::assertFalse(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     public function testInvalidArgumentsCount() : void
     {
+        self::expectException(InvalidConstantNode::class);
+
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO'))]);
 
-        self::assertFalse(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     public function testNameAsNotString() : void
     {
+        self::expectException(InvalidConstantNode::class);
+
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Expr\Variable('FOO')), new Node\Arg(new Node\Scalar\String_('foo'))]);
 
-        self::assertFalse(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     public function testValueAsFunctionCall() : void
     {
-        $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg(new Node\Expr\FuncCall('fopen'))]);
+        self::expectException(InvalidConstantNode::class);
 
-        self::assertFalse(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg(new Node\Expr\FuncCall(new Node\Name('fopen')))]);
+
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     public function testValueAsVariable() : void
     {
+        self::expectException(InvalidConstantNode::class);
+
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg(new Node\Expr\Variable('foo'))]);
 
-        self::assertFalse(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     /**
@@ -80,8 +93,10 @@ class ConstantNodeCheckerTest extends TestCase
      */
     public function testValidValues(Node\Expr $valueNode) : void
     {
+        self::expectNotToPerformAssertions();
+
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg($valueNode)]);
 
-        self::assertTrue(ConstantNodeChecker::isValidDefineFunctionCall($node));
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 }

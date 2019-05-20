@@ -10,6 +10,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
@@ -116,9 +117,13 @@ final class FindReflectionsInTree
                     return null;
                 }
 
-                if ($node instanceof Node\Expr\FuncCall
-                    && ConstantNodeChecker::isValidDefineFunctionCall($node)
-                ) {
+                if ($node instanceof Node\Expr\FuncCall) {
+                    try {
+                        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                    } catch (InvalidConstantNode $e) {
+                        return null;
+                    }
+
                     $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
 
                     if ($this->identifierType->isMatchingReflector($reflection)) {

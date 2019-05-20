@@ -11,6 +11,7 @@ use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
@@ -210,9 +211,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
 
-                if ($node instanceof Node\Expr\FuncCall
-                    && ConstantNodeChecker::isValidDefineFunctionCall($node)
-                ) {
+                if ($node instanceof Node\Expr\FuncCall) {
+                    try {
+                        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                    } catch (InvalidConstantNode $e) {
+                        return null;
+                    }
+
                     /** @var Node\Scalar\String_ $nameNode */
                     $nameNode     = $node->args[0]->value;
                     $constantName = $nameNode->value;

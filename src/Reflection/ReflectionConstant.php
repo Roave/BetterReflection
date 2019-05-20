@@ -11,7 +11,7 @@ use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflection\Exception\InvalidNode;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -98,14 +98,15 @@ class ReflectionConstant implements Reflection, CoreReflector
         return $constant;
     }
 
+    /**
+     * @throws InvalidConstantNode
+     */
     private static function createFromDefineFunctionCall(
         Reflector $reflector,
         Node\Expr\FuncCall $node,
         LocatedSource $locatedSource
     ) : self {
-        if (! ConstantNodeChecker::isValidDefineFunctionCall($node)) {
-            throw InvalidNode::create();
-        }
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
 
         $constant                = new self();
         $constant->reflector     = $reflector;

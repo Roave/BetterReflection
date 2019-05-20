@@ -15,6 +15,7 @@ use ReflectionException;
 use ReflectionFunction;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -313,9 +314,13 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
 
-                if ($node instanceof Node\Expr\FuncCall
-                    && ConstantNodeChecker::isValidDefineFunctionCall($node)
-                ) {
+                if ($node instanceof Node\Expr\FuncCall) {
+                    try {
+                        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                    } catch (InvalidConstantNode $e) {
+                        return null;
+                    }
+
                     /** @var Node\Scalar\String_ $nameNode */
                     $nameNode = $node->args[0]->value;
 

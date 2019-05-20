@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
 use PhpParser\Node;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\Util\ConstantNodeChecker;
 
 /**
  * @internal
@@ -54,10 +54,12 @@ class NodeToReflection implements AstConversionStrategy
             return ReflectionConstant::createFromNode($reflector, $node, $locatedSource, $namespace, $positionInNode);
         }
 
-        if ($node instanceof Node\Expr\FuncCall
-            && ConstantNodeChecker::isValidDefineFunctionCall($node)
-        ) {
-            return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
+        if ($node instanceof Node\Expr\FuncCall) {
+            try {
+                return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
+            } catch (InvalidConstantNode $e) {
+                // Ignore
+            }
         }
 
         return null;

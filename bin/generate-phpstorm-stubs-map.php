@@ -67,9 +67,9 @@ use function var_export;
                 return NodeTraverser::DONT_TRAVERSE_CHILDREN;
             }
 
-            if ($node instanceof Node\Expr\FuncCall
-                && ConstantNodeChecker::isValidDefineFunctionCall($node)
-            ) {
+            if ($node instanceof Node\Expr\FuncCall) {
+                ConstantNodeChecker::assertValidDefineFunctionCall($node);
+
                 /** @var Node\Scalar\String_ $nameNode */
                 $nameNode = $node->args[0]->value;
 
