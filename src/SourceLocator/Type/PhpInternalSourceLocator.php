@@ -34,7 +34,9 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      */
     protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
     {
-        return $this->getClassSource($identifier) ?? $this->getFunctionSource($identifier);
+        return $this->getClassSource($identifier)
+            ?? $this->getFunctionSource($identifier)
+            ?? $this->getConstantSource($identifier);
     }
 
     private function getClassSource(Identifier $identifier) : ?InternalLocatedSource
@@ -53,6 +55,15 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         }
 
         return $this->createLocatedSourceFromStubData($this->stubber->generateFunctionStub($identifier->getName()));
+    }
+
+    private function getConstantSource(Identifier $identifier) : ?InternalLocatedSource
+    {
+        if (! $identifier->isConstant()) {
+            return null;
+        }
+
+        return $this->createLocatedSourceFromStubData($this->stubber->generateConstantStub($identifier->getName()));
     }
 
     private function createLocatedSourceFromStubData(?StubData $stubData) : ?InternalLocatedSource

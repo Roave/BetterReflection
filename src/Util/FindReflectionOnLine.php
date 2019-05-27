@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflector\ClassReflector;
@@ -39,7 +40,7 @@ final class FindReflectionOnLine
      *
      * Returns null if no reflections found on the line.
      *
-     * @return ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection|null
+     * @return ReflectionMethod|ReflectionClass|ReflectionFunction|ReflectionConstant|Reflection|null
      *
      * @throws InvalidFileLocation
      * @throws ParseToAstFailure
@@ -63,6 +64,10 @@ final class FindReflectionOnLine
             if ($reflection instanceof ReflectionFunction && $this->containsLine($reflection, $lineNumber)) {
                 return $reflection;
             }
+
+            if ($reflection instanceof ReflectionConstant && $this->containsLine($reflection, $lineNumber)) {
+                return $reflection;
+            }
         }
 
         return null;
@@ -83,7 +88,8 @@ final class FindReflectionOnLine
 
         return array_merge(
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
-            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
+            $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT))
         );
     }
 

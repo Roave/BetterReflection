@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
@@ -64,6 +65,22 @@ class FindReflectionOnLineTest extends TestCase
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertSame('fooFunc', $reflection->getName());
+    }
+
+    public function testInvokeFindsConstantByDefine() : void
+    {
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 30);
+
+        self::assertInstanceOf(ReflectionConstant::class, $reflection);
+        self::assertSame('FOO', $reflection->getName());
+    }
+
+    public function testInvokeFindsConstantByConst() : void
+    {
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 32);
+
+        self::assertInstanceOf(ReflectionConstant::class, $reflection);
+        self::assertSame('BOO', $reflection->getName());
     }
 
     public function testInvokeReturnsNullWhenNothingFound() : void

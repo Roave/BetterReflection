@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 use function array_merge;
+use function array_reduce;
 
 class AggregateSourceStubber implements SourceStubber
 {
@@ -46,5 +47,15 @@ class AggregateSourceStubber implements SourceStubber
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateConstantStub(string $constantName) : ?StubData
+    {
+        return array_reduce($this->sourceStubbers, static function (?StubData $stubData, SourceStubber $sourceStubber) use ($constantName) : ?StubData {
+            return $stubData ?? $sourceStubber->generateConstantStub($constantName);
+        }, null);
     }
 }

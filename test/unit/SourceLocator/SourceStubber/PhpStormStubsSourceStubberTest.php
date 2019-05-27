@@ -10,9 +10,11 @@ use ReflectionFunction as CoreReflectionFunction;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -24,6 +26,7 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
 use function sort;
@@ -46,6 +49,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /** @var FunctionReflector */
     private $functionReflector;
 
+    /** @var ConstantReflector */
+    private $constantReflector;
+
     protected function setUp() : void
     {
         parent::setUp();
@@ -59,6 +65,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         );
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
         $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
+        $this->constantReflector        = new ConstantReflector($this->phpInternalSourceLocator, $this->classReflector);
     }
 
     /**
@@ -400,6 +407,66 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return array<int, array<int, mixed>>
+     */
+    public function internalConstantsProvider() : array
+    {
+        $provider = [];
+
+        foreach (get_defined_constants(true) as $extensionName => $extensionConstants) {
+            // Check only always enabled extensions
+            if (! in_array($extensionName, ['Core', 'standard', 'pcre', 'SPL'], true)) {
+                continue;
+            }
+
+            foreach ($extensionConstants as $constantName => $constantValue) {
+                // Needs fixes in JetBrains/phpstorm-stubs
+                if (in_array($constantName, ['PHP_WINDOWS_NT_DOMAIN_CONTROLLER', 'PHP_WINDOWS_NT_SERVER', 'PHP_WINDOWS_NT_WORKSTATION'], true)) {
+                    continue;
+                }
+
+                // Not supported because of resource as value
+                if (in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)) {
+                    continue;
+                }
+
+                $provider[] = [$constantName, $constantValue, $extensionName];
+            }
+        }
+
+        return $provider;
+    }
+
+    /**
+     * @param mixed $constantValue
+     *
+     * @dataProvider internalConstantsProvider
+     */
+    public function testInternalConstants(string $constantName, $constantValue, string $extensionName) : void
+    {
+        $constantReflection = $this->constantReflector->reflect($constantName);
+
+        self::assertInstanceOf(ReflectionConstant::class, $constantReflection);
+        // Needs fixes in JetBrains/phpstorm-stubs
+        if (! in_array($constantName, ['TRUE', 'FALSE', 'NULL'], true)) {
+            self::assertSame($constantName, $constantReflection->getName());
+            self::assertSame($constantName, $constantReflection->getShortName());
+        }
+        self::assertNotNull($constantReflection->getNamespaceName());
+        self::assertFalse($constantReflection->inNamespace());
+        self::assertTrue($constantReflection->isInternal());
+        self::assertFalse($constantReflection->isUserDefined());
+        // Needs fixes in JetBrains/phpstorm-stubs
+        // self::assertSame($extensionName, $constantReflection->getExtensionName());
+        // NAN cannot be compared
+        if ($constantName === 'NAN') {
+            return;
+        }
+
+        self::assertSame($constantValue, $constantReflection->getValue());
+    }
+
     public function testNoStubForUnknownClass() : void
     {
         self::assertNull($this->sourceStubber->generateClassStub('SomeClass'));
@@ -408,5 +475,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function testNoStubForUnknownFunction() : void
     {
         self::assertNull($this->sourceStubber->generateFunctionStub('someFunction'));
+    }
+
+    public function testNoStubForUnknownConstant() : void
+    {
+        self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
     }
 }

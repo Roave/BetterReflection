@@ -18,4 +18,9 @@ interface SourceStubber
      * Generates stub for given function. Returns null when it cannot generate the stub.
      */
     public function generateFunctionStub(string $functionName) : ?StubData;
+
+    /**
+     * Generates stub for given constant. Returns null when it cannot generate the stub.
+     */
+    public function generateConstantStub(string $constantName) : ?StubData;
 }

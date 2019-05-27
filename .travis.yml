@@ -175,7 +175,7 @@ jobs:
       php: 7.2
       env: DEPENDENCIES=""
       before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.11.5
+        - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.11.7
       script: vendor/bin/phpstan analyse
 
     - stage: Static Analysis

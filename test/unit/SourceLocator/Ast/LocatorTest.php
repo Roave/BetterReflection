@@ -8,8 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
@@ -30,7 +32,11 @@ class LocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->locator = new Locator(BetterReflectionSingleton::instance()->phpParser());
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->locator = new Locator($betterReflection->phpParser(), static function () use ($betterReflection) : FunctionReflector {
+            return $betterReflection->functionReflector();
+        });
     }
 
     private function getIdentifier(string $name, string $type) : Identifier
@@ -98,6 +104,36 @@ class LocatorTest extends TestCase
         );
 
         self::assertInstanceOf(ReflectionFunction::class, $functionInfo);
+    }
+
+    public function testReflectingTopLevelConstantByConst() : void
+    {
+        $php = '<?php
+        const FOO = 1;
+        ';
+
+        $constantInfo = $this->locator->findReflection(
+            new ConstantReflector(new StringSourceLocator($php, $this->locator), BetterReflectionSingleton::instance()->classReflector()),
+            new LocatedSource($php, null),
+            $this->getIdentifier('FOO', IdentifierType::IDENTIFIER_CONSTANT)
+        );
+
+        self::assertInstanceOf(ReflectionConstant::class, $constantInfo);
+    }
+
+    public function testReflectingTopLevelConstantByDefine() : void
+    {
+        $php = '<?php
+        define("FOO", 1);
+        ';
+
+        $constantInfo = $this->locator->findReflection(
+            new ConstantReflector(new StringSourceLocator($php, $this->locator), BetterReflectionSingleton::instance()->classReflector()),
+            new LocatedSource($php, null),
+            $this->getIdentifier('FOO', IdentifierType::IDENTIFIER_CONSTANT)
+        );
+
+        self::assertInstanceOf(ReflectionConstant::class, $constantInfo);
     }
 
     public function testReflectThrowsExeptionWhenClassNotFoundAndNoNodesExist() : void

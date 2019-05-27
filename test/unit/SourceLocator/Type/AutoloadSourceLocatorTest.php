@@ -11,6 +11,7 @@ use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -170,6 +171,55 @@ class AutoloadSourceLocatorTest extends TestCase
 
         $this->expectException(IdentifierNotFound::class);
         $reflector->reflect('this function does not exist, hopefully');
+    }
+
+    public function testConstantLoadsByConst() : void
+    {
+        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+
+        require_once __DIR__ . '/../../Fixture/Constants.php';
+        $reflection = $reflector->reflect('Roave\BetterReflectionTest\Fixture\BY_CONST_2');
+
+        self::assertSame('Roave\BetterReflectionTest\Fixture\BY_CONST_2', $reflection->getName());
+        self::assertSame('BY_CONST_2', $reflection->getShortName());
+    }
+
+    public function testConstantLoadsByDefine() : void
+    {
+        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+
+        require_once __DIR__ . '/../../Fixture/Constants.php';
+        $reflection = $reflector->reflect('BY_DEFINE');
+
+        self::assertSame('BY_DEFINE', $reflection->getName());
+        self::assertSame('BY_DEFINE', $reflection->getShortName());
+    }
+
+    public function testConstantLoadsByDefineWithNamespace() : void
+    {
+        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+
+        require_once __DIR__ . '/../../Fixture/Constants.php';
+        $reflection = $reflector->reflect('Roave\BetterReflectionTest\Fixture\BY_DEFINE');
+
+        self::assertSame('Roave\BetterReflectionTest\Fixture\BY_DEFINE', $reflection->getName());
+        self::assertSame('BY_DEFINE', $reflection->getShortName());
+    }
+
+    public function testInternalConstantDoesNotLoad() : void
+    {
+        $this->expectException(IdentifierNotFound::class);
+
+        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector->reflect('E_ALL');
+    }
+
+    public function testConstantReflectionFailsWhenConstantNotDefined() : void
+    {
+        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+
+        $this->expectException(IdentifierNotFound::class);
+        $reflector->reflect('this constant does not exist, hopefully');
     }
 
     public function testNullReturnedWhenInvalidTypeGiven() : void
