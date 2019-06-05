@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Reflector;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
@@ -18,7 +17,6 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Throwable;
 use const E_ALL;
 
 /**

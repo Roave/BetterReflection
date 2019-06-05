@@ -24,6 +24,7 @@ class ReflectionFunction extends CoreReflectionFunction
 
     /**
      * {@inheritDoc}
+     *
      * @throws Exception
      */
     public static function export($name, $return = null)

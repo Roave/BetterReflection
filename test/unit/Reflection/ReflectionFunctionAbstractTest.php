@@ -30,7 +30,6 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
-use Throwable;
 use TypeError;
 use function current;
 use function next;

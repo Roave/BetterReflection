@@ -15,7 +15,8 @@ use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject
 use function array_combine;
 use function array_map;
 use function func_num_args;
-use Roave\BetterReflection\Reflection\ReflectionObject;
+use function is_object;
+use function is_string;
 use function sprintf;
 use function strtolower;
 
@@ -31,6 +32,7 @@ class ReflectionClass extends CoreReflectionClass
 
     /**
      * {@inheritDoc}
+     *
      * @throws CoreReflectionException
      */
     public static function export($argument, $return = false)
@@ -47,6 +49,7 @@ class ReflectionClass extends CoreReflectionClass
             }
 
             echo $output;
+
             return null;
         }
 

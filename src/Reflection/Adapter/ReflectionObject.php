@@ -26,6 +26,7 @@ class ReflectionObject extends CoreReflectionObject
 
     /**
      * {@inheritDoc}
+     *
      * @throws CoreReflectionException
      */
     public static function export($argument, $return = null)
@@ -37,6 +38,7 @@ class ReflectionObject extends CoreReflectionObject
         }
 
         echo $output;
+
         return null;
     }
 

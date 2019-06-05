@@ -29,6 +29,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
     /**
      * {@inheritDoc}
+     *
      * @throws Exception
      */
     public static function export($class, $name, $return = null)
