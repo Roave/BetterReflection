@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Closure;
-use Exception;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
@@ -15,7 +14,6 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -34,7 +32,7 @@ use function func_num_args;
 use function get_class;
 use function is_object;
 
-class ReflectionProperty implements CoreReflector
+class ReflectionProperty
 {
     /** @var ReflectionClass */
     private $declaringClass;
@@ -59,11 +57,6 @@ class ReflectionProperty implements CoreReflector
 
     private function __construct()
     {
-    }
-
-    public static function export() : void
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**

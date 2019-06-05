@@ -129,21 +129,6 @@ class ReflectionParameterTest extends TestCase
         ReflectionParameter::createFromSpec(123, 'a');
     }
 
-    public function testImplementsReflector() : void
-    {
-        $classInfo  = $this->reflector->reflect(Methods::class);
-        $methodInfo = $classInfo->getMethod('methodWithParameters');
-        $paramInfo  = $methodInfo->getParameter('parameter1');
-
-        self::assertInstanceOf(Reflector::class, $paramInfo);
-    }
-
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionParameter::export();
-    }
-
     /**
      * @return array
      */

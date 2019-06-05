@@ -85,14 +85,6 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('add', $method->getName());
     }
 
-    public function testImplementsReflector() : void
-    {
-        $classInfo  = $this->reflector->reflect(Methods::class);
-        $methodInfo = $classInfo->getMethod('publicMethod');
-
-        self::assertInstanceOf(Reflector::class, $methodInfo);
-    }
-
     /**
      * @return array
      */

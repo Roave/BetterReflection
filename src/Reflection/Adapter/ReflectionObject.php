@@ -10,7 +10,6 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use function array_combine;
 use function array_map;
-use function func_get_args;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
@@ -27,10 +26,18 @@ class ReflectionObject extends CoreReflectionObject
 
     /**
      * {@inheritDoc}
+     * @throws CoreReflectionException
      */
     public static function export($argument, $return = null)
     {
-        return BetterReflectionObject::export(...func_get_args());
+        $output = BetterReflectionObject::createFromInstance($argument)->__toString();
+
+        if ($return) {
+            return $output;
+        }
+
+        echo $output;
+        return null;
     }
 
     /**

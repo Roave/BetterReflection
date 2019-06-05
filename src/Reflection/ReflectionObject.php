@@ -45,27 +45,6 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * Create a reflection and return the string representation of a class instance
-     *
-     * @param object $instance
-     *
-     * @throws IdentifierNotFound
-     * @throws ReflectionException
-     * @throws InvalidArgumentException
-     */
-    public static function export($instance, bool $return = false) : ?string
-    {
-        $output = self::createFromInstance($instance)->__toString();
-
-        if ($return) {
-            return $output;
-        }
-
-        echo $output;
-        return null;
-    }
-
-    /**
      * Pass an instance of an object to this method to reflect it
      *
      * @param object $object

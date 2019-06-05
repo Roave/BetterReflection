@@ -3,6 +3,22 @@
 This document serves as a reference to upgrade your current BetterReflection installation if improvements, deprecations
 or backwards compatibility (BC) breakages occur.
 
+## 4.0.0
+
+### BC Breaks
+
+* The following classes no longer implement `\Reflector`. If you need something that implements `\Reflector`, you should
+  wrap the BetterReflection in the appropriate `\Roave\BetterReflection\Reflection\Adapter\*` class.
+  * `\Roave\BetterReflection\Reflection\ReflectionClass`
+  * `\Roave\BetterReflection\Reflection\ReflectionClassConstant`
+  * `\Roave\BetterReflection\Reflection\ReflectionConstant`
+  * `\Roave\BetterReflection\Reflection\ReflectionFunctionAbstract`
+  * `\Roave\BetterReflection\Reflection\ReflectionFunction`
+  * `\Roave\BetterReflection\Reflection\ReflectionMethod`
+  * `\Roave\BetterReflection\Reflection\ReflectionObject`
+  * `\Roave\BetterReflection\Reflection\ReflectionParameter`
+  * `\Roave\BetterReflection\Reflection\ReflectionProperty`
+
 ## 3.0.0
 
 ### BC breaks

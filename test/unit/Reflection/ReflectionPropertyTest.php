@@ -74,14 +74,6 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('someProperty', $property->getName());
     }
 
-    public function testImplementsReflector() : void
-    {
-        $classInfo  = $this->reflector->reflect(ExampleClass::class);
-        $publicProp = $classInfo->getProperty('publicProperty');
-
-        self::assertInstanceOf(Reflector::class, $publicProp);
-    }
-
     public function testVisibilityMethods() : void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
@@ -195,12 +187,6 @@ class ReflectionPropertyTest extends TestCase
         $property  = $classInfo->getProperty('publicStaticProperty');
 
         self::assertSame('', $property->getDocComment());
-    }
-
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionProperty::export();
     }
 
     public function modifierProvider() : array

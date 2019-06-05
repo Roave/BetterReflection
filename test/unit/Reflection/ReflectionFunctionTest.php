@@ -43,16 +43,6 @@ class ReflectionFunctionTest extends TestCase
         $this->sourceStubber  = $configuration->sourceStubber();
     }
 
-    public function testImplementsReflector() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
-
-        self::assertInstanceOf(Reflector::class, $functionInfo);
-    }
-
     public function testNameMethodsWithNoNamespace() : void
     {
         $php = '<?php function foo() {}';

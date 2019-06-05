@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use Exception;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
@@ -21,10 +22,11 @@ class ReflectionParameter extends CoreReflectionParameter
 
     /**
      * {@inheritDoc}
+     * @throws Exception
      */
     public static function export($function, $parameter, $return = null)
     {
-        BetterReflectionParameter::export(...func_get_args());
+        throw new Exception('Unable to export statically');
     }
 
     /**

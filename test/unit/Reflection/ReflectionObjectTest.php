@@ -277,41 +277,6 @@ class ReflectionObjectTest extends TestCase
         $reflectionObject->{$methodName}(...$fakeParams);
     }
 
-    public function testReflectionObjectExportMatchesExpectation() : void
-    {
-        $foo      = new ClassForHinting();
-        $foo->bar = 'huzzah';
-
-        $expectedExport = <<<'BLAH'
-Object of class [ <user> class Roave\BetterReflectionTest\Fixture\ClassForHinting ] {
-  @@ %s
-
-  - Constants [0] {
-  }
-
-  - Static properties [0] {
-  }
-
-  - Static methods [0] {
-  }
-
-  - Properties [1] {
-    Property [ <default> public $someProperty ]
-  }
-
-  - Dynamic properties [1] {
-    Property [ <dynamic> public $bar ]
-  }
-
-  - Methods [0] {
-  }
-}
-BLAH;
-        $actualExport   = ReflectionObject::export($foo, true);
-
-        self::assertStringMatchesFormat($expectedExport, $actualExport);
-    }
-
     public function testCannotClone() : void
     {
         $classInfo = ReflectionObject::createFromInstance(new stdClass());

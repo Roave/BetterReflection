@@ -45,16 +45,6 @@ class ReflectionConstantTest extends TestCase
         $this->sourceStubber  = $configuration->sourceStubber();
     }
 
-    public function testImplementsReflector() : void
-    {
-        $php = '<?php const FOO = 1;';
-
-        $reflector  = new ConstantReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $reflection = $reflector->reflect('FOO');
-
-        self::assertInstanceOf(Reflector::class, $reflection);
-    }
-
     public function testNameMethodsWithNoNamespaceByConst() : void
     {
         $php = '<?php const FOO = 1;';
@@ -308,11 +298,5 @@ class ReflectionConstantTest extends TestCase
 
         self::assertInstanceOf(Node\Expr\FuncCall::class, $ast);
         self::assertSame('FOO', $ast->args[0]->value->value);
-    }
-
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionConstant::export();
     }
 }

@@ -20,7 +20,6 @@ use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -47,13 +46,12 @@ use function array_values;
 use function implode;
 use function in_array;
 use function is_object;
-use function is_string;
 use function ltrim;
 use function sha1;
 use function sprintf;
 use function strtolower;
 
-class ReflectionClass implements Reflection, CoreReflector
+class ReflectionClass implements Reflection
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
 
@@ -83,31 +81,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     private function __construct()
     {
-    }
-
-    /**
-     * Create a reflection and return the string representation of a named class
-     *
-     * @param string|object $argument
-     */
-    public static function export($argument, bool $return = false) : ?string
-    {
-        if (is_string($argument) || is_object($argument)) {
-            if (is_string($argument)) {
-                $output = self::createFromName($argument)->__toString();
-            } else {
-                $output = ReflectionObject::createFromInstance($argument)->__toString();
-            }
-
-            if ($return) {
-                return $output;
-            }
-
-            echo $output;
-            return null;
-        }
-
-        throw new InvalidArgumentException('Class name must be provided');
     }
 
     public function __toString() : string

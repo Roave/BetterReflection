@@ -60,12 +60,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         $this->astLocator     = $configuration->astLocator();
     }
 
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionFunctionAbstract::export();
-    }
-
     public function testNameMethodsWithNamespace() : void
     {
         $php = '<?php namespace Foo { function bar() {}}';

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Exception;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
@@ -25,7 +23,7 @@ use function explode;
 use function implode;
 use function substr_count;
 
-class ReflectionConstant implements Reflection, CoreReflector
+class ReflectionConstant implements Reflection
 {
     /** @var Reflector */
     private $reflector;
@@ -284,11 +282,6 @@ class ReflectionConstant implements Reflection, CoreReflector
     public function __toString() : string
     {
         return ReflectionConstantStringCast::toString($this);
-    }
-
-    public static function export() : void
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**
