@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionFunctionAbstract;
 use ReflectionProperty as CoreReflectionProperty;
-use Reflector;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -35,7 +34,6 @@ use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use stdClass;
-use Throwable;
 use TraitWithProperty;
 use function count;
 
@@ -72,14 +70,6 @@ class ReflectionPropertyTest extends TestCase
 
         self::assertInstanceOf(ReflectionProperty::class, $property);
         self::assertSame('someProperty', $property->getName());
-    }
-
-    public function testImplementsReflector() : void
-    {
-        $classInfo  = $this->reflector->reflect(ExampleClass::class);
-        $publicProp = $classInfo->getProperty('publicProperty');
-
-        self::assertInstanceOf(Reflector::class, $publicProp);
     }
 
     public function testVisibilityMethods() : void
@@ -195,12 +185,6 @@ class ReflectionPropertyTest extends TestCase
         $property  = $classInfo->getProperty('publicStaticProperty');
 
         self::assertSame('', $property->getDocComment());
-    }
-
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionProperty::export();
     }
 
     public function modifierProvider() : array

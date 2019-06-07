@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Reflector;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
@@ -18,7 +17,6 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use Throwable;
 use const E_ALL;
 
 /**
@@ -43,16 +41,6 @@ class ReflectionConstantTest extends TestCase
         $this->classReflector = $configuration->classReflector();
         $this->astLocator     = $configuration->astLocator();
         $this->sourceStubber  = $configuration->sourceStubber();
-    }
-
-    public function testImplementsReflector() : void
-    {
-        $php = '<?php const FOO = 1;';
-
-        $reflector  = new ConstantReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $reflection = $reflector->reflect('FOO');
-
-        self::assertInstanceOf(Reflector::class, $reflection);
     }
 
     public function testNameMethodsWithNoNamespaceByConst() : void
@@ -308,11 +296,5 @@ class ReflectionConstantTest extends TestCase
 
         self::assertInstanceOf(Node\Expr\FuncCall::class, $ast);
         self::assertSame('FOO', $ast->args[0]->value->value);
-    }
-
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionConstant::export();
     }
 }

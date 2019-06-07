@@ -19,7 +19,6 @@ use Reflection as CoreReflection;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -1398,30 +1397,12 @@ PHP;
         self::assertSame([], $traitReflection->getInterfaces());
     }
 
-    public function testImplementsReflector() : void
-    {
-        $php = '<?php class Foo {}';
-
-        $reflector = new ClassReflector(new StringSourceLocator($php, $this->astLocator));
-        $classInfo = $reflector->reflect('Foo');
-
-        self::assertInstanceOf(CoreReflector::class, $classInfo);
-    }
-
     public function testToString() : void
     {
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             $reflection->__toString()
-        );
-    }
-
-    public function testExport() : void
-    {
-        self::assertStringMatchesFormat(
-            file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
-            ReflectionClass::export(ExampleClass::class)
         );
     }
 

@@ -11,7 +11,6 @@ use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
-use Reflector;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -34,7 +33,6 @@ use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
 use stdClass;
-use Throwable;
 use function sprintf;
 
 /**
@@ -127,21 +125,6 @@ class ReflectionParameterTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Could not create reflection from the spec given');
         ReflectionParameter::createFromSpec(123, 'a');
-    }
-
-    public function testImplementsReflector() : void
-    {
-        $classInfo  = $this->reflector->reflect(Methods::class);
-        $methodInfo = $classInfo->getMethod('methodWithParameters');
-        $paramInfo  = $methodInfo->getParameter('parameter1');
-
-        self::assertInstanceOf(Reflector::class, $paramInfo);
-    }
-
-    public function testExportThrowsException() : void
-    {
-        $this->expectException(Throwable::class);
-        ReflectionParameter::export();
     }
 
     /**

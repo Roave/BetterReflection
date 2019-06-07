@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Closure;
 use phpDocumentor\Reflection\Types\Boolean;
 use PHPUnit\Framework\TestCase;
-use Reflector;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -41,16 +40,6 @@ class ReflectionFunctionTest extends TestCase
         $this->classReflector = $configuration->classReflector();
         $this->astLocator     = $configuration->astLocator();
         $this->sourceStubber  = $configuration->sourceStubber();
-    }
-
-    public function testImplementsReflector() : void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
-
-        self::assertInstanceOf(Reflector::class, $functionInfo);
     }
 
     public function testNameMethodsWithNoNamespace() : void

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Closure;
-use Exception;
 use LogicException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
@@ -18,7 +17,6 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -40,7 +38,7 @@ use function is_array;
 use function is_string;
 use function strtolower;
 
-abstract class ReflectionFunctionAbstract implements CoreReflector
+abstract class ReflectionFunctionAbstract
 {
     public const CLOSURE_NAME = '{closure}';
 
@@ -61,11 +59,6 @@ abstract class ReflectionFunctionAbstract implements CoreReflector
 
     protected function __construct()
     {
-    }
-
-    public static function export() : void
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**

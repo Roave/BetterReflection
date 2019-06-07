@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use Exception;
 use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Throwable;
 use function func_get_args;
@@ -22,10 +24,12 @@ class ReflectionFunction extends CoreReflectionFunction
 
     /**
      * {@inheritDoc}
+     *
+     * @throws Exception
      */
     public static function export($name, $return = null)
     {
-        BetterReflectionFunction::export(...func_get_args());
+        throw new Exception('Unable to export statically');
     }
 
     /**
@@ -81,7 +85,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getClosureThis()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        throw new NotImplemented('Not implemented');
     }
 
     /**
@@ -89,7 +93,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getClosureScopeClass()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        throw new NotImplemented('Not implemented');
     }
 
     /**
@@ -113,7 +117,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getExtension()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        throw new NotImplemented('Not implemented');
     }
 
     /**
@@ -208,7 +212,7 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getStaticVariables()
     {
-        throw new Exception\NotImplemented('Not implemented');
+        throw new NotImplemented('Not implemented');
     }
 
     /**

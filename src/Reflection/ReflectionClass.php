@@ -20,7 +20,6 @@ use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -52,7 +51,7 @@ use function sha1;
 use function sprintf;
 use function strtolower;
 
-class ReflectionClass implements Reflection, CoreReflector
+class ReflectionClass implements Reflection
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
 
@@ -82,18 +81,6 @@ class ReflectionClass implements Reflection, CoreReflector
 
     private function __construct()
     {
-    }
-
-    /**
-     * Create a reflection and return the string representation of a named class
-     */
-    public static function export(?string $className) : string
-    {
-        if ($className === null) {
-            throw new InvalidArgumentException('Class name must be provided');
-        }
-
-        return self::createFromName($className)->__toString();
     }
 
     public function __toString() : string

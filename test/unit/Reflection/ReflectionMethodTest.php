@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
-use Reflector;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -83,14 +82,6 @@ class ReflectionMethodTest extends TestCase
 
         self::assertInstanceOf(ReflectionMethod::class, $method);
         self::assertSame('add', $method->getName());
-    }
-
-    public function testImplementsReflector() : void
-    {
-        $classInfo  = $this->reflector->reflect(Methods::class);
-        $methodInfo = $classInfo->getMethod('publicMethod');
-
-        self::assertInstanceOf(Reflector::class, $methodInfo);
     }
 
     /**

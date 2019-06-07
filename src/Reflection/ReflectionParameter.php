@@ -14,7 +14,6 @@ use PhpParser\Node;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
@@ -33,7 +32,7 @@ use function is_string;
 use function sprintf;
 use function strtolower;
 
-class ReflectionParameter implements CoreReflector
+class ReflectionParameter
 {
     /** @var ParamNode */
     private $node;
@@ -61,11 +60,6 @@ class ReflectionParameter implements CoreReflector
 
     private function __construct()
     {
-    }
-
-    public static function export() : void
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**

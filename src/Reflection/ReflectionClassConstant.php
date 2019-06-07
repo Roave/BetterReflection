@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Exception;
 use PhpParser\Node\Stmt\ClassConst;
 use ReflectionProperty;
-use Reflector as CoreReflector;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
@@ -15,7 +13,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
-class ReflectionClassConstant implements CoreReflector
+class ReflectionClassConstant
 {
     /** @var bool */
     private $valueWasCached = false;
@@ -175,11 +173,6 @@ class ReflectionClassConstant implements CoreReflector
     public function __toString() : string
     {
         return ReflectionClassConstantStringCast::toString($this);
-    }
-
-    public static function export() : void
-    {
-        throw new Exception('Unable to export statically');
     }
 
     public function getAst() : ClassConst

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use Exception;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Throwable;
-use function func_get_args;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
@@ -27,10 +27,12 @@ class ReflectionProperty extends CoreReflectionProperty
 
     /**
      * {@inheritDoc}
+     *
+     * @throws Exception
      */
     public static function export($class, $name, $return = null)
     {
-        BetterReflectionProperty::export(...func_get_args());
+        throw new Exception('Unable to export statically');
     }
 
     /**
