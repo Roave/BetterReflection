@@ -71,7 +71,7 @@ class ReflectionMethodTest extends TestCase
             ['isUserDefined', null, true, []],
             ['getClosureThis', NotImplemented::class, null, []],
             ['getClosureScopeClass', NotImplemented::class, null, []],
-            ['getDocComment', null, false, []],
+            ['getDocComment', null, '', []],
             ['getStartLine', null, 123, []],
             ['getEndLine', null, 123, []],
             ['getExtension', NotImplemented::class, null, []],
