@@ -24,6 +24,7 @@ use function preg_match;
 use function sprintf;
 use function str_replace;
 use function strlen;
+use function strpos;
 use function strtolower;
 use function substr;
 use function var_export;
@@ -37,6 +38,8 @@ use function var_export;
 
     $fileVisitor = new class() extends NodeVisitorAbstract
     {
+        private const PHPSTORM_PREFIXES = ['PS_UNRESERVE_PREFIX_', '___PHPSTORM_HELPERS'];
+
         /** @var string[] */
         private $classNames = [];
 
@@ -49,14 +52,22 @@ use function var_export;
         public function enterNode(Node $node) : ?int
         {
             if ($node instanceof Node\Stmt\ClassLike) {
-                $this->classNames[] = $node->namespacedName->toString();
+                $className = $node->namespacedName->toString();
+
+                if (! $this->hasPhpStormPrefix($className)) {
+                    $this->classNames[] = $className;
+                }
 
                 return NodeTraverser::DONT_TRAVERSE_CHILDREN;
             }
 
             if ($node instanceof Node\Stmt\Function_) {
                 /** @psalm-suppress UndefinedPropertyFetch */
-                $this->functionNames[] = $node->namespacedName->toString();
+                $functionName = $node->namespacedName->toString();
+
+                if (! $this->hasPhpStormPrefix($functionName)) {
+                    $this->functionNames[] = $functionName;
+                }
 
                 return NodeTraverser::DONT_TRAVERSE_CHILDREN;
             }
@@ -122,6 +133,17 @@ use function var_export;
             $this->classNames    = [];
             $this->functionNames = [];
             $this->constantNames = [];
+        }
+
+        private function hasPhpStormPrefix(string $name) : bool
+        {
+            foreach (self::PHPSTORM_PREFIXES as $prefix) {
+                if (strpos($name, $prefix) === 0) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     };
 
