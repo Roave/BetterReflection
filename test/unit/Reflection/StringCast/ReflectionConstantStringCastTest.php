@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -21,11 +22,17 @@ class ReflectionConstantStringCastTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var SourceStubber */
+    private $sourceStubber;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
+        $betterReflection = BetterReflectionSingleton::instance();
+
+        $this->astLocator    = $betterReflection->astLocator();
+        $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
     public function toStringProvider() : array
@@ -46,7 +53,7 @@ class ReflectionConstantStringCastTest extends TestCase
     {
         $sourceLocator = new AggregateSourceLocator([
             new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastConstants.php', $this->astLocator),
-            new PhpInternalSourceLocator($this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
         ]);
 
         $reflector          = new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator));

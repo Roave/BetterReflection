@@ -18,6 +18,8 @@ or backwards compatibility (BC) breakages occur.
   * `\Roave\BetterReflection\Reflection\ReflectionObject`
   * `\Roave\BetterReflection\Reflection\ReflectionParameter`
   * `\Roave\BetterReflection\Reflection\ReflectionProperty`
+* The `$stubber` parameter of `Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator` and
+  `Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator` constructors is now required.
 
 ## 3.0.0
 
