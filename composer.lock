@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a294a0b137b49f3005562f5c80dd3f1",
+    "content-hash": "8655e92f6b3057cbdf319848175e3dde",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2019.1",
+            "version": "v2019.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "9e309771f362e979ecfb429303ad7a402c657234"
+                "reference": "0eb16807e8406e775ef602974b104454fc7ffb5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/9e309771f362e979ecfb429303ad7a402c657234",
-                "reference": "9e309771f362e979ecfb429303ad7a402c657234",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/0eb16807e8406e775ef602974b104454fc7ffb5c",
+                "reference": "0eb16807e8406e775ef602974b104454fc7ffb5c",
                 "shasum": ""
             },
             "require-dev": {
@@ -27,6 +27,11 @@
                 "phpunit/phpunit": "7.1.4"
             },
             "type": "library",
+            "autoload": {
+                "files": [
+                    "PhpStormStubsMap.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
@@ -43,7 +48,7 @@
                 "stubs",
                 "type"
             ],
-            "time": "2019-03-25T16:59:23+00:00"
+            "time": "2019-07-22T14:52:46+00:00"
         },
         {
             "name": "nikic/php-parser",
