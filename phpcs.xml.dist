@@ -5,7 +5,6 @@
     <arg name="colors"/>
     <arg name="cache" value=".phpcs-cache"/>
 
-    <file>bin</file>
     <file>src</file>
     <file>test/unit</file>
     <exclude-pattern>test/unit/Assets/*</exclude-pattern>

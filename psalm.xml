@@ -6,7 +6,6 @@
     allowPhpStormGenerics="true"
 >
     <projectFiles>
-        <directory name="bin" />
         <directory name="src" />
     </projectFiles>
 
