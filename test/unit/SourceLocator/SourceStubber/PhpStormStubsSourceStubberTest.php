@@ -228,8 +228,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             . '.' . $original->getName();
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
-        // Bugs in PHP: https://3v4l.org/1HSTK
-        if (! in_array($parameterName, ['SplFileObject#fputcsv.fields'], true)) {
+        // Inconsistencies
+        if (! in_array($parameterName, ['SplFileObject#fputcsv.fields', 'SplFixedArray#fromArray.array'], true)) {
             self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
         }
         // Bugs in PHP: https://3v4l.org/RjCDr
@@ -284,7 +284,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionNames = get_defined_functions()['internal'];
 
         // Needs fixes in JetBrains/phpstorm-stubs
-        $missingFunctionsInStubs = ['password_algos', 'sapi_windows_vt100_support', 'sapi_windows_set_ctrl_handler', 'sapi_windows_generate_ctrl_event'];
+        $missingFunctionsInStubs = ['password_algos', 'sapi_windows_set_ctrl_handler', 'sapi_windows_generate_ctrl_event', 'get_mangled_object_vars'];
 
         return array_map(
             static function (string $functionName) : array {
@@ -342,6 +342,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             'compact',
             'array_map',
             'array_merge',
+            'array_merge_recursive',
             'array_replace',
             'array_replace_recursive',
             'array_intersect',
@@ -364,6 +365,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
             'dns_get_record',
             'extract',
             'pos',
+            'setcookie',
+            'setrawcookie',
+            'sapi_windows_vt100_support',
         ], true)) {
             return;
         }
@@ -439,7 +443,18 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
             foreach ($extensionConstants as $constantName => $constantValue) {
                 // Needs fixes in JetBrains/phpstorm-stubs
-                if (in_array($constantName, ['PHP_WINDOWS_NT_DOMAIN_CONTROLLER', 'PHP_WINDOWS_NT_SERVER', 'PHP_WINDOWS_NT_WORKSTATION'], true)) {
+                if (in_array($constantName, [
+                    'PHP_WINDOWS_NT_DOMAIN_CONTROLLER',
+                    'PHP_WINDOWS_NT_SERVER',
+                    'PHP_WINDOWS_NT_WORKSTATION',
+                    'PHP_WINDOWS_EVENT_CTRL_C',
+                    'PHP_WINDOWS_EVENT_CTRL_BREAK',
+                    'PHP_CLI_PROCESS_TITLE',
+                    'STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT',
+                    'STREAM_CRYPTO_METHOD_TLSv1_3_SERVER',
+                    'STREAM_CRYPTO_PROTO_TLSv1_3',
+                    'PASSWORD_ARGON2_PROVIDER',
+                ], true)) {
                     continue;
                 }
 
