@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c387590622cb8d65728e1aebc1b1595a",
+    "content-hash": "475fa397d60cd36b6490ca3d0e25db4f",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -52,16 +52,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.2",
+            "version": "v4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420"
+                "reference": "e612609022e935f3d0337c1295176505b41188c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
-                "reference": "1bd73cc04c3843ad8d6b0bfc0956026a151fc420",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e612609022e935f3d0337c1295176505b41188c8",
+                "reference": "e612609022e935f3d0337c1295176505b41188c8",
                 "shasum": ""
             },
             "require": {
@@ -69,7 +69,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5 || ^7.0"
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -99,7 +99,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-05-25T20:07:01+00:00"
+            "time": "2019-08-12T20:17:41+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -331,7 +331,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -437,9 +437,9 @@
             "authors": [
                 {
                     "name": "Franck Nijhof",
+                    "role": "Developer / IT Manager",
                     "email": "franck.nijhof@dealerdirect.com",
-                    "homepage": "http://www.frenck.nl",
-                    "role": "Developer / IT Manager"
+                    "homepage": "http://www.frenck.nl"
                 }
             ],
             "description": "PHP_CodeSniffer Standards Composer Installer Plugin",
@@ -666,18 +666,18 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 },
                 {
                     "name": "Sebastian Heuer",
-                    "email": "sebastian@phpeople.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpeople.de"
                 },
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
@@ -940,8 +940,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
@@ -982,8 +982,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Simple template engine.",
@@ -1031,8 +1031,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Utility class for timing",
@@ -1160,8 +1160,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "The PHP Unit Testing framework.",
@@ -1734,8 +1734,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
@@ -1866,8 +1866,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
