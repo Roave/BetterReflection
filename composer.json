@@ -8,7 +8,7 @@
         "jetbrains/phpstorm-stubs": "2019.2",
         "nikic/php-parser": "^4.2.1",
         "phpdocumentor/reflection-docblock": "^4.3.2",
-        "phpdocumentor/type-resolver": "^0.4.0 || ^1.0.0",
+        "phpdocumentor/type-resolver": "^1.0.0",
         "roave/signature": "^1.0"
     },
     "authors": [
