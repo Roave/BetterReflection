@@ -205,7 +205,7 @@ class MemoizingSourceLocatorTest extends TestCase
                 Reflector $reflector,
                 Identifier $identifier
             ) use (
-                & $fetchedSymbolsCount
+                &$fetchedSymbolsCount
             ) : ?Reflection {
                 $identifierId = spl_object_hash($identifier);
                 $reflectorId  = spl_object_hash($reflector);
