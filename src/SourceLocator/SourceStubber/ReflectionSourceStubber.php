@@ -33,6 +33,7 @@ use ReflectionClassConstant;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionMethod as CoreReflectionMethod;
+use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use ReflectionType as CoreReflectionType;
@@ -475,7 +476,7 @@ final class ReflectionSourceStubber implements SourceStubber
      */
     private function formatType(CoreReflectionType $type) : NodeAbstract
     {
-        $name     = (string) $type;
+        $name     = $type instanceof CoreReflectionNamedType ? $type->getName() : (string) $type;
         $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
 
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
