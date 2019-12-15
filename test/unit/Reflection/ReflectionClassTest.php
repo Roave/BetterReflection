@@ -680,6 +680,19 @@ PHP;
         self::assertStringEndsWith('Fixture/AnonymousClassNoNamespace.php(3)', $classInfo->getName());
     }
 
+    public function testIsAnonymousWithParentClass(): void
+    {
+        $classReflection = ReflectionClass::createFromInstance(
+            new class extends \Roave\BetterReflectionTest\Fixture\ClassForHinting {
+                public function a()
+                {
+                }
+            }
+        );
+        $parent = $classReflection->getParentClass();
+        self::assertSame(ClassForHinting::class, $parent->getName());
+    }
+
     public function testIsAnonymousWithAnonymousClassInNamespace() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
