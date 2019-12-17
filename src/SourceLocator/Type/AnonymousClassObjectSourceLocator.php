@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use ReflectionClass as CoreReflectionClass;
@@ -153,6 +154,8 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor($nodeVisitor);
+        $nodeTraverser->addVisitor(new NameResolver);
+
         $nodeTraverser->traverse($ast);
 
         /** @var ReflectionClass|null $reflectionClass */

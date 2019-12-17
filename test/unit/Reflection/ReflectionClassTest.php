@@ -682,15 +682,24 @@ PHP;
 
     public function testIsAnonymousWithParentClass(): void
     {
-        $classReflection = ReflectionClass::createFromInstance(
-            new class extends \Roave\BetterReflectionTest\Fixture\ClassForHinting {
-                public function a()
+        $reflector = new ClassReflector(
+            new SingleFileSourceLocator(
+                realpath(__DIR__.'/../Fixture/ClassForHinting.php'),
+                $this->astLocator
+            )
+        );
+
+        $anonymousClassInfo = ReflectionClass::createFromInstance(
+            new class extends ClassForHinting {
+                public function a(): void
                 {
                 }
             }
         );
-        $parent = $classReflection->getParentClass();
+
+        $parent = $anonymousClassInfo->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
+        self::assertSame((string)$parent, (string)$reflector->reflect(ClassForHinting::class));
     }
 
     public function testIsAnonymousWithAnonymousClassInNamespace() : void
