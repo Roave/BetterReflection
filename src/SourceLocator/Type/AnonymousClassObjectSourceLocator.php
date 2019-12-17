@@ -154,7 +154,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $nodeTraverser = new NodeTraverser();
         $nodeTraverser->addVisitor($nodeVisitor);
-        $nodeTraverser->addVisitor(new NameResolver);
+        $nodeTraverser->addVisitor(new NameResolver());
 
         $nodeTraverser->traverse($ast);
 

@@ -65,6 +65,7 @@ use function basename;
 use function class_exists;
 use function count;
 use function file_get_contents;
+use function realpath;
 use function sort;
 use function uniqid;
 
@@ -680,18 +681,18 @@ PHP;
         self::assertStringEndsWith('Fixture/AnonymousClassNoNamespace.php(3)', $classInfo->getName());
     }
 
-    public function testIsAnonymousWithParentClass(): void
+    public function testIsAnonymousWithParentClass() : void
     {
         $reflector = new ClassReflector(
             new SingleFileSourceLocator(
-                realpath(__DIR__.'/../Fixture/ClassForHinting.php'),
+                realpath(__DIR__ . '/../Fixture/ClassForHinting.php'),
                 $this->astLocator
             )
         );
 
         $anonymousClassInfo = ReflectionClass::createFromInstance(
             new class extends ClassForHinting {
-                public function a(): void
+                public function a() : void
                 {
                 }
             }
@@ -699,7 +700,7 @@ PHP;
 
         $parent = $anonymousClassInfo->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
-        self::assertSame((string)$parent, (string)$reflector->reflect(ClassForHinting::class));
+        self::assertSame((string) $parent, (string) $reflector->reflect(ClassForHinting::class));
     }
 
     public function testIsAnonymousWithAnonymousClassInNamespace() : void
