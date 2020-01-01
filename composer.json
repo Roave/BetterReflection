@@ -35,7 +35,7 @@
 
     ],
     "require-dev": {
-        "doctrine/coding-standard": "^6.0",
+        "doctrine/coding-standard": "^7.0",
         "phpunit/phpunit": "^8.1.6"
     },
     "autoload": {
