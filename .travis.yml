@@ -2,6 +2,8 @@ os: linux
 dist: xenial
 language: php
 
+if: type != push OR branch = master OR branch =~ /^v?\d+\.\d+(\.\d+)?(-\S*)?$/
+
 before_script:
   - rm composer.lock
   - travis_retry composer update --prefer-dist $DEPENDENCIES
