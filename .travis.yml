@@ -208,7 +208,7 @@ jobs:
     - stage: Static Analysis
       php: 7.2
       env: DEPENDENCIES=""
-      script: vendor/bin/phpstan analyse
+      script: vendor/bin/phpstan analyse --memory-limit=-1
 
     - stage: Static Analysis
       php: 7.2
