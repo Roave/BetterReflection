@@ -964,7 +964,6 @@ class ReflectionClass implements Reflection
 
             foreach ($adaptations as $adaptation) {
                 $usedTrait = $adaptation->trait;
-                assert($usedTrait instanceof Node\Name || $usedTrait === null);
                 if ($usedTrait === null) {
                     $usedTrait = $traitNames[0];
                 }

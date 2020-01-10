@@ -103,7 +103,6 @@ class CompileNodeToValue
         }
 
         $classInfo = null;
-        assert($classInfo instanceof ReflectionClass || $classInfo === null);
 
         if ($className === 'self' || $className === 'static') {
             $classInfo = $context->getSelf()->hasConstant($nodeName) ? $context->getSelf() : null;

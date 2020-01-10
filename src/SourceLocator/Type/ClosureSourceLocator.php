@@ -119,6 +119,8 @@ final class ClosureSourceLocator implements SourceLocator
                 }
 
                 $this->closureNodes[] = [$node, $this->currentNamespace];
+
+                return null;
             }
 
             /**
@@ -131,6 +133,8 @@ final class ClosureSourceLocator implements SourceLocator
                 }
 
                 $this->currentNamespace = null;
+
+                return null;
             }
 
             /**
@@ -166,6 +170,7 @@ final class ClosureSourceLocator implements SourceLocator
 
         $closureNodes = $nodeVisitor->getClosureNodes();
         assert(is_array($closureNodes));
+        assert($closureNodes[1] instanceof Namespace_ || $closureNodes[1] === null);
 
         $reflectionFunction = (new NodeToReflection())->__invoke(
             $reflector,

@@ -169,6 +169,8 @@ final class FindReflectionsInTree
                 }
 
                 $this->reflections[] = $reflection;
+
+                return null;
             }
 
             /**
@@ -181,6 +183,8 @@ final class FindReflectionsInTree
                 }
 
                 $this->currentNamespace = null;
+
+                return null;
             }
 
             /**

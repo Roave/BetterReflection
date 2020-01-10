@@ -128,6 +128,8 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                 }
 
                 $this->anonymousClassNodes[] = $node;
+
+                return null;
             }
 
             public function getAnonymousClassNode() : ?Class_

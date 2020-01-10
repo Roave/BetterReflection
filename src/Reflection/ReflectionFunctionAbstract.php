@@ -502,7 +502,7 @@ abstract class ReflectionFunctionAbstract
 
         $functionNode = $closureReflection->getNode();
 
-        $this->node->stmts = $functionNode->stmts;
+        $this->node->stmts = $functionNode->getStmts();
     }
 
     /**
