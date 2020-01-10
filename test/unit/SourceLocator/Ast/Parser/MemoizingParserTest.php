@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
 use PhpParser\Parser;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use function array_map;
@@ -23,7 +22,6 @@ class MemoizingParserTest extends TestCase
 {
     public function testParse() : void
     {
-        /** @var Parser|MockObject $wrappedParser */
         $wrappedParser = $this->createMock(Parser::class);
 
         $randomCodeStrings = array_unique(array_map(

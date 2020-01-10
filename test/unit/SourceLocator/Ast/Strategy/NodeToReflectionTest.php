@@ -9,7 +9,6 @@ use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -54,7 +53,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForClassNode() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
@@ -72,7 +70,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForTraitNode() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php trait Foo {}', null);
@@ -91,7 +88,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForInterfaceNode() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php interface Foo {}', null);
@@ -110,7 +106,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForFunctionNode() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php function foo(){}', null);
@@ -128,7 +123,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByConst() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
@@ -147,7 +141,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByConstWithMoreConstants() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector        = $this->createMock(Reflector::class);
         $nodeToReflection = new NodeToReflection();
 
@@ -178,7 +171,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByDefine() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php define("FOO", 1);', null);
@@ -199,7 +191,6 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsNullWhenIncompatibleNodeFound() : void
     {
-        /** @var Reflector|MockObject $reflector */
         $reflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);

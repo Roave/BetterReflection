@@ -13,12 +13,12 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use SplFileInfo;
-use const PATHINFO_EXTENSION;
 use function array_filter;
 use function array_map;
 use function array_values;
 use function iterator_to_array;
 use function pathinfo;
+use const PATHINFO_EXTENSION;
 
 /**
  * This source locator loads all php files from \FileSystemIterator

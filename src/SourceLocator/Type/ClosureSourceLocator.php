@@ -25,7 +25,9 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use function array_filter;
 use function array_values;
+use function assert;
 use function file_get_contents;
+use function is_array;
 use function strpos;
 
 /**
@@ -117,6 +119,8 @@ final class ClosureSourceLocator implements SourceLocator
                 }
 
                 $this->closureNodes[] = [$node, $this->currentNamespace];
+
+                return null;
             }
 
             /**
@@ -129,6 +133,8 @@ final class ClosureSourceLocator implements SourceLocator
                 }
 
                 $this->currentNamespace = null;
+
+                return null;
             }
 
             /**
@@ -162,16 +168,17 @@ final class ClosureSourceLocator implements SourceLocator
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        /** @var array $closureNodes */
         $closureNodes = $nodeVisitor->getClosureNodes();
+        assert(is_array($closureNodes));
+        assert($closureNodes[1] instanceof Namespace_ || $closureNodes[1] === null);
 
-        /** @var ReflectionFunction|null $reflectionFunction */
         $reflectionFunction = (new NodeToReflection())->__invoke(
             $reflector,
             $closureNodes[0],
             new LocatedSource($fileContents, $fileName),
             $closureNodes[1]
         );
+        assert($reflectionFunction instanceof ReflectionFunction || $reflectionFunction === null);
 
         return $reflectionFunction;
     }

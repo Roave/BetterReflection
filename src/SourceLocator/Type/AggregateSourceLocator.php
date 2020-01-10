@@ -29,9 +29,6 @@ class AggregateSourceLocator implements SourceLocator
         $this->sourceLocators = $validator(...$sourceLocators);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         foreach ($this->sourceLocators as $sourceLocator) {

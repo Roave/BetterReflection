@@ -27,7 +27,6 @@ use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
 use Traversable;
-use const PHP_VERSION_ID;
 use function array_filter;
 use function array_map;
 use function array_merge;
@@ -37,6 +36,7 @@ use function get_declared_traits;
 use function in_array;
 use function sort;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber
@@ -287,12 +287,14 @@ class ReflectionSourceStubberTest extends TestCase
             // Bug in PHP: https://3v4l.org/EeHXS
             self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
         }
+
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         if (! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)) {
             // Parameters are variadic but not optinal
             self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         }
+
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 

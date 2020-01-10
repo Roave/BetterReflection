@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator
@@ -22,7 +23,6 @@ class AbstractSourceLocatorTest extends TestCase
 {
     public function testLocateIdentifierCallsFindReflection() : void
     {
-        /** @var Reflector|MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', null);
@@ -31,7 +31,6 @@ class AbstractSourceLocatorTest extends TestCase
 
         $mockReflection = $this->createMock(ReflectionClass::class);
 
-        /** @var AstLocator|MockObject $astLocator */
         $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->once())
@@ -39,11 +38,11 @@ class AbstractSourceLocatorTest extends TestCase
             ->with($mockReflector, $locatedSource, $identifier)
             ->will($this->returnValue($mockReflection));
 
-        /** @var AbstractSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
+        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -55,22 +54,20 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource() : void
     {
-        /** @var Reflector|MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        /** @var AstLocator|MockObject $astLocator */
         $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->never())
             ->method('findReflection');
 
-        /** @var AbstractSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
+        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -82,14 +79,12 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException() : void
     {
-        /** @var Reflector|MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', null);
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        /** @var AstLocator|MockObject $astLocator */
         $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->once())
@@ -97,11 +92,11 @@ class AbstractSourceLocatorTest extends TestCase
             ->with($mockReflector, $locatedSource, $identifier)
             ->will($this->throwException(new IdentifierNotFound('Foo', $identifier)));
 
-        /** @var AbstractSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
+        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -113,7 +108,6 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersByTypeCallsFindReflectionsOfType() : void
     {
-        /** @var Reflector|MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', null);
@@ -122,7 +116,6 @@ class AbstractSourceLocatorTest extends TestCase
 
         $mockReflection = $this->createMock(ReflectionClass::class);
 
-        /** @var AstLocator|MockObject $astLocator */
         $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->once())
@@ -130,11 +123,11 @@ class AbstractSourceLocatorTest extends TestCase
             ->with($mockReflector, $locatedSource, $identifierType)
             ->will($this->returnValue([$mockReflection]));
 
-        /** @var AbstractSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
+        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -145,22 +138,20 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource() : void
     {
-        /** @var Reflector|MockObject $mockReflector */
         $mockReflector = $this->createMock(Reflector::class);
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        /** @var AstLocator|MockObject $astLocator */
         $astLocator = $this->createMock(AstLocator::class);
 
         $astLocator->expects($this->never())
             ->method('findReflectionsOfType');
 
-        /** @var AbstractSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
+        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')

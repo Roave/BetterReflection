@@ -16,12 +16,12 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use const ARRAY_FILTER_USE_KEY;
 use function array_filter;
 use function array_keys;
 use function array_map;
 use function array_merge;
 use function array_values;
+use function assert;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
@@ -29,6 +29,7 @@ use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
 use function sprintf;
+use const ARRAY_FILTER_USE_KEY;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
@@ -64,12 +65,12 @@ class PhpInternalSourceLocatorTest extends TestCase
     public function testCanFetchInternalLocatedSourceForClasses(string $className) : void
     {
         try {
-            /** @var ReflectionClass $reflection */
             $reflection = $this->phpInternalSourceLocator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
             );
-            $source     = $reflection->getLocatedSource();
+            assert($reflection instanceof ReflectionClass);
+            $source = $reflection->getLocatedSource();
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
@@ -114,12 +115,12 @@ class PhpInternalSourceLocatorTest extends TestCase
     public function testCanFetchInternalLocatedSourceForFunctions(string $functionName) : void
     {
         try {
-            /** @var ReflectionFunction $reflection */
             $reflection = $this->phpInternalSourceLocator->locateIdentifier(
                 $this->getMockReflector(),
                 new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
             );
-            $source     = $reflection->getLocatedSource();
+            assert($reflection instanceof ReflectionFunction);
+            $source = $reflection->getLocatedSource();
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
             self::assertNotEmpty($source->getSource());
@@ -152,12 +153,12 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function testCanFetchInternalLocatedSourceForConstants(string $constantName) : void
     {
-        /** @var ReflectionFunction $reflection */
         $reflection = $this->phpInternalSourceLocator->locateIdentifier(
             $this->getMockReflector(),
             new Identifier($constantName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT))
         );
-        $source     = $reflection->getLocatedSource();
+        assert($reflection instanceof ReflectionFunction);
+        $source = $reflection->getLocatedSource();
 
         self::assertInstanceOf(InternalLocatedSource::class, $source);
         self::assertNotEmpty($source->getSource());

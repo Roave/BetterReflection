@@ -18,6 +18,7 @@ use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use function array_slice;
+use function assert;
 use function count;
 use function explode;
 use function implode;
@@ -276,9 +277,6 @@ class ReflectionConstant implements Reflection
         return GetFirstDocComment::forNode($this->node);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString() : string
     {
         return ReflectionConstantStringCast::toString($this);
@@ -294,8 +292,8 @@ class ReflectionConstant implements Reflection
 
     private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node) : string
     {
-        /** @var Node\Scalar\String_ $nameNode */
         $nameNode = $node->args[0]->value;
+        assert($nameNode instanceof Node\Scalar\String_);
 
         return $nameNode->value;
     }

@@ -17,9 +17,6 @@ class AggregateSourceStubber implements SourceStubber
         $this->sourceStubbers = array_merge([$sourceStubber], $otherSourceStubbers);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateClassStub(string $className) : ?StubData
     {
         foreach ($this->sourceStubbers as $sourceStubber) {
@@ -33,9 +30,6 @@ class AggregateSourceStubber implements SourceStubber
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateFunctionStub(string $functionName) : ?StubData
     {
         foreach ($this->sourceStubbers as $sourceStubber) {
@@ -49,9 +43,6 @@ class AggregateSourceStubber implements SourceStubber
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateConstantStub(string $constantName) : ?StubData
     {
         return array_reduce($this->sourceStubbers, static function (?StubData $stubData, SourceStubber $sourceStubber) use ($constantName) : ?StubData {

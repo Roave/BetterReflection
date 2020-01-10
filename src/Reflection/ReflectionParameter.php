@@ -23,6 +23,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\Util\CalculateReflectionColum;
 use RuntimeException;
+use function assert;
 use function count;
 use function get_class;
 use function in_array;
@@ -174,17 +175,17 @@ class ReflectionParameter
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
-            /** @var Node\Name $defaultValueNode->class */
+            assert($defaultValueNode->class instanceof Node\Name);
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {
-                /** @var Node\Identifier $defaultValueNode->name */
+                assert($defaultValueNode->name instanceof Node\Identifier);
                 $constantName = $defaultValueNode->name->name;
                 $className    = $this->findParentClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant = true;
-            /** @var Node\Identifier $defaultValueNode->name */
+            assert($defaultValueNode->name instanceof Node\Identifier);
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name->name;
         }
 
@@ -208,9 +209,9 @@ class ReflectionParameter
      */
     private function findParentClassDeclaringConstant(string $constantName) : string
     {
-        /** @var ReflectionMethod $method */
         $method = $this->function;
-        $class  = $method->getDeclaringClass();
+        assert($method instanceof ReflectionMethod);
+        $class = $method->getDeclaringClass();
 
         do {
             if ($class->hasConstant($constantName)) {
@@ -229,7 +230,8 @@ class ReflectionParameter
      */
     public function getName() : string
     {
-        /** @var string $this->node->var->name */
+        assert(is_string($this->node->var->name));
+
         return $this->node->var->name;
     }
 
@@ -491,22 +493,22 @@ class ReflectionParameter
             return null;
         }
 
-        /** @var ReflectionType $type */
-        $type     = $this->getType();
+        $type = $this->getType();
+        assert($type instanceof ReflectionType);
         $typeHint = (string) $type;
 
         if ($typeHint === 'self') {
-            /** @var ReflectionClass $declaringClass */
             $declaringClass = $this->getDeclaringClass();
+            assert($declaringClass instanceof ReflectionClass);
 
             return $declaringClass->getName();
         }
 
         if ($typeHint === 'parent') {
-            /** @var ReflectionClass $declaringClass */
             $declaringClass = $this->getDeclaringClass();
-            /** @var ReflectionClass $parentClass */
+            assert($declaringClass instanceof ReflectionClass);
             $parentClass = $declaringClass->getParentClass();
+            assert($parentClass instanceof ReflectionClass);
 
             return $parentClass->getName();
         }

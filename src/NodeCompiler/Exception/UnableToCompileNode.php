@@ -8,6 +8,7 @@ use LogicException;
 use PhpParser\Node;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use function assert;
 use function get_class;
 use function reset;
 use function sprintf;
@@ -29,7 +30,8 @@ class UnableToCompileNode extends LogicException
         ReflectionClass $targetClass,
         Node\Expr\ClassConstFetch $constantFetch
     ) : self {
-        /** @var Node\Identifier $constantFetch->name */
+        assert($constantFetch->name instanceof Node\Identifier);
+
         return new self(sprintf(
             'Could not locate constant %s::%s while trying to evaluate constant expression in %s at line %s',
             $targetClass->getName(),
@@ -43,7 +45,8 @@ class UnableToCompileNode extends LogicException
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch
     ) : self {
-        /** @var Node\Name $constantFetch->name */
+        assert($constantFetch->name instanceof Node\Name);
+
         return new self(sprintf(
             'Could not locate constant "%s" while evaluating expression in %s at line %s',
             reset($constantFetch->name->parts),

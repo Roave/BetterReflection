@@ -35,6 +35,7 @@ class IdentifierType
                 $type
             ));
         }
+
         $this->name = $type;
     }
 

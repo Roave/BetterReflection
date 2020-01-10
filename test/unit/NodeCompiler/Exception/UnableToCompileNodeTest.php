@@ -10,7 +10,6 @@ use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -43,7 +42,6 @@ final class UnableToCompileNodeTest extends TestCase
     {
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
-        /** @var ReflectionClass|MockObject $targetClass */
         $targetClass = $this->createMock(ReflectionClass::class);
 
         $targetClass

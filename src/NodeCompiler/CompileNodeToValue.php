@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
+use function assert;
 use function constant;
 use function defined;
 use function dirname;
@@ -92,16 +93,15 @@ class CompileNodeToValue
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        /** @var Node\Identifier $node->name */
+        assert($node->name instanceof Node\Identifier);
         $nodeName = $node->name->name;
-        /** @var Node\Name $node->class */
+        assert($node->class instanceof Node\Name);
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {
             return $this->resolveClassNameForClassNameConstant($className, $context);
         }
 
-        /** @var ReflectionClass|null $classInfo */
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
@@ -111,8 +111,8 @@ class CompileNodeToValue
         }
 
         if ($classInfo === null) {
-            /** @var ReflectionClass $classInfo */
             $classInfo = $context->getReflector()->reflect($className);
+            assert($classInfo instanceof ReflectionClass);
         }
 
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
@@ -150,8 +150,8 @@ class CompileNodeToValue
         }
 
         if ($className === 'parent') {
-            /** @var ReflectionClass $parentClass */
             $parentClass = $context->getSelf()->getParentClass();
+            assert($parentClass instanceof ReflectionClass);
 
             return $parentClass->getName();
         }

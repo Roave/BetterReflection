@@ -26,6 +26,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use function array_filter;
 use function array_values;
+use function assert;
 use function file_get_contents;
 use function gettype;
 use function is_object;
@@ -127,6 +128,8 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                 }
 
                 $this->anonymousClassNodes[] = $node;
+
+                return null;
             }
 
             public function getAnonymousClassNode() : ?Class_
@@ -155,13 +158,13 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
-        /** @var ReflectionClass|null $reflectionClass */
         $reflectionClass = (new NodeToReflection())->__invoke(
             $reflector,
             $nodeVisitor->getAnonymousClassNode(),
             new LocatedSource($fileContents, $fileName),
             null
         );
+        assert($reflectionClass instanceof ReflectionClass || $reflectionClass === null);
 
         return $reflectionClass;
     }

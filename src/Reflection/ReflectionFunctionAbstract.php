@@ -32,6 +32,7 @@ use Roave\BetterReflection\Util\CalculateReflectionColum;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use function array_filter;
+use function assert;
 use function count;
 use function implode;
 use function is_array;
@@ -493,16 +494,15 @@ abstract class ReflectionFunctionAbstract
      */
     public function setBodyFromClosure(Closure $newBody) : void
     {
-        /** @var self $closureReflection */
         $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
             $this->reflector,
             new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
         );
+        assert($closureReflection instanceof self);
 
-        /** @var Node\Stmt\Function_ $functionNode */
         $functionNode = $closureReflection->getNode();
 
-        $this->node->stmts = $functionNode->stmts;
+        $this->node->stmts = $functionNode->getStmts();
     }
 
     /**

@@ -167,9 +167,6 @@ class ReflectionClassConstant
         return GetFirstDocComment::forNode($this->node);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString() : string
     {
         return ReflectionClassConstantStringCast::toString($this);

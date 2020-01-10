@@ -56,9 +56,6 @@ class DirectoriesSourceLocator implements SourceLocator
         )));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {
         return $this->aggregateSourceLocator->locateIdentifier($reflector, $identifier);

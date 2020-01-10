@@ -8,7 +8,7 @@ before_script:
 
 matrix:
   allow_failures:
-    - php: 7.4snapshot
+    - php: 7.4
 
 jobs:
   include:
@@ -81,12 +81,12 @@ jobs:
       script: vendor/bin/phpunit
 
     - stage: Test
-      php: 7.4snapshot
+      php: 7.4
       env: DEPENDENCIES=""
       script: vendor/bin/phpunit
 
     - stage: Test
-      php: 7.4snapshot
+      php: 7.4
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit
 
@@ -159,12 +159,12 @@ jobs:
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
-      php: 7.4snapshot
+      php: 7.4
       env: DEPENDENCIES=""
       script: vendor/bin/phpunit test/compat
 
     - stage: Test Compatibility
-      php: 7.4snapshot
+      php: 7.4
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: vendor/bin/phpunit test/compat
 
@@ -189,12 +189,12 @@ jobs:
       script: test/demo/check-demo.sh
 
     - stage: Check Demo Scripts
-      php: 7.4snapshot
+      php: 7.4
       env: DEPENDENCIES=""
       script: test/demo/check-demo.sh
 
     - stage: Check Demo Scripts
-      php: 7.4snapshot
+      php: 7.4
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
       script: test/demo/check-demo.sh
 
@@ -208,8 +208,6 @@ jobs:
     - stage: Static Analysis
       php: 7.2
       env: DEPENDENCIES=""
-      before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.11.7
       script: vendor/bin/phpstan analyse
 
     - stage: Static Analysis

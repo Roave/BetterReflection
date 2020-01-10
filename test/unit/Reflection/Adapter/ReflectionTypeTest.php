@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
@@ -14,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Reflector\Reflector;
 use function array_combine;
 use function array_map;
+use function assert;
 use function get_class_methods;
 
 /**
@@ -56,7 +56,6 @@ class ReflectionTypeTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionType|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionType::class);
 
         if ($expectedException === null) {
@@ -86,8 +85,8 @@ class ReflectionTypeTest extends TestCase
 
     public function testSelfIsNotBuiltin() : void
     {
-        /** @var Reflector $reflector */
-        $reflector             = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector);
         $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('self', false, $reflector);
         $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
 
@@ -96,8 +95,8 @@ class ReflectionTypeTest extends TestCase
 
     public function testParentIsNotBuiltin() : void
     {
-        /** @var Reflector $reflector */
-        $reflector             = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector);
         $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('parent', false, $reflector);
         $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
 

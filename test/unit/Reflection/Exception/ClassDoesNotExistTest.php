@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Reflection;
@@ -16,7 +15,6 @@ class ClassDoesNotExistTest extends TestCase
 {
     public function testForDifferentReflectionType() : void
     {
-        /** @var Reflection|MockObject $reflection */
         $reflection = $this->createMock(Reflection::class);
 
         $reflection

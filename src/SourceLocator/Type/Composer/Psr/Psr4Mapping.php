@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Psr;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
-use const ARRAY_FILTER_USE_KEY;
 use function array_filter;
 use function array_keys;
 use function array_map;
@@ -20,6 +19,7 @@ use function str_replace;
 use function strlen;
 use function strpos;
 use function substr;
+use const ARRAY_FILTER_USE_KEY;
 
 final class Psr4Mapping implements PsrAutoloaderMapping
 {

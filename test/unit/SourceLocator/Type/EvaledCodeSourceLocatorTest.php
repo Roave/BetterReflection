@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 use function uniqid;
 
 /**
@@ -55,12 +56,12 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         $locator = new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber);
 
-        /** @var ReflectionClass $reflection */
         $reflection = $locator->locateIdentifier(
             $this->getMockReflector(),
             new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
         );
-        $source     = $reflection->getLocatedSource();
+        assert($reflection instanceof ReflectionClass);
+        $source = $reflection->getLocatedSource();
 
         self::assertInstanceOf(EvaledLocatedSource::class, $source);
         self::assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());

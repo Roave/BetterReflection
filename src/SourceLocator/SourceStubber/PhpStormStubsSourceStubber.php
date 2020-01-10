@@ -18,6 +18,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhp
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use Traversable;
 use function array_key_exists;
+use function assert;
 use function constant;
 use function count;
 use function defined;
@@ -76,9 +77,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $this->nodeTraverser->addVisitor($this->cachingVisitor);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateClassStub(string $className) : ?StubData
     {
         if (! array_key_exists($className, PhpStormStubsMap::CLASSES)) {
@@ -101,9 +99,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($stub, $this->getExtensionFromFilePath($filePath));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateFunctionStub(string $functionName) : ?StubData
     {
         if (! array_key_exists($functionName, PhpStormStubsMap::FUNCTIONS)) {
@@ -119,9 +114,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($this->createStub($this->functionNodes[$functionName]), $this->getExtensionFromFilePath($filePath));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateConstantStub(string $constantName) : ?StubData
     {
         // https://github.com/JetBrains/phpstorm-stubs/pull/591
@@ -219,8 +211,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         return null;
                     }
 
-                    /** @var Node\Scalar\String_ $nameNode */
-                    $nameNode     = $node->args[0]->value;
+                    $nameNode = $node->args[0]->value;
+                    assert($nameNode instanceof Node\Scalar\String_);
                     $constantName = $nameNode->value;
 
                     // Some constants has different values on different systems, some are not actual in stubs
