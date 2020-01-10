@@ -501,7 +501,6 @@ abstract class ReflectionFunctionAbstract
         assert($closureReflection instanceof self);
 
         $functionNode = $closureReflection->getNode();
-        assert($functionNode instanceof Node\Stmt\Function_);
 
         $this->node->stmts = $functionNode->stmts;
     }

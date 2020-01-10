@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -21,7 +20,6 @@ use stdClass;
 use Throwable;
 use function array_combine;
 use function array_map;
-use function assert;
 use function get_class_methods;
 
 /**
@@ -75,7 +73,6 @@ class ReflectionPropertyTest extends TestCase
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
     {
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
-        assert($reflectionStub instanceof BetterReflectionProperty || $reflectionStub instanceof MockObject);
 
         $reflectionStub->expects($this->once())
             ->method($methodName)

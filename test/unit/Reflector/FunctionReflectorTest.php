@@ -39,7 +39,7 @@ class FunctionReflectorTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['locateIdentifier'])
             ->getMock();
-        assert($sourceLocator instanceof StringSourceLocator || $sourceLocator instanceof MockObject);
+        assert($sourceLocator instanceof StringSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator
             ->expects($this->once())

@@ -6,12 +6,10 @@ namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
 use PhpParser\Parser;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use function array_map;
 use function array_unique;
-use function assert;
 use function count;
 use function range;
 use function spl_object_hash;
@@ -25,7 +23,6 @@ class MemoizingParserTest extends TestCase
     public function testParse() : void
     {
         $wrappedParser = $this->createMock(Parser::class);
-        assert($wrappedParser instanceof Parser || $wrappedParser instanceof MockObject);
 
         $randomCodeStrings = array_unique(array_map(
             static function () : string {

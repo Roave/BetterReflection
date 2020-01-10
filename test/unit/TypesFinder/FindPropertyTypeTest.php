@@ -11,14 +11,12 @@ use PhpParser\Builder\Use_;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use function assert;
 use function count;
 use function sprintf;
 
@@ -49,7 +47,6 @@ class FindPropertyTypeTest extends TestCase
     public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
     {
         $property = $this->createMock(ReflectionProperty::class);
-        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue(sprintf("/**\n * %s\n */", $docBlock)));
@@ -89,7 +86,6 @@ class FindPropertyTypeTest extends TestCase
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
     {
         $property = $this->createMock(ReflectionProperty::class);
-        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue('Nothing here...'));
@@ -102,7 +98,6 @@ class FindPropertyTypeTest extends TestCase
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent() : void
     {
         $property = $this->createMock(ReflectionProperty::class);
-        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property->expects(self::once())->method('getDocComment')
             ->will(self::returnValue(''));
@@ -127,7 +122,6 @@ class FindPropertyTypeTest extends TestCase
         $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 
         $property = $this->createMock(ReflectionProperty::class);
-        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property
             ->expects($this->once())

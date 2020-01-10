@@ -9,7 +9,6 @@ use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -17,7 +16,6 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use function assert;
 use function reset;
 
 /**
@@ -56,7 +54,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsReflectionForClassNode() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
@@ -74,7 +71,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsReflectionForTraitNode() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php trait Foo {}', null);
 
@@ -93,7 +89,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsReflectionForInterfaceNode() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php interface Foo {}', null);
 
@@ -112,7 +107,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsReflectionForFunctionNode() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php function foo(){}', null);
 
@@ -130,7 +124,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsReflectionForConstantNodeByConst() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
 
@@ -148,8 +141,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByConstWithMoreConstants() : void
     {
-        $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
+        $reflector        = $this->createMock(Reflector::class);
         $nodeToReflection = new NodeToReflection();
 
         $locatedSource = new LocatedSource('<?php const FOO = 1, BOO = 2;', null);
@@ -180,7 +172,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsReflectionForConstantNodeByDefine() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php define("FOO", 1);', null);
 
@@ -201,7 +192,6 @@ class NodeToReflectionTest extends TestCase
     public function testReturnsNullWhenIncompatibleNodeFound() : void
     {
         $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
 
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 

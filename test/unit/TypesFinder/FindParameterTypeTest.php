@@ -13,7 +13,6 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
@@ -21,7 +20,6 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use function assert;
 use function count;
 use function sprintf;
 
@@ -84,7 +82,6 @@ class FindParameterTypeTest extends TestCase
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
         $function = $this->createMock(ReflectionFunction::class);
-        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects($this->once())
@@ -111,7 +108,6 @@ class FindParameterTypeTest extends TestCase
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
         $method = $this->createMock(ReflectionFunctionAbstract::class);
-        assert($method instanceof ReflectionFunctionAbstract || $method instanceof MockObject);
 
         $method
             ->expects($this->once())
@@ -132,7 +128,6 @@ class FindParameterTypeTest extends TestCase
         $node = new ParamNode(new Variable('foo'));
 
         $function = $this->createMock(ReflectionFunctionAbstract::class);
-        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects(self::once())
@@ -159,7 +154,6 @@ class FindParameterTypeTest extends TestCase
         $parameterNode = new ParamNode(new Variable('foo'));
 
         $function = $this->createMock(ReflectionFunctionAbstract::class);
-        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects(self::once())

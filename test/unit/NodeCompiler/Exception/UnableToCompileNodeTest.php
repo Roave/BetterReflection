@@ -10,7 +10,6 @@ use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -18,7 +17,6 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use function assert;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
@@ -45,7 +43,6 @@ final class UnableToCompileNodeTest extends TestCase
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         $targetClass = $this->createMock(ReflectionClass::class);
-        assert($targetClass instanceof ReflectionClass || $targetClass instanceof MockObject);
 
         $targetClass
             ->expects(self::any())
