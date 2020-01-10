@@ -1,0 +1,133 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Continuous Integration"
+
+on:
+    pull_request:
+    push:
+        branches:
+            - master
+
+env:
+    REQUIRED_PHP_EXTENSIONS: "json"
+
+jobs:
+    coding-standards:
+        name: "Coding Standards"
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php-version:
+                    - 7.2
+
+                dependencies:
+                    - locked
+
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v2.0.0
+
+            - name: "Install PHP with extensions"
+              uses: shivammathur/setup-php@1.7.2
+              with:
+                  coverage: none
+                  extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
+                  php-version: ${{ matrix.php-version }}
+
+            - name: "Cache dependencies installed with composer"
+              uses: actions/cache@v1.1.0
+              with:
+                  path: ~/.composer/cache
+                  key: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-
+
+            - name: "Install locked dependencies with composer"
+              run: composer install --no-interaction --no-progress --no-suggest
+
+            - name: "Run doctrine/coding-standard"
+              run: vendor/bin/phpcs
+
+    static-code-analysis:
+        name: "Static Code Analysis"
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php-version:
+                    - 7.4
+
+                dependencies:
+                    - locked
+
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v2.0.0
+
+            - name: "Install PHP with extensions"
+              uses: shivammathur/setup-php@1.7.2
+              with:
+                  coverage: none
+                  extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
+                  php-version: ${{ matrix.php-version }}
+
+            - name: "Cache dependencies installed with composer"
+              uses: actions/cache@v1.1.0
+              with:
+                  path: ~/.composer/cache
+                  key: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-
+
+            - name: "Install locked dependencies with composer"
+              run: composer install --no-interaction --no-progress --no-suggest
+
+            - name: "Run phpstan/phpstan"
+              run: vendor/bin/phpstan analyse
+
+            - name: "Install vimeo/psalm"
+              run: composer require --dev --prefer-dist --prefer-stable --no-interaction --no-progress --no-suggest vimeo/psalm:2.0.0
+
+            - name: "Run vimeo/psalm"
+              run: vendor/bin/psalm --config=psalm.xml --show-info=false --stats
+
+    benchmarks:
+        name: "Benchmarks"
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php-version:
+                    - 7.2
+
+                dependencies:
+                    - locked
+
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v2.0.0
+
+            - name: "Install PHP with extensions"
+              uses: shivammathur/setup-php@1.7.2
+              with:
+                  coverage: none
+                  extensions: ${{ env.REQUIRED_PHP_EXTENSIONS }}
+                  php-version: ${{ matrix.php-version }}
+
+            - name: "Cache dependencies installed with composer"
+              uses: actions/cache@v1.1.0
+              with:
+                  path: ~/.composer/cache
+                  key: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-
+
+            - name: "Install locked dependencies with composer"
+              run: composer install --no-interaction --no-progress --no-suggest
+
+            - name: "Install phpbench/phpbench"
+              run: composer require --dev --prefer-dist --prefer-stable --no-interaction --no-progress --no-suggest phpbench/phpbench:^0.16.9
+
+            - name: "Run phpbench/phpbench"
+              run: vendor/bin/phpbench run --progress=dots --iterations=1
