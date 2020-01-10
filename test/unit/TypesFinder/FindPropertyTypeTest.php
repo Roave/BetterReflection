@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 use function count;
 use function sprintf;
 
@@ -47,8 +48,8 @@ class FindPropertyTypeTest extends TestCase
      */
     public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
     {
-        /** @var ReflectionProperty|MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
+        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue(sprintf("/**\n * %s\n */", $docBlock)));
@@ -87,8 +88,8 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
     {
-        /** @var ReflectionProperty|MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
+        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property->expects($this->any())->method('getDocComment')
             ->will($this->returnValue('Nothing here...'));
@@ -100,8 +101,8 @@ class FindPropertyTypeTest extends TestCase
 
     public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent() : void
     {
-        /** @var ReflectionProperty|MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
+        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property->expects(self::once())->method('getDocComment')
             ->will(self::returnValue(''));
@@ -125,8 +126,8 @@ class FindPropertyTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 
-        /** @var ReflectionProperty|MockObject $property */
         $property = $this->createMock(ReflectionProperty::class);
+        assert($property instanceof ReflectionProperty || $property instanceof MockObject);
 
         $property
             ->expects($this->once())

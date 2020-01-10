@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Throwable;
 use function array_combine;
 use function array_map;
+use function assert;
 use function get_class_methods;
 
 /**
@@ -86,8 +87,8 @@ class ReflectionParameterTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionParameter|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);
+        assert($reflectionStub instanceof BetterReflectionParameter || $reflectionStub instanceof MockObject);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())

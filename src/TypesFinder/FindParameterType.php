@@ -58,6 +58,7 @@ class FindParameterType
             if ($node->var instanceof Error) {
                 throw new LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
             }
+
             if ($paramTag->getVariableName() === $node->var->name) {
                 return $this->resolveTypes->__invoke(explode('|', (string) $paramTag->getType()), $context);
             }

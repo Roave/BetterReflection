@@ -20,8 +20,8 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
-use const STREAM_URL_STAT_QUIET;
 use function array_key_exists;
+use function assert;
 use function class_exists;
 use function defined;
 use function file_exists;
@@ -38,6 +38,7 @@ use function stream_wrapper_register;
 use function stream_wrapper_restore;
 use function stream_wrapper_unregister;
 use function trait_exists;
+use const STREAM_URL_STAT_QUIET;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -244,7 +245,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * @param int    $options
      * @param string $opened_path
      *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      */
     public function stream_open($path, $mode, $options, &$opened_path) : bool
     {
@@ -266,7 +267,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      *
      * @return mixed[]|bool
      *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      */
     public function url_stat($path, $flags)
     {
@@ -321,8 +322,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                         return null;
                     }
 
-                    /** @var Node\Scalar\String_ $nameNode */
                     $nameNode = $node->args[0]->value;
+                    assert($nameNode instanceof Node\Scalar\String_);
 
                     if ($nameNode->value === $this->constantName) {
                         $this->node = $node;

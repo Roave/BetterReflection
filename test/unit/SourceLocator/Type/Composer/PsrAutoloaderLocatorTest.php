@@ -65,7 +65,7 @@ class PsrAutoloaderLocatorTest extends TestCase
                     return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foo.php'];
                 }
 
-                if ($identifier->getName() === (Foo::class . 'potato')) {
+                if ($identifier->getName() === Foo::class . 'potato') {
                     return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foopotato.php'];
                 }
 

@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\TypesFinder;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Context;
+use function assert;
 
 class ResolveTypes
 {
@@ -28,8 +29,8 @@ class ResolveTypes
         $resolvedTypes = [];
 
         foreach ($stringTypes as $stringType) {
-            /** @var Type $resolvedType */
-            $resolvedType    = $this->typeResolver->resolve($stringType, $context);
+            $resolvedType = $this->typeResolver->resolve($stringType, $context);
+            assert($resolvedType instanceof Type);
             $resolvedTypes[] = $resolvedType;
         }
 

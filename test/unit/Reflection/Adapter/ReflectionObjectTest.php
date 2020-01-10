@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProp
 use stdClass;
 use function array_combine;
 use function array_map;
+use function assert;
 use function get_class_methods;
 
 /**
@@ -108,8 +109,8 @@ class ReflectionObjectTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionObject|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
+        assert($reflectionStub instanceof BetterReflectionObject || $reflectionStub instanceof MockObject);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())

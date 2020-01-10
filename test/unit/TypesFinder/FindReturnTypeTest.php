@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
+use function assert;
 use function count;
 use function sprintf;
 
@@ -49,8 +50,8 @@ class FindReturnTypeTest extends TestCase
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionMethod|MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
+        assert($function instanceof ReflectionMethod || $function instanceof MockObject);
 
         $function
             ->expects(self::once())
@@ -75,8 +76,8 @@ class FindReturnTypeTest extends TestCase
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionMethod|MockObject $method */
         $method = $this->createMock(ReflectionMethod::class);
+        assert($method instanceof ReflectionMethod || $method instanceof MockObject);
 
         $method
             ->expects($this->once())
@@ -94,8 +95,8 @@ class FindReturnTypeTest extends TestCase
 
     public function testFindReturnTypeForFunctionWithNoDocBlock() : void
     {
-        /** @var ReflectionFunction|MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
+        assert($function instanceof ReflectionFunction || $function instanceof MockObject);
 
         $function
             ->expects(self::once())
@@ -119,8 +120,8 @@ class FindReturnTypeTest extends TestCase
     ) : void {
         $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 
-        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
+        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects($this->once())

@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use function array_map;
 use function array_unique;
+use function assert;
 use function count;
 use function range;
 use function spl_object_hash;
@@ -23,8 +24,8 @@ class MemoizingParserTest extends TestCase
 {
     public function testParse() : void
     {
-        /** @var Parser|MockObject $wrappedParser */
         $wrappedParser = $this->createMock(Parser::class);
+        assert($wrappedParser instanceof Parser || $wrappedParser instanceof MockObject);
 
         $randomCodeStrings = array_unique(array_map(
             static function () : string {

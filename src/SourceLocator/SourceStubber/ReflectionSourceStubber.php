@@ -124,9 +124,6 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->createStubData($this->generateStubInNamespace($functionNode->getNode(), $functionReflection->getNamespaceName()), $extensionName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function generateConstantStub(string $constantName) : ?StubData
     {
         // Not supported because of resource as value

@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use function array_combine;
 use function array_map;
+use function assert;
 use function get_class_methods;
 
 /**
@@ -61,8 +62,8 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionClassConstant|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
+        assert($reflectionStub instanceof BetterReflectionClassConstant || $reflectionStub instanceof MockObject);
 
         $reflectionStub->expects($this->once())
             ->method($methodName)

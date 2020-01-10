@@ -17,11 +17,11 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use const PHP_EOL;
-use const PHP_INT_MAX;
 use function define;
 use function sprintf;
 use function uniqid;
+use const PHP_EOL;
+use const PHP_INT_MAX;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue

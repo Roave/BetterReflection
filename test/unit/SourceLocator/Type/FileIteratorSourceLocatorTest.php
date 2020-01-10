@@ -25,9 +25,6 @@ class FileIteratorSourceLocatorTest extends TestCase
     /** @var FileIteratorSourceLocator */
     private $sourceLocator;
 
-    /**
-     * {@inheritDoc}
-     */
     public function setUp() : void
     {
         parent::setUp();

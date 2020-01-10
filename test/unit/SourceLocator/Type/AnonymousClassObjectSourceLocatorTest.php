@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 use function get_class;
 use function realpath;
 use function sprintf;
@@ -70,7 +71,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
      */
     public function testLocateIdentifier($class, string $file, int $startLine, int $endLine) : void
     {
-        /** @var ReflectionClass $reflection */
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
@@ -78,6 +78,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
             )
         );
+        assert($reflection instanceof ReflectionClass);
 
         self::assertTrue($reflection->isAnonymous());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $reflection->getShortName());
@@ -91,7 +92,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $anonymousClass = new class {
         };
 
-        /** @var ReflectionClass|null $reflection */
         $reflection = (new AnonymousClassObjectSourceLocator($anonymousClass, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
@@ -99,6 +99,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
             )
         );
+        assert($reflection instanceof ReflectionClass || $reflection === null);
 
         self::assertNull($reflection);
     }
@@ -188,7 +189,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
 
-        /** @var ReflectionClass $reflection */
+        assert($reflection instanceof ReflectionClass);
+
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(

@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
@@ -43,8 +44,8 @@ final class UnableToCompileNodeTest extends TestCase
     {
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
-        /** @var ReflectionClass|MockObject $targetClass */
         $targetClass = $this->createMock(ReflectionClass::class);
+        assert($targetClass instanceof ReflectionClass || $targetClass instanceof MockObject);
 
         $targetClass
             ->expects(self::any())

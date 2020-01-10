@@ -8,6 +8,7 @@ use Exception;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use function assert;
 
 class ReflectionParameter extends CoreReflectionParameter
 {
@@ -66,8 +67,8 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public function getDeclaringFunction()
     {
-        /** @var BetterReflectionMethod|\Roave\BetterReflection\Reflection\ReflectionFunction $function */
         $function = $this->betterReflectionParameter->getDeclaringFunction();
+        assert($function instanceof BetterReflectionMethod || $function instanceof \Roave\BetterReflection\Reflection\ReflectionFunction);
 
         if ($function instanceof BetterReflectionMethod) {
             return new ReflectionMethod($function);

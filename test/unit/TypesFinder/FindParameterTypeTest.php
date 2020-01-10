@@ -21,6 +21,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 use function count;
 use function sprintf;
 
@@ -82,8 +83,8 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunction::class);
+        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects($this->once())
@@ -109,8 +110,8 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        /** @var ReflectionFunctionAbstract|MockObject $method */
         $method = $this->createMock(ReflectionFunctionAbstract::class);
+        assert($method instanceof ReflectionFunctionAbstract || $method instanceof MockObject);
 
         $method
             ->expects($this->once())
@@ -130,8 +131,8 @@ class FindParameterTypeTest extends TestCase
     {
         $node = new ParamNode(new Variable('foo'));
 
-        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
+        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects(self::once())
@@ -157,8 +158,8 @@ class FindParameterTypeTest extends TestCase
 
         $parameterNode = new ParamNode(new Variable('foo'));
 
-        /** @var ReflectionFunctionAbstract|MockObject $function */
         $function = $this->createMock(ReflectionFunctionAbstract::class);
+        assert($function instanceof ReflectionFunctionAbstract || $function instanceof MockObject);
 
         $function
             ->expects(self::once())

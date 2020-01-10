@@ -31,6 +31,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 use TypeError;
+use function assert;
 use function current;
 use function next;
 use function reset;
@@ -669,10 +670,10 @@ PHP;
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
 
         reset($nodes);
-        /** @var Return_ $first */
         $first = current($nodes);
-        /** @var Return_ $second */
+        assert($first instanceof Return_);
         $second = next($nodes);
+        assert($second instanceof Return_);
 
         self::assertInstanceOf(LNumber::class, $first->expr);
         self::assertInstanceOf(BinaryOp\Plus::class, $second->expr);
@@ -703,8 +704,8 @@ PHP;
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
 
         reset($nodes);
-        /** @var Return_ $first */
         $first = current($nodes);
+        assert($first instanceof Return_);
 
         self::assertInstanceOf(Closure::class, $first->expr);
         self::assertSame(8, $first->getStartLine());

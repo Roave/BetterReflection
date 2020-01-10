@@ -25,6 +25,7 @@ use stdClass;
 use Throwable;
 use function array_combine;
 use function array_map;
+use function assert;
 use function get_class_methods;
 
 /**
@@ -112,8 +113,8 @@ class ReflectionMethodTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionMethod|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionMethod::class);
+        assert($reflectionStub instanceof BetterReflectionMethod || $reflectionStub instanceof MockObject);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())

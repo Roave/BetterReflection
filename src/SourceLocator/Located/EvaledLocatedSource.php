@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Located;
 
-/**
- * {@inheritDoc}
- */
 class EvaledLocatedSource extends LocatedSource
 {
     /**
@@ -17,9 +14,6 @@ class EvaledLocatedSource extends LocatedSource
         parent::__construct($source, null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function isEvaled() : bool
     {
         return true;

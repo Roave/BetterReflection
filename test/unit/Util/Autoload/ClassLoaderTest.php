@@ -16,6 +16,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use Roave\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
 use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 use stdClass;
+use function assert;
 use function class_exists;
 use function count;
 use function spl_autoload_functions;
@@ -30,9 +31,9 @@ final class ClassLoaderTest extends TestCase
     {
         $initialAutoloaderCount = count(spl_autoload_functions());
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader       = new ClassLoader($loaderMethod);
+        assert($loaderMethod instanceof LoaderMethodInterface || $loaderMethod instanceof MockObject);
+        $loader = new ClassLoader($loaderMethod);
 
         self::assertCount($initialAutoloaderCount + 1, spl_autoload_functions());
 
@@ -46,8 +47,8 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(TestClassForAutoloader::class);
         self::assertFalse(class_exists(TestClassForAutoloader::class, false));
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        assert($loaderMethod instanceof LoaderMethodInterface || $loaderMethod instanceof MockObject);
         $loaderMethod->expects(self::once())
             ->method('__invoke')
             ->with($reflection)
@@ -67,9 +68,9 @@ final class ClassLoaderTest extends TestCase
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader       = new ClassLoader($loaderMethod);
+        assert($loaderMethod instanceof LoaderMethodInterface || $loaderMethod instanceof MockObject);
+        $loader = new ClassLoader($loaderMethod);
 
         $loader->addClass($reflection);
 
@@ -81,9 +82,9 @@ final class ClassLoaderTest extends TestCase
 
     public function testAddClassThrowsExceptionWhenClassAlreadyLoaded() : void
     {
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader       = new ClassLoader($loaderMethod);
+        assert($loaderMethod instanceof LoaderMethodInterface || $loaderMethod instanceof MockObject);
+        $loader = new ClassLoader($loaderMethod);
 
         $this->expectException(ClassAlreadyLoaded::class);
         $loader->addClass(ReflectionClass::createFromName(stdClass::class));
@@ -100,8 +101,8 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
         self::assertFalse(class_exists(AnotherTestClassForAutoloader::class, false));
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        assert($loaderMethod instanceof LoaderMethodInterface || $loaderMethod instanceof MockObject);
         $loaderMethod->expects(self::once())
             ->method('__invoke')
             ->with($reflection);

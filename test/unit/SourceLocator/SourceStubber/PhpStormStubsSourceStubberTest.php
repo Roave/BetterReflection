@@ -19,7 +19,6 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use const PHP_VERSION_ID;
 use function array_filter;
 use function array_map;
 use function array_merge;
@@ -31,6 +30,7 @@ use function get_defined_functions;
 use function in_array;
 use function sort;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber
@@ -232,10 +232,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
         if (! in_array($parameterName, ['SplFileObject#fputcsv.fields', 'SplFixedArray#fromArray.array'], true)) {
             self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
         }
+
         // Bugs in PHP: https://3v4l.org/RjCDr
         if (! in_array($parameterName, ['Closure#fromCallable.callable', 'CallbackFilterIterator#__construct.callback'], true)) {
             self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
         }
+
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         // Bugs in PHP
         if (! in_array($parameterName, [
@@ -252,6 +254,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ], true)) {
             self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         }
+
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
@@ -485,6 +488,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             self::assertSame($constantName, $constantReflection->getName());
             self::assertSame($constantName, $constantReflection->getShortName());
         }
+
         self::assertNotNull($constantReflection->getNamespaceName());
         self::assertFalse($constantReflection->inNamespace());
         self::assertTrue($constantReflection->isInternal());

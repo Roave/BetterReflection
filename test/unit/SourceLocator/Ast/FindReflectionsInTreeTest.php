@@ -19,6 +19,7 @@ use Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
@@ -35,14 +36,14 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $strategy->expects($this->never())
             ->method('__invoke');
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php', null);
 
         self::assertSame(
@@ -58,14 +59,14 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $strategy->expects($this->never())
             ->method('__invoke');
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 
         self::assertSame(
@@ -81,8 +82,8 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeCallsReflectNodesForClassWithoutNamespace() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflection = $this->createMock(ReflectionClass::class);
 
@@ -90,8 +91,8 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
         self::assertSame(
@@ -107,8 +108,8 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeCallsReflectNodesForNamespacedClass() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflection = $this->createMock(ReflectionClass::class);
 
@@ -116,8 +117,8 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', null);
 
         self::assertSame(
@@ -133,8 +134,8 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeCallsReflectNodesForFunction() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflection = $this->createMock(ReflectionFunction::class);
 
@@ -142,8 +143,8 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
 
         self::assertSame(
@@ -159,8 +160,8 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeCallsReflectNodesForConstantByConst() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflection = $this->createMock(ReflectionConstant::class);
 
@@ -168,8 +169,8 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
 
         self::assertSame(
@@ -185,8 +186,8 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeCallsReflectNodesForConstantByConstWithMoreConstants() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflection1 = $this->createMock(ReflectionConstant::class);
         $mockReflection2 = $this->createMock(ReflectionConstant::class);
@@ -195,8 +196,8 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->willReturnOnConsecutiveCalls($mockReflection1, $mockReflection2);
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php const FOO = 1, BOO = 2;', null);
 
         self::assertSame(
@@ -212,8 +213,8 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeCallsReflectNodesForConstantByDefine() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflection = $this->createMock(ReflectionConstant::class);
 
@@ -221,8 +222,8 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $source        = <<<'PHP'
 <?php
 namespace Foo;
@@ -244,8 +245,8 @@ PHP;
 
     public function testInvokeCallsReflectNodesForNotGlobalDefine() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockFunctionReflection = $this->createMock(ReflectionFunction::class);
 
@@ -257,8 +258,8 @@ PHP;
             ->method('__invoke')
             ->willReturn($mockFunctionReflection);
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $source        = <<<'PHP'
 <?php
 namespace Foo;
@@ -282,8 +283,8 @@ PHP;
 
     public function testNoInvokeCallsReflectNodesForClassConstant() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflectionClass = $this->createMock(ReflectionClass::class);
 
@@ -291,8 +292,8 @@ PHP;
             ->method('__invoke')
             ->will($this->returnValue($mockReflectionClass));
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php class Foo { const FOO = 1; }', null);
 
         self::assertSame(
@@ -308,8 +309,8 @@ PHP;
 
     public function testAnonymousClassCreatedInFunction() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
+        assert($strategy instanceof NodeToReflection || $strategy instanceof MockObject);
 
         $mockReflectionFunction = $this->createMock(ReflectionFunction::class);
         $mockReflectionClass    = $this->createMock(ReflectionClass::class);
@@ -318,8 +319,8 @@ PHP;
             ->method('__invoke')
             ->willReturnOnConsecutiveCalls($mockReflectionFunction, $mockReflectionClass);
 
-        /** @var Reflector|MockObject $reflector */
-        $reflector     = $this->createMock(Reflector::class);
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector || $reflector instanceof MockObject);
         $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);
 
         self::assertSame(

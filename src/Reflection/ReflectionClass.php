@@ -43,6 +43,7 @@ use function array_merge;
 use function array_reverse;
 use function array_slice;
 use function array_values;
+use function assert;
 use function implode;
 use function in_array;
 use function is_object;
@@ -156,7 +157,8 @@ class ReflectionClass implements Reflection
     public function getShortName() : string
     {
         if (! $this->isAnonymous()) {
-            /** @var Node\Identifier $this->node->name */
+            assert($this->node->name instanceof Node\Identifier);
+
             return $this->node->name->name;
         }
 
@@ -237,8 +239,8 @@ class ReflectionClass implements Reflection
             ...array_map(
                 function (ReflectionClass $trait) : array {
                     return array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
-                        /** @var ClassMethod $methodAst */
                         $methodAst = $method->getAst();
+                        assert($methodAst instanceof ClassMethod);
 
                         return ReflectionMethod::createFromNode(
                             $this->reflector,
@@ -774,9 +776,9 @@ class ReflectionClass implements Reflection
             return null;
         }
 
-        // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        /** @var self $parent */
         $parent = $this->reflector->reflect($this->node->extends->toString());
+        // @TODO use actual `ClassReflector` or `FunctionReflector`?
+        assert($parent instanceof self);
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);
@@ -901,11 +903,11 @@ class ReflectionClass implements Reflection
     {
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         if ($this->isAnonymous()) {
-            /** @var self $class */
             $class = (new BetterReflection())->classReflector()->reflect($node->toString());
+            assert($class instanceof self);
         } else {
-            /** @var self $class */
             $class = $this->reflector->reflect($node->toString());
+            assert($class instanceof self);
         }
 
         return $class;
@@ -961,8 +963,8 @@ class ReflectionClass implements Reflection
             $adaptations = $traitUsage->adaptations;
 
             foreach ($adaptations as $adaptation) {
-                /** @var Node\Name|null $usedTrait */
                 $usedTrait = $adaptation->trait;
+                assert($usedTrait instanceof Node\Name || $usedTrait === null);
                 if ($usedTrait === null) {
                     $usedTrait = $traitNames[0];
                 }
@@ -1193,8 +1195,8 @@ class ReflectionClass implements Reflection
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
-        /** @var InterfaceNode $node */
         $node = $this->node;
+        assert($node instanceof InterfaceNode);
 
         return array_merge(
             [$this->getName() => $this],

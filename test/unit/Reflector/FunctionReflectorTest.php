@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\Reflector\FunctionReflector
@@ -33,12 +34,12 @@ class FunctionReflectorTest extends TestCase
     {
         $reflection = $this->createMock(ReflectionFunction::class);
 
-        /** @var StringSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this
             ->getMockBuilder(StringSourceLocator::class)
             ->disableOriginalConstructor()
             ->setMethods(['locateIdentifier'])
             ->getMock();
+        assert($sourceLocator instanceof StringSourceLocator || $sourceLocator instanceof MockObject);
 
         $sourceLocator
             ->expects($this->once())

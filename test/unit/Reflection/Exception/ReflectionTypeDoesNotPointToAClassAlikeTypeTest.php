@@ -8,6 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\ReflectionTypeDoesNotPointToAClassAlikeType;
 use Roave\BetterReflection\Reflection\ReflectionType;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Exception\ReflectionTypeDoesNotPointToAClassAlikeType
@@ -16,8 +17,8 @@ class ReflectionTypeDoesNotPointToAClassAlikeTypeTest extends TestCase
 {
     public function testFor() : void
     {
-        /** @var ReflectionType|MockObject $type */
         $type = $this->createMock(ReflectionType::class);
+        assert($type instanceof ReflectionType || $type instanceof MockObject);
 
         $type
             ->expects(self::any())
