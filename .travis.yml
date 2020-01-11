@@ -28,7 +28,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.18 DEPENDENCIES=""
+      env: PHP_VERSION=7.2.26 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -40,7 +40,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.18 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.2.26 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -62,7 +62,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.5 DEPENDENCIES=""
+      env: PHP_VERSION=7.3.13 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -74,7 +74,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.5 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.3.13 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -90,6 +90,30 @@ jobs:
     - stage: Test
       php: 7.4
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.4.1 DEPENDENCIES=""
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
+      script: vendor/bin/phpunit
+
+    - stage: Test
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.4.1 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit
 
     - stage: Test Compatibility
@@ -106,7 +130,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.18 DEPENDENCIES=""
+      env: PHP_VERSION=7.2.26 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -118,7 +142,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.2.18 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.2.26 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -140,7 +164,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.5 DEPENDENCIES=""
+      env: PHP_VERSION=7.3.13 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -152,7 +176,7 @@ jobs:
       os: windows
       dist: 1803-containers
       language: sh # No PHP currently
-      env: PHP_VERSION=7.3.5 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      env: PHP_VERSION=7.3.13 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
         - choco install composer --ia "/DEV=C:\tools\php"
@@ -168,6 +192,30 @@ jobs:
     - stage: Test Compatibility
       php: 7.4
       env: DEPENDENCIES="--prefer-lowest --prefer-stable"
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.4.1 DEPENDENCIES=""
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
+      script: vendor/bin/phpunit test/compat
+
+    - stage: Test Compatibility
+      os: windows
+      dist: 1803-containers
+      language: sh # No PHP currently
+      env: PHP_VERSION=7.4.1 DEPENDENCIES="--prefer-lowest --prefer-stable"
+      install:
+        - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
+        - choco install composer --ia "/DEV=C:\tools\php"
+        - export PATH=/c/tools/php:$PATH
+        - echo "memory_limit=1G" >> /c/tools/php/php.ini
       script: vendor/bin/phpunit test/compat
 
     - stage: Check Demo Scripts
@@ -201,31 +249,31 @@ jobs:
       script: test/demo/check-demo.sh
 
     - stage: Check Coding Standard
-      php: 7.3
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer install
       script: vendor/bin/phpcs
 
     - stage: Static Analysis
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       script: vendor/bin/phpstan analyse --memory-limit=-1
 
     - stage: Static Analysis
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       script: vendor/bin/psalm
 
     - stage: Run benchmarks
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpbench/phpbench:^0.16.9
       script: ./vendor/bin/phpbench run --progress=dots --iterations=1
 
     - stage: Upload Coverage
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer update --prefer-dist $DEPENDENCIES
