@@ -26,7 +26,7 @@ class ClassReflectorTest extends TestCase
         ))->getAllClasses();
 
         self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        self::assertCount(9, $classes);
+        self::assertCount(10, $classes);
     }
 
     public function testReflectProxiesToSourceLocator() : void

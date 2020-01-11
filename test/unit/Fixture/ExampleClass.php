@@ -65,6 +65,17 @@ namespace Roave\BetterReflectionTest\Fixture {
     interface ExampleInterface
     {
     }
+
+    class ExampleClassWhereConstructorIsNotFirstMethod
+    {
+        public function someMethod()
+        {
+        }
+
+        public function __construct()
+        {
+        }
+    }
 }
 
 namespace Roave\BetterReflectionTest\FixtureOther {
