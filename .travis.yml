@@ -233,7 +233,8 @@ jobs:
         - travis_retry composer update --prefer-dist $DEPENDENCIES
         - wget https://scrutinizer-ci.com/ocular.phar
       script:
-        - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
+        - vendor/bin/phpunit --dump-xdebug-filter=xdebug-filter.php
+        - vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml --prepend=xdebug-filter.php
         - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
 cache:
