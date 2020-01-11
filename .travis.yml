@@ -249,33 +249,33 @@ jobs:
       script: test/demo/check-demo.sh
 
     - stage: Check Coding Standard
-      php: 7.3
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer install
       script: vendor/bin/phpcs
 
     - stage: Static Analysis
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       script: vendor/bin/phpstan analyse --memory-limit=-1
 
     - stage: Static Analysis
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable vimeo/psalm:2.0.0
       script: vendor/bin/psalm
 
     - stage: Run benchmarks
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpbench/phpbench:^0.16.9
       script: ./vendor/bin/phpbench run --progress=dots --iterations=1
 
     - stage: Upload Coverage
-      php: 7.2
+      php: 7.4
       env: DEPENDENCIES=""
       before_script:
         - travis_retry composer update --prefer-dist $DEPENDENCIES

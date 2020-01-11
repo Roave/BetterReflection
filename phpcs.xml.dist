@@ -33,6 +33,12 @@
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingParameterTypeHint">
         <exclude-pattern>src/Reflection/Adapter/*</exclude-pattern>
     </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>     
+        <properties>
+            <property name="enableObjectTypeHint" value="false"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
         <properties>
             <property name="enableObjectTypeHint" value="false"/>
