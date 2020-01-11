@@ -48,6 +48,7 @@ use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
@@ -318,6 +319,19 @@ class ReflectionClassTest extends TestCase
     {
         $reflector   = new ClassReflector($this->getComposerLocator());
         $classInfo   = $reflector->reflect(ExampleClass::class);
+        $constructor = $classInfo->getConstructor();
+
+        self::assertInstanceOf(ReflectionMethod::class, $constructor);
+        self::assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetConstructorThatIsNotFirstMethod() : void
+    {
+        $reflector   = (new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ExampleClass.php',
+            $this->astLocator
+        )));
+        $classInfo   = $reflector->reflect(ExampleClassWhereConstructorIsNotFirstMethod::class);
         $constructor = $classInfo->getConstructor();
 
         self::assertInstanceOf(ReflectionMethod::class, $constructor);
