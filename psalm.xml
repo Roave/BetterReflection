@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <psalm
-    name="Example Psalm config with recommended defaults"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    errorBaseline="psalm-baseline.xml"
     useDocblockTypes="true"
     totallyTyped="false"
     allowPhpStormGenerics="true"

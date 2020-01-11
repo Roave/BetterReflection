@@ -65,7 +65,7 @@ class NamespaceNodeToReflectionTypeContext
     private function classAlikeUses(Namespace_ $namespace) : array
     {
         return array_filter(
-            $namespace->stmts ?? [],
+            $namespace->stmts,
             static function (Node $node) : bool {
                 return (
                     $node instanceof Use_
