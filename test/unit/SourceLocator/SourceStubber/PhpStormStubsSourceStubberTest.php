@@ -79,20 +79,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             get_declared_traits()
         );
 
-        // Needs fixes in JetBrains/phpstorm-stubs
-        $missingClassesInStubs = ['WeakReference'];
-
         return array_map(
             static function (string $className) : array {
                 return [$className];
             },
             array_filter(
                 $classNames,
-                static function (string $className) use ($missingClassesInStubs) : bool {
-                    if (in_array($className, $missingClassesInStubs, true)) {
-                        return false;
-                    }
-
+                static function (string $className) : bool {
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
@@ -167,7 +160,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
 
             // Added in PHP 7.4.0
-            if (PHP_VERSION_ID >= 70400 && $method->getShortName() === '__unserialize') {
+            if (PHP_VERSION_ID < 70400 && $method->getShortName() === '__unserialize') {
                 return;
             }
 
@@ -241,12 +234,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         // Bugs in PHP
         if (! in_array($parameterName, [
-            'ErrorException#__construct.message',
-            'ErrorException#__construct.code',
-            'ErrorException#__construct.severity',
-            'ErrorException#__construct.filename',
-            'ErrorException#__construct.lineno',
-            'ErrorException#__construct.previous',
             'RecursiveIteratorIterator#getSubIterator.level',
             'RecursiveIteratorIterator#setMaxDepth.max_depth',
             'SplTempFileObject#__construct.max_memory',
@@ -287,7 +274,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionNames = get_defined_functions()['internal'];
 
         // Needs fixes in JetBrains/phpstorm-stubs
-        $missingFunctionsInStubs = ['password_algos', 'sapi_windows_set_ctrl_handler', 'sapi_windows_generate_ctrl_event', 'get_mangled_object_vars'];
+        $missingFunctionsInStubs = ['sapi_windows_set_ctrl_handler', 'sapi_windows_generate_ctrl_event'];
 
         return array_map(
             static function (string $functionName) : array {
@@ -381,7 +368,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
 
         // Changed in PHP 7.4.0
-        if (PHP_VERSION_ID >= 70400 && $functionName === 'preg_replace_callback') {
+        if (PHP_VERSION_ID < 70400 && $functionName === 'preg_replace_callback') {
             return;
         }
 
@@ -409,7 +396,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
 
             // Needs fixes in JetBrains/phpstorm-stubs
-            if (! in_array($parameterName, ['fscanf.vars', 'debug_zval_dump.vars', 'array_merge_recursive.arrays'], true)) {
+            if (! in_array($parameterName, ['fscanf.vars', 'debug_zval_dump.vars'], true)) {
                 self::assertSame($originalReflectionParameter->isVariadic(), $stubbedReflectionParameter->isVariadic(), $parameterName);
             }
 
@@ -452,11 +439,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                     'PHP_WINDOWS_NT_WORKSTATION',
                     'PHP_WINDOWS_EVENT_CTRL_C',
                     'PHP_WINDOWS_EVENT_CTRL_BREAK',
-                    'PHP_CLI_PROCESS_TITLE',
-                    'STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT',
-                    'STREAM_CRYPTO_METHOD_TLSv1_3_SERVER',
-                    'STREAM_CRYPTO_PROTO_TLSv1_3',
-                    'PASSWORD_ARGON2_PROVIDER',
                 ], true)) {
                     continue;
                 }
