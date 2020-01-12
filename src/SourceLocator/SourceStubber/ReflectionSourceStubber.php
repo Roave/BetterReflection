@@ -33,12 +33,13 @@ use ReflectionClassConstant;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionMethod as CoreReflectionMethod;
+use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
-use ReflectionType as CoreReflectionType;
 use Reflector as CoreReflector;
 use function array_diff;
 use function array_key_exists;
+use function assert;
 use function class_exists;
 use function explode;
 use function function_exists;
@@ -358,6 +359,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $this->addParameters($methodNode, $methodReflection);
 
             $returnType = $methodReflection->getReturnType();
+            assert($returnType instanceof CoreReflectionNamedType || $returnType === null);
 
             if ($methodReflection->getReturnType() !== null) {
                 $methodNode->setReturnType($this->formatType($returnType));
@@ -445,6 +447,7 @@ final class ReflectionSourceStubber implements SourceStubber
         }
 
         $parameterType = $parameterReflection->getType();
+        assert($parameterType instanceof CoreReflectionNamedType || $parameterType === null);
 
         if ($parameterReflection->getType() !== null) {
             $parameterNode->setType($this->formatType($parameterType));
@@ -470,9 +473,9 @@ final class ReflectionSourceStubber implements SourceStubber
     /**
      * @return Name|FullyQualified|NullableType
      */
-    private function formatType(CoreReflectionType $type) : NodeAbstract
+    private function formatType(CoreReflectionNamedType $type) : NodeAbstract
     {
-        $name     = (string) $type;
+        $name     = $type->getName();
         $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
 
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
