@@ -95,8 +95,6 @@ class ReflectionType
 
     /**
      * Convert this string type to a string
-     *
-     * @see https://github.com/php/php-src/blob/master/ext/reflection/php_reflection.c#L2993
      */
     public function __toString() : string
     {
