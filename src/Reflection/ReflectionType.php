@@ -93,6 +93,11 @@ class ReflectionType
         return $reflectionClass;
     }
 
+    public function getName() : string
+    {
+        return $this->type;
+    }
+
     /**
      * Convert this string type to a string
      */
