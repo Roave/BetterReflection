@@ -24,7 +24,8 @@ class CompileNodeToValue
      *
      * @param Node\Stmt\Expression|Node\Expr $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
-     * @return scalar|scalar[]|null
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      *
      * @throws Exception\UnableToCompileNode
      */
@@ -60,7 +61,8 @@ class CompileNodeToValue
     /**
      * Compile constant expressions
      *
-     * @return scalar|scalar[]|null
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      *
      * @throws Exception\UnableToCompileNode
      */
@@ -86,7 +88,8 @@ class CompileNodeToValue
     /**
      * Compile class constants
      *
-     * @return scalar|scalar[]|null
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      *
      * @throws IdentifierNotFound
      * @throws Exception\UnableToCompileNode If a referenced constant could not be located on the expected referenced class.

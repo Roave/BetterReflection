@@ -7,9 +7,6 @@ namespace Roave\BetterReflection\Util;
 use PhpParser\Comment\Doc;
 use PhpParser\NodeAbstract;
 
-use function assert;
-use function is_string;
-
 /**
  * @internal
  */

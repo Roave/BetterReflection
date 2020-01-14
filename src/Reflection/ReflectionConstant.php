@@ -41,7 +41,10 @@ class ReflectionConstant implements Reflection
     /** @var int|null */
     private $positionInNode;
 
-    /** @var scalar|scalar[]|null const value */
+    /**
+     * @var bool|int|float|string|array|null const value
+     * @psalm-var scalar|array<scalar>|null
+     */
     private $value;
 
     /** @var bool */
@@ -210,7 +213,8 @@ class ReflectionConstant implements Reflection
     /**
      * Returns constant value
      *
-     * @return scalar|scalar[]|null
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      */
     public function getValue()
     {

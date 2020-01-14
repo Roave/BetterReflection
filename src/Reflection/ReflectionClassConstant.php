@@ -18,7 +18,10 @@ class ReflectionClassConstant
     /** @var bool */
     private $valueWasCached = false;
 
-    /** @var scalar|scalar[]|null const value */
+    /** 
+     * @var bool|int|float|string|array|null const value
+     * @psalm-var scalar|array<scalar>|null
+     */
     private $value;
 
     /** @var Reflector */
@@ -71,7 +74,8 @@ class ReflectionClassConstant
     /**
      * Returns constant value
      *
-     * @return scalar|scalar[]|null
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      */
     public function getValue()
     {

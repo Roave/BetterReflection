@@ -29,7 +29,8 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Returns constant value
      *
-     * @return scalar|scalar[]|null
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      */
     public function getValue()
     {
