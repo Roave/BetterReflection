@@ -29,7 +29,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Returns constant value
      *
-     * @return mixed
+     * @return scalar|scalar[]|null
      */
     public function getValue()
     {

@@ -32,9 +32,13 @@ final class FindReflectionsInTree
     /** @var FunctionReflector */
     private $functionReflector;
 
-    /** @var Closure */
+    /** @var Closure(): FunctionReflector */
     private $functionReflectorGetter;
 
+    /**
+     * @param AstConversionStrategy $astConversionStrategy
+     * @param Closure(): FunctionReflector $functionReflectorGetter
+     */
     public function __construct(AstConversionStrategy $astConversionStrategy, Closure $functionReflectorGetter)
     {
         $this->astConversionStrategy   = $astConversionStrategy;

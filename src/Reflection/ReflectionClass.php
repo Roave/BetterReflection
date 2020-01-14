@@ -68,16 +68,16 @@ class ReflectionClass implements Reflection
     /** @var ClassLikeNode */
     private $node;
 
-    /** @var ReflectionClassConstant[]|null indexed by name, when present */
+    /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
     private $cachedReflectionConstants;
 
-    /** @var ReflectionProperty[]|null */
+    /** @var array<string, ReflectionProperty>|null */
     private $cachedImmediateProperties;
 
     /** @var ReflectionProperty[]|null */
     private $cachedProperties;
 
-    /** @var ReflectionMethod[]|null */
+    /** @var array<string, ReflectionMethod>|null */
     private $cachedMethods;
 
     private function __construct()
@@ -272,7 +272,7 @@ class ReflectionClass implements Reflection
      * Methods are not merged via their name as array index, since internal PHP method
      * sorting does not follow `\array_merge()` semantics.
      *
-     * @return ReflectionMethod[] indexed by method name
+     * @return array<string, ReflectionMethod> indexed by method name
      */
     private function getMethodsIndexedByName() : array
     {
@@ -324,7 +324,7 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_FINAL
      * the only the final public methods will be returned
      *
-     * @return ReflectionMethod[]
+     * @return list<ReflectionMethod>
      */
     public function getMethods(?int $filter = null) : array
     {
@@ -413,7 +413,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as constant values.
      *
-     * @return string[]|int[]|float[]|array[]|bool[]|null[]
+     * @return array<string, scalar|array<scalar>|null>
      */
     public function getImmediateConstants() : array
     {
@@ -426,7 +426,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as constant values.
      *
-     * @return string[]|int[]|float[]|array[]|bool[]|null[]
+     * @return array<string, scalar|array<scalar>|null>
      */
     public function getConstants() : array
     {
@@ -440,7 +440,7 @@ class ReflectionClass implements Reflection
      *
      * Returns null if not specified.
      *
-     * @return mixed|null
+     * @return scalar|scalar[]|null
      */
     public function getConstant(string $name)
     {
@@ -475,7 +475,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return ReflectionClassConstant[] indexed by name
+     * @return array<string, ReflectionClassConstant> indexed by name
      */
     public function getImmediateReflectionConstants() : array
     {
@@ -519,7 +519,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return ReflectionClassConstant[] indexed by name
+     * @return array<string, ReflectionClassConstant> indexed by name
      */
     public function getReflectionConstants() : array
     {
@@ -586,7 +586,7 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getProperties() for the usage of filter
      *
-     * @return ReflectionProperty[]
+     * @return array<string, ReflectionProperty>
      */
     public function getImmediateProperties(?int $filter = null) : array
     {
@@ -714,7 +714,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return mixed[]
+     * @return array<scalar|array<scalar>|null>
      */
     public function getDefaultProperties() : array
     {
@@ -874,7 +874,7 @@ class ReflectionClass implements Reflection
      * Get the traits used, if any are defined. If this class does not have any
      * defined traits, this will return an empty array.
      *
-     * @return ReflectionClass[]
+     * @return list<ReflectionClass>
      */
     public function getTraits() : array
     {
@@ -936,7 +936,7 @@ class ReflectionClass implements Reflection
      *
      *   'aliasedMethodName' => 'ActualClass::actualMethod'
      *
-     * @return string[]
+     * @return array<string, string>
      *
      * @example
      * // When reflecting a class such as:
@@ -992,8 +992,8 @@ class ReflectionClass implements Reflection
      *
      * @link https://php.net/manual/en/reflectionclass.getinterfaces.php
      *
-     * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
-     *                           values as {@see ReflectionClass} objects.
+     * @return array<string, ReflectionClass> An associative array of interfaces, with keys as interface names and 
+     *                                        the array values as {@see ReflectionClass} objects.
      */
     public function getInterfaces() : array
     {
@@ -1021,7 +1021,7 @@ class ReflectionClass implements Reflection
      *
      * @link https://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
-     * @return string[] A numerical array with interface names as the values.
+     * @return list<string> A numerical array with interface names as the values.
      */
     public function getInterfaceNames() : array
     {
@@ -1143,7 +1143,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return ReflectionClass[] indexed by interface name
+     * @return array<string, ReflectionClass> indexed by interface name
      */
     private function getCurrentClassImplementedInterfacesIndexedByName() : array
     {
@@ -1263,7 +1263,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, mixed>
      */
     public function getStaticProperties() : array
     {

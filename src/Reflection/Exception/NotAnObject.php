@@ -11,7 +11,7 @@ use function sprintf;
 class NotAnObject extends InvalidArgumentException
 {
     /**
-     * @param mixed $nonObject
+     * @param scalar|array|resource|null $nonObject
      */
     public static function fromNonObject($nonObject) : self
     {

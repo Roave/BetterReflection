@@ -18,7 +18,7 @@ class ReflectionClassConstant
     /** @var bool */
     private $valueWasCached = false;
 
-    /** @var int|float|mixed[]|string|bool|null const value */
+    /** @var scalar|scalar[]|null const value */
     private $value;
 
     /** @var Reflector */
@@ -71,7 +71,7 @@ class ReflectionClassConstant
     /**
      * Returns constant value
      *
-     * @return mixed
+     * @return scalar|scalar[]|null
      */
     public function getValue()
     {

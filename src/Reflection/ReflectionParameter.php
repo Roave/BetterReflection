@@ -47,7 +47,7 @@ class ReflectionParameter
     /** @var int */
     private $parameterIndex;
 
-    /** @var mixed */
+    /** @var scalar|scalar[]|null */
     private $defaultValue;
 
     /** @var bool */
@@ -289,7 +289,7 @@ class ReflectionParameter
     /**
      * Get the default value of the parameter.
      *
-     * @return mixed
+     * @return scalar|scalar[]|null
      *
      * @throws LogicException
      */

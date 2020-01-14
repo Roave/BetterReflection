@@ -41,7 +41,7 @@ class ReflectionConstant implements Reflection
     /** @var int|null */
     private $positionInNode;
 
-    /** @var int|float|mixed[]|string|bool|null const value */
+    /** @var scalar|scalar[]|null const value */
     private $value;
 
     /** @var bool */
@@ -210,7 +210,7 @@ class ReflectionConstant implements Reflection
     /**
      * Returns constant value
      *
-     * @return mixed
+     * @return scalar|scalar[]|null
      */
     public function getValue()
     {

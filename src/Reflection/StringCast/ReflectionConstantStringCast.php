@@ -18,6 +18,7 @@ final class ReflectionConstantStringCast
     public static function toString(ReflectionConstant $constantReflection) : string
     {
         $value = $constantReflection->getValue();
+        assert($value === null || is_scalar($value));
 
         return sprintf(
             'Constant [ <%s> %s %s ] {%s %s }',
@@ -25,7 +26,7 @@ final class ReflectionConstantStringCast
             gettype($value),
             $constantReflection->getName(),
             self::fileAndLinesToString($constantReflection),
-            $value
+            (string) $value
         );
     }
 
