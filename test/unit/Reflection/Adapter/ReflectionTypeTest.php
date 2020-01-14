@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -75,12 +74,12 @@ class ReflectionTypeTest extends TestCase
 
     public function testFromReturnTypeOrNullWithNull() : void
     {
-        self::assertNull(ReflectionType::fromReturnTypeOrNull(null));
+        self::assertNull(ReflectionTypeAdapter::fromReturnTypeOrNull(null));
     }
 
     public function testFromReturnTypeOrNullWithBetterReflectionType() : void
     {
-        self::assertInstanceOf(ReflectionTypeAdapter::class, ReflectionType::fromReturnTypeOrNull($this->createMock(BetterReflectionType::class)));
+        self::assertInstanceOf(ReflectionTypeAdapter::class, ReflectionTypeAdapter::fromReturnTypeOrNull($this->createMock(BetterReflectionType::class)));
     }
 
     public function testSelfIsNotBuiltin() : void
