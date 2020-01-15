@@ -54,6 +54,22 @@ class ReflectionTypeTest extends TestCase
         self::assertFalse(ReflectionType::createFromTypeAndReflector('\foo', false, $this->reflector)->isBuiltin());
     }
 
+    public function testGetName() : void
+    {
+        self::assertSame('int', ReflectionType::createFromTypeAndReflector('int', false, $this->reflector)->getName());
+        self::assertSame('string', ReflectionType::createFromTypeAndReflector('string', false, $this->reflector)->getName());
+        self::assertSame('array', ReflectionType::createFromTypeAndReflector('array', false, $this->reflector)->getName());
+        self::assertSame('callable', ReflectionType::createFromTypeAndReflector('callable', false, $this->reflector)->getName());
+        self::assertSame('bool', ReflectionType::createFromTypeAndReflector('bool', false, $this->reflector)->getName());
+        self::assertSame('float', ReflectionType::createFromTypeAndReflector('float', false, $this->reflector)->getName());
+        self::assertSame('void', ReflectionType::createFromTypeAndReflector('void', false, $this->reflector)->getName());
+        self::assertSame('object', ReflectionType::createFromTypeAndReflector('object', false, $this->reflector)->getName());
+        self::assertSame('iterable', ReflectionType::createFromTypeAndReflector('iterable', false, $this->reflector)->getName());
+
+        self::assertSame('Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector('Foo\Bar\Baz', false, $this->reflector)->getName());
+        self::assertSame('Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector('\Foo\Bar\Baz', false, $this->reflector)->getName());
+    }
+
     public function testImplicitCastToString() : void
     {
         self::assertSame('int', (string) ReflectionType::createFromTypeAndReflector('int', false, $this->reflector));
