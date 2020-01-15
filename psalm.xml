@@ -85,5 +85,19 @@
                 <referencedProperty name="PhpParser\Node\Stmt\ClassMethod::$stmts" />
             </errorLevel>
         </PossiblyNullPropertyAssignmentValue>
+        
+        <InvalidScalarArgument>
+            <!-- Not actually an issue, we send scalar where the called method wait for bool|float|int|string. See vimeo/psalm/issues/2622 -->
+            <errorLevel type="suppress">
+                <referencedFunction name="PhpParser\BuilderHelpers::normalizeValue"/>
+            </errorLevel>
+        </InvalidScalarArgument>
+        
+        <RedundantConditionGivenDocblockType>
+            <!-- Assertion used to check that expected object is indeed an object -->
+            <errorLevel type="suppress">
+                <file name="src\Reflection\ReflectionProperty.php"/>
+            </errorLevel>
+        </RedundantConditionGivenDocblockType>
     </issueHandlers>
 </psalm>

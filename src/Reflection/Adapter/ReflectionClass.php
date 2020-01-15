@@ -273,6 +273,7 @@ class ReflectionClass extends CoreReflectionClass
 
     /**
      * {@inheritdoc}
+     * @psalm-suppress InvalidReturnType see #530
      */
     public function getReflectionConstants()
     {
@@ -314,6 +315,7 @@ class ReflectionClass extends CoreReflectionClass
 
     /**
      * {@inheritDoc}
+     * @psalm-suppress InvalidReturnType see #530
      */
     public function getTraits()
     {

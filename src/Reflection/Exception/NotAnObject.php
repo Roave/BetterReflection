@@ -12,7 +12,6 @@ class NotAnObject extends InvalidArgumentException
 {
     /**
      * @param bool|int|float|string|array|resource|null $nonObject
-     * @psalm-param scalar|array|resource|null $nonObject
      */
     public static function fromNonObject($nonObject) : self
     {
