@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+use function assert;
 use function gettype;
+use function is_scalar;
 use function sprintf;
 
 /**

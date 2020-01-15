@@ -96,7 +96,7 @@
         <RedundantConditionGivenDocblockType>
             <!-- Assertion used to check that expected object is indeed an object -->
             <errorLevel type="suppress">
-                <file name="src\Reflection\ReflectionProperty.php"/>
+                <file name="src/Reflection/ReflectionProperty.php"/>
             </errorLevel>
         </RedundantConditionGivenDocblockType>
     </issueHandlers>
