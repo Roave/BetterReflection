@@ -250,7 +250,8 @@ class ReflectionProperty
      * Get the default value of the property (as defined before constructor is
      * called, when the property is defined)
      *
-     * @return mixed
+     * @return bool|int|float|string|array|null
+     * @psalm-return scalar|array<scalar>|null
      */
     public function getDefaultValue()
     {
@@ -432,6 +433,8 @@ class ReflectionProperty
 
     /**
      * @throws ClassDoesNotExist
+     *
+     * @psalm-assert class-string $className
      */
     private function assertClassExist(string $className) : void
     {
@@ -448,6 +451,8 @@ class ReflectionProperty
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
+     *
+     * @psalm-assert object $object
      */
     private function assertObject($object)
     {

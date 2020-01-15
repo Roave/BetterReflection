@@ -190,7 +190,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array<int|string, array<string>> $paths
+     * @param array<int|string, array<int, string>> $paths
      *
      * @return array<int|string, array<string>>
      */

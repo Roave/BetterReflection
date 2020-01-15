@@ -268,6 +268,7 @@ class ReflectionObject extends CoreReflectionObject
 
     /**
      * {@inheritDoc}
+     * @psalm-suppress InvalidReturnType see #530
      */
     public function getTraits()
     {

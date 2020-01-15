@@ -192,6 +192,7 @@ abstract class ReflectionFunctionAbstract
      * array of ReflectionParameter instances.
      *
      * @return ReflectionParameter[]
+     * @psalm-return list<ReflectionParameter>
      */
     public function getParameters() : array
     {

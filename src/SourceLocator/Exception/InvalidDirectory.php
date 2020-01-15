@@ -23,7 +23,7 @@ class InvalidDirectory extends RuntimeException
     }
 
     /**
-     * @param mixed $nonStringValue
+     * @param resource|float|int|bool|object|array|null $nonStringValue
      */
     public static function fromNonStringValue($nonStringValue) : self
     {
