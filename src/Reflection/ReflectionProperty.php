@@ -251,6 +251,7 @@ class ReflectionProperty
      * called, when the property is defined)
      *
      * @return bool|int|float|string|array|null
+     *
      * @psalm-return scalar|array<scalar>|null
      */
     public function getDefaultValue()

@@ -293,9 +293,10 @@ class ReflectionParameter
      * Get the default value of the parameter.
      *
      * @return bool|int|float|string|array|null
-     * @psalm-return scalar|array<scalar>|null
      *
      * @throws LogicException
+     *
+     * @psalm-return scalar|array<scalar>|null
      */
     public function getDefaultValue()
     {

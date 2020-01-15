@@ -214,6 +214,7 @@ class ReflectionConstant implements Reflection
      * Returns constant value
      *
      * @return bool|int|float|string|array|null
+     *
      * @psalm-return scalar|array<scalar>|null
      */
     public function getValue()
