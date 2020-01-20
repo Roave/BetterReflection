@@ -46,6 +46,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
         $astLocator = BetterReflectionSingleton::instance()->astLocator();
 
         $projectA                 = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-a');
+        $projectComposerV2        = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-using-composer-v2');
         $projectWithPsrCollisions = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-with-psr-collisions');
         $projectALocator          = new AggregateSourceLocator([
             new PsrAutoloaderLocator(
@@ -113,6 +114,24 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
             [
                 $projectA,
                 $projectALocator,
+            ],
+            [
+                $projectComposerV2,
+                new AggregateSourceLocator([
+                    new PsrAutoloaderLocator(
+                        Psr4Mapping::fromArrayMappings([
+                            'A\\B\\'        => [
+                                $projectComposerV2 . '/vendor/a/b/src/ab_PSR-4_Sources',
+                            ],
+                        ]),
+                        $astLocator
+                    ),
+                    new PsrAutoloaderLocator(
+                        Psr0Mapping::fromArrayMappings([]),
+                        $astLocator
+                    ),
+                    new DirectoriesSourceLocator([], $astLocator),
+                ]),
             ],
             [
                 $projectWithPsrCollisions,
