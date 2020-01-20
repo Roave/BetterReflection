@@ -42,12 +42,14 @@ final class MakeLocatorForInstalledJson
             throw MissingInstalledJson::inProjectPath($installationPath);
         }
 
-        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}>|null $installed */
-        $installed = json_decode((string) file_get_contents($installedJsonPath), true);
+        $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
-        if (! is_array($installed)) {
+        if (! is_array($installedJson)) {
             throw FailedToParseJson::inFile($installedJsonPath);
         }
+
+        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}>|null $installed */
+        $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
             [],

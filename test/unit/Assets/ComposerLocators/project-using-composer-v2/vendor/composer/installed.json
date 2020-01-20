@@ -1,0 +1,13 @@
+{
+  "packages": [
+    {
+      "name": "a/b",
+      "autoload": {
+        "psr-4": {
+          "A\\B\\": "src/ab_PSR-4_Sources"
+        }
+      }
+    }
+  ],
+  "dev": true
+}
