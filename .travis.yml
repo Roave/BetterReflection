@@ -263,7 +263,7 @@ jobs:
     - stage: Static Analysis
       php: 7.4
       env: DEPENDENCIES=""
-      script: vendor/bin/psalm
+      script: vendor/bin/psalm --shepherd --stats
 
     - stage: Run benchmarks
       php: 7.4

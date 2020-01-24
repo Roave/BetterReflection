@@ -1,9 +1,14 @@
 Better Reflection
 =================
 
-[![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master) [![Latest Stable Version](https://poser.pugx.org/roave/better-reflection/v/stable)](https://packagist.org/packages/roave/better-reflection) [![License](https://poser.pugx.org/roave/better-reflection/license)](https://packagist.org/packages/roave/better-reflection)
+[![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/Roave/BetterReflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/BetterReflection/?branch=master)
+[![Type Coverage](https://shepherd.dev/github/Roave/BetterReflection/coverage.svg)](https://shepherd.dev/github/Roave/BetterReflection)
+[![Latest Stable Version](https://poser.pugx.org/roave/better-reflection/v/stable)](https://packagist.org/packages/roave/better-reflection)
+[![License](https://poser.pugx.org/roave/better-reflection/license)](https://packagist.org/packages/roave/better-reflection)
 
-Better Reflection is a reflection API that aims to improve and provide more features than PHP's built-in 
+Better Reflection is a reflection API that aims to improve and provide more features than PHP's built-in
 [reflection API](https://php.net/manual/en/book.reflection.php).
 
 ## Why is it better?
@@ -53,7 +58,7 @@ $classInfo = (new BetterReflection())
 
 ## Upgrading
 
-Please refer to the [Upgrade Documentation](UPGRADE.md) documentation to see what is required to upgrade your installed 
+Please refer to the [Upgrade Documentation](UPGRADE.md) documentation to see what is required to upgrade your installed
 `BetterReflection` version.
 
 ## Limitations
