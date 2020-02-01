@@ -50,6 +50,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
         /** @var array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}|null $composer */
         $composer = json_decode((string) file_get_contents($composerJsonPath), true);
+        /** @var array{packages: list<array>}|list<array>|null $installedJson */
         $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
         if (! is_array($composer)) {

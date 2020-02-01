@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Ast;
 
 use Closure;
 use PhpParser\Node;
+use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
@@ -145,13 +146,17 @@ final class FindReflectionsInTree
                         return null;
                     }
 
-                    if ($node->name->hasAttribute('namespacedName') && count($node->name->getAttribute('namespacedName')->parts) > 1) {
-                        try {
-                            $this->functionReflector->reflect($node->name->getAttribute('namespacedName')->toString());
+                    if ($node->name->hasAttribute('namespacedName')) {
+                        /** @var Name $namespacedName */
+                        $namespacedName = $node->name->getAttribute('namespacedName');
+                        if(count($namespacedName->parts) > 1) {
+                            try {
+                                $this->functionReflector->reflect($namespacedName->toString());
 
-                            return null;
-                        } catch (IdentifierNotFound $e) {
-                            // Global define()
+                                return null;
+                            } catch (IdentifierNotFound $e) {
+                                // Global define()
+                            }
                         }
                     }
 

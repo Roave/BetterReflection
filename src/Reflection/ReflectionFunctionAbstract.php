@@ -49,13 +49,13 @@ abstract class ReflectionFunctionAbstract
     /** @var LocatedSource */
     private $locatedSource;
 
-    /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure */
+    /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null */
     private $node;
 
     /** @var Reflector */
     private $reflector;
 
-    /** @var Parser */
+    /** @var Parser|null */
     private static $parser;
 
     protected function __construct()
@@ -86,10 +86,12 @@ abstract class ReflectionFunctionAbstract
     /**
      * Get the AST node from which this function was created
      *
-     * @return Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\FunctionLike
+     * @return Node\Expr\Closure|Node\Stmt\ClassMethod|Node\Stmt\Function_
      */
     protected function getNode() : Node\FunctionLike
     {
+        assert($this->node !== null);
+
         return $this->node;
     }
 
@@ -100,9 +102,9 @@ abstract class ReflectionFunctionAbstract
     private function setNodeOptionalFlag() : void
     {
         $overallOptionalFlag = true;
-        $lastParamIndex      = count($this->node->params) - 1;
+        $lastParamIndex      = count($this->getNode()->params) - 1;
         for ($i = $lastParamIndex; $i >= 0; $i--) {
-            $hasDefault = ($this->node->params[$i]->default !== null);
+            $hasDefault = ($this->getNode()->params[$i]->default !== null);
 
             // When we find the first parameter that does not have a default,
             // flip the flag as all params for this are no longer optional
@@ -111,7 +113,7 @@ abstract class ReflectionFunctionAbstract
                 $overallOptionalFlag = false;
             }
 
-            $this->node->params[$i]->isOptional = $overallOptionalFlag;
+            $this->getNode()->params[$i]->isOptional = $overallOptionalFlag;
         }
     }
 
@@ -134,11 +136,12 @@ abstract class ReflectionFunctionAbstract
      */
     public function getShortName() : string
     {
-        if ($this->node instanceof Node\Expr\Closure) {
+        $initializedNode = $this->getNode();
+        if ($initializedNode instanceof Node\Expr\Closure) {
             return self::CLOSURE_NAME;
         }
 
-        return $this->node->name->name;
+        return $initializedNode->name->name;
     }
 
     /**
@@ -199,7 +202,9 @@ abstract class ReflectionFunctionAbstract
     {
         $parameters = [];
 
-        foreach ($this->node->params as $paramIndex => $paramNode) {
+        /** @var list<Node\Param> $nodeParams */
+        $nodeParams = $this->getNode()->params;
+        foreach ($nodeParams as $paramIndex => $paramNode) {
             $parameters[] = ReflectionParameter::createFromNode(
                 $this->reflector,
                 $paramNode,
@@ -229,7 +234,7 @@ abstract class ReflectionFunctionAbstract
 
     public function getDocComment() : string
     {
-        return GetFirstDocComment::forNode($this->node);
+        return GetFirstDocComment::forNode($this->getNode());
     }
 
     public function setDocCommentFromString(string $string) : void
@@ -353,7 +358,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getStartLine() : int
     {
-        return $this->node->getStartLine();
+        return $this->getNode()->getStartLine();
     }
 
     /**
@@ -361,17 +366,17 @@ abstract class ReflectionFunctionAbstract
      */
     public function getEndLine() : int
     {
-        return $this->node->getEndLine();
+        return $this->getNode()->getEndLine();
     }
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->locatedSource->getSource(), $this->node);
+        return CalculateReflectionColum::getStartColumn($this->locatedSource->getSource(), $this->getNode());
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->locatedSource->getSource(), $this->node);
+        return CalculateReflectionColum::getEndColumn($this->locatedSource->getSource(), $this->getNode());
     }
 
     /**
@@ -379,7 +384,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function returnsReference() : bool
     {
-        return $this->node->byRef;
+        return $this->getNode()->byRef;
     }
 
     /**
@@ -400,7 +405,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getReturnType() : ?ReflectionType
     {
-        $returnType = $this->node->getReturnType();
+        $returnType = $this->getNode()->getReturnType();
 
         if ($returnType === null) {
             return null;
@@ -426,7 +431,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function setReturnType(string $newReturnType) : void
     {
-        $this->node->returnType = new Node\Name($newReturnType);
+        $this->getNode()->returnType = new Node\Name($newReturnType);
     }
 
     /**
@@ -434,7 +439,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function removeReturnType() : void
     {
-        $this->node->returnType = null;
+        $this->getNode()->returnType = null;
     }
 
     /**
@@ -452,7 +457,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getBodyAst() : array
     {
-        return $this->node->stmts ?: [];
+        return $this->getNode()->stmts ?: [];
     }
 
     /**
@@ -481,7 +486,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getAst() : Node\FunctionLike
     {
-        return $this->node;
+        return $this->getNode();
     }
 
     /**
@@ -504,7 +509,7 @@ abstract class ReflectionFunctionAbstract
 
         $functionNode = $closureReflection->getNode();
 
-        $this->node->stmts = $functionNode->getStmts();
+        $this->getNode()->stmts = $functionNode->getStmts();
     }
 
     /**
@@ -516,7 +521,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function setBodyFromString(string $newBody) : void
     {
-        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
+        $this->getNode()->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
     }
 
     /**
@@ -533,10 +538,10 @@ abstract class ReflectionFunctionAbstract
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator         = static function (Node ...$node) : array {
+        $validator              = static function (Node ...$node) : array {
             return $node;
         };
-        $this->node->stmts = $validator(...$nodes);
+        $this->getNode()->stmts = $validator(...$nodes);
     }
 
     /**
@@ -544,7 +549,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function addParameter(string $parameterName) : void
     {
-        $this->node->params[] = new ParamNode(new Node\Expr\Variable($parameterName));
+        $this->getNode()->params[] = new ParamNode(new Node\Expr\Variable($parameterName));
     }
 
     /**
@@ -554,7 +559,7 @@ abstract class ReflectionFunctionAbstract
     {
         $lowerName = strtolower($parameterName);
 
-        foreach ($this->node->params as $key => $paramNode) {
+        foreach ($this->getNode()->params as $key => $paramNode) {
             if ($paramNode->var instanceof Node\Expr\Error) {
                 throw new LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
             }
@@ -563,7 +568,7 @@ abstract class ReflectionFunctionAbstract
                 continue;
             }
 
-            unset($this->node->params[$key]);
+            unset($this->getNode()->params[$key]);
         }
     }
 
@@ -582,7 +587,7 @@ abstract class ReflectionFunctionAbstract
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);
 
-        $traverser->traverse($this->node->getStmts());
+        $traverser->traverse($this->getNode()->getStmts());
 
         return $visitor->getReturnNodes();
     }

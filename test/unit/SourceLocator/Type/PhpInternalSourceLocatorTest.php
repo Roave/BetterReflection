@@ -169,6 +169,7 @@ class PhpInternalSourceLocatorTest extends TestCase
      */
     public function internalConstantsProvider() : array
     {
+        /** @psalm-var array<string, array<string,int|string|float|bool|null|array|resource>> $allSymbols */
         $allSymbols = get_defined_constants(true);
 
         return array_map(

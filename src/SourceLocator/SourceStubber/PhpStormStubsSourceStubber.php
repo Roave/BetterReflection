@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
+use PhpParser\NodeAbstract;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
@@ -146,17 +147,29 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $this->nodeTraverser->traverse($ast);
 
-        /** @psalm-suppress UndefinedMethod */
+        /**
+         * @var string $className
+         * @var Node\Stmt\ClassLike $classNode
+         * @psalm-suppress UndefinedMethod
+         */
         foreach ($this->cachingVisitor->getClassNodes() as $className => $classNode) {
             $this->classNodes[$className] = $classNode;
         }
 
-        /** @psalm-suppress UndefinedMethod */
+        /**
+         * @var string $functionName
+         * @var Node\Stmt\Function_ $functionNode
+         * @psalm-suppress UndefinedMethod
+         */
         foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNode) {
             $this->functionNodes[$functionName] = $functionNode;
         }
 
-        /** @psalm-suppress UndefinedMethod */
+        /**
+         * @var string $constantName
+         * @var NodeAbstract $constantNode
+         * @psalm-suppress UndefinedMethod
+         */
         foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
             $this->constantNodes[$constantName] = $constantNode;
         }
@@ -183,14 +196,16 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             public function enterNode(Node $node) : ?int
             {
                 if ($node instanceof Node\Stmt\ClassLike) {
-                    $this->classNodes[$node->namespacedName->toString()] = $node;
+                    $nodeName                    = (string) $node->namespacedName->toString();
+                    $this->classNodes[$nodeName] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
 
                 if ($node instanceof Node\Stmt\Function_) {
                     /** @psalm-suppress UndefinedPropertyFetch */
-                    $this->functionNodes[$node->namespacedName->toString()] = $node;
+                    $nodeName                       = (string) $node->namespacedName->toString();
+                    $this->functionNodes[$nodeName] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
@@ -198,7 +213,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
                         /** @psalm-suppress UndefinedPropertyFetch */
-                        $this->constantNodes[$constNode->namespacedName->toString()] = $node;
+                        $constNodeName                       = (string) $constNode->namespacedName->toString();
+                        $this->constantNodes[$constNodeName] = $node;
                     }
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -217,6 +233,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                     // Some constants has different values on different systems, some are not actual in stubs
                     if (defined($constantName)) {
+                        /** @psalm-var scalar|scalar[]|null $constantValue */
                         $constantValue        = constant($constantName);
                         $node->args[1]->value = BuilderHelpers::normalizeValue($constantValue);
                     }

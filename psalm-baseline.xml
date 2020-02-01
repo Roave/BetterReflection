@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.8.2@90d6b73fd8062432030ef39b7b6694b3902daa31">
+<files psalm-version="3.8.3@389af1bfc739bfdff3f9e3dc7bd6499aee51a831">
   <file src="src/BetterReflection.php">
     <DocblockTypeContradiction occurrences="1">
       <code>$this-&gt;sourceStubber</code>
@@ -40,10 +40,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/Reflection/ReflectionFunctionAbstract.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>$this-&gt;node === null</code>
-      <code>self::$parser</code>
-    </DocblockTypeContradiction>
     <PossiblyInvalidCast occurrences="1">
       <code>$returnType</code>
     </PossiblyInvalidCast>
@@ -91,18 +87,6 @@
     <InternalMethod occurrences="1">
       <code>BuilderHelpers::normalizeValue($constantReflection-&gt;getValue())</code>
     </InternalMethod>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$extensionConstants</code>
-    </PossiblyInvalidArgument>
-    <PossiblyInvalidArrayAccess occurrences="1">
-      <code>$extensionConstants[$constantName]</code>
-    </PossiblyInvalidArrayAccess>
-    <PossiblyInvalidArrayOffset occurrences="1">
-      <code>$extensionConstants[$constantName]</code>
-    </PossiblyInvalidArrayOffset>
-    <PossiblyNullArrayAccess occurrences="1">
-      <code>$extensionConstants[$constantName]</code>
-    </PossiblyNullArrayAccess>
     <PossiblyNullIterator occurrences="1">
       <code>$classReflection-&gt;getTraitAliases()</code>
     </PossiblyNullIterator>
@@ -117,9 +101,6 @@
     <InternalMethod occurrences="1">
       <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
     </InternalMethod>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>get_defined_constants(true)['user']</code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/SourceLocator/Type/ClosureSourceLocator.php">
     <PossiblyNullReference occurrences="1">
