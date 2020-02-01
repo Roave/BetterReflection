@@ -186,6 +186,8 @@ class ReflectionClass implements Reflection
     /**
      * Get the "full" name of the class (e.g. for A\B\Foo, this will return
      * "A\B\Foo").
+     *
+     * @psalm-return class-string
      */
     public function getName() : string
     {
@@ -817,6 +819,8 @@ class ReflectionClass implements Reflection
      * Gets the parent class names.
      *
      * @return string[] A numerical array with parent class names as the values.
+     *
+     * @psalm-return list<class-string>
      */
     public function getParentClassNames() : array
     {
@@ -1178,7 +1182,8 @@ class ReflectionClass implements Reflection
 
     /**
      * @return ReflectionClass[] indexed by interface name
-     * @return array<string, ReflectionClass>
+     *
+     * @psalm-return array<string, ReflectionClass>
      */
     private function getCurrentClassImplementedInterfacesIndexedByName() : array
     {

@@ -425,7 +425,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         $provider = [];
 
-        foreach (get_defined_constants(true) as $extensionName => $extensionConstants) {
+        /** @psalm-var array<string, array<string,int|string|float|bool|null|array|resource>> $constants */
+        $constants = get_defined_constants(true);
+
+        foreach ($constants as $extensionName => $extensionConstants) {
             // Check only always enabled extensions
             if (! in_array($extensionName, ['Core', 'standard', 'pcre', 'SPL'], true)) {
                 continue;

@@ -42,6 +42,7 @@ final class MakeLocatorForInstalledJson
             throw MissingInstalledJson::inProjectPath($installationPath);
         }
 
+        /** @var array{packages: list<array>}|list<array>|null $installedJson */
         $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
         if (! is_array($installedJson)) {
