@@ -20,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
+use function assert;
 use function count;
 
 /**
@@ -147,9 +148,9 @@ final class FindReflectionsInTree
                     }
 
                     if ($node->name->hasAttribute('namespacedName')) {
-                        /** @var Name $namespacedName */
                         $namespacedName = $node->name->getAttribute('namespacedName');
-                        if(count($namespacedName->parts) > 1) {
+                        assert($namespacedName instanceof Name);
+                        if (count($namespacedName->parts) > 1) {
                             try {
                                 $this->functionReflector->reflect($namespacedName->toString());
 
