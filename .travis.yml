@@ -8,10 +8,6 @@ before_script:
   - rm composer.lock
   - travis_retry composer update --prefer-dist $DEPENDENCIES
 
-matrix:
-  allow_failures:
-    - php: 7.4
-
 jobs:
   include:
     - stage: Test
