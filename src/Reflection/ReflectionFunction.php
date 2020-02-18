@@ -17,9 +17,7 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use function assert;
 use function function_exists;
-use function is_callable;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
 {
@@ -129,7 +127,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         $functionName = $this->getName();
 
         $this->assertFunctionExist($functionName);
-        
+
         return $functionName(...$args);
     }
 

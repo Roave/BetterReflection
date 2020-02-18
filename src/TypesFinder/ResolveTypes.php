@@ -7,7 +7,6 @@ namespace Roave\BetterReflection\TypesFinder;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Context;
-use function assert;
 
 class ResolveTypes
 {
