@@ -19,7 +19,7 @@ class ReflectionClassConstant
     private $valueWasCached = false;
 
     /**
-     * @var bool|int|float|string|array|null const value
+     * @var bool|int|float|string|array<bool|int|float|string>|null const value
      * @psalm-var scalar|array<scalar>|null
      */
     private $value;

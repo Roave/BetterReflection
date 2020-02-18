@@ -12,6 +12,8 @@ class NotAnObject extends InvalidArgumentException
 {
     /**
      * @param bool|int|float|string|array|resource|null $nonObject
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
      */
     public static function fromNonObject($nonObject) : self
     {

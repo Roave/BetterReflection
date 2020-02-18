@@ -14,6 +14,8 @@
         <exclude name="Generic.Files.LineLength.TooLong"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>
+        <!-- @psalm-return annotations are used -->
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
     </rule>
 
     <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps">
@@ -34,7 +36,7 @@
         <exclude-pattern>src/Reflection/Adapter/*</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
-        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>     
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>
         <properties>
             <property name="enableObjectTypeHint" value="false"/>
         </properties>
@@ -46,9 +48,5 @@
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint">
         <exclude-pattern>src/Reflection/Adapter/*</exclude-pattern>
-    </rule>
-    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification">
-        <!-- It's useless to add "@return mixed[]" to all data providers -->
-        <exclude-pattern>test/</exclude-pattern>
     </rule>
 </ruleset>
