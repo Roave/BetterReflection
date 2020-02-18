@@ -19,7 +19,7 @@ final class GetFirstDocComment
             if ($comment instanceof Doc) {
                 $text = $comment->getReformattedText();
                 Assert::string($text);
-                
+
                 return $text;
             }
         }

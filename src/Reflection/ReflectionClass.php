@@ -1225,9 +1225,9 @@ class ReflectionClass implements Reflection
      *
      * @return ReflectionClass[] parent interfaces of this interface
      *
-     * @psalm-return array<string, ReflectionClass>
-     *
      * @throws NotAnInterfaceReflection
+     *
+     * @psalm-return array<string, ReflectionClass>
      */
     private function getInterfacesHierarchy() : array
     {

@@ -10,7 +10,6 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
-use function assert;
 
 class ClassReflector implements Reflector
 {
