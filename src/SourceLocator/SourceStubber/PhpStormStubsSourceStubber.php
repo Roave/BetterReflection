@@ -7,7 +7,6 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
-use PhpParser\NodeAbstract;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
@@ -27,6 +26,7 @@ use function explode;
 use function file_get_contents;
 use function in_array;
 use function is_dir;
+use function is_string;
 use function sprintf;
 use function str_replace;
 use function strtolower;
@@ -148,29 +148,29 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $this->nodeTraverser->traverse($ast);
 
         /**
-         * @var string $className
-         * @var Node\Stmt\ClassLike $classNode
          * @psalm-suppress UndefinedMethod
          */
         foreach ($this->cachingVisitor->getClassNodes() as $className => $classNode) {
+            assert(is_string($className));
+            assert($classNode instanceof Node\Stmt\ClassLike);
             $this->classNodes[$className] = $classNode;
         }
 
         /**
-         * @var string $functionName
-         * @var Node\Stmt\Function_ $functionNode
          * @psalm-suppress UndefinedMethod
          */
         foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNode) {
+            assert(is_string($functionName));
+            assert($functionNode instanceof Node\Stmt\Function_);
             $this->functionNodes[$functionName] = $functionNode;
         }
 
         /**
-         * @var string $constantName
-         * @var NodeAbstract $constantNode
          * @psalm-suppress UndefinedMethod
          */
         foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
+            assert(is_string($constantName));
+            assert($constantNode instanceof Node\Stmt\Const_ || $constantNode instanceof Node\Expr\FuncCall);
             $this->constantNodes[$constantName] = $constantNode;
         }
     }

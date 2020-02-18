@@ -48,7 +48,7 @@ class ReflectionParameter
     private $parameterIndex;
 
     /**
-     * @var bool|int|float|string|array|null
+     * @var bool|int|float|string|array<bool|int|float|string>|null
      * @psalm-var scalar|array<scalar>|null
      */
     private $defaultValue;

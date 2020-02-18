@@ -29,7 +29,7 @@ class Locator
     private $parser;
 
     /**
-     * @psalm-param Closure(): FunctionReflector $functionReflectorGetter
+     * @param Closure(): FunctionReflector $functionReflectorGetter
      */
     public function __construct(Parser $parser, Closure $functionReflectorGetter)
     {
