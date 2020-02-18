@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.8.3@389af1bfc739bfdff3f9e3dc7bd6499aee51a831">
+<files psalm-version="3.9.2@87d8947ff36d8b71f54b7e46b93384cf010681a0">
   <file src="src/BetterReflection.php">
     <DocblockTypeContradiction occurrences="1">
       <code>$this-&gt;sourceStubber</code>
     </DocblockTypeContradiction>
   </file>
   <file src="src/Reflection/Adapter/ReflectionClass.php">
+    <InvalidReturnType occurrences="1">
+      <code>getProperties</code>
+    </InvalidReturnType>
     <MethodSignatureMismatch occurrences="5">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
@@ -19,12 +22,14 @@
       <code>$interface</code>
       <code>$realInterfaceName</code>
     </PossiblyInvalidArgument>
-    <RedundantCondition occurrences="2">
+    <RedundantCondition occurrences="1">
       <code>is_object($argument)</code>
-      <code>is_string($argument) || is_object($argument)</code>
     </RedundantCondition>
   </file>
   <file src="src/Reflection/Adapter/ReflectionObject.php">
+    <InvalidReturnType occurrences="1">
+      <code>getProperties</code>
+    </InvalidReturnType>
     <MethodSignatureMismatch occurrences="5">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
@@ -43,6 +48,10 @@
     <PossiblyInvalidCast occurrences="1">
       <code>$returnType</code>
     </PossiblyInvalidCast>
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
+      <code>$functionNode-&gt;getStmts()</code>
+      <code>$this-&gt;loadStaticParser()-&gt;parse('&lt;?php ' . $newBody)</code>
+    </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="src/Reflection/ReflectionMethod.php">
     <InvalidStringClass occurrences="1">

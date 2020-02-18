@@ -97,8 +97,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         $this->assertFunctionExist($functionName);
 
         return static function (...$args) use ($functionName) {
-            assert(is_callable($functionName));
-
             return $functionName(...$args);
         };
     }
@@ -131,9 +129,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         $functionName = $this->getName();
 
         $this->assertFunctionExist($functionName);
-
-        assert(is_callable($functionName));
-
+        
         return $functionName(...$args);
     }
 
@@ -149,6 +145,8 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
     /**
      * @throws FunctionDoesNotExist
+     *
+     * @psalm-assert callable-string $functionName
      */
     private function assertFunctionExist(string $functionName) : void
     {
