@@ -16,7 +16,9 @@ use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function array_filter;
@@ -501,5 +503,25 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function testNoStubForUnknownConstant() : void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
+    }
+
+    public function testStubberWithStubsDirectory(): void
+    {
+        $parser = BetterReflectionSingleton::instance()->phpParser();
+        $stubber = PhpStormStubsSourceStubber::fromStubsDirectory($parser, __DIR__.'/../../../../vendor/jetbrains/phpstorm-stubs');
+
+        $stub = $stubber->generateFunctionStub('array_filter');
+
+        self::assertInstanceOf(StubData::class, $stub);
+    }
+
+    public function testStubberThrowsExceptionWhenInvalidStubsDirectoryIsSpecified() : void
+    {
+        $parser = BetterReflectionSingleton::instance()->phpParser();
+        $stubber = PhpStormStubsSourceStubber::fromStubsDirectory($parser, '/tmp/invalid_directory');
+
+        self::expectException(InvalidFileLocation::class);
+
+        $stubber->generateFunctionStub('array_filter');
     }
 }

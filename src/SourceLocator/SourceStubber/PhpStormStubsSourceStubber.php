@@ -66,17 +66,25 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var array<string, Node\Const_|Node\Expr\FuncCall> */
     private $constantNodes = [];
 
-    public function __construct(Parser $phpParser, ?string $stubsDirectory = null)
+    public function __construct(Parser $phpParser)
     {
-        $this->phpParser      = $phpParser;
-        $this->stubsDirectory = $stubsDirectory;
-        $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
+        $this->phpParser     = $phpParser;
+        $this->prettyPrinter = new Standard(self::BUILDER_OPTIONS);
 
         $this->cachingVisitor = $this->createCachingVisitor();
 
         $this->nodeTraverser = new NodeTraverser();
         $this->nodeTraverser->addVisitor(new NameResolver());
         $this->nodeTraverser->addVisitor($this->cachingVisitor);
+    }
+
+    public static function fromStubsDirectory(Parser $phpParser, string $stubsDirectory)
+    {
+        $instance = new self($phpParser);
+
+        $instance->stubsDirectory = $stubsDirectory;
+
+        return $instance;
     }
 
     public function generateClassStub(string $className) : ?StubData
