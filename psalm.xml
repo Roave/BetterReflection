@@ -6,6 +6,7 @@
     errorBaseline="psalm-baseline.xml"
     useDocblockTypes="true"
     totallyTyped="false"
+    usePhpDocPropertiesWithoutMagicCall="true"
     allowPhpStormGenerics="true"
 >
     <projectFiles>
@@ -66,26 +67,16 @@
 
         <UndefinedPropertyAssignment>
             <errorLevel type="suppress">
-                <referencedProperty name="PhpParser\Node\Stmt\ClassLike::$namespacedName" />
                 <referencedProperty name="PhpParser\Node\Param::$isOptional" />
             </errorLevel>
         </UndefinedPropertyAssignment>
 
         <UndefinedPropertyFetch>
             <errorLevel type="suppress">
-                <referencedProperty name="PhpParser\Node\Stmt\ClassLike::$namespacedName" />
                 <referencedProperty name="PhpParser\Node\Param::$isOptional" />
             </errorLevel>
         </UndefinedPropertyFetch>
 
-        <PossiblyNullPropertyAssignmentValue>
-            <errorLevel type="suppress">
-                <referencedProperty name="PhpParser\Node\Expr\Closure::$stmts" />
-                <referencedProperty name="PhpParser\Node\Stmt\Function_::$stmts" />
-                <referencedProperty name="PhpParser\Node\Stmt\ClassMethod::$stmts" />
-            </errorLevel>
-        </PossiblyNullPropertyAssignmentValue>
-        
         <InvalidScalarArgument>
             <!-- Not actually an issue, we send scalar where the called method wait for bool|float|int|string. See vimeo/psalm/issues/2622 -->
             <errorLevel type="suppress">

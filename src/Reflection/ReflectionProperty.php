@@ -338,7 +338,7 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        return Closure::bind(function ($instance, string $propertyName) {
+        return Closure::bind(function (object $instance, string $propertyName) {
             return $instance->{$propertyName};
         }, $instance, $declaringClassName)->__invoke($instance, $this->getName());
     }

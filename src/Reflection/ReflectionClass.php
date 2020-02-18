@@ -936,7 +936,6 @@ class ReflectionClass implements Reflection
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
         if ($this->isAnonymous()) {
             $class = (new BetterReflection())->classReflector()->reflect($node->toString());
-            assert($class instanceof self);
         } else {
             $class = $this->reflector->reflect($node->toString());
             assert($class instanceof self);
@@ -1225,6 +1224,8 @@ class ReflectionClass implements Reflection
      * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
      *
      * @return ReflectionClass[] parent interfaces of this interface
+     *
+     * @psalm-return array<string, ReflectionClass>
      *
      * @throws NotAnInterfaceReflection
      */

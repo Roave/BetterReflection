@@ -45,8 +45,6 @@ class UnableToCompileNode extends LogicException
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch
     ) : self {
-        assert($constantFetch->name instanceof Node\Name);
-
         return new self(sprintf(
             'Could not locate constant "%s" while evaluating expression in %s at line %s',
             reset($constantFetch->name->parts),

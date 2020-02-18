@@ -34,7 +34,6 @@ class ClassReflector implements Reflector
         $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
-        assert($classInfo instanceof ReflectionClass || $classInfo === null);
 
         if ($classInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);

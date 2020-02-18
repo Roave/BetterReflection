@@ -29,9 +29,7 @@ class ResolveTypes
         $resolvedTypes = [];
 
         foreach ($stringTypes as $stringType) {
-            $resolvedType = $this->typeResolver->resolve($stringType, $context);
-            assert($resolvedType instanceof Type);
-            $resolvedTypes[] = $resolvedType;
+            $resolvedTypes[] = $this->typeResolver->resolve($stringType, $context);
         }
 
         return $resolvedTypes;
