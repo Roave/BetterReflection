@@ -253,7 +253,7 @@ jobs:
       php: 7.4
       env: DEPENDENCIES=""
       before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable phpbench/phpbench:^0.16.9
+        - travis_retry composer require --dev --prefer-dist --prefer-stable phpbench/phpbench:^0.17.0
       script: ./vendor/bin/phpbench run --progress=dots --iterations=1
 
     - stage: Upload Coverage
