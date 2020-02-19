@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function assert;
 
 class ClassReflector implements Reflector
 {
@@ -33,6 +34,7 @@ class ClassReflector implements Reflector
         $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
+        assert($classInfo instanceof ReflectionClass || $classInfo === null);
 
         if ($classInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);

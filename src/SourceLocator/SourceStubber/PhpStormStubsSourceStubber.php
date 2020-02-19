@@ -63,7 +63,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var array<string, Node\Stmt\Function_> */
     private $functionNodes = [];
 
-    /** @var array<string, Node\Const_|Node\Expr\FuncCall> */
+    /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
     private $constantNodes = [];
 
     public function __construct(Parser $phpParser)
