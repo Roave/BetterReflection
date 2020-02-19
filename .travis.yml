@@ -8,10 +8,6 @@ before_script:
   - rm composer.lock
   - travis_retry composer update --prefer-dist $DEPENDENCIES
 
-matrix:
-  allow_failures:
-    - php: 7.4
-
 jobs:
   include:
     - stage: Test
@@ -26,8 +22,7 @@ jobs:
 
     - stage: Test
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.2.26 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -38,8 +33,7 @@ jobs:
 
     - stage: Test
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.2.26 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -60,8 +54,7 @@ jobs:
 
     - stage: Test
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.3.13 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -72,8 +65,7 @@ jobs:
 
     - stage: Test
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.3.13 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -94,8 +86,7 @@ jobs:
 
     - stage: Test
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.4.1 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -106,8 +97,7 @@ jobs:
 
     - stage: Test
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.4.1 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -128,8 +118,7 @@ jobs:
 
     - stage: Test Compatibility
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.2.26 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -140,8 +129,7 @@ jobs:
 
     - stage: Test Compatibility
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.2.26 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -162,8 +150,7 @@ jobs:
 
     - stage: Test Compatibility
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.3.13 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -174,8 +161,7 @@ jobs:
 
     - stage: Test Compatibility
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.3.13 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -196,8 +182,7 @@ jobs:
 
     - stage: Test Compatibility
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.4.1 DEPENDENCIES=""
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
@@ -208,8 +193,7 @@ jobs:
 
     - stage: Test Compatibility
       os: windows
-      dist: 1803-containers
-      language: sh # No PHP currently
+      language: shell # No PHP currently
       env: PHP_VERSION=7.4.1 DEPENDENCIES="--prefer-lowest --prefer-stable"
       install:
         - choco install php --version=${PHP_VERSION} --package-parameters="/InstallDir:c:\tools\php"
