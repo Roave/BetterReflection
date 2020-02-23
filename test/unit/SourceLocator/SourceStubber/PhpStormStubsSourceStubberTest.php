@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -517,11 +518,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testStubberThrowsExceptionWhenInvalidStubsDirectoryIsSpecified() : void
     {
+        self::expectException(CouldNotFindPhpStormStubs::class);
+
         $parser = BetterReflectionSingleton::instance()->phpParser();
         $stubber = PhpStormStubsSourceStubber::fromStubsDirectory($parser, '/tmp/invalid_directory');
-
-        self::expectException(InvalidFileLocation::class);
-
-        $stubber->generateFunctionStub('array_filter');
     }
 }

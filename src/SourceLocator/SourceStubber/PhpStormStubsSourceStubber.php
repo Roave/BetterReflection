@@ -80,8 +80,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     public static function fromStubsDirectory(Parser $phpParser, string $stubsDirectory)
     {
-        $instance = new self($phpParser);
+        if (is_dir($stubsDirectory) === false) {
+            throw CouldNotFindPhpStormStubs::create();
+        }
 
+        $instance = new self($phpParser);
         $instance->stubsDirectory = $stubsDirectory;
 
         return $instance;
