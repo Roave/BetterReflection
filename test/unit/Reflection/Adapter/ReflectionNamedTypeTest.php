@@ -70,4 +70,11 @@ class ReflectionNamedTypeTest extends TestCase
         $adapter = new ReflectionNamedTypeAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
     }
+
+    public function testIsInstanceOfCoreReflectionType() : void
+    {
+        $reflectionStub = $this->createMock(BetterReflectionType::class);
+        $adapter        = ReflectionNamedTypeAdapter::fromReturnTypeOrNull($reflectionStub);
+        $this->assertInstanceOf(CoreReflectionNamedType::class, $adapter);
+    }
 }

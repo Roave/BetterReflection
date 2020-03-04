@@ -100,7 +100,7 @@ class ReflectionProperty extends CoreReflectionProperty
      */
     public function getType()
     {
-        return ReflectionType::fromReturnTypeOrNull($this->betterReflectionProperty->getType());
+        return ReflectionNamedType::fromReturnTypeOrNull($this->betterReflectionProperty->getType());
     }
 
     /**
