@@ -19,7 +19,7 @@ use function is_dir;
 use function is_string;
 
 /**
- * This source locator loads all php files in an entire directory or multiple directories.
+ * This source locator recursively loads all php files in an entire directory or multiple directories.
  */
 class DirectoriesSourceLocator implements SourceLocator
 {
