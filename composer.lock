@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e232ac24f060b080f2be6c4cf5a8862",
+    "content-hash": "0047a5f21b0ff9084ffbc5ff90c0651d",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1315,20 +1315,23 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.18",
+            "version": "0.12.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "1ce27fe29c8660a27926127d350d53d80c4d4286"
+                "reference": "054f6d76b12ba9a6c13a5a8d5fcdf51219615f4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1ce27fe29c8660a27926127d350d53d80c4d4286",
-                "reference": "1ce27fe29c8660a27926127d350d53d80c4d4286",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/054f6d76b12ba9a6c13a5a8d5fcdf51219615f4d",
+                "reference": "054f6d76b12ba9a6c13a5a8d5fcdf51219615f4d",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
             },
             "bin": [
                 "phpstan",
@@ -1350,7 +1353,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-03-22T16:51:47+00:00"
+            "time": "2020-04-19T20:35:10+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
