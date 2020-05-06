@@ -81,7 +81,7 @@ class ReflectionProperty extends CoreReflectionProperty
         try {
             $this->betterReflectionProperty->setValue($object, $value);
         } catch (NoObjectProvided | NotAnObject $e) {
-            return null;
+            return;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
         }

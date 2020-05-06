@@ -6,10 +6,14 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
+use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
+use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Webmozart\Assert\Assert;
 use function array_combine;
 use function array_map;
+use function array_values;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
@@ -201,14 +205,9 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getProperties($filter = null)
     {
-        $properties = $this->betterReflectionObject->getProperties();
-
-        $wrappedProperties = [];
-        foreach ($properties as $key => $property) {
-            $wrappedProperties[$key] = new ReflectionProperty($property);
-        }
-
-        return $wrappedProperties;
+        return array_values(array_map(static function (BetterReflectionProperty $property) : ReflectionProperty {
+            return new ReflectionProperty($property);
+        }, $this->betterReflectionObject->getProperties()));
     }
 
     /**
@@ -275,12 +274,27 @@ class ReflectionObject extends CoreReflectionObject
     {
         $traits = $this->betterReflectionObject->getTraits();
 
-        $wrappedTraits = [];
-        foreach ($traits as $key => $trait) {
-            $wrappedTraits[$key] = new ReflectionClass($trait);
-        }
+        /** @psalm-var array<trait-string> $traitNames */
+        $traitNames = array_map(static function (BetterReflectionClass $trait) : string {
+            return $trait->getName();
+        }, $traits);
 
-        return $wrappedTraits;
+        $traitsByName = array_combine(
+            $traitNames,
+            array_map(static function (BetterReflectionClass $trait) : ReflectionClass {
+                return new ReflectionClass($trait);
+            }, $traits)
+        );
+
+        Assert::isArray(
+            $traitsByName,
+            sprintf(
+                'Could not create an array<trait-string, ReflectionClass> for object of type "%s"',
+                $this->betterReflectionObject->getName()
+            )
+        );
+
+        return $traitsByName;
     }
 
     /**
