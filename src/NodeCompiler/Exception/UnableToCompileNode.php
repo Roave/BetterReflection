@@ -15,6 +15,14 @@ use function sprintf;
 
 class UnableToCompileNode extends LogicException
 {
+    /** @var string|null */
+    private $constantName;
+
+    public function constantName() : ?string
+    {
+        return $this->constantName;
+    }
+
     public static function forUnRecognizedExpressionInContext(Node\Expr $expression, CompilerContext $context) : self
     {
         return new self(sprintf(
@@ -45,12 +53,18 @@ class UnableToCompileNode extends LogicException
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch
     ) : self {
-        return new self(sprintf(
+        $constantName = reset($constantFetch->name->parts);
+
+        $exception = new self(sprintf(
             'Could not locate constant "%s" while evaluating expression in %s at line %s',
-            reset($constantFetch->name->parts),
+            $constantName,
             self::compilerContextToContextDescription($fetchContext),
             $constantFetch->getLine()
         ));
+
+        $exception->constantName = $constantName;
+
+        return $exception;
     }
 
     private static function compilerContextToContextDescription(CompilerContext $fetchContext) : string
