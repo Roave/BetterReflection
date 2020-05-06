@@ -775,12 +775,8 @@ class ReflectionClass implements Reflection
         }
 
         // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        if ($this->isAnonymous()) {
-            $parent = self::createFromName($this->node->extends->toString());
-        } else {
-            /** @var self $parent */
-            $parent = $this->reflector->reflect($this->node->extends->toString());
-        }
+        /** @var self $parent */
+        $parent = $this->reflector->reflect($this->node->extends->toString());
 
         if ($parent->isInterface() || $parent->isTrait()) {
             throw NotAClassReflection::fromReflectionClass($parent);

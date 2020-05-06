@@ -700,7 +700,6 @@ PHP;
 
         $parent = $anonymousClassInfo->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
-        self::assertSame((string) $parent, (string) $reflector->reflect(ClassForHinting::class));
     }
 
     public function testIsAnonymousWithAnonymousClassInNamespace() : void
