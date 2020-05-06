@@ -17,24 +17,42 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
  */
 final class UnableToCompileNodeTest extends TestCase
 {
+    public function testDefaults() : void
+    {
+        $exception = new UnableToCompileNode();
+
+        self::assertNull($exception->constantName());
+    }
+
     /** @dataProvider supportedContextTypes */
     public function testBecauseOfNotFoundConstantReference(CompilerContext $context) : void
     {
+        $constantName = 'FOO';
+
+        $exception = UnableToCompileNode::becauseOfNotFoundConstantReference(
+            $context,
+            new ConstFetch(new Name($constantName))
+        );
+
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         self::assertSame(
-            'Could not locate constant "FOO" while evaluating expression in ' . $contextName . ' at line -1',
-            UnableToCompileNode::becauseOfNotFoundConstantReference(
-                $context,
-                new ConstFetch(new Name('FOO'))
-            )->getMessage()
+            sprintf(
+                'Could not locate constant "%s" while evaluating expression in %s at line -1',
+                $constantName,
+                $contextName
+            ),
+            $exception->getMessage()
         );
+
+        self::assertSame($constantName, $exception->constantName());
     }
 
     /** @dataProvider supportedContextTypes */
