@@ -68,11 +68,11 @@ class ReflectionObject extends ReflectionClass
             $reflector = new ClassReflector(
                 new AggregateSourceLocator(
                     [
+                        (new BetterReflection())->sourceLocator(),
                         new AnonymousClassObjectSourceLocator(
                             $object,
                             (new BetterReflection())->phpParser()
                         ),
-                        (new BetterReflection())->sourceLocator(),
                     ]
                 )
             );
