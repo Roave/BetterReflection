@@ -6,7 +6,8 @@ namespace Roave\BetterReflection\Util;
 
 use PhpParser\Comment\Doc;
 use PhpParser\NodeAbstract;
-use Webmozart\Assert\Assert;
+use function assert;
+use function is_string;
 
 /**
  * @internal
@@ -18,7 +19,8 @@ final class GetFirstDocComment
         foreach ($node->getComments() as $comment) {
             if ($comment instanceof Doc) {
                 $text = $comment->getReformattedText();
-                Assert::string($text);
+
+                assert(is_string($text));
 
                 return $text;
             }

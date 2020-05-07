@@ -12,9 +12,13 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
+use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use function array_combine;
 use function array_map;
+use function array_values;
+use function assert;
 use function func_num_args;
+use function is_array;
 use function is_object;
 use function is_string;
 use function sprintf;
@@ -227,14 +231,9 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getProperties($filter = null)
     {
-        $properties = $this->betterReflectionClass->getProperties();
-
-        $wrappedProperties = [];
-        foreach ($properties as $key => $property) {
-            $wrappedProperties[$key] = new ReflectionProperty($property);
-        }
-
-        return $wrappedProperties;
+        return array_values(array_map(static function (BetterReflectionProperty $property) : ReflectionProperty {
+            return new ReflectionProperty($property);
+        }, $this->betterReflectionClass->getProperties()));
     }
 
     /**
@@ -278,9 +277,9 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants()
     {
-        return array_map(static function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
+        return array_values(array_map(static function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
-        }, $this->betterReflectionClass->getReflectionConstants());
+        }, $this->betterReflectionClass->getReflectionConstants()));
     }
 
     /**
@@ -323,12 +322,27 @@ class ReflectionClass extends CoreReflectionClass
     {
         $traits = $this->betterReflectionClass->getTraits();
 
-        $wrappedTraits = [];
-        foreach ($traits as $key => $trait) {
-            $wrappedTraits[$key] = new self($trait);
-        }
+        /** @psalm-var array<trait-string> $traitNames */
+        $traitNames = array_map(static function (BetterReflectionClass $trait) : string {
+            return $trait->getName();
+        }, $traits);
 
-        return $wrappedTraits;
+        $traitsByName = array_combine(
+            $traitNames,
+            array_map(static function (BetterReflectionClass $trait) : self {
+                return new self($trait);
+            }, $traits)
+        );
+
+        assert(
+            is_array($traitsByName),
+            sprintf(
+                'Could not create an array<trait-string, ReflectionClass> for class "%s"',
+                $this->betterReflectionClass->getName()
+            )
+        );
+
+        return $traitsByName;
     }
 
     /**
