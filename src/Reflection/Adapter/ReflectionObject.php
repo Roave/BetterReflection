@@ -10,11 +10,12 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
-use Webmozart\Assert\Assert;
 use function array_combine;
 use function array_map;
 use function array_values;
+use function assert;
 use function func_num_args;
+use function is_array;
 use function sprintf;
 use function strtolower;
 
@@ -286,10 +287,10 @@ class ReflectionObject extends CoreReflectionObject
             }, $traits)
         );
 
-        Assert::isArray(
-            $traitsByName,
+        assert(
+            is_array($traitsByName),
             sprintf(
-                'Could not create an array<trait-string, ReflectionClass> for object of type "%s"',
+                'Could not create an array<trait-string, ReflectionClass> for class "%s"',
                 $this->betterReflectionObject->getName()
             )
         );
