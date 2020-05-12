@@ -19,9 +19,11 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\AutoloadableClassInPhar;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassNotInPhar;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use function class_exists;
 use function file_exists;
@@ -301,5 +303,27 @@ class AutoloadSourceLocatorTest extends TestCase
         include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
 
         return true;
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillLocateSourcesInPharPath() : void
+    {
+        require_once 'phar://' . __DIR__ . '/../../Fixture/autoload.phar/vendor/autoload.php';
+        spl_autoload_register(static function (string $class) : void {
+            if ($class !== ClassNotInPhar::class) {
+                return;
+            }
+
+            include_once __DIR__ . '/../../Fixture/ClassNotInPhar.php';
+        });
+
+        $sourceLocator  = new AutoloadSourceLocator($this->astLocator);
+        $classReflector = new ClassReflector($sourceLocator);
+
+        $reflection = $classReflector->reflect(AutoloadableClassInPhar::class);
+
+        $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
     }
 }
