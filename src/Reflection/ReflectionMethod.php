@@ -36,6 +36,9 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /** @var MethodNode */
     private $methodNode;
 
+    /** @var string|null */
+    private $aliasName;
+
     /**
      * @internal
      *
@@ -48,12 +51,14 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         MethodNode $node,
         ?Namespace_ $namespace,
         ReflectionClass $declaringClass,
-        ReflectionClass $implementingClass
+        ReflectionClass $implementingClass,
+        ?string $aliasName = null
     ) : self {
         $method                    = new self();
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
         $method->methodNode        = $node;
+        $method->aliasName         = $aliasName;
 
         $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
 
@@ -84,6 +89,20 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public static function createFromInstance($instance, string $methodName) : self
     {
         return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
+    }
+
+    public function getShortName() : string
+    {
+        if ($this->aliasName !== null) {
+            return $this->aliasName;
+        }
+
+        return parent::getShortName();
+    }
+
+    public function getAliasName() : ?string
+    {
+        return $this->aliasName;
     }
 
     /**
