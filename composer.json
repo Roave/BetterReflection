@@ -51,9 +51,6 @@
             "Roave\\BetterReflectionBenchmark\\": "test/benchmark"
         }
     },
-    "conflict": {
-        "slevomat/coding-standard": "<6.0.7"
-    },
     "suggest": {
         "composer/composer": "Required to use the ComposerSourceLocator"
     },
