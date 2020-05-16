@@ -161,7 +161,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
             // Added in PHP 7.4.0
             if (PHP_VERSION_ID < 70400 && $method->getShortName() === '__unserialize') {
-                return;
+                continue;
+            }
+
+            // Fixed in PHP 7.4.6, needs fix in JetBrains/phpstorm-stubs
+            if (PHP_VERSION_ID >= 70406 && $method->getShortName() === '__debugInfo') {
+                continue;
             }
 
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
