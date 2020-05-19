@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFu
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use function array_combine;
 use function array_map;
@@ -129,6 +130,20 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertFalse($betterReflectionFunction->getFileName());
+    }
+
+    public function testGetFileNameReturnsPathWithSystemDirectorySeparator() : void
+    {
+        $fileName = 'foo/bar\\foo/bar.php';
+
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getFileName')
+            ->willReturn($fileName);
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionFunction->getFileName());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void

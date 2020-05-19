@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Util\FileHelper;
 use function array_combine;
 use function array_map;
 use function array_values;
@@ -121,7 +122,9 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getFileName()
     {
-        return $this->betterReflectionClass->getFileName() ?? false;
+        $fileName = $this->betterReflectionClass->getFileName();
+
+        return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
     /**
