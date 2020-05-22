@@ -1,7 +1,7 @@
 Better Reflection
 =================
 
-[![Build Status](https://travis-ci.org/Roave/BetterReflection.svg?branch=master)](https://travis-ci.org/Roave/BetterReflection)
+[![Build status](https://github.com/Roave/BetterReflection/workflows/Build/badge.svg?branch=master)](https://github.com/Roave/BetterReflection/actions?query=workflow%3ABuild+branch%3Amaster)
 [![Type Coverage](https://shepherd.dev/github/Roave/BetterReflection/coverage.svg)](https://shepherd.dev/github/Roave/BetterReflection)
 [![Latest Stable Version](https://poser.pugx.org/roave/better-reflection/v/stable)](https://packagist.org/packages/roave/better-reflection)
 [![License](https://poser.pugx.org/roave/better-reflection/license)](https://packagist.org/packages/roave/better-reflection)
