@@ -50,7 +50,7 @@ jobs:
         run: "composer update --prefer-dist --no-interaction --no-progress --no-suggest"
 
       - name: "Tests"
-        run: "vendor/bin/phpunit"
+        run: "php -dmemory_limit=-1 vendor/phpunit/phpunit/phpunit"
 
   compatibility:
     name: "Test Compatibility"
