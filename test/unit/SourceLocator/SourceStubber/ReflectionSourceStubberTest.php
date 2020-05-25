@@ -23,9 +23,11 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForSourceStubber;
+use Roave\BetterReflectionTest\Fixture\ClassForSourceStubberWithDefaultStaticProperty;
 use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
+use stdClass;
 use Traversable;
 use function array_filter;
 use function array_map;
@@ -122,6 +124,18 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNotNull($stubData);
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubberExpected.php', $stubData->getStub());
         self::assertNull($stubData->getExtensionName());
+    }
+
+    public function testClassStubWithDefaultStaticPropertyWithUnsupportedValue() : void
+    {
+        require __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
+
+        ClassForSourceStubberWithDefaultStaticProperty::$publicStaticProperty = new stdClass();
+
+        $stubData = $this->stubber->generateClassStub(ClassForSourceStubberWithDefaultStaticProperty::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpected.php', $stubData->getStub());
     }
 
     public function testInterfaceStub() : void
