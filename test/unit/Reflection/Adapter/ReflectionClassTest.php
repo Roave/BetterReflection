@@ -190,50 +190,6 @@ class ReflectionClassTest extends TestCase
         self::assertFalse($reflectionClassAdapter->getParentClass());
     }
 
-    public function testHasMethodIsCaseInsensitive() : void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('getName')
-            ->willReturn('foo');
-
-        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
-        $betterReflectionClass
-            ->method('getMethods')
-            ->willReturn([$betterReflectionMethod]);
-        $betterReflectionClass
-            ->method('hasMethod')
-            ->with('foo')
-            ->willReturn(true);
-
-        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
-
-        self::assertTrue($reflectionClassAdapter->hasMethod('foo'));
-        self::assertTrue($reflectionClassAdapter->hasMethod('FOO'));
-    }
-
-    public function testGetMethodIsCaseInsensitive() : void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('getName')
-            ->willReturn('foo');
-
-        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
-        $betterReflectionClass
-            ->method('getMethods')
-            ->willReturn([$betterReflectionMethod]);
-        $betterReflectionClass
-            ->method('getMethod')
-            ->with('foo')
-            ->willReturn($betterReflectionMethod);
-
-        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
-
-        self::assertSame('foo', $reflectionClassAdapter->getMethod('foo')->getName());
-        self::assertSame('foo', $reflectionClassAdapter->getMethod('FOO')->getName());
-    }
-
     public function testGetMethodsFilter() : void
     {
         $publicBetterReflectionMethod = $this->createMock(BetterReflectionMethod::class);

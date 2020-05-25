@@ -168,7 +168,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function hasMethod($name)
     {
-        return $this->betterReflectionClass->hasMethod($this->getMethodRealName($name));
+        return $this->betterReflectionClass->hasMethod($name);
     }
 
     /**
@@ -176,20 +176,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethod($name)
     {
-        return new ReflectionMethod($this->betterReflectionClass->getMethod($this->getMethodRealName($name)));
-    }
-
-    private function getMethodRealName(string $name) : string
-    {
-        $realMethodNames = array_map(static function (BetterReflectionMethod $method) : string {
-            return $method->getName();
-        }, $this->betterReflectionClass->getMethods());
-
-        $methodNames = array_combine(array_map(static function (string $methodName) : string {
-            return strtolower($methodName);
-        }, $realMethodNames), $realMethodNames);
-
-        return $methodNames[strtolower($name)] ?? $name;
+        return new ReflectionMethod($this->betterReflectionClass->getMethod($name));
     }
 
     /**

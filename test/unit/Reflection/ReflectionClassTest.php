@@ -48,6 +48,7 @@ use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
 use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMethod;
@@ -206,6 +207,16 @@ class ReflectionClassTest extends TestCase
 
         self::assertCount($count, $classInfo->getMethods($filter));
         self::assertCount($count, $classInfo->getImmediateMethods($filter));
+    }
+
+    public function testCaseInsensitiveMethods() : void
+    {
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassWithCaseInsensitiveMethods.php',
+            $this->astLocator
+        )))->reflect(ClassWithCaseInsensitiveMethods::class);
+
+        self::assertCount(1, $classInfo->getMethods());
     }
 
     public function testGetMethodsReturnsInheritedMethods() : void
@@ -672,6 +683,27 @@ PHP;
 
         self::assertFalse($classInfo->hasMethod('aNonExistentMethod'));
         self::assertTrue($classInfo->hasMethod('someMethod'));
+    }
+
+    public function testHasMethodIsCaseInsensitive() : void
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+
+        self::assertTrue($classInfo->hasMethod('someMethod'));
+        self::assertTrue($classInfo->hasMethod('SOMEMETHOD'));
+        self::assertTrue($classInfo->hasMethod('somemethod'));
+    }
+
+    public function testGetMethodIsCaseInsensitive() : void
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+
+        $method1 = $classInfo->getMethod('someMethod');
+        $method2 = $classInfo->getMethod('SOMEMETHOD');
+
+        self::assertSame($method1, $method2);
     }
 
     public function testGetDefaultProperties() : void
