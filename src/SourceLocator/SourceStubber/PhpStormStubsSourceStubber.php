@@ -196,7 +196,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             public function enterNode(Node $node) : ?int
             {
                 if ($node instanceof Node\Stmt\ClassLike) {
-                    $nodeName                    = (string) $node->namespacedName->toString();
+                    $nodeName                    = $node->namespacedName->toString();
                     $this->classNodes[$nodeName] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -204,7 +204,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                 if ($node instanceof Node\Stmt\Function_) {
                     /** @psalm-suppress UndefinedPropertyFetch */
-                    $nodeName                       = (string) $node->namespacedName->toString();
+                    $nodeName                       = $node->namespacedName->toString();
                     $this->functionNodes[$nodeName] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -213,7 +213,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
                         /** @psalm-suppress UndefinedPropertyFetch */
-                        $constNodeName                       = (string) $constNode->namespacedName->toString();
+                        $constNodeName                       = $constNode->namespacedName->toString();
                         $this->constantNodes[$constNodeName] = $node;
                     }
 
