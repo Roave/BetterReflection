@@ -228,7 +228,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         return array_values(array_map(static function (BetterReflectionProperty $property) : ReflectionProperty {
             return new ReflectionProperty($property);
-        }, $this->betterReflectionClass->getProperties()));
+        }, $this->betterReflectionClass->getProperties($filter)));
     }
 
     /**
