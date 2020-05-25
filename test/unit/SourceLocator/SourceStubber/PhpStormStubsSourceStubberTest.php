@@ -493,6 +493,63 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($constantValue, $constantReflection->getValue());
     }
 
+    public function dataClassInNamespace() : array
+    {
+        return [
+            ['http\\Client'],
+            ['MongoDB\\Driver\\Manager'],
+            ['Parle\\Stack'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataClassInNamespace
+     */
+    public function testClassInNamespace(string $className) : void
+    {
+        $classReflection = $this->classReflector->reflect($className);
+
+        $this->assertSame($className, $classReflection->getName());
+    }
+
+    public function dataFunctionInNamespace() : array
+    {
+        return [
+            ['Couchbase\\basicDecoderV1'],
+            ['MongoDB\\BSON\\fromJSON'],
+            ['Sodium\\add'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataFunctionInNamespace
+     */
+    public function testFunctionInNamespace(string $functionName) : void
+    {
+        $functionReflection = $this->functionReflector->reflect($functionName);
+
+        $this->assertSame($functionName, $functionReflection->getName());
+    }
+
+    public function dataConstantInNamespace() : array
+    {
+        return [
+            ['http\\Client\\Curl\\AUTH_ANY'],
+            ['pcov\\all'],
+            ['YAF\\ENVIRON'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataConstantInNamespace
+     */
+    public function testConstantInNamespace(string $constantName) : void
+    {
+        $constantReflection = $this->constantReflector->reflect($constantName);
+
+        $this->assertSame($constantName, $constantReflection->getName());
+    }
+
     public function testNoStubForUnknownClass() : void
     {
         self::assertNull($this->sourceStubber->generateClassStub('SomeClass'));
