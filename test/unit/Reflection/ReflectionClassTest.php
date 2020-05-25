@@ -29,6 +29,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -47,6 +48,7 @@ use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleInterface;
@@ -234,6 +236,24 @@ class ReflectionClassTest extends TestCase
 
         self::assertSame('f', $classInfo->getMethod('f')->getName(), 'Failed asserting that method from SUT was returned');
         self::assertSame('Qux', $classInfo->getMethod('f')->getDeclaringClass()->getName());
+    }
+
+    public function testGetMethodsWithBrokenClass() : void
+    {
+        $classInfo = (new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassWithMissingParent.php',
+            $this->astLocator
+        )))->reflect(ClassWithMissingParent::class);
+
+        try {
+            $classInfo->getMethods();
+        } catch (IdentifierNotFound $e) {
+            // Ignore error for the first time
+        }
+
+        self::expectException(IdentifierNotFound::class);
+
+        $classInfo->getMethods();
     }
 
     public function testGetMethodsOrder() : void

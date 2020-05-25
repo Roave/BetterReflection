@@ -296,7 +296,7 @@ class ReflectionClass implements Reflection
             return $this->cachedMethods;
         }
 
-        $this->cachedMethods = [];
+        $cachedMethods = [];
 
         $traitAliases = $this->getTraitAliases();
 
@@ -309,19 +309,21 @@ class ReflectionClass implements Reflection
                     continue;
                 }
 
-                if (isset($this->cachedMethods[$methodAlias])) {
+                if (isset($cachedMethods[$methodAlias])) {
                     continue;
                 }
 
-                $this->cachedMethods[$methodAlias] = $method;
+                $cachedMethods[$methodAlias] = $method;
             }
 
-            if (isset($this->cachedMethods[$methodName])) {
+            if (isset($cachedMethods[$methodName])) {
                 continue;
             }
 
-            $this->cachedMethods[$methodName] = $method;
+            $cachedMethods[$methodName] = $method;
         }
+
+        $this->cachedMethods = $cachedMethods;
 
         return $this->cachedMethods;
     }
