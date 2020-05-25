@@ -194,14 +194,9 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethods($filter = null)
     {
-        $methods = $this->betterReflectionClass->getMethods($filter);
-
-        $wrappedMethods = [];
-        foreach ($methods as $key => $method) {
-            $wrappedMethods[$key] = new ReflectionMethod($method);
-        }
-
-        return $wrappedMethods;
+        return array_map(static function (BetterReflectionMethod $method) : ReflectionMethod {
+            return new ReflectionMethod($method);
+        }, $this->betterReflectionClass->getMethods($filter));
     }
 
     /**
