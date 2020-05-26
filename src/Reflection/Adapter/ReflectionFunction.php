@@ -9,6 +9,7 @@ use ReflectionException as CoreReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use function func_get_args;
 
@@ -133,7 +134,9 @@ class ReflectionFunction extends CoreReflectionFunction
      */
     public function getFileName()
     {
-        return $this->betterReflectionFunction->getFileName() ?? false;
+        $fileName = $this->betterReflectionFunction->getFileName();
+
+        return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
     /**
