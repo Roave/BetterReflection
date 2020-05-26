@@ -14,8 +14,6 @@
     </projectFiles>
 
     <issueHandlers>
-        <LessSpecificReturnType errorLevel="suppress" />
-
         <MissingClosureReturnType errorLevel="suppress" />
         <MissingReturnType errorLevel="suppress" />
 
@@ -36,34 +34,6 @@
         <PossiblyNullArgument errorLevel="suppress" />
 
         <TypeCoercion errorLevel="suppress" />
-
-        <TooManyArguments>
-            <errorLevel type="suppress">
-                <directory name="src/Reflection/Adapter" />
-            </errorLevel>
-        </TooManyArguments>
-
-        <UnresolvableInclude errorLevel="suppress" />
-
-        <RawObjectIteration errorLevel="suppress" />
-
-        <MoreSpecificImplementedParamType>
-            <errorLevel type="suppress">
-                <file name="src/Reflection/ReflectionObject.php" />
-            </errorLevel>
-        </MoreSpecificImplementedParamType>
-
-        <LessSpecificImplementedReturnType>
-            <errorLevel type="suppress">
-                <file name="src/SourceLocator/Ast/Parser/MemoizingParser.php" />
-            </errorLevel>
-        </LessSpecificImplementedReturnType>
-
-        <ImplementedReturnTypeMismatch>
-            <errorLevel type="suppress">
-                <file name="src/Reflection/Adapter/ReflectionClassConstant.php" />
-            </errorLevel>
-        </ImplementedReturnTypeMismatch>
 
         <UndefinedPropertyAssignment>
             <errorLevel type="suppress">
