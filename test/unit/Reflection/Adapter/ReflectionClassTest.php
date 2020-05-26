@@ -8,6 +8,8 @@ use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
+use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -232,6 +234,42 @@ class ReflectionClassTest extends TestCase
         self::assertSame('foo', $reflectionClassAdapter->getMethod('FOO')->getName());
     }
 
+    public function testGetMethodsFilter() : void
+    {
+        $publicBetterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $publicBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('publicMethod');
+
+        $privateBetterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $privateBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('privateMethod');
+
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getMethods')
+            ->willReturnMap([
+                [null, [$publicBetterReflectionMethod, $privateBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PUBLIC, [$publicBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PRIVATE, [$privateBetterReflectionMethod]],
+            ]);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertCount(2, $reflectionClassAdapter->getMethods());
+
+        $publicMethods = $reflectionClassAdapter->getMethods(CoreReflectionMethod::IS_PUBLIC);
+
+        self::assertCount(1, $publicMethods);
+        self::assertSame($publicBetterReflectionMethod->getName(), $publicMethods[0]->getName());
+
+        $privateMethods = $reflectionClassAdapter->getMethods(CoreReflectionMethod::IS_PRIVATE);
+
+        self::assertCount(1, $privateMethods);
+        self::assertSame($privateBetterReflectionMethod->getName(), $privateMethods[0]->getName());
+    }
+
     public function testIsSubclassOfIsCaseInsensitive() : void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
@@ -301,6 +339,42 @@ class ReflectionClassTest extends TestCase
 
         $this->expectException(CoreReflectionException::class);
         $reflectionClassAdapter->getProperty('foo');
+    }
+
+    public function testGetPropertiesFilter() : void
+    {
+        $publicBetterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $publicBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('publicProperty');
+
+        $privateBetterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $privateBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('privateProperty');
+
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getProperties')
+            ->willReturnMap([
+                [null, [$publicBetterReflectionProperty, $privateBetterReflectionProperty]],
+                [CoreReflectionProperty::IS_PUBLIC, [$publicBetterReflectionProperty]],
+                [CoreReflectionProperty::IS_PRIVATE, [$privateBetterReflectionProperty]],
+            ]);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertCount(2, $reflectionClassAdapter->getProperties());
+
+        $publicProperties = $reflectionClassAdapter->getProperties(CoreReflectionProperty::IS_PUBLIC);
+
+        self::assertCount(1, $publicProperties);
+        self::assertSame($publicBetterReflectionProperty->getName(), $publicProperties[0]->getName());
+
+        $privateProperties = $reflectionClassAdapter->getProperties(CoreReflectionProperty::IS_PRIVATE);
+
+        self::assertCount(1, $privateProperties);
+        self::assertSame($privateBetterReflectionProperty->getName(), $privateProperties[0]->getName());
     }
 
     public function testGetStaticPropertyValue() : void

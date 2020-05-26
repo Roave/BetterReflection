@@ -197,14 +197,9 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethods($filter = null)
     {
-        $methods = $this->betterReflectionClass->getMethods();
-
-        $wrappedMethods = [];
-        foreach ($methods as $key => $method) {
-            $wrappedMethods[$key] = new ReflectionMethod($method);
-        }
-
-        return $wrappedMethods;
+        return array_map(static function (BetterReflectionMethod $method) : ReflectionMethod {
+            return new ReflectionMethod($method);
+        }, $this->betterReflectionClass->getMethods($filter));
     }
 
     /**
@@ -236,7 +231,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         return array_values(array_map(static function (BetterReflectionProperty $property) : ReflectionProperty {
             return new ReflectionProperty($property);
-        }, $this->betterReflectionClass->getProperties()));
+        }, $this->betterReflectionClass->getProperties($filter)));
     }
 
     /**
