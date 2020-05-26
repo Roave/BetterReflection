@@ -276,7 +276,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function isAbstract()
     {
-        return $this->betterReflectionMethod->isAbstract();
+        return $this->betterReflectionMethod->isAbstract() || $this->betterReflectionMethod->getDeclaringClass()->isInterface();
     }
 
     /**
