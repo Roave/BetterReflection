@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.9.2@87d8947ff36d8b71f54b7e46b93384cf010681a0">
+<files psalm-version="3.11.2@d470903722cfcbc1cd04744c5491d3e6d13ec3d9">
   <file src="src/BetterReflection.php">
     <DocblockTypeContradiction occurrences="1">
       <code>$this-&gt;sourceStubber</code>
     </DocblockTypeContradiction>
   </file>
   <file src="src/Reflection/Adapter/ReflectionClass.php">
-    <InvalidReturnType occurrences="1">
-      <code>getProperties</code>
-    </InvalidReturnType>
     <MethodSignatureMismatch occurrences="5">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
@@ -27,9 +24,6 @@
     </RedundantCondition>
   </file>
   <file src="src/Reflection/Adapter/ReflectionObject.php">
-    <InvalidReturnType occurrences="1">
-      <code>getProperties</code>
-    </InvalidReturnType>
     <MethodSignatureMismatch occurrences="5">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
