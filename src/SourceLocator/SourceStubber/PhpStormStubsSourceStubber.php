@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 use JetBrains\PHPStormStub\PhpStormStubsMap;
+use PhpParser\BuilderFactory;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -45,6 +46,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var Parser */
     private $phpParser;
 
+    /** @var BuilderFactory */
+    private $builderFactory;
+
     /** @var Standard */
     private $prettyPrinter;
 
@@ -68,8 +72,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     public function __construct(Parser $phpParser)
     {
-        $this->phpParser     = $phpParser;
-        $this->prettyPrinter = new Standard(self::BUILDER_OPTIONS);
+        $this->phpParser      = $phpParser;
+        $this->builderFactory = new BuilderFactory();
+        $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
 
         $this->cachingVisitor = $this->createCachingVisitor();
 
@@ -175,8 +180,20 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
     }
 
+    /**
+     * @param Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node
+     */
     private function createStub(Node $node) : string
     {
+        $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
+
+        if (isset($nodeWithNamespaceName->namespacedName)) {
+            $namespaceBuilder = $this->builderFactory->namespace($nodeWithNamespaceName->namespacedName->slice(0, -1));
+            $namespaceBuilder->addStmt($node);
+
+            $node = $namespaceBuilder->getNode();
+        }
+
         return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
     }
 
@@ -196,7 +213,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             public function enterNode(Node $node) : ?int
             {
                 if ($node instanceof Node\Stmt\ClassLike) {
-                    $nodeName                    = (string) $node->namespacedName->toString();
+                    $nodeName                    = $node->namespacedName->toString();
                     $this->classNodes[$nodeName] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -204,7 +221,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                 if ($node instanceof Node\Stmt\Function_) {
                     /** @psalm-suppress UndefinedPropertyFetch */
-                    $nodeName                       = (string) $node->namespacedName->toString();
+                    $nodeName                       = $node->namespacedName->toString();
                     $this->functionNodes[$nodeName] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -213,7 +230,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
                         /** @psalm-suppress UndefinedPropertyFetch */
-                        $constNodeName                       = (string) $constNode->namespacedName->toString();
+                        $constNodeName                       = $constNode->namespacedName->toString();
                         $this->constantNodes[$constNodeName] = $node;
                     }
 
