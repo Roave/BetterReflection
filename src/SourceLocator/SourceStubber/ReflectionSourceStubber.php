@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
+use LogicException;
 use PhpParser\Builder;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\Declaration;
@@ -270,7 +271,11 @@ final class ReflectionSourceStubber implements SourceStubber
             $this->addDocComment($propertyNode, $propertyReflection);
 
             if (array_key_exists($propertyReflection->getName(), $defaultProperties)) {
-                $propertyNode->setDefault($defaultProperties[$propertyReflection->getName()]);
+                try {
+                    $propertyNode->setDefault($defaultProperties[$propertyReflection->getName()]);
+                } catch (LogicException $e) {
+                    // Unsupported value
+                }
             }
 
             $classNode->addStmt($propertyNode);
