@@ -340,7 +340,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             {
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
-                        /** @psalm-suppress UndefinedPropertyFetch */
                         if ($constNode->namespacedName->toString() === $this->constantName) {
                             $this->node = $node;
 
