@@ -48,6 +48,11 @@ use const STREAM_URL_STAT_QUIET;
  */
 class AutoloadSourceLocator extends AbstractSourceLocator
 {
+    private const DEFAULT_STREAM_WRAPPER_PROTOCOLS = [
+        'file',
+        'phar',
+    ];
+
     /** @var AstLocator */
     private $astLocator;
 
@@ -60,11 +65,16 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /** @var NodeVisitorAbstract */
     private $constantVisitor;
 
+    /** @var string[] */
+    private $streamWrapperProtocols;
+
     /**
      * Note: the constructor has been made a 0-argument constructor because `\stream_wrapper_register`
      *       is a piece of trash, and doesn't accept instances, just class names.
+     *
+     * @param string[] $streamWrapperProtocols
      */
-    public function __construct(?AstLocator $astLocator = null, ?Parser $phpParser = null)
+    public function __construct(?AstLocator $astLocator = null, ?Parser $phpParser = null, array $streamWrapperProtocols = self::DEFAULT_STREAM_WRAPPER_PROTOCOLS)
     {
         $betterReflection = new BetterReflection();
 
@@ -72,9 +82,10 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         parent::__construct($validLocator);
 
-        $this->astLocator      = $validLocator;
-        $this->phpParser       = $phpParser ?? $betterReflection->phpParser();
-        $this->constantVisitor = $this->createConstantVisitor();
+        $this->astLocator             = $validLocator;
+        $this->phpParser              = $phpParser ?? $betterReflection->phpParser();
+        $this->streamWrapperProtocols = $streamWrapperProtocols;
+        $this->constantVisitor        = $this->createConstantVisitor();
 
         $this->nodeTraverser = new NodeTraverser();
         $this->nodeTraverser->addVisitor(new NameResolver());
@@ -163,16 +174,32 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         self::$autoloadLocatedFile = null;
         self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
-        $previousErrorHandler      = set_error_handler(static function (int $errno, string $errstr) : bool {
-            return true;
-        });
-        stream_wrapper_unregister('file');
-        stream_wrapper_register('file', self::class);
-        class_exists($className);
-        stream_wrapper_restore('file');
-        set_error_handler($previousErrorHandler);
+
+        $this->silenceErrors();
+
+        foreach ($this->streamWrapperProtocols as $protocol) {
+            stream_wrapper_unregister($protocol);
+            stream_wrapper_register($protocol, self::class);
+        }
+
+        try {
+            class_exists($className);
+        } finally {
+            foreach ($this->streamWrapperProtocols as $protocol) {
+                stream_wrapper_restore($protocol);
+            }
+
+            restore_error_handler();
+        }
 
         return self::$autoloadLocatedFile;
+    }
+
+    private function silenceErrors() : void
+    {
+        set_error_handler(static function () : bool {
+            return true;
+        });
     }
 
     /**
@@ -275,21 +302,22 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     public function url_stat($path, $flags)
     {
-        stream_wrapper_restore('file');
+        foreach ($this->streamWrapperProtocols as $protocol) {
+            stream_wrapper_restore($protocol);
+        }
 
         if ($flags & STREAM_URL_STAT_QUIET) {
-            set_error_handler(static function () {
-                // Use native error handler
-                return false;
-            });
-            $result = @stat($path);
             restore_error_handler();
+            $result = @stat($path);
+            $this->silenceErrors();
         } else {
             $result = stat($path);
         }
 
-        stream_wrapper_unregister('file');
-        stream_wrapper_register('file', self::class);
+        foreach ($this->streamWrapperProtocols as $protocol) {
+            stream_wrapper_unregister($protocol);
+            stream_wrapper_register($protocol, self::class);
+        }
 
         return $result;
     }
