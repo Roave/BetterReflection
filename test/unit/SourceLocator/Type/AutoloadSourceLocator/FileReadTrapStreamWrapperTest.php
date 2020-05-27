@@ -149,6 +149,10 @@ class FileReadTrapStreamWrapperTest extends TestCase
                 'another value produced by the function',
                 FileReadTrapStreamWrapper::withStreamWrapperOverride(
                     static function () use ($thrown) : string {
+                        if (! file_exists(__FILE__)) {
+                            throw new UnexpectedValueException('file_exists() should operate as usual');
+                        }
+
                         throw $thrown;
                     },
                     ['http']
