@@ -891,6 +891,19 @@ PHP;
         self::assertTrue($traits[0]->isTrait());
     }
 
+    public function testGetDeclaringClassForTraits() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixture.php',
+            $this->astLocator
+        ));
+
+        $classInfo = $reflector->reflect('TraitFixtureAA');
+
+        self::assertTrue($classInfo->hasMethod('foo'));
+        self::assertSame('TraitFixtureTraitA', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
+    }
+
     public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
@@ -941,26 +954,18 @@ PHP;
 
         $classInfo = $reflector->reflect('TraitFixtureC');
 
-        self::assertTrue($classInfo->hasMethod('a'));
+        self::assertFalse($classInfo->hasMethod('a'));
         self::assertTrue($classInfo->hasMethod('a_protected'));
 
-        $a          = $classInfo->getMethod('a');
         $aProtected = $classInfo->getMethod('a_protected');
 
-        self::assertSame('a', $a->getName());
-        self::assertSame($a->getName(), $aProtected->getName());
-        self::assertSame('TraitFixtureTraitC', $a->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureTraitC', $aProtected->getDeclaringClass()->getName());
 
-        self::assertTrue($classInfo->hasMethod('b'));
+        self::assertFalse($classInfo->hasMethod('b'));
         self::assertTrue($classInfo->hasMethod('b_renamed'));
 
-        $b        = $classInfo->getMethod('b');
         $bRenamed = $classInfo->getMethod('b_renamed');
 
-        self::assertSame('b', $b->getName());
-        self::assertSame($b->getName(), $bRenamed->getName());
-        self::assertSame('TraitFixtureTraitC', $b->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureTraitC', $bRenamed->getDeclaringClass()->getName());
 
         self::assertTrue($classInfo->hasMethod('c'));
@@ -984,26 +989,74 @@ PHP;
         self::assertSame('TraitFixtureD', $classInfo->getMethod('boo')->getDeclaringClass()->getName());
 
         self::assertTrue($classInfo->hasMethod('foo'));
+        self::assertSame('TraitFixtureTraitD1', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
 
         $foo = $classInfo->getMethod('foo');
 
         self::assertSame('TraitFixtureTraitD1', $foo->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureD', $foo->getImplementingClass()->getName());
 
-        self::assertTrue($classInfo->hasMethod('hoo'));
+        self::assertFalse($classInfo->hasMethod('hoo'));
         self::assertTrue($classInfo->hasMethod('hooFirstAlias'));
         self::assertTrue($classInfo->hasMethod('hooSecondAlias'));
 
-        $hoo            = $classInfo->getMethod('hoo');
         $hooFirstAlias  = $classInfo->getMethod('hooFirstAlias');
         $hooSecondAlias = $classInfo->getMethod('hooSecondAlias');
 
-        self::assertSame('TraitFixtureTraitD1', $hoo->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureTraitD1', $hooFirstAlias->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureTraitD1', $hooSecondAlias->getDeclaringClass()->getName());
-        self::assertSame('TraitFixtureD', $hoo->getImplementingClass()->getName());
         self::assertSame('TraitFixtureD', $hooFirstAlias->getImplementingClass()->getName());
         self::assertSame('TraitFixtureD', $hooSecondAlias->getImplementingClass()->getName());
+    }
+
+    public function testMethodsFromTraitsWithAliases() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixture.php',
+            $this->astLocator
+        ));
+
+        $classInfo = $reflector->reflect('TraitFixtureE');
+
+        self::assertTrue($classInfo->hasMethod('foo'));
+        self::assertSame('foo', $classInfo->getMethod('foo')->getName());
+        self::assertTrue($classInfo->hasMethod('parentFoo'));
+        self::assertSame('parentFoo', $classInfo->getMethod('parentFoo')->getName());
+
+        $traitInfo = $reflector->reflect('SecondTraitForFixtureE');
+
+        self::assertTrue($traitInfo->hasMethod('foo'));
+        self::assertSame('foo', $traitInfo->getMethod('foo')->getName());
+        self::assertTrue($traitInfo->hasMethod('parentFoo'));
+        self::assertSame('parentFoo', $traitInfo->getMethod('parentFoo')->getName());
+    }
+
+    public function testMethodsFromTraitsWithAliasesAndConflicts() : void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixture.php',
+            $this->astLocator
+        ));
+
+        $classInfo = $reflector->reflect('TraitFixtureF');
+
+        self::assertTrue($classInfo->hasMethod('a'));
+        self::assertTrue($classInfo->hasMethod('aliasedA'));
+
+        $a        = $classInfo->getMethod('a');
+        $aliasedA = $classInfo->getMethod('aliasedA');
+
+        self::assertSame('FirstTraitForFixtureF', $a->getDeclaringClass()->getName());
+        self::assertSame('SecondTraitForFixtureF', $aliasedA->getDeclaringClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('b'));
+        self::assertTrue($classInfo->hasMethod('aliasedB'));
+
+        $b        = $classInfo->getMethod('b');
+        $aliasedB = $classInfo->getMethod('aliasedB');
+
+        self::assertSame('SecondTraitForFixtureF', $b->getDeclaringClass()->getName());
+        self::assertSame('FirstTraitForFixtureF', $aliasedB->getDeclaringClass()->getName());
     }
 
     public function testGetInterfaceNames() : void

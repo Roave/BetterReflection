@@ -38,6 +38,7 @@ use Roave\BetterReflection\Util\GetFirstDocComment;
 use Traversable;
 use function array_combine;
 use function array_filter;
+use function array_key_exists;
 use function array_map;
 use function array_merge;
 use function array_reverse;
@@ -91,6 +92,12 @@ class ReflectionClass implements Reflection
      * @psalm-var ?array<string, ReflectionMethod>
      */
     private $cachedMethods;
+
+    /** @var array<string, string>|null */
+    private $cachedTraitAliases;
+
+    /** @var array<string, string>|null */
+    private $cachedTraitPrecedences;
 
     private function __construct()
     {
@@ -252,18 +259,15 @@ class ReflectionClass implements Reflection
             ),
             ...array_map(
                 function (ReflectionClass $trait) : array {
-                    return array_map(function (ReflectionMethod $method) use ($trait) : ReflectionMethod {
-                        $methodAst = $method->getAst();
-                        assert($methodAst instanceof ClassMethod);
-
-                        return ReflectionMethod::createFromNode(
-                            $this->reflector,
-                            $methodAst,
-                            $this->declaringNamespace,
-                            $trait,
-                            $this
-                        );
-                    }, $trait->getMethods());
+                    return array_merge(
+                        [],
+                        ...array_map(
+                            function (ReflectionMethod $method) : array {
+                                return $this->createMethodsFromTrait($method);
+                            },
+                            $trait->getMethods()
+                        )
+                    );
                 },
                 $this->getTraits()
             ),
@@ -277,6 +281,55 @@ class ReflectionClass implements Reflection
                 ))
             )
         );
+    }
+
+    /**
+     * @return ReflectionMethod[]
+     */
+    private function createMethodsFromTrait(ReflectionMethod $method) : array
+    {
+        $traitAliases     = $this->getTraitAliases();
+        $traitPrecedences = $this->getTraitPrecedences();
+
+        $methodAst = $method->getAst();
+        assert($methodAst instanceof ClassMethod);
+
+        $methodHash = $this->methodHash($method->getDeclaringClass()->getName(), $method->getName());
+
+        $aliases = [];
+        foreach ($traitAliases as $aliasMethodName => $traitAliasDefinition) {
+            if ($methodHash !== $traitAliasDefinition) {
+                continue;
+            }
+
+            $aliases[] = ReflectionMethod::createFromNode(
+                $this->reflector,
+                $methodAst,
+                $method->getDeclaringClass()->getDeclaringNamespaceAst(),
+                $method->getDeclaringClass(),
+                $this,
+                $aliasMethodName
+            );
+        }
+
+        if ($aliases !== []) {
+            return $aliases;
+        }
+
+        if (array_key_exists($methodHash, $traitPrecedences)) {
+            return [];
+        }
+
+        $newMethod = ReflectionMethod::createFromNode(
+            $this->reflector,
+            $methodAst,
+            $method->getDeclaringClass()->getDeclaringNamespaceAst(),
+            $method->getDeclaringClass(),
+            $this,
+            $method->getAliasName()
+        );
+
+        return [$newMethod];
     }
 
     /**
@@ -298,23 +351,8 @@ class ReflectionClass implements Reflection
 
         $cachedMethods = [];
 
-        $traitAliases = $this->getTraitAliases();
-
         foreach ($this->getAllMethods() as $method) {
-            $methodName              = $method->getName();
-            $methodNameWithClassName = sprintf('%s::%s', $method->getDeclaringClass()->getName(), $methodName);
-
-            foreach ($traitAliases as $methodAlias => $traitMethodNameWithTraitName) {
-                if ($methodNameWithClassName !== $traitMethodNameWithTraitName) {
-                    continue;
-                }
-
-                if (isset($cachedMethods[$methodAlias])) {
-                    continue;
-                }
-
-                $cachedMethods[$methodAlias] = $method;
-            }
+            $methodName = $method->getName();
 
             if (isset($cachedMethods[$methodName])) {
                 continue;
@@ -984,12 +1022,52 @@ class ReflectionClass implements Reflection
      */
     public function getTraitAliases() : array
     {
+        $this->parseTraitUsages();
+
+        /** @return array<string, string> */
+        return $this->cachedTraitAliases;
+    }
+
+    /**
+     * Return a list of the precedences used when importing traits for this class.
+     * The returned array is in key/value pair in this format:.
+     *
+     *   'Class::method' => 'Class::method'
+     *
+     * @return array<string, string>
+     *
+     * @example
+     * // When reflecting a class such as:
+     * class Foo
+     * {
+     *     use MyTrait, MyTrait2 {
+     *         MyTrait2::foo insteadof MyTrait1;
+     *     }
+     * }
+     * // This method would return
+     * //   ['MyTrait1::foo' => 'MyTrait2::foo']
+     */
+    private function getTraitPrecedences() : array
+    {
+        $this->parseTraitUsages();
+
+        /** @return array<string, string> */
+        return $this->cachedTraitPrecedences;
+    }
+
+    private function parseTraitUsages() : void
+    {
+        if ($this->cachedTraitAliases !== null && $this->cachedTraitPrecedences !== null) {
+            return;
+        }
+
         /** @var Node\Stmt\TraitUse[] $traitUsages */
         $traitUsages = array_filter($this->node->stmts, static function (Node $node) : bool {
             return $node instanceof TraitUse;
         });
 
-        $resolvedAliases = [];
+        $this->cachedTraitAliases     = [];
+        $this->cachedTraitPrecedences = [];
 
         foreach ($traitUsages as $traitUsage) {
             $traitNames  = $traitUsage->traits;
@@ -1001,23 +1079,35 @@ class ReflectionClass implements Reflection
                     $usedTrait = $traitNames[0];
                 }
 
-                if (! ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias)) {
+                if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias && $adaptation->newName) {
+                    $this->cachedTraitAliases[$adaptation->newName->name] = $this->methodHash($usedTrait->toString(), $adaptation->method->toString());
                     continue;
                 }
 
-                if (! $adaptation->newName) {
+                if (! $adaptation instanceof Node\Stmt\TraitUseAdaptation\Precedence || ! $adaptation->insteadof) {
                     continue;
                 }
 
-                $resolvedAliases[$adaptation->newName->name] = sprintf(
-                    '%s::%s',
-                    $usedTrait->toString(),
-                    $adaptation->method->toString()
-                );
+                foreach ($adaptation->insteadof as $insteadof) {
+                    $adaptationNameHash = $this->methodHash($insteadof->toString(), $adaptation->method->toString());
+                    $originalNameHash   = $this->methodHash($usedTrait->toString(), $adaptation->method->toString());
+
+                    $this->cachedTraitPrecedences[$adaptationNameHash] = $originalNameHash;
+                }
             }
         }
+    }
 
-        return $resolvedAliases;
+    /**
+     * @psalm-pure
+     */
+    private function methodHash(string $className, string $methodName) : string
+    {
+        return sprintf(
+            '%s::%s',
+            $className,
+            $methodName
+        );
     }
 
     /**
