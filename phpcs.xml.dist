@@ -18,15 +18,6 @@
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
     </rule>
 
-    <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps">
-        <!-- Contains stream wrapper -->
-        <exclude-pattern>src/SourceLocator/Type/AutoloadSourceLocator.php</exclude-pattern>
-    </rule>
-    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
-        <!-- Contains stream wrapper -->
-        <exclude-pattern>src/SourceLocator/Type/AutoloadSourceLocator.php</exclude-pattern>
-    </rule>
-
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
         <properties>
             <property name="enableObjectTypeHint" value="false"/>
