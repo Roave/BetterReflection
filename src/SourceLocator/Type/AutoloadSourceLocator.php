@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use function array_key_exists;
 use function array_reverse;
@@ -34,29 +35,18 @@ use function interface_exists;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
-use function stat;
-use function stream_wrapper_register;
-use function stream_wrapper_restore;
-use function stream_wrapper_unregister;
+use function spl_autoload_functions;
 use function trait_exists;
-use const STREAM_URL_STAT_QUIET;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
  *
  * There are some prerequisites...
  *   - we expect the autoloader to load classes from a file (i.e. using require/include)
+ *   - your autoloader of choice does not replace stream wrappers
  */
 class AutoloadSourceLocator extends AbstractSourceLocator
 {
-    private const DEFAULT_STREAM_WRAPPER_PROTOCOLS = [
-        'file',
-        'phar',
-    ];
-
-    /** @var AstLocator */
-    private $astLocator;
-
     /** @var Parser */
     private $phpParser;
 
@@ -66,43 +56,19 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /** @var NodeVisitorAbstract */
     private $constantVisitor;
 
-    /** @var string[] */
-    private $streamWrapperProtocols;
-
-    /**
-     * Note: the constructor has been made a 0-argument constructor because `\stream_wrapper_register`
-     *       is a piece of trash, and doesn't accept instances, just class names.
-     *
-     * @param string[] $streamWrapperProtocols
-     */
-    public function __construct(?AstLocator $astLocator = null, ?Parser $phpParser = null, array $streamWrapperProtocols = self::DEFAULT_STREAM_WRAPPER_PROTOCOLS)
+    public function __construct(?AstLocator $astLocator = null, ?Parser $phpParser = null)
     {
         $betterReflection = new BetterReflection();
 
-        $validLocator = $astLocator ?? self::$currentAstLocator ?? $betterReflection->astLocator();
+        parent::__construct($astLocator ?? $betterReflection->astLocator());
 
-        parent::__construct($validLocator);
-
-        $this->astLocator             = $validLocator;
-        $this->phpParser              = $phpParser ?? $betterReflection->phpParser();
-        $this->streamWrapperProtocols = $streamWrapperProtocols;
-        $this->constantVisitor        = $this->createConstantVisitor();
+        $this->phpParser       = $phpParser ?? $betterReflection->phpParser();
+        $this->constantVisitor = $this->createConstantVisitor();
 
         $this->nodeTraverser = new NodeTraverser();
         $this->nodeTraverser->addVisitor(new NameResolver());
         $this->nodeTraverser->addVisitor($this->constantVisitor);
     }
-
-    /**
-     * Primarily used by the non-loading-autoloader magic trickery to determine
-     * the filename used during autoloading.
-     *
-     * @var string|null
-     */
-    private static $autoloadLocatedFile;
-
-    /** @var AstLocator */
-    private static $currentAstLocator;
 
     /**
      * {@inheritDoc}
@@ -179,39 +145,31 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return $filename;
         }
 
-        self::$autoloadLocatedFile = null;
-        self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
-
         $this->silenceErrors();
 
-        foreach ($this->streamWrapperProtocols as $protocol) {
-            stream_wrapper_unregister($protocol);
-            stream_wrapper_register($protocol, self::class);
-        }
-
         try {
-            foreach (spl_autoload_functions() as $preExistingAutoloader) {
-                $preExistingAutoloader($className);
+            return FileReadTrapStreamWrapper::withStreamWrapperOverride(
+                static function () use ($className) : ?string {
+                    foreach (spl_autoload_functions() as $preExistingAutoloader) {
+                        $preExistingAutoloader($className);
 
-                /**
-                 * @psalm-suppress TypeDoesNotContainType the static variable is populated by the side-effect of
-                 *                 the stream wrapper trying to read the file path when `include()` is used by an
-                 *                 autoloader. This will not be `null` when the autoloader
-                 *                 tried to read a file.
-                 */
-                if (self::$autoloadLocatedFile !== null) {
-                    return self::$autoloadLocatedFile;
+                        /**
+                         * This static variable is populated by the side-effect of the stream wrapper
+                         * trying to read the file path when `include()` is used by an autoloader.
+                         *
+                         * This will not be `null` when the autoloader tried to read a file.
+                         */
+                        if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
+                            return FileReadTrapStreamWrapper::$autoloadLocatedFile;
+                        }
+                    }
+
+                    return null;
                 }
-            }
+            );
         } finally {
-            foreach ($this->streamWrapperProtocols as $protocol) {
-                stream_wrapper_restore($protocol);
-            }
-
             restore_error_handler();
         }
-
-        return null;
     }
 
     private function silenceErrors() : void
@@ -235,8 +193,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        $reflection         = new ReflectionFunction($functionName);
-        $reflectionFileName = $reflection->getFileName();
+        $reflectionFileName = (new ReflectionFunction($functionName))->getFileName();
 
         if (! is_string($reflectionFileName)) {
             return null;
@@ -284,64 +241,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         return $constantFileName;
-    }
-
-    /**
-     * Our wrapper simply records which file we tried to load and returns
-     * boolean false indicating failure.
-     *
-     * @see https://php.net/manual/en/class.streamwrapper.php
-     * @see https://php.net/manual/en/streamwrapper.stream-open.php
-     *
-     * @param string $path
-     * @param string $mode
-     * @param int    $options
-     * @param string $opened_path
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
-     */
-    public function stream_open($path, $mode, $options, &$opened_path) : bool
-    {
-        self::$autoloadLocatedFile = $path;
-
-        return false;
-    }
-
-    /**
-     * url_stat is triggered by calls like "file_exists". The call to "file_exists" must not be overloaded.
-     * This function restores the original "file" stream, issues a call to "stat" to get the real results,
-     * and then re-registers the AutoloadSourceLocator stream wrapper.
-     *
-     * @see https://php.net/manual/en/class.streamwrapper.php
-     * @see https://php.net/manual/en/streamwrapper.url-stat.php
-     *
-     * @param string $path
-     * @param int    $flags
-     *
-     * @return mixed[]|bool
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
-     */
-    public function url_stat($path, $flags)
-    {
-        foreach ($this->streamWrapperProtocols as $protocol) {
-            stream_wrapper_restore($protocol);
-        }
-
-        if ($flags & STREAM_URL_STAT_QUIET) {
-            restore_error_handler();
-            $result = @stat($path);
-            $this->silenceErrors();
-        } else {
-            $result = stat($path);
-        }
-
-        foreach ($this->streamWrapperProtocols as $protocol) {
-            stream_wrapper_unregister($protocol);
-            stream_wrapper_register($protocol, self::class);
-        }
-
-        return $result;
     }
 
     private function createConstantVisitor() : NodeVisitorAbstract
