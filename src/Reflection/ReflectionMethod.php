@@ -171,7 +171,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isAbstract() : bool
     {
-        return $this->methodNode->isAbstract();
+        return $this->methodNode->isAbstract() || $this->declaringClass->isInterface();
     }
 
     /**

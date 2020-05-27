@@ -123,6 +123,14 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($shouldBeStatic, $reflectionMethod->isStatic());
     }
 
+    public function testIsAbstractForMethodInInterface() : void
+    {
+        $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
+        $methodInfo = $classInfo->getMethod('someMethod');
+
+        self::assertTrue($methodInfo->isAbstract());
+    }
+
     public function testIsConstructorDestructor() : void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
