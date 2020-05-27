@@ -18,6 +18,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
@@ -32,7 +33,6 @@ use function function_exists;
 use function get_defined_constants;
 use function get_included_files;
 use function interface_exists;
-use function is_readable;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
@@ -230,7 +230,9 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         //       defined a constant that is being looked up. Earlier files are possibly related
         //       to libraries/frameworks that we rely upon.
         foreach (array_reverse(get_included_files()) as $includedFileName) {
-            if (! is_readable($includedFileName)) {
+            try {
+                FileChecker::assertReadableFile($includedFileName);
+            } catch (InvalidFileLocation $ignored) {
                 continue;
             }
 
