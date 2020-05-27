@@ -25,17 +25,17 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           extensions: mbstring
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}"
@@ -68,17 +68,17 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           extensions: mbstring
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}"
@@ -110,16 +110,16 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}"
@@ -143,16 +143,16 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "7.4"
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-7.4"
@@ -171,16 +171,16 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "7.4"
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-7.4"
@@ -199,16 +199,16 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "7.4"
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-7.4"
@@ -227,16 +227,16 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.2"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "7.4"
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v1.1.2"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-7.4"
