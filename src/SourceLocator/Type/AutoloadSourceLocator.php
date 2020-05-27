@@ -159,6 +159,12 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * that it cannot find the file, so we squelch the errors by overriding the
      * error handler temporarily.
      *
+     * Note: the following code is designed so that the first hit on an actual
+     *       **file** leads to a path being resolved. No actual autoloading nor
+     *       file reading should happen, and most certainly no other classes
+     *       should exist after execution. The only filesystem access is to
+     *       check whether the file exists.
+     *
      * @throws ReflectionException
      */
     private function locateClassByName(string $className) : ?string
@@ -184,7 +190,19 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         try {
-            class_exists($className);
+            foreach (spl_autoload_functions() as $preExistingAutoloader) {
+                $preExistingAutoloader($className);
+
+                /**
+                 * @psalm-suppress TypeDoesNotContainType the static variable is populated by the side-effect of
+                 *                 the stream wrapper trying to read the file path when `include()` is used by an
+                 *                 autoloader. This will not be `null` when the autoloader
+                 *                 tried to read a file.
+                 */
+                if (self::$autoloadLocatedFile !== null) {
+                    return self::$autoloadLocatedFile;
+                }
+            }
         } finally {
             foreach ($this->streamWrapperProtocols as $protocol) {
                 stream_wrapper_restore($protocol);
@@ -193,7 +211,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             restore_error_handler();
         }
 
-        return self::$autoloadLocatedFile;
+        return null;
     }
 
     private function silenceErrors() : void
