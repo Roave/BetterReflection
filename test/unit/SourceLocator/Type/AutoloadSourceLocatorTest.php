@@ -22,12 +22,16 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\AutoloadableClassInPhar;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
+use Roave\BetterReflectionTest\Fixture\BrokenAutoloaderException;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassNotInPhar;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use function class_exists;
 use function file_exists;
+use function file_get_contents;
 use function interface_exists;
+use function restore_error_handler;
+use function set_error_handler;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
 use function trait_exists;
@@ -325,5 +329,42 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflection = $classReflector->reflect(AutoloadableClassInPhar::class);
 
         $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
+    }
+
+    public function testBrokenAutoloader() : void
+    {
+        $getErrorHandler = static function () : ?callable {
+            $errorHandler = set_error_handler(static function () : bool {
+                return true;
+            });
+            restore_error_handler();
+
+            return $errorHandler;
+        };
+
+        $toBeThrown           = new BrokenAutoloaderException();
+        $brokenAutoloader     = static function () use ($toBeThrown) : void {
+            throw $toBeThrown;
+        };
+        $previousErrorHandler = $getErrorHandler();
+
+        spl_autoload_register($brokenAutoloader);
+
+        try {
+            (new AutoloadSourceLocator($this->astLocator))
+                ->locateIdentifier(
+                    $this->getMockReflector(),
+                    new Identifier('Whatever', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+                );
+
+            self::fail('No exception was thrown');
+        } catch (BrokenAutoloaderException $e) {
+            self::assertSame($e, $toBeThrown);
+        } finally {
+            spl_autoload_unregister($brokenAutoloader);
+        }
+
+        self::assertSame($previousErrorHandler, $getErrorHandler());
+        self::assertNotFalse(file_get_contents(__FILE__));
     }
 }

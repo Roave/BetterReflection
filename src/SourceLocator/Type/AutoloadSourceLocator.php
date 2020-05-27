@@ -174,24 +174,32 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         self::$autoloadLocatedFile = null;
         self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
-        $previousErrorHandler      = set_error_handler(static function (int $errno, string $errstr) : bool {
-            return true;
-        });
+
+        $this->silenceErrors();
 
         foreach ($this->streamWrapperProtocols as $protocol) {
             stream_wrapper_unregister($protocol);
             stream_wrapper_register($protocol, self::class);
         }
 
-        class_exists($className);
+        try {
+            class_exists($className);
+        } finally {
+            foreach ($this->streamWrapperProtocols as $protocol) {
+                stream_wrapper_restore($protocol);
+            }
 
-        foreach ($this->streamWrapperProtocols as $protocol) {
-            stream_wrapper_restore($protocol);
+            restore_error_handler();
         }
 
-        set_error_handler($previousErrorHandler);
-
         return self::$autoloadLocatedFile;
+    }
+
+    private function silenceErrors() : void
+    {
+        set_error_handler(static function () : bool {
+            return true;
+        });
     }
 
     /**
@@ -299,12 +307,9 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         }
 
         if ($flags & STREAM_URL_STAT_QUIET) {
-            set_error_handler(static function () {
-                // Use native error handler
-                return false;
-            });
-            $result = @stat($path);
             restore_error_handler();
+            $result = @stat($path);
+            $this->silenceErrors();
         } else {
             $result = stat($path);
         }
