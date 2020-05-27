@@ -68,10 +68,10 @@ final class FileReadTrapStreamWrapper
             foreach ($streamWrapperProtocols as $protocol) {
                 stream_wrapper_restore($protocol);
             }
-        }
 
-        self::$registeredStreamWrapperProtocols = null;
-        self::$autoloadLocatedFile              = null;
+            self::$registeredStreamWrapperProtocols = null;
+            self::$autoloadLocatedFile              = null;
+        }
 
         return $result;
     }
