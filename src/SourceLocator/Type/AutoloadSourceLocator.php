@@ -32,6 +32,7 @@ use function function_exists;
 use function get_defined_constants;
 use function get_included_files;
 use function interface_exists;
+use function is_readable;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
@@ -229,6 +230,10 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         //       defined a constant that is being looked up. Earlier files are possibly related
         //       to libraries/frameworks that we rely upon.
         foreach (array_reverse(get_included_files()) as $includedFileName) {
+            if (! is_readable($includedFileName)) {
+                continue;
+            }
+
             $ast = $this->phpParser->parse(file_get_contents($includedFileName));
 
             $this->nodeTraverser->traverse($ast);
