@@ -392,24 +392,4 @@ class ReflectionMethodTest extends TestCase
         $this->expectException(CoreReflectionException::class);
         $reflectionMethodAdapter->invokeArgs();
     }
-
-    public function testIsAbstractWhenDeclaringClassIsInterface() : void
-    {
-        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
-        $betterReflectionClass
-            ->method('isInterface')
-            ->willReturn(true);
-
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('isAbstract')
-            ->willReturn(false);
-        $betterReflectionMethod
-            ->method('getDeclaringClass')
-            ->willReturn($betterReflectionClass);
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-
-        self::assertTrue($reflectionMethodAdapter->isAbstract());
-    }
 }
