@@ -29,13 +29,18 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use function class_exists;
 use function file_exists;
 use function file_get_contents;
+use function file_put_contents;
 use function interface_exists;
 use function restore_error_handler;
 use function set_error_handler;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
+use function str_replace;
+use function sys_get_temp_dir;
+use function tempnam;
 use function trait_exists;
 use function uniqid;
+use function unlink;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
@@ -186,6 +191,45 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertSame('Roave\BetterReflectionTest\Fixture\BY_CONST_2', $reflection->getName());
         self::assertSame('BY_CONST_2', $reflection->getShortName());
+    }
+
+    /**
+     * Running in a separate process to reduce the amount of existing files to scan in case of a constant lookup failure
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testAutoloadSourceLocatorWillNotFindConstantDeclarationFileIfDeclarationFileIsRemoved() : void
+    {
+        $constantName        = str_replace('.', '', uniqid('constant_name', true));
+        $temporarySourceFile = tempnam(sys_get_temp_dir(), 'AutoloadSourceLocatorTest');
+
+        self::assertIsString($temporarySourceFile);
+
+        file_put_contents(
+            $temporarySourceFile,
+            '<?php namespace Roave\BetterReflectionTest\SourceLocator\Type; const ' . $constantName . ' = "foo";'
+        );
+
+        require $temporarySourceFile;
+
+        $sourceLocator     = new AutoloadSourceLocator($this->astLocator);
+        $constantReflector = (new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator)));
+
+        self::assertSame(
+            'Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName,
+            $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName)
+                ->getName()
+        );
+
+        unlink($temporarySourceFile);
+
+        $sourceLocator     = new AutoloadSourceLocator($this->astLocator);
+        $constantReflector = (new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator)));
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName);
     }
 
     public function testConstantLoadsByDefine() : void
