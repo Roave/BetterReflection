@@ -1457,7 +1457,8 @@ class ReflectionClass implements Reflection
         $lowerName = strtolower($methodName);
         foreach ($this->node->stmts as $key => $stmt) {
             if ($stmt instanceof ClassMethod && $lowerName === $stmt->name->toLowerString()) {
-                unset($this->node->stmts[$key], $this->cachedMethods);
+                unset($this->node->stmts[$key]);
+                $this->cachedMethods = null;
 
                 return true;
             }
@@ -1472,7 +1473,7 @@ class ReflectionClass implements Reflection
     public function addMethod(string $methodName) : void
     {
         $this->node->stmts[] = new ClassMethod($methodName);
-        unset($this->cachedMethods);
+        $this->cachedMethods = null;
     }
 
     /**

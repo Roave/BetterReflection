@@ -11,6 +11,7 @@ use ReflectionException;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
@@ -162,7 +163,7 @@ class PhpInternalSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier($constantName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT))
         );
-        assert($reflection instanceof ReflectionFunction);
+        assert($reflection instanceof ReflectionConstant);
         $source = $reflection->getLocatedSource();
 
         self::assertInstanceOf(InternalLocatedSource::class, $source);

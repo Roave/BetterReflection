@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionNamedType;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
@@ -257,7 +258,10 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
         $fakeParams                       = array_map(
             static function (ReflectionParameter $parameter) {
-                switch ((string) $parameter->getType()) {
+                $type     = $parameter->getType();
+                $typeName = $type instanceof ReflectionNamedType ? $type->getName() : (string) $type;
+
+                switch ($typeName) {
                     case 'int':
                         return random_int(1, 1000);
                     case 'null':
