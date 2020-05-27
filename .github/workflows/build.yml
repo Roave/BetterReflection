@@ -7,7 +7,6 @@ x-all-permutations: &all-permutations
       - "highest"
       - "locked"
     php-version:
-      - "7.2"
       - "7.3"
       - "7.4"
     operating-system:
