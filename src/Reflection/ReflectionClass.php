@@ -89,7 +89,7 @@ class ReflectionClass implements Reflection
 
     /**
      * @var ReflectionMethod[]|null
-     * @psalm-var ?array<string, ReflectionMethod>
+     * @psalm-var ?array<lowercase-string, ReflectionMethod>
      */
     private $cachedMethods;
 
@@ -341,7 +341,7 @@ class ReflectionClass implements Reflection
      *
      * @return ReflectionMethod[] indexed by method name
      *
-     * @psalm-return array<string, ReflectionMethod>
+     * @psalm-return array<lowercase-string, ReflectionMethod>
      */
     private function getMethodsIndexedByName() : array
     {
@@ -352,7 +352,7 @@ class ReflectionClass implements Reflection
         $cachedMethods = [];
 
         foreach ($this->getAllMethods() as $method) {
-            $methodName = $method->getName();
+            $methodName = strtolower($method->getName());
 
             if (isset($cachedMethods[$methodName])) {
                 continue;
@@ -444,13 +444,14 @@ class ReflectionClass implements Reflection
      */
     public function getMethod(string $methodName) : ReflectionMethod
     {
-        $methods = $this->getMethodsIndexedByName();
+        $lowercaseMethodName = strtolower($methodName);
+        $methods             = $this->getMethodsIndexedByName();
 
-        if (! isset($methods[$methodName])) {
+        if (! isset($methods[$lowercaseMethodName])) {
             throw new OutOfBoundsException('Could not find method: ' . $methodName);
         }
 
-        return $methods[$methodName];
+        return $methods[$lowercaseMethodName];
     }
 
     /**
