@@ -5,6 +5,8 @@ name: "Test Compatibility"
 on:
   pull_request:
   push:
+    branches:
+      - "master"
 
 jobs:
   compatibility:
