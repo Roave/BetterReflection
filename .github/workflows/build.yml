@@ -250,3 +250,31 @@ jobs:
 
       - name: "PhpBench"
         run: "vendor/bin/phpbench run --progress=dots --iterations=1"
+
+  mutation-tests:
+    name: "Run mutation tests"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "pcov"
+          php-version: "7.4"
+
+      - name: "Cache dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: "~/.composer/cache"
+          key: "php-7.4"
+          restore-keys: "php-7.4"
+
+      - name: "Install dependencies"
+        run: "composer install"
+
+      - name: "Infection"
+        run: "vendor/bin/infection"
