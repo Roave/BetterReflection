@@ -321,8 +321,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             'printf',
             'fprintf',
             'trait_exists',
-            'user_error',
-            'preg_replace_callback_array',
             'strtok',
             'strtr',
             'hrtime',
@@ -373,7 +371,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
 
         // Changed in PHP 7.4.0
-        if (PHP_VERSION_ID < 70400 && $functionName === 'preg_replace_callback') {
+        if (PHP_VERSION_ID < 70400 && in_array($functionName, ['preg_replace_callback', 'preg_replace_callback_array'], true)) {
             return;
         }
 

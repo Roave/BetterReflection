@@ -104,12 +104,7 @@ class PhpInternalSourceLocatorTest extends TestCase
                 static function (string $symbol) : bool {
                     $reflection = new CoreReflectionClass($symbol);
 
-                    if (! $reflection->isInternal()) {
-                        return false;
-                    }
-
-                    // https://github.com/Roave/BetterReflection/issues/598
-                    return ! in_array($reflection->getExtensionName(), ['FFI', 'mongodb'], true);
+                    return $reflection->isInternal();
                 }
             )
         );
