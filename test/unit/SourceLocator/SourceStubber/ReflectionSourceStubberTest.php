@@ -36,6 +36,7 @@ use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
 use function in_array;
+use function preg_match;
 use function sort;
 use function sprintf;
 use const PHP_VERSION_ID;
@@ -184,8 +185,8 @@ class ReflectionSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // https://github.com/Roave/BetterReflection/issues/598
-                    return ! in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'redis'], true);
+                    // Classes in "memcache" extension contain methods with parameters without name
+                    return $reflection->getExtensionName() !== 'memcache';
                 }
             )
         );
@@ -310,8 +311,14 @@ class ReflectionSourceStubberTest extends TestCase
         }
 
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
-        self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-        if (! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)) {
+        if ($original->getDeclaringClass()->getName() !== 'FFI') {
+            // Parameters can be passed by reference and also by value
+            self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
+        }
+
+        if (! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)
+            && ! preg_match('~^RedisCluster#\w+.arg$~', $parameterName)
+        ) {
             // Parameters are variadic but not optinal
             self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         }
