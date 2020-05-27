@@ -5,6 +5,8 @@ name: "Check Demo Scripts"
 on:
   pull_request:
   push:
+    branches:
+      - "master"
 
 jobs:
   demo-scripts:
