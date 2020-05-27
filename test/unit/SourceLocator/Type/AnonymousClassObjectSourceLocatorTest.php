@@ -189,8 +189,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
 
-        assert($reflection instanceof ReflectionClass);
-
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(

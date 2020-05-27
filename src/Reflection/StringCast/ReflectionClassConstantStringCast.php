@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
-use function assert;
 use function gettype;
-use function is_scalar;
+use function is_array;
 use function sprintf;
 
 /**
@@ -18,14 +17,13 @@ final class ReflectionClassConstantStringCast
     public static function toString(ReflectionClassConstant $constantReflection) : string
     {
         $value = $constantReflection->getValue();
-        assert($value === null || is_scalar($value));
 
         return sprintf(
             "Constant [ %s %s %s ] { %s }\n",
             self::visibilityToString($constantReflection),
             gettype($value),
             $constantReflection->getName(),
-            (string) $value
+            is_array($value) ? 'Array' : (string) $value
         );
     }
 

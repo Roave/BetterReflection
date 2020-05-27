@@ -84,8 +84,6 @@ class ClosureSourceLocatorTest extends TestCase
 
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
-        assert($reflection instanceof ReflectionFunction);
-
         $locator->locateIdentifier(
             $this->reflector,
             new Identifier(
