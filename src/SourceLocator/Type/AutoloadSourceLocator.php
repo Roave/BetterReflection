@@ -21,6 +21,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use function array_key_exists;
+use function array_reverse;
 use function assert;
 use function class_exists;
 use function defined;
@@ -249,7 +250,10 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         $constantFileName = null;
 
-        foreach (get_included_files() as $includedFileName) {
+        // Note: looking at files in reverse order, since newer files are more likely to have
+        //       defined a constant that is being looked up. Earlier files are possibly related
+        //       to libraries/frameworks that we rely upon.
+        foreach (array_reverse(get_included_files()) as $includedFileName) {
             $ast = $this->phpParser->parse(file_get_contents($includedFileName));
 
             $this->nodeTraverser->traverse($ast);
