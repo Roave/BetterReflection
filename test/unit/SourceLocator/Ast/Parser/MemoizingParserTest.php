@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use function array_map;
@@ -60,29 +59,6 @@ class MemoizingParserTest extends TestCase
         );
 
         self::assertCount(count($nodeIdentifiers), array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
-        self::assertEquals($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
-    }
-
-    public function testParsedCodeIsDifferentAtEachParserLookup() : void
-    {
-        $code          = '<?php echo "hello world";';
-        $wrappedParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
-
-        $parser = new MemoizingParser($wrappedParser);
-
-        self::assertEquals(
-            $wrappedParser->parse($code),
-            $parser->parse($code),
-        );
-        self::assertEquals(
-            $parser->parse($code),
-            $parser->parse($code),
-            'Equal tree is produced at each iteration',
-        );
-        self::assertNotSame(
-            $wrappedParser->parse($code),
-            $wrappedParser->parse($code),
-            'Each time a tree is requested, a new copy is provided',
-        );
+        self::assertSame($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
     }
 }
