@@ -37,7 +37,7 @@
     "require-dev": {
         "doctrine/coding-standard": "^7.0.2",
         "phpstan/phpstan": "^0.12.25",
-        "phpunit/phpunit": "^8.5.4",
+        "phpunit/phpunit": "^9.1.5",
         "vimeo/psalm": "3.11.2",
         "infection/infection": "^0.16.3"
     },
