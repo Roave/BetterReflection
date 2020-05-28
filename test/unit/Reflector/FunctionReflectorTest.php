@@ -57,7 +57,7 @@ class FunctionReflectorTest extends TestCase
         ))->getAllFunctions();
 
         self::assertContainsOnlyInstancesOf(ReflectionFunction::class, $functions);
-        self::assertCount(2, $functions);
+        self::assertCount(10, $functions);
     }
 
     public function testThrowsExceptionWhenIdentifierNotFound() : void

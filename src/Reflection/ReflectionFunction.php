@@ -8,6 +8,7 @@ use Closure;
 use PhpParser\Node;
 use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
+use PhpParser\NodeTraverser;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
@@ -17,6 +18,8 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Roave\BetterReflection\Util\Visitor\FunctionCallNodeVisitor;
+use Roave\BetterReflection\Util\Visitor\MethodCallNodeVisitor;
 use function function_exists;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
@@ -110,6 +113,46 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     public function invoke(...$args)
     {
         return $this->invokeArgs($args);
+    }
+
+    public function containsFunctionCall(string $functionName) : bool
+    {
+        $visitor = new FunctionCallNodeVisitor();
+
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
+
+        $traverser->traverse($this->getNode()->getStmts());
+
+        foreach ($visitor->getFunctionCallNodes() as $functionNode) {
+            if ($functionNode->name->getLast() === $functionName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function containsMethodCall(string $objectName, string $methodName) : bool
+    {
+        $visitor = new MethodCallNodeVisitor();
+
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
+
+        $traverser->traverse($this->getNode()->getStmts());
+
+        foreach ($visitor->getMethodCallNodes() as $methodCallNode) {
+            if (! $methodCallNode->var instanceof Node\Expr\Variable) {
+                continue;
+            }
+
+            if ($methodCallNode->var->name === $objectName && $methodCallNode->name->toString() === $methodName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

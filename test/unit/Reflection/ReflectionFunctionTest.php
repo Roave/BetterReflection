@@ -256,4 +256,58 @@ class ReflectionFunctionTest extends TestCase
 
         $functionReflection->invokeArgs();
     }
+
+    public function testContainsFunctionCall() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithInternalFunctionCalls');
+
+        self::assertTrue($functionReflection->containsFunctionCall('myFunction'));
+    }
+
+    public function testContainsFunctionCall2() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithInternalFunctionCallsExpressions');
+
+        self::assertTrue($functionReflection->containsFunctionCall('myFunction'));
+    }
+
+    public function testContainsFunctionCall3() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithInternalFunctionCallInFunctionCall');
+
+        self::assertFalse($functionReflection->containsFunctionCall('myFunction'));
+    }
+
+    public function testContainsFunctionCall4() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithInternalFunctionCallsIf');
+
+        self::assertTrue($functionReflection->containsFunctionCall('myFunction'));
+    }
+
+    public function testContainsMethodCall() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithMethodCall');
+
+        self::assertTrue($functionReflection->containsMethodCall('class', 'myMethod'));
+    }
+
+    public function testContainsMethodCall2() : void
+    {
+        require_once __DIR__ . '/../Fixture/Functions.php';
+
+        $functionReflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunctionWithNewMethodCall');
+
+        self::assertFalse($functionReflection->containsMethodCall('class', 'myMethod'));
+    }
 }
