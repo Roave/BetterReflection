@@ -26,11 +26,13 @@ use function count;
 use function defined;
 use function explode;
 use function file_get_contents;
+use function in_array;
 use function is_dir;
 use function is_string;
 use function sprintf;
 use function str_replace;
 use function strtolower;
+use function strtoupper;
 
 /**
  * @internal
@@ -283,6 +285,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     $nameNode = $node->args[0]->value;
                     assert($nameNode instanceof Node\Scalar\String_);
                     $constantName = $nameNode->value;
+
+                    if (in_array($constantName, ['true', 'false', 'null'], true)) {
+                        $constantName    = strtoupper($constantName);
+                        $nameNode->value = $constantName;
+                    }
 
                     // Some constants has different values on different systems, some are not actual in stubs
                     if (defined($constantName)) {
