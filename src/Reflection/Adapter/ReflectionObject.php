@@ -277,7 +277,7 @@ class ReflectionObject extends CoreReflectionObject
     {
         $traits = $this->betterReflectionObject->getTraits();
 
-        /** @psalm-var array<trait-string> $traitNames */
+        /** @var array<trait-string> $traitNames */
         $traitNames = array_map(static function (BetterReflectionClass $trait) : string {
             return $trait->getName();
         }, $traits);

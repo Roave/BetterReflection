@@ -293,7 +293,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                     // Some constants has different values on different systems, some are not actual in stubs
                     if (defined($constantName)) {
-                        /** @psalm-var scalar|scalar[]|null $constantValue */
+                        /** @var scalar|scalar[]|null $constantValue */
                         $constantValue        = constant($constantName);
                         $node->args[1]->value = BuilderHelpers::normalizeValue($constantValue);
                     }

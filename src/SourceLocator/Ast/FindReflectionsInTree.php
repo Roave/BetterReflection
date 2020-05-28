@@ -34,14 +34,11 @@ final class FindReflectionsInTree
     /** @var FunctionReflector */
     private $functionReflector;
 
-    /**
-     * @var Closure
-     * @psalm-var Closure(): FunctionReflector
-     */
+    /** @var Closure(): FunctionReflector */
     private $functionReflectorGetter;
 
     /**
-     * @psalm-param Closure(): FunctionReflector $functionReflectorGetter
+     * @param Closure(): FunctionReflector $functionReflectorGetter
      */
     public function __construct(AstConversionStrategy $astConversionStrategy, Closure $functionReflectorGetter)
     {

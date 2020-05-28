@@ -37,9 +37,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
     }
 
     /**
-     * @return array<string, array<int, string|SourceLocator>>
-     *
-     * @psalm-return array<string, array{0: string, 1: SourceLocator}>
+     * @return array<string, array{0: string, 1: SourceLocator}>
      */
     public function expectedLocators() : array
     {

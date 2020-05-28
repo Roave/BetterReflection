@@ -250,9 +250,7 @@ class ReflectionProperty
      * Get the default value of the property (as defined before constructor is
      * called, when the property is defined)
      *
-     * @return bool|int|float|string|array|null
-     *
-     * @psalm-return scalar|array<scalar>|null
+     * @return scalar|array<scalar>|null
      */
     public function getDefaultValue()
     {

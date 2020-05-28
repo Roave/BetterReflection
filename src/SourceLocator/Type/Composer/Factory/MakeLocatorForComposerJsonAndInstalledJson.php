@@ -166,9 +166,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param mixed[] $package
-     *
-     * @psalm-param array{name: string} $package
+     * @param array{name: string} $package
      */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package) : string
     {
@@ -177,11 +175,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
     /**
      * @param array<string, array<int, string>> $paths
-     * @param array<string, array<int, string>> $package
+     * @param array{name: string}               $package $package
      *
      * @return array<string, array<int, string>>
-     *
-     * @psalm-param array{name: string} $package
      */
     private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
     {
