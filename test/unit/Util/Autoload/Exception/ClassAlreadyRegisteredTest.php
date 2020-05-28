@@ -27,7 +27,7 @@ final class ClassAlreadyRegisteredTest extends TestCase
         self::assertInstanceOf(ClassAlreadyRegistered::class, $exception);
         self::assertSame(
             sprintf('Class %s already registered', $className),
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

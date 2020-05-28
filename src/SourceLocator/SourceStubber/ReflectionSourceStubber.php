@@ -243,7 +243,7 @@ final class ReflectionSourceStubber implements SourceStubber
             [$traitName, $methodName] = explode('::', $methodInfo);
             $traitUseNode             = new TraitUse(
                 [new FullyQualified($traitName)],
-                [new TraitUseAdaptation\Alias(new FullyQualified($traitName), $methodName, null, $methodNameAlias)]
+                [new TraitUseAdaptation\Alias(new FullyQualified($traitName), $methodName, null, $methodNameAlias)],
             );
 
             $classNode->addStmt($traitUseNode);
@@ -327,7 +327,7 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $classConstantNode = new ClassConst(
                 [new Const_($constantReflection->getName(), BuilderHelpers::normalizeValue($constantReflection->getValue()))],
-                $this->constantVisibilityFlags($constantReflection)
+                $this->constantVisibilityFlags($constantReflection),
             );
 
             if ($constantReflection->getDocComment() !== false) {

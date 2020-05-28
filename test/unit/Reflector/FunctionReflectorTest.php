@@ -54,7 +54,7 @@ class FunctionReflectorTest extends TestCase
     {
         $functions = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', BetterReflectionSingleton::instance()->astLocator()),
-            $this->classReflector
+            $this->classReflector,
         ))->getAllFunctions();
 
         self::assertContainsOnlyInstancesOf(ReflectionFunction::class, $functions);

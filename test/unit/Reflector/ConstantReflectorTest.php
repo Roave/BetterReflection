@@ -54,7 +54,7 @@ class ConstantReflectorTest extends TestCase
     {
         $constants = (new ConstantReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Constants.php', BetterReflectionSingleton::instance()->astLocator()),
-            $this->classReflector
+            $this->classReflector,
         ))->getAllConstants();
 
         self::assertContainsOnlyInstancesOf(ReflectionConstant::class, $constants);

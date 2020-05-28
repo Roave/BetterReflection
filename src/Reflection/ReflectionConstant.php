@@ -231,7 +231,7 @@ class ReflectionConstant implements Reflection
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->value          = (new CompileNodeToValue())->__invoke(
             $valueNode,
-            new CompilerContext($this->reflector, null)
+            new CompilerContext($this->reflector, null),
         );
         $this->valueWasCached = true;
 

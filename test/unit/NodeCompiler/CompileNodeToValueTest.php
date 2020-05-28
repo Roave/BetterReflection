@@ -57,7 +57,7 @@ class CompileNodeToValueTest extends TestCase
     {
         return new CompilerContext(
             new ClassReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
-            null
+            null,
         );
     }
 
@@ -180,7 +180,7 @@ class CompileNodeToValueTest extends TestCase
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage(sprintf(
             'Unable to compile expression in unknown context (probably a function): unrecognized node type %s at line -1',
-            Yield_::class
+            Yield_::class,
         ));
 
         (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContext());
@@ -203,9 +203,9 @@ class CompileNodeToValueTest extends TestCase
             ->__invoke(
                 new Node\Expr\ClassConstFetch(
                     new Name\FullyQualified('EmptyClass'),
-                    new Node\Identifier('FOO')
+                    new Node\Identifier('FOO'),
                 ),
-                $this->getDummyContextWithEmptyClass()
+                $this->getDummyContextWithEmptyClass(),
             );
     }
 
@@ -218,8 +218,8 @@ class CompileNodeToValueTest extends TestCase
             123,
             (new CompileNodeToValue())->__invoke(
                 new ConstFetch(new Name($constName)),
-                $this->getDummyContext()
-            )
+                $this->getDummyContext(),
+            ),
         );
     }
 

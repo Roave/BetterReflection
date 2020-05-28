@@ -74,7 +74,7 @@ class AggregateSourceLocatorTest extends TestCase
                 $locator2,
                 $locator3,
                 $locator4,
-            ]))->locateIdentifier($this->getMockReflector(), $identifier)
+            ]))->locateIdentifier($this->getMockReflector(), $identifier),
         );
     }
 
@@ -83,8 +83,8 @@ class AggregateSourceLocatorTest extends TestCase
         self::assertNull(
             (new AggregateSourceLocator([]))->locateIdentifier(
                 $this->getMockReflector(),
-                new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
-            )
+                new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+            ),
         );
     }
 
@@ -127,7 +127,7 @@ class AggregateSourceLocatorTest extends TestCase
                 $locator2,
                 $locator3,
                 $locator4,
-            ]))->locateIdentifiersByType($this->getMockReflector(), $identifierType)
+            ]))->locateIdentifiersByType($this->getMockReflector(), $identifierType),
         );
     }
 }

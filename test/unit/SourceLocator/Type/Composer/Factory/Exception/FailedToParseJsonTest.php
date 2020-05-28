@@ -17,7 +17,7 @@ class FailedToParseJsonTest extends TestCase
         self::assertSame(
             'Could not parse JSON file "foo/bar"',
             FailedToParseJson::inFile('foo/bar')
-                ->getMessage()
+                ->getMessage(),
         );
     }
 }

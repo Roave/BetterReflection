@@ -87,7 +87,7 @@ final class BetterReflection
             ?? $this->phpParser = new MemoizingParser(
                 (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
                     'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
-                ]))
+                ])),
             );
     }
 
@@ -110,7 +110,7 @@ final class BetterReflection
         return $this->sourceStubber
             ?? $this->sourceStubber = new AggregateSourceStubber(
                 new PhpStormStubsSourceStubber($this->phpParser()),
-                new ReflectionSourceStubber()
+                new ReflectionSourceStubber(),
             );
     }
 }

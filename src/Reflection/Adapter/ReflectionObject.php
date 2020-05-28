@@ -286,15 +286,15 @@ class ReflectionObject extends CoreReflectionObject
             $traitNames,
             array_map(static function (BetterReflectionClass $trait) : ReflectionClass {
                 return new ReflectionClass($trait);
-            }, $traits)
+            }, $traits),
         );
 
         assert(
             is_array($traitsByName),
             sprintf(
                 'Could not create an array<trait-string, ReflectionClass> for class "%s"',
-                $this->betterReflectionObject->getName()
-            )
+                $this->betterReflectionObject->getName(),
+            ),
         );
 
         return $traitsByName;

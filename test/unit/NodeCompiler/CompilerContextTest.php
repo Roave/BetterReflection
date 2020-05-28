@@ -106,7 +106,7 @@ class CompilerContextTest extends TestCase
 
         $reflector    = new FunctionReflector(
             new StringSourceLocator($phpCode, $this->astLocator),
-            BetterReflectionSingleton::instance()->classReflector()
+            BetterReflectionSingleton::instance()->classReflector(),
         );
         $functionInfo = $reflector->reflect('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());

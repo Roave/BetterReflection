@@ -35,7 +35,7 @@ class StringSourceLocator extends AbstractSourceLocator
             // point in us even trying to parse it because we won't find what
             // we are looking for, therefore this throws an exception
             throw new EmptyPhpSourceCode(
-                'Source code string was empty'
+                'Source code string was empty',
             );
         }
 
@@ -52,7 +52,7 @@ class StringSourceLocator extends AbstractSourceLocator
     {
         return new LocatedSource(
             $this->source,
-            null
+            null,
         );
     }
 }

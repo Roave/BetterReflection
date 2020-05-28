@@ -62,7 +62,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->sourceStubber            = new PhpStormStubsSourceStubber($betterReflection->phpParser());
         $this->phpInternalSourceLocator = new PhpInternalSourceLocator(
             $betterReflection->astLocator(),
-            $this->sourceStubber
+            $this->sourceStubber,
         );
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
         $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
@@ -77,7 +77,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $classNames = array_merge(
             get_declared_classes(),
             get_declared_interfaces(),
-            get_declared_traits()
+            get_declared_traits(),
         );
 
         return array_map(
@@ -95,8 +95,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -127,7 +127,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertSame(
             $originalParentClass ? $originalParentClass->getName() : null,
-            $stubbedParentClass ? $stubbedParentClass->getName() : null
+            $stubbedParentClass ? $stubbedParentClass->getName() : null,
         );
     }
 
@@ -172,13 +172,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             static function (CoreReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
-            $original->getParameters()
+            $original->getParameters(),
         );
         $stubParameterNames     = array_map(
             static function (ReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
-            $stubbed->getParameters()
+            $stubbed->getParameters(),
         );
 
         // Needs fixes in JetBrains/phpstorm-stubs
@@ -195,7 +195,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $this->assertSameParameterAttributes(
                 $original,
                 $parameter,
-                $stubbedParameter
+                $stubbedParameter,
             );
         }
 
@@ -287,8 +287,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
-                }
-            )
+                },
+            ),
         );
     }
 

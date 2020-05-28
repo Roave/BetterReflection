@@ -29,7 +29,7 @@ class MemoizingParserTest extends TestCase
             static function () : string {
                 return uniqid('code', true);
             },
-            range(0, 100)
+            range(0, 100),
         ));
 
         $randomCodeStringsCount = count($randomCodeStrings);
@@ -56,7 +56,7 @@ class MemoizingParserTest extends TestCase
             static function (array $nodes) : string {
                 return spl_object_hash($nodes[0]);
             },
-            $producedNodes
+            $producedNodes,
         );
 
         self::assertCount(count($nodeIdentifiers), array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
@@ -72,17 +72,17 @@ class MemoizingParserTest extends TestCase
 
         self::assertEquals(
             $wrappedParser->parse($code),
-            $parser->parse($code)
+            $parser->parse($code),
         );
         self::assertEquals(
             $parser->parse($code),
             $parser->parse($code),
-            'Equal tree is produced at each iteration'
+            'Equal tree is produced at each iteration',
         );
         self::assertNotSame(
             $wrappedParser->parse($code),
             $wrappedParser->parse($code),
-            'Each time a tree is requested, a new copy is provided'
+            'Each time a tree is requested, a new copy is provided',
         );
     }
 }

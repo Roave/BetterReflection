@@ -38,7 +38,7 @@ final class UnableToCompileNodeTest extends TestCase
 
         $exception = UnableToCompileNode::becauseOfNotFoundConstantReference(
             $context,
-            new ConstFetch(new Name($constantName))
+            new ConstFetch(new Name($constantName)),
         );
 
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
@@ -47,9 +47,9 @@ final class UnableToCompileNodeTest extends TestCase
             sprintf(
                 'Could not locate constant "%s" while evaluating expression in %s at line -1',
                 $constantName,
-                $contextName
+                $contextName,
             ),
-            $exception->getMessage()
+            $exception->getMessage(),
         );
 
         self::assertSame($constantName, $exception->constantName());
@@ -75,9 +75,9 @@ final class UnableToCompileNodeTest extends TestCase
                 $targetClass,
                 new ClassConstFetch(
                     new Name\FullyQualified('A'),
-                    new Identifier('SOME_CONSTANT')
-                )
-            )->getMessage()
+                    new Identifier('SOME_CONSTANT'),
+                ),
+            )->getMessage(),
         );
     }
 
@@ -92,8 +92,8 @@ final class UnableToCompileNodeTest extends TestCase
             . ' at line -1',
             UnableToCompileNode::forUnRecognizedExpressionInContext(
                 new Yield_(new String_('')),
-                $context
-            )->getMessage()
+                $context,
+            )->getMessage(),
         );
     }
 
@@ -102,7 +102,7 @@ final class UnableToCompileNodeTest extends TestCase
     {
         $reflector = new ClassReflector(new StringSourceLocator(
             '<?php class EmptyClass {}',
-            BetterReflectionSingleton::instance()->astLocator()
+            BetterReflectionSingleton::instance()->astLocator(),
         ));
 
         return [

@@ -48,8 +48,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -69,8 +69,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -93,8 +93,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -117,8 +117,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -141,8 +141,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -165,8 +165,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -190,8 +190,8 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -220,8 +220,8 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -256,8 +256,8 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -280,8 +280,8 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
@@ -305,8 +305,8 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 

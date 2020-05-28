@@ -26,7 +26,7 @@ class InvalidAbstractFunctionNodeTypeTest extends TestCase
             ReflectionFunctionAbstract::class,
             Node\Stmt\ClassMethod::class,
             Node\FunctionLike::class,
-            Node\Scalar\LNumber::class
+            Node\Scalar\LNumber::class,
         ), $exception->getMessage());
     }
 }

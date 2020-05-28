@@ -104,8 +104,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableInterface::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
 
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
@@ -123,8 +123,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableInterface::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
     }
 
@@ -140,8 +140,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
 
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
@@ -159,8 +159,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
     }
 
@@ -208,7 +208,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         file_put_contents(
             $temporarySourceFile,
-            '<?php namespace Roave\BetterReflectionTest\SourceLocator\Type; const ' . $constantName . ' = "foo";'
+            '<?php namespace Roave\BetterReflectionTest\SourceLocator\Type; const ' . $constantName . ' = "foo";',
         );
 
         require $temporarySourceFile;
@@ -219,7 +219,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertSame(
             'Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName,
             $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName)
-                ->getName()
+                ->getName(),
         );
 
         unlink($temporarySourceFile);
@@ -290,7 +290,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertNull($sourceLocator->locateIdentifier(
             new ClassReflector($sourceLocator),
-            new Identifier('Some\Class\That\Cannot\Exist', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            new Identifier('Some\Class\That\Cannot\Exist', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         ));
     }
 
@@ -302,7 +302,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertNull(
             (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+                ->locateIdentifier($this->getMockReflector(), new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))),
         );
     }
 
@@ -312,8 +312,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
-                    new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
-                )
+                    new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
+                ),
         );
     }
 
@@ -325,8 +325,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
-                    new Identifier(AutoloadableClassWithTwoDirectories::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
-                )
+                    new Identifier(AutoloadableClassWithTwoDirectories::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                ),
         );
 
         spl_autoload_unregister([$this, 'autoload']);
@@ -396,7 +396,7 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
-                    new Identifier('Whatever', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+                    new Identifier('Whatever', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
                 );
 
             self::fail('No exception was thrown');

@@ -38,7 +38,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
         return (new FunctionReflector(
             new ClosureSourceLocator($closure, $configuration->phpParser()),
-            $configuration->classReflector()
+            $configuration->classReflector(),
         ))->reflect(self::CLOSURE_NAME);
     }
 

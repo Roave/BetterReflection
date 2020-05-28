@@ -26,7 +26,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
     {
         self::assertFalse(
             class_exists(MemoizingParser::class, false),
-            MemoizingParser::class . ' was not loaded into memory'
+            MemoizingParser::class . ' was not loaded into memory',
         );
 
         $parser            = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
@@ -37,7 +37,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
             new Locator($parser, static function () use (&$functionReflector) : FunctionReflector {
                 return $functionReflector;
             }),
-            $parser
+            $parser,
         );
         $classReflector    = new ClassReflector($sourceLocator);
         $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
@@ -46,7 +46,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
         self::assertSame(ExampleClass::class, $reflection->getName());
         self::assertFalse(
             class_exists(MemoizingParser::class, false),
-            MemoizingParser::class . ' was not implicitly loaded'
+            MemoizingParser::class . ' was not implicitly loaded',
         );
     }
 }

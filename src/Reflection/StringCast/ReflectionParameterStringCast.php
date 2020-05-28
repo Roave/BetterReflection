@@ -27,7 +27,7 @@ final class ReflectionParameterStringCast
             $parameterReflection->isVariadic() ? '...' : '',
             $parameterReflection->isPassedByReference() ? '&' : '',
             $parameterReflection->getName(),
-            self::valueToString($parameterReflection)
+            self::valueToString($parameterReflection),
         );
     }
 

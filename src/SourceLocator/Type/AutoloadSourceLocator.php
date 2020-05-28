@@ -87,7 +87,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         return new LocatedSource(
             file_get_contents($potentiallyLocatedFile),
-            $potentiallyLocatedFile
+            $potentiallyLocatedFile,
         );
     }
 
@@ -166,7 +166,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                     }
 
                     return null;
-                }
+                },
             );
         } finally {
             restore_error_handler();

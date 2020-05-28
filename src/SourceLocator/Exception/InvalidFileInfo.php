@@ -19,7 +19,7 @@ class InvalidFileInfo extends RuntimeException
     {
         return new self(sprintf(
             'Expected an iterator of SplFileInfo instances, %s given instead',
-            is_object($nonSplFileInfo) ? get_class($nonSplFileInfo) : gettype($nonSplFileInfo)
+            is_object($nonSplFileInfo) ? get_class($nonSplFileInfo) : gettype($nonSplFileInfo),
         ));
     }
 }

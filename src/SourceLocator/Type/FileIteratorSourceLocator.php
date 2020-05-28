@@ -64,7 +64,7 @@ class FileIteratorSourceLocator implements SourceLocator
 
                 return new SingleFileSourceLocator($item->getRealPath(), $this->astLocator);
             },
-            iterator_to_array($this->fileSystemIterator)
+            iterator_to_array($this->fileSystemIterator),
         ))));
     }
 

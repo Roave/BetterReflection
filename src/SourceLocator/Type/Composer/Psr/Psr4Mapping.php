@@ -43,7 +43,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
                     return rtrim($directory, '/');
                 }, $directories);
             },
-            $mappings
+            $mappings,
         );
 
         return $instance;
@@ -71,7 +71,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
                 return array_map(static function (string $path) use ($subPath) : string {
                     return rtrim($path, '/') . '/' . $subPath . '.php';
                 }, $paths);
-            }, $matchingPrefixes, array_keys($matchingPrefixes))
+            }, $matchingPrefixes, array_keys($matchingPrefixes)),
         )));
     }
 
@@ -83,7 +83,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
             static function (string $prefix) use ($className) : bool {
                 return strpos($className, $prefix) === 0;
             },
-            ARRAY_FILTER_USE_KEY
+            ARRAY_FILTER_USE_KEY,
         );
     }
 

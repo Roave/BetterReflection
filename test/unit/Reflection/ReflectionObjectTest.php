@@ -268,7 +268,7 @@ class ReflectionObjectTest extends TestCase
                         return uniqid('stringParam', true);
                 }
             },
-            $reflectionObjectReflectionMethod->getParameters()
+            $reflectionObjectReflectionMethod->getParameters(),
         );
 
         // Finally, call the method name with some dummy parameters. This should

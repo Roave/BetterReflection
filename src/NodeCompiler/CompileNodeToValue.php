@@ -129,7 +129,7 @@ class CompileNodeToValue
 
         return $this->__invoke(
             $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
-            new CompilerContext($context->getReflector(), $classInfo)
+            new CompilerContext($context->getReflector(), $classInfo),
         );
     }
 

@@ -57,7 +57,7 @@ class ConstantReflector implements Reflector
         /** @var array<int,ReflectionConstant> $allConstants */
         $allConstants = $this->sourceLocator->locateIdentifiersByType(
             $this,
-            new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT)
+            new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
         );
 
         return $allConstants;
