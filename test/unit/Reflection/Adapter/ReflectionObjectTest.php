@@ -10,6 +10,7 @@ use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
@@ -410,5 +411,18 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
 
         self::assertFalse($betterReflectionObject->getExtensionName());
+    }
+
+    public function testIsInstanceReturnsNullWithNonObjectParameter() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('isInstance')
+            ->with('string')
+            ->willThrowException(NotAnObject::fromNonObject('string'));
+
+        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertNull($betterReflectionObject->isInstance('string'));
     }
 }
