@@ -21,8 +21,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class AggregateSourceLocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {

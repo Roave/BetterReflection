@@ -35,29 +35,22 @@ use function strtolower;
 
 class ReflectionParameter
 {
-    /** @var ParamNode */
-    private $node;
+    private ParamNode $node;
 
-    /** @var Namespace_|null */
-    private $declaringNamespace;
+    private ?Namespace_ $declaringNamespace;
 
-    /** @var ReflectionFunctionAbstract */
-    private $function;
+    private ReflectionFunctionAbstract $function;
 
-    /** @var int */
-    private $parameterIndex;
+    private int $parameterIndex;
 
     /** @var scalar|array<scalar>|null */
     private $defaultValue;
 
-    /** @var bool */
-    private $isDefaultValueConstant = false;
+    private bool $isDefaultValueConstant = false;
 
-    /** @var string|null */
-    private $defaultValueConstantName;
+    private ?string $defaultValueConstantName;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct()
     {

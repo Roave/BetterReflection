@@ -55,35 +55,31 @@ class ReflectionClass implements Reflection
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
-    /** @var NamespaceNode|null */
-    private $declaringNamespace;
+    private ?NamespaceNode $declaringNamespace = null;
 
-    /** @var LocatedSource */
-    private $locatedSource;
+    private LocatedSource $locatedSource;
 
-    /** @var ClassLikeNode */
-    private $node;
+    private ClassLikeNode $node;
 
     /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
-    private $cachedReflectionConstants;
+    private ?array $cachedReflectionConstants = null;
 
     /** @var array<string, ReflectionProperty>|null */
-    private $cachedImmediateProperties;
+    private ?array $cachedImmediateProperties = null;
 
     /** @var array<string, ReflectionProperty>|null */
-    private $cachedProperties;
+    private ?array $cachedProperties = null;
 
     /** @var array<lowercase-string, ReflectionMethod>|null */
-    private $cachedMethods;
+    private ?array $cachedMethods = null;
 
     /** @var array<string, string>|null */
-    private $cachedTraitAliases;
+    private ?array $cachedTraitAliases = null;
 
     /** @var array<string, string>|null */
-    private $cachedTraitPrecedences;
+    private ?array $cachedTraitPrecedences = null;
 
     private function __construct()
     {
@@ -135,13 +131,10 @@ class ReflectionClass implements Reflection
     ) : self {
         $class = new self();
 
-        $class->reflector     = $reflector;
-        $class->locatedSource = $locatedSource;
-        $class->node          = $node;
-
-        if ($namespace !== null) {
-            $class->declaringNamespace = $namespace;
-        }
+        $class->reflector          = $reflector;
+        $class->locatedSource      = $locatedSource;
+        $class->node               = $node;
+        $class->declaringNamespace = $namespace;
 
         return $class;
     }

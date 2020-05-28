@@ -21,17 +21,13 @@ use function str_replace;
 
 final class FileCacheLoader implements LoaderMethodInterface
 {
-    /** @var string */
-    private $cacheDirectory;
+    private string $cacheDirectory;
 
-    /** @var ClassPrinterInterface */
-    private $classPrinter;
+    private ClassPrinterInterface $classPrinter;
 
-    /** @var SignerInterface */
-    private $signer;
+    private SignerInterface $signer;
 
-    /** @var CheckerInterface */
-    private $checker;
+    private CheckerInterface $checker;
 
     public function __construct(
         string $cacheDirectory,

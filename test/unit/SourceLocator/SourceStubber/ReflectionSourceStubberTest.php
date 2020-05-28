@@ -43,14 +43,11 @@ use function sort;
  */
 class ReflectionSourceStubberTest extends TestCase
 {
-    /** @var ReflectionSourceStubber */
-    private $stubber;
+    private ReflectionSourceStubber $stubber;
 
-    /** @var PhpInternalSourceLocator */
-    private $phpInternalSourceLocator;
+    private PhpInternalSourceLocator $phpInternalSourceLocator;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {

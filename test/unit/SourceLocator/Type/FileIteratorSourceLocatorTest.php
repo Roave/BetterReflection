@@ -22,8 +22,7 @@ use function sort;
  */
 class FileIteratorSourceLocatorTest extends TestCase
 {
-    /** @var FileIteratorSourceLocator */
-    private $sourceLocator;
+    private FileIteratorSourceLocator $sourceLocator;
 
     public function setUp() : void
     {

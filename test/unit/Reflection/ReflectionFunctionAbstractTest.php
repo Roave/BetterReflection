@@ -41,14 +41,11 @@ use function reset;
  */
 class ReflectionFunctionAbstractTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {

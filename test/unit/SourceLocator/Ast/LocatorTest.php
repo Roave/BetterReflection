@@ -25,8 +25,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class LocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $locator;
+    private Locator $locator;
 
     protected function setUp() : void
     {

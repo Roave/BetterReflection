@@ -15,8 +15,7 @@ use function func_get_args;
 
 class ReflectionFunction extends CoreReflectionFunction
 {
-    /** @var BetterReflectionFunction */
-    private $betterReflectionFunction;
+    private BetterReflectionFunction $betterReflectionFunction;
 
     public function __construct(BetterReflectionFunction $betterReflectionFunction)
     {

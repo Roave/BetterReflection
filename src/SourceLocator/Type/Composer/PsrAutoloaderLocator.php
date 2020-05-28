@@ -19,11 +19,9 @@ use function file_get_contents;
 
 final class PsrAutoloaderLocator implements SourceLocator
 {
-    /** @var PsrAutoloaderMapping */
-    private $mapping;
+    private PsrAutoloaderMapping $mapping;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     public function __construct(PsrAutoloaderMapping $mapping, Locator $astLocator)
     {

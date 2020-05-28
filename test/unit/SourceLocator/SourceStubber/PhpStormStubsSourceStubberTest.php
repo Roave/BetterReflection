@@ -38,20 +38,15 @@ use const PHP_VERSION_ID;
  */
 class PhpStormStubsSourceStubberTest extends TestCase
 {
-    /** @var PhpStormStubsSourceStubber */
-    private $sourceStubber;
+    private PhpStormStubsSourceStubber $sourceStubber;
 
-    /** @var PhpInternalSourceLocator */
-    private $phpInternalSourceLocator;
+    private PhpInternalSourceLocator $phpInternalSourceLocator;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
-    /** @var FunctionReflector */
-    private $functionReflector;
+    private FunctionReflector $functionReflector;
 
-    /** @var ConstantReflector */
-    private $constantReflector;
+    private ConstantReflector $constantReflector;
 
     protected function setUp() : void
     {

@@ -14,8 +14,7 @@ use function assert;
 
 class ClassReflector implements Reflector
 {
-    /** @var SourceLocator */
-    private $sourceLocator;
+    private SourceLocator $sourceLocator;
 
     public function __construct(SourceLocator $sourceLocator)
     {

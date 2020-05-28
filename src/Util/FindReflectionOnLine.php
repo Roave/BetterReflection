@@ -23,11 +23,9 @@ use function method_exists;
 
 final class FindReflectionOnLine
 {
-    /** @var SourceLocator */
-    private $sourceLocator;
+    private SourceLocator $sourceLocator;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     public function __construct(SourceLocator $sourceLocator, Locator $astLocator)
     {

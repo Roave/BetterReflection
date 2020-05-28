@@ -10,8 +10,7 @@ use function sprintf;
 
 class IdentifierNotFound extends RuntimeException
 {
-    /** @var Identifier */
-    private $identifier;
+    private Identifier $identifier;
 
     public function __construct(string $message, Identifier $identifier)
     {

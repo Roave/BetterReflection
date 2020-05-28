@@ -76,8 +76,7 @@ use function uniqid;
  */
 class ReflectionClassTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {

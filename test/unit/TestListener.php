@@ -21,8 +21,7 @@ class TestListener implements BaseTestListener
 {
     use TestListenerDefaultImplementation;
 
-    /** @var TestSuite|null */
-    private $currentSuite;
+    private ?TestSuite $currentSuite;
 
     /**
      * Determine the "full" test name (including the suite name if it is set)

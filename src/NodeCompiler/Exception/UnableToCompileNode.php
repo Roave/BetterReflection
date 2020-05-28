@@ -15,8 +15,7 @@ use function sprintf;
 
 class UnableToCompileNode extends LogicException
 {
-    /** @var string|null */
-    private $constantName;
+    private ?string $constantName = null;
 
     public function constantName() : ?string
     {

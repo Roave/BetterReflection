@@ -34,11 +34,9 @@ use function strpos;
  */
 final class AnonymousClassObjectSourceLocator implements SourceLocator
 {
-    /** @var CoreReflectionClass */
-    private $coreClassReflection;
+    private CoreReflectionClass $coreClassReflection;
 
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     /**
      * @throws ReflectionException
@@ -87,14 +85,12 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $nodeVisitor = new class($fileName, $this->coreClassReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            /** @var string */
-            private $fileName;
+            private string $fileName;
 
-            /** @var int */
-            private $startLine;
+            private int $startLine;
 
             /** @var Class_[] */
-            private $anonymousClassNodes = [];
+            private array $anonymousClassNodes = [];
 
             public function __construct(string $fileName, int $startLine)
             {

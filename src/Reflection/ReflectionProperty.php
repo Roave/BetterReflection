@@ -34,26 +34,19 @@ use function is_object;
 
 class ReflectionProperty
 {
-    /** @var ReflectionClass */
-    private $declaringClass;
+    private ReflectionClass $declaringClass;
 
-    /** @var ReflectionClass */
-    private $implementingClass;
+    private ReflectionClass $implementingClass;
 
-    /** @var PropertyNode */
-    private $node;
+    private PropertyNode $node;
 
-    /** @var int */
-    private $positionInNode;
+    private int $positionInNode;
 
-    /** @var Namespace_|null */
-    private $declaringNamespace;
+    private ?Namespace_ $declaringNamespace;
 
-    /** @var bool */
-    private $declaredAtCompileTime = true;
+    private bool $declaredAtCompileTime = true;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct()
     {

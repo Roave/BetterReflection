@@ -20,8 +20,7 @@ use function assert;
  */
 class FunctionReflectorTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {

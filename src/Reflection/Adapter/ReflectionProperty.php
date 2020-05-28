@@ -15,11 +15,9 @@ use TypeError;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
-    /** @var BetterReflectionProperty */
-    private $betterReflectionProperty;
+    private BetterReflectionProperty $betterReflectionProperty;
 
-    /** @var bool */
-    private $accessible = false;
+    private bool $accessible = false;
 
     public function __construct(BetterReflectionProperty $betterReflectionProperty)
     {

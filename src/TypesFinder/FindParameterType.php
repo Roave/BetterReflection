@@ -17,14 +17,11 @@ use function explode;
 
 class FindParameterType
 {
-    /** @var ResolveTypes */
-    private $resolveTypes;
+    private ResolveTypes $resolveTypes;
 
-    /** @var DocBlockFactory */
-    private $docBlockFactory;
+    private DocBlockFactory $docBlockFactory;
 
-    /** @var NamespaceNodeToReflectionTypeContext */
-    private $makeContext;
+    private NamespaceNodeToReflectionTypeContext $makeContext;
 
     public function __construct()
     {

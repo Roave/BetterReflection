@@ -19,8 +19,7 @@ use function trait_exists;
 
 final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
-    /** @var SourceStubber */
-    private $stubber;
+    private SourceStubber $stubber;
 
     public function __construct(Locator $astLocator, SourceStubber $stubber)
     {

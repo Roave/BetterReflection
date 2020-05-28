@@ -58,11 +58,9 @@ final class ReflectionSourceStubber implements SourceStubber
 {
     private const BUILDER_OPTIONS = ['shortArraySyntax' => true];
 
-    /** @var BuilderFactory */
-    private $builderFactory;
+    private BuilderFactory $builderFactory;
 
-    /** @var Standard */
-    private $prettyPrinter;
+    private Standard $prettyPrinter;
 
     public function __construct()
     {

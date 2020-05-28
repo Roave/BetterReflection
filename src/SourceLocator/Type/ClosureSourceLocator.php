@@ -35,11 +35,9 @@ use function strpos;
  */
 final class ClosureSourceLocator implements SourceLocator
 {
-    /** @var CoreFunctionReflection */
-    private $coreFunctionReflection;
+    private CoreFunctionReflection $coreFunctionReflection;
 
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     public function __construct(Closure $closure, Parser $parser)
     {
@@ -85,17 +83,14 @@ final class ClosureSourceLocator implements SourceLocator
 
         $nodeVisitor = new class($fileName, $this->coreFunctionReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            /** @var string */
-            private $fileName;
+            private string $fileName;
 
-            /** @var int */
-            private $startLine;
+            private int $startLine;
 
             /** @var (Node|null)[][] */
-            private $closureNodes = [];
+            private array $closureNodes = [];
 
-            /** @var Namespace_|null */
-            private $currentNamespace;
+            private ?Namespace_ $currentNamespace = null;
 
             public function __construct(string $fileName, int $startLine)
             {

@@ -42,11 +42,9 @@ use function count;
  */
 class ReflectionPropertyTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     public function setUp() : void
     {

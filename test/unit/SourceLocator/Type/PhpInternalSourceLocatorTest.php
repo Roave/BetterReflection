@@ -37,8 +37,7 @@ use const ARRAY_FILTER_USE_KEY;
  */
 class PhpInternalSourceLocatorTest extends TestCase
 {
-    /** @var PhpInternalSourceLocator */
-    private $phpInternalSourceLocator;
+    private PhpInternalSourceLocator $phpInternalSourceLocator;
 
     protected function setUp() : void
     {

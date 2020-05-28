@@ -20,8 +20,7 @@ use RuntimeException;
  */
 class CompilerContextTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {

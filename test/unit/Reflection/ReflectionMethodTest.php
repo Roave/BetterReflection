@@ -47,14 +47,11 @@ use function basename;
  */
 class ReflectionMethodTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     public function setUp() : void
     {

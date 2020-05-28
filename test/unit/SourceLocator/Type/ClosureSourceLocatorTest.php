@@ -25,11 +25,9 @@ use function sprintf;
  */
 class ClosureSourceLocatorTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     protected function setUp() : void
     {

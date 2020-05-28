@@ -28,11 +28,9 @@ use const PHP_INT_MAX;
  */
 class CompileNodeToValueTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
