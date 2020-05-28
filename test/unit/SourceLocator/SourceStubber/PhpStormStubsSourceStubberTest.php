@@ -562,4 +562,52 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
     }
+
+    public function dataCaseInsensitiveClass() : array
+    {
+        return [
+            [
+                'SoapFault',
+                'SoapFault',
+            ],
+            [
+                'SOAPFault',
+                'SoapFault',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCaseInsensitiveClass
+     */
+    public function testCaseInsensitiveClass(string $className, string $expectedClassName) : void
+    {
+        $classReflection = $this->classReflector->reflect($className);
+
+        $this->assertSame($expectedClassName, $classReflection->getName());
+    }
+
+    public function dataCaseInsensitiveFunction() : array
+    {
+        return [
+            [
+                'htmlspecialchars',
+                'htmlspecialchars',
+            ],
+            [
+                'htmlSpecialChars',
+                'htmlspecialchars',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCaseInsensitiveFunction
+     */
+    public function testCaseInsensitiveFunction(string $functionName, string $expectedFunctionName) : void
+    {
+        $functionReflection = $this->functionReflector->reflect($functionName);
+
+        $this->assertSame($expectedFunctionName, $functionReflection->getName());
+    }
 }
