@@ -80,9 +80,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @see ReflectionClass::getProperties() for the usage of $filter
      *
-     * @return ReflectionProperty[]
-     *
-     * @psalm-return array<string, ReflectionProperty>
+     * @return array<string, ReflectionProperty>
      */
     private function getRuntimeProperties(?int $filter = null) : array
     {

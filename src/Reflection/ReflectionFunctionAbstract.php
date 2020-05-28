@@ -194,9 +194,7 @@ abstract class ReflectionFunctionAbstract
      * Get an array list of the parameters for this method signature, as an
      * array of ReflectionParameter instances.
      *
-     * @return ReflectionParameter[]
-     *
-     * @psalm-return list<ReflectionParameter>
+     * @return list<ReflectionParameter>
      */
     public function getParameters() : array
     {

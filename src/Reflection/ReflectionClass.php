@@ -69,28 +69,16 @@ class ReflectionClass implements Reflection
     /** @var ClassLikeNode */
     private $node;
 
-    /**
-     * @var ReflectionClassConstant[]|null indexed by name, when present
-     * @psalm-var ?array<string, ReflectionClassConstant>
-     */
+    /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
     private $cachedReflectionConstants;
 
-    /**
-     * @var ReflectionProperty[]|null
-     * @psalm-var ?array<string, ReflectionProperty>
-     */
+    /** @var array<string, ReflectionProperty>|null */
     private $cachedImmediateProperties;
 
-    /**
-     * @var ReflectionProperty[]|null
-     * @psalm-var ?array<string, ReflectionProperty>
-     */
+    /** @var array<string, ReflectionProperty>|null */
     private $cachedProperties;
 
-    /**
-     * @var ReflectionMethod[]|null
-     * @psalm-var ?array<lowercase-string, ReflectionMethod>
-     */
+    /** @var array<lowercase-string, ReflectionMethod>|null */
     private $cachedMethods;
 
     /** @var array<string, string>|null */
@@ -194,7 +182,7 @@ class ReflectionClass implements Reflection
      * Get the "full" name of the class (e.g. for A\B\Foo, this will return
      * "A\B\Foo").
      *
-     * @psalm-return class-string
+     * @return class-string
      */
     public function getName() : string
     {
@@ -339,9 +327,7 @@ class ReflectionClass implements Reflection
      * Methods are not merged via their name as array index, since internal PHP method
      * sorting does not follow `\array_merge()` semantics.
      *
-     * @return ReflectionMethod[] indexed by method name
-     *
-     * @psalm-return array<lowercase-string, ReflectionMethod>
+     * @return array<lowercase-string, ReflectionMethod> indexed by method name
      */
     private function getMethodsIndexedByName() : array
     {
@@ -380,9 +366,7 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_FINAL
      * the only the final public methods will be returned
      *
-     * @return ReflectionMethod[]
-     *
-     * @psalm-return list<ReflectionMethod>
+     * @return list<ReflectionMethod>
      */
     public function getMethods(?int $filter = null) : array
     {
@@ -472,7 +456,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as constant values.
      *
-     * @psalm-return array<string, scalar|array<scalar>|null>
+     * @return array<string, scalar|array<scalar>|null>
      */
     public function getImmediateConstants() : array
     {
@@ -485,7 +469,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as constant values.
      *
-     * @psalm-return array<string, scalar|array<scalar>|null>
+     * @return array<string, scalar|array<scalar>|null>
      */
     public function getConstants() : array
     {
@@ -499,9 +483,7 @@ class ReflectionClass implements Reflection
      *
      * Returns null if not specified.
      *
-     * @return bool|int|float|string|array|null
-     *
-     * @psalm-return scalar|array<scalar>|null
+     * @return scalar|array<scalar>|null
      */
     public function getConstant(string $name)
     {
@@ -536,9 +518,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return ReflectionClassConstant[] indexed by name
-     *
-     * @psalm-return array<string, ReflectionClassConstant>
+     * @return array<string, ReflectionClassConstant> indexed by name
      */
     public function getImmediateReflectionConstants() : array
     {
@@ -582,9 +562,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return ReflectionClassConstant[] indexed by name
-     *
-     * @psalm-return array<string, ReflectionClassConstant>
+     * @return array<string, ReflectionClassConstant> indexed by name
      */
     public function getReflectionConstants() : array
     {
@@ -651,9 +629,7 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getProperties() for the usage of filter
      *
-     * @return ReflectionProperty[]
-     *
-     * @psalm-return array<string, ReflectionProperty>
+     * @return array<string, ReflectionProperty>
      */
     public function getImmediateProperties(?int $filter = null) : array
     {
@@ -704,9 +680,7 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionProperty::IS_STATIC | \ReflectionProperty::IS_PUBLIC
      * only the static public properties will be returned
      *
-     * @return ReflectionProperty[]
-     *
-     * @psalm-return array<string, ReflectionProperty>
+     * @return array<string, ReflectionProperty>
      */
     public function getProperties(?int $filter = null) : array
     {
@@ -783,7 +757,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @psalm-return array<string, scalar|array<scalar>|null>
+     * @return array<string, scalar|array<scalar>|null>
      */
     public function getDefaultProperties() : array
     {
@@ -859,9 +833,7 @@ class ReflectionClass implements Reflection
     /**
      * Gets the parent class names.
      *
-     * @return string[] A numerical array with parent class names as the values.
-     *
-     * @psalm-return list<class-string>
+     * @return list<class-string> A numerical array with parent class names as the values.
      */
     public function getParentClassNames() : array
     {
@@ -945,9 +917,7 @@ class ReflectionClass implements Reflection
      * Get the traits used, if any are defined. If this class does not have any
      * defined traits, this will return an empty array.
      *
-     * @return ReflectionClass[]
-     *
-     * @psalm-return list<ReflectionClass>
+     * @return list<ReflectionClass>
      */
     public function getTraits() : array
     {
@@ -1116,10 +1086,8 @@ class ReflectionClass implements Reflection
      *
      * @link https://php.net/manual/en/reflectionclass.getinterfaces.php
      *
-     * @return ReflectionClass[] An associative array of interfaces, with keys as interface names and the array
-     *                           values as {@see ReflectionClass} objects.
-     *
-     * @psalm-return array<string, ReflectionClass>
+     * @return array<string, ReflectionClass> An associative array of interfaces, with keys as interface names and the array
+     *                                        values as {@see ReflectionClass} objects.
      */
     public function getInterfaces() : array
     {
@@ -1135,9 +1103,7 @@ class ReflectionClass implements Reflection
      * Get only the interfaces that this class implements (i.e. do not search
      * up parent classes etc.)
      *
-     * @return ReflectionClass[]
-     *
-     * @psalm-return array<string, ReflectionClass>
+     * @return array<string, ReflectionClass>
      */
     public function getImmediateInterfaces() : array
     {
@@ -1149,9 +1115,7 @@ class ReflectionClass implements Reflection
      *
      * @link https://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
-     * @return string[] A numerical array with interface names as the values.
-     *
-     * @psalm-return list<string>
+     * @return list<string> A numerical array with interface names as the values.
      */
     public function getInterfaceNames() : array
     {
@@ -1273,9 +1237,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return ReflectionClass[] indexed by interface name
-     *
-     * @psalm-return array<string, ReflectionClass>
+     * @return array<string, ReflectionClass>
      */
     private function getCurrentClassImplementedInterfacesIndexedByName() : array
     {
@@ -1316,11 +1278,9 @@ class ReflectionClass implements Reflection
     /**
      * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
      *
-     * @return ReflectionClass[] parent interfaces of this interface
+     * @return array<string, ReflectionClass> parent interfaces of this interface
      *
      * @throws NotAnInterfaceReflection
-     *
-     * @psalm-return array<string, ReflectionClass>
      */
     private function getInterfacesHierarchy() : array
     {

@@ -47,10 +47,7 @@ class ReflectionParameter
     /** @var int */
     private $parameterIndex;
 
-    /**
-     * @var bool|int|float|string|array<bool|int|float|string>|null
-     * @psalm-var scalar|array<scalar>|null
-     */
+    /** @var scalar|array<scalar>|null */
     private $defaultValue;
 
     /** @var bool */
@@ -292,11 +289,9 @@ class ReflectionParameter
     /**
      * Get the default value of the parameter.
      *
-     * @return bool|int|float|string|array|null
+     * @return scalar|array<scalar>|null
      *
      * @throws LogicException
-     *
-     * @psalm-return scalar|array<scalar>|null
      */
     public function getDefaultValue()
     {

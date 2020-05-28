@@ -42,12 +42,12 @@ final class FileReadTrapStreamWrapper
     public static $autoloadLocatedFile;
 
     /**
-     * @param string[] $streamWrapperProtocols
+     * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
+     * @param string[]                              $streamWrapperProtocols
      *
      * @return mixed
      *
      * @psalm-template ExecutedMethodReturnType of mixed
-     * @psalm-param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
      * @psalm-return ExecutedMethodReturnType
      */
     public static function withStreamWrapperOverride(
