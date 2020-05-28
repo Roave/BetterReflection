@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 use ClassWithoutNamespaceForSourceStubber;
 use Closure;
 use PHPUnit\Framework\TestCase;
-use RecursiveArrayIterator;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
@@ -38,8 +37,6 @@ use function get_declared_traits;
 use function in_array;
 use function preg_match;
 use function sort;
-use function sprintf;
-use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber
@@ -245,17 +242,6 @@ class ReflectionSourceStubberTest extends TestCase
 
         foreach ($original->getMethods() as $method) {
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
-        }
-
-        if ($original->getName() === RecursiveArrayIterator::class
-            && PHP_VERSION_ID >= 70200
-            && PHP_VERSION_ID < 70202
-        ) {
-            // https://bugs.php.net/bug.php?id=75242
-            self::markTestIncomplete(sprintf(
-                'Constants of "%s" missing because of bug #75242.',
-                $original->getName()
-            ));
         }
 
         self::assertEquals($original->getConstants(), $stubbed->getConstants());
