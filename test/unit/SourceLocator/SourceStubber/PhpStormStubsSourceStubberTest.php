@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -609,5 +610,52 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionReflection = $this->functionReflector->reflect($functionName);
 
         $this->assertSame($expectedFunctionName, $functionReflection->getName());
+    }
+
+    public function dataCaseInsensitiveConstant() : array
+    {
+        return [
+            [
+                'TRUE',
+                'true',
+            ],
+            [
+                '__file__',
+                '__FILE__',
+            ],
+            [
+                'YaF_VeRsIoN',
+                'YAF_VERSION',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCaseInsensitiveConstant
+     */
+    public function testCaseInsensitiveConstant(string $constantName, string $expectedConstantName) : void
+    {
+        $constantReflector = $this->constantReflector->reflect($constantName);
+
+        $this->assertSame($expectedConstantName, $constantReflector->getName());
+    }
+
+    public function dataCaseSensitiveConstant() : array
+    {
+        return [
+            ['date_atom'],
+            ['PHP_version_ID'],
+            ['FiLeInFo_NoNe'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCaseSensitiveConstant
+     */
+    public function testCaseSensitiveConstant(string $constantName) : void
+    {
+        self::expectException(IdentifierNotFound::class);
+
+        $this->constantReflector->reflect($constantName);
     }
 }
