@@ -19,7 +19,6 @@ jobs:
         dependencies:
           - "locked"
         php-version:
-          - "7.3"
           - "7.4"
         operating-system:
           - "ubuntu-latest"
