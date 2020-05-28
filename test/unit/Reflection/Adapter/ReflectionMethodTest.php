@@ -14,7 +14,6 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMeth
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -23,6 +22,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
 use Throwable;
+use TypeError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -238,7 +238,7 @@ class ReflectionMethodTest extends TestCase
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
             ->method('getClosure')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
@@ -313,7 +313,7 @@ class ReflectionMethodTest extends TestCase
             ->willReturn(true);
         $betterReflectionMethod
             ->method('invoke')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
@@ -328,7 +328,7 @@ class ReflectionMethodTest extends TestCase
             ->willReturn(true);
         $betterReflectionMethod
             ->method('invokeArgs')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 

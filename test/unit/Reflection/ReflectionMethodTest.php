@@ -18,7 +18,6 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -449,16 +448,6 @@ PHP;
         $methodReflection->getClosure(null);
     }
 
-    public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        $methodReflection->getClosure(123);
-    }
-
     public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
@@ -555,26 +544,6 @@ PHP;
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->invokeArgs(null);
-    }
-
-    public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        $methodReflection->invoke(123);
-    }
-
-    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        $methodReflection->invokeArgs(123);
     }
 
     public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void

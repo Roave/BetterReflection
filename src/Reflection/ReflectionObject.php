@@ -20,7 +20,6 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use function array_merge;
 use function get_class;
-use function is_object;
 use function strpos;
 
 class ReflectionObject extends ReflectionClass
@@ -34,10 +33,7 @@ class ReflectionObject extends ReflectionClass
     /** @var Reflector */
     private $reflector;
 
-    /**
-     * @param object $object
-     */
-    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
+    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, object $object)
     {
         $this->reflector       = $reflector;
         $this->reflectionClass = $reflectionClass;
@@ -47,20 +43,11 @@ class ReflectionObject extends ReflectionClass
     /**
      * Pass an instance of an object to this method to reflect it
      *
-     * @param object $object
-     *
      * @throws ReflectionException
-     * @throws InvalidArgumentException
      * @throws IdentifierNotFound
-     *
-     * @psalm-suppress DocblockTypeContradiction
      */
-    public static function createFromInstance($object) : ReflectionClass
+    public static function createFromInstance(object $object) : ReflectionClass
     {
-        if (! is_object($object)) {
-            throw new InvalidArgumentException('Can only create from an instance of an object');
-        }
-
         $className = get_class($object);
 
         if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
@@ -132,10 +119,8 @@ class ReflectionObject extends ReflectionClass
      *
      * Note that we don't copy across DocBlock, protected, private or static
      * because runtime properties can't have these attributes.
-     *
-     * @param object $instance
      */
-    private function createPropertyNodeFromReflection(CoreReflectionProperty $property, $instance) : PropertyNode
+    private function createPropertyNodeFromReflection(CoreReflectionProperty $property, object $instance) : PropertyNode
     {
         $builder = new PropertyNodeBuilder($property->getName());
         $builder->setDefault($property->getValue($instance));

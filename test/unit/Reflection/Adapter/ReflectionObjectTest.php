@@ -10,13 +10,13 @@ use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
+use TypeError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -419,7 +419,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject
             ->method('isInstance')
             ->with('string')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
 

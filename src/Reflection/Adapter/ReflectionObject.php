@@ -6,12 +6,12 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+use TypeError;
 use function array_combine;
 use function array_map;
 use function array_values;
@@ -355,7 +355,7 @@ class ReflectionObject extends CoreReflectionObject
     {
         try {
             return $this->betterReflectionObject->isInstance($object);
-        } catch (NotAnObject $e) {
+        } catch (TypeError $e) {
             return null;
         }
     }

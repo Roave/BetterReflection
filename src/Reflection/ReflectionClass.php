@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use InvalidArgumentException;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -47,7 +46,6 @@ use function array_values;
 use function assert;
 use function implode;
 use function in_array;
-use function is_object;
 use function ltrim;
 use function sha1;
 use function sprintf;
@@ -125,20 +123,11 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionObject::createFromInstance
      *
-     * @param object $instance
-     *
      * @throws IdentifierNotFound
      * @throws ReflectionException
-     * @throws InvalidArgumentException
-     *
-     * @psalm-suppress DocblockTypeContradiction
      */
-    public static function createFromInstance($instance) : self
+    public static function createFromInstance(object $instance) : self
     {
-        if (! is_object($instance)) {
-            throw new InvalidArgumentException('Instance must be an instance of an object');
-        }
-
         return ReflectionObject::createFromInstance($instance);
     }
 
@@ -1167,19 +1156,9 @@ class ReflectionClass implements Reflection
      * Checks whether the given object is an instance.
      *
      * @link https://php.net/manual/en/reflectionclass.isinstance.php
-     *
-     * @param object $object
-     *
-     * @throws NotAnObject
-     *
-     * @psalm-suppress DocblockTypeContradiction
      */
-    public function isInstance($object) : bool
+    public function isInstance(object $object) : bool
     {
-        if (! is_object($object)) {
-            throw NotAnObject::fromNonObject($object);
-        }
-
         $className = $this->getName();
 
         // note: since $object was loaded, we can safely assume that $className is available in the current
