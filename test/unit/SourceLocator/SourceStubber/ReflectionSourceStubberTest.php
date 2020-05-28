@@ -59,7 +59,7 @@ class ReflectionSourceStubberTest extends TestCase
         $this->stubber                  = new ReflectionSourceStubber();
         $this->phpInternalSourceLocator = new PhpInternalSourceLocator(
             BetterReflectionSingleton::instance()->astLocator(),
-            $this->stubber
+            $this->stubber,
         );
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
     }
@@ -71,7 +71,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             '%Aclass stdClass%A{%A}%A',
-            $stubData->getStub()
+            $stubData->getStub(),
         );
         self::assertSame('Core', $stubData->getExtensionName());
     }
@@ -83,7 +83,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             '%Ainterface Traversable%A{%A}%A',
-            $stubData->getStub()
+            $stubData->getStub(),
         );
         self::assertSame('Core', $stubData->getExtensionName());
     }
@@ -97,7 +97,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             '%Atrait EmptyTrait%A{%A}%A',
-            $stubData->getStub()
+            $stubData->getStub(),
         );
         self::assertNull($stubData->getExtensionName());
     }
@@ -166,7 +166,7 @@ class ReflectionSourceStubberTest extends TestCase
         $allSymbols = array_merge(
             get_declared_classes(),
             get_declared_interfaces(),
-            get_declared_traits()
+            get_declared_traits(),
         );
 
         return array_map(
@@ -184,8 +184,8 @@ class ReflectionSourceStubberTest extends TestCase
 
                     // Classes in "memcache" extension contain methods with parameters without name
                     return $reflection->getExtensionName() !== 'memcache';
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -218,7 +218,7 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertSame(
             $originalParentClass ? $originalParentClass->getName() : null,
-            $stubbedParentClass ? $stubbedParentClass->getName() : null
+            $stubbedParentClass ? $stubbedParentClass->getName() : null,
         );
     }
 
@@ -253,13 +253,13 @@ class ReflectionSourceStubberTest extends TestCase
             static function (CoreReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
-            $original->getParameters()
+            $original->getParameters(),
         );
         $stubParameterNames     = array_map(
             static function (ReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
-            $stubbed->getParameters()
+            $stubbed->getParameters(),
         );
 
         self::assertSame($originalParameterNames, $stubParameterNames);
@@ -268,7 +268,7 @@ class ReflectionSourceStubberTest extends TestCase
             $this->assertSameParameterAttributes(
                 $original,
                 $parameter,
-                $stubbed->getParameter($parameter->getName())
+                $stubbed->getParameter($parameter->getName()),
             );
         }
 
@@ -383,7 +383,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
             "%Adefine('E_ALL',%A",
-            $stubData->getStub()
+            $stubData->getStub(),
         );
         self::assertSame('Core', $stubData->getExtensionName());
     }

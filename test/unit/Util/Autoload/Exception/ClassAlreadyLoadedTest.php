@@ -27,7 +27,7 @@ final class ClassAlreadyLoadedTest extends TestCase
         self::assertInstanceOf(ClassAlreadyLoaded::class, $exception);
         self::assertSame(
             sprintf('Class %s has already been loaded into memory so cannot be modified', $className),
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

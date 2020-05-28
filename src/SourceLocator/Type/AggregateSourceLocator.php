@@ -51,7 +51,7 @@ class AggregateSourceLocator implements SourceLocator
             [],
             ...array_map(static function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
                 return $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
-            }, $this->sourceLocators)
+            }, $this->sourceLocators),
         );
     }
 }

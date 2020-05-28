@@ -46,7 +46,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         $this->psrLocator = new PsrAutoloaderLocator(
             $this->psrMapping,
             BetterReflectionSingleton::instance()
-                ->astLocator()
+                ->astLocator(),
         );
         $this->reflector  = new ClassReflector($this->psrLocator);
         $this
@@ -83,8 +83,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 Foo::class,
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         self::assertNotNull($located);
@@ -97,8 +97,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 Foo::class . 'potato',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -108,8 +108,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\Bar\\Empty',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -119,8 +119,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Blah',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -138,7 +138,7 @@ class PsrAutoloaderLocatorTest extends TestCase
                     __DIR__ . '/../../../Assets/DirectoryScannerAssetsFoo',
                 ],
             ]),
-            $astLocator
+            $astLocator,
         );
 
         $expected = [
@@ -154,8 +154,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             },
             $locator->locateIdentifiersByType(
                 new ClassReflector($locator),
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         // Sorting may depend on filesystem here

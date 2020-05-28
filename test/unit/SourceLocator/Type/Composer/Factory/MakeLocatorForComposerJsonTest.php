@@ -32,7 +32,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
         self::assertEquals(
             $expectedLocatorStructure,
             (new MakeLocatorForComposerJson())
-                ->__invoke($projectDirectory, BetterReflectionSingleton::instance()->astLocator())
+                ->__invoke($projectDirectory, BetterReflectionSingleton::instance()->astLocator()),
         );
     }
 
@@ -55,7 +55,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
                         $projectA . '/src/root_PSR-4_Sources',
                     ],
                 ]),
-                $astLocator
+                $astLocator,
             ),
             new PsrAutoloaderLocator(
                 Psr0Mapping::fromArrayMappings([
@@ -66,25 +66,25 @@ class MakeLocatorForComposerJsonTest extends TestCase
                         $projectA . '/src/root_PSR-0_Sources',
                     ],
                 ]),
-                $astLocator
+                $astLocator,
             ),
             new DirectoriesSourceLocator(
                 [
                     $projectA . '/src/root_ClassmapDir',
                 ],
-                $astLocator
+                $astLocator,
             ),
             new SingleFileSourceLocator(
                 $projectA . '/src/root_ClassmapFile',
-                $astLocator
+                $astLocator,
             ),
             new SingleFileSourceLocator(
                 $projectA . '/src/root_File1.php',
-                $astLocator
+                $astLocator,
             ),
             new SingleFileSourceLocator(
                 $projectA . '/src/root_File2.php',
-                $astLocator
+                $astLocator,
             ),
         ]);
 
@@ -102,7 +102,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
                                 $projectWithPsrCollisions . '/src/root_PSR-4_Sources',
                             ],
                         ]),
-                        $astLocator
+                        $astLocator,
                     ),
                     new PsrAutoloaderLocator(
                         Psr0Mapping::fromArrayMappings([
@@ -110,7 +110,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
                                 $projectWithPsrCollisions . '/src/root_PSR-0_Sources',
                             ],
                         ]),
-                        $astLocator
+                        $astLocator,
                     ),
                     new DirectoriesSourceLocator([], $astLocator),
                 ]),
@@ -132,7 +132,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
         (new MakeLocatorForComposerJson())
             ->__invoke(
                 __DIR__ . '/../../../../Assets/ComposerLocators/empty-project',
-                BetterReflectionSingleton::instance()->astLocator()
+                BetterReflectionSingleton::instance()->astLocator(),
             );
     }
 
@@ -143,7 +143,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
         (new MakeLocatorForComposerJson())
             ->__invoke(
                 __DIR__ . '/../../../../Assets/ComposerLocators/project-with-invalid-composer-json',
-                BetterReflectionSingleton::instance()->astLocator()
+                BetterReflectionSingleton::instance()->astLocator(),
             );
     }
 
@@ -154,7 +154,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
         (new MakeLocatorForComposerJson())
             ->__invoke(
                 __DIR__ . '/../../../../Assets/ComposerLocators/non-existing',
-                BetterReflectionSingleton::instance()->astLocator()
+                BetterReflectionSingleton::instance()->astLocator(),
             );
     }
 }

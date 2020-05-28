@@ -80,7 +80,7 @@ class ResolveTypesTest extends TestCase
             [
                 'Bar' => 'Foo\Bar',
                 'Baz' => 'Bat\Baz',
-            ]
+            ],
         );
 
         $resolvedTypes = (new ResolveTypes())->__invoke([$inputType], $context);

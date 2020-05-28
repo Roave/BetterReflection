@@ -35,7 +35,7 @@ class NotAnInterfaceReflectionTest extends TestCase
         self::assertInstanceOf(NotAnInterfaceReflection::class, $exception);
         self::assertSame(
             'Provided node "' . Fixture\ExampleClass::class . '" is not interface, but "class"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 
@@ -47,7 +47,7 @@ class NotAnInterfaceReflectionTest extends TestCase
         self::assertInstanceOf(NotAnInterfaceReflection::class, $exception);
         self::assertSame(
             'Provided node "' . Fixture\ExampleTrait::class . '" is not interface, but "trait"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

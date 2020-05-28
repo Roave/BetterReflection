@@ -47,12 +47,12 @@ class DirectoriesSourceLocator implements SourceLocator
                 return new FileIteratorSourceLocator(
                     new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                         $directory,
-                        RecursiveDirectoryIterator::SKIP_DOTS
+                        RecursiveDirectoryIterator::SKIP_DOTS,
                     )),
-                    $astLocator
+                    $astLocator,
                 );
             },
-            $directories
+            $directories,
         )));
     }
 

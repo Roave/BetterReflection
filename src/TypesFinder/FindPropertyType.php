@@ -53,7 +53,7 @@ class FindPropertyType
             [],
             ...array_map(function (Var_ $varTag) use ($context) {
                 return $this->resolveTypes->__invoke(explode('|', (string) $varTag->getType()), $context);
-            }, $varTags)
+            }, $varTags),
         );
     }
 }

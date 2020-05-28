@@ -17,7 +17,7 @@ final class InvalidPrefixMappingTest extends TestCase
         self::assertSame(
             'An invalid empty string provided as a PSR mapping prefix',
             InvalidPrefixMapping::emptyPrefixGiven()
-                ->getMessage()
+                ->getMessage(),
         );
     }
 
@@ -26,7 +26,7 @@ final class InvalidPrefixMappingTest extends TestCase
         self::assertSame(
             'Provided path "A\" for prefix "a/b" is not a directory',
             InvalidPrefixMapping::prefixMappingIsNotADirectory('A\\', 'a/b')
-                ->getMessage()
+                ->getMessage(),
         );
     }
 
@@ -35,7 +35,7 @@ final class InvalidPrefixMappingTest extends TestCase
         self::assertSame(
             'An invalid empty list of paths was provided for PSR mapping prefix "A\"',
             InvalidPrefixMapping::emptyPrefixMappingGiven('A\\')
-                ->getMessage()
+                ->getMessage(),
         );
     }
 }

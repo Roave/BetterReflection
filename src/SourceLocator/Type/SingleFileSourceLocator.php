@@ -47,7 +47,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     {
         return new LocatedSource(
             file_get_contents($this->fileName),
-            $this->fileName
+            $this->fileName,
         );
     }
 }

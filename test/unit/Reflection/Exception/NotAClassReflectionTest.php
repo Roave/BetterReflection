@@ -35,7 +35,7 @@ class NotAClassReflectionTest extends TestCase
         self::assertInstanceOf(NotAClassReflection::class, $exception);
         self::assertSame(
             'Provided node "' . Fixture\ExampleInterface::class . '" is not class, but "interface"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 
@@ -47,7 +47,7 @@ class NotAClassReflectionTest extends TestCase
         self::assertInstanceOf(NotAClassReflection::class, $exception);
         self::assertSame(
             'Provided node "' . Fixture\ExampleTrait::class . '" is not class, but "trait"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

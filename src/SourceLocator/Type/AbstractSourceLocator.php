@@ -69,7 +69,7 @@ abstract class AbstractSourceLocator implements SourceLocator
         return $this->astLocator->findReflectionsOfType(
             $reflector,
             $locatedSource,
-            $identifierType
+            $identifierType,
         );
     }
 }

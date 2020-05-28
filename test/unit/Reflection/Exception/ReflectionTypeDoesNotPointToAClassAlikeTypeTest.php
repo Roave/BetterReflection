@@ -27,7 +27,7 @@ class ReflectionTypeDoesNotPointToAClassAlikeTypeTest extends TestCase
         self::assertInstanceOf(ReflectionTypeDoesNotPointToAClassAlikeType::class, $exception);
         self::assertStringMatchesFormat(
             'Provided %s instance does not point to a class-alike type, but to "another potato"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

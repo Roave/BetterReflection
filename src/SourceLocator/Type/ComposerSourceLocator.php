@@ -51,7 +51,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
 
         return new LocatedSource(
             file_get_contents($filename),
-            $filename
+            $filename,
         );
     }
 }

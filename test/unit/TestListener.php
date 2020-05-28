@@ -46,7 +46,7 @@ class TestListener implements BaseTestListener
     {
         TestCase::assertFalse(
             class_exists($className, false),
-            'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test)
+            'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test),
         );
     }
 

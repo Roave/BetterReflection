@@ -58,7 +58,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         $reflection = $locator->locateIdentifier(
             $this->getMockReflector(),
-            new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
         assert($reflection instanceof ReflectionClass);
         $source = $reflection->getLocatedSource();
@@ -77,7 +77,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         $reflection = $locator->locateIdentifier(
             $this->getMockReflector(),
-            new Identifier($interfaceName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            new Identifier($interfaceName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
 
         self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
@@ -94,7 +94,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         $reflection = $locator->locateIdentifier(
             $this->getMockReflector(),
-            new Identifier($traitName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            new Identifier($traitName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
 
         self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
@@ -122,7 +122,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
     {
         self::assertNull(
             (new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(self::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+                ->locateIdentifier($this->getMockReflector(), new Identifier(self::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))),
         );
     }
 
@@ -134,9 +134,9 @@ class EvaledCodeSourceLocatorTest extends TestCase
                 $this->getMockReflector(),
                 new Identifier(
                     'Foo\Bar',
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                )
-            )
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ),
+            ),
         );
     }
 
@@ -148,9 +148,9 @@ class EvaledCodeSourceLocatorTest extends TestCase
                 $this->getMockReflector(),
                 new Identifier(
                     'foo',
-                    new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-                )
-            )
+                    new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+                ),
+            ),
         );
     }
 }

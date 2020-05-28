@@ -303,7 +303,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($expectedModifier, $method->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            Reflection::getModifierNames($method->getModifiers())
+            Reflection::getModifierNames($method->getModifiers()),
         );
     }
 

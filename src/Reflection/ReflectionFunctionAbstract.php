@@ -186,7 +186,7 @@ abstract class ReflectionFunctionAbstract
             $this->getParameters(),
             static function (ReflectionParameter $p) : bool {
                 return ! $p->isOptional();
-            }
+            },
         ));
     }
 
@@ -208,7 +208,7 @@ abstract class ReflectionFunctionAbstract
                 $paramNode,
                 $this->declaringNamespace,
                 $this,
-                $paramIndex
+                $paramIndex,
             );
         }
 
@@ -501,7 +501,7 @@ abstract class ReflectionFunctionAbstract
     {
         $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
             $this->reflector,
-            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
         );
         assert($closureReflection instanceof self);
 

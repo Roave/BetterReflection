@@ -210,7 +210,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($expectedModifier, $property->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            Reflection::getModifierNames($property->getModifiers())
+            Reflection::getModifierNames($property->getModifiers()),
         );
     }
 
@@ -234,9 +234,9 @@ class ReflectionPropertyTest extends TestCase
                 null,
                 $classInfo,
                 $classInfo,
-                false
+                false,
             )
-            ->isDefault()
+            ->isDefault(),
         );
     }
 
@@ -658,7 +658,7 @@ PHP;
         self::assertSame('string', (string) $propertyReflection->getType());
         self::assertStringStartsWith(
             'public string $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
     }
 
@@ -672,7 +672,7 @@ PHP;
         self::assertNull($propertyReflection->getType());
         self::assertStringStartsWith(
             'public $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
     }
 }

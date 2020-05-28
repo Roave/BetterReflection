@@ -91,7 +91,7 @@ class ReflectionTypeTest extends TestCase
         $type = ReflectionType::createFromTypeAndReflector(
             'int',
             true,
-            $this->reflector
+            $this->reflector,
         );
 
         $this
@@ -109,7 +109,7 @@ class ReflectionTypeTest extends TestCase
         $type = ReflectionType::createFromTypeAndReflector(
             '\Foo\Bar',
             true,
-            $this->reflector
+            $this->reflector,
         );
 
         $reflection = $this->createMock(Reflection::class);
@@ -131,7 +131,7 @@ class ReflectionTypeTest extends TestCase
         $type = ReflectionType::createFromTypeAndReflector(
             'Foo\Bar',
             true,
-            $this->reflector
+            $this->reflector,
         );
 
         $reflection = $this->createMock(ReflectionClass::class);

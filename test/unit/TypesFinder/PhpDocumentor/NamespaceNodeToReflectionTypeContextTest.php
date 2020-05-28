@@ -48,11 +48,11 @@ class NamespaceNodeToReflectionTypeContextTest extends TestCase
                     [
                         new UseUse(new Name('MMM')),
                         new UseUse(new Name('NNN'), 'OOO'),
-                    ]
+                    ],
                 ),
                 (new Use_('\\PPP', UseStatement::TYPE_NORMAL))->getNode(),
                 new Class_('ClassNode'), // class node, should be ignored
-            ]
+            ],
         );
 
         return [
@@ -88,7 +88,7 @@ class NamespaceNodeToReflectionTypeContextTest extends TestCase
                         'MMM' => 'LLL\\MMM',
                         'OOO' => 'LLL\\NNN',
                         'PPP' => 'PPP',
-                    ]
+                    ],
                 ),
             ],
         ];

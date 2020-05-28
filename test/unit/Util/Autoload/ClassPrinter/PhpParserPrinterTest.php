@@ -30,8 +30,8 @@ class TestClassForPhpParserPrinterTest
 PHP
             ,
             (new PhpParserPrinter())->__invoke(
-                ReflectionClass::createFromName(TestClassForPhpParserPrinterTest::class)
-            )
+                ReflectionClass::createFromName(TestClassForPhpParserPrinterTest::class),
+            ),
         );
     }
 }

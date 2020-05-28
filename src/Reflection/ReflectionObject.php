@@ -53,7 +53,7 @@ class ReflectionObject extends ReflectionClass
         if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
                 $object,
-                (new BetterReflection())->phpParser()
+                (new BetterReflection())->phpParser(),
             ));
         } else {
             $reflector = (new BetterReflection())->classReflector();
@@ -99,7 +99,7 @@ class ReflectionObject extends ReflectionClass
                     : null,
                 $this,
                 $this,
-                false
+                false,
             );
 
             if ($filter !== null && ! ($filter & $runtimeProperty->getModifiers())) {
@@ -243,7 +243,7 @@ class ReflectionObject extends ReflectionClass
     {
         return array_merge(
             $this->reflectionClass->getProperties($filter),
-            $this->getRuntimeProperties($filter)
+            $this->getRuntimeProperties($filter),
         );
     }
 
@@ -254,7 +254,7 @@ class ReflectionObject extends ReflectionClass
     {
         return array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
-            $this->getRuntimeProperties($filter)
+            $this->getRuntimeProperties($filter),
         );
     }
 

@@ -132,7 +132,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         throw new Exception\MethodPrototypeNotFound(sprintf(
             'Method %s::%s does not have a prototype',
             $this->getDeclaringClass()->getName(),
-            $this->getName()
+            $this->getName(),
         ));
     }
 

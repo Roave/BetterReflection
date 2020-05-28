@@ -28,7 +28,7 @@ final class ReflectionConstantStringCast
             gettype($value),
             $constantReflection->getName(),
             self::fileAndLinesToString($constantReflection),
-            (string) $value
+            (string) $value,
         );
     }
 

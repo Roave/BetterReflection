@@ -79,7 +79,7 @@ class Psr4MappingTest extends TestCase
     {
         self::assertEquals(
             $expectedFiles,
-            Psr4Mapping::fromArrayMappings($mappings)->resolvePossibleFilePaths($identifier)
+            Psr4Mapping::fromArrayMappings($mappings)->resolvePossibleFilePaths($identifier),
         );
     }
 

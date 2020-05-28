@@ -146,7 +146,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             $reflector,
             $nodeVisitor->getAnonymousClassNode(),
             new LocatedSource($fileContents, $fileName),
-            null
+            null,
         );
         assert($reflectionClass instanceof ReflectionClass || $reflectionClass === null);
 

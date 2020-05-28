@@ -17,7 +17,7 @@ class InvalidProjectDirectoryTest extends TestCase
         self::assertSame(
             'Could not locate project directory "foo/bar"',
             InvalidProjectDirectory::atPath('foo/bar')
-                ->getMessage()
+                ->getMessage(),
         );
     }
 }

@@ -37,7 +37,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
                     return rtrim($directory, '/');
                 }, $directories);
             },
-            $mappings
+            $mappings,
         );
 
         return $instance;
@@ -58,7 +58,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
                     static function (string $path) use ($className) : string {
                         return rtrim($path, '/') . '/' . str_replace(['\\', '_'], '/', $className) . '.php';
                     },
-                    $paths
+                    $paths,
                 );
             }
         }

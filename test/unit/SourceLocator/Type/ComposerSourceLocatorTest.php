@@ -57,7 +57,7 @@ class ComposerSourceLocatorTest extends TestCase
 
         $reflectionClass = $locator->locateIdentifier($this->getMockReflector(), new Identifier(
             $className,
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         ));
 
         self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
@@ -80,7 +80,7 @@ class ComposerSourceLocatorTest extends TestCase
 
         self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             $className,
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         )));
     }
 
@@ -93,7 +93,7 @@ class ComposerSourceLocatorTest extends TestCase
 
         self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
             'foo',
-            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
         )));
     }
 }

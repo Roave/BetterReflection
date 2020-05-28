@@ -18,7 +18,7 @@ class InvalidPrefixMapping extends InvalidArgumentException implements Exception
     {
         return new self(sprintf(
             'An invalid empty list of paths was provided for PSR mapping prefix "%s"',
-            $prefix
+            $prefix,
         ));
     }
 
@@ -27,7 +27,7 @@ class InvalidPrefixMapping extends InvalidArgumentException implements Exception
         return new self(sprintf(
             'Provided path "%s" for prefix "%s" is not a directory',
             $prefix,
-            $path
+            $path,
         ));
     }
 }

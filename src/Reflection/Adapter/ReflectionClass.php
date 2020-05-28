@@ -252,7 +252,7 @@ class ReflectionClass extends CoreReflectionClass
     public function getReflectionConstant($name)
     {
         return new ReflectionClassConstant(
-            $this->betterReflectionClass->getReflectionConstant($name)
+            $this->betterReflectionClass->getReflectionConstant($name),
         );
     }
 
@@ -313,15 +313,15 @@ class ReflectionClass extends CoreReflectionClass
             $traitNames,
             array_map(static function (BetterReflectionClass $trait) : self {
                 return new self($trait);
-            }, $traits)
+            }, $traits),
         );
 
         assert(
             is_array($traitsByName),
             sprintf(
                 'Could not create an array<trait-string, ReflectionClass> for class "%s"',
-                $this->betterReflectionClass->getName()
-            )
+                $this->betterReflectionClass->getName(),
+            ),
         );
 
         return $traitsByName;

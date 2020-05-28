@@ -34,7 +34,7 @@ class NodeToReflection implements AstConversionStrategy
                 $reflector,
                 $node,
                 $locatedSource,
-                $namespace
+                $namespace,
             );
         }
 
@@ -46,7 +46,7 @@ class NodeToReflection implements AstConversionStrategy
                 $reflector,
                 $node,
                 $locatedSource,
-                $namespace
+                $namespace,
             );
         }
 

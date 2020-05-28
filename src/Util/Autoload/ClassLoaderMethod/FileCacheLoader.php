@@ -58,7 +58,7 @@ final class FileCacheLoader implements LoaderMethodInterface
             $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);
             file_put_contents(
                 $filename,
-                str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code)
+                str_replace('<?php', "<?php\n// " . $this->signer->sign($code), $code),
             );
         }
 
@@ -76,7 +76,7 @@ final class FileCacheLoader implements LoaderMethodInterface
             $cacheDirectory,
             new PhpParserPrinter(),
             new FileContentSigner(new Sha1SumEncoder()),
-            new FileContentChecker(new Sha1SumEncoder())
+            new FileContentChecker(new Sha1SumEncoder()),
         );
     }
 }

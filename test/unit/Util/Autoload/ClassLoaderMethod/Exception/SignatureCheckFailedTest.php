@@ -26,7 +26,7 @@ final class SignatureCheckFailedTest extends TestCase
         self::assertInstanceOf(SignatureCheckFailed::class, $exception);
         self::assertSame(
             sprintf('Failed to verify the signature of the cached file for %s', $className),
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

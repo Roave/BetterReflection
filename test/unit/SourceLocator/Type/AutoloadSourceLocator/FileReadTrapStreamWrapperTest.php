@@ -54,8 +54,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
                     return 'value produced by the function';
                 },
-                ['file']
-            )
+                ['file'],
+            ),
         );
 
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
@@ -94,8 +94,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
                     return 'the value produced by the function';
                 },
-                ['file']
-            )
+                ['file'],
+            ),
         );
 
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
@@ -132,8 +132,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
                     return 'another value produced by the function';
                 },
-                ['http']
-            )
+                ['http'],
+            ),
         );
 
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
@@ -155,8 +155,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
                         throw $thrown;
                     },
-                    ['http']
-                )
+                    ['http'],
+                ),
             );
 
             self::fail('No exception was raised');
@@ -172,7 +172,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
     {
         self::assertTrue(
             class_exists(Warning::class),
-            'The warning class should not be autoloaded lazily for this specific test'
+            'The warning class should not be autoloaded lazily for this specific test',
         );
 
         $nonExistingFile = __DIR__ . uniqid('non-existing-file', true);
@@ -193,8 +193,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
                     return 'another value produced by the function';
                 },
-                ['file']
-            )
+                ['file'],
+            ),
         );
 
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
