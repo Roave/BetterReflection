@@ -24,14 +24,11 @@ use function strpos;
 
 class ReflectionObject extends ReflectionClass
 {
-    /** @var ReflectionClass */
-    private $reflectionClass;
+    private ReflectionClass $reflectionClass;
 
-    /** @var object */
-    private $object;
+    private object $object;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, object $object)
     {

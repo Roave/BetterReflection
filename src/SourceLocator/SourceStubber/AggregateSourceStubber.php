@@ -10,7 +10,7 @@ use function array_reduce;
 class AggregateSourceStubber implements SourceStubber
 {
     /** @var SourceStubber[] */
-    private $sourceStubbers;
+    private array $sourceStubbers;
 
     public function __construct(SourceStubber $sourceStubber, SourceStubber ...$otherSourceStubbers)
     {

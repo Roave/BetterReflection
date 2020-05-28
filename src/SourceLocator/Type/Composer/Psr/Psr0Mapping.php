@@ -18,7 +18,7 @@ use function strpos;
 final class Psr0Mapping implements PsrAutoloaderMapping
 {
     /** @var array<string, array<int, string>> */
-    private $mappings = [];
+    private array $mappings = [];
 
     private function __construct()
     {

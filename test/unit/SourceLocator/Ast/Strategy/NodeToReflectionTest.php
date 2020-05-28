@@ -23,11 +23,9 @@ use function reset;
  */
 class NodeToReflectionTest extends TestCase
 {
-    /** @var Parser */
-    private $phpParser;
+    private Parser $phpParser;
 
-    /** @var NodeTraverser */
-    private $nodeTraverser;
+    private NodeTraverser $nodeTraverser;
 
     protected function setUp() : void
     {

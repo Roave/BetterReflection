@@ -24,7 +24,7 @@ use const ARRAY_FILTER_USE_KEY;
 final class Psr4Mapping implements PsrAutoloaderMapping
 {
     /** @var array<string, array<int, string>> */
-    private $mappings = [];
+    private array $mappings = [];
 
     private function __construct()
     {

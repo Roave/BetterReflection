@@ -25,14 +25,12 @@ use const PATHINFO_EXTENSION;
  */
 class FileIteratorSourceLocator implements SourceLocator
 {
-    /** @var AggregateSourceLocator|null */
-    private $aggregateSourceLocator;
+    private ?AggregateSourceLocator $aggregateSourceLocator = null;
 
     /** @var Iterator|SplFileInfo[] */
-    private $fileSystemIterator;
+    private Iterator $fileSystemIterator;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     /**
      * @param Iterator|SplFileInfo[] $fileInfoIterator note: only SplFileInfo allowed in this iterator

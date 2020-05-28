@@ -43,20 +43,16 @@ abstract class ReflectionFunctionAbstract
 {
     public const CLOSURE_NAME = '{closure}';
 
-    /** @var NamespaceNode|null */
-    private $declaringNamespace;
+    private ?NamespaceNode $declaringNamespace;
 
-    /** @var LocatedSource */
-    private $locatedSource;
+    private LocatedSource $locatedSource;
 
     /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null */
     private $node;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
-    /** @var Parser|null */
-    private static $parser;
+    private static ?Parser $parser;
 
     protected function __construct()
     {

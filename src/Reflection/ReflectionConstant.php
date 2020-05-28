@@ -26,20 +26,16 @@ use function substr_count;
 
 class ReflectionConstant implements Reflection
 {
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     /** @var Node\Stmt\Const_|Node\Expr\FuncCall */
     private $node;
 
-    /** @var LocatedSource */
-    private $locatedSource;
+    private LocatedSource $locatedSource;
 
-    /** @var NamespaceNode|null */
-    private $declaringNamespace;
+    private ?NamespaceNode $declaringNamespace;
 
-    /** @var int|null */
-    private $positionInNode;
+    private ?int $positionInNode;
 
     /**
      * @var bool|int|float|string|array<bool|int|float|string>|null const value
@@ -47,8 +43,7 @@ class ReflectionConstant implements Reflection
      */
     private $value;
 
-    /** @var bool */
-    private $valueWasCached = false;
+    private bool $valueWasCached = false;
 
     private function __construct()
     {

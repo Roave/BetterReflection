@@ -21,8 +21,7 @@ use function assert;
  */
 class ComposerSourceLocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {

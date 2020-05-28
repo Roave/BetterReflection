@@ -20,8 +20,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class StringSourceLocator extends AbstractSourceLocator
 {
-    /** @var string */
-    private $source;
+    private string $source;
 
     /**
      * @throws EmptyPhpSourceCode

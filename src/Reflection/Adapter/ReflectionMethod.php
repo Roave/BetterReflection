@@ -17,11 +17,9 @@ use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
-    /** @var BetterReflectionMethod */
-    private $betterReflectionMethod;
+    private BetterReflectionMethod $betterReflectionMethod;
 
-    /** @var bool */
-    private $accessible = false;
+    private bool $accessible = false;
 
     public function __construct(BetterReflectionMethod $betterReflectionMethod)
     {

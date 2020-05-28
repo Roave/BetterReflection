@@ -15,8 +15,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 abstract class AbstractSourceLocator implements SourceLocator
 {
-    /** @var AstLocator */
-    private $astLocator;
+    private AstLocator $astLocator;
 
     /**
      * Children should implement this method and return a LocatedSource object

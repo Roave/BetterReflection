@@ -23,8 +23,7 @@ use function strtolower;
 
 class ReflectionObject extends CoreReflectionObject
 {
-    /** @var BetterReflectionObject */
-    private $betterReflectionObject;
+    private BetterReflectionObject $betterReflectionObject;
 
     public function __construct(BetterReflectionObject $betterReflectionObject)
     {

@@ -22,11 +22,9 @@ use function strtolower;
  */
 class Locator
 {
-    /** @var FindReflectionsInTree */
-    private $findReflectionsInTree;
+    private FindReflectionsInTree $findReflectionsInTree;
 
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     /**
      * @param Closure(): FunctionReflector $functionReflectorGetter

@@ -37,14 +37,12 @@ class MemoizingSourceLocatorTest extends TestCase
     /** @var SourceLocator|MockObject */
     private $wrappedLocator;
 
-    /** @var MemoizingSourceLocator */
-    private $memoizingLocator;
+    private MemoizingSourceLocator $memoizingLocator;
 
     /** @var string[] */
-    private $identifierNames;
+    private array $identifierNames;
 
-    /** @var int */
-    private $identifierCount;
+    private int $identifierCount;
 
     protected function setUp() : void
     {

@@ -24,17 +24,13 @@ use function strtolower;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
-    /** @var ReflectionClass */
-    private $declaringClass;
+    private ReflectionClass $declaringClass;
 
-    /** @var ReflectionClass */
-    private $implementingClass;
+    private ReflectionClass $implementingClass;
 
-    /** @var MethodNode */
-    private $methodNode;
+    private MethodNode $methodNode;
 
-    /** @var string|null */
-    private $aliasName;
+    private ?string $aliasName;
 
     /**
      * @internal

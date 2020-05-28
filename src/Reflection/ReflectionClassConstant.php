@@ -15,8 +15,7 @@ use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant
 {
-    /** @var bool */
-    private $valueWasCached = false;
+    private bool $valueWasCached = false;
 
     /**
      * @var bool|int|float|string|array<bool|int|float|string>|null const value
@@ -24,17 +23,14 @@ class ReflectionClassConstant
      */
     private $value;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     /** @var ReflectionClass Constant owner */
-    private $owner;
+    private ReflectionClass $owner;
 
-    /** @var ClassConst */
-    private $node;
+    private ClassConst $node;
 
-    /** @var int */
-    private $positionInNode;
+    private int $positionInNode;
 
     private function __construct()
     {

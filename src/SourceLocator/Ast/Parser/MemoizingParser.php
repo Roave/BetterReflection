@@ -18,10 +18,9 @@ use function unserialize;
 final class MemoizingParser implements Parser
 {
     /** @var string[] indexed by source hash */
-    private $sourceHashToAst = [];
+    private array $sourceHashToAst = [];
 
-    /** @var Parser */
-    private $wrappedParser;
+    private Parser $wrappedParser;
 
     public function __construct(Parser $wrappedParser)
     {

@@ -29,11 +29,9 @@ class PsrAutoloaderLocatorTest extends TestCase
     /** @var PsrAutoloaderMapping&MockObject */
     private $psrMapping;
 
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var PsrAutoloaderLocator */
-    private $psrLocator;
+    private PsrAutoloaderLocator $psrLocator;
 
     protected function setUp() : void
     {

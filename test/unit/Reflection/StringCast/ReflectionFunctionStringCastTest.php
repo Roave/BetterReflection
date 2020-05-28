@@ -16,11 +16,9 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class ReflectionFunctionStringCastTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {
