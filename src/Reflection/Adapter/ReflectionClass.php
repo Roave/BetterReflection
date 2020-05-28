@@ -14,7 +14,6 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
-use TypeError;
 use function array_combine;
 use function array_map;
 use function array_values;
@@ -376,14 +375,18 @@ class ReflectionClass extends CoreReflectionClass
 
     /**
      * {@inheritDoc}
+     *
+     * @see https://bugs.php.net/bug.php?id=79645
+     *
+     * @param mixed $object in PHP 7.x, the type declaration is absent in core reflection
      */
     public function isInstance($object)
     {
-        try {
-            return $this->betterReflectionClass->isInstance($object);
-        } catch (TypeError $e) {
+        if (! is_object($object)) {
             return null;
         }
+
+        return $this->betterReflectionClass->isInstance($object);
     }
 
     /**
