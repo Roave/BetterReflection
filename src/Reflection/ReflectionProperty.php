@@ -70,13 +70,10 @@ class ReflectionProperty
     /**
      * Create a reflection of an instance's property by its name
      *
-     * @param object $instance
-     *
-     * @throws InvalidArgumentException
      * @throws ReflectionException
      * @throws IdentifierNotFound
      */
-    public static function createFromInstance($instance, string $propertyName) : self
+    public static function createFromInstance(object $instance, string $propertyName) : self
     {
         return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
     }
@@ -313,16 +310,13 @@ class ReflectionProperty
     }
 
     /**
-     * @param object|null $object
-     *
      * @return mixed
      *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
-     * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function getValue($object = null)
+    public function getValue(?object $object = null)
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -342,7 +336,7 @@ class ReflectionProperty
     }
 
     /**
-     * @param object     $object
+     * @param mixed      $object
      * @param mixed|null $value
      *
      * @throws ClassDoesNotExist
@@ -445,15 +439,13 @@ class ReflectionProperty
     /**
      * @param mixed $object
      *
-     * @return object
-     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      *
      * @psalm-assert object $object
      */
-    private function assertObject($object)
+    private function assertObject($object) : object
     {
         if ($object === null) {
             throw NoObjectProvided::create();

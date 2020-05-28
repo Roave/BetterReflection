@@ -543,16 +543,6 @@ PHP;
         $propertyReflection->setValue('string');
     }
 
-    public function testGetValueOfObjectPropertyThrowsExceptionNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
-        $propertyReflection = $classReflection->getProperty('baz');
-
-        $propertyReflection->getValue('string');
-    }
-
     public function testSetValueOfObjectPropertyThrowsExceptionWhenObjectNotInstanceOfClass() : void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);

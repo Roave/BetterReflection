@@ -8,13 +8,13 @@ use InvalidArgumentException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+use TypeError;
 use function array_combine;
 use function array_map;
 use function array_values;
@@ -382,7 +382,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         try {
             return $this->betterReflectionClass->isInstance($object);
-        } catch (NotAnObject $e) {
+        } catch (TypeError $e) {
             return null;
         }
     }

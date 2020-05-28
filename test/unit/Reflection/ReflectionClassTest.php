@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Bar;
 use Baz;
 use E;
-use InvalidArgumentException;
 use Iterator;
 use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
@@ -21,7 +20,6 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -62,6 +60,7 @@ use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
+use TypeError;
 use function array_keys;
 use function array_map;
 use function array_walk;
@@ -101,13 +100,6 @@ class ReflectionClassTest extends TestCase
     {
         $instance = new stdClass();
         self::assertSame(stdClass::class, ReflectionClass::createFromInstance($instance)->getName());
-    }
-
-    public function testCreateFromInstanceThrowsExceptionWhenInvalidArgumentProvided() : void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Instance must be an instance of an object');
-        ReflectionClass::createFromInstance('invalid argument');
     }
 
     public function testCanReflectEvaledClassWithDefaultLocator() : void
@@ -1279,7 +1271,7 @@ PHP;
         self::assertFalse($class->isInstance($this));
         self::assertTrue($class->isInstance(new ClassForHinting()));
 
-        $this->expectException(NotAnObject::class);
+        $this->expectException(TypeError::class);
 
         $class->isInstance('foo');
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use InvalidArgumentException;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -40,12 +39,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    public function testExceptionThrownWhenNonObjectGiven() : void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new AnonymousClassObjectSourceLocator(123, $this->parser);
-    }
-
     public function anonymousClassInstancesProvider() : array
     {
         $fileWithClasses                = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
@@ -64,11 +57,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param object $class
-     *
      * @dataProvider anonymousClassInstancesProvider
      */
-    public function testLocateIdentifier($class, string $file, int $startLine, int $endLine) : void
+    public function testLocateIdentifier(object $class, string $file, int $startLine, int $endLine) : void
     {
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
@@ -104,11 +95,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param object $class
-     *
      * @dataProvider anonymousClassInstancesProvider
      */
-    public function testLocateIdentifiersByType($class, string $file, int $startLine, int $endLine) : void
+    public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine) : void
     {
         /** @var ReflectionClass[] $reflections */
         $reflections = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifiersByType(
@@ -152,11 +141,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param object $class
-     *
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */
-    public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, $class) : void
+    public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, object $class) : void
     {
         $this->expectException(TwoAnonymousClassesOnSameLine::class);
         $this->expectExceptionMessage(sprintf('Two anonymous classes on line 3 in %s', $file));
