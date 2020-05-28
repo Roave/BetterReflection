@@ -498,4 +498,17 @@ class ReflectionClassTest extends TestCase
 
         self::assertNull($reflectionClassAdapter->isInstance('string'));
     }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist() : void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getReflectionConstant')
+            ->with('FOO')
+            ->willReturn(null);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->getReflectionConstant('FOO'));
+    }
 }
