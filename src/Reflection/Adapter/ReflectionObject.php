@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
@@ -352,7 +353,11 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function isInstance($object)
     {
-        return $this->betterReflectionObject->isInstance($object);
+        try {
+            return $this->betterReflectionObject->isInstance($object);
+        } catch (NotAnObject $e) {
+            return null;
+        }
     }
 
     /**

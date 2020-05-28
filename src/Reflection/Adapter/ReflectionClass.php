@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
+use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -379,7 +380,11 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function isInstance($object)
     {
-        return $this->betterReflectionClass->isInstance($object);
+        try {
+            return $this->betterReflectionClass->isInstance($object);
+        } catch (NotAnObject $e) {
+            return null;
+        }
     }
 
     /**
