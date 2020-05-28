@@ -51,7 +51,6 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /**
-     * @paran int $endLine
      * @dataProvider closuresProvider
      */
     public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
@@ -94,7 +93,6 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /**
-     * @paran int $endLine
      * @dataProvider closuresProvider
      */
     public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void

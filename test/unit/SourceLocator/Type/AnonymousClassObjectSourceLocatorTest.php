@@ -66,7 +66,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /**
      * @param object $class
      *
-     * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
     public function testLocateIdentifier($class, string $file, int $startLine, int $endLine) : void
@@ -107,7 +106,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /**
      * @param object $class
      *
-     * @paran int $endLine
      * @dataProvider anonymousClassInstancesProvider
      */
     public function testLocateIdentifiersByType($class, string $file, int $startLine, int $endLine) : void
