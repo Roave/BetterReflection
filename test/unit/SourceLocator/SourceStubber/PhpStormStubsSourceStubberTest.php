@@ -472,11 +472,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $constantReflection = $this->constantReflector->reflect($constantName);
 
         self::assertInstanceOf(ReflectionConstant::class, $constantReflection);
-        // Needs fixes in JetBrains/phpstorm-stubs
-        if (! in_array($constantName, ['TRUE', 'FALSE', 'NULL'], true)) {
-            self::assertSame($constantName, $constantReflection->getName());
-            self::assertSame($constantName, $constantReflection->getShortName());
-        }
+        self::assertSame($constantName, $constantReflection->getName());
+        self::assertSame($constantName, $constantReflection->getShortName());
 
         self::assertNotNull($constantReflection->getNamespaceName());
         self::assertFalse($constantReflection->inNamespace());
@@ -616,8 +613,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         return [
             [
-                'TRUE',
                 'true',
+                'TRUE',
             ],
             [
                 '__file__',
