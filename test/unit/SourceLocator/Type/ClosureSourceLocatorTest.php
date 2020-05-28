@@ -25,11 +25,9 @@ use function sprintf;
  */
 class ClosureSourceLocatorTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     protected function setUp() : void
     {
@@ -61,8 +59,8 @@ class ClosureSourceLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
         );
         assert($reflection instanceof ReflectionFunction);
 
@@ -87,8 +85,8 @@ class ClosureSourceLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
         );
     }
 
@@ -100,7 +98,7 @@ class ClosureSourceLocatorTest extends TestCase
         /** @var ReflectionFunction[] $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
             $this->reflector,
-            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
         );
 
         self::assertCount(1, $reflections);
@@ -123,7 +121,7 @@ class ClosureSourceLocatorTest extends TestCase
         /** @var ReflectionFunction[] $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
             $this->reflector,
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         );
 
         self::assertCount(0, $reflections);
@@ -152,8 +150,8 @@ class ClosureSourceLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
         );
     }
 }

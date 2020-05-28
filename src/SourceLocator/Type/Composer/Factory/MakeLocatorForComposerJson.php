@@ -58,21 +58,21 @@ final class MakeLocatorForComposerJson
             [
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $pathPrefix)
+                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $pathPrefix),
                     ),
-                    $astLocator
+                    $astLocator,
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $pathPrefix)
+                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $pathPrefix),
                     ),
-                    $astLocator
+                    $astLocator,
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
             ...array_map(static function (string $file) use ($astLocator) : array {
                 return [new SingleFileSourceLocator($file, $astLocator)];
-            }, array_merge($classMapFiles, $filePaths))
+            }, array_merge($classMapFiles, $filePaths)),
         ));
     }
 

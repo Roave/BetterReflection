@@ -14,7 +14,7 @@ use function array_merge;
 class AggregateSourceLocator implements SourceLocator
 {
     /** @var SourceLocator[] */
-    private $sourceLocators;
+    private array $sourceLocators;
 
     /**
      * @param SourceLocator[] $sourceLocators
@@ -51,7 +51,7 @@ class AggregateSourceLocator implements SourceLocator
             [],
             ...array_map(static function (SourceLocator $sourceLocator) use ($reflector, $identifierType) {
                 return $sourceLocator->locateIdentifiersByType($reflector, $identifierType);
-            }, $this->sourceLocators)
+            }, $this->sourceLocators),
         );
     }
 }

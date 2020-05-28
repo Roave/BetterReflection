@@ -20,8 +20,7 @@ use function assert;
  */
 class ConstantReflectorTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {
@@ -54,7 +53,7 @@ class ConstantReflectorTest extends TestCase
     {
         $constants = (new ConstantReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Constants.php', BetterReflectionSingleton::instance()->astLocator()),
-            $this->classReflector
+            $this->classReflector,
         ))->getAllConstants();
 
         self::assertContainsOnlyInstancesOf(ReflectionConstant::class, $constants);

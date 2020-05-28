@@ -43,20 +43,16 @@ abstract class ReflectionFunctionAbstract
 {
     public const CLOSURE_NAME = '{closure}';
 
-    /** @var NamespaceNode|null */
-    private $declaringNamespace;
+    private ?NamespaceNode $declaringNamespace;
 
-    /** @var LocatedSource */
-    private $locatedSource;
+    private LocatedSource $locatedSource;
 
     /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null */
     private $node;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
-    /** @var Parser|null */
-    private static $parser;
+    private static ?Parser $parser;
 
     protected function __construct()
     {
@@ -186,7 +182,7 @@ abstract class ReflectionFunctionAbstract
             $this->getParameters(),
             static function (ReflectionParameter $p) : bool {
                 return ! $p->isOptional();
-            }
+            },
         ));
     }
 
@@ -208,7 +204,7 @@ abstract class ReflectionFunctionAbstract
                 $paramNode,
                 $this->declaringNamespace,
                 $this,
-                $paramIndex
+                $paramIndex,
             );
         }
 
@@ -501,7 +497,7 @@ abstract class ReflectionFunctionAbstract
     {
         $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
             $this->reflector,
-            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
+            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
         );
         assert($closureReflection instanceof self);
 

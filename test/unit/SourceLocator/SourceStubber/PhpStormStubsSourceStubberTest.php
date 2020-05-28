@@ -38,20 +38,15 @@ use const PHP_VERSION_ID;
  */
 class PhpStormStubsSourceStubberTest extends TestCase
 {
-    /** @var PhpStormStubsSourceStubber */
-    private $sourceStubber;
+    private PhpStormStubsSourceStubber $sourceStubber;
 
-    /** @var PhpInternalSourceLocator */
-    private $phpInternalSourceLocator;
+    private PhpInternalSourceLocator $phpInternalSourceLocator;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
-    /** @var FunctionReflector */
-    private $functionReflector;
+    private FunctionReflector $functionReflector;
 
-    /** @var ConstantReflector */
-    private $constantReflector;
+    private ConstantReflector $constantReflector;
 
     protected function setUp() : void
     {
@@ -62,7 +57,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->sourceStubber            = new PhpStormStubsSourceStubber($betterReflection->phpParser());
         $this->phpInternalSourceLocator = new PhpInternalSourceLocator(
             $betterReflection->astLocator(),
-            $this->sourceStubber
+            $this->sourceStubber,
         );
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
         $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
@@ -77,7 +72,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $classNames = array_merge(
             get_declared_classes(),
             get_declared_interfaces(),
-            get_declared_traits()
+            get_declared_traits(),
         );
 
         return array_map(
@@ -95,8 +90,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -127,7 +122,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertSame(
             $originalParentClass ? $originalParentClass->getName() : null,
-            $stubbedParentClass ? $stubbedParentClass->getName() : null
+            $stubbedParentClass ? $stubbedParentClass->getName() : null,
         );
     }
 
@@ -146,22 +141,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
-        // Changed in PHP 7.3.0
-        if (PHP_VERSION_ID < 70300 && $original->getName() === 'ParseError') {
-            return;
-        }
-
         $this->assertSameParentClass($original, $stubbed);
         $this->assertSameInterfaces($original, $stubbed);
 
         foreach ($original->getMethods() as $method) {
             // Needs fix in JetBrains/phpstorm-stubs
             if ($original->getName() === 'Generator' && $method->getName() === 'throw') {
-                continue;
-            }
-
-            // Added in PHP 7.4.0
-            if (PHP_VERSION_ID < 70400 && $method->getShortName() === '__unserialize') {
                 continue;
             }
 
@@ -182,13 +167,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             static function (CoreReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
-            $original->getParameters()
+            $original->getParameters(),
         );
         $stubParameterNames     = array_map(
             static function (ReflectionParameter $parameter) : string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
-            $stubbed->getParameters()
+            $stubbed->getParameters(),
         );
 
         // Needs fixes in JetBrains/phpstorm-stubs
@@ -205,7 +190,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $this->assertSameParameterAttributes(
                 $original,
                 $parameter,
-                $stubbedParameter
+                $stubbedParameter,
             );
         }
 
@@ -297,8 +282,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -363,16 +348,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             'setrawcookie',
             'sapi_windows_vt100_support',
         ], true)) {
-            return;
-        }
-
-        // Changed in PHP 7.3.0
-        if (PHP_VERSION_ID < 70300 && in_array($functionName, ['array_push', 'array_unshift'], true)) {
-            return;
-        }
-
-        // Changed in PHP 7.4.0
-        if (PHP_VERSION_ID < 70400 && in_array($functionName, ['preg_replace_callback', 'preg_replace_callback_array'], true)) {
             return;
         }
 

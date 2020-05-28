@@ -23,7 +23,7 @@ final class FailedToLoadClassTest extends TestCase
         self::assertInstanceOf(FailedToLoadClass::class, $exception);
         self::assertSame(
             sprintf('Unable to load class %s', $className),
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

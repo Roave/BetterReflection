@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Bar;
 use Baz;
 use E;
-use InvalidArgumentException;
 use Iterator;
 use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
@@ -21,7 +20,6 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -62,6 +60,7 @@ use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
+use TypeError;
 use function array_keys;
 use function array_map;
 use function array_walk;
@@ -77,8 +76,7 @@ use function uniqid;
  */
 class ReflectionClassTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
@@ -101,13 +99,6 @@ class ReflectionClassTest extends TestCase
     {
         $instance = new stdClass();
         self::assertSame(stdClass::class, ReflectionClass::createFromInstance($instance)->getName());
-    }
-
-    public function testCreateFromInstanceThrowsExceptionWhenInvalidArgumentProvided() : void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Instance must be an instance of an object');
-        ReflectionClass::createFromInstance('invalid argument');
     }
 
     public function testCanReflectEvaledClassWithDefaultLocator() : void
@@ -134,7 +125,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/NoNamespace.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('ClassWithNoNamespace');
 
         self::assertFalse($classInfo->inNamespace());
@@ -147,7 +138,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('ClassWithExplicitGlobalNamespace');
 
         self::assertFalse($classInfo->inNamespace());
@@ -213,7 +204,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithCaseInsensitiveMethods.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(ClassWithCaseInsensitiveMethods::class);
 
         self::assertCount(1, $classInfo->getMethods());
@@ -223,7 +214,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassMethods.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Qux');
 
         $methods = $classInfo->getMethods();
@@ -253,7 +244,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithMissingParent.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(ClassWithMissingParent::class);
 
         try {
@@ -271,7 +262,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/MethodsOrder.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(MethodsOrder::class);
 
         $actualMethodNames = array_map(static function (ReflectionMethod $method) : string {
@@ -292,7 +283,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassMethods.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Qux');
 
         $methods = $classInfo->getImmediateMethods();
@@ -360,7 +351,7 @@ class ReflectionClassTest extends TestCase
     {
         $reflector   = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         )));
         $classInfo   = $reflector->reflect(ExampleClassWhereConstructorIsNotFirstMethod::class);
         $constructor = $classInfo->getConstructor();
@@ -383,7 +374,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/Php4StyleConstruct.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Php4StyleConstruct::class);
 
         $constructor = $classInfo->getConstructor();
@@ -398,7 +389,7 @@ class ReflectionClassTest extends TestCase
 
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Fixture\Php4StyleConstructInNamespace::class);
 
         $classInfo->getConstructor();
@@ -408,7 +399,7 @@ class ReflectionClassTest extends TestCase
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Php4StyleCaseInsensitiveConstruct::class);
 
         $constructor = $classInfo->getConstructor();
@@ -486,7 +477,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassProperties.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Qux::class);
 
         $properties = $classInfo->getProperties();
@@ -513,7 +504,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassProperties.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Qux::class);
 
         $properties = $classInfo->getImmediateProperties();
@@ -558,7 +549,7 @@ PHP;
     {
         $childReflection = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Fixture\ClassWithParent::class);
 
         $parentReflection = $childReflection->getParentClass();
@@ -576,7 +567,7 @@ PHP;
     {
         $childReflection = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(Fixture\ClassWithTwoParents::class);
 
         self::assertSame(['Roave\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Roave\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
@@ -652,7 +643,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(AnotherClass::class);
 
         self::assertSame('', $classInfo->getDocComment());
@@ -710,7 +701,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/DefaultProperties.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Foo');
 
         self::assertSame([
@@ -723,7 +714,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(ExampleClass::class);
 
         self::assertFalse($classInfo->isAnonymous());
@@ -733,7 +724,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/AnonymousClassNoNamespace.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $allClassesInfo = $reflector->getAllClasses();
@@ -750,7 +741,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/AnonymousClassInNamespace.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $allClassesInfo = $reflector->getAllClasses();
@@ -768,7 +759,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/NestedAnonymousClassInstances.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $allClassesInfo = $reflector->getAllClasses();
@@ -826,7 +817,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect(AbstractClass::class);
@@ -840,7 +831,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect(FinalClass::class);
@@ -868,7 +859,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('\Roave\BetterReflectionTest\Fixture\\' . $className);
@@ -876,7 +867,7 @@ PHP;
         self::assertSame($expectedModifier, $classInfo->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            CoreReflection::getModifierNames($classInfo->getModifiers())
+            CoreReflection::getModifierNames($classInfo->getModifiers()),
         );
     }
 
@@ -884,7 +875,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect(ExampleTrait::class);
@@ -898,7 +889,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect(ExampleInterface::class);
@@ -912,7 +903,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureA');
@@ -927,7 +918,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureAA');
@@ -940,7 +931,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureB');
@@ -953,12 +944,12 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertSame(
             ['TraitFixtureTraitA'],
-            $reflector->reflect('TraitFixtureA')->getTraitNames()
+            $reflector->reflect('TraitFixtureA')->getTraitNames(),
         );
     }
 
@@ -966,7 +957,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureC');
@@ -981,7 +972,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureC');
@@ -1012,7 +1003,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureD');
@@ -1045,7 +1036,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureE');
@@ -1067,7 +1058,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $classInfo = $reflector->reflect('TraitFixtureF');
@@ -1095,7 +1086,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertSame(
@@ -1109,7 +1100,7 @@ PHP;
             $reflector
                 ->reflect(ClassWithInterfaces\ExampleClass::class)
                 ->getInterfaceNames(),
-            'Interfaces are retrieved in the correct numeric order (indexed by number)'
+            'Interfaces are retrieved in the correct numeric order (indexed by number)',
         );
     }
 
@@ -1117,7 +1108,7 @@ PHP;
     {
         $reflector  = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $interfaces = $reflector
                 ->reflect(ClassWithInterfaces\ExampleClass::class)
@@ -1144,7 +1135,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertSame(
@@ -1158,7 +1149,7 @@ PHP;
             $reflector
                 ->reflect(ClassWithInterfaces\SubExampleClass::class)
                 ->getInterfaceNames(),
-            'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
+            'Child class interfaces are retrieved in the correct numeric order (indexed by number)',
         );
     }
 
@@ -1166,7 +1157,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $interfaces = $reflector
@@ -1194,7 +1185,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertSame(
@@ -1209,7 +1200,7 @@ PHP;
             $reflector
                 ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
                 ->getInterfaceNames(),
-            'Child class interfaces are retrieved in the correct numeric order (indexed by number)'
+            'Child class interfaces are retrieved in the correct numeric order (indexed by number)',
         );
     }
 
@@ -1217,7 +1208,7 @@ PHP;
     {
         $reflector  = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $interfaces = $reflector
             ->reflect(ClassWithInterfaces\SubSubExampleClass::class)
@@ -1245,7 +1236,7 @@ PHP;
     {
         $reflector  = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $interfaces = $reflector
             ->reflect(ClassWithInterfaces\ExampleImplementingCompositeInterface::class)
@@ -1272,14 +1263,14 @@ PHP;
         // note: ClassForHinting is safe to type-check against, as it will actually be loaded at runtime
         $class = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassForHinting.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(ClassForHinting::class);
 
         self::assertFalse($class->isInstance(new stdClass()));
         self::assertFalse($class->isInstance($this));
         self::assertTrue($class->isInstance(new ClassForHinting()));
 
-        $this->expectException(NotAnObject::class);
+        $this->expectException(TypeError::class);
 
         $class->isInstance('foo');
     }
@@ -1288,28 +1279,28 @@ PHP;
     {
         $subExampleClass = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(ClassWithInterfaces\SubExampleClass::class);
 
         self::assertFalse(
             $subExampleClass->isSubclassOf(ClassWithInterfaces\SubExampleClass::class),
-            'Not a subclass of itself'
+            'Not a subclass of itself',
         );
         self::assertFalse(
             $subExampleClass->isSubclassOf(ClassWithInterfaces\SubSubExampleClass::class),
-            'Not a subclass of a child class'
+            'Not a subclass of a child class',
         );
         self::assertFalse(
             $subExampleClass->isSubclassOf(stdClass::class),
-            'Not a subclass of a unrelated'
+            'Not a subclass of a unrelated',
         );
         self::assertTrue(
             $subExampleClass->isSubclassOf(ClassWithInterfaces\ExampleClass::class),
-            'A subclass of a parent class'
+            'A subclass of a parent class',
         );
         self::assertTrue(
             $subExampleClass->isSubclassOf('\\' . ClassWithInterfaces\ExampleClass::class),
-            'A subclass of a parent class (considering eventual backslashes upfront)'
+            'A subclass of a parent class (considering eventual backslashes upfront)',
         );
     }
 
@@ -1317,7 +1308,7 @@ PHP;
     {
         $subExampleClass = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect(ClassWithInterfaces\SubExampleClass::class);
 
         self::assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\A::class));
@@ -1333,7 +1324,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertTrue($reflector->reflect(ExampleClass::class)->isInstantiable());
@@ -1345,7 +1336,7 @@ PHP;
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassesWithPublicOrNonPublicContructor.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertTrue($reflector->reflect(ClassWithPublicConstructor::class)->isInstantiable());
@@ -1359,7 +1350,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertTrue($reflector->reflect(ExampleClass::class)->isCloneable());
@@ -1371,7 +1362,7 @@ PHP;
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassesWithCloneMethod.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertTrue($reflector->reflect(ClassesWithCloneMethod\WithPublicClone::class)->isCloneable());
@@ -1383,28 +1374,28 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassesImplementingIterators.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         self::assertTrue(
             $reflector
                 ->reflect(ClassesImplementingIterators\TraversableImplementation::class)
-                ->isIterateable()
+                ->isIterateable(),
         );
         self::assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\NonTraversableImplementation::class)
-                ->isIterateable()
+                ->isIterateable(),
         );
         self::assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\AbstractTraversableImplementation::class)
-                ->isIterateable()
+                ->isIterateable(),
         );
         self::assertFalse(
             $reflector
                 ->reflect(ClassesImplementingIterators\TraversableExtension::class)
-                ->isIterateable()
+                ->isIterateable(),
         );
     }
 
@@ -1412,7 +1403,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InvalidInheritances.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $class = $reflector->reflect(InvalidInheritances\ClassExtendingInterface::class);
@@ -1426,7 +1417,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InvalidInheritances.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $class = $reflector->reflect(InvalidInheritances\ClassExtendingTrait::class);
@@ -1440,7 +1431,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InvalidInheritances.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingClass::class);
@@ -1454,7 +1445,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InvalidInheritances.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $class = $reflector->reflect(InvalidInheritances\InterfaceExtendingTrait::class);
@@ -1468,7 +1459,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/PrototypeTree.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $interfaces = $reflector->reflect('Boom\B')->getImmediateInterfaces();
@@ -1482,20 +1473,20 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithInterfaces.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $cInterfaces = array_map(
             static function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
-            $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces()
+            $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces(),
         );
         $dInterfaces = array_map(
             static function (ReflectionClass $interface) : string {
                 return $interface->getShortName();
             },
-            $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces()
+            $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces(),
         );
 
         sort($cInterfaces);
@@ -1509,7 +1500,7 @@ PHP;
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitFixture.php',
-            $this->astLocator
+            $this->astLocator,
         ));
 
         $traitReflection = $reflector->reflect('TraitFixtureTraitA');
@@ -1521,7 +1512,7 @@ PHP;
         $reflection = ReflectionClass::createFromName(ExampleClass::class);
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
-            $reflection->__toString()
+            $reflection->__toString(),
         );
     }
 
@@ -1727,9 +1718,9 @@ PHP;
                 self::assertSame(
                     $constantValue,
                     $reflection->getConstant($constantName),
-                    'Constant value for ' . $constantName . ' does not match'
+                    'Constant value for ' . $constantName . ' does not match',
                 );
-            }
+            },
         );
     }
 
@@ -1737,7 +1728,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassConstants.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Next');
 
         $expectedConstants = [
@@ -1755,7 +1746,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassConstants.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Next');
 
         self::assertSame(['F' => 'ff'], $classInfo->getImmediateConstants());
@@ -1765,7 +1756,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassConstants.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Next');
 
         $expectedConstants = [
@@ -1789,9 +1780,9 @@ PHP;
                 self::assertSame(
                     $constantValue,
                     $reflectionConstants[$constantName]->getValue(),
-                    'Constant value for ' . $constantName . ' does not match'
+                    'Constant value for ' . $constantName . ' does not match',
                 );
-            }
+            },
         );
     }
 
@@ -1799,7 +1790,7 @@ PHP;
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/InheritedClassConstants.php',
-            $this->astLocator
+            $this->astLocator,
         )))->reflect('Next');
 
         $reflectionConstants = $classInfo->getImmediateReflectionConstants();

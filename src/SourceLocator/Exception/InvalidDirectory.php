@@ -31,7 +31,7 @@ class InvalidDirectory extends RuntimeException
     {
         return new self(sprintf(
             'Expected string, %s given',
-            is_object($nonStringValue) ? get_class($nonStringValue) : gettype($nonStringValue)
+            is_object($nonStringValue) ? get_class($nonStringValue) : gettype($nonStringValue),
         ));
     }
 }

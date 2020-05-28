@@ -15,23 +15,19 @@ use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant
 {
-    /** @var bool */
-    private $valueWasCached = false;
+    private bool $valueWasCached = false;
 
     /** @var scalar|array<scalar>|null const value */
     private $value;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     /** @var ReflectionClass Constant owner */
-    private $owner;
+    private ReflectionClass $owner;
 
-    /** @var ClassConst */
-    private $node;
+    private ClassConst $node;
 
-    /** @var int */
-    private $positionInNode;
+    private int $positionInNode;
 
     private function __construct()
     {
@@ -81,7 +77,7 @@ class ReflectionClassConstant
 
         $this->value          = (new CompileNodeToValue())->__invoke(
             $this->node->consts[$this->positionInNode]->value,
-            new CompilerContext($this->reflector, $this->getDeclaringClass())
+            new CompilerContext($this->reflector, $this->getDeclaringClass()),
         );
         $this->valueWasCached = true;
 

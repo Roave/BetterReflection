@@ -9,19 +9,17 @@ use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
+use TypeError;
 use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
-    /** @var BetterReflectionMethod */
-    private $betterReflectionMethod;
+    private BetterReflectionMethod $betterReflectionMethod;
 
-    /** @var bool */
-    private $accessible = false;
+    private bool $accessible = false;
 
     public function __construct(BetterReflectionMethod $betterReflectionMethod)
     {
@@ -318,7 +316,7 @@ class ReflectionMethod extends CoreReflectionMethod
     {
         try {
             return $this->betterReflectionMethod->getClosure($object);
-        } catch (NoObjectProvided | NotAnObject $e) {
+        } catch (NoObjectProvided | TypeError $e) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -344,7 +342,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
         try {
             return $this->betterReflectionMethod->invoke(...func_get_args());
-        } catch (NoObjectProvided | NotAnObject $e) {
+        } catch (NoObjectProvided | TypeError $e) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -362,7 +360,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
         try {
             return $this->betterReflectionMethod->invokeArgs($object, $args);
-        } catch (NoObjectProvided | NotAnObject $e) {
+        } catch (NoObjectProvided | TypeError $e) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);

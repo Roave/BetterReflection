@@ -23,11 +23,9 @@ use function file_get_contents;
  */
 class ReflectionClassStringCastTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     protected function setUp() : void
     {
@@ -46,7 +44,7 @@ class ReflectionClassStringCastTest extends TestCase
 
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../../Fixture/StringCastClassExpected.txt'),
-            $classReflection->__toString()
+            $classReflection->__toString(),
         );
     }
 
@@ -107,7 +105,7 @@ class ReflectionClassStringCastTest extends TestCase
 
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../../Fixture/StringCastClassObjectExpected.txt'),
-            $objectReflection->__toString()
+            $objectReflection->__toString(),
         );
     }
 }

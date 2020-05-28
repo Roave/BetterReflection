@@ -18,10 +18,9 @@ use function trait_exists;
 final class ClassLoader
 {
     /** @var ReflectionClass[] */
-    private $reflections = [];
+    private array $reflections = [];
 
-    /** @var LoaderMethodInterface */
-    private $loaderMethod;
+    private LoaderMethodInterface $loaderMethod;
 
     public function __construct(LoaderMethodInterface $loaderMethod)
     {

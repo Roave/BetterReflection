@@ -20,7 +20,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         return new ComposerSourceLocator(
             require __DIR__ . '/../../../vendor/autoload.php',
-            BetterReflectionSingleton::instance()->astLocator()
+            BetterReflectionSingleton::instance()->astLocator(),
         );
     }
 

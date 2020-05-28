@@ -42,11 +42,9 @@ use function count;
  */
 class ReflectionPropertyTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     public function setUp() : void
     {
@@ -210,7 +208,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($expectedModifier, $property->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            Reflection::getModifierNames($property->getModifiers())
+            Reflection::getModifierNames($property->getModifiers()),
         );
     }
 
@@ -234,9 +232,9 @@ class ReflectionPropertyTest extends TestCase
                 null,
                 $classInfo,
                 $classInfo,
-                false
+                false,
             )
-            ->isDefault()
+            ->isDefault(),
         );
     }
 
@@ -543,16 +541,6 @@ PHP;
         $propertyReflection->setValue('string');
     }
 
-    public function testGetValueOfObjectPropertyThrowsExceptionNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
-        $propertyReflection = $classReflection->getProperty('baz');
-
-        $propertyReflection->getValue('string');
-    }
-
     public function testSetValueOfObjectPropertyThrowsExceptionWhenObjectNotInstanceOfClass() : void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
@@ -668,7 +656,7 @@ PHP;
         self::assertSame('string', (string) $propertyReflection->getType());
         self::assertStringStartsWith(
             'public string $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
     }
 
@@ -682,7 +670,7 @@ PHP;
         self::assertNull($propertyReflection->getType());
         self::assertStringStartsWith(
             'public $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
     }
 }

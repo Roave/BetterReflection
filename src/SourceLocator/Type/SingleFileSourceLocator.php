@@ -22,8 +22,7 @@ use function file_get_contents;
  */
 class SingleFileSourceLocator extends AbstractSourceLocator
 {
-    /** @var string */
-    private $fileName;
+    private string $fileName;
 
     /**
      * @throws InvalidFileLocation
@@ -47,7 +46,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
     {
         return new LocatedSource(
             file_get_contents($this->fileName),
-            $this->fileName
+            $this->fileName,
         );
     }
 }

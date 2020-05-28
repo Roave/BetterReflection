@@ -15,8 +15,7 @@ use function sprintf;
 
 class UnableToCompileNode extends LogicException
 {
-    /** @var string|null */
-    private $constantName;
+    private ?string $constantName = null;
 
     public function constantName() : ?string
     {
@@ -29,7 +28,7 @@ class UnableToCompileNode extends LogicException
             'Unable to compile expression in %s: unrecognized node type %s at line %d',
             self::compilerContextToContextDescription($context),
             get_class($expression),
-            $expression->getLine()
+            $expression->getLine(),
         ));
     }
 
@@ -45,7 +44,7 @@ class UnableToCompileNode extends LogicException
             $targetClass->getName(),
             $constantFetch->name->name,
             self::compilerContextToContextDescription($fetchContext),
-            $constantFetch->getLine()
+            $constantFetch->getLine(),
         ));
     }
 
@@ -59,7 +58,7 @@ class UnableToCompileNode extends LogicException
             'Could not locate constant "%s" while evaluating expression in %s at line %s',
             $constantName,
             self::compilerContextToContextDescription($fetchContext),
-            $constantFetch->getLine()
+            $constantFetch->getLine(),
         ));
 
         $exception->constantName = $constantName;

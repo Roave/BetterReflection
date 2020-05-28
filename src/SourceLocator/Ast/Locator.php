@@ -22,11 +22,9 @@ use function strtolower;
  */
 class Locator
 {
-    /** @var FindReflectionsInTree */
-    private $findReflectionsInTree;
+    private FindReflectionsInTree $findReflectionsInTree;
 
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     /**
      * @param Closure(): FunctionReflector $functionReflectorGetter
@@ -51,9 +49,9 @@ class Locator
             $this->findReflectionsOfType(
                 $reflector,
                 $locatedSource,
-                $identifier->getType()
+                $identifier->getType(),
             ),
-            $identifier
+            $identifier,
         );
     }
 
@@ -74,7 +72,7 @@ class Locator
                 $reflector,
                 $this->parser->parse($locatedSource->getSource()),
                 $identifierType,
-                $locatedSource
+                $locatedSource,
             );
         } catch (Throwable $exception) {
             throw Exception\ParseToAstFailure::fromLocatedSource($locatedSource, $exception);

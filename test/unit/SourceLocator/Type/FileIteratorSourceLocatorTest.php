@@ -22,8 +22,7 @@ use function sort;
  */
 class FileIteratorSourceLocatorTest extends TestCase
 {
-    /** @var FileIteratorSourceLocator */
-    private $sourceLocator;
+    private FileIteratorSourceLocator $sourceLocator;
 
     public function setUp() : void
     {
@@ -32,9 +31,9 @@ class FileIteratorSourceLocatorTest extends TestCase
         $this->sourceLocator = new FileIteratorSourceLocator(
             new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
-                RecursiveDirectoryIterator::SKIP_DOTS
+                RecursiveDirectoryIterator::SKIP_DOTS,
             )),
-            BetterReflectionSingleton::instance()->astLocator()
+            BetterReflectionSingleton::instance()->astLocator(),
         );
     }
 
@@ -42,7 +41,7 @@ class FileIteratorSourceLocatorTest extends TestCase
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new ClassReflector($this->sourceLocator),
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         );
 
         self::assertCount(2, $classes);
@@ -51,7 +50,7 @@ class FileIteratorSourceLocatorTest extends TestCase
             static function (ReflectionClass $reflectionClass) : string {
                 return $reflectionClass->getName();
             },
-            $classes
+            $classes,
         );
 
         sort($classNames);
@@ -66,8 +65,8 @@ class FileIteratorSourceLocatorTest extends TestCase
             new ClassReflector($this->sourceLocator),
             new Identifier(
                 DirectoryScannerAssets\Bar\FooBar::class,
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         self::assertInstanceOf(ReflectionClass::class, $class);

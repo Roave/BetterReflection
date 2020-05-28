@@ -15,8 +15,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 
 final class PhpInternalSourceLocator extends AbstractSourceLocator
 {
-    /** @var SourceStubber */
-    private $stubber;
+    private SourceStubber $stubber;
 
     public function __construct(Locator $astLocator, SourceStubber $stubber)
     {
@@ -78,7 +77,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
         return new InternalLocatedSource(
             $stubData->getStub(),
-            $stubData->getExtensionName()
+            $stubData->getExtensionName(),
         );
     }
 }

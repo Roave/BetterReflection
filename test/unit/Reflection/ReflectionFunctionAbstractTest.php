@@ -41,14 +41,11 @@ use function reset;
  */
 class ReflectionFunctionAbstractTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
@@ -90,9 +87,9 @@ class ReflectionFunctionAbstractTest extends TestCase
             new ClosureSourceLocator(
                 static function () : void {
                 },
-                $this->parser
+                $this->parser,
             ),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('foo');
 
         self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
@@ -116,9 +113,9 @@ class ReflectionFunctionAbstractTest extends TestCase
             new ClosureSourceLocator(
                 static function () : void {
                 },
-                $this->parser
+                $this->parser,
             ),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
 
         self::assertTrue($function->isClosure());
@@ -362,7 +359,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
 
         self::assertStringContainsString('Fixture/Functions.php', $functionInfo->getFileName());
@@ -423,7 +420,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect($functionToReflect);
 
         $reflectionType = $functionInfo->getReturnType();
@@ -435,7 +432,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsNothing');
 
         self::assertNull($functionInfo->getReturnType());
@@ -445,7 +442,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsString');
 
         self::assertTrue($functionInfo->hasReturnType());
@@ -455,7 +452,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsNothing');
 
         self::assertFalse($functionInfo->hasReturnType());
@@ -477,7 +474,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php71NullableReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect($functionToReflect);
 
         $reflectionType = $functionInfo->getReturnType();
@@ -490,7 +487,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsString');
 
         $functionInfo->setReturnType('int');
@@ -503,7 +500,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsString');
 
         $functionInfo->removeReturnType();
@@ -553,7 +550,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertSame(
             "echo 'Hello world';",
-            $function->getBodyCode()
+            $function->getBodyCode(),
         );
     }
 

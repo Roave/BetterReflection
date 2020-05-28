@@ -22,7 +22,7 @@ class ClassReflectorTest extends TestCase
     public function testGetClassesFromFile() : void
     {
         $classes = (new ClassReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', BetterReflectionSingleton::instance()->astLocator())
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', BetterReflectionSingleton::instance()->astLocator()),
         ))->getAllClasses();
 
         self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);

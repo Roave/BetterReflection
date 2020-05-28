@@ -45,45 +45,39 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         __DIR__ . '/../../../vendor/jetbrains/phpstorm-stubs',
     ];
 
-    /** @var Parser */
-    private $phpParser;
+    private Parser $phpParser;
 
-    /** @var BuilderFactory */
-    private $builderFactory;
+    private BuilderFactory $builderFactory;
 
-    /** @var Standard */
-    private $prettyPrinter;
+    private Standard $prettyPrinter;
 
-    /** @var NodeTraverser */
-    private $nodeTraverser;
+    private NodeTraverser $nodeTraverser;
 
-    /** @var string|null */
-    private $stubsDirectory;
+    private ?string $stubsDirectory = null;
 
-    /** @var NodeVisitorAbstract */
-    private $cachingVisitor;
+    private NodeVisitorAbstract $cachingVisitor;
 
     /** @var array<string, Node\Stmt\ClassLike> */
-    private $classNodes = [];
+    private array $classNodes = [];
 
     /** @var array<string, Node\Stmt\Function_> */
-    private $functionNodes = [];
+    private array $functionNodes = [];
 
     /**
      * `null` means "failed lookup" for constant that is not case insensitive
      *
      * @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall|null>
      */
-    private $constantNodes = [];
+    private array $constantNodes = [];
 
     /** @var array<lowercase-string, string> */
-    private $classMap;
+    private array $classMap;
 
     /** @var array<lowercase-string, string> */
-    private $functionMap;
+    private array $functionMap;
 
     /** @var array<lowercase-string, string> */
-    private $constantMap;
+    private array $constantMap;
 
     public function __construct(Parser $phpParser)
     {
@@ -240,13 +234,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new class() extends NodeVisitorAbstract
         {
             /** @var array<string, Node\Stmt\ClassLike> */
-            private $classNodes = [];
+            private array $classNodes = [];
 
             /** @var array<string, Node\Stmt\Function_> */
-            private $functionNodes = [];
+            private array $functionNodes = [];
 
             /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
-            private $constantNodes = [];
+            private array $constantNodes = [];
 
             public function enterNode(Node $node) : ?int
             {

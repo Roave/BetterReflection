@@ -40,14 +40,11 @@ use function sprintf;
  */
 class ReflectionParameterTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     public function setUp() : void
     {
@@ -353,7 +350,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('string', (string) $parameterInfo->getType());
         self::assertStringStartsWith(
             'public function foo(string $intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()]),
         );
     }
 
@@ -368,7 +365,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($parameterInfo->getType());
         self::assertStringStartsWith(
             'public function foo($intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()]),
         );
     }
 
@@ -508,7 +505,7 @@ class ReflectionParameterTest extends TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method    = $classInfo->getMethod('method');
@@ -529,7 +526,7 @@ class ReflectionParameterTest extends TestCase
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method    = $classInfo->getMethod('method');

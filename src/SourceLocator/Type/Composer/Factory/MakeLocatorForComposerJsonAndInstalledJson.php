@@ -69,9 +69,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             ...array_map(function (array $package) use ($realInstallationPath) : array {
                 return $this->prefixPaths(
                     $this->packageToClassMapPaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package)
+                    $this->packagePrefixPath($realInstallationPath, $package),
                 );
-            }, $installed)
+            }, $installed),
         );
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
@@ -80,9 +80,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             ...array_map(function (array $package) use ($realInstallationPath) : array {
                 return $this->prefixPaths(
                     $this->packageToFilePaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package)
+                    $this->packagePrefixPath($realInstallationPath, $package),
                 );
-            }, $installed)
+            }, $installed),
         );
 
         return new AggregateSourceLocator(array_merge(
@@ -94,11 +94,11 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr4AutoloadNamespaces($package),
                                 $realInstallationPath,
-                                $package
+                                $package,
                             );
-                        }, $installed)
+                        }, $installed),
                     )),
-                    $astLocator
+                    $astLocator,
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(array_merge_recursive(
@@ -107,17 +107,17 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr0AutoloadNamespaces($package),
                                 $realInstallationPath,
-                                $package
+                                $package,
                             );
-                        }, $installed)
+                        }, $installed),
                     )),
-                    $astLocator
+                    $astLocator,
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
             ...array_map(static function (string $file) use ($astLocator) : array {
                 return [new SingleFileSourceLocator($file, $astLocator)];
-            }, array_merge($classMapFiles, $filePaths))
+            }, array_merge($classMapFiles, $filePaths)),
         ));
     }
 

@@ -35,29 +35,22 @@ use function strtolower;
 
 class ReflectionParameter
 {
-    /** @var ParamNode */
-    private $node;
+    private ParamNode $node;
 
-    /** @var Namespace_|null */
-    private $declaringNamespace;
+    private ?Namespace_ $declaringNamespace;
 
-    /** @var ReflectionFunctionAbstract */
-    private $function;
+    private ReflectionFunctionAbstract $function;
 
-    /** @var int */
-    private $parameterIndex;
+    private int $parameterIndex;
 
     /** @var scalar|array<scalar>|null */
     private $defaultValue;
 
-    /** @var bool */
-    private $isDefaultValueConstant = false;
+    private bool $isDefaultValueConstant = false;
 
-    /** @var string|null */
-    private $defaultValueConstantName;
+    private ?string $defaultValueConstantName;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct()
     {
@@ -81,12 +74,10 @@ class ReflectionParameter
     /**
      * Create a reflection of a parameter using an instance
      *
-     * @param object $instance
-     *
      * @throws OutOfBoundsException
      */
     public static function createFromClassInstanceAndMethod(
-        $instance,
+        object $instance,
         string $methodName,
         string $parameterName
     ) : self {
@@ -200,7 +191,7 @@ class ReflectionParameter
 
         $this->defaultValue = (new CompileNodeToValue())->__invoke(
             $defaultValueNode,
-            new CompilerContext($this->reflector, $this->getDeclaringClass())
+            new CompilerContext($this->reflector, $this->getDeclaringClass()),
         );
     }
 
@@ -480,7 +471,7 @@ class ReflectionParameter
             throw new RuntimeException(sprintf(
                 'Unable to reflect class type because we were not given a "%s", but a "%s" instead',
                 ClassReflector::class,
-                get_class($this->reflector)
+                get_class($this->reflector),
             ));
         }
 

@@ -23,11 +23,9 @@ use function reset;
  */
 class NodeToReflectionTest extends TestCase
 {
-    /** @var Parser */
-    private $phpParser;
+    private Parser $phpParser;
 
-    /** @var NodeTraverser */
-    private $nodeTraverser;
+    private NodeTraverser $nodeTraverser;
 
     protected function setUp() : void
     {
@@ -61,7 +59,7 @@ class NodeToReflectionTest extends TestCase
             $reflector,
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,
-            null
+            null,
         );
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
@@ -78,7 +76,7 @@ class NodeToReflectionTest extends TestCase
             $reflector,
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,
-            null
+            null,
         );
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
@@ -96,7 +94,7 @@ class NodeToReflectionTest extends TestCase
             $reflector,
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,
-            null
+            null,
         );
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
@@ -114,7 +112,7 @@ class NodeToReflectionTest extends TestCase
             $reflector,
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,
-            null
+            null,
         );
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
@@ -132,7 +130,7 @@ class NodeToReflectionTest extends TestCase
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,
             null,
-            0
+            0,
         );
 
         self::assertInstanceOf(ReflectionConstant::class, $reflection);
@@ -153,14 +151,14 @@ class NodeToReflectionTest extends TestCase
             $firstAstNodeInString,
             $locatedSource,
             null,
-            0
+            0,
         );
         $reflection2 = $nodeToReflection->__invoke(
             $reflector,
             $firstAstNodeInString,
             $locatedSource,
             null,
-            1
+            1,
         );
 
         self::assertInstanceOf(ReflectionConstant::class, $reflection1);
@@ -182,7 +180,7 @@ class NodeToReflectionTest extends TestCase
             $reflector,
             $firstAstNodeInString->expr,
             $locatedSource,
-            null
+            null,
         );
 
         self::assertInstanceOf(ReflectionConstant::class, $reflection);
@@ -199,7 +197,7 @@ class NodeToReflectionTest extends TestCase
             $reflector,
             $this->getFirstAstNodeInString($locatedSource->getSource()),
             $locatedSource,
-            null
+            null,
         ));
     }
 }

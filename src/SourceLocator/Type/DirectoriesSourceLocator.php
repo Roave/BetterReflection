@@ -23,8 +23,7 @@ use function is_string;
  */
 class DirectoriesSourceLocator implements SourceLocator
 {
-    /** @var AggregateSourceLocator */
-    private $aggregateSourceLocator;
+    private AggregateSourceLocator $aggregateSourceLocator;
 
     /**
      * @param string[] $directories directories to scan
@@ -47,12 +46,12 @@ class DirectoriesSourceLocator implements SourceLocator
                 return new FileIteratorSourceLocator(
                     new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                         $directory,
-                        RecursiveDirectoryIterator::SKIP_DOTS
+                        RecursiveDirectoryIterator::SKIP_DOTS,
                     )),
-                    $astLocator
+                    $astLocator,
                 );
             },
-            $directories
+            $directories,
         )));
     }
 

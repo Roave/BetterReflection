@@ -48,14 +48,11 @@ use function trait_exists;
  */
 class AutoloadSourceLocator extends AbstractSourceLocator
 {
-    /** @var Parser */
-    private $phpParser;
+    private Parser $phpParser;
 
-    /** @var NodeTraverser */
-    private $nodeTraverser;
+    private NodeTraverser $nodeTraverser;
 
-    /** @var NodeVisitorAbstract */
-    private $constantVisitor;
+    private NodeVisitorAbstract $constantVisitor;
 
     public function __construct(?AstLocator $astLocator = null, ?Parser $phpParser = null)
     {
@@ -87,7 +84,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         return new LocatedSource(
             file_get_contents($potentiallyLocatedFile),
-            $potentiallyLocatedFile
+            $potentiallyLocatedFile,
         );
     }
 
@@ -166,7 +163,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                     }
 
                     return null;
-                }
+                },
             );
         } finally {
             restore_error_handler();
@@ -254,8 +251,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         return new class() extends NodeVisitorAbstract
         {
-            /** @var string|null */
-            private $constantName;
+            private ?string $constantName;
 
             /** @var Node\Stmt\Const_|Node\Expr\FuncCall|null */
             private $node;

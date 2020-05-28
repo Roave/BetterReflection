@@ -11,14 +11,13 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Throwable;
+use TypeError;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
-    /** @var BetterReflectionProperty */
-    private $betterReflectionProperty;
+    private BetterReflectionProperty $betterReflectionProperty;
 
-    /** @var bool */
-    private $accessible = false;
+    private bool $accessible = false;
 
     public function __construct(BetterReflectionProperty $betterReflectionProperty)
     {
@@ -62,7 +61,7 @@ class ReflectionProperty extends CoreReflectionProperty
 
         try {
             return $this->betterReflectionProperty->getValue($object);
-        } catch (NoObjectProvided | NotAnObject $e) {
+        } catch (NoObjectProvided | TypeError $e) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);

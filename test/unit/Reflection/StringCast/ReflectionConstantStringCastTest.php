@@ -19,11 +19,9 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class ReflectionConstantStringCastTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     protected function setUp() : void
     {

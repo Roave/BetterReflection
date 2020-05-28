@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -28,8 +27,7 @@ use function strtolower;
 
 class ReflectionClass extends CoreReflectionClass
 {
-    /** @var BetterReflectionClass */
-    private $betterReflectionClass;
+    private BetterReflectionClass $betterReflectionClass;
 
     public function __construct(BetterReflectionClass $betterReflectionClass)
     {
@@ -252,7 +250,7 @@ class ReflectionClass extends CoreReflectionClass
     public function getReflectionConstant($name)
     {
         return new ReflectionClassConstant(
-            $this->betterReflectionClass->getReflectionConstant($name)
+            $this->betterReflectionClass->getReflectionConstant($name),
         );
     }
 
@@ -313,15 +311,15 @@ class ReflectionClass extends CoreReflectionClass
             $traitNames,
             array_map(static function (BetterReflectionClass $trait) : self {
                 return new self($trait);
-            }, $traits)
+            }, $traits),
         );
 
         assert(
             is_array($traitsByName),
             sprintf(
                 'Could not create an array<trait-string, ReflectionClass> for class "%s"',
-                $this->betterReflectionClass->getName()
-            )
+                $this->betterReflectionClass->getName(),
+            ),
         );
 
         return $traitsByName;
@@ -377,14 +375,18 @@ class ReflectionClass extends CoreReflectionClass
 
     /**
      * {@inheritDoc}
+     *
+     * @see https://bugs.php.net/bug.php?id=79645
+     *
+     * @param mixed $object in PHP 7.x, the type declaration is absent in core reflection
      */
     public function isInstance($object)
     {
-        try {
-            return $this->betterReflectionClass->isInstance($object);
-        } catch (NotAnObject $e) {
+        if (! is_object($object)) {
             return null;
         }
+
+        return $this->betterReflectionClass->isInstance($object);
     }
 
     /**
