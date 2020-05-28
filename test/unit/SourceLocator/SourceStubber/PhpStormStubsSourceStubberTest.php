@@ -146,22 +146,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
-        // Changed in PHP 7.3.0
-        if (PHP_VERSION_ID < 70300 && $original->getName() === 'ParseError') {
-            return;
-        }
-
         $this->assertSameParentClass($original, $stubbed);
         $this->assertSameInterfaces($original, $stubbed);
 
         foreach ($original->getMethods() as $method) {
             // Needs fix in JetBrains/phpstorm-stubs
             if ($original->getName() === 'Generator' && $method->getName() === 'throw') {
-                continue;
-            }
-
-            // Added in PHP 7.4.0
-            if (PHP_VERSION_ID < 70400 && $method->getShortName() === '__unserialize') {
                 continue;
             }
 
@@ -363,16 +353,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             'setrawcookie',
             'sapi_windows_vt100_support',
         ], true)) {
-            return;
-        }
-
-        // Changed in PHP 7.3.0
-        if (PHP_VERSION_ID < 70300 && in_array($functionName, ['array_push', 'array_unshift'], true)) {
-            return;
-        }
-
-        // Changed in PHP 7.4.0
-        if (PHP_VERSION_ID < 70400 && in_array($functionName, ['preg_replace_callback', 'preg_replace_callback_array'], true)) {
             return;
         }
 
