@@ -646,6 +646,9 @@ PHP;
         self::assertSame($expectedType, (string) $type);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testSetType() : void
     {
         $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
@@ -660,6 +663,9 @@ PHP;
         );
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRemoveType() : void
     {
         $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
