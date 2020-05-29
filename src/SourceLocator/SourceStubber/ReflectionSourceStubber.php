@@ -365,7 +365,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $returnType = $methodReflection->getReturnType();
             assert($returnType instanceof CoreReflectionNamedType || $returnType === null);
 
-            if ($methodReflection->getReturnType() !== null) {
+            if ($returnType !== null) {
                 $methodNode->setReturnType($this->formatType($returnType));
             }
 
@@ -436,11 +436,11 @@ final class ReflectionSourceStubber implements SourceStubber
                 $parameterNode->setDefault($this->parameterDefaultValue($parameterReflection, $functionReflectionAbstract));
             }
 
-            $functionNode->addParam($this->addParameterModifiers($parameterReflection, $parameterNode));
+            $functionNode->addParam($parameterNode);
         }
     }
 
-    private function addParameterModifiers(ReflectionParameter $parameterReflection, Param $parameterNode) : Param
+    private function addParameterModifiers(ReflectionParameter $parameterReflection, Param $parameterNode) : void
     {
         if ($parameterReflection->isVariadic()) {
             $parameterNode->makeVariadic();
@@ -453,11 +453,11 @@ final class ReflectionSourceStubber implements SourceStubber
         $parameterType = $parameterReflection->getType();
         assert($parameterType instanceof CoreReflectionNamedType || $parameterType === null);
 
-        if ($parameterReflection->getType() !== null) {
-            $parameterNode->setType($this->formatType($parameterType));
+        if ($parameterType === null) {
+            return;
         }
 
-        return $parameterNode;
+        $parameterNode->setType($this->formatType($parameterType));
     }
 
     /**
