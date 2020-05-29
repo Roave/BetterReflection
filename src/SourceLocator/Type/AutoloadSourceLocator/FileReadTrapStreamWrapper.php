@@ -38,7 +38,7 @@ final class FileReadTrapStreamWrapper
      * @psalm-readonly
      * @psalm-allow-private-mutation
      */
-    public static ?string $autoloadLocatedFile;
+    public static ?string $autoloadLocatedFile = null;
 
     /**
      * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
