@@ -365,7 +365,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $returnType = $methodReflection->getReturnType();
             assert($returnType instanceof CoreReflectionNamedType || $returnType === null);
 
-            if ($methodReflection->getReturnType() !== null) {
+            if ($returnType !== null) {
                 $methodNode->setReturnType($this->formatType($returnType));
             }
 
