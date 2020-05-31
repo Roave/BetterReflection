@@ -249,9 +249,12 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstant($name)
     {
-        return new ReflectionClassConstant(
-            $this->betterReflectionClass->getReflectionConstant($name),
-        );
+        $betterReflectionConstant = $this->betterReflectionClass->getReflectionConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return new ReflectionClassConstant($betterReflectionConstant);
     }
 
     /**
