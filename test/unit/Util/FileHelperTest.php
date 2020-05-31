@@ -12,7 +12,7 @@ use const DIRECTORY_SEPARATOR;
 /**
  * @covers \Roave\BetterReflection\Util\FileHelper
  */
-class FindHelperTest extends TestCase
+class FileHelperTest extends TestCase
 {
     public function testNormalizeWindowsPath() : void
     {
