@@ -339,6 +339,9 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testSetType() : void
     {
         $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
@@ -354,6 +357,9 @@ class ReflectionParameterTest extends TestCase
         );
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRemoveType() : void
     {
         $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
