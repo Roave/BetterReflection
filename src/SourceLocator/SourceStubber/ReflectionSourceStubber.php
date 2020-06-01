@@ -276,6 +276,13 @@ final class ReflectionSourceStubber implements SourceStubber
                 }
             }
 
+            $propertyType = $propertyReflection->getType();
+            assert($propertyType instanceof CoreReflectionNamedType || $propertyType === null);
+
+            if ($propertyType !== null) {
+                $propertyNode->setType($this->formatType($propertyType));
+            }
+
             $classNode->addStmt($propertyNode);
         }
     }
