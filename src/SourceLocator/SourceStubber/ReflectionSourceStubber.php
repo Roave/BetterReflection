@@ -398,7 +398,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $methodNode->makeFinal();
         }
 
-        if ($methodReflection->isAbstract()) {
+        if ($methodReflection->isAbstract() && ! $methodReflection->getDeclaringClass()->isInterface()) {
             $methodNode->makeAbstract();
         }
 
