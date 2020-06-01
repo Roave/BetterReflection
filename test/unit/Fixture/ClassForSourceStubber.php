@@ -81,6 +81,8 @@ abstract class ClassForSourceStubber extends ParentClassForSourceStubber impleme
 
     public static $publicStaticProperty;
 
+    public int $propertyWithTypeHint;
+
     function methodWithoutVisibility() : ?\stdClass
     {
     }
