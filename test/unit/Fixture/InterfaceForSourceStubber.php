@@ -10,4 +10,5 @@ use Serializable;
  */
 interface InterfaceForSourceStubber extends JsonSerializable, Serializable
 {
+    public function someMethod();
 }

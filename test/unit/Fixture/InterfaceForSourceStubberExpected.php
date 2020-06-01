@@ -7,4 +7,5 @@ namespace Roave\BetterReflectionTest\Fixture;
  */
 interface InterfaceForSourceStubber extends \JsonSerializable, \Serializable
 {
+    public function someMethod();
 }

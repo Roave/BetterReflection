@@ -275,6 +275,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($original->returnsReference(), $stubbed->returnsReference());
         self::assertSame($original->isStatic(), $stubbed->isStatic());
         self::assertSame($original->isFinal(), $stubbed->isFinal());
+        self::assertSame($original->isAbstract(), $stubbed->isAbstract());
     }
 
     private function assertSameParameterAttributes(
