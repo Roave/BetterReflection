@@ -22,6 +22,13 @@ Better Reflection is a reflection API that aims to improve and provide more feat
 * Change the body of a function or method to do something different
 * *Moar stuff coming soon!*
 
+Typically you would use Better Reflection for static analysis tooling. It can serve as a baseline to access type
+information (e.g. doc blocks, type declarations), method/function body AST fetching etc. for static analysis.
+
+Better Reflection is **NOT** suited to runtime usage, since performance is **much** worse than PHP built-in reflection.
+If you do not want to do anything that native PHP reflection can't do, then just use native PHP reflection! The "Better"
+in Better Reflection refers to feature, not speed!
+
 Be sure to read more in the [feature documentation](docs/features.md).
 
 ## Installation
