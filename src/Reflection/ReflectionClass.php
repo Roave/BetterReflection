@@ -32,7 +32,7 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Traversable;
 use function array_combine;
@@ -781,12 +781,12 @@ class ReflectionClass implements Reflection
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->locatedSource->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->locatedSource->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
     }
 
     /**

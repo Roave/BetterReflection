@@ -21,7 +21,7 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use RuntimeException;
 use function assert;
 use function count;
@@ -523,12 +523,12 @@ class ReflectionParameter
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getAst() : ParamNode

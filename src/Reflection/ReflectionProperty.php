@@ -25,7 +25,7 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use function class_exists;
 use function func_num_args;
@@ -274,12 +274,12 @@ class ReflectionProperty
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getAst() : PropertyNode

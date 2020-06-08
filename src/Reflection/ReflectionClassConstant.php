@@ -10,7 +10,7 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 
 class ReflectionClassConstant
@@ -139,12 +139,12 @@ class ReflectionClassConstant
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->owner->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->owner->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->owner->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->owner->getLocatedSource()->getSource(), $this->node);
     }
 
     /**
