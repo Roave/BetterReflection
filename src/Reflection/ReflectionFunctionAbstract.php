@@ -28,7 +28,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetFirstDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use function array_filter;
@@ -365,12 +365,12 @@ abstract class ReflectionFunctionAbstract
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->locatedSource->getSource(), $this->getNode());
+        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->getNode());
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->locatedSource->getSource(), $this->getNode());
+        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->getNode());
     }
 
     /**

@@ -6,12 +6,12 @@ namespace Roave\BetterReflectionTest\Util;
 
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
 
 /**
- * @covers \Roave\BetterReflection\Util\CalculateReflectionColum
+ * @covers \Roave\BetterReflection\Util\CalculateReflectionColumn
  */
 class CalculateReflectionColumnTest extends TestCase
 {
@@ -28,7 +28,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getStartFilePos')
             ->willReturn(10);
 
-        self::assertSame(5, CalculateReflectionColum::getStartColumn($source, $node));
+        self::assertSame(5, CalculateReflectionColumn::getStartColumn($source, $node));
     }
 
     public function testGetStartColumnIfAtTheBeginningOfLine() : void
@@ -44,7 +44,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getStartFilePos')
             ->willReturn(6);
 
-        self::assertSame(1, CalculateReflectionColum::getStartColumn($source, $node));
+        self::assertSame(1, CalculateReflectionColumn::getStartColumn($source, $node));
     }
 
     public function testGetStartColumnIfOneLineSource() : void
@@ -60,7 +60,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getStartFilePos')
             ->willReturn(6);
 
-        self::assertSame(7, CalculateReflectionColum::getStartColumn($source, $node));
+        self::assertSame(7, CalculateReflectionColumn::getStartColumn($source, $node));
     }
 
     public function testGetStartColumnThrowsExceptionIfInvalidPosition() : void
@@ -76,7 +76,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getStartFilePos')
             ->willReturn(10000);
 
-        CalculateReflectionColum::getStartColumn('', $node);
+        CalculateReflectionColumn::getStartColumn('', $node);
     }
 
     public function testGetStartColumnThrowsExceptionIfNoPosition() : void
@@ -89,7 +89,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('startFilePos')
             ->willReturn(false);
 
-        CalculateReflectionColum::getStartColumn('', $node);
+        CalculateReflectionColumn::getStartColumn('', $node);
     }
 
     public function testGetEndColumn() : void
@@ -105,7 +105,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getEndFilePos')
             ->willReturn(21);
 
-        self::assertSame(16, CalculateReflectionColum::getEndColumn($source, $node));
+        self::assertSame(16, CalculateReflectionColumn::getEndColumn($source, $node));
     }
 
     public function testGetEndColumnIfAtTheEndOfLine() : void
@@ -121,7 +121,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getEndFilePos')
             ->willReturn(17);
 
-        self::assertSame(12, CalculateReflectionColum::getEndColumn($source, $node));
+        self::assertSame(12, CalculateReflectionColumn::getEndColumn($source, $node));
     }
 
     public function testGetEndColumnIfOneLineSource() : void
@@ -137,7 +137,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getEndFilePos')
             ->willReturn(17);
 
-        self::assertSame(18, CalculateReflectionColum::getEndColumn($source, $node));
+        self::assertSame(18, CalculateReflectionColumn::getEndColumn($source, $node));
     }
 
     public function testGetEndColumnThrowsExceptionIfInvalidPosition() : void
@@ -153,7 +153,7 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getEndFilePos')
             ->willReturn(10000);
 
-        CalculateReflectionColum::getEndColumn('', $node);
+        CalculateReflectionColumn::getEndColumn('', $node);
     }
 
     public function testGetEndColumnThrowsExceptionIfNoPosition() : void
@@ -166,6 +166,6 @@ class CalculateReflectionColumnTest extends TestCase
             ->with('endFilePos')
             ->willReturn(false);
 
-        CalculateReflectionColum::getEndColumn('', $node);
+        CalculateReflectionColumn::getEndColumn('', $node);
     }
 }
