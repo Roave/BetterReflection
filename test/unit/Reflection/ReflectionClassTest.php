@@ -35,11 +35,11 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\ClassesImplementingIterators;
 use Roave\BetterReflectionTest\ClassesWithCloneMethod;
-use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithExtendedConstructor;
-use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithoutConstructor;
-use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithPrivateConstructor;
-use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithProtectedConstructor;
-use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor\ClassWithPublicConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicConstructor\ClassWithExtendedConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicConstructor\ClassWithoutConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicConstructor\ClassWithPrivateConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicConstructor\ClassWithProtectedConstructor;
+use Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicConstructor\ClassWithPublicConstructor;
 use Roave\BetterReflectionTest\ClassWithInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesOther;
@@ -626,7 +626,7 @@ PHP;
         self::assertStringContainsString('Some comments here', $classInfo->getDocComment());
     }
 
-    public function testGetDocCommentBetweeenComments() : void
+    public function testGetDocCommentBetweenComments() : void
     {
         $php       = '<?php
             /* A comment */
@@ -1335,7 +1335,7 @@ PHP;
         self::assertFalse($reflector->reflect(ExampleInterface::class)->isInstantiable());
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/ClassesWithPublicOrNonPublicContructor.php',
+            __DIR__ . '/../Fixture/ClassesWithPublicOrNonPublicConstructor.php',
             $this->astLocator,
         ));
 

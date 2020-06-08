@@ -121,7 +121,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    public function columsProvider() : array
+    public function columnsProvider() : array
     {
         return [
             ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
@@ -131,7 +131,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @dataProvider columsProvider
+     * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {

@@ -303,7 +303,7 @@ class ReflectionSourceStubberTest extends TestCase
         if (! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)
             && ! preg_match('~^RedisCluster#\w+.arg$~', $parameterName)
         ) {
-            // Parameters are variadic but not optinal
+            // Parameters are variadic but not optional
             self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         }
 

@@ -266,7 +266,7 @@ $functions = $reflector->getAllFunctions();
 
 ### Reflecting a Closure
 
-The `ReflectionFunction` class has a static constructor which you can reflectdirectly on a closure:
+The `ReflectionFunction` class has a static constructor which you can reflect directly on a closure:
 
 ```php
 <?php
