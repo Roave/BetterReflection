@@ -26,7 +26,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Roave\BetterReflection\Util\GetLastDocComment;
 use function class_exists;
 use function func_num_args;
 use function get_class;
@@ -233,7 +233,7 @@ class ReflectionProperty
 
     public function getDocComment() : string
     {
-        return GetFirstDocComment::forNode($this->node);
+        return GetLastDocComment::forNode($this->node);
     }
 
     /**

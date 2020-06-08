@@ -33,7 +33,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Roave\BetterReflection\Util\GetLastDocComment;
 use Traversable;
 use function array_combine;
 use function array_filter;
@@ -826,7 +826,7 @@ class ReflectionClass implements Reflection
 
     public function getDocComment() : string
     {
-        return GetFirstDocComment::forNode($this->node);
+        return GetLastDocComment::forNode($this->node);
     }
 
     public function isAnonymous() : bool

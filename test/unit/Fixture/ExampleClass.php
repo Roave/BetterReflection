@@ -2,14 +2,20 @@
 
 namespace Roave\BetterReflectionTest\Fixture {
     /**
-     * Some comments here
+     * Unused class comment
+     */
+    /**
+     * This class comment should be used.
      */
     class ExampleClass
     {
         const MY_CONST_1 = 123;
 
         /**
-         * Documentation for constant
+         * Unused documentation for constant
+         */
+        /**
+         * This comment for constant should be used.
          */
         const MY_CONST_2 = 234;
         public const MY_CONST_3 = 345;
@@ -26,6 +32,7 @@ namespace Roave\BetterReflectionTest\Fixture {
          */
         protected $protectedProperty;
 
+        /** Unused property comment */
         /**
          * @var string
          */
