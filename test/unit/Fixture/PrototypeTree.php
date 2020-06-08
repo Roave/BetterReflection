@@ -138,7 +138,8 @@ namespace Foom {
 namespace Boom {
     interface Foo {}
     interface Bar {}
+    interface Boo extends Bar {}
 
     class A implements Foo {}
-    class B extends A implements Bar {}
+    class B extends A implements Boo {}
 }
