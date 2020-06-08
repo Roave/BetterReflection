@@ -54,7 +54,7 @@ class MemoizingSourceLocatorTest extends TestCase
         $this->memoizingLocator = new MemoizingSourceLocator($this->wrappedLocator);
         $this->identifierNames  = array_unique(array_map(
             static function () : string {
-                return uniqid('identifer', true);
+                return uniqid('identifier', true);
             },
             range(1, 20),
         ));

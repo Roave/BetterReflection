@@ -161,7 +161,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($expectedDoc, $property->getDocComment());
     }
 
-    public function testGetDocCommentBetweeenComments() : void
+    public function testGetDocCommentBetweenComments() : void
     {
         $php       = '<?php
             class Bar implements Foo {
@@ -325,7 +325,7 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    public function columsProvider() : array
+    public function columnsProvider() : array
     {
         return [
             ["<?php\n\nclass T {\npublic \$test = 1;\n}", 1, 17],
@@ -335,7 +335,7 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @dataProvider columsProvider
+     * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {

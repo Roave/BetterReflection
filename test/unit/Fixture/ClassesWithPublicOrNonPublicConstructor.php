@@ -1,6 +1,6 @@
 <?php
 
-namespace Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicContructor;
+namespace Roave\BetterReflectionTest\ClassesWithPublicOrNonPublicConstructor;
 
 
 class ClassWithPublicConstructor

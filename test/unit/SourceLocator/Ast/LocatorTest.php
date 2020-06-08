@@ -135,7 +135,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionConstant::class, $constantInfo);
     }
 
-    public function testReflectThrowsExeptionWhenClassNotFoundAndNoNodesExist() : void
+    public function testReflectThrowsExceptionWhenClassNotFoundAndNoNodesExist() : void
     {
         $php = '<?php';
 
@@ -147,7 +147,7 @@ class LocatorTest extends TestCase
         );
     }
 
-    public function testReflectThrowsExeptionWhenClassNotFoundButNodesExist() : void
+    public function testReflectThrowsExceptionWhenClassNotFoundButNodesExist() : void
     {
         $php = "<?php
         namespace Foo;

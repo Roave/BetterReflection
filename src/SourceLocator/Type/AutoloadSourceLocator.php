@@ -203,7 +203,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /**
      * We can only load constants if they already exist, because PHP does not
      * have constant autoloading. Therefore if it exists, we simply use brute force
-     * to search throught all included files to find the right filename.
+     * to search throughout all included files to find the right filename.
      */
     private function locateConstantByName(string $constantName) : ?string
     {

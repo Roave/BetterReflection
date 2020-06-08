@@ -39,7 +39,7 @@ class ReflectionPropertyTest extends TestCase
     /**
      * @dataProvider coreReflectionPropertyNamesProvider
      */
-    public function testCoreReflectionPropertys(string $methodName) : void
+    public function testCoreReflectionProperties(string $methodName) : void
     {
         $reflectionPropertyAdapterReflection = new CoreReflectionClass(ReflectionPropertyAdapter::class);
         self::assertTrue($reflectionPropertyAdapterReflection->hasMethod($methodName));
