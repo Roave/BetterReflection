@@ -10,6 +10,7 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
+use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -310,6 +311,10 @@ abstract class ReflectionFunctionAbstract
     private function nodeIsOrContainsYield(Node $node) : bool
     {
         if ($node instanceof YieldNode) {
+            return true;
+        }
+
+        if ($node instanceof YieldFromNode) {
             return true;
         }
 
