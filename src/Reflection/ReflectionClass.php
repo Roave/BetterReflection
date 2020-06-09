@@ -1089,7 +1089,28 @@ class ReflectionClass implements Reflection
      */
     public function getImmediateInterfaces() : array
     {
-        return $this->getCurrentClassImplementedInterfacesIndexedByName();
+        if ($this->isTrait()) {
+            return [];
+        }
+
+        assert($this->node instanceof ClassNode || $this->node instanceof InterfaceNode);
+
+        $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
+
+        return array_combine(
+            array_map(
+                static function (Node\Name $interfaceName) : string {
+                    return $interfaceName->toString();
+                },
+                $nodes,
+            ),
+            array_map(
+                function (Node\Name $interfaceName) : ReflectionClass {
+                    return $this->reflectClassForNamedNode($interfaceName);
+                },
+                $nodes,
+            ),
+        );
     }
 
     /**

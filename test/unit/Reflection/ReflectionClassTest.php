@@ -1465,8 +1465,8 @@ PHP;
         $interfaces = $reflector->reflect('Boom\B')->getImmediateInterfaces();
 
         self::assertCount(1, $interfaces);
-        self::assertInstanceOf(ReflectionClass::class, $interfaces['Boom\Bar']);
-        self::assertSame('Boom\Bar', $interfaces['Boom\Bar']->getName());
+        self::assertInstanceOf(ReflectionClass::class, $interfaces['Boom\Boo']);
+        self::assertSame('Boom\Boo', $interfaces['Boom\Boo']->getName());
     }
 
     public function testGetImmediateInterfacesDoesNotIncludeCurrentInterface() : void
@@ -1493,7 +1493,7 @@ PHP;
         sort($dInterfaces);
 
         self::assertSame(['B'], $cInterfaces);
-        self::assertSame(['A', 'B', 'C'], $dInterfaces);
+        self::assertSame(['A', 'C'], $dInterfaces);
     }
 
     public function testReflectedTraitHasNoInterfaces() : void
