@@ -103,7 +103,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getPrototype() : self
     {
-        $currentClass = $this->getDeclaringClass();
+        $currentClass = $this->getImplementingClass();
 
         while ($currentClass) {
             foreach ($currentClass->getImmediateInterfaces() as $interface) {
@@ -121,6 +121,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             $prototype = $currentClass->getMethod($this->getName())->findPrototype();
 
             if ($prototype !== null) {
+                if ($this->isConstructor() && ! $prototype->isAbstract()) {
+                    break;
+                }
+
                 return $prototype;
             }
         }
