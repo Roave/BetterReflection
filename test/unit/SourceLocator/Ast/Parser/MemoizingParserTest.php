@@ -80,8 +80,8 @@ class MemoizingParserTest extends TestCase
             'Equal tree is produced at each iteration',
         );
         self::assertNotSame(
-            $wrappedParser->parse($code),
-            $wrappedParser->parse($code),
+            $parser->parse($code),
+            $parser->parse($code),
             'Each time a tree is requested, a new copy is provided',
         );
     }
