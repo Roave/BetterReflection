@@ -101,16 +101,16 @@ abstract class ReflectionFunctionAbstract
         $overallOptionalFlag = true;
         $lastParamIndex      = count($this->getNode()->params) - 1;
         for ($i = $lastParamIndex; $i >= 0; $i--) {
-            $hasDefault = ($this->getNode()->params[$i]->default !== null);
+            $param = $this->getNode()->params[$i];
 
-            // When we find the first parameter that does not have a default,
+            // When we find the first parameter that does not have a default or is not variadic,
             // flip the flag as all params for this are no longer optional
             // EVEN if they have a default value
-            if (! $hasDefault) {
+            if ($param->default === null && ! $param->variadic) {
                 $overallOptionalFlag = false;
             }
 
-            $this->getNode()->params[$i]->isOptional = $overallOptionalFlag;
+            $param->isOptional = $overallOptionalFlag;
         }
     }
 

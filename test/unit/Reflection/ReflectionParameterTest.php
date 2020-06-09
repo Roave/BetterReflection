@@ -443,6 +443,20 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($secondParam->isDefaultValueAvailable());
     }
 
+    public function testParameterWithDefaultValueBeforeVariadicParameterShouldBeOptional() : void
+    {
+        $classInfo = $this->reflector->reflect(Methods::class);
+        $method    = $classInfo->getMethod('methodWithFirstParameterWithDefaultValueAndSecondParameterIsVariadic');
+
+        $firstParam = $method->getParameter('parameterWithDefaultValue');
+        self::assertTrue($firstParam->isOptional());
+        self::assertTrue($firstParam->isDefaultValueAvailable());
+
+        $secondParam = $method->getParameter('variadicParameter');
+        self::assertTrue($secondParam->isOptional());
+        self::assertTrue($secondParam->isVariadic());
+    }
+
     /**
      * @group 109
      */

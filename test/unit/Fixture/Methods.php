@@ -67,6 +67,10 @@ abstract class Methods
     {
     }
 
+    public function methodWithFirstParameterWithDefaultValueAndSecondParameterIsVariadic($parameterWithDefaultValue = null, ...$variadicParameter)
+    {
+    }
+
     public function methodWithReference($nonRefParameter, &$refParameter)
     {
     }
