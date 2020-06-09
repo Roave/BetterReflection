@@ -206,54 +206,6 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Construct a flat list of all methods from current class, traits,
-     * parent classes and interfaces in this precise order.
-     *
-     * @return ReflectionMethod[]
-     */
-    private function getAllMethods() : array
-    {
-        return array_merge(
-            [],
-            array_map(
-                function (ClassMethod $methodNode) : ReflectionMethod {
-                    return ReflectionMethod::createFromNode(
-                        $this->reflector,
-                        $methodNode,
-                        $this->declaringNamespace,
-                        $this,
-                        $this,
-                    );
-                },
-                $this->node->getMethods(),
-            ),
-            ...array_map(
-                function (ReflectionClass $trait) : array {
-                    return array_merge(
-                        [],
-                        ...array_map(
-                            function (ReflectionMethod $method) : array {
-                                return $this->createMethodsFromTrait($method);
-                            },
-                            $trait->getMethods(),
-                        ),
-                    );
-                },
-                $this->getTraits(),
-            ),
-            ...array_map(
-                static function (ReflectionClass $ancestor) : array {
-                    return $ancestor->getMethods();
-                },
-                array_values(array_merge(
-                    array_filter([$this->getParentClass()]),
-                    $this->getInterfaces(),
-                )),
-            ),
-        );
-    }
-
-    /**
      * @return ReflectionMethod[]
      */
     private function createMethodsFromTrait(ReflectionMethod $method) : array
@@ -303,8 +255,69 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Construct a flat list of methods that are available. This will search up
-     * all parent classes/traits/interfaces/current scope for methods.
+     * @return list<ReflectionMethod>
+     */
+    private function getParentMethods() : array
+    {
+        return array_merge(
+            [],
+            ...array_map(
+                static function (ReflectionClass $ancestor) : array {
+                    return $ancestor->getMethods();
+                },
+                array_filter([$this->getParentClass()]),
+            ),
+        );
+    }
+
+    /**
+     * @return list<ReflectionMethod>
+     */
+    private function getMethodsFromTraits() : array
+    {
+        return array_merge(
+            [],
+            ...array_map(
+                function (ReflectionClass $trait) : array {
+                    return array_merge(
+                        [],
+                        ...array_map(
+                            function (ReflectionMethod $method) : array {
+                                return $this->createMethodsFromTrait($method);
+                            },
+                            $trait->getMethods(),
+                        ),
+                    );
+                },
+                $this->getTraits(),
+            ),
+        );
+    }
+
+    /**
+     * @return list<ReflectionMethod>
+     */
+    private function getMethodsFromInterfaces() : array
+    {
+        return array_merge(
+            [],
+            ...array_map(
+                static function (ReflectionClass $ancestor) : array {
+                    return $ancestor->getMethods();
+                },
+                array_values($this->getInterfaces()),
+            ),
+        );
+    }
+
+    /**
+     * Construct a flat list of all methods in this precise order from:
+     *  - current class
+     *  - parent class
+     *  - traits used in parent class
+     *  - interfaces implemented in parent class
+     *  - traits used in current class
+     *  - interfaces implemented in current class
      *
      * Methods are not merged via their name as array index, since internal PHP method
      * sorting does not follow `\array_merge()` semantics.
@@ -317,19 +330,51 @@ class ReflectionClass implements Reflection
             return $this->cachedMethods;
         }
 
-        $cachedMethods = [];
+        $classMethods     = $this->getImmediateMethods();
+        $parentClass      = $this->getParentClass();
+        $parentClassName  = $parentClass !== null ? $parentClass->getName() : null;
+        $parentMethods    = $this->getParentMethods();
+        $traitsMethods    = $this->getMethodsFromTraits();
+        $interfaceMethods = $this->getMethodsFromInterfaces();
 
-        foreach ($this->getAllMethods() as $method) {
-            $methodName = strtolower($method->getName());
+        $methods = [];
 
-            if (isset($cachedMethods[$methodName])) {
-                continue;
+        foreach ([$classMethods, $parentMethods, 'traits' => $traitsMethods, $interfaceMethods] as $type => $typeMethods) {
+            foreach ($typeMethods as $method) {
+                $methodName = strtolower($method->getName());
+
+                if (! array_key_exists($methodName, $methods)) {
+                    $methods[$methodName] = $method;
+                    continue;
+                }
+
+                if ($type !== 'traits') {
+                    continue;
+                }
+
+                $existingMethod = $methods[$methodName];
+
+                // Non-abstract trait method can overwrite existing methods:
+                // - when existing method comes from parent class
+                // - when existing method comes from trait and is abstract
+                if (! (
+                    ! $method->isAbstract()
+                    && (
+                        $existingMethod->getDeclaringClass()->getName() === $parentClassName
+                        || (
+                            $existingMethod->isAbstract()
+                            && $existingMethod->getDeclaringClass()->isTrait()
+                        )
+                    )
+                )) {
+                    continue;
+                }
+
+                $methods[$methodName] = $method;
             }
-
-            $cachedMethods[$methodName] = $method;
         }
 
-        $this->cachedMethods = $cachedMethods;
+        $this->cachedMethods = $methods;
 
         return $this->cachedMethods;
     }
