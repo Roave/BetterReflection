@@ -30,7 +30,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Roave\BetterReflection\Util\GetLastDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use function array_filter;
 use function assert;
@@ -229,7 +229,7 @@ abstract class ReflectionFunctionAbstract
 
     public function getDocComment() : string
     {
-        return GetFirstDocComment::forNode($this->getNode());
+        return GetLastDocComment::forNode($this->getNode());
     }
 
     public function setDocCommentFromString(string $string) : void

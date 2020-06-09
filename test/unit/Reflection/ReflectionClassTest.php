@@ -623,7 +623,7 @@ PHP;
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
 
-        self::assertStringContainsString('Some comments here', $classInfo->getDocComment());
+        self::assertStringContainsString('This class comment should be used.', $classInfo->getDocComment());
     }
 
     public function testGetDocCommentBetweenComments() : void

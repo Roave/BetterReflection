@@ -288,15 +288,16 @@ class ReflectionFunctionAbstractTest extends TestCase
         /* --- This is a separator --------------- */
 
         /**
-         * Some function comment
+         * Unused function comment
          */
+        /** This function comment should be used. */ 
         function foo() {}
         ';
 
         $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionInfo = $reflector->reflect('foo');
 
-        self::assertStringContainsString('Some function comment', $functionInfo->getDocComment());
+        self::assertStringContainsString('This function comment should be used.', $functionInfo->getDocComment());
     }
 
     public function testSetDocCommentFromString() : void
