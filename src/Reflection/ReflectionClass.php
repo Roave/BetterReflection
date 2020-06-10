@@ -81,6 +81,8 @@ class ReflectionClass implements Reflection
     /** @var array<string, string>|null */
     private ?array $cachedTraitPrecedences = null;
 
+    private ?ReflectionClass $cachedParentClass = null;
+
     private function __construct()
     {
     }
@@ -846,15 +848,19 @@ class ReflectionClass implements Reflection
             return null;
         }
 
-        $parent = $this->reflector->reflect($this->node->extends->toString());
-        // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        assert($parent instanceof self);
+        if ($this->cachedParentClass === null) {
+            $parent = $this->reflector->reflect($this->node->extends->toString());
+            // @TODO use actual `ClassReflector` or `FunctionReflector`?
+            assert($parent instanceof self);
 
-        if ($parent->isInterface() || $parent->isTrait()) {
-            throw NotAClassReflection::fromReflectionClass($parent);
+            $this->cachedParentClass = $parent;
         }
 
-        return $parent;
+        if ($this->cachedParentClass->isInterface() || $this->cachedParentClass->isTrait()) {
+            throw NotAClassReflection::fromReflectionClass($this->cachedParentClass);
+        }
+
+        return $this->cachedParentClass;
     }
 
     /**
