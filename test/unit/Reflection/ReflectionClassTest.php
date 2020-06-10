@@ -1028,6 +1028,7 @@ PHP;
         self::assertSame([
             'a_protected' => 'TraitFixtureTraitC::a',
             'b_renamed' => 'TraitFixtureTraitC::b',
+            'd_renamed' => 'TraitFixtureTraitC3::d',
         ], $classInfo->getTraitAliases());
     }
 
@@ -1040,14 +1041,14 @@ PHP;
 
         $classInfo = $reflector->reflect('TraitFixtureC');
 
-        self::assertFalse($classInfo->hasMethod('a'));
+        self::assertTrue($classInfo->hasMethod('a'));
         self::assertTrue($classInfo->hasMethod('a_protected'));
 
         $aProtected = $classInfo->getMethod('a_protected');
 
         self::assertSame('TraitFixtureTraitC', $aProtected->getDeclaringClass()->getName());
 
-        self::assertFalse($classInfo->hasMethod('b'));
+        self::assertTrue($classInfo->hasMethod('b'));
         self::assertTrue($classInfo->hasMethod('b_renamed'));
 
         $bRenamed = $classInfo->getMethod('b_renamed');
@@ -1060,6 +1061,12 @@ PHP;
 
         self::assertSame('c', $c->getName());
         self::assertSame('TraitFixtureTraitC', $c->getDeclaringClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('d'));
+        self::assertTrue($classInfo->hasMethod('d_renamed'));
+
+        self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d')->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d_renamed')->getDeclaringClass()->getName());
     }
 
     public function testMethodsFromTraitsWithConflicts() : void
@@ -1082,7 +1089,7 @@ PHP;
         self::assertSame('TraitFixtureTraitD1', $foo->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureD', $foo->getImplementingClass()->getName());
 
-        self::assertFalse($classInfo->hasMethod('hoo'));
+        self::assertTrue($classInfo->hasMethod('hoo'));
         self::assertTrue($classInfo->hasMethod('hooFirstAlias'));
         self::assertTrue($classInfo->hasMethod('hooSecondAlias'));
 

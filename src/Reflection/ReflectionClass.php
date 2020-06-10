@@ -218,15 +218,9 @@ class ReflectionClass implements Reflection
         $methodAst = $method->getAst();
         assert($methodAst instanceof ClassMethod);
 
-        $methodHash = $this->methodHash($method->getDeclaringClass()->getName(), $method->getName());
-
-        $aliases = [];
-        foreach ($traitAliases as $aliasMethodName => $traitAliasDefinition) {
-            if ($methodHash !== $traitAliasDefinition) {
-                continue;
-            }
-
-            $aliases[] = ReflectionMethod::createFromNode(
+        $methodHash   = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
+        $createMethod = function (?string $aliasMethodName) use ($method, $methodAst) : ReflectionMethod {
+            return ReflectionMethod::createFromNode(
                 $this->reflector,
                 $methodAst,
                 $method->getDeclaringClass()->getDeclaringNamespaceAst(),
@@ -234,26 +228,22 @@ class ReflectionClass implements Reflection
                 $this,
                 $aliasMethodName,
             );
+        };
+
+        $methods = [];
+        foreach ($traitAliases as $aliasMethodName => $traitAliasDefinition) {
+            if ($methodHash !== $traitAliasDefinition) {
+                continue;
+            }
+
+            $methods[] = $createMethod($aliasMethodName);
         }
 
-        if ($aliases !== []) {
-            return $aliases;
+        if (! array_key_exists($methodHash, $traitPrecedences)) {
+            $methods[] = $createMethod($method->getAliasName());
         }
 
-        if (array_key_exists($methodHash, $traitPrecedences)) {
-            return [];
-        }
-
-        $newMethod = ReflectionMethod::createFromNode(
-            $this->reflector,
-            $methodAst,
-            $method->getDeclaringClass()->getDeclaringNamespaceAst(),
-            $method->getDeclaringClass(),
-            $this,
-            $method->getAliasName(),
-        );
-
-        return [$newMethod];
+        return $methods;
     }
 
     /**

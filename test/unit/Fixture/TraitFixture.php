@@ -31,12 +31,23 @@ trait TraitFixtureTraitC
     public function b() {}
     public function c() {}
 }
+trait TraitFixtureTraitC2
+{
+    public function d() {}
+}
+trait TraitFixtureTraitC3
+{
+    use TraitFixtureTraitC2;
+}
 class TraitFixtureC
 {
     use TraitFixtureTraitC {
         a as protected a_protected;
         b as b_renamed;
         c as private;
+    }
+    use TraitFixtureTraitC3 {
+        d as d_renamed;
     }
 }
 
