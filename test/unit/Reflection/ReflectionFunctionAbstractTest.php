@@ -711,4 +711,18 @@ PHP;
         self::assertSame(8, $first->getStartLine());
         self::assertSame(10, $first->getEndLine());
     }
+
+    public function testFunctionsCanBeDeprecated() : void
+    {
+        $php = '<?php
+        /** 
+         * @deprecated since 7.1
+         */
+        function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $function  = $reflector->reflect('foo');
+
+        $this->assertTrue($function->isDeprecated());
+    }
 }

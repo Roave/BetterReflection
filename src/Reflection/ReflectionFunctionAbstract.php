@@ -39,6 +39,7 @@ use function count;
 use function implode;
 use function is_array;
 use function is_string;
+use function strpos;
 use function strtolower;
 
 abstract class ReflectionFunctionAbstract
@@ -258,16 +259,10 @@ abstract class ReflectionFunctionAbstract
 
     /**
      * Is this function deprecated?
-     *
-     * Note - we cannot reflect on internal functions (as there is no PHP source
-     * code we can access. This means, at present, we can only EVER return false
-     * from this function.
-     *
-     * @see https://github.com/Roave/BetterReflection/issues/38
      */
     public function isDeprecated(): bool
     {
-        return false;
+        return strpos($this->getDocComment(), '@deprecated') !== false;
     }
 
     public function isInternal(): bool
