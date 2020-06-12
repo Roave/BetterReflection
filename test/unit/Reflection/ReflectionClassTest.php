@@ -45,7 +45,10 @@ use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
+use Roave\BetterReflectionTest\Fixture\ClassExtendingNonAbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract;
+use Roave\BetterReflectionTest\Fixture\ClassUsingTraitWithAbstractMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
 use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -270,10 +273,16 @@ class ReflectionClassTest extends TestCase
         }, $classInfo->getMethods());
 
         $expectedMethodNames = [
-            'first',
-            'second',
-            'third',
-            'forth',
+            'f1',
+            'f2',
+            'f3',
+            'f4',
+            'f5',
+            'f6',
+            'f7',
+            'f8',
+            'f9',
+            'f10',
         ];
 
         self::assertSame($expectedMethodNames, $actualMethodNames);
@@ -927,6 +936,60 @@ PHP;
         self::assertSame('TraitFixtureTraitA', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
     }
 
+    public function declaringClassProvider() : array
+    {
+        return [
+            [
+                ClassUsingTraitWithAbstractMethod::class,
+                'foo',
+                'AbstractClassImplementingMethodFromTrait',
+                'AbstractClassImplementingMethodFromTrait',
+            ],
+            [
+                ClassUsingTraitWithAbstractMethod::class,
+                'bar',
+                'TraitWithAbstractMethod',
+                'ClassUsingTraitWithAbstractMethod',
+            ],
+            [
+                ClassExtendingNonAbstractClass::class,
+                'boo',
+                'TraitWithBoo',
+                'ClassExtendingNonAbstractClass',
+            ],
+            [
+                ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract::class,
+                'bar',
+                'ImplementationTrait',
+                'ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider declaringClassProvider
+     */
+    public function testGetDeclaringClassWithTraitAndParent(
+        string $className,
+        string $methodName,
+        string $declaringClassShortName,
+        string $implementingClassShortName
+    ) : void {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitWithAbstractMethod.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflect($className);
+
+        self::assertTrue($classInfo->hasMethod($methodName));
+
+        $fooMethodInfo = $classInfo->getMethod($methodName);
+
+        self::assertSame($declaringClassShortName, $fooMethodInfo->getDeclaringClass()->getShortName());
+        self::assertSame($implementingClassShortName, $fooMethodInfo->getImplementingClass()->getShortName());
+    }
+
     public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
@@ -965,6 +1028,7 @@ PHP;
         self::assertSame([
             'a_protected' => 'TraitFixtureTraitC::a',
             'b_renamed' => 'TraitFixtureTraitC::b',
+            'd_renamed' => 'TraitFixtureTraitC3::d',
         ], $classInfo->getTraitAliases());
     }
 
@@ -977,14 +1041,14 @@ PHP;
 
         $classInfo = $reflector->reflect('TraitFixtureC');
 
-        self::assertFalse($classInfo->hasMethod('a'));
+        self::assertTrue($classInfo->hasMethod('a'));
         self::assertTrue($classInfo->hasMethod('a_protected'));
 
         $aProtected = $classInfo->getMethod('a_protected');
 
         self::assertSame('TraitFixtureTraitC', $aProtected->getDeclaringClass()->getName());
 
-        self::assertFalse($classInfo->hasMethod('b'));
+        self::assertTrue($classInfo->hasMethod('b'));
         self::assertTrue($classInfo->hasMethod('b_renamed'));
 
         $bRenamed = $classInfo->getMethod('b_renamed');
@@ -997,6 +1061,12 @@ PHP;
 
         self::assertSame('c', $c->getName());
         self::assertSame('TraitFixtureTraitC', $c->getDeclaringClass()->getName());
+
+        self::assertTrue($classInfo->hasMethod('d'));
+        self::assertTrue($classInfo->hasMethod('d_renamed'));
+
+        self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d')->getDeclaringClass()->getName());
+        self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d_renamed')->getDeclaringClass()->getName());
     }
 
     public function testMethodsFromTraitsWithConflicts() : void
@@ -1019,7 +1089,7 @@ PHP;
         self::assertSame('TraitFixtureTraitD1', $foo->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureD', $foo->getImplementingClass()->getName());
 
-        self::assertFalse($classInfo->hasMethod('hoo'));
+        self::assertTrue($classInfo->hasMethod('hoo'));
         self::assertTrue($classInfo->hasMethod('hooFirstAlias'));
         self::assertTrue($classInfo->hasMethod('hooSecondAlias'));
 
