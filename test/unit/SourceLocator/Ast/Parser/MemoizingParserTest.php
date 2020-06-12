@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
+use PhpParser\Node\Name;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
@@ -37,8 +38,8 @@ class MemoizingParserTest extends TestCase
         $wrappedParser
             ->expects(self::exactly($randomCodeStringsCount))
             ->method('parse')
-            ->willReturnCallback(function () : array {
-                return [$this->createMock(Node::class)];
+            ->willReturnCallback(static function () : array {
+                return [new Name('bool')];
             });
 
         $parser = new MemoizingParser($wrappedParser);

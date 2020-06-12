@@ -70,14 +70,16 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      */
     private array $constantNodes = [];
 
-    /** @var array<lowercase-string, string> */
-    private array $classMap;
+    private static bool $mapsInitialized = false;
 
     /** @var array<lowercase-string, string> */
-    private array $functionMap;
+    private static array $classMap;
 
     /** @var array<lowercase-string, string> */
-    private array $constantMap;
+    private static array $functionMap;
+
+    /** @var array<lowercase-string, string> */
+    private static array $constantMap;
 
     public function __construct(Parser $phpParser)
     {
@@ -91,20 +93,25 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $this->nodeTraverser->addVisitor(new NameResolver());
         $this->nodeTraverser->addVisitor($this->cachingVisitor);
 
-        $this->classMap    = array_change_key_case(PhpStormStubsMap::CLASSES);
-        $this->functionMap = array_change_key_case(PhpStormStubsMap::FUNCTIONS);
-        $this->constantMap = array_change_key_case(PhpStormStubsMap::CONSTANTS);
+        if (self::$mapsInitialized) {
+            return;
+        }
+
+        self::$classMap        = array_change_key_case(PhpStormStubsMap::CLASSES);
+        self::$functionMap     = array_change_key_case(PhpStormStubsMap::FUNCTIONS);
+        self::$constantMap     = array_change_key_case(PhpStormStubsMap::CONSTANTS);
+        self::$mapsInitialized = true;
     }
 
     public function generateClassStub(string $className) : ?StubData
     {
         $lowercaseClassName = strtolower($className);
 
-        if (! array_key_exists($lowercaseClassName, $this->classMap)) {
+        if (! array_key_exists($lowercaseClassName, self::$classMap)) {
             return null;
         }
 
-        $filePath = $this->classMap[$lowercaseClassName];
+        $filePath = self::$classMap[$lowercaseClassName];
 
         if (! array_key_exists($lowercaseClassName, $this->classNodes)) {
             $this->parseFile($filePath);
@@ -124,11 +131,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         $lowercaseFunctionName = strtolower($functionName);
 
-        if (! array_key_exists($lowercaseFunctionName, $this->functionMap)) {
+        if (! array_key_exists($lowercaseFunctionName, self::$functionMap)) {
             return null;
         }
 
-        $filePath = $this->functionMap[$lowercaseFunctionName];
+        $filePath = self::$functionMap[$lowercaseFunctionName];
 
         if (! array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
             $this->parseFile($filePath);
@@ -141,7 +148,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         $lowercaseConstantName = strtolower($constantName);
 
-        if (! array_key_exists($lowercaseConstantName, $this->constantMap)) {
+        if (! array_key_exists($lowercaseConstantName, self::$constantMap)) {
             return null;
         }
 
@@ -151,7 +158,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        $filePath     = $this->constantMap[$lowercaseConstantName];
+        $filePath     = self::$constantMap[$lowercaseConstantName];
         $constantNode = $this->constantNodes[$constantName] ?? $this->constantNodes[$lowercaseConstantName] ?? null;
 
         if ($constantNode === null) {
