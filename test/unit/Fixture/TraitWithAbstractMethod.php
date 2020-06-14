@@ -29,7 +29,12 @@ trait TraitWithBoo
     }
 }
 
-class ClassUsingTraitWithAbstractMethod extends AbstractClassImplementingMethodFromTrait
+abstract class AbstractClassCausingIndirectParent extends AbstractClassImplementingMethodFromTrait
+{
+
+}
+
+class ClassUsingTraitWithAbstractMethod extends AbstractClassCausingIndirectParent
 {
     use TraitWithAbstractMethod;
 
