@@ -28,10 +28,10 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -689,19 +689,20 @@ PHP;
     public function testIsAnonymousWithParentClass() : void
     {
         $reflector = new ClassReflector(
-            new StringSourceLocator('<?php new class extends ClassForHinting {};', $this->astLocator)
+            new StringSourceLocator('<?php
+            namespace Foo { class FooClass {}}
+            namespace Bar {
+                use Foo\FooClass;
+                new class extends FooClass {};
+            }', $this->astLocator)
         );
-        $parent = $reflector->getAllClasses()[0]->getParentClass();
-        self::assertSame(ClassForHinting::class, $parent->getName());
+        $parent = $reflector->getAllClasses()[1]->getParentClass();
+        self::assertSame('Foo\FooClass', $parent->getName());
 
-        $reflector = new ClassReflector(
-            new AnonymousClassObjectSourceLocator(
-                new class extends ClassForHinting {
-                },
-                $this->parser
-            )
+        $anonymousClassInfo = ReflectionObject::createFromInstance(
+            new class extends ClassForHinting {}
         );
-        $parent = $reflector->getAllClasses()[0]->getParentClass();
+        $parent = $anonymousClassInfo->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
     }
 
