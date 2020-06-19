@@ -13,6 +13,7 @@ use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use Reflection as CoreReflection;
@@ -30,6 +31,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -65,7 +67,6 @@ use function basename;
 use function class_exists;
 use function count;
 use function file_get_contents;
-use function realpath;
 use function sort;
 use function uniqid;
 
@@ -77,11 +78,15 @@ class ReflectionClassTest extends TestCase
     /** @var Locator */
     private $astLocator;
 
+    /** @var Parser */
+    private $parser;
+
     protected function setUp() : void
     {
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
+        $this->parser = BetterReflectionSingleton::instance()->phpParser();
     }
 
     private function getComposerLocator() : ComposerSourceLocator
@@ -684,21 +689,19 @@ PHP;
     public function testIsAnonymousWithParentClass() : void
     {
         $reflector = new ClassReflector(
-            new SingleFileSourceLocator(
-                realpath(__DIR__ . '/../Fixture/ClassForHinting.php'),
-                $this->astLocator
+            new StringSourceLocator('<?php new class extends ClassForHinting {};', $this->astLocator)
+        );
+        $parent = $reflector->getAllClasses()[0]->getParentClass();
+        self::assertSame(ClassForHinting::class, $parent->getName());
+
+        $reflector = new ClassReflector(
+            new AnonymousClassObjectSourceLocator(
+                new class extends ClassForHinting {
+                },
+                $this->parser
             )
         );
-
-        $anonymousClassInfo = ReflectionClass::createFromInstance(
-            new class extends ClassForHinting {
-                public function a() : void
-                {
-                }
-            }
-        );
-
-        $parent = $anonymousClassInfo->getParentClass();
+        $parent = $reflector->getAllClasses()[0]->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
     }
 
