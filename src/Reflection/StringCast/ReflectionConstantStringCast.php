@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+use function assert;
 use function gettype;
+use function is_scalar;
 use function sprintf;
 
 /**
@@ -18,6 +20,7 @@ final class ReflectionConstantStringCast
     public static function toString(ReflectionConstant $constantReflection) : string
     {
         $value = $constantReflection->getValue();
+        assert($value === null || is_scalar($value));
 
         return sprintf(
             'Constant [ <%s> %s %s ] {%s %s }',
@@ -25,7 +28,7 @@ final class ReflectionConstantStringCast
             gettype($value),
             $constantReflection->getName(),
             self::fileAndLinesToString($constantReflection),
-            $value
+            (string) $value,
         );
     }
 

@@ -17,8 +17,7 @@ use Roave\BetterReflectionTest\Fixture;
  */
 class NotAClassReflectionTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
@@ -35,7 +34,7 @@ class NotAClassReflectionTest extends TestCase
         self::assertInstanceOf(NotAClassReflection::class, $exception);
         self::assertSame(
             'Provided node "' . Fixture\ExampleInterface::class . '" is not class, but "interface"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 
@@ -47,7 +46,7 @@ class NotAClassReflectionTest extends TestCase
         self::assertInstanceOf(NotAClassReflection::class, $exception);
         self::assertSame(
             'Provided node "' . Fixture\ExampleTrait::class . '" is not class, but "trait"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

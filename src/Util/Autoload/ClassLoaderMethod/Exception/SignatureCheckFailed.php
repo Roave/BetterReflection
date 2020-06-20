@@ -14,7 +14,7 @@ final class SignatureCheckFailed extends RuntimeException
     {
         return new self(sprintf(
             'Failed to verify the signature of the cached file for %s',
-            $reflectionClass->getName()
+            $reflectionClass->getName(),
         ));
     }
 }

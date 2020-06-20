@@ -45,8 +45,8 @@ class AggregateSourceStubberTest extends TestCase
                 $sourceStubber1,
                 $sourceStubber2,
                 $sourceStubber3,
-                $sourceStubber4
-            ))->generateClassStub('SomeClass')
+                $sourceStubber4,
+            ))->generateClassStub('SomeClass'),
         );
     }
 
@@ -81,8 +81,8 @@ class AggregateSourceStubberTest extends TestCase
                 $sourceStubber1,
                 $sourceStubber2,
                 $sourceStubber3,
-                $sourceStubber4
-            ))->generateFunctionStub('someFunction')
+                $sourceStubber4,
+            ))->generateFunctionStub('someFunction'),
         );
     }
 
@@ -117,8 +117,8 @@ class AggregateSourceStubberTest extends TestCase
                 $sourceStubber1,
                 $sourceStubber2,
                 $sourceStubber3,
-                $sourceStubber4
-            ))->generateConstantStub('SOME_CONSTANT')
+                $sourceStubber4,
+            ))->generateConstantStub('SOME_CONSTANT'),
         );
     }
 }

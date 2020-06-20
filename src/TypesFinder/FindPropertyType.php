@@ -16,14 +16,11 @@ use function explode;
 
 class FindPropertyType
 {
-    /** @var ResolveTypes */
-    private $resolveTypes;
+    private ResolveTypes $resolveTypes;
 
-    /** @var DocBlockFactory */
-    private $docBlockFactory;
+    private DocBlockFactory $docBlockFactory;
 
-    /** @var NamespaceNodeToReflectionTypeContext */
-    private $makeContext;
+    private NamespaceNodeToReflectionTypeContext $makeContext;
 
     public function __construct()
     {
@@ -53,7 +50,7 @@ class FindPropertyType
             [],
             ...array_map(function (Var_ $varTag) use ($context) {
                 return $this->resolveTypes->__invoke(explode('|', (string) $varTag->getType()), $context);
-            }, $varTags)
+            }, $varTags),
         );
     }
 }

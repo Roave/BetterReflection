@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -35,13 +34,11 @@ class FindReflectionsInTreeTest extends TestCase
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $strategy->expects($this->never())
             ->method('__invoke');
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php', null);
 
@@ -51,20 +48,18 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $strategy->expects($this->never())
             ->method('__invoke');
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
 
@@ -74,14 +69,13 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForClassWithoutNamespace() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflection = $this->createMock(ReflectionClass::class);
@@ -90,7 +84,6 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php class Foo {}', null);
 
@@ -100,14 +93,13 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForNamespacedClass() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflection = $this->createMock(ReflectionClass::class);
@@ -116,7 +108,6 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', null);
 
@@ -126,14 +117,13 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForFunction() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflection = $this->createMock(ReflectionFunction::class);
@@ -142,7 +132,6 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
 
@@ -152,14 +141,13 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForConstantByConst() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflection = $this->createMock(ReflectionConstant::class);
@@ -168,7 +156,6 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
 
@@ -178,14 +165,13 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForConstantByConstWithMoreConstants() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflection1 = $this->createMock(ReflectionConstant::class);
@@ -195,7 +181,6 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->willReturnOnConsecutiveCalls($mockReflection1, $mockReflection2);
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php const FOO = 1, BOO = 2;', null);
 
@@ -205,14 +190,13 @@ class FindReflectionsInTreeTest extends TestCase
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForConstantByDefine() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflection = $this->createMock(ReflectionConstant::class);
@@ -221,7 +205,6 @@ class FindReflectionsInTreeTest extends TestCase
             ->method('__invoke')
             ->will($this->returnValue($mockReflection));
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $source        = <<<'PHP'
 <?php
@@ -237,14 +220,13 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testInvokeCallsReflectNodesForNotGlobalDefine() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockFunctionReflection = $this->createMock(ReflectionFunction::class);
@@ -257,7 +239,6 @@ PHP;
             ->method('__invoke')
             ->willReturn($mockFunctionReflection);
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $source        = <<<'PHP'
 <?php
@@ -275,14 +256,13 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testNoInvokeCallsReflectNodesForClassConstant() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflectionClass = $this->createMock(ReflectionClass::class);
@@ -291,7 +271,6 @@ PHP;
             ->method('__invoke')
             ->will($this->returnValue($mockReflectionClass));
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php class Foo { const FOO = 1; }', null);
 
@@ -301,14 +280,13 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 
     public function testAnonymousClassCreatedInFunction() : void
     {
-        /** @var NodeToReflection|MockObject $strategy */
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflectionFunction = $this->createMock(ReflectionFunction::class);
@@ -318,7 +296,6 @@ PHP;
             ->method('__invoke')
             ->willReturnOnConsecutiveCalls($mockReflectionFunction, $mockReflectionClass);
 
-        /** @var Reflector|MockObject $reflector */
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);
 
@@ -328,8 +305,8 @@ PHP;
                 $reflector,
                 $this->getAstForSource($locatedSource),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                $locatedSource
-            )
+                $locatedSource,
+            ),
         );
     }
 

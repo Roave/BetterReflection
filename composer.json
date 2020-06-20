@@ -3,12 +3,12 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": ">=7.2.0,<7.5.0",
+        "php": ">=7.4.1,<7.5.0",
         "ext-json": "*",
-        "jetbrains/phpstorm-stubs": "2019.2",
-        "nikic/php-parser": "^4.2.1",
-        "phpdocumentor/reflection-docblock": "^4.3.2",
-        "phpdocumentor/type-resolver": "^1.0.0",
+        "jetbrains/phpstorm-stubs": "2019.3",
+        "nikic/php-parser": "^4.4.0",
+        "phpdocumentor/reflection-docblock": "^5.1.0",
+        "phpdocumentor/type-resolver": "^1.1.0",
         "roave/signature": "^1.0"
     },
     "authors": [
@@ -35,8 +35,11 @@
 
     ],
     "require-dev": {
-        "doctrine/coding-standard": "^6.0",
-        "phpunit/phpunit": "^8.1.6"
+        "doctrine/coding-standard": "^7.0.2",
+        "phpstan/phpstan": "^0.12.25",
+        "phpunit/phpunit": "^9.1.5",
+        "vimeo/psalm": "3.11.2",
+        "infection/infection": "^0.16.3"
     },
     "autoload": {
         "psr-4": {

@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Psr;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
-use const ARRAY_FILTER_USE_KEY;
 use function array_filter;
 use function array_keys;
 use function array_map;
@@ -20,11 +19,12 @@ use function str_replace;
 use function strlen;
 use function strpos;
 use function substr;
+use const ARRAY_FILTER_USE_KEY;
 
 final class Psr4Mapping implements PsrAutoloaderMapping
 {
     /** @var array<string, array<int, string>> */
-    private $mappings = [];
+    private array $mappings = [];
 
     private function __construct()
     {
@@ -43,7 +43,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
                     return rtrim($directory, '/');
                 }, $directories);
             },
-            $mappings
+            $mappings,
         );
 
         return $instance;
@@ -71,7 +71,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
                 return array_map(static function (string $path) use ($subPath) : string {
                     return rtrim($path, '/') . '/' . $subPath . '.php';
                 }, $paths);
-            }, $matchingPrefixes, array_keys($matchingPrefixes))
+            }, $matchingPrefixes, array_keys($matchingPrefixes)),
         )));
     }
 
@@ -83,7 +83,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
             static function (string $prefix) use ($className) : bool {
                 return strpos($className, $prefix) === 0;
             },
-            ARRAY_FILTER_USE_KEY
+            ARRAY_FILTER_USE_KEY,
         );
     }
 

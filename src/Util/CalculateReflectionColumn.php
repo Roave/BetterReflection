@@ -13,7 +13,7 @@ use function strrpos;
 /**
  * @internal
  */
-final class CalculateReflectionColum
+final class CalculateReflectionColumn
 {
     /**
      * @throws InvalidNodePosition

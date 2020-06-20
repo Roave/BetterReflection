@@ -24,14 +24,11 @@ use const E_ALL;
  */
 class ReflectionConstantTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     protected function setUp() : void
     {
@@ -206,12 +203,13 @@ class ReflectionConstantTest extends TestCase
             /**
              * @var int
              */
+            /** This constant comment should be used. */ 
             const FOO = 1;';
 
         $reflector  = new ConstantReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $reflection = $reflector->reflect('FOO');
 
-        self::assertNotNull($reflection->getDocComment());
+        self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
     public function testGetDocCommentByDefine() : void
@@ -220,12 +218,13 @@ class ReflectionConstantTest extends TestCase
             /**
              * @var int
              */
+            /** This constant comment should be used. */ 
             define("FOO", 1);';
 
         $reflector  = new ConstantReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $reflection = $reflector->reflect('FOO');
 
-        self::assertNotNull($reflection->getDocComment());
+        self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
     public function startEndLineProvider() : array

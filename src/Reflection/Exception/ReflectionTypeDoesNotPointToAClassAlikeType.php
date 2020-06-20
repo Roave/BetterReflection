@@ -16,7 +16,7 @@ class ReflectionTypeDoesNotPointToAClassAlikeType extends LogicException
         return new self(sprintf(
             'Provided %s instance does not point to a class-alike type, but to "%s"',
             get_class($type),
-            $type->__toString()
+            $type->__toString(),
         ));
     }
 }

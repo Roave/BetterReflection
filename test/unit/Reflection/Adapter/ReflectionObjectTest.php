@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -15,7 +14,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
+use TypeError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -108,7 +109,6 @@ class ReflectionObjectTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionObject|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
 
         if ($expectedException === null) {
@@ -144,6 +144,20 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
 
         self::assertFalse($betterReflectionObject->getFileName());
+    }
+
+    public function testGetFileNameReturnsPathWithSystemDirectorySeparator() : void
+    {
+        $fileName = 'foo/bar\\foo/bar.php';
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getFileName')
+            ->willReturn($fileName);
+
+        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionObject->getFileName());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
@@ -397,5 +411,18 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
 
         self::assertFalse($betterReflectionObject->getExtensionName());
+    }
+
+    public function testIsInstanceReturnsNullWithNonObjectParameter() : void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('isInstance')
+            ->with('string')
+            ->willThrowException(new TypeError());
+
+        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertNull($betterReflectionObject->isInstance('string'));
     }
 }

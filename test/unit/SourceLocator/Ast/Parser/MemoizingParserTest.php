@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
+use PhpParser\Node\Name;
 use PhpParser\Parser;
-use PHPUnit\Framework\MockObject\MockObject;
+use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use function array_map;
@@ -23,14 +24,13 @@ class MemoizingParserTest extends TestCase
 {
     public function testParse() : void
     {
-        /** @var Parser|MockObject $wrappedParser */
         $wrappedParser = $this->createMock(Parser::class);
 
         $randomCodeStrings = array_unique(array_map(
             static function () : string {
                 return uniqid('code', true);
             },
-            range(0, 100)
+            range(0, 100),
         ));
 
         $randomCodeStringsCount = count($randomCodeStrings);
@@ -38,8 +38,8 @@ class MemoizingParserTest extends TestCase
         $wrappedParser
             ->expects(self::exactly($randomCodeStringsCount))
             ->method('parse')
-            ->willReturnCallback(function () : array {
-                return [$this->createMock(Node::class)];
+            ->willReturnCallback(static function () : array {
+                return [new Name('bool')];
             });
 
         $parser = new MemoizingParser($wrappedParser);
@@ -57,10 +57,33 @@ class MemoizingParserTest extends TestCase
             static function (array $nodes) : string {
                 return spl_object_hash($nodes[0]);
             },
-            $producedNodes
+            $producedNodes,
         );
 
         self::assertCount(count($nodeIdentifiers), array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
-        self::assertSame($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
+        self::assertEquals($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
+    }
+
+    public function testParsedCodeIsDifferentAtEachParserLookup() : void
+    {
+        $code          = '<?php echo "hello world";';
+        $wrappedParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
+
+        $parser = new MemoizingParser($wrappedParser);
+
+        self::assertEquals(
+            $wrappedParser->parse($code),
+            $parser->parse($code),
+        );
+        self::assertEquals(
+            $parser->parse($code),
+            $parser->parse($code),
+            'Equal tree is produced at each iteration',
+        );
+        self::assertNotSame(
+            $parser->parse($code),
+            $parser->parse($code),
+            'Each time a tree is requested, a new copy is provided',
+        );
     }
 }

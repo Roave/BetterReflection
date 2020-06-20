@@ -48,25 +48,30 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw MissingInstalledJson::inProjectPath($installationPath);
         }
 
-        $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
-        $installed = json_decode((string) file_get_contents($installedJsonPath), true);
+        /** @var array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}|null $composer */
+        $composer = json_decode((string) file_get_contents($composerJsonPath), true);
+        /** @var array{packages: list<array>}|list<array>|null $installedJson */
+        $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
         if (! is_array($composer)) {
             throw FailedToParseJson::inFile($composerJsonPath);
         }
 
-        if (! is_array($installed)) {
+        if (! is_array($installedJson)) {
             throw FailedToParseJson::inFile($installedJsonPath);
         }
+
+        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}>|null $installed*/
+        $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
             $this->prefixPaths($this->packageToClassMapPaths($composer), $realInstallationPath . '/'),
             ...array_map(function (array $package) use ($realInstallationPath) : array {
                 return $this->prefixPaths(
                     $this->packageToClassMapPaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package)
+                    $this->packagePrefixPath($realInstallationPath, $package),
                 );
-            }, $installed)
+            }, $installed),
         );
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
@@ -75,9 +80,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             ...array_map(function (array $package) use ($realInstallationPath) : array {
                 return $this->prefixPaths(
                     $this->packageToFilePaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package)
+                    $this->packagePrefixPath($realInstallationPath, $package),
                 );
-            }, $installed)
+            }, $installed),
         );
 
         return new AggregateSourceLocator(array_merge(
@@ -89,11 +94,11 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr4AutoloadNamespaces($package),
                                 $realInstallationPath,
-                                $package
+                                $package,
                             );
-                        }, $installed)
+                        }, $installed),
                     )),
-                    $astLocator
+                    $astLocator,
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(array_merge_recursive(
@@ -102,22 +107,22 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr0AutoloadNamespaces($package),
                                 $realInstallationPath,
-                                $package
+                                $package,
                             );
-                        }, $installed)
+                        }, $installed),
                     )),
-                    $astLocator
+                    $astLocator,
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
             ...array_map(static function (string $file) use ($astLocator) : array {
                 return [new SingleFileSourceLocator($file, $astLocator)];
-            }, array_merge($classMapFiles, $filePaths))
+            }, array_merge($classMapFiles, $filePaths)),
         ));
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -129,7 +134,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -141,7 +146,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<int, string>
      */
@@ -151,7 +156,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<int, string>
      */
@@ -161,9 +166,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param mixed[] $package
-     *
-     * @psalm-param array{name: string} $package
+     * @param array{name: string} $package
      */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package) : string
     {
@@ -172,11 +175,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
     /**
      * @param array<string, array<int, string>> $paths
-     * @param array<string, array<int, string>> $package
+     * @param array{name: string}               $package $package
      *
      * @return array<string, array<int, string>>
-     *
-     * @psalm-param array{name: string} $package
      */
     private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package) : array
     {
@@ -188,7 +189,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array<int|string, array<string>> $paths
+     * @param array<int|string, array<int, string>> $paths
      *
      * @return array<int|string, array<string>>
      */

@@ -10,7 +10,6 @@ use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -18,24 +17,42 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
  */
 final class UnableToCompileNodeTest extends TestCase
 {
+    public function testDefaults() : void
+    {
+        $exception = new UnableToCompileNode();
+
+        self::assertNull($exception->constantName());
+    }
+
     /** @dataProvider supportedContextTypes */
     public function testBecauseOfNotFoundConstantReference(CompilerContext $context) : void
     {
+        $constantName = 'FOO';
+
+        $exception = UnableToCompileNode::becauseOfNotFoundConstantReference(
+            $context,
+            new ConstFetch(new Name($constantName)),
+        );
+
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         self::assertSame(
-            'Could not locate constant "FOO" while evaluating expression in ' . $contextName . ' at line -1',
-            UnableToCompileNode::becauseOfNotFoundConstantReference(
-                $context,
-                new ConstFetch(new Name('FOO'))
-            )->getMessage()
+            sprintf(
+                'Could not locate constant "%s" while evaluating expression in %s at line -1',
+                $constantName,
+                $contextName,
+            ),
+            $exception->getMessage(),
         );
+
+        self::assertSame($constantName, $exception->constantName());
     }
 
     /** @dataProvider supportedContextTypes */
@@ -43,7 +60,6 @@ final class UnableToCompileNodeTest extends TestCase
     {
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
-        /** @var ReflectionClass|MockObject $targetClass */
         $targetClass = $this->createMock(ReflectionClass::class);
 
         $targetClass
@@ -59,9 +75,9 @@ final class UnableToCompileNodeTest extends TestCase
                 $targetClass,
                 new ClassConstFetch(
                     new Name\FullyQualified('A'),
-                    new Identifier('SOME_CONSTANT')
-                )
-            )->getMessage()
+                    new Identifier('SOME_CONSTANT'),
+                ),
+            )->getMessage(),
         );
     }
 
@@ -76,8 +92,8 @@ final class UnableToCompileNodeTest extends TestCase
             . ' at line -1',
             UnableToCompileNode::forUnRecognizedExpressionInContext(
                 new Yield_(new String_('')),
-                $context
-            )->getMessage()
+                $context,
+            )->getMessage(),
         );
     }
 
@@ -86,7 +102,7 @@ final class UnableToCompileNodeTest extends TestCase
     {
         $reflector = new ClassReflector(new StringSourceLocator(
             '<?php class EmptyClass {}',
-            BetterReflectionSingleton::instance()->astLocator()
+            BetterReflectionSingleton::instance()->astLocator(),
         ));
 
         return [

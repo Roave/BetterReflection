@@ -8,6 +8,7 @@ use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
+use function assert;
 use function count;
 use function reset;
 
@@ -79,7 +80,7 @@ class ResolveTypesTest extends TestCase
             [
                 'Bar' => 'Foo\Bar',
                 'Baz' => 'Bat\Baz',
-            ]
+            ],
         );
 
         $resolvedTypes = (new ResolveTypes())->__invoke([$inputType], $context);
@@ -88,7 +89,7 @@ class ResolveTypesTest extends TestCase
         $resolvedType = reset($resolvedTypes);
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
-        /** @var $resolvedType Types\Object_ */
+        assert($resolvedType instanceof Types\Object_);
         self::assertSame($expectedType, (string) $resolvedType);
     }
 }

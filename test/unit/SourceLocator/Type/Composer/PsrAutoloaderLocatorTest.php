@@ -29,11 +29,9 @@ class PsrAutoloaderLocatorTest extends TestCase
     /** @var PsrAutoloaderMapping&MockObject */
     private $psrMapping;
 
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var PsrAutoloaderLocator */
-    private $psrLocator;
+    private PsrAutoloaderLocator $psrLocator;
 
     protected function setUp() : void
     {
@@ -46,7 +44,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         $this->psrLocator = new PsrAutoloaderLocator(
             $this->psrMapping,
             BetterReflectionSingleton::instance()
-                ->astLocator()
+                ->astLocator(),
         );
         $this->reflector  = new ClassReflector($this->psrLocator);
         $this
@@ -65,7 +63,7 @@ class PsrAutoloaderLocatorTest extends TestCase
                     return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foo.php'];
                 }
 
-                if ($identifier->getName() === (Foo::class . 'potato')) {
+                if ($identifier->getName() === Foo::class . 'potato') {
                     return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foopotato.php'];
                 }
 
@@ -83,8 +81,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 Foo::class,
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         self::assertNotNull($located);
@@ -97,8 +95,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 Foo::class . 'potato',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -108,8 +106,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\Bar\\Empty',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -119,8 +117,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Blah',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -138,7 +136,7 @@ class PsrAutoloaderLocatorTest extends TestCase
                     __DIR__ . '/../../../Assets/DirectoryScannerAssetsFoo',
                 ],
             ]),
-            $astLocator
+            $astLocator,
         );
 
         $expected = [
@@ -154,8 +152,8 @@ class PsrAutoloaderLocatorTest extends TestCase
             },
             $locator->locateIdentifiersByType(
                 new ClassReflector($locator),
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         // Sorting may depend on filesystem here

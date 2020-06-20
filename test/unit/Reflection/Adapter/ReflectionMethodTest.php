@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -12,17 +11,18 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
 use Throwable;
+use TypeError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -112,7 +112,6 @@ class ReflectionMethodTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionMethod|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionMethod::class);
 
         if ($expectedException === null) {
@@ -135,7 +134,7 @@ class ReflectionMethodTest extends TestCase
                 break;
 
             case 'getReturnType':
-                self::assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
+                self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $adapterReturnValue);
                 break;
 
             case 'getPrototype':
@@ -164,6 +163,20 @@ class ReflectionMethodTest extends TestCase
         $betterReflectionMethod = new ReflectionMethodAdapter($betterReflectionMethod);
 
         self::assertFalse($betterReflectionMethod->getFileName());
+    }
+
+    public function testGetFileNameReturnsPathWithSystemDirectorySeparator() : void
+    {
+        $fileName = 'foo/bar\\foo/bar.php';
+
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getFileName')
+            ->willReturn($fileName);
+
+        $betterReflectionMethod = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionMethod->getFileName());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
@@ -225,7 +238,7 @@ class ReflectionMethodTest extends TestCase
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
             ->method('getClosure')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
@@ -300,7 +313,7 @@ class ReflectionMethodTest extends TestCase
             ->willReturn(true);
         $betterReflectionMethod
             ->method('invoke')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
@@ -315,7 +328,7 @@ class ReflectionMethodTest extends TestCase
             ->willReturn(true);
         $betterReflectionMethod
             ->method('invokeArgs')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
+            ->willThrowException(new TypeError());
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 

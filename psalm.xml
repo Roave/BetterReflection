@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <psalm
-    name="Example Psalm config with recommended defaults"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    errorBaseline="psalm-baseline.xml"
     useDocblockTypes="true"
     totallyTyped="false"
+    usePhpDocPropertiesWithoutMagicCall="true"
     allowPhpStormGenerics="true"
 >
     <projectFiles>
@@ -10,8 +14,6 @@
     </projectFiles>
 
     <issueHandlers>
-        <LessSpecificReturnType errorLevel="suppress" />
-
         <MissingClosureReturnType errorLevel="suppress" />
         <MissingReturnType errorLevel="suppress" />
 
@@ -33,54 +35,30 @@
 
         <TypeCoercion errorLevel="suppress" />
 
-        <TooManyArguments>
-            <errorLevel type="suppress">
-                <directory name="src/Reflection/Adapter" />
-            </errorLevel>
-        </TooManyArguments>
-
-        <UnresolvableInclude errorLevel="suppress" />
-
-        <RawObjectIteration errorLevel="suppress" />
-
-        <MoreSpecificImplementedParamType>
-            <errorLevel type="suppress">
-                <file name="src/Reflection/ReflectionObject.php" />
-            </errorLevel>
-        </MoreSpecificImplementedParamType>
-
-        <LessSpecificImplementedReturnType>
-            <errorLevel type="suppress">
-                <file name="src/SourceLocator/Ast/Parser/MemoizingParser.php" />
-            </errorLevel>
-        </LessSpecificImplementedReturnType>
-
-        <ImplementedReturnTypeMismatch>
-            <errorLevel type="suppress">
-                <file name="src/Reflection/Adapter/ReflectionClassConstant.php" />
-            </errorLevel>
-        </ImplementedReturnTypeMismatch>
-
         <UndefinedPropertyAssignment>
             <errorLevel type="suppress">
-                <referencedProperty name="PhpParser\Node\Stmt\ClassLike::$namespacedName" />
                 <referencedProperty name="PhpParser\Node\Param::$isOptional" />
             </errorLevel>
         </UndefinedPropertyAssignment>
 
         <UndefinedPropertyFetch>
             <errorLevel type="suppress">
-                <referencedProperty name="PhpParser\Node\Stmt\ClassLike::$namespacedName" />
                 <referencedProperty name="PhpParser\Node\Param::$isOptional" />
             </errorLevel>
         </UndefinedPropertyFetch>
 
-        <PossiblyNullPropertyAssignmentValue>
+        <InvalidScalarArgument>
+            <!-- Not actually an issue, we send scalar where the called method wait for bool|float|int|string. See vimeo/psalm/issues/2622 -->
             <errorLevel type="suppress">
-                <referencedProperty name="PhpParser\Node\Expr\Closure::$stmts" />
-                <referencedProperty name="PhpParser\Node\Stmt\Function_::$stmts" />
-                <referencedProperty name="PhpParser\Node\Stmt\ClassMethod::$stmts" />
+                <referencedFunction name="PhpParser\BuilderHelpers::normalizeValue"/>
             </errorLevel>
-        </PossiblyNullPropertyAssignmentValue>
+        </InvalidScalarArgument>
+        
+        <RedundantConditionGivenDocblockType>
+            <!-- Assertion used to check that expected object is indeed an object -->
+            <errorLevel type="suppress">
+                <file name="src/Reflection/ReflectionProperty.php"/>
+            </errorLevel>
+        </RedundantConditionGivenDocblockType>
     </issueHandlers>
 </psalm>

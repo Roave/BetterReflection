@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -15,6 +14,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFu
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use function array_combine;
 use function array_map;
@@ -96,7 +96,6 @@ class ReflectionFunctionTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
     {
-        /** @var BetterReflectionFunction|MockObject $reflectionStub */
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
 
         if ($expectedException === null) {
@@ -131,6 +130,20 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertFalse($betterReflectionFunction->getFileName());
+    }
+
+    public function testGetFileNameReturnsPathWithSystemDirectorySeparator() : void
+    {
+        $fileName = 'foo/bar\\foo/bar.php';
+
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getFileName')
+            ->willReturn($fileName);
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionFunction->getFileName());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment() : void

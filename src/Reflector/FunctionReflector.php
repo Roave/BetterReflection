@@ -10,14 +10,13 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function assert;
 
 class FunctionReflector implements Reflector
 {
-    /** @var SourceLocator */
-    private $sourceLocator;
+    private SourceLocator $sourceLocator;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     public function __construct(SourceLocator $sourceLocator, ClassReflector $classReflector)
     {
@@ -36,8 +35,8 @@ class FunctionReflector implements Reflector
     {
         $identifier = new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
-        /** @var ReflectionFunction|null $functionInfo */
         $functionInfo = $this->sourceLocator->locateIdentifier($this->classReflector, $identifier);
+        assert($functionInfo instanceof ReflectionFunction || $functionInfo === null);
 
         if ($functionInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
@@ -56,7 +55,7 @@ class FunctionReflector implements Reflector
         /** @var ReflectionFunction[] $allFunctions */
         $allFunctions = $this->sourceLocator->locateIdentifiersByType(
             $this,
-            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
         );
 
         return $allFunctions;

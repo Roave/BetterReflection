@@ -20,7 +20,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         return new ComposerSourceLocator(
             require __DIR__ . '/../../../vendor/autoload.php',
-            BetterReflectionSingleton::instance()->astLocator()
+            BetterReflectionSingleton::instance()->astLocator(),
         );
     }
 
@@ -82,7 +82,7 @@ class ReflectionClassConstantTest extends TestCase
     public function testGetDocComment() : void
     {
         $const = $this->getExampleConstant('MY_CONST_2');
-        self::assertStringContainsString('Documentation for constant', $const->getDocComment());
+        self::assertStringContainsString('This comment for constant should be used.', $const->getDocComment());
     }
 
     public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
@@ -121,7 +121,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    public function columsProvider() : array
+    public function columnsProvider() : array
     {
         return [
             ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
@@ -131,7 +131,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
-     * @dataProvider columsProvider
+     * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {

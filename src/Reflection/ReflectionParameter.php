@@ -21,8 +21,9 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use RuntimeException;
+use function assert;
 use function count;
 use function get_class;
 use function in_array;
@@ -34,29 +35,22 @@ use function strtolower;
 
 class ReflectionParameter
 {
-    /** @var ParamNode */
-    private $node;
+    private ParamNode $node;
 
-    /** @var Namespace_|null */
-    private $declaringNamespace;
+    private ?Namespace_ $declaringNamespace;
 
-    /** @var ReflectionFunctionAbstract */
-    private $function;
+    private ReflectionFunctionAbstract $function;
 
-    /** @var int */
-    private $parameterIndex;
+    private int $parameterIndex;
 
-    /** @var mixed */
+    /** @var scalar|array<scalar>|null */
     private $defaultValue;
 
-    /** @var bool */
-    private $isDefaultValueConstant = false;
+    private bool $isDefaultValueConstant = false;
 
-    /** @var string|null */
-    private $defaultValueConstantName;
+    private ?string $defaultValueConstantName;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct()
     {
@@ -80,12 +74,10 @@ class ReflectionParameter
     /**
      * Create a reflection of a parameter using an instance
      *
-     * @param object $instance
-     *
      * @throws OutOfBoundsException
      */
     public static function createFromClassInstanceAndMethod(
-        $instance,
+        object $instance,
         string $methodName,
         string $parameterName
     ) : self {
@@ -174,17 +166,17 @@ class ReflectionParameter
         $defaultValueNode = $this->node->default;
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
-            /** @var Node\Name $defaultValueNode->class */
+            assert($defaultValueNode->class instanceof Node\Name);
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {
-                /** @var Node\Identifier $defaultValueNode->name */
+                assert($defaultValueNode->name instanceof Node\Identifier);
                 $constantName = $defaultValueNode->name->name;
                 $className    = $this->findParentClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant = true;
-            /** @var Node\Identifier $defaultValueNode->name */
+            assert($defaultValueNode->name instanceof Node\Identifier);
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name->name;
         }
 
@@ -199,7 +191,7 @@ class ReflectionParameter
 
         $this->defaultValue = (new CompileNodeToValue())->__invoke(
             $defaultValueNode,
-            new CompilerContext($this->reflector, $this->getDeclaringClass())
+            new CompilerContext($this->reflector, $this->getDeclaringClass()),
         );
     }
 
@@ -208,9 +200,9 @@ class ReflectionParameter
      */
     private function findParentClassDeclaringConstant(string $constantName) : string
     {
-        /** @var ReflectionMethod $method */
         $method = $this->function;
-        $class  = $method->getDeclaringClass();
+        assert($method instanceof ReflectionMethod);
+        $class = $method->getDeclaringClass();
 
         do {
             if ($class->hasConstant($constantName)) {
@@ -229,7 +221,8 @@ class ReflectionParameter
      */
     public function getName() : string
     {
-        /** @var string $this->node->var->name */
+        assert(is_string($this->node->var->name));
+
         return $this->node->var->name;
     }
 
@@ -287,7 +280,7 @@ class ReflectionParameter
     /**
      * Get the default value of the parameter.
      *
-     * @return mixed
+     * @return scalar|array<scalar>|null
      *
      * @throws LogicException
      */
@@ -478,7 +471,7 @@ class ReflectionParameter
             throw new RuntimeException(sprintf(
                 'Unable to reflect class type because we were not given a "%s", but a "%s" instead',
                 ClassReflector::class,
-                get_class($this->reflector)
+                get_class($this->reflector),
             ));
         }
 
@@ -491,22 +484,22 @@ class ReflectionParameter
             return null;
         }
 
-        /** @var ReflectionType $type */
-        $type     = $this->getType();
+        $type = $this->getType();
+        assert($type instanceof ReflectionType);
         $typeHint = (string) $type;
 
         if ($typeHint === 'self') {
-            /** @var ReflectionClass $declaringClass */
             $declaringClass = $this->getDeclaringClass();
+            assert($declaringClass instanceof ReflectionClass);
 
             return $declaringClass->getName();
         }
 
         if ($typeHint === 'parent') {
-            /** @var ReflectionClass $declaringClass */
             $declaringClass = $this->getDeclaringClass();
-            /** @var ReflectionClass $parentClass */
+            assert($declaringClass instanceof ReflectionClass);
             $parentClass = $declaringClass->getParentClass();
+            assert($parentClass instanceof ReflectionClass);
 
             return $parentClass->getName();
         }
@@ -530,12 +523,12 @@ class ReflectionParameter
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getAst() : ParamNode

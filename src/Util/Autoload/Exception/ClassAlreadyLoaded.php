@@ -14,7 +14,7 @@ final class ClassAlreadyLoaded extends LogicException
     {
         return new self(sprintf(
             'Class %s has already been loaded into memory so cannot be modified',
-            $reflectionClass->getName()
+            $reflectionClass->getName(),
         ));
     }
 }

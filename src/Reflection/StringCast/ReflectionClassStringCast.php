@@ -69,7 +69,7 @@ final class ReflectionClassStringCast
             $isObject ? count($dynamicProperties) : '',
             $isObject ? self::propertiesToString($dynamicProperties) : '',
             count($methods),
-            self::methodsToString($classReflection, $methods, 2)
+            self::methodsToString($classReflection, $methods, 2),
         );
     }
 

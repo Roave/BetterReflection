@@ -21,24 +21,17 @@ use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use function array_merge;
 use function get_class;
-use function is_object;
 use function strpos;
 
 class ReflectionObject extends ReflectionClass
 {
-    /** @var ReflectionClass */
-    private $reflectionClass;
+    private ReflectionClass $reflectionClass;
 
-    /** @var object */
-    private $object;
+    private object $object;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
-    /**
-     * @param object $object
-     */
-    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, $object)
+    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, object $object)
     {
         $this->reflector       = $reflector;
         $this->reflectionClass = $reflectionClass;
@@ -48,20 +41,11 @@ class ReflectionObject extends ReflectionClass
     /**
      * Pass an instance of an object to this method to reflect it
      *
-     * @param object $object
-     *
      * @throws ReflectionException
-     * @throws InvalidArgumentException
      * @throws IdentifierNotFound
-     *
-     * @psalm-suppress DocblockTypeContradiction
      */
-    public static function createFromInstance($object) : ReflectionClass
+    public static function createFromInstance(object $object) : ReflectionClass
     {
-        if (! is_object($object)) {
-            throw new InvalidArgumentException('Can only create from an instance of an object');
-        }
-
         $className = get_class($object);
 
         if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
@@ -89,7 +73,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @see ReflectionClass::getProperties() for the usage of $filter
      *
-     * @return ReflectionProperty[]
+     * @return array<string, ReflectionProperty>
      */
     private function getRuntimeProperties(?int $filter = null) : array
     {
@@ -121,7 +105,7 @@ class ReflectionObject extends ReflectionClass
                     : null,
                 $this,
                 $this,
-                false
+                false,
             );
 
             if ($filter !== null && ! ($filter & $runtimeProperty->getModifiers())) {
@@ -139,10 +123,8 @@ class ReflectionObject extends ReflectionClass
      *
      * Note that we don't copy across DocBlock, protected, private or static
      * because runtime properties can't have these attributes.
-     *
-     * @param object $instance
      */
-    private function createPropertyNodeFromReflection(CoreReflectionProperty $property, $instance) : PropertyNode
+    private function createPropertyNodeFromReflection(CoreReflectionProperty $property, object $instance) : PropertyNode
     {
         $builder = new PropertyNodeBuilder($property->getName());
         $builder->setDefault($property->getValue($instance));
@@ -154,33 +136,21 @@ class ReflectionObject extends ReflectionClass
         return $builder->getNode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getShortName() : string
     {
         return $this->reflectionClass->getShortName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName() : string
     {
         return $this->reflectionClass->getName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNamespaceName() : string
     {
         return $this->reflectionClass->getNamespaceName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function inNamespace() : bool
     {
         return $this->reflectionClass->inNamespace();
@@ -207,17 +177,11 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getImmediateMethods($filter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMethod(string $methodName) : ReflectionMethod
     {
         return $this->reflectionClass->getMethod($methodName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasMethod(string $methodName) : bool
     {
         return $this->reflectionClass->hasMethod($methodName);
@@ -247,17 +211,11 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getConstant($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasConstant(string $name) : bool
     {
         return $this->reflectionClass->hasConstant($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getReflectionConstant(string $name) : ?ReflectionClassConstant
     {
         return $this->reflectionClass->getReflectionConstant($name);
@@ -279,9 +237,6 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getReflectionConstants();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConstructor() : ReflectionMethod
     {
         return $this->reflectionClass->getConstructor();
@@ -294,7 +249,7 @@ class ReflectionObject extends ReflectionClass
     {
         return array_merge(
             $this->reflectionClass->getProperties($filter),
-            $this->getRuntimeProperties($filter)
+            $this->getRuntimeProperties($filter),
         );
     }
 
@@ -305,13 +260,10 @@ class ReflectionObject extends ReflectionClass
     {
         return array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
-            $this->getRuntimeProperties($filter)
+            $this->getRuntimeProperties($filter),
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperty(string $name) : ?ReflectionProperty
     {
         $runtimeProperties = $this->getRuntimeProperties();
@@ -323,9 +275,6 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getProperty($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperty(string $name) : bool
     {
         $runtimeProperties = $this->getRuntimeProperties();
@@ -341,57 +290,36 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getDefaultProperties();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFileName() : ?string
     {
         return $this->reflectionClass->getFileName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocatedSource() : LocatedSource
     {
         return $this->reflectionClass->getLocatedSource();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStartLine() : int
     {
         return $this->reflectionClass->getStartLine();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEndLine() : int
     {
         return $this->reflectionClass->getEndLine();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStartColumn() : int
     {
         return $this->reflectionClass->getStartColumn();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEndColumn() : int
     {
         return $this->reflectionClass->getEndColumn();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParentClass() : ?ReflectionClass
     {
         return $this->reflectionClass->getParentClass();
@@ -405,73 +333,46 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getParentClassNames();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDocComment() : string
     {
         return $this->reflectionClass->getDocComment();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAnonymous() : bool
     {
         return $this->reflectionClass->isAnonymous();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInternal() : bool
     {
         return $this->reflectionClass->isInternal();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isUserDefined() : bool
     {
         return $this->reflectionClass->isUserDefined();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAbstract() : bool
     {
         return $this->reflectionClass->isAbstract();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFinal() : bool
     {
         return $this->reflectionClass->isFinal();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getModifiers() : int
     {
         return $this->reflectionClass->getModifiers();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isTrait() : bool
     {
         return $this->reflectionClass->isTrait();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInterface() : bool
     {
         return $this->reflectionClass->isInterface();
@@ -533,41 +434,26 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->isInstance($object);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isSubclassOf(string $className) : bool
     {
         return $this->reflectionClass->isSubclassOf($className);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function implementsInterface(string $interfaceName) : bool
     {
         return $this->reflectionClass->implementsInterface($interfaceName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInstantiable() : bool
     {
         return $this->reflectionClass->isInstantiable();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCloneable() : bool
     {
         return $this->reflectionClass->isCloneable();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isIterateable() : bool
     {
         return $this->reflectionClass->isIterateable();
@@ -597,57 +483,36 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAst() : ClassLikeNode
     {
         return $this->reflectionClass->getAst();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDeclaringNamespaceAst() : ?Namespace_
     {
         return $this->reflectionClass->getDeclaringNamespaceAst();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFinal(bool $isFinal) : void
     {
         $this->reflectionClass->setFinal($isFinal);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeMethod(string $methodName) : bool
     {
         return $this->reflectionClass->removeMethod($methodName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addMethod(string $methodName) : void
     {
         $this->reflectionClass->addMethod($methodName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeProperty(string $methodName) : bool
     {
         return $this->reflectionClass->removeProperty($methodName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addProperty(
         string $methodName,
         int $visibility = CoreReflectionProperty::IS_PUBLIC,

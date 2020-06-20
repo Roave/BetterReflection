@@ -1,5 +1,5 @@
 Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
-  @@ %s/test/unit/Fixture/ExampleClass.php 7-43
+  @@ %s/test/unit/Fixture/ExampleClass.php 10-50
 
   - Constants [5] {
     Constant [ public integer MY_CONST_1 ] { 123 }
@@ -24,11 +24,11 @@ Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
 
   - Methods [2] {
     Method [ <user, ctor> public method __construct ] {
-      @@ %s/test/unit/Fixture/ExampleClass.php 36 - 38
+      @@ %s/test/unit/Fixture/ExampleClass.php 43 - 45
     }
 
     Method [ <user> public method someMethod ] {
-      @@ %s/test/unit/Fixture/ExampleClass.php 40 - 42
+      @@ %s/test/unit/Fixture/ExampleClass.php 47 - 49
     }
   }
 }

@@ -8,26 +8,26 @@ use PhpParser\Comment;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt\Function_;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Roave\BetterReflection\Util\GetLastDocComment;
 
 /**
- * @covers \Roave\BetterReflection\Util\GetFirstDocComment
+ * @covers \Roave\BetterReflection\Util\GetLastDocComment
  */
-class GetFirstDocCommentTest extends TestCase
+class GetLastDocCommentTest extends TestCase
 {
     public function testWithComment() : void
     {
         $comment = new Comment('/* An ordinary comment */');
         $node    = new Function_('test', [], ['comments' => [$comment]]);
 
-        self::assertSame('', GetFirstDocComment::forNode($node));
+        self::assertSame('', GetLastDocComment::forNode($node));
     }
 
     public function testWithoutComment() : void
     {
         $node = new Function_('test');
 
-        self::assertSame('', GetFirstDocComment::forNode($node));
+        self::assertSame('', GetLastDocComment::forNode($node));
     }
 
     public function testWithMixedCommentTypes() : void
@@ -36,7 +36,7 @@ class GetFirstDocCommentTest extends TestCase
         $docComment = new Doc('/** Property description */');
         $node       = new Function_('test', [], ['comments' => [$comment, $docComment]]);
 
-        self::assertSame('/** Property description */', GetFirstDocComment::forNode($node));
+        self::assertSame('/** Property description */', GetLastDocComment::forNode($node));
     }
 
     public function testWithMultipleDocComments() : void
@@ -45,6 +45,6 @@ class GetFirstDocCommentTest extends TestCase
         $comment2 = new Doc('/** Second doc comment */');
         $node     = new Function_('test', [], ['comments' => [$comment1, $comment2]]);
 
-        self::assertSame('/** First doc comment */', GetFirstDocComment::forNode($node));
+        self::assertSame('/** Second doc comment */', GetLastDocComment::forNode($node));
     }
 }

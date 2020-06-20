@@ -16,7 +16,7 @@ class InvalidConstantNode extends RuntimeException
     {
         return new self(sprintf(
             'Invalid constant node (first 50 characters: %s)',
-            substr((new Standard())->prettyPrint([$node]), 0, 50)
+            substr((new Standard())->prettyPrint([$node]), 0, 50),
         ));
     }
 }

@@ -36,7 +36,7 @@ final class ReflectionMethodStringCast
             $methodReflection->getName(),
             self::fileAndLinesToString($methodReflection),
             count($methodReflection->getParameters()),
-            self::parametersToString($methodReflection)
+            self::parametersToString($methodReflection),
         );
     }
 

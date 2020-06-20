@@ -19,7 +19,7 @@ class InvalidAbstractFunctionNodeType extends InvalidArgumentException
             ReflectionFunctionAbstract::class,
             Node\Stmt\ClassMethod::class,
             Node\FunctionLike::class,
-            get_class($node)
+            get_class($node),
         ));
     }
 }

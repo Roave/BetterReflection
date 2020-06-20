@@ -11,7 +11,9 @@ use function sprintf;
 class NotAnObject extends InvalidArgumentException
 {
     /**
-     * @param mixed $nonObject
+     * @param bool|int|float|string|array|resource|null $nonObject
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
      */
     public static function fromNonObject($nonObject) : self
     {

@@ -23,13 +23,15 @@ class InvalidDirectory extends RuntimeException
     }
 
     /**
-     * @param mixed $nonStringValue
+     * @param resource|float|int|bool|object|array|null $nonStringValue
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
      */
     public static function fromNonStringValue($nonStringValue) : self
     {
         return new self(sprintf(
             'Expected string, %s given',
-            is_object($nonStringValue) ? get_class($nonStringValue) : gettype($nonStringValue)
+            is_object($nonStringValue) ? get_class($nonStringValue) : gettype($nonStringValue),
         ));
     }
 }

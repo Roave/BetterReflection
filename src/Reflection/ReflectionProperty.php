@@ -25,8 +25,8 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
+use Roave\BetterReflection\Util\GetLastDocComment;
 use function class_exists;
 use function func_num_args;
 use function get_class;
@@ -34,26 +34,19 @@ use function is_object;
 
 class ReflectionProperty
 {
-    /** @var ReflectionClass */
-    private $declaringClass;
+    private ReflectionClass $declaringClass;
 
-    /** @var ReflectionClass */
-    private $implementingClass;
+    private ReflectionClass $implementingClass;
 
-    /** @var PropertyNode */
-    private $node;
+    private PropertyNode $node;
 
-    /** @var int */
-    private $positionInNode;
+    private int $positionInNode;
 
-    /** @var Namespace_|null */
-    private $declaringNamespace;
+    private ?Namespace_ $declaringNamespace;
 
-    /** @var bool */
-    private $declaredAtCompileTime = true;
+    private bool $declaredAtCompileTime = true;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct()
     {
@@ -70,13 +63,10 @@ class ReflectionProperty
     /**
      * Create a reflection of an instance's property by its name
      *
-     * @param object $instance
-     *
-     * @throws InvalidArgumentException
      * @throws ReflectionException
      * @throws IdentifierNotFound
      */
-    public static function createFromInstance($instance, string $propertyName) : self
+    public static function createFromInstance(object $instance, string $propertyName) : self
     {
         return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
     }
@@ -243,14 +233,14 @@ class ReflectionProperty
 
     public function getDocComment() : string
     {
-        return GetFirstDocComment::forNode($this->node);
+        return GetLastDocComment::forNode($this->node);
     }
 
     /**
      * Get the default value of the property (as defined before constructor is
      * called, when the property is defined)
      *
-     * @return mixed
+     * @return scalar|array<scalar>|null
      */
     public function getDefaultValue()
     {
@@ -262,7 +252,7 @@ class ReflectionProperty
 
         return (new CompileNodeToValue())->__invoke(
             $defaultValueNode,
-            new CompilerContext($this->reflector, $this->getDeclaringClass())
+            new CompilerContext($this->reflector, $this->getDeclaringClass()),
         );
     }
 
@@ -284,12 +274,12 @@ class ReflectionProperty
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getAst() : PropertyNode
@@ -313,16 +303,13 @@ class ReflectionProperty
     }
 
     /**
-     * @param object|null $object
-     *
      * @return mixed
      *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
-     * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function getValue($object = null)
+    public function getValue(?object $object = null)
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -336,13 +323,13 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        return Closure::bind(function ($instance, string $propertyName) {
+        return Closure::bind(function (object $instance, string $propertyName) {
             return $instance->{$propertyName};
         }, $instance, $declaringClassName)->__invoke($instance, $this->getName());
     }
 
     /**
-     * @param object     $object
+     * @param mixed      $object
      * @param mixed|null $value
      *
      * @throws ClassDoesNotExist
@@ -432,6 +419,8 @@ class ReflectionProperty
 
     /**
      * @throws ClassDoesNotExist
+     *
+     * @psalm-assert class-string $className
      */
     private function assertClassExist(string $className) : void
     {
@@ -443,13 +432,13 @@ class ReflectionProperty
     /**
      * @param mixed $object
      *
-     * @return object
-     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
+     *
+     * @psalm-assert object $object
      */
-    private function assertObject($object)
+    private function assertObject($object) : object
     {
         if ($object === null) {
             throw NoObjectProvided::create();

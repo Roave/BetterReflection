@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
@@ -27,7 +26,6 @@ final class FileCacheLoaderTest extends TestCase
         $className         = uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
 
-        /** @var ReflectionClass|MockObject $classInfo */
         $classInfo = $this->createMock(ReflectionClass::class);
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
@@ -35,15 +33,12 @@ final class FileCacheLoaderTest extends TestCase
         $signature     = uniqid('Roave/Signature: ', true);
         $signedCode    = "<?php\n// " . $signature . "\n" . $generatedCode;
 
-        /** @var ClassPrinterInterface|MockObject $printer */
         $printer = $this->createMock(ClassPrinterInterface::class);
         $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
 
-        /** @var SignerInterface|MockObject $signer */
         $signer = $this->createMock(SignerInterface::class);
         $signer->expects(self::once())->method('sign')->with("<?php\n" . $generatedCode)->willReturn($signature);
 
-        /** @var CheckerInterface|MockObject $checker */
         $checker = $this->createMock(CheckerInterface::class);
         $checker->expects(self::exactly(2))->method('check')->with($signedCode)->willReturn(true);
 
@@ -61,7 +56,6 @@ final class FileCacheLoaderTest extends TestCase
         $className         = uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
 
-        /** @var ReflectionClass|MockObject $classInfo */
         $classInfo = $this->createMock(ReflectionClass::class);
         $classInfo->expects(self::exactly(2))->method('getName')->willReturn($className);
 
@@ -69,15 +63,12 @@ final class FileCacheLoaderTest extends TestCase
         $signature     = uniqid('Roave/Signature: ', true);
         $signedCode    = "<?php\n// " . $signature . "\n" . $generatedCode;
 
-        /** @var ClassPrinterInterface|MockObject $printer */
         $printer = $this->createMock(ClassPrinterInterface::class);
         $printer->expects(self::once())->method('__invoke')->with($classInfo)->willReturn($generatedCode);
 
-        /** @var SignerInterface|MockObject $signer */
         $signer = $this->createMock(SignerInterface::class);
         $signer->expects(self::once())->method('sign')->with("<?php\n" . $generatedCode)->willReturn($signature);
 
-        /** @var CheckerInterface|MockObject $checker */
         $checker = $this->createMock(CheckerInterface::class);
         $checker->expects(self::once())->method('check')->with($signedCode)->willReturn(false);
 

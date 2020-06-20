@@ -19,8 +19,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class StringSourceLocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
@@ -47,8 +46,8 @@ class StringSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier(
                 'does not matter what the class name is',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -62,8 +61,8 @@ class StringSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         self::assertSame('Foo', $reflectionClass->getName());

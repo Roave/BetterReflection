@@ -13,14 +13,14 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\Reflector\FunctionReflector
  */
 class FunctionReflectorTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {
@@ -33,12 +33,12 @@ class FunctionReflectorTest extends TestCase
     {
         $reflection = $this->createMock(ReflectionFunction::class);
 
-        /** @var StringSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this
             ->getMockBuilder(StringSourceLocator::class)
             ->disableOriginalConstructor()
             ->setMethods(['locateIdentifier'])
             ->getMock();
+        assert($sourceLocator instanceof StringSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator
             ->expects($this->once())
@@ -53,7 +53,7 @@ class FunctionReflectorTest extends TestCase
     {
         $functions = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', BetterReflectionSingleton::instance()->astLocator()),
-            $this->classReflector
+            $this->classReflector,
         ))->getAllFunctions();
 
         self::assertContainsOnlyInstancesOf(ReflectionFunction::class, $functions);

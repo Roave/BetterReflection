@@ -9,8 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 class ReflectionType extends CoreReflectionType
 {
-    /** @var BetterReflectionType */
-    private $betterReflectionType;
+    private BetterReflectionType $betterReflectionType;
 
     public function __construct(BetterReflectionType $betterReflectionType)
     {
@@ -26,25 +25,16 @@ class ReflectionType extends CoreReflectionType
         return new self($betterReflectionType);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString() : string
     {
         return $this->betterReflectionType->__toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function allowsNull() : bool
     {
         return $this->betterReflectionType->allowsNull();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function isBuiltin() : bool
     {
         $type = (string) $this->betterReflectionType;
