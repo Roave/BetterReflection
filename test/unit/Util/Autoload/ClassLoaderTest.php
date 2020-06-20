@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util\Autoload;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoader;
@@ -30,7 +29,6 @@ final class ClassLoaderTest extends TestCase
     {
         $initialAutoloaderCount = count(spl_autoload_functions());
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
@@ -46,7 +44,6 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(TestClassForAutoloader::class);
         self::assertFalse(class_exists(TestClassForAutoloader::class, false));
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loaderMethod->expects(self::once())
             ->method('__invoke')
@@ -67,7 +64,6 @@ final class ClassLoaderTest extends TestCase
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
@@ -81,7 +77,6 @@ final class ClassLoaderTest extends TestCase
 
     public function testAddClassThrowsExceptionWhenClassAlreadyLoaded() : void
     {
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loader       = new ClassLoader($loaderMethod);
 
@@ -100,7 +95,6 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
         self::assertFalse(class_exists(AnotherTestClassForAutoloader::class, false));
 
-        /** @var LoaderMethodInterface|MockObject $loaderMethod */
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
         $loaderMethod->expects(self::once())
             ->method('__invoke')

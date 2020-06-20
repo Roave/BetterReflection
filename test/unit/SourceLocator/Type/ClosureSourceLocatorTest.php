@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 use function realpath;
 use function sprintf;
 
@@ -24,11 +25,9 @@ use function sprintf;
  */
 class ClosureSourceLocatorTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     protected function setUp() : void
     {
@@ -50,21 +49,20 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /**
-     * @paran int $endLine
      * @dataProvider closuresProvider
      */
     public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
     {
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
-        /** @var ReflectionFunction $reflection */
         $reflection = $locator->locateIdentifier(
             $this->reflector,
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
         );
+        assert($reflection instanceof ReflectionFunction);
 
         self::assertTrue($reflection->isClosure());
         self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
@@ -83,18 +81,16 @@ class ClosureSourceLocatorTest extends TestCase
 
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
-        /** @var ReflectionFunction $reflection */
         $locator->locateIdentifier(
             $this->reflector,
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
         );
     }
 
     /**
-     * @paran int $endLine
      * @dataProvider closuresProvider
      */
     public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
@@ -102,7 +98,7 @@ class ClosureSourceLocatorTest extends TestCase
         /** @var ReflectionFunction[] $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
             $this->reflector,
-            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
+            new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
         );
 
         self::assertCount(1, $reflections);
@@ -125,7 +121,7 @@ class ClosureSourceLocatorTest extends TestCase
         /** @var ReflectionFunction[] $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
             $this->reflector,
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         );
 
         self::assertCount(0, $reflections);
@@ -154,8 +150,8 @@ class ClosureSourceLocatorTest extends TestCase
             $this->reflector,
             new Identifier(
                 'Foo',
-                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
         );
     }
 }

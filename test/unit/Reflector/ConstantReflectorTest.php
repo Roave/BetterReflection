@@ -13,14 +13,14 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use function assert;
 
 /**
  * @covers \Roave\BetterReflection\Reflector\ConstantReflector
  */
 class ConstantReflectorTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {
@@ -33,12 +33,12 @@ class ConstantReflectorTest extends TestCase
     {
         $reflection = $this->createMock(ReflectionConstant::class);
 
-        /** @var StringSourceLocator|MockObject $sourceLocator */
         $sourceLocator = $this
             ->getMockBuilder(StringSourceLocator::class)
             ->disableOriginalConstructor()
             ->setMethods(['locateIdentifier'])
             ->getMock();
+        assert($sourceLocator instanceof StringSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator
             ->expects($this->once())
@@ -53,7 +53,7 @@ class ConstantReflectorTest extends TestCase
     {
         $constants = (new ConstantReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Constants.php', BetterReflectionSingleton::instance()->astLocator()),
-            $this->classReflector
+            $this->classReflector,
         ))->getAllConstants();
 
         self::assertContainsOnlyInstancesOf(ReflectionConstant::class, $constants);

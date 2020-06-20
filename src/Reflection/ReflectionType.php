@@ -28,14 +28,11 @@ class ReflectionType
         'void'     => null,
     ];
 
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var bool */
-    private $allowsNull;
+    private bool $allowsNull;
 
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     private function __construct()
     {
@@ -93,10 +90,13 @@ class ReflectionType
         return $reflectionClass;
     }
 
+    public function getName() : string
+    {
+        return $this->type;
+    }
+
     /**
      * Convert this string type to a string
-     *
-     * @see https://github.com/php/php-src/blob/master/ext/reflection/php_reflection.c#L2993
      */
     public function __toString() : string
     {

@@ -138,7 +138,55 @@ namespace Foom {
 namespace Boom {
     interface Foo {}
     interface Bar {}
+    interface Boo extends Bar {}
 
     class A implements Foo {}
-    class B extends A implements Bar {}
+    class B extends A implements Boo {}
+}
+
+namespace Construct {
+    class Foo
+    {
+        public function __construct(int $i)
+        {
+        }
+    }
+
+    class Bar extends Foo
+    {
+        public function __construct(string $s)
+        {
+        }
+    }
+
+    abstract class Lorem
+    {
+        abstract public function __construct(int $i);
+    }
+
+    class Ipsum extends Lorem
+    {
+        public function __construct(int $i)
+        {
+        }
+    }
+}
+
+namespace Traits {
+    interface FooInterface
+    {
+        public function doFoo(): void;
+    }
+
+    trait FooTrait
+    {
+        public function doFoo(): void
+        {
+        }
+    }
+
+    class Foo implements FooInterface
+    {
+        use FooTrait;
+    }
 }

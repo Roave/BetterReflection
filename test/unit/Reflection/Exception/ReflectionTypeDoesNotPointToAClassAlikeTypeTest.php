@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\ReflectionTypeDoesNotPointToAClassAlikeType;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -16,7 +15,6 @@ class ReflectionTypeDoesNotPointToAClassAlikeTypeTest extends TestCase
 {
     public function testFor() : void
     {
-        /** @var ReflectionType|MockObject $type */
         $type = $this->createMock(ReflectionType::class);
 
         $type
@@ -29,7 +27,7 @@ class ReflectionTypeDoesNotPointToAClassAlikeTypeTest extends TestCase
         self::assertInstanceOf(ReflectionTypeDoesNotPointToAClassAlikeType::class, $exception);
         self::assertStringMatchesFormat(
             'Provided %s instance does not point to a class-alike type, but to "another potato"',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

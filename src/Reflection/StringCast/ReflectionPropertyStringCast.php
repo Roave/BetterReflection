@@ -25,7 +25,7 @@ final class ReflectionPropertyStringCast
             $stateModifier,
             self::visibilityToString($propertyReflection),
             $propertyReflection->isStatic() ? ' static' : '',
-            $propertyReflection->getName()
+            $propertyReflection->getName(),
         );
     }
 

@@ -19,28 +19,37 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\AutoloadableClassInPhar;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
+use Roave\BetterReflectionTest\Fixture\BrokenAutoloaderException;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassNotInPhar;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use function class_exists;
 use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
 use function interface_exists;
+use function restore_error_handler;
+use function set_error_handler;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
+use function str_replace;
+use function sys_get_temp_dir;
+use function tempnam;
 use function trait_exists;
 use function uniqid;
+use function unlink;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
  */
 class AutoloadSourceLocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
     protected function setUp() : void
     {
@@ -51,9 +60,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $this->classReflector = $configuration->classReflector();
     }
 
-    /**
-     * @return Reflector|MockObject
-     */
+    /** @return Reflector&MockObject */
     private function getMockReflector()
     {
         return $this->createMock(Reflector::class);
@@ -95,8 +102,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableInterface::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
 
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
@@ -114,8 +121,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableInterface::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
     }
 
@@ -131,8 +138,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
 
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
@@ -150,8 +157,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-                ))->getLocatedSource()
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
         );
     }
 
@@ -182,6 +189,45 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertSame('Roave\BetterReflectionTest\Fixture\BY_CONST_2', $reflection->getName());
         self::assertSame('BY_CONST_2', $reflection->getShortName());
+    }
+
+    /**
+     * Running in a separate process to reduce the amount of existing files to scan in case of a constant lookup failure
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testAutoloadSourceLocatorWillNotFindConstantDeclarationFileIfDeclarationFileIsRemoved() : void
+    {
+        $constantName        = str_replace('.', '', uniqid('constant_name', true));
+        $temporarySourceFile = tempnam(sys_get_temp_dir(), 'AutoloadSourceLocatorTest');
+
+        self::assertIsString($temporarySourceFile);
+
+        file_put_contents(
+            $temporarySourceFile,
+            '<?php namespace Roave\BetterReflectionTest\SourceLocator\Type; const ' . $constantName . ' = "foo";',
+        );
+
+        require $temporarySourceFile;
+
+        $sourceLocator     = new AutoloadSourceLocator($this->astLocator);
+        $constantReflector = (new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator)));
+
+        self::assertSame(
+            'Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName,
+            $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName)
+                ->getName(),
+        );
+
+        unlink($temporarySourceFile);
+
+        $sourceLocator     = new AutoloadSourceLocator($this->astLocator);
+        $constantReflector = (new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator)));
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName);
     }
 
     public function testConstantLoadsByDefine() : void
@@ -242,7 +288,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertNull($sourceLocator->locateIdentifier(
             new ClassReflector($sourceLocator),
-            new Identifier('Some\Class\That\Cannot\Exist', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
+            new Identifier('Some\Class\That\Cannot\Exist', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         ));
     }
 
@@ -254,7 +300,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertNull(
             (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)))
+                ->locateIdentifier($this->getMockReflector(), new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))),
         );
     }
 
@@ -264,8 +310,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
-                    new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))
-                )
+                    new Identifier('strlen', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
+                ),
         );
     }
 
@@ -277,8 +323,8 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier(
                     $this->getMockReflector(),
-                    new Identifier(AutoloadableClassWithTwoDirectories::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS))
-                )
+                    new Identifier(AutoloadableClassWithTwoDirectories::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                ),
         );
 
         spl_autoload_unregister([$this, 'autoload']);
@@ -301,5 +347,64 @@ class AutoloadSourceLocatorTest extends TestCase
         include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
 
         return true;
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillLocateSourcesInPharPath() : void
+    {
+        require_once 'phar://' . __DIR__ . '/../../Fixture/autoload.phar/vendor/autoload.php';
+        spl_autoload_register(static function (string $class) : void {
+            if ($class !== ClassNotInPhar::class) {
+                return;
+            }
+
+            include_once __DIR__ . '/../../Fixture/ClassNotInPhar.php';
+        });
+
+        $sourceLocator  = new AutoloadSourceLocator($this->astLocator);
+        $classReflector = new ClassReflector($sourceLocator);
+
+        $reflection = $classReflector->reflect(AutoloadableClassInPhar::class);
+
+        $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
+    }
+
+    public function testBrokenAutoloader() : void
+    {
+        $getErrorHandler = static function () : ?callable {
+            $errorHandler = set_error_handler(static function () : bool {
+                return true;
+            });
+            restore_error_handler();
+
+            return $errorHandler;
+        };
+
+        $toBeThrown           = new BrokenAutoloaderException();
+        $brokenAutoloader     = static function () use ($toBeThrown) : void {
+            throw $toBeThrown;
+        };
+        $previousErrorHandler = $getErrorHandler();
+
+        spl_autoload_register($brokenAutoloader);
+
+        try {
+            (new AutoloadSourceLocator($this->astLocator))
+                ->locateIdentifier(
+                    $this->getMockReflector(),
+                    new Identifier('Whatever', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                );
+
+            self::fail('No exception was thrown');
+        } catch (BrokenAutoloaderException $e) {
+            self::assertSame($e, $toBeThrown);
+        } finally {
+            spl_autoload_unregister($brokenAutoloader);
+        }
+
+        self::assertSame($previousErrorHandler, $getErrorHandler());
+        self::assertNotFalse(file_get_contents(__FILE__));
     }
 }

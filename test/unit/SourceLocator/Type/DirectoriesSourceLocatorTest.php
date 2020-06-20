@@ -24,8 +24,7 @@ use function uniqid;
  */
 class DirectoriesSourceLocatorTest extends TestCase
 {
-    /** @var DirectoriesSourceLocator */
-    private $sourceLocator;
+    private DirectoriesSourceLocator $sourceLocator;
 
     public function setUp() : void
     {
@@ -36,7 +35,7 @@ class DirectoriesSourceLocatorTest extends TestCase
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
                 __DIR__ . '/../../Assets/DirectoryScannerAssetsFoo',
             ],
-            BetterReflectionSingleton::instance()->astLocator()
+            BetterReflectionSingleton::instance()->astLocator(),
         );
     }
 
@@ -44,7 +43,7 @@ class DirectoriesSourceLocatorTest extends TestCase
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new ClassReflector($this->sourceLocator),
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         );
 
         self::assertCount(4, $classes);
@@ -53,7 +52,7 @@ class DirectoriesSourceLocatorTest extends TestCase
             static function (ReflectionClass $reflectionClass) : string {
                 return $reflectionClass->getName();
             },
-            $classes
+            $classes,
         );
 
         sort($classNames);
@@ -70,8 +69,8 @@ class DirectoriesSourceLocatorTest extends TestCase
             new ClassReflector($this->sourceLocator),
             new Identifier(
                 DirectoryScannerAssets\Bar\FooBar::class,
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         self::assertInstanceOf(ReflectionClass::class, $class);

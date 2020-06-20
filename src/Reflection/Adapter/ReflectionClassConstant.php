@@ -9,8 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-    /** @var BetterReflectionClassConstant */
-    private $betterClassConstant;
+    private BetterReflectionClassConstant $betterClassConstant;
 
     public function __construct(BetterReflectionClassConstant $betterClassConstant)
     {
@@ -29,7 +28,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Returns constant value
      *
-     * @return mixed
+     * @return scalar|array<scalar>|null
      */
     public function getValue()
     {
@@ -90,10 +89,8 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
      * To string
      *
      * @link https://php.net/manual/en/reflector.tostring.php
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->betterClassConstant->__toString();
     }

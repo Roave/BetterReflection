@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Ast;
 
 use Closure;
 use PhpParser\Node;
+use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
@@ -19,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
+use function assert;
 use function count;
 
 /**
@@ -26,15 +28,16 @@ use function count;
  */
 final class FindReflectionsInTree
 {
-    /** @var AstConversionStrategy */
-    private $astConversionStrategy;
+    private AstConversionStrategy $astConversionStrategy;
 
-    /** @var FunctionReflector */
-    private $functionReflector;
+    private FunctionReflector $functionReflector;
 
-    /** @var Closure */
-    private $functionReflectorGetter;
+    /** @var Closure(): FunctionReflector */
+    private Closure $functionReflectorGetter;
 
+    /**
+     * @param Closure(): FunctionReflector $functionReflectorGetter
+     */
     public function __construct(AstConversionStrategy $astConversionStrategy, Closure $functionReflectorGetter)
     {
         $this->astConversionStrategy   = $astConversionStrategy;
@@ -58,25 +61,19 @@ final class FindReflectionsInTree
             extends NodeVisitorAbstract
         {
             /** @var Reflection[] */
-            private $reflections = [];
+            private array $reflections = [];
 
-            /** @var Reflector */
-            private $reflector;
+            private Reflector $reflector;
 
-            /** @var IdentifierType */
-            private $identifierType;
+            private IdentifierType $identifierType;
 
-            /** @var LocatedSource */
-            private $locatedSource;
+            private LocatedSource $locatedSource;
 
-            /** @var AstConversionStrategy */
-            private $astConversionStrategy;
+            private AstConversionStrategy $astConversionStrategy;
 
-            /** @var Namespace_|null */
-            private $currentNamespace;
+            private ?Namespace_ $currentNamespace = null;
 
-            /** @var FunctionReflector */
-            private $functionReflector;
+            private FunctionReflector $functionReflector;
 
             public function __construct(
                 Reflector $reflector,
@@ -139,13 +136,17 @@ final class FindReflectionsInTree
                         return null;
                     }
 
-                    if ($node->name->hasAttribute('namespacedName') && count($node->name->getAttribute('namespacedName')->parts) > 1) {
-                        try {
-                            $this->functionReflector->reflect($node->name->getAttribute('namespacedName')->toString());
+                    if ($node->name->hasAttribute('namespacedName')) {
+                        $namespacedName = $node->name->getAttribute('namespacedName');
+                        assert($namespacedName instanceof Name);
+                        if (count($namespacedName->parts) > 1) {
+                            try {
+                                $this->functionReflector->reflect($namespacedName->toString());
 
-                            return null;
-                        } catch (IdentifierNotFound $e) {
-                            // Global define()
+                                return null;
+                            } catch (IdentifierNotFound $e) {
+                                // Global define()
+                            }
                         }
                     }
 
@@ -169,6 +170,8 @@ final class FindReflectionsInTree
                 }
 
                 $this->reflections[] = $reflection;
+
+                return null;
             }
 
             /**
@@ -181,6 +184,8 @@ final class FindReflectionsInTree
                 }
 
                 $this->currentNamespace = null;
+
+                return null;
             }
 
             /**

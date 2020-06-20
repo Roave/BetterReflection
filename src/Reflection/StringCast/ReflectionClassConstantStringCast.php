@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use function gettype;
+use function is_array;
 use function sprintf;
 
 /**
@@ -22,7 +23,7 @@ final class ReflectionClassConstantStringCast
             self::visibilityToString($constantReflection),
             gettype($value),
             $constantReflection->getName(),
-            $value
+            is_array($value) ? 'Array' : (string) $value,
         );
     }
 

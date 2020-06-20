@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionNamedType;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
@@ -41,12 +42,6 @@ class ReflectionObjectTest extends TestCase
         return BetterReflectionSingleton::instance()->phpParser()->parse($code);
     }
 
-    public function testExceptionThrownWhenNonObjectGiven() : void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        ReflectionObject::createFromInstance(123);
-    }
-
     public function anonymousClassInstancesProvider() : array
     {
         $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
@@ -60,11 +55,9 @@ class ReflectionObjectTest extends TestCase
     }
 
     /**
-     * @param object $anonymousClass
-     *
      * @dataProvider anonymousClassInstancesProvider
      */
-    public function testReflectionForAnonymousClass($anonymousClass, string $file, int $startLine, int $endLine) : void
+    public function testReflectionForAnonymousClass(object $anonymousClass, string $file, int $startLine, int $endLine) : void
     {
         $classInfo = ReflectionObject::createFromInstance($anonymousClass);
 
@@ -256,8 +249,15 @@ class ReflectionObjectTest extends TestCase
 
         $reflectionObjectReflectionMethod = $reflectionObjectReflection->getMethod($methodName);
         $fakeParams                       = array_map(
-            static function (ReflectionParameter $parameter) {
-                switch ((string) $parameter->getType()) {
+            static function (ReflectionParameter $parameter) use ($methodName) {
+                if ($methodName === 'isInstance' && $parameter->getName() === 'object') {
+                    return new stdClass();
+                }
+
+                $type     = $parameter->getType();
+                $typeName = $type instanceof ReflectionNamedType ? $type->getName() : (string) $type;
+
+                switch ($typeName) {
                     case 'int':
                         return random_int(1, 1000);
                     case 'null':
@@ -268,7 +268,7 @@ class ReflectionObjectTest extends TestCase
                         return uniqid('stringParam', true);
                 }
             },
-            $reflectionObjectReflectionMethod->getParameters()
+            $reflectionObjectReflectionMethod->getParameters(),
         );
 
         // Finally, call the method name with some dummy parameters. This should

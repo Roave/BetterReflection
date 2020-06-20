@@ -8,11 +8,11 @@ use Exception;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use function assert;
 
 class ReflectionParameter extends CoreReflectionParameter
 {
-    /** @var BetterReflectionParameter */
-    private $betterReflectionParameter;
+    private BetterReflectionParameter $betterReflectionParameter;
 
     public function __construct(BetterReflectionParameter $betterReflectionParameter)
     {
@@ -66,8 +66,8 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public function getDeclaringFunction()
     {
-        /** @var BetterReflectionMethod|\Roave\BetterReflection\Reflection\ReflectionFunction $function */
         $function = $this->betterReflectionParameter->getDeclaringFunction();
+        assert($function instanceof BetterReflectionMethod || $function instanceof \Roave\BetterReflection\Reflection\ReflectionFunction);
 
         if ($function instanceof BetterReflectionMethod) {
             return new ReflectionMethod($function);
@@ -197,6 +197,6 @@ class ReflectionParameter extends CoreReflectionParameter
      */
     public function getType()
     {
-        return ReflectionType::fromReturnTypeOrNull($this->betterReflectionParameter->getType());
+        return ReflectionNamedType::fromReturnTypeOrNull($this->betterReflectionParameter->getType());
     }
 }

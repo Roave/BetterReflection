@@ -17,8 +17,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class FindReflectionOnLineTest extends TestCase
 {
-    /** @var FindReflectionOnLine */
-    private $finder;
+    private FindReflectionOnLine $finder;
 
     protected function setUp() : void
     {

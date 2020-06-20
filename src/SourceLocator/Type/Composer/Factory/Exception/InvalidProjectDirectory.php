@@ -13,7 +13,7 @@ final class InvalidProjectDirectory extends InvalidArgumentException implements 
     {
         return new self(sprintf(
             'Could not locate project directory "%s"',
-            $path
+            $path,
         ));
     }
 }

@@ -10,8 +10,7 @@ use function sprintf;
 
 class IdentifierNotFound extends RuntimeException
 {
-    /** @var Identifier */
-    private $identifier;
+    private Identifier $identifier;
 
     public function __construct(string $message, Identifier $identifier)
     {
@@ -30,7 +29,7 @@ class IdentifierNotFound extends RuntimeException
         return new self(sprintf(
             '%s "%s" could not be found in the located source',
             $identifier->getType()->getName(),
-            $identifier->getName()
+            $identifier->getName(),
         ), $identifier);
     }
 }

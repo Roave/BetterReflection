@@ -18,10 +18,13 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
-use const STREAM_URL_STAT_QUIET;
 use function array_key_exists;
+use function array_reverse;
+use function assert;
 use function class_exists;
 use function defined;
 use function file_exists;
@@ -33,10 +36,7 @@ use function interface_exists;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
-use function stat;
-use function stream_wrapper_register;
-use function stream_wrapper_restore;
-use function stream_wrapper_unregister;
+use function spl_autoload_functions;
 use function trait_exists;
 
 /**
@@ -44,34 +44,22 @@ use function trait_exists;
  *
  * There are some prerequisites...
  *   - we expect the autoloader to load classes from a file (i.e. using require/include)
+ *   - your autoloader of choice does not replace stream wrappers
  */
 class AutoloadSourceLocator extends AbstractSourceLocator
 {
-    /** @var AstLocator */
-    private $astLocator;
+    private Parser $phpParser;
 
-    /** @var Parser */
-    private $phpParser;
+    private NodeTraverser $nodeTraverser;
 
-    /** @var NodeTraverser */
-    private $nodeTraverser;
+    private NodeVisitorAbstract $constantVisitor;
 
-    /** @var NodeVisitorAbstract */
-    private $constantVisitor;
-
-    /**
-     * Note: the constructor has been made a 0-argument constructor because `\stream_wrapper_register`
-     *       is a piece of trash, and doesn't accept instances, just class names.
-     */
     public function __construct(?AstLocator $astLocator = null, ?Parser $phpParser = null)
     {
         $betterReflection = new BetterReflection();
 
-        $validLocator = $astLocator ?? self::$currentAstLocator ?? $betterReflection->astLocator();
+        parent::__construct($astLocator ?? $betterReflection->astLocator());
 
-        parent::__construct($validLocator);
-
-        $this->astLocator      = $validLocator;
         $this->phpParser       = $phpParser ?? $betterReflection->phpParser();
         $this->constantVisitor = $this->createConstantVisitor();
 
@@ -79,17 +67,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         $this->nodeTraverser->addVisitor(new NameResolver());
         $this->nodeTraverser->addVisitor($this->constantVisitor);
     }
-
-    /**
-     * Primarily used by the non-loading-autoloader magic trickery to determine
-     * the filename used during autoloading.
-     *
-     * @var string|null
-     */
-    private static $autoloadLocatedFile;
-
-    /** @var AstLocator */
-    private static $currentAstLocator;
 
     /**
      * {@inheritDoc}
@@ -107,7 +84,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         return new LocatedSource(
             file_get_contents($potentiallyLocatedFile),
-            $potentiallyLocatedFile
+            $potentiallyLocatedFile,
         );
     }
 
@@ -146,6 +123,12 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      * that it cannot find the file, so we squelch the errors by overriding the
      * error handler temporarily.
      *
+     * Note: the following code is designed so that the first hit on an actual
+     *       **file** leads to a path being resolved. No actual autoloading nor
+     *       file reading should happen, and most certainly no other classes
+     *       should exist after execution. The only filesystem access is to
+     *       check whether the file exists.
+     *
      * @throws ReflectionException
      */
     private function locateClassByName(string $className) : ?string
@@ -160,17 +143,38 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return $filename;
         }
 
-        self::$autoloadLocatedFile = null;
-        self::$currentAstLocator   = $this->astLocator; // passing the locator on to the implicitly instantiated `self`
-        $previousErrorHandler      = set_error_handler(static function () : void {
-        });
-        stream_wrapper_unregister('file');
-        stream_wrapper_register('file', self::class);
-        class_exists($className);
-        stream_wrapper_restore('file');
-        set_error_handler($previousErrorHandler);
+        $this->silenceErrors();
 
-        return self::$autoloadLocatedFile;
+        try {
+            return FileReadTrapStreamWrapper::withStreamWrapperOverride(
+                static function () use ($className) : ?string {
+                    foreach (spl_autoload_functions() as $preExistingAutoloader) {
+                        $preExistingAutoloader($className);
+
+                        /**
+                         * This static variable is populated by the side-effect of the stream wrapper
+                         * trying to read the file path when `include()` is used by an autoloader.
+                         *
+                         * This will not be `null` when the autoloader tried to read a file.
+                         */
+                        if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
+                            return FileReadTrapStreamWrapper::$autoloadLocatedFile;
+                        }
+                    }
+
+                    return null;
+                },
+            );
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    private function silenceErrors() : void
+    {
+        set_error_handler(static function () : bool {
+            return true;
+        });
     }
 
     /**
@@ -187,8 +191,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        $reflection         = new ReflectionFunction($functionName);
-        $reflectionFileName = $reflection->getFileName();
+        $reflectionFileName = (new ReflectionFunction($functionName))->getFileName();
 
         if (! is_string($reflectionFileName)) {
             return null;
@@ -200,7 +203,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     /**
      * We can only load constants if they already exist, because PHP does not
      * have constant autoloading. Therefore if it exists, we simply use brute force
-     * to search throught all included files to find the right filename.
+     * to search throughout all included files to find the right filename.
      */
     private function locateConstantByName(string $constantName) : ?string
     {
@@ -208,7 +211,10 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        if (! array_key_exists($constantName, get_defined_constants(true)['user'])) {
+        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $constants */
+        $constants = get_defined_constants(true);
+
+        if (! array_key_exists($constantName, $constants['user'])) {
             return null;
         }
 
@@ -217,7 +223,16 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
         $constantFileName = null;
 
-        foreach (get_included_files() as $includedFileName) {
+        // Note: looking at files in reverse order, since newer files are more likely to have
+        //       defined a constant that is being looked up. Earlier files are possibly related
+        //       to libraries/frameworks that we rely upon.
+        foreach (array_reverse(get_included_files()) as $includedFileName) {
+            try {
+                FileChecker::assertReadableFile($includedFileName);
+            } catch (InvalidFileLocation $ignored) {
+                continue;
+            }
+
             $ast = $this->phpParser->parse(file_get_contents($includedFileName));
 
             $this->nodeTraverser->traverse($ast);
@@ -232,69 +247,11 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         return $constantFileName;
     }
 
-    /**
-     * Our wrapper simply records which file we tried to load and returns
-     * boolean false indicating failure.
-     *
-     * @see https://php.net/manual/en/class.streamwrapper.php
-     * @see https://php.net/manual/en/streamwrapper.stream-open.php
-     *
-     * @param string $path
-     * @param string $mode
-     * @param int    $options
-     * @param string $opened_path
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
-     */
-    public function stream_open($path, $mode, $options, &$opened_path) : bool
-    {
-        self::$autoloadLocatedFile = $path;
-
-        return false;
-    }
-
-    /**
-     * url_stat is triggered by calls like "file_exists". The call to "file_exists" must not be overloaded.
-     * This function restores the original "file" stream, issues a call to "stat" to get the real results,
-     * and then re-registers the AutoloadSourceLocator stream wrapper.
-     *
-     * @see https://php.net/manual/en/class.streamwrapper.php
-     * @see https://php.net/manual/en/streamwrapper.url-stat.php
-     *
-     * @param string $path
-     * @param int    $flags
-     *
-     * @return mixed[]|bool
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
-     */
-    public function url_stat($path, $flags)
-    {
-        stream_wrapper_restore('file');
-
-        if ($flags & STREAM_URL_STAT_QUIET) {
-            set_error_handler(static function () {
-                // Use native error handler
-                return false;
-            });
-            $result = @stat($path);
-            restore_error_handler();
-        } else {
-            $result = stat($path);
-        }
-
-        stream_wrapper_unregister('file');
-        stream_wrapper_register('file', self::class);
-
-        return $result;
-    }
-
     private function createConstantVisitor() : NodeVisitorAbstract
     {
         return new class() extends NodeVisitorAbstract
         {
-            /** @var string|null */
-            private $constantName;
+            private ?string $constantName;
 
             /** @var Node\Stmt\Const_|Node\Expr\FuncCall|null */
             private $node;
@@ -303,7 +260,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             {
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
-                        /** @psalm-suppress UndefinedPropertyFetch */
                         if ($constNode->namespacedName->toString() === $this->constantName) {
                             $this->node = $node;
 
@@ -321,8 +277,8 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                         return null;
                     }
 
-                    /** @var Node\Scalar\String_ $nameNode */
                     $nameNode = $node->args[0]->value;
+                    assert($nameNode instanceof Node\Scalar\String_);
 
                     if ($nameNode->value === $this->constantName) {
                         $this->node = $node;

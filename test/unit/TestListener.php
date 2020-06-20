@@ -21,8 +21,7 @@ class TestListener implements BaseTestListener
 {
     use TestListenerDefaultImplementation;
 
-    /** @var TestSuite|null */
-    private $currentSuite;
+    private ?TestSuite $currentSuite;
 
     /**
      * Determine the "full" test name (including the suite name if it is set)
@@ -46,7 +45,7 @@ class TestListener implements BaseTestListener
     {
         TestCase::assertFalse(
             class_exists($className, false),
-            'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test)
+            'Class ' . $className . ' was loaded during test ' . $this->getCurrentTestName($test),
         );
     }
 

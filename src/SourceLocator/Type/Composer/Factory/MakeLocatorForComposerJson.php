@@ -41,6 +41,7 @@ final class MakeLocatorForComposerJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
+        /** @var array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}|null $composer */
         $composer = json_decode((string) file_get_contents($composerJsonPath), true);
 
         if (! is_array($composer)) {
@@ -57,26 +58,26 @@ final class MakeLocatorForComposerJson
             [
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $pathPrefix)
+                        $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $pathPrefix),
                     ),
-                    $astLocator
+                    $astLocator,
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(
-                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $pathPrefix)
+                        $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $pathPrefix),
                     ),
-                    $astLocator
+                    $astLocator,
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
             ...array_map(static function (string $file) use ($astLocator) : array {
                 return [new SingleFileSourceLocator($file, $astLocator)];
-            }, array_merge($classMapFiles, $filePaths))
+            }, array_merge($classMapFiles, $filePaths)),
         ));
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -88,7 +89,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -100,7 +101,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<int, string>
      */
@@ -110,7 +111,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param mixed[] $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<int, string>
      */

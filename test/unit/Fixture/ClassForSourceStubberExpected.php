@@ -32,6 +32,7 @@ abstract class ClassForSourceStubber extends \Roave\BetterReflectionTest\Fixture
      */
     public $publicProperty = 'string';
     public static $publicStaticProperty = null;
+    public int $propertyWithTypeHint;
     public function methodWithoutVisibility() : ?\stdClass
     {
     }

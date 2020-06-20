@@ -31,6 +31,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 use TypeError;
+use function assert;
 use function current;
 use function next;
 use function reset;
@@ -40,14 +41,11 @@ use function reset;
  */
 class ReflectionFunctionAbstractTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var ClassReflector */
-    private $classReflector;
+    private ClassReflector $classReflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
@@ -89,9 +87,9 @@ class ReflectionFunctionAbstractTest extends TestCase
             new ClosureSourceLocator(
                 static function () : void {
                 },
-                $this->parser
+                $this->parser,
             ),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('foo');
 
         self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
@@ -115,9 +113,9 @@ class ReflectionFunctionAbstractTest extends TestCase
             new ClosureSourceLocator(
                 static function () : void {
                 },
-                $this->parser
+                $this->parser,
             ),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
 
         self::assertTrue($function->isClosure());
@@ -191,6 +189,7 @@ class ReflectionFunctionAbstractTest extends TestCase
             ['<?php function foo() { func(yield $foo); }', true],
             ['<?php function foo() { $foo->func(yield $foo); }', true],
             ['<?php function foo() { new Foo(yield $foo); }', true],
+            ['<?php function foo() { yield from []; }', true],
         ];
     }
 
@@ -289,15 +288,16 @@ class ReflectionFunctionAbstractTest extends TestCase
         /* --- This is a separator --------------- */
 
         /**
-         * Some function comment
+         * Unused function comment
          */
+        /** This function comment should be used. */ 
         function foo() {}
         ';
 
         $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $functionInfo = $reflector->reflect('foo');
 
-        self::assertStringContainsString('Some function comment', $functionInfo->getDocComment());
+        self::assertStringContainsString('This function comment should be used.', $functionInfo->getDocComment());
     }
 
     public function testSetDocCommentFromString() : void
@@ -361,7 +361,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
 
         self::assertStringContainsString('Fixture/Functions.php', $functionInfo->getFileName());
@@ -422,7 +422,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect($functionToReflect);
 
         $reflectionType = $functionInfo->getReturnType();
@@ -434,7 +434,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsNothing');
 
         self::assertNull($functionInfo->getReturnType());
@@ -444,7 +444,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsString');
 
         self::assertTrue($functionInfo->hasReturnType());
@@ -454,7 +454,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsNothing');
 
         self::assertFalse($functionInfo->hasReturnType());
@@ -476,7 +476,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php71NullableReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect($functionToReflect);
 
         $reflectionType = $functionInfo->getReturnType();
@@ -489,7 +489,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsString');
 
         $functionInfo->setReturnType('int');
@@ -502,7 +502,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $functionInfo = (new FunctionReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector
+            $this->classReflector,
         ))->reflect('returnsString');
 
         $functionInfo->removeReturnType();
@@ -552,7 +552,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertSame(
             "echo 'Hello world';",
-            $function->getBodyCode()
+            $function->getBodyCode(),
         );
     }
 
@@ -669,10 +669,10 @@ PHP;
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
 
         reset($nodes);
-        /** @var Return_ $first */
         $first = current($nodes);
-        /** @var Return_ $second */
+        assert($first instanceof Return_);
         $second = next($nodes);
+        assert($second instanceof Return_);
 
         self::assertInstanceOf(LNumber::class, $first->expr);
         self::assertInstanceOf(BinaryOp\Plus::class, $second->expr);
@@ -703,8 +703,8 @@ PHP;
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
 
         reset($nodes);
-        /** @var Return_ $first */
         $first = current($nodes);
+        assert($first instanceof Return_);
 
         self::assertInstanceOf(Closure::class, $first->expr);
         self::assertSame(8, $first->getStartLine());

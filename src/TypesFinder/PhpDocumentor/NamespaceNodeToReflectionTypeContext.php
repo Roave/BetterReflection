@@ -25,7 +25,7 @@ class NamespaceNodeToReflectionTypeContext
 
         return new Context(
             $namespace->name ? $namespace->name->toString() : '',
-            $this->aliasesToFullyQualifiedNames($namespace)
+            $this->aliasesToFullyQualifiedNames($namespace),
         );
     }
 
@@ -50,12 +50,12 @@ class NamespaceNodeToReflectionTypeContext
 
                                 return [$useUse->getAlias()->toString() => $useUse->name->toString()];
                             },
-                            $use->uses
+                            $use->uses,
                         );
                     },
-                    $this->classAlikeUses($namespace)
-                )
-            )
+                    $this->classAlikeUses($namespace),
+                ),
+            ),
         );
     }
 
@@ -65,13 +65,13 @@ class NamespaceNodeToReflectionTypeContext
     private function classAlikeUses(Namespace_ $namespace) : array
     {
         return array_filter(
-            $namespace->stmts ?? [],
+            $namespace->stmts,
             static function (Node $node) : bool {
                 return (
                     $node instanceof Use_
                     || $node instanceof GroupUse
                 ) && in_array($node->type, [Use_::TYPE_UNKNOWN, Use_::TYPE_NORMAL], true);
-            }
+            },
         );
     }
 }

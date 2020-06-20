@@ -26,29 +26,21 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
 
 final class BetterReflection
 {
-    /** @var SourceLocator|null */
-    private $sourceLocator;
+    private ?SourceLocator $sourceLocator;
 
-    /** @var ClassReflector|null */
-    private $classReflector;
+    private ?ClassReflector $classReflector;
 
-    /** @var FunctionReflector|null */
-    private $functionReflector;
+    private ?FunctionReflector $functionReflector;
 
-    /** @var ConstantReflector|null */
-    private $constantReflector;
+    private ?ConstantReflector $constantReflector;
 
-    /** @var Parser|null */
-    private $phpParser;
+    private ?Parser $phpParser;
 
-    /** @var AstLocator|null */
-    private $astLocator;
+    private ?AstLocator $astLocator;
 
-    /** @var FindReflectionOnLine|null */
-    private $findReflectionOnLine;
+    private ?FindReflectionOnLine $findReflectionOnLine;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private ?SourceStubber $sourceStubber;
 
     public function sourceLocator() : SourceLocator
     {
@@ -87,7 +79,7 @@ final class BetterReflection
             ?? $this->phpParser = new MemoizingParser(
                 (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
                     'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
-                ]))
+                ])),
             );
     }
 
@@ -110,7 +102,7 @@ final class BetterReflection
         return $this->sourceStubber
             ?? $this->sourceStubber = new AggregateSourceStubber(
                 new PhpStormStubsSourceStubber($this->phpParser()),
-                new ReflectionSourceStubber()
+                new ReflectionSourceStubber(),
             );
     }
 }

@@ -18,8 +18,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
  */
 class SingleFileSourceLocatorTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     protected function setUp() : void
     {
@@ -46,8 +45,8 @@ class SingleFileSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier(
                 'does not matter what the class name is',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         ));
     }
 
@@ -61,8 +60,8 @@ class SingleFileSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier(
                 'ClassWithNoNamespace',
-                new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
-            )
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
         );
 
         self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());

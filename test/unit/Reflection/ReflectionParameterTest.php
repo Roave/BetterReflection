@@ -40,14 +40,11 @@ use function sprintf;
  */
 class ReflectionParameterTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     public function setUp() : void
     {
@@ -342,6 +339,9 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testSetType() : void
     {
         $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
@@ -353,10 +353,13 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('string', (string) $parameterInfo->getType());
         self::assertStringStartsWith(
             'public function foo(string $intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()]),
         );
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRemoveType() : void
     {
         $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
@@ -368,7 +371,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($parameterInfo->getType());
         self::assertStringStartsWith(
             'public function foo($intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()]),
         );
     }
 
@@ -440,6 +443,20 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($secondParam->isDefaultValueAvailable());
     }
 
+    public function testParameterWithDefaultValueBeforeVariadicParameterShouldBeOptional() : void
+    {
+        $classInfo = $this->reflector->reflect(Methods::class);
+        $method    = $classInfo->getMethod('methodWithFirstParameterWithDefaultValueAndSecondParameterIsVariadic');
+
+        $firstParam = $method->getParameter('parameterWithDefaultValue');
+        self::assertTrue($firstParam->isOptional());
+        self::assertTrue($firstParam->isDefaultValueAvailable());
+
+        $secondParam = $method->getParameter('variadicParameter');
+        self::assertTrue($secondParam->isOptional());
+        self::assertTrue($secondParam->isVariadic());
+    }
+
     /**
      * @group 109
      */
@@ -508,7 +525,7 @@ class ReflectionParameterTest extends TestCase
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method    = $classInfo->getMethod('method');
@@ -529,7 +546,7 @@ class ReflectionParameterTest extends TestCase
 
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
-            $this->astLocator
+            $this->astLocator,
         ));
         $classInfo = $reflector->reflect(ClassWithConstantsAsDefaultValues::class);
         $method    = $classInfo->getMethod('method');

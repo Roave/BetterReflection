@@ -14,10 +14,11 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\Util\CalculateReflectionColum;
+use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
-use Roave\BetterReflection\Util\GetFirstDocComment;
+use Roave\BetterReflection\Util\GetLastDocComment;
 use function array_slice;
+use function assert;
 use function count;
 use function explode;
 use function implode;
@@ -25,26 +26,21 @@ use function substr_count;
 
 class ReflectionConstant implements Reflection
 {
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     /** @var Node\Stmt\Const_|Node\Expr\FuncCall */
     private $node;
 
-    /** @var LocatedSource */
-    private $locatedSource;
+    private LocatedSource $locatedSource;
 
-    /** @var NamespaceNode|null */
-    private $declaringNamespace;
+    private ?NamespaceNode $declaringNamespace;
 
-    /** @var int|null */
-    private $positionInNode;
+    private ?int $positionInNode;
 
-    /** @var int|float|mixed[]|string|bool|null const value */
+    /** @var scalar|array<scalar>|null const value */
     private $value;
 
-    /** @var bool */
-    private $valueWasCached = false;
+    private bool $valueWasCached = false;
 
     private function __construct()
     {
@@ -209,7 +205,7 @@ class ReflectionConstant implements Reflection
     /**
      * Returns constant value
      *
-     * @return mixed
+     * @return scalar|array<scalar>|null
      */
     public function getValue()
     {
@@ -225,7 +221,7 @@ class ReflectionConstant implements Reflection
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->value          = (new CompileNodeToValue())->__invoke(
             $valueNode,
-            new CompilerContext($this->reflector, null)
+            new CompilerContext($this->reflector, null),
         );
         $this->valueWasCached = true;
 
@@ -260,12 +256,12 @@ class ReflectionConstant implements Reflection
 
     public function getStartColumn() : int
     {
-        return CalculateReflectionColum::getStartColumn($this->locatedSource->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
     }
 
     public function getEndColumn() : int
     {
-        return CalculateReflectionColum::getEndColumn($this->locatedSource->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
     }
 
     /**
@@ -273,12 +269,9 @@ class ReflectionConstant implements Reflection
      */
     public function getDocComment() : string
     {
-        return GetFirstDocComment::forNode($this->node);
+        return GetLastDocComment::forNode($this->node);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString() : string
     {
         return ReflectionConstantStringCast::toString($this);
@@ -294,8 +287,8 @@ class ReflectionConstant implements Reflection
 
     private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node) : string
     {
-        /** @var Node\Scalar\String_ $nameNode */
         $nameNode = $node->args[0]->value;
+        assert($nameNode instanceof Node\Scalar\String_);
 
         return $nameNode->value;
     }

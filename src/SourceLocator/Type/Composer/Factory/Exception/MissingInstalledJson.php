@@ -13,7 +13,7 @@ final class MissingInstalledJson extends UnexpectedValueException implements Exc
     {
         return new self(sprintf(
             'Could not locate a "vendor/composer/installed.json" file in "%s"',
-            $path
+            $path,
         ));
     }
 }

@@ -15,8 +15,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 abstract class AbstractSourceLocator implements SourceLocator
 {
-    /** @var AstLocator */
-    private $astLocator;
+    private AstLocator $astLocator;
 
     /**
      * Children should implement this method and return a LocatedSource object
@@ -69,7 +68,7 @@ abstract class AbstractSourceLocator implements SourceLocator
         return $this->astLocator->findReflectionsOfType(
             $reflector,
             $locatedSource,
-            $identifierType
+            $identifierType,
         );
     }
 }

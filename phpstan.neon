@@ -4,13 +4,12 @@ parameters:
     paths:
         - src
 
+    excludes_analyse:
+        # references huge array PhpStormStubsMap
+        # can be removed once updated to PHPStan 0.12.26
+        - src/SourceLocator/SourceStubber/PhpStormStubsSourceStubber.php
+
     ignoreErrors:
-        # Some parent constructors are explicitly to be ignored
-        -
-            message: '#does not call parent constructor#'
-            paths:
-                - %currentWorkingDirectory%/src/Reflection/Adapter/*
-                - %currentWorkingDirectory%/src/Reflection/ReflectionObject.php
         -
             message: '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
             paths:
@@ -23,3 +22,8 @@ parameters:
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
             path: %currentWorkingDirectory%/src/SourceLocator/Type/AutoloadSourceLocator.php
+        # ClassLoader is a pseudo-callable
+        -
+            message: "#^Parameter \\#1 \\$autoload_function of function spl_autoload_register expects callable\\(string\\)\\: void, \\$this\\(Roave\\\\BetterReflection\\\\Util\\\\Autoload\\\\ClassLoader\\) given\\.$#"
+            count: 1
+            path: src/Util/Autoload/ClassLoader.php

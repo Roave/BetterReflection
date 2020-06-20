@@ -10,6 +10,16 @@ class TraitFixtureA
     use TraitFixtureTraitA;
 }
 
+trait TraitFixtureTraitAA
+{
+    use TraitFixtureTraitA;
+}
+
+class TraitFixtureAA
+{
+    use TraitFixtureTraitAA;
+}
+
 // No trait usage
 class TraitFixtureB
 {
@@ -21,12 +31,23 @@ trait TraitFixtureTraitC
     public function b() {}
     public function c() {}
 }
+trait TraitFixtureTraitC2
+{
+    public function d() {}
+}
+trait TraitFixtureTraitC3
+{
+    use TraitFixtureTraitC2;
+}
 class TraitFixtureC
 {
     use TraitFixtureTraitC {
         a as protected a_protected;
         b as b_renamed;
         c as private;
+    }
+    use TraitFixtureTraitC3 {
+        d as d_renamed;
     }
 }
 
@@ -43,11 +64,72 @@ trait TraitFixtureTraitD2
 }
 class TraitFixtureD
 {
-    use TraitFixtureTraitD1, TraitFixtureTraitD2 {
+    use TraitFixtureTraitD2, TraitFixtureTraitD1 {
         TraitFixtureTraitD1::foo insteadof TraitFixtureTraitD2;
         TraitFixtureTraitD1::hoo as hooFirstAlias;
         TraitFixtureTraitD1::hoo as hooSecondAlias;
     }
 
     public function boo() {}
+}
+
+trait FirstTraitForFixtureE
+{
+    public function foo(): void
+    {
+    }
+}
+
+trait SecondTraitForFixtureE
+{
+    use FirstTraitForFixtureE {
+        foo as parentFoo;
+    }
+
+    public function foo(): void
+    {
+    }
+}
+
+class TraitFixtureE
+{
+    use SecondTraitForFixtureE;
+}
+
+trait FirstTraitForFixtureF
+{
+
+    public function a()
+    {
+    }
+
+    public function b()
+    {
+    }
+
+}
+
+trait SecondTraitForFixtureF
+{
+
+    public function a()
+    {
+    }
+
+    public function b()
+    {
+    }
+
+}
+
+class TraitFixtureF
+{
+
+    use FirstTraitForFixtureF, SecondTraitForFixtureF {
+        FirstTraitForFixtureF::a insteadof SecondTraitForFixtureF;
+        SecondTraitForFixtureF::b insteadof FirstTraitForFixtureF;
+        SecondTraitForFixtureF::a as aliasedA;
+        FirstTraitForFixtureF::b as aliasedB;
+    }
+
 }

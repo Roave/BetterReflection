@@ -10,11 +10,11 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+use function assert;
 
 class ClassReflector implements Reflector
 {
-    /** @var SourceLocator */
-    private $sourceLocator;
+    private SourceLocator $sourceLocator;
 
     public function __construct(SourceLocator $sourceLocator)
     {
@@ -32,8 +32,8 @@ class ClassReflector implements Reflector
     {
         $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        /** @var ReflectionClass|null $classInfo */
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
+        assert($classInfo instanceof ReflectionClass || $classInfo === null);
 
         if ($classInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
@@ -52,7 +52,7 @@ class ClassReflector implements Reflector
         /** @var ReflectionClass[] $allClasses */
         $allClasses = $this->sourceLocator->locateIdentifiersByType(
             $this,
-            new IdentifierType(IdentifierType::IDENTIFIER_CLASS)
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         );
 
         return $allClasses;

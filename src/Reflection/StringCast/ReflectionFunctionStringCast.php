@@ -25,7 +25,7 @@ final class ReflectionFunctionStringCast
             $functionReflection->getName(),
             self::fileAndLinesToString($functionReflection),
             count($functionReflection->getParameters()),
-            self::parametersToString($functionReflection)
+            self::parametersToString($functionReflection),
         );
     }
 

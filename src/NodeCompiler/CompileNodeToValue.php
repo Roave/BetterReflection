@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
+use function assert;
 use function constant;
 use function defined;
 use function dirname;
@@ -23,7 +24,7 @@ class CompileNodeToValue
      *
      * @param Node\Stmt\Expression|Node\Expr $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
-     * @return mixed
+     * @return scalar|array<scalar>|null
      *
      * @throws Exception\UnableToCompileNode
      */
@@ -59,7 +60,7 @@ class CompileNodeToValue
     /**
      * Compile constant expressions
      *
-     * @return bool|mixed|null
+     * @return scalar|array<scalar>|null
      *
      * @throws Exception\UnableToCompileNode
      */
@@ -85,23 +86,22 @@ class CompileNodeToValue
     /**
      * Compile class constants
      *
-     * @return string|int|float|bool|mixed[]|null
+     * @return scalar|array<scalar>|null
      *
      * @throws IdentifierNotFound
      * @throws Exception\UnableToCompileNode If a referenced constant could not be located on the expected referenced class.
      */
     private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
     {
-        /** @var Node\Identifier $node->name */
+        assert($node->name instanceof Node\Identifier);
         $nodeName = $node->name->name;
-        /** @var Node\Name $node->class */
+        assert($node->class instanceof Node\Name);
         $className = $node->class->toString();
 
         if ($nodeName === 'class') {
             return $this->resolveClassNameForClassNameConstant($className, $context);
         }
 
-        /** @var ReflectionClass|null $classInfo */
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
@@ -111,8 +111,8 @@ class CompileNodeToValue
         }
 
         if ($classInfo === null) {
-            /** @var ReflectionClass $classInfo */
             $classInfo = $context->getReflector()->reflect($className);
+            assert($classInfo instanceof ReflectionClass);
         }
 
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
@@ -123,7 +123,7 @@ class CompileNodeToValue
 
         return $this->__invoke(
             $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
-            new CompilerContext($context->getReflector(), $classInfo)
+            new CompilerContext($context->getReflector(), $classInfo),
         );
     }
 
@@ -150,8 +150,8 @@ class CompileNodeToValue
         }
 
         if ($className === 'parent') {
-            /** @var ReflectionClass $parentClass */
             $parentClass = $context->getSelf()->getParentClass();
+            assert($parentClass instanceof ReflectionClass);
 
             return $parentClass->getName();
         }

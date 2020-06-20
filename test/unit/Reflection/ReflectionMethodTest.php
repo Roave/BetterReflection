@@ -18,7 +18,6 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
-use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -48,14 +47,11 @@ use function basename;
  */
 class ReflectionMethodTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     public function setUp() : void
     {
@@ -121,6 +117,14 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($shouldBeFinal, $reflectionMethod->isFinal());
         self::assertSame($shouldBeAbstract, $reflectionMethod->isAbstract());
         self::assertSame($shouldBeStatic, $reflectionMethod->isStatic());
+    }
+
+    public function testIsAbstractForMethodInInterface() : void
+    {
+        $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
+        $methodInfo = $classInfo->getMethod('someMethod');
+
+        self::assertTrue($methodInfo->isAbstract());
     }
 
     public function testIsConstructorDestructor() : void
@@ -296,7 +300,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($expectedModifier, $method->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            Reflection::getModifierNames($method->getModifiers())
+            Reflection::getModifierNames($method->getModifiers()),
         );
     }
 
@@ -311,6 +315,9 @@ class ReflectionMethodTest extends TestCase
             ['Foom\A', 'foo', 'Foom\Foo'],
             ['ClassE', 'boo', 'ClassC'],
             ['ClassF', 'zoo', 'ClassD'],
+            ['Construct\Bar', '__construct', null],
+            ['Construct\Ipsum', '__construct', 'Construct\Lorem'],
+            ['Traits\Foo', 'doFoo', 'Traits\FooInterface'],
         ];
     }
 
@@ -441,16 +448,6 @@ PHP;
         $methodReflection->getClosure(null);
     }
 
-    public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        $methodReflection->getClosure(123);
-    }
-
     public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
@@ -547,26 +544,6 @@ PHP;
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->invokeArgs(null);
-    }
-
-    public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        $methodReflection->invoke(123);
-    }
-
-    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        $methodReflection->invokeArgs(123);
     }
 
     public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void

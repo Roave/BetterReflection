@@ -42,11 +42,9 @@ use function count;
  */
 class ReflectionPropertyTest extends TestCase
 {
-    /** @var ClassReflector */
-    private $reflector;
+    private ClassReflector $reflector;
 
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
     public function setUp() : void
     {
@@ -163,7 +161,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($expectedDoc, $property->getDocComment());
     }
 
-    public function testGetDocCommentBetweeenComments() : void
+    public function testGetDocCommentBetweenComments() : void
     {
         $php       = '<?php
             class Bar implements Foo {
@@ -210,7 +208,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($expectedModifier, $property->getModifiers());
         self::assertSame(
             $expectedModifierNames,
-            Reflection::getModifierNames($property->getModifiers())
+            Reflection::getModifierNames($property->getModifiers()),
         );
     }
 
@@ -234,9 +232,9 @@ class ReflectionPropertyTest extends TestCase
                 null,
                 $classInfo,
                 $classInfo,
-                false
+                false,
             )
-            ->isDefault()
+            ->isDefault(),
         );
     }
 
@@ -327,7 +325,7 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    public function columsProvider() : array
+    public function columnsProvider() : array
     {
         return [
             ["<?php\n\nclass T {\npublic \$test = 1;\n}", 1, 17],
@@ -337,7 +335,7 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @dataProvider columsProvider
+     * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
     {
@@ -543,16 +541,6 @@ PHP;
         $propertyReflection->setValue('string');
     }
 
-    public function testGetValueOfObjectPropertyThrowsExceptionNotAnObject() : void
-    {
-        $this->expectException(NotAnObject::class);
-
-        $classReflection    = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflect(PropertyGetSet::class);
-        $propertyReflection = $classReflection->getProperty('baz');
-
-        $propertyReflection->getValue('string');
-    }
-
     public function testSetValueOfObjectPropertyThrowsExceptionWhenObjectNotInstanceOfClass() : void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
@@ -658,6 +646,9 @@ PHP;
         self::assertSame($expectedType, (string) $type);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testSetType() : void
     {
         $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
@@ -668,10 +659,13 @@ PHP;
         self::assertSame('string', (string) $propertyReflection->getType());
         self::assertStringStartsWith(
             'public string $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRemoveType() : void
     {
         $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
@@ -682,7 +676,7 @@ PHP;
         self::assertNull($propertyReflection->getType());
         self::assertStringStartsWith(
             'public $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()])
+            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
     }
 }

@@ -19,11 +19,9 @@ use Roave\BetterReflectionTest\Fixture\StringCastMethods;
  */
 class ReflectionMethodStringCastTest extends TestCase
 {
-    /** @var Locator */
-    private $astLocator;
+    private Locator $astLocator;
 
-    /** @var SourceStubber */
-    private $sourceStubber;
+    private SourceStubber $sourceStubber;
 
     protected function setUp() : void
     {
