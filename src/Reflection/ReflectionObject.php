@@ -56,10 +56,10 @@ class ReflectionObject extends ReflectionClass
                         $betterReflection->sourceLocator(),
                         new AnonymousClassObjectSourceLocator(
                             $object,
-                            $betterReflection->phpParser()
+                            $betterReflection->phpParser(),
                         ),
-                    ]
-                )
+                    ],
+                ),
             );
         } else {
             $reflector = (new BetterReflection())->classReflector();

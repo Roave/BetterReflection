@@ -83,8 +83,7 @@ class ReflectionClassTest extends TestCase
 {
     private Locator $astLocator;
 
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     protected function setUp() : void
     {
@@ -760,14 +759,14 @@ PHP;
             namespace Bar {
                 use Foo\FooClass;
                 new class extends FooClass {};
-            }', $this->astLocator)
+            }', $this->astLocator),
         );
         $parent    = $reflector->getAllClasses()[1]->getParentClass();
         self::assertSame('Foo\FooClass', $parent->getName());
 
         $anonymousClassInfo = ReflectionObject::createFromInstance(
             new class extends ClassForHinting {
-            }
+            },
         );
         $parent             = $anonymousClassInfo->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
