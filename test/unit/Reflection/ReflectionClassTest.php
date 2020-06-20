@@ -25,6 +25,7 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -744,6 +745,27 @@ PHP;
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
         self::assertStringEndsWith('Fixture/AnonymousClassNoNamespace.php(3)', $classInfo->getName());
+    }
+
+    public function testIsAnonymousWithParentClass() : void
+    {
+        $reflector = new ClassReflector(
+            new StringSourceLocator('<?php
+            namespace Foo { class FooClass {}}
+            namespace Bar {
+                use Foo\FooClass;
+                new class extends FooClass {};
+            }', $this->astLocator),
+        );
+        $parent    = $reflector->getAllClasses()[1]->getParentClass();
+        self::assertSame('Foo\FooClass', $parent->getName());
+
+        $anonymousClassInfo = ReflectionObject::createFromInstance(
+            new class extends ClassForHinting {
+            },
+        );
+        $parent             = $anonymousClassInfo->getParentClass();
+        self::assertSame(ClassForHinting::class, $parent->getName());
     }
 
     public function testIsAnonymousWithAnonymousClassInNamespace() : void
