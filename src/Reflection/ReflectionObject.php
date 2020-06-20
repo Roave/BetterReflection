@@ -66,7 +66,7 @@ class ReflectionObject extends ReflectionClass
 
         if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $betterReflection = new BetterReflection();
-            $reflector = new ClassReflector(
+            $reflector        = new ClassReflector(
                 new AggregateSourceLocator(
                     [
                         $betterReflection->sourceLocator(),

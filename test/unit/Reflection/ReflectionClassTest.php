@@ -86,7 +86,7 @@ class ReflectionClassTest extends TestCase
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->parser = BetterReflectionSingleton::instance()->phpParser();
+        $this->parser     = BetterReflectionSingleton::instance()->phpParser();
     }
 
     private function getComposerLocator() : ComposerSourceLocator
@@ -696,13 +696,14 @@ PHP;
                 new class extends FooClass {};
             }', $this->astLocator)
         );
-        $parent = $reflector->getAllClasses()[1]->getParentClass();
+        $parent    = $reflector->getAllClasses()[1]->getParentClass();
         self::assertSame('Foo\FooClass', $parent->getName());
 
         $anonymousClassInfo = ReflectionObject::createFromInstance(
-            new class extends ClassForHinting {}
+            new class extends ClassForHinting {
+            }
         );
-        $parent = $anonymousClassInfo->getParentClass();
+        $parent             = $anonymousClassInfo->getParentClass();
         self::assertSame(ClassForHinting::class, $parent->getName());
     }
 
