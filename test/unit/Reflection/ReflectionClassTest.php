@@ -12,7 +12,6 @@ use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use Reflection as CoreReflection;
@@ -83,14 +82,11 @@ class ReflectionClassTest extends TestCase
 {
     private Locator $astLocator;
 
-    private Parser $parser;
-
     protected function setUp() : void
     {
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->parser     = BetterReflectionSingleton::instance()->phpParser();
     }
 
     private function getComposerLocator() : ComposerSourceLocator
