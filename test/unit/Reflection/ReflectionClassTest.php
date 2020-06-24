@@ -768,6 +768,20 @@ PHP;
         self::assertSame(ClassForHinting::class, $parent->getName());
     }
 
+    public function testAnonymousRetrievesImmediateInterfaces() : void
+    {
+        $reflector  = new ClassReflector(
+            new StringSourceLocator('<?php
+            namespace Foo { interface FooInterface {}}
+            namespace Bar {
+                use Foo\FooInterface;
+                new class implements FooInterface {};
+            }', $this->astLocator),
+        );
+        $interfaces = $reflector->getAllClasses()[1]->getImmediateInterfaces();
+        self::assertSame(['Foo\FooInterface'], array_keys($interfaces));
+    }
+
     public function testIsAnonymousWithAnonymousClassInNamespace() : void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
