@@ -967,13 +967,8 @@ class ReflectionClass implements Reflection
      */
     private function reflectClassForNamedNode(Node\Name $node) : self
     {
-        // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        if ($this->isAnonymous()) {
-            $class = (new BetterReflection())->classReflector()->reflect($node->toString());
-        } else {
-            $class = $this->reflector->reflect($node->toString());
-            assert($class instanceof self);
-        }
+        $class = $this->reflector->reflect($node->toString());
+        assert($class instanceof self);
 
         return $class;
     }

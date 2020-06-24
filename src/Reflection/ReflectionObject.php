@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use function array_merge;
 use function get_class;
@@ -48,10 +49,18 @@ class ReflectionObject extends ReflectionClass
         $className = get_class($object);
 
         if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
-            $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
-                $object,
-                (new BetterReflection())->phpParser(),
-            ));
+            $betterReflection = new BetterReflection();
+            $reflector        = new ClassReflector(
+                new AggregateSourceLocator(
+                    [
+                        $betterReflection->sourceLocator(),
+                        new AnonymousClassObjectSourceLocator(
+                            $object,
+                            $betterReflection->phpParser(),
+                        ),
+                    ],
+                ),
+            );
         } else {
             $reflector = (new BetterReflection())->classReflector();
         }
