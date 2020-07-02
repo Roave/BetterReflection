@@ -7,10 +7,12 @@ namespace Roave\BetterReflection\SourceLocator\Ast\Parser;
 use PhpParser\ErrorHandler;
 use PhpParser\JsonDecoder;
 use PhpParser\Parser;
+
 use function array_key_exists;
 use function hash;
 use function json_encode;
 use function strlen;
+
 use const JSON_PARTIAL_OUTPUT_ON_ERROR;
 use const JSON_PRESERVE_ZERO_FRACTION;
 
@@ -35,7 +37,7 @@ final class MemoizingParser implements Parser
     /**
      * {@inheritDoc}
      */
-    public function parse(string $code, ?ErrorHandler $errorHandler = null) : ?array
+    public function parse(string $code, ?ErrorHandler $errorHandler = null): ?array
     {
         // note: this code is mathematically buggy by default, as we are using a hash to identify
         //       cache entries. The string length is added to further reduce likeliness (although

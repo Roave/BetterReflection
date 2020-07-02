@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
+
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -25,11 +26,11 @@ use function get_class_methods;
  */
 class ReflectionFunctionTest extends TestCase
 {
-    public function coreReflectionMethodNamesProvider() : array
+    public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionFunction::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -37,19 +38,19 @@ class ReflectionFunctionTest extends TestCase
     /**
      * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionMethods(string $methodName) : void
+    public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionFunctionAdapterReflection = new CoreReflectionClass(ReflectionFunctionAdapter::class);
         self::assertTrue($reflectionFunctionAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         $mockParameter = $this->createMock(BetterReflectionParameter::class);
 
         $mockType = $this->createMock(BetterReflectionType::class);
 
-        $closure = static function () : void {
+        $closure = static function (): void {
         };
 
         return [
@@ -94,7 +95,7 @@ class ReflectionFunctionTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
 
@@ -113,14 +114,14 @@ class ReflectionFunctionTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testExport() : void
+    public function testExport(): void
     {
         $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionFunctionAdapter::export('str_replace');
     }
 
-    public function testGetFileNameReturnsFalseWhenNoFileName() : void
+    public function testGetFileNameReturnsFalseWhenNoFileName(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
@@ -132,7 +133,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertFalse($betterReflectionFunction->getFileName());
     }
 
-    public function testGetFileNameReturnsPathWithSystemDirectorySeparator() : void
+    public function testGetFileNameReturnsPathWithSystemDirectorySeparator(): void
     {
         $fileName = 'foo/bar\\foo/bar.php';
 
@@ -146,7 +147,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionFunction->getFileName());
     }
 
-    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
@@ -158,7 +159,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertFalse($reflectionFunctionAdapter->getDocComment());
     }
 
-    public function testGetExtensionNameReturnsFalseWhenNoExtensionName() : void
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
@@ -170,7 +171,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertFalse($betterReflectionFunction->getExtensionName());
     }
 
-    public function testGetClosureReturnsNullWhenError() : void
+    public function testGetClosureReturnsNullWhenError(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
@@ -182,7 +183,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertNull($betterReflectionFunction->getClosure());
     }
 
-    public function testInvokeThrowsExceptionWhenError() : void
+    public function testInvokeThrowsExceptionWhenError(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
@@ -195,7 +196,7 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction->invoke();
     }
 
-    public function testInvokeArgsThrowsExceptionWhenError() : void
+    public function testInvokeArgsThrowsExceptionWhenError(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction

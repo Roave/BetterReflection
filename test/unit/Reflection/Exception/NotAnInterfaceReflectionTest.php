@@ -19,14 +19,14 @@ class NotAnInterfaceReflectionTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    public function testFromClass() : void
+    public function testFromClass(): void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php', $this->astLocator));
         $exception = NotAnInterfaceReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleClass::class));
@@ -38,7 +38,7 @@ class NotAnInterfaceReflectionTest extends TestCase
         );
     }
 
-    public function testFromTrait() : void
+    public function testFromTrait(): void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/ExampleClass.php', $this->astLocator));
         $exception = NotAnInterfaceReflection::fromReflectionClass($reflector->reflect(Fixture\ExampleTrait::class));

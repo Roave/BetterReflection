@@ -13,11 +13,13 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use SplFileInfo;
+
 use function array_filter;
 use function array_map;
 use function array_values;
 use function iterator_to_array;
 use function pathinfo;
+
 use const PATHINFO_EXTENSION;
 
 /**
@@ -52,10 +54,10 @@ class FileIteratorSourceLocator implements SourceLocator
     /**
      * @throws InvalidFileLocation
      */
-    private function getAggregatedSourceLocator() : AggregateSourceLocator
+    private function getAggregatedSourceLocator(): AggregateSourceLocator
     {
         return $this->aggregateSourceLocator ?: new AggregateSourceLocator(array_values(array_filter(array_map(
-            function (SplFileInfo $item) : ?SingleFileSourceLocator {
+            function (SplFileInfo $item): ?SingleFileSourceLocator {
                 if (! ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) === 'php')) {
                     return null;
                 }
@@ -71,7 +73,7 @@ class FileIteratorSourceLocator implements SourceLocator
      *
      * @throws InvalidFileLocation
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
         return $this->getAggregatedSourceLocator()->locateIdentifier($reflector, $identifier);
     }
@@ -81,7 +83,7 @@ class FileIteratorSourceLocator implements SourceLocator
      *
      * @throws InvalidFileLocation
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         return $this->getAggregatedSourceLocator()->locateIdentifiersByType($reflector, $identifierType);
     }

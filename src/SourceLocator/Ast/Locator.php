@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Throwable;
+
 use function strtolower;
 
 /**
@@ -44,7 +45,7 @@ class Locator
         Reflector $reflector,
         LocatedSource $locatedSource,
         Identifier $identifier
-    ) : Reflection {
+    ): Reflection {
         return $this->findInArray(
             $this->findReflectionsOfType(
                 $reflector,
@@ -66,7 +67,7 @@ class Locator
         Reflector $reflector,
         LocatedSource $locatedSource,
         IdentifierType $identifierType
-    ) : array {
+    ): array {
         try {
             return $this->findReflectionsInTree->__invoke(
                 $reflector,
@@ -86,7 +87,7 @@ class Locator
      *
      * @throws IdentifierNotFound
      */
-    private function findInArray(array $reflections, Identifier $identifier) : Reflection
+    private function findInArray(array $reflections, Identifier $identifier): Reflection
     {
         $identifierName = strtolower($identifier->getName());
 

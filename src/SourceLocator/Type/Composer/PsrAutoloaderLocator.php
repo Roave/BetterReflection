@@ -14,6 +14,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\PsrAutoloaderMapping;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+
 use function file_exists;
 use function file_get_contents;
 
@@ -29,7 +30,7 @@ final class PsrAutoloaderLocator implements SourceLocator
         $this->astLocator = $astLocator;
     }
 
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
         foreach ($this->mapping->resolvePossibleFilePaths($identifier) as $file) {
             if (! file_exists($file)) {
@@ -58,7 +59,7 @@ final class PsrAutoloaderLocator implements SourceLocator
      *
      * @return Reflection[]
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         return (new DirectoriesSourceLocator(
             $this->mapping->directories(),

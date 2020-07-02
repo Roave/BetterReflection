@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function count;
 use function sprintf;
 
@@ -28,7 +29,7 @@ class FindPropertyTypeTest extends TestCase
     /**
      * @return array
      */
-    public function propertyTypeProvider() : array
+    public function propertyTypeProvider(): array
     {
         return [
             ['@var int|string $foo', [Types\Integer::class, Types\String_::class]],
@@ -44,7 +45,7 @@ class FindPropertyTypeTest extends TestCase
      *
      * @dataProvider propertyTypeProvider
      */
-    public function testFindPropertyType(string $docBlock, array $expectedInstances) : void
+    public function testFindPropertyType(string $docBlock, array $expectedInstances): void
     {
         $property = $this->createMock(ReflectionProperty::class);
 
@@ -60,7 +61,7 @@ class FindPropertyTypeTest extends TestCase
         }
     }
 
-    public function testNamespaceResolutionForProperty() : void
+    public function testNamespaceResolutionForProperty(): void
     {
         $php = '<?php
             namespace MyNamespace;
@@ -83,7 +84,7 @@ class FindPropertyTypeTest extends TestCase
         self::assertSame(['\Psr\Log\LoggerInterface'], $prop->getDocBlockTypeStrings());
     }
 
-    public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound() : void
+    public function testFindPropertyTypeReturnsEmptyArrayWhenNoCommentsNodesFound(): void
     {
         $property = $this->createMock(ReflectionProperty::class);
 
@@ -95,7 +96,7 @@ class FindPropertyTypeTest extends TestCase
         self::assertSame([], $foundTypes);
     }
 
-    public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent() : void
+    public function testFindPropertyTypeReturnsEmptyArrayWhenNoDocBlockIsPresent(): void
     {
         $property = $this->createMock(ReflectionProperty::class);
 
@@ -118,7 +119,7 @@ class FindPropertyTypeTest extends TestCase
         array $aliasesToFQCNs,
         string $docBlockType,
         array $expectedTypes
-    ) : void {
+    ): void {
         $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 
         $property = $this->createMock(ReflectionProperty::class);
@@ -141,7 +142,7 @@ class FindPropertyTypeTest extends TestCase
         self::assertEquals($expectedTypes, (new FindPropertyType())->__invoke($property, $namespace));
     }
 
-    public function aliasedVarTypesProvider() : array
+    public function aliasedVarTypesProvider(): array
     {
         return [
             'No namespace' => [

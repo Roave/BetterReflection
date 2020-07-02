@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
 use Throwable;
 use UnexpectedValueException;
+
 use function class_exists;
 use function file_exists;
 use function file_get_contents;
@@ -24,14 +25,14 @@ use function uniqid;
  */
 class FileReadTrapStreamWrapperTest extends TestCase
 {
-    public function testWillFindFileLocationOfExistingFileWhenFileIsRead() : void
+    public function testWillFindFileLocationOfExistingFileWhenFileIsRead(): void
     {
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
 
         self::assertSame(
             'value produced by the function',
             FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                static function () : string {
+                static function (): string {
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should be null when being first used');
                     }
@@ -62,7 +63,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
     }
 
-    public function testWillReportAttemptedAccessesToNonExistingFiles() : void
+    public function testWillReportAttemptedAccessesToNonExistingFiles(): void
     {
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
 
@@ -71,7 +72,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
         self::assertSame(
             'the value produced by the function',
             FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                static function () use ($nonExistingFilePath) : string {
+                static function () use ($nonExistingFilePath): string {
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should be null when being first used');
                     }
@@ -102,14 +103,14 @@ class FileReadTrapStreamWrapperTest extends TestCase
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
     }
 
-    public function testWillOnlyOverrideProvidedProtocols() : void
+    public function testWillOnlyOverrideProvidedProtocols(): void
     {
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
 
         self::assertSame(
             'another value produced by the function',
             FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                static function () : string {
+                static function (): string {
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should be null when being first used');
                     }
@@ -140,7 +141,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
     }
 
-    public function testStreamWrapperIsRestoredWhenAnExceptionIsThrown() : void
+    public function testStreamWrapperIsRestoredWhenAnExceptionIsThrown(): void
     {
         $thrown = new Exception();
 
@@ -148,7 +149,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
             self::assertSame(
                 'another value produced by the function',
                 FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                    static function () use ($thrown) : string {
+                    static function () use ($thrown): string {
                         if (! file_exists(__FILE__)) {
                             throw new UnexpectedValueException('file_exists() should operate as usual');
                         }
@@ -168,7 +169,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
     }
 
-    public function testWillRaiseWarningWhenTryingToCheckFileExistenceForNonExistingFileWithoutSilencingModifier() : void
+    public function testWillRaiseWarningWhenTryingToCheckFileExistenceForNonExistingFileWithoutSilencingModifier(): void
     {
         self::assertTrue(
             class_exists(Warning::class),
@@ -182,7 +183,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
         self::assertSame(
             'another value produced by the function',
             FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                static function () use ($nonExistingFile) : string {
+                static function () use ($nonExistingFile): string {
                     if (file_exists($nonExistingFile)) {
                         throw new UnexpectedValueException('file_exists() should report `false` for a non-existing file');
                     }

@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Util\Autoload\Exception;
 
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
+
 use function sprintf;
 use function uniqid;
 
@@ -14,7 +15,7 @@ use function uniqid;
  */
 final class FailedToLoadClassTest extends TestCase
 {
-    public function testFromReflectionClass() : void
+    public function testFromReflectionClass(): void
     {
         $className = uniqid('class name', true);
 

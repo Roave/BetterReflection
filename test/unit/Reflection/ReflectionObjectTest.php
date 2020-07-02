@@ -22,6 +22,7 @@ use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use stdClass;
+
 use function array_map;
 use function get_class_methods;
 use function in_array;
@@ -37,12 +38,12 @@ class ReflectionObjectTest extends TestCase
     /**
      * @return Node[]
      */
-    private function parse(string $code) : array
+    private function parse(string $code): array
     {
         return BetterReflectionSingleton::instance()->phpParser()->parse($code);
     }
 
-    public function anonymousClassInstancesProvider() : array
+    public function anonymousClassInstancesProvider(): array
     {
         $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
 
@@ -57,7 +58,7 @@ class ReflectionObjectTest extends TestCase
     /**
      * @dataProvider anonymousClassInstancesProvider
      */
-    public function testReflectionForAnonymousClass(object $anonymousClass, string $file, int $startLine, int $endLine) : void
+    public function testReflectionForAnonymousClass(object $anonymousClass, string $file, int $startLine, int $endLine): void
     {
         $classInfo = ReflectionObject::createFromInstance($anonymousClass);
 
@@ -69,7 +70,7 @@ class ReflectionObjectTest extends TestCase
         self::assertSame($endLine, $classInfo->getEndLine());
     }
 
-    public function testReflectionForAnonymousClassWithInterface() : void
+    public function testReflectionForAnonymousClassWithInterface(): void
     {
         $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstanceWithInterface.php'));
 
@@ -84,7 +85,7 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($classInfo->isInstantiable());
     }
 
-    public function testReflectionWorksWithInternalClasses() : void
+    public function testReflectionWorksWithInternalClasses(): void
     {
         $foo = new stdClass();
 
@@ -95,7 +96,7 @@ class ReflectionObjectTest extends TestCase
         self::assertSame('Core', $classInfo->getExtensionName());
     }
 
-    public function testReflectionWorksWithEvaledClasses() : void
+    public function testReflectionWorksWithEvaledClasses(): void
     {
         $foo = new ClassForHinting();
 
@@ -106,7 +107,7 @@ class ReflectionObjectTest extends TestCase
         self::assertNull($classInfo->getExtensionName());
     }
 
-    public function testReflectionWorksWithDynamicallyDeclaredMembers() : void
+    public function testReflectionWorksWithDynamicallyDeclaredMembers(): void
     {
         $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
@@ -119,7 +120,7 @@ class ReflectionObjectTest extends TestCase
         self::assertFalse($propInfo->isDefault());
     }
 
-    public function testExceptionThrownWhenInvalidInstanceGiven() : void
+    public function testExceptionThrownWhenInvalidInstanceGiven(): void
     {
         $foo      = new ClassForHinting();
         $foo->bar = 'huzzah';
@@ -142,7 +143,7 @@ class ReflectionObjectTest extends TestCase
         $classInfo->getProperties();
     }
 
-    public function testGetRuntimePropertiesWithFilter() : void
+    public function testGetRuntimePropertiesWithFilter(): void
     {
         $foo      = new stdClass();
         $foo->bar = 'huzzah';
@@ -155,7 +156,7 @@ class ReflectionObjectTest extends TestCase
         self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_PRIVATE));
     }
 
-    public function testGetRuntimeImmediatePropertiesWithFilter() : void
+    public function testGetRuntimeImmediatePropertiesWithFilter(): void
     {
         $foo      = new stdClass();
         $foo->bar = 'huzzah';
@@ -174,7 +175,7 @@ class ReflectionObjectTest extends TestCase
      *
      * @return array
      */
-    public function reflectionClassMethodProvider() : array
+    public function reflectionClassMethodProvider(): array
     {
         $publicClassMethods = get_class_methods(ReflectionClass::class);
 
@@ -207,7 +208,7 @@ class ReflectionObjectTest extends TestCase
      *
      * @dataProvider reflectionClassMethodProvider
      */
-    public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName) : void
+    public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName): void
     {
         // First, ensure the expected method even exists
         $publicObjectMethods = get_class_methods(ReflectionObject::class);
@@ -260,10 +261,13 @@ class ReflectionObjectTest extends TestCase
                 switch ($typeName) {
                     case 'int':
                         return random_int(1, 1000);
+
                     case 'null':
                         return null;
+
                     case 'bool':
                         return (bool) random_int(0, 1);
+
                     default:
                         return uniqid('stringParam', true);
                 }
@@ -277,7 +281,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObject->{$methodName}(...$fakeParams);
     }
 
-    public function testCannotClone() : void
+    public function testCannotClone(): void
     {
         $classInfo = ReflectionObject::createFromInstance(new stdClass());
 

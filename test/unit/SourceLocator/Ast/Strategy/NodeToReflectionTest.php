@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+
 use function reset;
 
 /**
@@ -27,7 +28,7 @@ class NodeToReflectionTest extends TestCase
 
     private NodeTraverser $nodeTraverser;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -40,7 +41,7 @@ class NodeToReflectionTest extends TestCase
         $this->nodeTraverser->addVisitor(new NameResolver());
     }
 
-    private function getFirstAstNodeInString(string $php) : Node
+    private function getFirstAstNodeInString(string $php): Node
     {
         $nodes = $this->phpParser->parse($php);
 
@@ -49,7 +50,7 @@ class NodeToReflectionTest extends TestCase
         return reset($nodes);
     }
 
-    public function testReturnsReflectionForClassNode() : void
+    public function testReturnsReflectionForClassNode(): void
     {
         $reflector = $this->createMock(Reflector::class);
 
@@ -66,7 +67,7 @@ class NodeToReflectionTest extends TestCase
         self::assertSame('Foo', $reflection->getName());
     }
 
-    public function testReturnsReflectionForTraitNode() : void
+    public function testReturnsReflectionForTraitNode(): void
     {
         $reflector = $this->createMock(Reflector::class);
 
@@ -84,7 +85,7 @@ class NodeToReflectionTest extends TestCase
         self::assertTrue($reflection->isTrait());
     }
 
-    public function testReturnsReflectionForInterfaceNode() : void
+    public function testReturnsReflectionForInterfaceNode(): void
     {
         $reflector = $this->createMock(Reflector::class);
 
@@ -102,7 +103,7 @@ class NodeToReflectionTest extends TestCase
         self::assertTrue($reflection->isInterface());
     }
 
-    public function testReturnsReflectionForFunctionNode() : void
+    public function testReturnsReflectionForFunctionNode(): void
     {
         $reflector = $this->createMock(Reflector::class);
 
@@ -119,7 +120,7 @@ class NodeToReflectionTest extends TestCase
         self::assertSame('foo', $reflection->getName());
     }
 
-    public function testReturnsReflectionForConstantNodeByConst() : void
+    public function testReturnsReflectionForConstantNodeByConst(): void
     {
         $reflector = $this->createMock(Reflector::class);
 
@@ -137,7 +138,7 @@ class NodeToReflectionTest extends TestCase
         self::assertSame('FOO', $reflection->getName());
     }
 
-    public function testReturnsReflectionForConstantNodeByConstWithMoreConstants() : void
+    public function testReturnsReflectionForConstantNodeByConstWithMoreConstants(): void
     {
         $reflector        = $this->createMock(Reflector::class);
         $nodeToReflection = new NodeToReflection();
@@ -167,7 +168,7 @@ class NodeToReflectionTest extends TestCase
         self::assertSame('BOO', $reflection2->getName());
     }
 
-    public function testReturnsReflectionForConstantNodeByDefine() : void
+    public function testReturnsReflectionForConstantNodeByDefine(): void
     {
         $reflector = $this->createMock(Reflector::class);
 
@@ -187,7 +188,7 @@ class NodeToReflectionTest extends TestCase
         self::assertSame('FOO', $reflection->getName());
     }
 
-    public function testReturnsNullWhenIncompatibleNodeFound() : void
+    public function testReturnsNullWhenIncompatibleNodeFound(): void
     {
         $reflector = $this->createMock(Reflector::class);
 

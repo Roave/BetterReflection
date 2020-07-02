@@ -20,7 +20,7 @@ class SingleFileSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -35,7 +35,7 @@ class SingleFileSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testReturnsNullWhenSourceDoesNotContainClass() : void
+    public function testReturnsNullWhenSourceDoesNotContainClass(): void
     {
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 
@@ -50,7 +50,7 @@ class SingleFileSourceLocatorTest extends TestCase
         ));
     }
 
-    public function testReturnsReflectionWhenSourceHasClass() : void
+    public function testReturnsReflectionWhenSourceHasClass(): void
     {
         $fileName = __DIR__ . '/../../Fixture/NoNamespace.php';
 

@@ -18,14 +18,14 @@ class ReflectionClassConstantStringCastTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    public function toStringProvider() : array
+    public function toStringProvider(): array
     {
         return [
             ['PUBLIC_CONSTANT', "Constant [ public boolean PUBLIC_CONSTANT ] { 1 }\n"],
@@ -38,7 +38,7 @@ class ReflectionClassConstantStringCastTest extends TestCase
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString(string $constantName, string $expectedString) : void
+    public function testToString(string $constantName, string $expectedString): void
     {
         $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClassConstants.php', $this->astLocator));
         $classReflection = $reflector->reflect(StringCastConstants::class);

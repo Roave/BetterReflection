@@ -23,7 +23,7 @@ class ReflectionConstantStringCastTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -33,7 +33,7 @@ class ReflectionConstantStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    public function toStringProvider() : array
+    public function toStringProvider(): array
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\BY_CONST', "Constant [ <user> boolean Roave\BetterReflectionTest\Fixture\BY_CONST ] {\n  @@ %s/Fixture/StringCastConstants.php 5 - 5\n 1 }"],
@@ -47,7 +47,7 @@ class ReflectionConstantStringCastTest extends TestCase
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString(string $constantName, string $expectedString) : void
+    public function testToString(string $constantName, string $expectedString): void
     {
         $sourceLocator = new AggregateSourceLocator([
             new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastConstants.php', $this->astLocator),

@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function assert;
 
 /**
@@ -23,7 +24,7 @@ class ComposerSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +39,7 @@ class ComposerSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testInvokableLoadsSource() : void
+    public function testInvokableLoadsSource(): void
     {
         $className = ClassWithNoNamespace::class;
         $fileName  = __DIR__ . '/../../Fixture/NoNamespace.php';
@@ -62,7 +63,7 @@ class ComposerSourceLocatorTest extends TestCase
         self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
     }
 
-    public function testInvokableThrowsExceptionWhenClassNotResolved() : void
+    public function testInvokableThrowsExceptionWhenClassNotResolved(): void
     {
         $className = ClassWithNoNamespace::class;
 
@@ -83,7 +84,7 @@ class ComposerSourceLocatorTest extends TestCase
         )));
     }
 
-    public function testInvokeThrowsExceptionWhenTryingToLocateFunction() : void
+    public function testInvokeThrowsExceptionWhenTryingToLocateFunction(): void
     {
         $loader = $this->createMock(ClassLoader::class);
 

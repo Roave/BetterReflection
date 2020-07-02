@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Throwable;
+
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -23,11 +24,11 @@ use function get_class_methods;
  */
 class ReflectionParameterTest extends TestCase
 {
-    public function coreReflectionParameterNamesProvider() : array
+    public function coreReflectionParameterNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionParameter::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -35,13 +36,13 @@ class ReflectionParameterTest extends TestCase
     /**
      * @dataProvider coreReflectionParameterNamesProvider
      */
-    public function testCoreReflectionParameters(string $methodName) : void
+    public function testCoreReflectionParameters(string $methodName): void
     {
         $reflectionParameterAdapterReflection = new CoreReflectionClass(ReflectionParameterAdapter::class);
         self::assertTrue($reflectionParameterAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         $mockFunction = $this->createMock(BetterReflectionFunction::class);
 
@@ -83,7 +84,7 @@ class ReflectionParameterTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);
 
@@ -102,7 +103,7 @@ class ReflectionParameterTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testExport() : void
+    public function testExport(): void
     {
         $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Unable to export statically');

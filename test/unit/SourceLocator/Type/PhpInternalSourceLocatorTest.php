@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function array_filter;
 use function array_keys;
 use function array_map;
@@ -30,6 +31,7 @@ use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
 use function sprintf;
+
 use const ARRAY_FILTER_USE_KEY;
 
 /**
@@ -39,7 +41,7 @@ class PhpInternalSourceLocatorTest extends TestCase
 {
     private PhpInternalSourceLocator $phpInternalSourceLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -62,7 +64,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @dataProvider internalClassesProvider
      */
-    public function testCanFetchInternalLocatedSourceForClasses(string $className) : void
+    public function testCanFetchInternalLocatedSourceForClasses(string $className): void
     {
         try {
             $reflection = $this->phpInternalSourceLocator->locateIdentifier(
@@ -86,7 +88,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @return string[][]
      */
-    public function internalClassesProvider() : array
+    public function internalClassesProvider(): array
     {
         $allSymbols = array_merge(
             get_declared_classes(),
@@ -95,12 +97,12 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
 
         return array_map(
-            static function (string $symbol) : array {
+            static function (string $symbol): array {
                 return [$symbol];
             },
             array_filter(
                 $allSymbols,
-                static function (string $symbol) : bool {
+                static function (string $symbol): bool {
                     $reflection = new CoreReflectionClass($symbol);
 
                     return $reflection->isInternal();
@@ -112,7 +114,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @dataProvider internalFunctionsProvider
      */
-    public function testCanFetchInternalLocatedSourceForFunctions(string $functionName) : void
+    public function testCanFetchInternalLocatedSourceForFunctions(string $functionName): void
     {
         try {
             $reflection = $this->phpInternalSourceLocator->locateIdentifier(
@@ -136,12 +138,12 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @return string[][]
      */
-    public function internalFunctionsProvider() : array
+    public function internalFunctionsProvider(): array
     {
         $allSymbols = get_defined_functions()['internal'];
 
         return array_map(
-            static function (string $symbol) : array {
+            static function (string $symbol): array {
                 return [$symbol];
             },
             $allSymbols,
@@ -151,7 +153,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @dataProvider internalConstantsProvider
      */
-    public function testCanFetchInternalLocatedSourceForConstants(string $constantName) : void
+    public function testCanFetchInternalLocatedSourceForConstants(string $constantName): void
     {
         $reflection = $this->phpInternalSourceLocator->locateIdentifier(
             $this->getMockReflector(),
@@ -167,26 +169,26 @@ class PhpInternalSourceLocatorTest extends TestCase
     /**
      * @return string[][]
      */
-    public function internalConstantsProvider() : array
+    public function internalConstantsProvider(): array
     {
         /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $allSymbols */
         $allSymbols = get_defined_constants(true);
 
         return array_map(
-            static function (string $symbol) : array {
+            static function (string $symbol): array {
                 return [$symbol];
             },
             array_filter(
                 array_keys(
                     array_merge(
                         ...array_values(
-                            array_filter($allSymbols, static function (string $extensionName) : bool {
+                            array_filter($allSymbols, static function (string $extensionName): bool {
                                 return $extensionName !== 'user';
                             }, ARRAY_FILTER_USE_KEY),
                         ),
                     ),
                 ),
-                static function (string $constantName) : bool {
+                static function (string $constantName): bool {
                     // Not supported because of resource as value
                     return ! in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true);
                 },
@@ -194,7 +196,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentClass() : void
+    public function testReturnsNullForNonExistentClass(): void
     {
         self::assertNull(
             $this->phpInternalSourceLocator->locateIdentifier(
@@ -207,7 +209,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentFunction() : void
+    public function testReturnsNullForNonExistentFunction(): void
     {
         self::assertNull(
             $this->phpInternalSourceLocator->locateIdentifier(
@@ -220,7 +222,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentConstant() : void
+    public function testReturnsNullForNonExistentConstant(): void
     {
         self::assertNull(
             $this->phpInternalSourceLocator->locateIdentifier(

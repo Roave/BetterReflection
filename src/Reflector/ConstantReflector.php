@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+
 use function assert;
 
 class ConstantReflector implements Reflector
@@ -31,7 +32,7 @@ class ConstantReflector implements Reflector
      *
      * @throws IdentifierNotFound
      */
-    public function reflect(string $constantName) : Reflection
+    public function reflect(string $constantName): Reflection
     {
         $identifier = new Identifier($constantName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT));
 
@@ -50,7 +51,7 @@ class ConstantReflector implements Reflector
      *
      * @return array<int, ReflectionConstant>
      */
-    public function getAllConstants() : array
+    public function getAllConstants(): array
     {
         /** @var array<int,ReflectionConstant> $allConstants */
         $allConstants = $this->sourceLocator->locateIdentifiersByType(

@@ -15,6 +15,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function assert;
 use function get_class;
 use function realpath;
@@ -29,7 +30,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     private Reflector $reflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +38,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    public function anonymousClassInstancesProvider() : array
+    public function anonymousClassInstancesProvider(): array
     {
         $fileWithClasses                = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
         $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
@@ -57,7 +58,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /**
      * @dataProvider anonymousClassInstancesProvider
      */
-    public function testLocateIdentifier(object $class, string $file, int $startLine, int $endLine) : void
+    public function testLocateIdentifier(object $class, string $file, int $startLine, int $endLine): void
     {
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
@@ -75,7 +76,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::assertSame($endLine, $reflection->getEndLine());
     }
 
-    public function testLocateIdentifierWithFunctionIdentifier() : void
+    public function testLocateIdentifierWithFunctionIdentifier(): void
     {
         $anonymousClass = new class {
         };
@@ -95,7 +96,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /**
      * @dataProvider anonymousClassInstancesProvider
      */
-    public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine) : void
+    public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine): void
     {
         /** @var ReflectionClass[] $reflections */
         $reflections = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifiersByType(
@@ -113,7 +114,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::assertSame($endLine, $reflections[0]->getEndLine());
     }
 
-    public function testLocateIdentifiersByTypeWithFunctionIdentifier() : void
+    public function testLocateIdentifiersByTypeWithFunctionIdentifier(): void
     {
         $anonymousClass = new class {
         };
@@ -127,7 +128,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::assertCount(0, $reflections);
     }
 
-    public function exceptionIfTwoAnonymousClassesOnSameLineProvider() : array
+    public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
         $file    = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
@@ -141,7 +142,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /**
      * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
      */
-    public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, object $class) : void
+    public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, object $class): void
     {
         $this->expectException(TwoAnonymousClassesOnSameLine::class);
         $this->expectExceptionMessage(sprintf('Two anonymous classes on line 3 in %s', $file));
@@ -155,7 +156,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         );
     }
 
-    public function nestedAnonymousClassInstancesProvider() : array
+    public function nestedAnonymousClassInstancesProvider(): array
     {
         $class = require __DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php';
 
@@ -166,7 +167,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    public function testExceptionIfEvaledAnonymousClass() : void
+    public function testExceptionIfEvaledAnonymousClass(): void
     {
         $this->expectException(EvaledAnonymousClassCannotBeLocated::class);
 

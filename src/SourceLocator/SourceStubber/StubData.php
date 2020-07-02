@@ -19,12 +19,12 @@ class StubData
         $this->extensionName = $extensionName;
     }
 
-    public function getStub() : string
+    public function getStub(): string
     {
         return $this->stub;
     }
 
-    public function getExtensionName() : ?string
+    public function getExtensionName(): ?string
     {
         return $this->extensionName;
     }

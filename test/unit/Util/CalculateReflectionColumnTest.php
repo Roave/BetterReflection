@@ -15,7 +15,7 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
  */
 class CalculateReflectionColumnTest extends TestCase
 {
-    public function testGetStartColumn() : void
+    public function testGetStartColumn(): void
     {
         $source = "<?php\n    class Foo {}";
 
@@ -31,7 +31,7 @@ class CalculateReflectionColumnTest extends TestCase
         self::assertSame(5, CalculateReflectionColumn::getStartColumn($source, $node));
     }
 
-    public function testGetStartColumnIfAtTheBeginningOfLine() : void
+    public function testGetStartColumnIfAtTheBeginningOfLine(): void
     {
         $source = "<?php\nclass Foo {}";
 
@@ -47,7 +47,7 @@ class CalculateReflectionColumnTest extends TestCase
         self::assertSame(1, CalculateReflectionColumn::getStartColumn($source, $node));
     }
 
-    public function testGetStartColumnIfOneLineSource() : void
+    public function testGetStartColumnIfOneLineSource(): void
     {
         $source = '<?php class Foo {}';
 
@@ -63,7 +63,7 @@ class CalculateReflectionColumnTest extends TestCase
         self::assertSame(7, CalculateReflectionColumn::getStartColumn($source, $node));
     }
 
-    public function testGetStartColumnThrowsExceptionIfInvalidPosition() : void
+    public function testGetStartColumnThrowsExceptionIfInvalidPosition(): void
     {
         $this->expectException(InvalidNodePosition::class);
 
@@ -79,7 +79,7 @@ class CalculateReflectionColumnTest extends TestCase
         CalculateReflectionColumn::getStartColumn('', $node);
     }
 
-    public function testGetStartColumnThrowsExceptionIfNoPosition() : void
+    public function testGetStartColumnThrowsExceptionIfNoPosition(): void
     {
         $this->expectException(NoNodePosition::class);
 
@@ -92,7 +92,7 @@ class CalculateReflectionColumnTest extends TestCase
         CalculateReflectionColumn::getStartColumn('', $node);
     }
 
-    public function testGetEndColumn() : void
+    public function testGetEndColumn(): void
     {
         $source = "<?php\n    class Foo {}";
 
@@ -108,7 +108,7 @@ class CalculateReflectionColumnTest extends TestCase
         self::assertSame(16, CalculateReflectionColumn::getEndColumn($source, $node));
     }
 
-    public function testGetEndColumnIfAtTheEndOfLine() : void
+    public function testGetEndColumnIfAtTheEndOfLine(): void
     {
         $source = "<?php\nclass Foo {}";
 
@@ -124,7 +124,7 @@ class CalculateReflectionColumnTest extends TestCase
         self::assertSame(12, CalculateReflectionColumn::getEndColumn($source, $node));
     }
 
-    public function testGetEndColumnIfOneLineSource() : void
+    public function testGetEndColumnIfOneLineSource(): void
     {
         $source = '<?php class Foo {}';
 
@@ -140,7 +140,7 @@ class CalculateReflectionColumnTest extends TestCase
         self::assertSame(18, CalculateReflectionColumn::getEndColumn($source, $node));
     }
 
-    public function testGetEndColumnThrowsExceptionIfInvalidPosition() : void
+    public function testGetEndColumnThrowsExceptionIfInvalidPosition(): void
     {
         $this->expectException(InvalidNodePosition::class);
 
@@ -156,7 +156,7 @@ class CalculateReflectionColumnTest extends TestCase
         CalculateReflectionColumn::getEndColumn('', $node);
     }
 
-    public function testGetEndColumnThrowsExceptionIfNoPosition() : void
+    public function testGetEndColumnThrowsExceptionIfNoPosition(): void
     {
         $this->expectException(NoNodePosition::class);
 

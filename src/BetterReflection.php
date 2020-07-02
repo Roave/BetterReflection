@@ -42,7 +42,7 @@ final class BetterReflection
 
     private ?SourceStubber $sourceStubber;
 
-    public function sourceLocator() : SourceLocator
+    public function sourceLocator(): SourceLocator
     {
         $astLocator    = $this->astLocator();
         $sourceStubber = $this->sourceStubber();
@@ -55,25 +55,25 @@ final class BetterReflection
             ]));
     }
 
-    public function classReflector() : ClassReflector
+    public function classReflector(): ClassReflector
     {
         return $this->classReflector
             ?? $this->classReflector = new ClassReflector($this->sourceLocator());
     }
 
-    public function functionReflector() : FunctionReflector
+    public function functionReflector(): FunctionReflector
     {
         return $this->functionReflector
             ?? $this->functionReflector = new FunctionReflector($this->sourceLocator(), $this->classReflector());
     }
 
-    public function constantReflector() : ConstantReflector
+    public function constantReflector(): ConstantReflector
     {
         return $this->constantReflector
             ?? $this->constantReflector = new ConstantReflector($this->sourceLocator(), $this->classReflector());
     }
 
-    public function phpParser() : Parser
+    public function phpParser(): Parser
     {
         return $this->phpParser
             ?? $this->phpParser = new MemoizingParser(
@@ -83,21 +83,21 @@ final class BetterReflection
             );
     }
 
-    public function astLocator() : AstLocator
+    public function astLocator(): AstLocator
     {
         return $this->astLocator
-            ?? $this->astLocator = new AstLocator($this->phpParser(), function () : FunctionReflector {
+            ?? $this->astLocator = new AstLocator($this->phpParser(), function (): FunctionReflector {
                 return $this->functionReflector();
             });
     }
 
-    public function findReflectionsOnLine() : FindReflectionOnLine
+    public function findReflectionsOnLine(): FindReflectionOnLine
     {
         return $this->findReflectionOnLine
             ?? $this->findReflectionOnLine = new FindReflectionOnLine($this->sourceLocator(), $this->astLocator());
     }
 
-    public function sourceStubber() : SourceStubber
+    public function sourceStubber(): SourceStubber
     {
         return $this->sourceStubber
             ?? $this->sourceStubber = new AggregateSourceStubber(

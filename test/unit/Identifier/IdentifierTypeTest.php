@@ -20,7 +20,7 @@ class IdentifierTypeTest extends TestCase
     /**
      * @return string[][]
      */
-    public function possibleIdentifierTypesProvider() : array
+    public function possibleIdentifierTypesProvider(): array
     {
         return [
             [IdentifierType::IDENTIFIER_CLASS],
@@ -32,20 +32,20 @@ class IdentifierTypeTest extends TestCase
     /**
      * @dataProvider possibleIdentifierTypesProvider
      */
-    public function testPossibleIdentifierTypes(string $full) : void
+    public function testPossibleIdentifierTypes(string $full): void
     {
         $type = new IdentifierType($full);
         self::assertSame($full, $type->getName());
     }
 
-    public function testThrowsAnExceptionWhenInvalidTypeGiven() : void
+    public function testThrowsAnExceptionWhenInvalidTypeGiven(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('foo is not a valid identifier type');
         new IdentifierType('foo');
     }
 
-    public function testIsMatchingReflectorClass() : void
+    public function testIsMatchingReflectorClass(): void
     {
         $reflectionClass = $this->createMock(ReflectionClass::class);
 
@@ -54,7 +54,7 @@ class IdentifierTypeTest extends TestCase
         self::assertTrue($type->isMatchingReflector($reflectionClass));
     }
 
-    public function testIsMatchingReflectorFunction() : void
+    public function testIsMatchingReflectorFunction(): void
     {
         $reflectionFunction = $this->createMock(ReflectionFunction::class);
 
@@ -63,7 +63,7 @@ class IdentifierTypeTest extends TestCase
         self::assertTrue($type->isMatchingReflector($reflectionFunction));
     }
 
-    public function testIsMatchingReflectorConstant() : void
+    public function testIsMatchingReflectorConstant(): void
     {
         $reflectionConstant = $this->createMock(ReflectionConstant::class);
 
@@ -72,7 +72,7 @@ class IdentifierTypeTest extends TestCase
         self::assertTrue($type->isMatchingReflector($reflectionConstant));
     }
 
-    public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid() : void
+    public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid(): void
     {
         $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -88,7 +88,7 @@ class IdentifierTypeTest extends TestCase
         self::assertFalse($classType->isMatchingReflector($reflectionClass));
     }
 
-    public function testIsTypesForClass() : void
+    public function testIsTypesForClass(): void
     {
         $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -97,7 +97,7 @@ class IdentifierTypeTest extends TestCase
         self::assertFalse($classType->isConstant());
     }
 
-    public function testIsTypesForFunction() : void
+    public function testIsTypesForFunction(): void
     {
         $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
 
@@ -106,7 +106,7 @@ class IdentifierTypeTest extends TestCase
         self::assertFalse($functionType->isConstant());
     }
 
-    public function testIsTypesForConstant() : void
+    public function testIsTypesForConstant(): void
     {
         $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
 

@@ -13,6 +13,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+
 use function class_exists;
 
 /** @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator */
@@ -22,7 +23,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testCanFindClassEvenWhenParserIsNotLoadedInMemory() : void
+    public function testCanFindClassEvenWhenParserIsNotLoadedInMemory(): void
     {
         self::assertFalse(
             class_exists(MemoizingParser::class, false),
@@ -34,7 +35,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
         ]));
         $functionReflector = null;
         $sourceLocator     = new AutoloadSourceLocator(
-            new Locator($parser, static function () use (&$functionReflector) : FunctionReflector {
+            new Locator($parser, static function () use (&$functionReflector): FunctionReflector {
                 return $functionReflector;
             }),
             $parser,

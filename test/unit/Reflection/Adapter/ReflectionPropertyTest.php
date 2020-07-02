@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProp
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use stdClass;
 use Throwable;
+
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -27,11 +28,11 @@ use function get_class_methods;
  */
 class ReflectionPropertyTest extends TestCase
 {
-    public function coreReflectionPropertyNamesProvider() : array
+    public function coreReflectionPropertyNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionProperty::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -39,13 +40,13 @@ class ReflectionPropertyTest extends TestCase
     /**
      * @dataProvider coreReflectionPropertyNamesProvider
      */
-    public function testCoreReflectionProperties(string $methodName) : void
+    public function testCoreReflectionProperties(string $methodName): void
     {
         $reflectionPropertyAdapterReflection = new CoreReflectionClass(ReflectionPropertyAdapter::class);
         self::assertTrue($reflectionPropertyAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         $mockType = $this->createMock(BetterReflectionType::class);
 
@@ -70,7 +71,7 @@ class ReflectionPropertyTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 
@@ -83,14 +84,14 @@ class ReflectionPropertyTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testExport() : void
+    public function testExport(): void
     {
         $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionPropertyAdapter::export('foo', 0);
     }
 
-    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -102,7 +103,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertFalse($reflectionPropertyAdapter->getDocComment());
     }
 
-    public function testGetDeclaringClass() : void
+    public function testGetDeclaringClass(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
@@ -120,7 +121,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('DeclaringClass', $reflectionPropertyAdapter->getDeclaringClass()->getName());
     }
 
-    public function testGetValueReturnsNullWhenNoObject() : void
+    public function testGetValueReturnsNullWhenNoObject(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -135,7 +136,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($reflectionPropertyAdapter->getValue());
     }
 
-    public function testSetValueReturnsNullWhenNoObject() : void
+    public function testSetValueReturnsNullWhenNoObject(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -150,7 +151,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($reflectionPropertyAdapter->setValue(null));
     }
 
-    public function testGetValueReturnsNullWhenNotAnObject() : void
+    public function testGetValueReturnsNullWhenNotAnObject(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -165,7 +166,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($reflectionPropertyAdapter->getValue('string'));
     }
 
-    public function testSetValueReturnsNullWhenNotAnObject() : void
+    public function testSetValueReturnsNullWhenNotAnObject(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -180,7 +181,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($reflectionPropertyAdapter->setValue('string'));
     }
 
-    public function testGetValueThrowsExceptionWhenPropertyNotAccessible() : void
+    public function testGetValueThrowsExceptionWhenPropertyNotAccessible(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -193,7 +194,7 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->getValue(new stdClass());
     }
 
-    public function testSetValueThrowsExceptionWhenPropertyNotAccessible() : void
+    public function testSetValueThrowsExceptionWhenPropertyNotAccessible(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -206,7 +207,7 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->setValue(new stdClass());
     }
 
-    public function testSetAccessibleAndGetValue() : void
+    public function testSetAccessibleAndGetValue(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -222,7 +223,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame(123, $reflectionPropertyAdapter->getValue(new stdClass()));
     }
 
-    public function testSetAccessibleAndSetValue() : void
+    public function testSetAccessibleAndSetValue(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -239,7 +240,7 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->setValue(null, 123);
     }
 
-    public function testGetValueThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testGetValueThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -255,7 +256,7 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->getValue(new stdClass());
     }
 
-    public function testSetValueThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testSetValueThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty

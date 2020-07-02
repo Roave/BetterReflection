@@ -28,6 +28,7 @@ use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
 use stdClass;
 use Traversable;
+
 use function array_filter;
 use function array_map;
 use function array_merge;
@@ -49,7 +50,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     private ClassReflector $classReflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -61,7 +62,7 @@ class ReflectionSourceStubberTest extends TestCase
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
     }
 
-    public function testCanStubClass() : void
+    public function testCanStubClass(): void
     {
         $stubData = $this->stubber->generateClassStub('stdClass');
 
@@ -73,7 +74,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame('Core', $stubData->getExtensionName());
     }
 
-    public function testCanStubInterface() : void
+    public function testCanStubInterface(): void
     {
         $stubData = $this->stubber->generateClassStub(Traversable::class);
 
@@ -85,7 +86,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame('Core', $stubData->getExtensionName());
     }
 
-    public function testCanStubTraits() : void
+    public function testCanStubTraits(): void
     {
         require __DIR__ . '/../../Fixture/EmptyTrait.php';
 
@@ -99,7 +100,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    public function testClassStub() : void
+    public function testClassStub(): void
     {
         require __DIR__ . '/../../Fixture/ClassForSourceStubber.php';
 
@@ -110,7 +111,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    public function testClassWithoutNamespaceStub() : void
+    public function testClassWithoutNamespaceStub(): void
     {
         require __DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubber.php';
 
@@ -121,7 +122,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    public function testClassStubWithDefaultStaticPropertyWithUnsupportedValue() : void
+    public function testClassStubWithDefaultStaticPropertyWithUnsupportedValue(): void
     {
         require __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
 
@@ -133,7 +134,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpected.php', $stubData->getStub());
     }
 
-    public function testInterfaceStub() : void
+    public function testInterfaceStub(): void
     {
         require __DIR__ . '/../../Fixture/InterfaceForSourceStubber.php';
 
@@ -144,7 +145,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    public function testTraitStub() : void
+    public function testTraitStub(): void
     {
         require __DIR__ . '/../../Fixture/TraitForSourceStubber.php';
 
@@ -158,7 +159,7 @@ class ReflectionSourceStubberTest extends TestCase
     /**
      * @return string[][]
      */
-    public function internalClassesProvider() : array
+    public function internalClassesProvider(): array
     {
         $allSymbols = array_merge(
             get_declared_classes(),
@@ -167,12 +168,12 @@ class ReflectionSourceStubberTest extends TestCase
         );
 
         return array_map(
-            static function (string $symbol) : array {
+            static function (string $symbol): array {
                 return [$symbol];
             },
             array_filter(
                 $allSymbols,
-                static function (string $symbol) : bool {
+                static function (string $symbol): bool {
                     $reflection = new CoreReflectionClass($symbol);
 
                     if (! $reflection->isInternal()) {
@@ -191,7 +192,7 @@ class ReflectionSourceStubberTest extends TestCase
      *
      * @dataProvider internalClassesProvider
      */
-    public function testInternalClasses(string $className) : void
+    public function testInternalClasses(string $className): void
     {
         $class = $this->classReflector->reflect($className);
 
@@ -208,7 +209,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSameClassAttributes($internalReflection, $class);
     }
 
-    private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed): void
     {
         $originalParentClass = $original->getParentClass();
         $stubbedParentClass  = $stubbed->getParentClass();
@@ -219,7 +220,7 @@ class ReflectionSourceStubberTest extends TestCase
         );
     }
 
-    private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed): void
     {
         $originalInterfacesNames = $original->getInterfaceNames();
         $stubbedInterfacesNames  = $stubbed->getInterfaceNames();
@@ -230,7 +231,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($originalInterfacesNames, $stubbedInterfacesNames);
     }
 
-    private function assertSameClassAttributes(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameClassAttributes(CoreReflectionClass $original, ReflectionClass $stubbed): void
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
@@ -244,16 +245,16 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertEquals($original->getConstants(), $stubbed->getConstants());
     }
 
-    private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed) : void
+    private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
     {
         $originalParameterNames = array_map(
-            static function (CoreReflectionParameter $parameter) : string {
+            static function (CoreReflectionParameter $parameter): string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
             $original->getParameters(),
         );
         $stubParameterNames     = array_map(
-            static function (ReflectionParameter $parameter) : string {
+            static function (ReflectionParameter $parameter): string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
             $stubbed->getParameters(),
@@ -282,7 +283,7 @@ class ReflectionSourceStubberTest extends TestCase
         CoreReflectionMethod $originalMethod,
         CoreReflectionParameter $original,
         ReflectionParameter $stubbed
-    ) : void {
+    ): void {
         $parameterName = $original->getDeclaringClass()->getName()
             . '#' . $originalMethod->getName()
             . '.' . $original->getName();
@@ -300,7 +301,8 @@ class ReflectionSourceStubberTest extends TestCase
             self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         }
 
-        if (! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)
+        if (
+            ! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)
             && ! preg_match('~^RedisCluster#\w+.arg$~', $parameterName)
         ) {
             // Parameters are variadic but not optional
@@ -321,7 +323,7 @@ class ReflectionSourceStubberTest extends TestCase
         }
     }
 
-    public function testFunctionWithParameterPassedByReference() : void
+    public function testFunctionWithParameterPassedByReference(): void
     {
         $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
         $functionReflection = $reflector->reflect('sort');
@@ -336,7 +338,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertFalse($parameterReflection->canBePassedByValue());
     }
 
-    public function testFunctionWithOptionalParameter() : void
+    public function testFunctionWithOptionalParameter(): void
     {
         $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
         $functionReflection = $reflector->reflect('preg_match');
@@ -350,7 +352,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertTrue($parameterReflection->isOptional());
     }
 
-    public function variadicParametersProvider() : array
+    public function variadicParametersProvider(): array
     {
         return [
             ['sprintf', 1, true, true],
@@ -361,7 +363,7 @@ class ReflectionSourceStubberTest extends TestCase
     /**
      * @dataProvider variadicParametersProvider
      */
-    public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional) : void
+    public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional): void
     {
         $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
         $functionReflection = $reflector->reflect($functionName);
@@ -374,7 +376,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($parameterIsOptional, $parametersReflections[$parameterPosition]->isOptional());
     }
 
-    public function testCanStubConstant() : void
+    public function testCanStubConstant(): void
     {
         $stubData = $this->stubber->generateConstantStub('E_ALL');
 
@@ -386,12 +388,12 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame('Core', $stubData->getExtensionName());
     }
 
-    public function testUnknownConstant() : void
+    public function testUnknownConstant(): void
     {
         self::assertNull($this->stubber->generateConstantStub('SOME_CONSTANT'));
     }
 
-    public function unsupportedConstants() : array
+    public function unsupportedConstants(): array
     {
         return [
             ['STDIN'],
@@ -403,7 +405,7 @@ class ReflectionSourceStubberTest extends TestCase
     /**
      * @dataProvider unsupportedConstants
      */
-    public function testUnsupportedConstants(string $constantName) : void
+    public function testUnsupportedConstants(string $constantName): void
     {
         self::expectException(IdentifierNotFound::class);
 

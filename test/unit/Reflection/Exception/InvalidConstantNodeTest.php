@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
  */
 class InvalidConstantNodeTest extends TestCase
 {
-    public function testCreate() : void
+    public function testCreate(): void
     {
         $exception = InvalidConstantNode::create(new Node\Name('Whatever'));
 

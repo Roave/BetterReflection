@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class NoObjectProvided extends InvalidArgumentException
 {
-    public static function create() : self
+    public static function create(): self
     {
         return new self('No object provided');
     }

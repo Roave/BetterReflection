@@ -18,6 +18,7 @@ use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use Traversable;
+
 use function array_change_key_case;
 use function array_key_exists;
 use function assert;
@@ -103,7 +104,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         self::$mapsInitialized = true;
     }
 
-    public function generateClassStub(string $className) : ?StubData
+    public function generateClassStub(string $className): ?StubData
     {
         $lowercaseClassName = strtolower($className);
 
@@ -127,7 +128,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($stub, $this->getExtensionFromFilePath($filePath));
     }
 
-    public function generateFunctionStub(string $functionName) : ?StubData
+    public function generateFunctionStub(string $functionName): ?StubData
     {
         $lowercaseFunctionName = strtolower($functionName);
 
@@ -144,7 +145,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName]), $this->getExtensionFromFilePath($filePath));
     }
 
-    public function generateConstantStub(string $constantName) : ?StubData
+    public function generateConstantStub(string $constantName): ?StubData
     {
         $lowercaseConstantName = strtolower($constantName);
 
@@ -152,7 +153,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        if (array_key_exists($lowercaseConstantName, $this->constantNodes)
+        if (
+            array_key_exists($lowercaseConstantName, $this->constantNodes)
             && $this->constantNodes[$lowercaseConstantName] === null
         ) {
             return null;
@@ -177,7 +179,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($this->createStub($constantNode), $this->getExtensionFromFilePath($filePath));
     }
 
-    private function parseFile(string $filePath) : void
+    private function parseFile(string $filePath): void
     {
         $absoluteFilePath = $this->getAbsoluteFilePath($filePath);
         FileChecker::assertReadableFile($absoluteFilePath);
@@ -222,7 +224,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * @param Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node
      */
-    private function createStub(Node $node) : string
+    private function createStub(Node $node): string
     {
         $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
 
@@ -236,9 +238,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
     }
 
-    private function createCachingVisitor() : NodeVisitorAbstract
+    private function createCachingVisitor(): NodeVisitorAbstract
     {
-        return new class() extends NodeVisitorAbstract
+        return new class () extends NodeVisitorAbstract
         {
             /** @var array<string, Node\Stmt\ClassLike> */
             private array $classNodes = [];
@@ -249,7 +251,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
             private array $constantNodes = [];
 
-            public function enterNode(Node $node) : ?int
+            public function enterNode(Node $node): ?int
             {
                 if ($node instanceof Node\Stmt\ClassLike) {
                     $nodeName                    = $node->namespacedName->toString();
@@ -301,7 +303,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                     $this->constantNodes[$constantName] = $node;
 
-                    if (count($node->args) === 3
+                    if (
+                        count($node->args) === 3
                         && $node->args[2]->value instanceof Node\Expr\ConstFetch
                         && $node->args[2]->value->name->toLowerString() === 'true'
                     ) {
@@ -317,7 +320,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /**
              * @return array<string, Node\Stmt\ClassLike>
              */
-            public function getClassNodes() : array
+            public function getClassNodes(): array
             {
                 return $this->classNodes;
             }
@@ -325,7 +328,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /**
              * @return array<string, Node\Stmt\Function_>
              */
-            public function getFunctionNodes() : array
+            public function getFunctionNodes(): array
             {
                 return $this->functionNodes;
             }
@@ -333,12 +336,12 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /**
              * @return array<string, Node\Stmt\Const_|Node\Expr\FuncCall>
              */
-            public function getConstantNodes() : array
+            public function getConstantNodes(): array
             {
                 return $this->constantNodes;
             }
 
-            public function clearNodes() : void
+            public function clearNodes(): void
             {
                 $this->classNodes    = [];
                 $this->functionNodes = [];
@@ -347,17 +350,17 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         };
     }
 
-    private function getExtensionFromFilePath(string $filePath) : string
+    private function getExtensionFromFilePath(string $filePath): string
     {
         return explode('/', $filePath)[0];
     }
 
-    private function getAbsoluteFilePath(string $filePath) : string
+    private function getAbsoluteFilePath(string $filePath): string
     {
         return sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
     }
 
-    private function getStubsDirectory() : string
+    private function getStubsDirectory(): string
     {
         if ($this->stubsDirectory !== null) {
             return $this->stubsDirectory;

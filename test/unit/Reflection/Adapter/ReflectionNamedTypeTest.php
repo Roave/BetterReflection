@@ -9,6 +9,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType as CoreReflectionNamedType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -18,11 +19,11 @@ use function get_class_methods;
  */
 class ReflectionNamedTypeTest extends TestCase
 {
-    public function coreReflectionTypeNamesProvider() : array
+    public function coreReflectionTypeNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionNamedType::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -30,13 +31,13 @@ class ReflectionNamedTypeTest extends TestCase
     /**
      * @dataProvider coreReflectionTypeNamesProvider
      */
-    public function testCoreReflectionTypes(string $methodName) : void
+    public function testCoreReflectionTypes(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
         self::assertTrue($reflectionTypeAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         return [
             ['__toString', null, 'int', []],
@@ -52,7 +53,7 @@ class ReflectionNamedTypeTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionType::class);
 
@@ -71,7 +72,7 @@ class ReflectionNamedTypeTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testIsInstanceOfCoreReflectionType() : void
+    public function testIsInstanceOfCoreReflectionType(): void
     {
         $reflectionStub = $this->createMock(BetterReflectionType::class);
         $adapter        = ReflectionNamedTypeAdapter::fromReturnTypeOrNull($reflectionStub);

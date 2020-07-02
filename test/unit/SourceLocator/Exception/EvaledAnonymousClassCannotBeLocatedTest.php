@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeL
  */
 class EvaledAnonymousClassCannotBeLocatedTest extends TestCase
 {
-    public function testCreate() : void
+    public function testCreate(): void
     {
         $exception = EvaledAnonymousClassCannotBeLocated::create();
 

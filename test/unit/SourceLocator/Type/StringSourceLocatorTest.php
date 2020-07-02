@@ -21,7 +21,7 @@ class StringSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +36,7 @@ class StringSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testReturnsNullWhenSourceDoesNotContainClass() : void
+    public function testReturnsNullWhenSourceDoesNotContainClass(): void
     {
         $sourceCode = '<?php echo "Hello world!";';
 
@@ -51,7 +51,7 @@ class StringSourceLocatorTest extends TestCase
         ));
     }
 
-    public function testReturnsReflectionWhenSourceHasClass() : void
+    public function testReturnsReflectionWhenSourceHasClass(): void
     {
         $sourceCode = '<?php class Foo {}';
 
@@ -68,7 +68,7 @@ class StringSourceLocatorTest extends TestCase
         self::assertSame('Foo', $reflectionClass->getName());
     }
 
-    public function testConstructorThrowsExceptionIfEmptyStringGiven() : void
+    public function testConstructorThrowsExceptionIfEmptyStringGiven(): void
     {
         $this->expectException(EmptyPhpSourceCode::class);
         new StringSourceLocator('', $this->astLocator);

@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator;
+
 use function assert;
 
 /**
@@ -21,7 +22,7 @@ use function assert;
  */
 class AbstractSourceLocatorTest extends TestCase
 {
-    public function testLocateIdentifierCallsFindReflection() : void
+    public function testLocateIdentifierCallsFindReflection(): void
     {
         $mockReflector = $this->createMock(Reflector::class);
 
@@ -52,7 +53,7 @@ class AbstractSourceLocatorTest extends TestCase
         self::assertSame($mockReflection, $sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
 
-    public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource() : void
+    public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource(): void
     {
         $mockReflector = $this->createMock(Reflector::class);
 
@@ -77,7 +78,7 @@ class AbstractSourceLocatorTest extends TestCase
         self::assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
 
-    public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException() : void
+    public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException(): void
     {
         $mockReflector = $this->createMock(Reflector::class);
 
@@ -106,7 +107,7 @@ class AbstractSourceLocatorTest extends TestCase
         self::assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
 
-    public function testLocateIdentifiersByTypeCallsFindReflectionsOfType() : void
+    public function testLocateIdentifiersByTypeCallsFindReflectionsOfType(): void
     {
         $mockReflector = $this->createMock(Reflector::class);
 
@@ -136,7 +137,7 @@ class AbstractSourceLocatorTest extends TestCase
         self::assertSame([$mockReflection], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
     }
 
-    public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource() : void
+    public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource(): void
     {
         $mockReflector = $this->createMock(Reflector::class);
 

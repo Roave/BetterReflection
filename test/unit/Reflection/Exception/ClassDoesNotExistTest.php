@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflection\Reflection;
  */
 class ClassDoesNotExistTest extends TestCase
 {
-    public function testForDifferentReflectionType() : void
+    public function testForDifferentReflectionType(): void
     {
         $reflection = $this->createMock(Reflection::class);
 

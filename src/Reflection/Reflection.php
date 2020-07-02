@@ -16,5 +16,5 @@ interface Reflection
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
      */
-    public function getName() : string;
+    public function getName(): string;
 }

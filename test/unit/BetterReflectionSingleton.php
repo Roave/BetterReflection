@@ -14,7 +14,7 @@ abstract class BetterReflectionSingleton
     {
     }
 
-    public static function instance() : BetterReflection
+    public static function instance(): BetterReflection
     {
         return self::$betterReflection ?? self::$betterReflection = new BetterReflection();
     }

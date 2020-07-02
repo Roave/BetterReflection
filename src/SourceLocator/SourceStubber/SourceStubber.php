@@ -12,15 +12,15 @@ interface SourceStubber
     /**
      * Generates stub for given class. Returns null when it cannot generate the stub.
      */
-    public function generateClassStub(string $className) : ?StubData;
+    public function generateClassStub(string $className): ?StubData;
 
     /**
      * Generates stub for given function. Returns null when it cannot generate the stub.
      */
-    public function generateFunctionStub(string $functionName) : ?StubData;
+    public function generateFunctionStub(string $functionName): ?StubData;
 
     /**
      * Generates stub for given constant. Returns null when it cannot generate the stub.
      */
-    public function generateConstantStub(string $constantName) : ?StubData;
+    public function generateConstantStub(string $constantName): ?StubData;
 }

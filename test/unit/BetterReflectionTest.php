@@ -20,7 +20,7 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
  */
 final class BetterReflectionTest extends TestCase
 {
-    public function testAccessorsReturnTypes() : void
+    public function testAccessorsReturnTypes(): void
     {
         $betterReflection = new BetterReflection();
 
@@ -34,7 +34,7 @@ final class BetterReflectionTest extends TestCase
         self::assertInstanceOf(SourceStubber::class, $betterReflection->sourceStubber());
     }
 
-    public function testProducedInstancesAreMemoized() : void
+    public function testProducedInstancesAreMemoized(): void
     {
         $betterReflection = new BetterReflection();
 
@@ -48,7 +48,7 @@ final class BetterReflectionTest extends TestCase
         self::assertSame($betterReflection->sourceStubber(), $betterReflection->sourceStubber());
     }
 
-    public function testProducedInstancesAreNotMemoizedAcrossInstances() : void
+    public function testProducedInstancesAreNotMemoizedAcrossInstances(): void
     {
         $betterReflection1 = new BetterReflection();
         $betterReflection2 = new BetterReflection();

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 
 use LogicException;
+
 use function stat;
 use function stream_wrapper_register;
 use function stream_wrapper_restore;
 use function stream_wrapper_unregister;
+
 use const STREAM_URL_STAT_QUIET;
 
 /**
@@ -90,7 +92,7 @@ final class FileReadTrapStreamWrapper
      * @param int    $options
      * @param string $opened_path
      */
-    public function stream_open($path, $mode, $options, &$opened_path) : bool
+    public function stream_open($path, $mode, $options, &$opened_path): bool
     {
         self::$autoloadLocatedFile = $path;
 

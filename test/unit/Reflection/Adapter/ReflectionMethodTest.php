@@ -23,6 +23,7 @@ use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
 use Throwable;
 use TypeError;
+
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -32,11 +33,11 @@ use function get_class_methods;
  */
 class ReflectionMethodTest extends TestCase
 {
-    public function coreReflectionMethodNamesProvider() : array
+    public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionMethod::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -44,13 +45,13 @@ class ReflectionMethodTest extends TestCase
     /**
      * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionMethods(string $methodName) : void
+    public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionMethodAdapterReflection = new CoreReflectionClass(ReflectionMethodAdapter::class);
         self::assertTrue($reflectionMethodAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         $mockParameter = $this->createMock(BetterReflectionParameter::class);
 
@@ -58,7 +59,7 @@ class ReflectionMethodTest extends TestCase
 
         $mockType = $this->createMock(BetterReflectionType::class);
 
-        $closure = static function () : void {
+        $closure = static function (): void {
         };
 
         return [
@@ -110,7 +111,7 @@ class ReflectionMethodTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionMethod::class);
 
@@ -146,14 +147,14 @@ class ReflectionMethodTest extends TestCase
         }
     }
 
-    public function testExport() : void
+    public function testExport(): void
     {
         $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Unable to export statically');
         ReflectionMethodAdapter::export('\stdClass', 'foo');
     }
 
-    public function testGetFileNameReturnsFalseWhenNoFileName() : void
+    public function testGetFileNameReturnsFalseWhenNoFileName(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -165,7 +166,7 @@ class ReflectionMethodTest extends TestCase
         self::assertFalse($betterReflectionMethod->getFileName());
     }
 
-    public function testGetFileNameReturnsPathWithSystemDirectorySeparator() : void
+    public function testGetFileNameReturnsPathWithSystemDirectorySeparator(): void
     {
         $fileName = 'foo/bar\\foo/bar.php';
 
@@ -179,7 +180,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionMethod->getFileName());
     }
 
-    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -191,7 +192,7 @@ class ReflectionMethodTest extends TestCase
         self::assertFalse($reflectionMethodAdapter->getDocComment());
     }
 
-    public function testGetDeclaringClass() : void
+    public function testGetDeclaringClass(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
@@ -209,7 +210,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('DeclaringClass', $reflectionMethodAdapter->getDeclaringClass()->getName());
     }
 
-    public function testGetExtensionNameReturnsFalseWhenNoExtensionName() : void
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -221,7 +222,7 @@ class ReflectionMethodTest extends TestCase
         self::assertFalse($betterReflectionMethod->getExtensionName());
     }
 
-    public function testGetClosureReturnsNullWhenNoObject() : void
+    public function testGetClosureReturnsNullWhenNoObject(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -233,7 +234,7 @@ class ReflectionMethodTest extends TestCase
         self::assertNull($reflectionMethodAdapter->getClosure());
     }
 
-    public function testGetClosureReturnsNullWhenNotAnObject() : void
+    public function testGetClosureReturnsNullWhenNotAnObject(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -245,7 +246,7 @@ class ReflectionMethodTest extends TestCase
         self::assertNull($reflectionMethodAdapter->getClosure('string'));
     }
 
-    public function testGetClosureThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testGetClosureThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -258,7 +259,7 @@ class ReflectionMethodTest extends TestCase
         $reflectionMethodAdapter->getClosure(new stdClass());
     }
 
-    public function testInvoke() : void
+    public function testInvoke(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -274,7 +275,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(123, $reflectionMethodAdapter->invoke(null, 100, 23));
     }
 
-    public function testInvokeArgs() : void
+    public function testInvokeArgs(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -290,7 +291,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(123, $reflectionMethodAdapter->invokeArgs(null, [100, 23]));
     }
 
-    public function testInvokeArgsReturnsNullWhenNoObject() : void
+    public function testInvokeArgsReturnsNullWhenNoObject(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -305,7 +306,7 @@ class ReflectionMethodTest extends TestCase
         self::assertNull($reflectionMethodAdapter->invokeArgs(null, []));
     }
 
-    public function testInvokeReturnsNullWhenNotAnObject() : void
+    public function testInvokeReturnsNullWhenNotAnObject(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -320,7 +321,7 @@ class ReflectionMethodTest extends TestCase
         self::assertNull($reflectionMethodAdapter->invoke('string'));
     }
 
-    public function testInvokeArgsReturnsNullWhenNotAnObject() : void
+    public function testInvokeArgsReturnsNullWhenNotAnObject(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -335,7 +336,7 @@ class ReflectionMethodTest extends TestCase
         self::assertNull($reflectionMethodAdapter->invokeArgs('string', []));
     }
 
-    public function testInvokeThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testInvokeThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -351,7 +352,7 @@ class ReflectionMethodTest extends TestCase
         $reflectionMethodAdapter->invoke(new stdClass());
     }
 
-    public function testInvokeArgsThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testInvokeArgsThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -367,7 +368,7 @@ class ReflectionMethodTest extends TestCase
         $reflectionMethodAdapter->invokeArgs(new stdClass(), []);
     }
 
-    public function testInvokeThrowsExceptionWhenPropertyNotAccessible() : void
+    public function testInvokeThrowsExceptionWhenPropertyNotAccessible(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -380,7 +381,7 @@ class ReflectionMethodTest extends TestCase
         $reflectionMethodAdapter->invoke();
     }
 
-    public function testInvokeArgsThrowsExceptionWhenPropertyNotAccessible() : void
+    public function testInvokeArgsThrowsExceptionWhenPropertyNotAccessible(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod

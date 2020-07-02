@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
  */
 class PropertyDoesNotExistTest extends TestCase
 {
-    public function testFromName() : void
+    public function testFromName(): void
     {
         $exception = PropertyDoesNotExist::fromName('boo');
 

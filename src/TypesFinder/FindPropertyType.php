@@ -10,6 +10,7 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
+
 use function array_map;
 use function array_merge;
 use function explode;
@@ -34,7 +35,7 @@ class FindPropertyType
      *
      * @return Type[]
      */
-    public function __invoke(ReflectionProperty $reflectionProperty, ?Namespace_ $namespace) : array
+    public function __invoke(ReflectionProperty $reflectionProperty, ?Namespace_ $namespace): array
     {
         $docComment = $reflectionProperty->getDocComment();
 

@@ -19,14 +19,14 @@ class FindReflectionOnLineTest extends TestCase
 {
     private FindReflectionOnLine $finder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->finder = BetterReflectionSingleton::instance()->findReflectionsOnLine();
     }
 
-    public function testInvokeFindsClass() : void
+    public function testInvokeFindsClass(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 10);
 
@@ -34,7 +34,7 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('SomeFooClass', $reflection->getName());
     }
 
-    public function testInvokeFindsTrait() : void
+    public function testInvokeFindsTrait(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 19);
 
@@ -42,7 +42,7 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('SomeFooTrait', $reflection->getName());
     }
 
-    public function testInvokeFindsInterface() : void
+    public function testInvokeFindsInterface(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 24);
 
@@ -50,7 +50,7 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('SomeFooInterface', $reflection->getName());
     }
 
-    public function testInvokeFindsMethod() : void
+    public function testInvokeFindsMethod(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 14);
 
@@ -58,7 +58,7 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('someMethod', $reflection->getName());
     }
 
-    public function testInvokeFindsFunction() : void
+    public function testInvokeFindsFunction(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 5);
 
@@ -66,7 +66,7 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('fooFunc', $reflection->getName());
     }
 
-    public function testInvokeFindsConstantByDefine() : void
+    public function testInvokeFindsConstantByDefine(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 30);
 
@@ -74,7 +74,7 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('FOO', $reflection->getName());
     }
 
-    public function testInvokeFindsConstantByConst() : void
+    public function testInvokeFindsConstantByConst(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 32);
 
@@ -82,12 +82,12 @@ class FindReflectionOnLineTest extends TestCase
         self::assertSame('BOO', $reflection->getName());
     }
 
-    public function testInvokeReturnsNullWhenNothingFound() : void
+    public function testInvokeReturnsNullWhenNothingFound(): void
     {
         self::assertNull(($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 1));
     }
 
-    public function testInvokeFindsClassWithImplementedInterface() : void
+    public function testInvokeFindsClassWithImplementedInterface(): void
     {
         $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 26);
 

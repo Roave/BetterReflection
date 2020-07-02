@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+
 use function array_combine;
 use function array_map;
 use function array_values;
@@ -183,7 +184,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethods($filter = null)
     {
-        return array_map(static function (BetterReflectionMethod $method) : ReflectionMethod {
+        return array_map(static function (BetterReflectionMethod $method): ReflectionMethod {
             return new ReflectionMethod($method);
         }, $this->betterReflectionClass->getMethods($filter));
     }
@@ -215,7 +216,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getProperties($filter = null)
     {
-        return array_values(array_map(static function (BetterReflectionProperty $property) : ReflectionProperty {
+        return array_values(array_map(static function (BetterReflectionProperty $property): ReflectionProperty {
             return new ReflectionProperty($property);
         }, $this->betterReflectionClass->getProperties($filter)));
     }
@@ -262,7 +263,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants()
     {
-        return array_values(array_map(static function (BetterReflectionClassConstant $betterConstant) : ReflectionClassConstant {
+        return array_values(array_map(static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
         }, $this->betterReflectionClass->getReflectionConstants()));
     }
@@ -306,13 +307,13 @@ class ReflectionClass extends CoreReflectionClass
         $traits = $this->betterReflectionClass->getTraits();
 
         /** @var array<trait-string> $traitNames */
-        $traitNames = array_map(static function (BetterReflectionClass $trait) : string {
+        $traitNames = array_map(static function (BetterReflectionClass $trait): string {
             return $trait->getName();
         }, $traits);
 
         $traitsByName = array_combine(
             $traitNames,
-            array_map(static function (BetterReflectionClass $trait) : self {
+            array_map(static function (BetterReflectionClass $trait): self {
                 return new self($trait);
             }, $traits),
         );
@@ -437,7 +438,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
 
-        $parentClassNames = array_combine(array_map(static function (string $parentClassName) : string {
+        $parentClassNames = array_combine(array_map(static function (string $parentClassName): string {
             return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
@@ -529,7 +530,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
 
-        $interfaceNames = array_combine(array_map(static function (string $interfaceName) : string {
+        $interfaceNames = array_combine(array_map(static function (string $interfaceName): string {
             return strtolower($interfaceName);
         }, $realInterfaceNames), $realInterfaceNames);
 

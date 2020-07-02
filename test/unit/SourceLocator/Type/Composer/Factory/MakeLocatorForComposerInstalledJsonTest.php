@@ -17,6 +17,7 @@ use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function array_column;
 use function array_combine;
 use function realpath;
@@ -27,7 +28,7 @@ use function realpath;
 class MakeLocatorForComposerInstalledJsonTest extends TestCase
 {
     /** @dataProvider expectedLocators */
-    public function testLocatorEquality(string $projectDirectory, SourceLocator $expectedLocatorStructure) : void
+    public function testLocatorEquality(string $projectDirectory, SourceLocator $expectedLocatorStructure): void
     {
         self::assertEquals(
             $expectedLocatorStructure,
@@ -39,7 +40,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
     /**
      * @return array<string, array{0: string, 1: SourceLocator}>
      */
-    public function expectedLocators() : array
+    public function expectedLocators(): array
     {
         $astLocator = BetterReflectionSingleton::instance()->astLocator();
 
@@ -171,7 +172,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
         return array_combine(array_column($expectedLocators, 0), $expectedLocators);
     }
 
-    public function testWillFailToProduceLocatorForProjectWithoutInstalledJson() : void
+    public function testWillFailToProduceLocatorForProjectWithoutInstalledJson(): void
     {
         $this->expectException(MissingInstalledJson::class);
 
@@ -182,7 +183,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
             );
     }
 
-    public function testWillFailToProduceLocatorForProjectWithInvalidInstalledJson() : void
+    public function testWillFailToProduceLocatorForProjectWithInvalidInstalledJson(): void
     {
         $this->expectException(FailedToParseJson::class);
 
@@ -193,7 +194,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
             );
     }
 
-    public function testWillFailToProduceLocatorForInvalidProjectDirectory() : void
+    public function testWillFailToProduceLocatorForInvalidProjectDirectory(): void
     {
         $this->expectException(InvalidProjectDirectory::class);
 

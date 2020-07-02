@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\NotAnObject;
  */
 class NotAnObjectTest extends TestCase
 {
-    public function testFromNonObject() : void
+    public function testFromNonObject(): void
     {
         $exception = NotAnObject::fromNonObject(123);
 

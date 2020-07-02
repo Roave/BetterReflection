@@ -12,6 +12,7 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
+
 use function array_filter;
 use function array_map;
 use function array_merge;
@@ -44,7 +45,7 @@ class MemoizingSourceLocatorTest extends TestCase
 
     private int $identifierCount;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -53,7 +54,7 @@ class MemoizingSourceLocatorTest extends TestCase
         $this->wrappedLocator   = $this->createMock(SourceLocator::class);
         $this->memoizingLocator = new MemoizingSourceLocator($this->wrappedLocator);
         $this->identifierNames  = array_unique(array_map(
-            static function () : string {
+            static function (): string {
                 return uniqid('identifier', true);
             },
             range(1, 20),
@@ -61,11 +62,11 @@ class MemoizingSourceLocatorTest extends TestCase
         $this->identifierCount  = count($this->identifierNames);
     }
 
-    public function testLocateIdentifierIsMemoized() : void
+    public function testLocateIdentifierIsMemoized(): void
     {
         $this->assertMemoization(
             array_map(
-                static function (string $identifier) : Identifier {
+                static function (string $identifier): Identifier {
                     return new Identifier(
                         $identifier,
                         new IdentifierType(
@@ -80,16 +81,16 @@ class MemoizingSourceLocatorTest extends TestCase
         );
     }
 
-    public function testLocateIdentifiersDistinguishesBetweenIdentifierTypes() : void
+    public function testLocateIdentifiersDistinguishesBetweenIdentifierTypes(): void
     {
         $classIdentifiers    = array_map(
-            static function (string $identifier) : Identifier {
+            static function (string $identifier): Identifier {
                 return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
             },
             $this->identifierNames,
         );
         $functionIdentifiers = array_map(
-            static function (string $identifier) : Identifier {
+            static function (string $identifier): Identifier {
                 return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
             },
             $this->identifierNames,
@@ -102,11 +103,11 @@ class MemoizingSourceLocatorTest extends TestCase
         );
     }
 
-    public function testLocateIdentifiersDistinguishesBetweenReflectorInstances() : void
+    public function testLocateIdentifiersDistinguishesBetweenReflectorInstances(): void
     {
         $this->assertMemoization(
             array_map(
-                static function (string $identifier) : Identifier {
+                static function (string $identifier): Identifier {
                     return new Identifier(
                         $identifier,
                         new IdentifierType(
@@ -121,7 +122,7 @@ class MemoizingSourceLocatorTest extends TestCase
         );
     }
 
-    public function testMemoizationByTypeDistinguishesBetweenSourceLocatorsAndType() : void
+    public function testMemoizationByTypeDistinguishesBetweenSourceLocatorsAndType(): void
     {
         /** @var IdentifierType[] $types */
         $types    = [
@@ -148,7 +149,7 @@ class MemoizingSourceLocatorTest extends TestCase
             ) use (
                 $symbols1,
                 $symbols2
-            ) : array {
+            ): array {
                 if ($reflector === $this->reflector1) {
                     return $symbols1[$identifierType->getName()];
                 }
@@ -186,7 +187,7 @@ class MemoizingSourceLocatorTest extends TestCase
         array $identifiers,
         int $expectedFetchOperationsCount,
         array $reflectors
-    ) : void {
+    ): void {
         $fetchedSymbolsCount = [];
 
         $this
@@ -204,7 +205,7 @@ class MemoizingSourceLocatorTest extends TestCase
                 Identifier $identifier
             ) use (
                 &$fetchedSymbolsCount
-            ) : ?Reflection {
+            ): ?Reflection {
                 $identifierId = spl_object_hash($identifier);
                 $reflectorId  = spl_object_hash($reflector);
                 $hash         = $reflectorId . $identifierId;
@@ -238,7 +239,7 @@ class MemoizingSourceLocatorTest extends TestCase
      *
      * @return Reflection[]|null[]
      */
-    private function locateIdentifiers(array $reflectors, array $identifiers) : array
+    private function locateIdentifiers(array $reflectors, array $identifiers): array
     {
         $memoizedSymbols = [];
 

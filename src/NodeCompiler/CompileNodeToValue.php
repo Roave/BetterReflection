@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
+
 use function assert;
 use function constant;
 use function defined;
@@ -70,10 +71,13 @@ class CompileNodeToValue
         switch ($firstName) {
             case 'null':
                 return null;
+
             case 'false':
                 return false;
+
             case 'true':
                 return true;
+
             default:
                 if (! defined($firstName)) {
                     throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode);
@@ -130,7 +134,7 @@ class CompileNodeToValue
     /**
      * Compile a __DIR__ node
      */
-    private function compileDirConstant(CompilerContext $context) : string
+    private function compileDirConstant(CompilerContext $context): string
     {
         return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
     }
@@ -138,12 +142,12 @@ class CompileNodeToValue
     /**
      * Compiles magic constant __CLASS__
      */
-    private function compileClassConstant(CompilerContext $context) : string
+    private function compileClassConstant(CompilerContext $context): string
     {
         return $context->hasSelf() ? $context->getSelf()->getName() : '';
     }
 
-    private function resolveClassNameForClassNameConstant(string $className, CompilerContext $context) : string
+    private function resolveClassNameForClassNameConstant(string $className, CompilerContext $context): string
     {
         if ($className === 'self' || $className === 'static') {
             return $context->getSelf()->getName();

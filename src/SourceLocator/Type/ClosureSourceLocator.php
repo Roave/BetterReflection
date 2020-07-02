@@ -23,6 +23,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
+
 use function array_filter;
 use function array_values;
 use function assert;
@@ -50,7 +51,7 @@ final class ClosureSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
         return $this->getReflectionFunction($reflector, $identifier->getType());
     }
@@ -60,12 +61,12 @@ final class ClosureSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         return array_filter([$this->getReflectionFunction($reflector, $identifierType)]);
     }
 
-    private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionFunction
+    private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType): ?ReflectionFunction
     {
         if (! $identifierType->isFunction()) {
             return null;
@@ -81,7 +82,7 @@ final class ClosureSourceLocator implements SourceLocator
 
         $fileName = FileHelper::normalizeWindowsPath($fileName);
 
-        $nodeVisitor = new class($fileName, $this->coreFunctionReflection->getStartLine()) extends NodeVisitorAbstract
+        $nodeVisitor = new class ($fileName, $this->coreFunctionReflection->getStartLine()) extends NodeVisitorAbstract
         {
             private string $fileName;
 
@@ -137,10 +138,10 @@ final class ClosureSourceLocator implements SourceLocator
              *
              * @throws TwoClosuresOnSameLine
              */
-            public function getClosureNodes() : ?array
+            public function getClosureNodes(): ?array
             {
                 /** @var (Node|null)[][] $closureNodesDataOnSameLine */
-                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, function (array $nodes) : bool {
+                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, function (array $nodes): bool {
                     return $nodes[0]->getLine() === $this->startLine;
                 }));
 

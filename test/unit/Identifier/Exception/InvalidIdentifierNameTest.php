@@ -12,7 +12,7 @@ use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
  */
 class InvalidIdentifierNameTest extends TestCase
 {
-    public function testFromInvalidName() : void
+    public function testFromInvalidName(): void
     {
         $exception = InvalidIdentifierName::fromInvalidName('!@#$%^&*()');
 

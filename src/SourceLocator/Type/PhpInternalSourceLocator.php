@@ -30,14 +30,14 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
     {
         return $this->getClassSource($identifier)
             ?? $this->getFunctionSource($identifier)
             ?? $this->getConstantSource($identifier);
     }
 
-    private function getClassSource(Identifier $identifier) : ?InternalLocatedSource
+    private function getClassSource(Identifier $identifier): ?InternalLocatedSource
     {
         if (! $identifier->isClass()) {
             return null;
@@ -46,7 +46,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return $this->createLocatedSourceFromStubData($this->stubber->generateClassStub($identifier->getName()));
     }
 
-    private function getFunctionSource(Identifier $identifier) : ?InternalLocatedSource
+    private function getFunctionSource(Identifier $identifier): ?InternalLocatedSource
     {
         if (! $identifier->isFunction()) {
             return null;
@@ -55,7 +55,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return $this->createLocatedSourceFromStubData($this->stubber->generateFunctionStub($identifier->getName()));
     }
 
-    private function getConstantSource(Identifier $identifier) : ?InternalLocatedSource
+    private function getConstantSource(Identifier $identifier): ?InternalLocatedSource
     {
         if (! $identifier->isConstant()) {
             return null;
@@ -64,7 +64,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return $this->createLocatedSourceFromStubData($this->stubber->generateConstantStub($identifier->getName()));
     }
 
-    private function createLocatedSourceFromStubData(?StubData $stubData) : ?InternalLocatedSource
+    private function createLocatedSourceFromStubData(?StubData $stubData): ?InternalLocatedSource
     {
         if ($stubData === null) {
             return null;

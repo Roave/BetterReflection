@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestSuite;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
+
 use function class_exists;
 
 class TestListener implements BaseTestListener
@@ -26,7 +27,7 @@ class TestListener implements BaseTestListener
     /**
      * Determine the "full" test name (including the suite name if it is set)
      */
-    private function getCurrentTestName(TestCase $test) : string
+    private function getCurrentTestName(TestCase $test): string
     {
         if ($this->currentSuite === null) {
             return $test->getName(true);
@@ -41,7 +42,7 @@ class TestListener implements BaseTestListener
      *
      * @throws AssertionFailedError
      */
-    private function assertClassNotLoaded(string $className, TestCase $test) : void
+    private function assertClassNotLoaded(string $className, TestCase $test): void
     {
         TestCase::assertFalse(
             class_exists($className, false),
@@ -56,7 +57,7 @@ class TestListener implements BaseTestListener
      *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function endTest(Test $test, float $time) : void
+    public function endTest(Test $test, float $time): void
     {
         // Only test PHPUnit tests (i.e. no .phpt tests or anything else unexpected)
         if (! ($test instanceof TestCase)) {
@@ -74,7 +75,7 @@ class TestListener implements BaseTestListener
      * Simply record the "current" test suite being run
      * Used by getCurrentTestName().
      */
-    public function startTestSuite(TestSuite $suite) : void
+    public function startTestSuite(TestSuite $suite): void
     {
         $this->currentSuite = $suite;
     }
@@ -83,7 +84,7 @@ class TestListener implements BaseTestListener
      * Unset the "current" test suite being run at the end.
      * Used by getCurrentTestName().
      */
-    public function endTestSuite(TestSuite $suite) : void
+    public function endTestSuite(TestSuite $suite): void
     {
         $this->currentSuite = null;
     }

@@ -14,7 +14,7 @@ use Roave\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
  */
 final class PhpParserPrinterTest extends TestCase
 {
-    public function testPrinting() : void
+    public function testPrinting(): void
     {
         self::assertSame(
             <<<'PHP'

@@ -8,6 +8,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
+
 use function array_key_exists;
 use function get_class;
 use function spl_object_hash;
@@ -27,7 +28,7 @@ final class MemoizingSourceLocator implements SourceLocator
         $this->wrappedSourceLocator = $wrappedSourceLocator;
     }
 
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
         $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierToCacheKey($identifier);
 
@@ -42,7 +43,7 @@ final class MemoizingSourceLocator implements SourceLocator
     /**
      * @return Reflection[]
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierTypeToCacheKey($identifierType);
 
@@ -54,19 +55,19 @@ final class MemoizingSourceLocator implements SourceLocator
             = $this->wrappedSourceLocator->locateIdentifiersByType($reflector, $identifierType);
     }
 
-    private function reflectorCacheKey(Reflector $reflector) : string
+    private function reflectorCacheKey(Reflector $reflector): string
     {
         return 'type:' . get_class($reflector)
             . '#oid:' . spl_object_hash($reflector);
     }
 
-    private function identifierToCacheKey(Identifier $identifier) : string
+    private function identifierToCacheKey(Identifier $identifier): string
     {
         return $this->identifierTypeToCacheKey($identifier->getType())
             . '#name:' . $identifier->getName();
     }
 
-    private function identifierTypeToCacheKey(IdentifierType $identifierType) : string
+    private function identifierTypeToCacheKey(IdentifierType $identifierType): string
     {
         return 'type:' . $identifierType->getName();
     }

@@ -12,6 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+
 use function class_exists;
 use function file_exists;
 use function interface_exists;
@@ -34,7 +35,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
     {
         $classReflection = $this->getInternalReflectionClass($identifier);
 
@@ -51,7 +52,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         return new EvaledLocatedSource($stubData->getStub());
     }
 
-    private function getInternalReflectionClass(Identifier $identifier) : ?ReflectionClass
+    private function getInternalReflectionClass(Identifier $identifier): ?ReflectionClass
     {
         if (! $identifier->isClass()) {
             return null;

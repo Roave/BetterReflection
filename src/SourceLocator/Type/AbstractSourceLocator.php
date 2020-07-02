@@ -25,7 +25,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      *   return new LocatedSource(['<?php class Foo {}', null]);
      *   return new LocatedSource([\file_get_contents('Foo.php'), 'Foo.php']);
      */
-    abstract protected function createLocatedSource(Identifier $identifier) : ?LocatedSource;
+    abstract protected function createLocatedSource(Identifier $identifier): ?LocatedSource;
 
     public function __construct(AstLocator $astLocator)
     {
@@ -37,7 +37,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
         $locatedSource = $this->createLocatedSource($identifier);
 
@@ -57,7 +57,7 @@ abstract class AbstractSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
+    final public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         $locatedSource = $this->createLocatedSource(new Identifier(Identifier::WILDCARD, $identifierType));
 
