@@ -512,4 +512,24 @@ class ReflectionClassTest extends TestCase
 
         self::assertFalse($reflectionClassAdapter->getReflectionConstant('FOO'));
     }
+
+    public function testPropertyName(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('Foo');
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+        self::assertSame('Foo', $reflectionClassAdapter->name);
+    }
+
+    public function testUnknownProperty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionClass::$foo does not exist.');
+        $reflectionClassAdapter->foo;
+    }
 }
