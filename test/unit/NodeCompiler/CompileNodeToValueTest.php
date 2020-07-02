@@ -17,9 +17,11 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function define;
 use function sprintf;
 use function uniqid;
+
 use const PHP_EOL;
 use const PHP_INT_MAX;
 
@@ -32,7 +34,7 @@ class CompileNodeToValueTest extends TestCase
 
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -41,17 +43,17 @@ class CompileNodeToValueTest extends TestCase
         $this->astLocator = $configuration->astLocator();
     }
 
-    private function parseCode(string $phpCode) : Node
+    private function parseCode(string $phpCode): Node
     {
         return $this->parser->parse('<?php ' . $phpCode . ';')[0];
     }
 
-    private function getDummyContext() : CompilerContext
+    private function getDummyContext(): CompilerContext
     {
         return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php', $this->astLocator)), null);
     }
 
-    private function getDummyContextWithEmptyClass() : CompilerContext
+    private function getDummyContextWithEmptyClass(): CompilerContext
     {
         return new CompilerContext(
             new ClassReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
@@ -59,7 +61,7 @@ class CompileNodeToValueTest extends TestCase
         );
     }
 
-    public function nodeProvider() : array
+    public function nodeProvider(): array
     {
         return [
             ['1', 1],
@@ -164,7 +166,7 @@ class CompileNodeToValueTest extends TestCase
      *
      * @dataProvider nodeProvider
      */
-    public function testVariousNodeCompilations(string $phpCode, $expectedValue) : void
+    public function testVariousNodeCompilations(string $phpCode, $expectedValue): void
     {
         $node = $this->parseCode($phpCode);
 
@@ -173,7 +175,7 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function testExceptionThrownWhenInvalidNodeGiven() : void
+    public function testExceptionThrownWhenInvalidNodeGiven(): void
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage(sprintf(
@@ -184,7 +186,7 @@ class CompileNodeToValueTest extends TestCase
         (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContext());
     }
 
-    public function testExceptionThrownWhenUndefinedConstUsed() : void
+    public function testExceptionThrownWhenUndefinedConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context (probably a function) at line -1');
@@ -192,7 +194,7 @@ class CompileNodeToValueTest extends TestCase
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
     }
 
-    public function testExceptionThrownWhenUndefinedClassConstUsed() : void
+    public function testExceptionThrownWhenUndefinedClassConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context (probably a function) at line -1');
@@ -207,7 +209,7 @@ class CompileNodeToValueTest extends TestCase
             );
     }
 
-    public function testConstantValueCompiled() : void
+    public function testConstantValueCompiled(): void
     {
         $constName = uniqid('BETTER_REFLECTION_TEST_CONST_', true);
         define($constName, 123);
@@ -221,7 +223,7 @@ class CompileNodeToValueTest extends TestCase
         );
     }
 
-    public function testClassConstantResolutionSelfForMethod() : void
+    public function testClassConstantResolutionSelfForMethod(): void
     {
         $phpCode = '<?php
         class Foo {
@@ -238,7 +240,7 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
 
-    public function testClassConstantResolutionWithAnotherClassConstant() : void
+    public function testClassConstantResolutionWithAnotherClassConstant(): void
     {
         $phpCode = <<<'PHP'
 <?php
@@ -263,7 +265,7 @@ PHP;
         self::assertSame(604800, $classInfo->getReflectionConstant('WEEK')->getValue());
     }
 
-    public function testClassConstantResolutionExternalForMethod() : void
+    public function testClassConstantResolutionExternalForMethod(): void
     {
         $phpCode = '<?php
         class Foo {
@@ -283,7 +285,7 @@ PHP;
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
 
-    public function testClassConstantResolutionStaticForMethod() : void
+    public function testClassConstantResolutionStaticForMethod(): void
     {
         $phpCode = '<?php
         class Foo {
@@ -300,7 +302,7 @@ PHP;
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
 
-    public function testClassConstantClassNameResolution() : void
+    public function testClassConstantClassNameResolution(): void
     {
         $phpCode = '<?php
 
@@ -316,7 +318,7 @@ PHP;
         self::assertSame('Foo', $classInfo->getConstant('QUX'));
     }
 
-    public function testClassConstantClassNameNamespaceResolution() : void
+    public function testClassConstantClassNameNamespaceResolution(): void
     {
         $phpCode = '<?php
         namespace Bar;
@@ -333,7 +335,7 @@ PHP;
         self::assertSame('Bar\Foo', $classInfo->getConstant('QUX'));
     }
 
-    public function testClassConstantClassNameOutOfScopeResolution() : void
+    public function testClassConstantClassNameOutOfScopeResolution(): void
     {
         $phpCode = '<?php
         namespace Bar;
@@ -350,7 +352,7 @@ PHP;
         self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
 
-    public function testClassConstantClassNameAliasedResolution() : void
+    public function testClassConstantClassNameAliasedResolution(): void
     {
         $phpCode = '<?php
         namespace Bar;
@@ -367,7 +369,7 @@ PHP;
         self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
 
-    public function testClassConstantResolutionFromParent() : void
+    public function testClassConstantResolutionFromParent(): void
     {
         $phpCode = '<?php
         namespace Bar;
@@ -385,7 +387,7 @@ PHP;
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
-    public function testClassConstantResolutionFromParentParent() : void
+    public function testClassConstantResolutionFromParentParent(): void
     {
         $phpCode = '<?php
         namespace Bar;
@@ -404,7 +406,7 @@ PHP;
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
-    public function testDifferentClassConstantAsDefaultValueWhenInNamespace() : void
+    public function testDifferentClassConstantAsDefaultValueWhenInNamespace(): void
     {
         $phpCode = '<?php
         namespace Foo;
@@ -423,7 +425,7 @@ PHP;
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
-    public function testDifferentClassConstantAsDefaultValueWhenNotInNamespace() : void
+    public function testDifferentClassConstantAsDefaultValueWhenNotInNamespace(): void
     {
         $phpCode = '<?php
         class Foo {
@@ -440,7 +442,7 @@ PHP;
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
-    public function testSelfStaticOrParentAsPropertyDefaultValue() : void
+    public function testSelfStaticOrParentAsPropertyDefaultValue(): void
     {
         $phpCode = <<<'PHP'
         <?php

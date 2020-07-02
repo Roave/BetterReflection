@@ -15,6 +15,7 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
+
 use function array_map;
 use function sort;
 use function uniqid;
@@ -26,7 +27,7 @@ class DirectoriesSourceLocatorTest extends TestCase
 {
     private DirectoriesSourceLocator $sourceLocator;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +40,7 @@ class DirectoriesSourceLocatorTest extends TestCase
         );
     }
 
-    public function testScanDirectoryClasses() : void
+    public function testScanDirectoryClasses(): void
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new ClassReflector($this->sourceLocator),
@@ -49,7 +50,7 @@ class DirectoriesSourceLocatorTest extends TestCase
         self::assertCount(4, $classes);
 
         $classNames = array_map(
-            static function (ReflectionClass $reflectionClass) : string {
+            static function (ReflectionClass $reflectionClass): string {
                 return $reflectionClass->getName();
             },
             $classes,
@@ -63,7 +64,7 @@ class DirectoriesSourceLocatorTest extends TestCase
         self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[3]);
     }
 
-    public function testLocateIdentifier() : void
+    public function testLocateIdentifier(): void
     {
         $class = $this->sourceLocator->locateIdentifier(
             new ClassReflector($this->sourceLocator),
@@ -82,14 +83,14 @@ class DirectoriesSourceLocatorTest extends TestCase
      *
      * @dataProvider invalidDirectoriesProvider
      */
-    public function testInvalidDirectory(array $directories) : void
+    public function testInvalidDirectory(array $directories): void
     {
         $this->expectException(InvalidDirectory::class);
 
         new DirectoriesSourceLocator($directories, BetterReflectionSingleton::instance()->astLocator());
     }
 
-    public function invalidDirectoriesProvider() : array
+    public function invalidDirectoriesProvider(): array
     {
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 

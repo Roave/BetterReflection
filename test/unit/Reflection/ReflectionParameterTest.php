@@ -33,6 +33,7 @@ use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
 use stdClass;
+
 use function sprintf;
 
 /**
@@ -46,7 +47,7 @@ class ReflectionParameterTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -57,7 +58,7 @@ class ReflectionParameterTest extends TestCase
         $this->reflector     = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
-    public function testCreateFromClassNameAndMethod() : void
+    public function testCreateFromClassNameAndMethod(): void
     {
         $parameterInfo = ReflectionParameter::createFromClassNameAndMethod(SplDoublyLinkedList::class, 'add', 'index');
 
@@ -65,7 +66,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromClassInstanceAndMethod() : void
+    public function testCreateFromClassInstanceAndMethod(): void
     {
         $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new SplDoublyLinkedList(), 'add', 'index');
 
@@ -73,16 +74,16 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromCallable() : void
+    public function testCreateFromCallable(): void
     {
-        $parameterInfo = ReflectionParameter::createFromClosure(static function ($a) : void {
+        $parameterInfo = ReflectionParameter::createFromClosure(static function ($a): void {
         }, 'a');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('a', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithArray() : void
+    public function testCreateFromSpecWithArray(): void
     {
         $parameterInfo = ReflectionParameter::createFromSpec([SplDoublyLinkedList::class, 'add'], 'index');
 
@@ -90,7 +91,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithArrayWithInstance() : void
+    public function testCreateFromSpecWithArrayWithInstance(): void
     {
         $splDoublyLinkedList = new SplDoublyLinkedList();
         $parameterInfo       = ReflectionParameter::createFromSpec([$splDoublyLinkedList, 'add'], 'index');
@@ -99,7 +100,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('index', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithFunctionName() : void
+    public function testCreateFromSpecWithFunctionName(): void
     {
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
         $parameterInfo = ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'param1');
@@ -108,16 +109,16 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('param1', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithClosure() : void
+    public function testCreateFromSpecWithClosure(): void
     {
-        $parameterInfo = ReflectionParameter::createFromSpec(static function ($a) : void {
+        $parameterInfo = ReflectionParameter::createFromSpec(static function ($a): void {
         }, 'a');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('a', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithInvalidArgumentThrowsException() : void
+    public function testCreateFromSpecWithInvalidArgumentThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Could not create reflection from the spec given');
@@ -127,7 +128,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @return array
      */
-    public function defaultParameterProvider() : array
+    public function defaultParameterProvider(): array
     {
         return [
             ['1', 1],
@@ -145,7 +146,7 @@ class ReflectionParameterTest extends TestCase
      *
      * @dataProvider defaultParameterProvider
      */
-    public function testDefaultParametersTypes(string $defaultExpression, $expectedValue) : void
+    public function testDefaultParametersTypes(string $defaultExpression, $expectedValue): void
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
 
@@ -158,7 +159,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException() : void
+    public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException(): void
     {
         $content = '<?php class Foo { public function myMethod($var) {} }';
 
@@ -172,7 +173,7 @@ class ReflectionParameterTest extends TestCase
         $paramInfo->getDefaultValue();
     }
 
-    public function testGetDocBlockTypeStrings() : void
+    public function testGetDocBlockTypeStrings(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -185,7 +186,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
     }
 
-    public function testGetDocBlockTypes() : void
+    public function testGetDocBlockTypes(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -203,7 +204,7 @@ class ReflectionParameterTest extends TestCase
         self::assertInstanceOf(Types\Float_::class, $param2Types[1]);
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodWithOptionalParameters');
@@ -215,7 +216,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('Parameter #1 [ <optional> $optionalParameter = NULL ]', (string) $optionalParam);
     }
 
-    public function testGetPosition() : void
+    public function testGetPosition(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -231,7 +232,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @return array
      */
-    public function typeProvider() : array
+    public function typeProvider(): array
     {
         return [
             ['stdClassParameter', 'stdClass'],
@@ -249,7 +250,7 @@ class ReflectionParameterTest extends TestCase
     public function testGetType(
         string $parameterToTest,
         string $expectedType
-    ) : void {
+    ): void {
         $classInfo = $this->reflector->reflect(Methods::class);
 
         $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
@@ -259,7 +260,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($expectedType, (string) $type);
     }
 
-    public function testPhp7TypeDeclarationWithIntBuiltinType() : void
+    public function testPhp7TypeDeclarationWithIntBuiltinType(): void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
@@ -270,7 +271,7 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($intParamType->allowsNull());
     }
 
-    public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin() : void
+    public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin(): void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
@@ -281,7 +282,7 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($classParamType->allowsNull());
     }
 
-    public function testPhp7TypeDeclarationWithoutType() : void
+    public function testPhp7TypeDeclarationWithoutType(): void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
@@ -289,7 +290,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull() : void
+    public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull(): void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
@@ -300,7 +301,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($stringParamType->allowsNull());
     }
 
-    public function nullableParameterTypeFunctionProvider() : array
+    public function nullableParameterTypeFunctionProvider(): array
     {
         return [
             ['nullableIntParam', 'int'],
@@ -312,7 +313,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @dataProvider nullableParameterTypeFunctionProvider
      */
-    public function testGetNullableReturnTypeWithDeclaredType(string $parameterToReflect, string $expectedType) : void
+    public function testGetNullableReturnTypeWithDeclaredType(string $parameterToReflect, string $expectedType): void
     {
         $classInfo = $this->reflector->reflect(Php71NullableParameterTypeDeclarations::class);
         $parameter = $classInfo->getMethod('foo')->getParameter($parameterToReflect);
@@ -323,7 +324,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($reflectionType->allowsNull());
     }
 
-    public function testHasTypeReturnsTrueWithType() : void
+    public function testHasTypeReturnsTrueWithType(): void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
@@ -331,7 +332,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($method->getParameter('intParam')->hasType());
     }
 
-    public function testHasTypeReturnsFalseWithoutType() : void
+    public function testHasTypeReturnsFalseWithoutType(): void
     {
         $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
@@ -342,7 +343,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testSetType() : void
+    public function testSetType(): void
     {
         $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $methodInfo    = $classInfo->getMethod('foo');
@@ -360,7 +361,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRemoveType() : void
+    public function testRemoveType(): void
     {
         $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
         $methodInfo    = $classInfo->getMethod('foo');
@@ -375,7 +376,7 @@ class ReflectionParameterTest extends TestCase
         );
     }
 
-    public function testIsCallable() : void
+    public function testIsCallable(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -388,7 +389,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($callableParam->isCallable());
     }
 
-    public function testIsArray() : void
+    public function testIsArray(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -401,7 +402,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($arrayParam->isArray());
     }
 
-    public function testIsVariadic() : void
+    public function testIsVariadic(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -414,7 +415,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($variadicParam->isVariadic());
     }
 
-    public function testIsPassedByReference() : void
+    public function testIsPassedByReference(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -429,7 +430,7 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($refParam->canBePassedByValue());
     }
 
-    public function testGetDefaultValueAndIsOptional() : void
+    public function testGetDefaultValueAndIsOptional(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodWithNonOptionalDefaultValue');
@@ -443,7 +444,7 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($secondParam->isDefaultValueAvailable());
     }
 
-    public function testParameterWithDefaultValueBeforeVariadicParameterShouldBeOptional() : void
+    public function testParameterWithDefaultValueBeforeVariadicParameterShouldBeOptional(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodWithFirstParameterWithDefaultValueAndSecondParameterIsVariadic');
@@ -460,7 +461,7 @@ class ReflectionParameterTest extends TestCase
     /**
      * @group 109
      */
-    public function testVariadicParametersAreAlsoImplicitlyOptional() : void
+    public function testVariadicParametersAreAlsoImplicitlyOptional(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -475,7 +476,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($variadicParam->isOptional());
     }
 
-    public function testAllowsNull() : void
+    public function testAllowsNull(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodToCheckAllowsNull');
@@ -490,7 +491,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($thirdParam->allowsNull());
     }
 
-    public function testIsDefaultValueConstantAndGetDefaultValueConstantName() : void
+    public function testIsDefaultValueConstantAndGetDefaultValueConstantName(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodWithUpperCasedDefaults');
@@ -521,7 +522,7 @@ class ReflectionParameterTest extends TestCase
         $intDefault->getDefaultValueConstantName();
     }
 
-    public function testGetDefaultValueConstantNameClassConstants() : void
+    public function testGetDefaultValueConstantNameClassConstants(): void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
@@ -540,7 +541,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(OtherClass::class . '::MY_CONST', $param3->getDefaultValueConstantName());
     }
 
-    public function testGetDefaultValueConstantNameNamespacedConstants() : void
+    public function testGetDefaultValueConstantNameNamespacedConstants(): void
     {
         $this->markTestSkipped('@todo - implement reflection of constants outside a class');
 
@@ -558,7 +559,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('Roave\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST', $param5->getDefaultValueConstantName());
     }
 
-    public function testGetDeclaringFunction() : void
+    public function testGetDeclaringFunction(): void
     {
         $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
@@ -570,7 +571,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($methodInfo, $paramInfo->getDeclaringFunction());
     }
 
-    public function testGetDeclaringClassForMethod() : void
+    public function testGetDeclaringClassForMethod(): void
     {
         $content = '<?php class Foo { public function myMethod($var = 123) {} }';
 
@@ -582,7 +583,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($classInfo, $paramInfo->getDeclaringClass());
     }
 
-    public function testGetDeclaringClassForFunctionReturnsNull() : void
+    public function testGetDeclaringClassForFunctionReturnsNull(): void
     {
         $content = '<?php function myMethod($var = 123) {}';
 
@@ -593,7 +594,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    public function testGetClassForTypeHintedMethodParameters() : void
+    public function testGetClassForTypeHintedMethodParameters(): void
     {
         $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
 
@@ -612,7 +613,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('stdClass', $hintedClassReflection->getName());
     }
 
-    public function testCannotClone() : void
+    public function testCannotClone(): void
     {
         $classInfo  = $this->reflector->reflect(Methods::class);
         $methodInfo = $classInfo->getMethod('methodWithParameters');
@@ -622,7 +623,7 @@ class ReflectionParameterTest extends TestCase
         $unused = clone $paramInfo;
     }
 
-    public function testGetClassFromSelfTypeHintedProperty() : void
+    public function testGetClassFromSelfTypeHintedProperty(): void
     {
         $content = '<?php class Foo { public function myMethod(self $param) {} }';
 
@@ -637,7 +638,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('Foo', $hintedClassReflection->getName());
     }
 
-    public function testGetClassFromParentTypeHintedProperty() : void
+    public function testGetClassFromParentTypeHintedProperty(): void
     {
         $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
 
@@ -653,7 +654,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('stdClass', $hintedClassReflection->getName());
     }
 
-    public function testGetClassFromObjectTypeHintedProperty() : void
+    public function testGetClassFromObjectTypeHintedProperty(): void
     {
         $content = '<?php class Foo { public function myMethod(object $param) {} }';
 
@@ -672,7 +673,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('object', $type->__toString());
     }
 
-    public function columnsProvider() : array
+    public function columnsProvider(): array
     {
         return [
             ["<?php\n\nfunction foo(\n\$test\n) {}", 1, 5],
@@ -688,7 +689,7 @@ class ReflectionParameterTest extends TestCase
      *
      * @dataProvider columnsProvider
      */
-    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->reflector);
         $function  = $reflector->reflect('foo');
@@ -698,7 +699,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($endColumn, $parameter->getEndColumn());
     }
 
-    public function testGetAst() : void
+    public function testGetAst(): void
     {
         $php = '<?php function foo($boo) {}';
 

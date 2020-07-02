@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPref
  */
 final class InvalidPrefixMappingTest extends TestCase
 {
-    public function testEmptyPrefixGiven() : void
+    public function testEmptyPrefixGiven(): void
     {
         self::assertSame(
             'An invalid empty string provided as a PSR mapping prefix',
@@ -21,7 +21,7 @@ final class InvalidPrefixMappingTest extends TestCase
         );
     }
 
-    public function testPrefixMappingIsNotADirectory() : void
+    public function testPrefixMappingIsNotADirectory(): void
     {
         self::assertSame(
             'Provided path "A\" for prefix "a/b" is not a directory',
@@ -30,7 +30,7 @@ final class InvalidPrefixMappingTest extends TestCase
         );
     }
 
-    public function testEmptyPrefixMappingGiven() : void
+    public function testEmptyPrefixMappingGiven(): void
     {
         self::assertSame(
             'An invalid empty list of paths was provided for PSR mapping prefix "A\"',

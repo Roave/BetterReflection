@@ -27,6 +27,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
+
 use function class_exists;
 use function func_num_args;
 use function get_class;
@@ -55,7 +56,7 @@ class ReflectionProperty
     /**
      * Create a reflection of a class's property by its name
      */
-    public static function createFromName(string $className, string $propertyName) : self
+    public static function createFromName(string $className, string $propertyName): self
     {
         return ReflectionClass::createFromName($className)->getProperty($propertyName);
     }
@@ -66,12 +67,12 @@ class ReflectionProperty
      * @throws ReflectionException
      * @throws IdentifierNotFound
      */
-    public static function createFromInstance(object $instance, string $propertyName) : self
+    public static function createFromInstance(object $instance, string $propertyName): self
     {
         return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return ReflectionPropertyStringCast::toString($this);
     }
@@ -89,7 +90,7 @@ class ReflectionProperty
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         bool $declaredAtCompileTime = true
-    ) : self {
+    ): self {
         $prop                        = new self();
         $prop->reflector             = $reflector;
         $prop->node                  = $node;
@@ -107,7 +108,7 @@ class ReflectionProperty
      *
      * @throws InvalidArgumentException
      */
-    public function setVisibility(int $newVisibility) : void
+    public function setVisibility(int $newVisibility): void
     {
         $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
 
@@ -133,7 +134,7 @@ class ReflectionProperty
      * true, because we are unable to reflect instances of classes, therefore
      * we can be sure that all properties are always declared at compile-time.
      */
-    public function isDefault() : bool
+    public function isDefault(): bool
     {
         return $this->declaredAtCompileTime;
     }
@@ -141,7 +142,7 @@ class ReflectionProperty
     /**
      * Get the core-reflection-compatible modifier values.
      */
-    public function getModifiers() : int
+    public function getModifiers(): int
     {
         $val  = 0;
         $val += $this->isStatic() ? CoreReflectionProperty::IS_STATIC : 0;
@@ -155,7 +156,7 @@ class ReflectionProperty
     /**
      * Get the name of the property.
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->node->props[$this->positionInNode]->name->name;
     }
@@ -163,7 +164,7 @@ class ReflectionProperty
     /**
      * Is the property private?
      */
-    public function isPrivate() : bool
+    public function isPrivate(): bool
     {
         return $this->node->isPrivate();
     }
@@ -171,7 +172,7 @@ class ReflectionProperty
     /**
      * Is the property protected?
      */
-    public function isProtected() : bool
+    public function isProtected(): bool
     {
         return $this->node->isProtected();
     }
@@ -179,7 +180,7 @@ class ReflectionProperty
     /**
      * Is the property public?
      */
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->node->isPublic();
     }
@@ -187,7 +188,7 @@ class ReflectionProperty
     /**
      * Is the property static?
      */
-    public function isStatic() : bool
+    public function isStatic(): bool
     {
         return $this->node->isStatic();
     }
@@ -197,7 +198,7 @@ class ReflectionProperty
      *
      * @return string[]
      */
-    public function getDocBlockTypeStrings() : array
+    public function getDocBlockTypeStrings(): array
     {
         $stringTypes = [];
 
@@ -216,22 +217,22 @@ class ReflectionProperty
      *
      * @return Type[]
      */
-    public function getDocBlockTypes() : array
+    public function getDocBlockTypes(): array
     {
         return (new FindPropertyType())->__invoke($this, $this->declaringNamespace);
     }
 
-    public function getDeclaringClass() : ReflectionClass
+    public function getDeclaringClass(): ReflectionClass
     {
         return $this->declaringClass;
     }
 
-    public function getImplementingClass() : ReflectionClass
+    public function getImplementingClass(): ReflectionClass
     {
         return $this->implementingClass;
     }
 
-    public function getDocComment() : string
+    public function getDocComment(): string
     {
         return GetLastDocComment::forNode($this->node);
     }
@@ -259,7 +260,7 @@ class ReflectionProperty
     /**
      * Get the line number that this property starts on.
      */
-    public function getStartLine() : int
+    public function getStartLine(): int
     {
         return $this->node->getStartLine();
     }
@@ -267,27 +268,27 @@ class ReflectionProperty
     /**
      * Get the line number that this property ends on.
      */
-    public function getEndLine() : int
+    public function getEndLine(): int
     {
         return $this->node->getEndLine();
     }
 
-    public function getStartColumn() : int
+    public function getStartColumn(): int
     {
         return CalculateReflectionColumn::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
-    public function getEndColumn() : int
+    public function getEndColumn(): int
     {
         return CalculateReflectionColumn::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
-    public function getAst() : PropertyNode
+    public function getAst(): PropertyNode
     {
         return $this->node;
     }
 
-    public function getPositionInAst() : int
+    public function getPositionInAst(): int
     {
         return $this->positionInNode;
     }
@@ -337,14 +338,14 @@ class ReflectionProperty
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function setValue($object, $value = null) : void
+    public function setValue($object, $value = null): void
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            Closure::bind(function (string $declaringClassName, string $propertyName, $value) : void {
+            Closure::bind(function (string $declaringClassName, string $propertyName, $value): void {
                 $declaringClassName::${$propertyName} = $value;
             }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
 
@@ -353,7 +354,7 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        Closure::bind(function ($instance, string $propertyName, $value) : void {
+        Closure::bind(function ($instance, string $propertyName, $value): void {
             $instance->{$propertyName} = $value;
         }, $instance, $declaringClassName)->__invoke($instance, $this->getName(), $value);
     }
@@ -361,7 +362,7 @@ class ReflectionProperty
     /**
      * Does this property allow null?
      */
-    public function allowsNull() : bool
+    public function allowsNull(): bool
     {
         if (! $this->hasType()) {
             return true;
@@ -376,7 +377,7 @@ class ReflectionProperty
      *
      * (note: this has nothing to do with DocBlocks).
      */
-    public function getType() : ?ReflectionType
+    public function getType(): ?ReflectionType
     {
         $type = $this->node->type;
 
@@ -396,7 +397,7 @@ class ReflectionProperty
      *
      * (note: this has nothing to do with DocBlocks).
      */
-    public function hasType() : bool
+    public function hasType(): bool
     {
         return $this->node->type !== null;
     }
@@ -404,7 +405,7 @@ class ReflectionProperty
     /**
      * Set the property type declaration.
      */
-    public function setType(string $newPropertyType) : void
+    public function setType(string $newPropertyType): void
     {
         $this->node->type = new Node\Name($newPropertyType);
     }
@@ -412,7 +413,7 @@ class ReflectionProperty
     /**
      * Remove the property type declaration completely.
      */
-    public function removeType() : void
+    public function removeType(): void
     {
         $this->node->type = null;
     }
@@ -422,7 +423,7 @@ class ReflectionProperty
      *
      * @psalm-assert class-string $className
      */
-    private function assertClassExist(string $className) : void
+    private function assertClassExist(string $className): void
     {
         if (! class_exists($className, false)) {
             throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
@@ -438,7 +439,7 @@ class ReflectionProperty
      *
      * @psalm-assert object $object
      */
-    private function assertObject($object) : object
+    private function assertObject($object): object
     {
         if ($object === null) {
             throw NoObjectProvided::create();

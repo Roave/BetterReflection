@@ -16,7 +16,7 @@ class ReflectionType extends CoreReflectionType
         $this->betterReflectionType = $betterReflectionType;
     }
 
-    public static function fromReturnTypeOrNull(?BetterReflectionType $betterReflectionType) : ?self
+    public static function fromReturnTypeOrNull(?BetterReflectionType $betterReflectionType): ?self
     {
         if ($betterReflectionType === null) {
             return null;
@@ -25,17 +25,17 @@ class ReflectionType extends CoreReflectionType
         return new self($betterReflectionType);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->betterReflectionType->__toString();
     }
 
-    public function allowsNull() : bool
+    public function allowsNull(): bool
     {
         return $this->betterReflectionType->allowsNull();
     }
 
-    public function isBuiltin() : bool
+    public function isBuiltin(): bool
     {
         $type = (string) $this->betterReflectionType;
 

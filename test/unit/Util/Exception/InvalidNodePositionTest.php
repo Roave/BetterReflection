@@ -12,7 +12,7 @@ use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
  */
 class InvalidNodePositionTest extends TestCase
 {
-    public function testFromPosition() : void
+    public function testFromPosition(): void
     {
         $exception = InvalidNodePosition::fromPosition(123);
 

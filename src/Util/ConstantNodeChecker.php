@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Util;
 
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
+
 use function count;
 use function in_array;
 
@@ -17,7 +18,7 @@ final class ConstantNodeChecker
     /**
      * @throws InvalidConstantNode
      */
-    public static function assertValidDefineFunctionCall(Node\Expr\FuncCall $node) : void
+    public static function assertValidDefineFunctionCall(Node\Expr\FuncCall $node): void
     {
         if (! ($node->name instanceof Node\Name)) {
             throw InvalidConstantNode::create($node);

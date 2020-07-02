@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use RuntimeException;
+
 use function file_exists;
 use function get_class;
 use function gettype;
@@ -13,7 +14,7 @@ use function sprintf;
 
 class InvalidDirectory extends RuntimeException
 {
-    public static function fromNonDirectory(string $nonDirectory) : self
+    public static function fromNonDirectory(string $nonDirectory): self
     {
         if (! file_exists($nonDirectory)) {
             return new self(sprintf('"%s" does not exist', $nonDirectory));
@@ -27,7 +28,7 @@ class InvalidDirectory extends RuntimeException
      *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
      */
-    public static function fromNonStringValue($nonStringValue) : self
+    public static function fromNonStringValue($nonStringValue): self
     {
         return new self(sprintf(
             'Expected string, %s given',

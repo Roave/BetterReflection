@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+
 use function assert;
 use function gettype;
 use function is_scalar;
@@ -17,7 +18,7 @@ use function sprintf;
  */
 final class ReflectionConstantStringCast
 {
-    public static function toString(ReflectionConstant $constantReflection) : string
+    public static function toString(ReflectionConstant $constantReflection): string
     {
         $value = $constantReflection->getValue();
         assert($value === null || is_scalar($value));
@@ -32,7 +33,7 @@ final class ReflectionConstantStringCast
         );
     }
 
-    private static function sourceToString(ReflectionConstant $constantReflection) : string
+    private static function sourceToString(ReflectionConstant $constantReflection): string
     {
         if ($constantReflection->isUserDefined()) {
             return 'user';
@@ -41,7 +42,7 @@ final class ReflectionConstantStringCast
         return sprintf('internal:%s', $constantReflection->getExtensionName());
     }
 
-    private static function fileAndLinesToString(ReflectionConstant $constantReflection) : string
+    private static function fileAndLinesToString(ReflectionConstant $constantReflection): string
     {
         if ($constantReflection->isInternal()) {
             return '';

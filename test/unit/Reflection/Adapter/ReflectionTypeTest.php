@@ -10,6 +10,7 @@ use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Reflector\Reflector;
+
 use function array_combine;
 use function array_map;
 use function assert;
@@ -20,11 +21,11 @@ use function get_class_methods;
  */
 class ReflectionTypeTest extends TestCase
 {
-    public function coreReflectionTypeNamesProvider() : array
+    public function coreReflectionTypeNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionType::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -32,13 +33,13 @@ class ReflectionTypeTest extends TestCase
     /**
      * @dataProvider coreReflectionTypeNamesProvider
      */
-    public function testCoreReflectionTypes(string $methodName) : void
+    public function testCoreReflectionTypes(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionTypeAdapter::class);
         self::assertTrue($reflectionTypeAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         return [
             ['__toString', null, '', []],
@@ -53,7 +54,7 @@ class ReflectionTypeTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionType::class);
 
@@ -72,17 +73,17 @@ class ReflectionTypeTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testFromReturnTypeOrNullWithNull() : void
+    public function testFromReturnTypeOrNullWithNull(): void
     {
         self::assertNull(ReflectionTypeAdapter::fromReturnTypeOrNull(null));
     }
 
-    public function testFromReturnTypeOrNullWithBetterReflectionType() : void
+    public function testFromReturnTypeOrNullWithBetterReflectionType(): void
     {
         self::assertInstanceOf(ReflectionTypeAdapter::class, ReflectionTypeAdapter::fromReturnTypeOrNull($this->createMock(BetterReflectionType::class)));
     }
 
-    public function testSelfIsNotBuiltin() : void
+    public function testSelfIsNotBuiltin(): void
     {
         $reflector = $this->createMock(Reflector::class);
         assert($reflector instanceof Reflector);
@@ -92,7 +93,7 @@ class ReflectionTypeTest extends TestCase
         self::assertFalse($reflectionTypeAdapter->isBuiltin());
     }
 
-    public function testParentIsNotBuiltin() : void
+    public function testParentIsNotBuiltin(): void
     {
         $reflector = $this->createMock(Reflector::class);
         assert($reflector instanceof Reflector);

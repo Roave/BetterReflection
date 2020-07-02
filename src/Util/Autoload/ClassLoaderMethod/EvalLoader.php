@@ -16,7 +16,7 @@ final class EvalLoader implements LoaderMethodInterface
         $this->classPrinter = $classPrinter;
     }
 
-    public function __invoke(ReflectionClass $classInfo) : void
+    public function __invoke(ReflectionClass $classInfo): void
     {
         eval($this->classPrinter->__invoke($classInfo));
     }

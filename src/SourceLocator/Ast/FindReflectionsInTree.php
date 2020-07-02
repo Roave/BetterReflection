@@ -20,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
+
 use function assert;
 use function count;
 
@@ -56,9 +57,8 @@ final class FindReflectionsInTree
         array $ast,
         IdentifierType $identifierType,
         LocatedSource $locatedSource
-    ) : array {
-        $nodeVisitor = new class($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke())
-            extends NodeVisitorAbstract
+    ): array {
+        $nodeVisitor = new class ($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke()) extends NodeVisitorAbstract
         {
             /** @var Reflection[] */
             private array $reflections = [];
@@ -191,7 +191,7 @@ final class FindReflectionsInTree
             /**
              * @return Reflection[]
              */
-            public function getReflections() : array
+            public function getReflections(): array
             {
                 return $this->reflections;
             }

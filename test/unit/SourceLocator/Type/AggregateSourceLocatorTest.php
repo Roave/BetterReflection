@@ -23,7 +23,7 @@ class AggregateSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class AggregateSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve() : void
+    public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve(): void
     {
         $locator1   = $this->createMock(SourceLocator::class);
         $locator2   = $this->createMock(SourceLocator::class);
@@ -50,7 +50,7 @@ class AggregateSourceLocatorTest extends TestCase
         self::assertNull((new AggregateSourceLocator([$locator1, $locator2]))->locateIdentifier($this->getMockReflector(), $identifier));
     }
 
-    public function testInvokeWillTraverseAllGivenLocatorsAndSucceed() : void
+    public function testInvokeWillTraverseAllGivenLocatorsAndSucceed(): void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -77,7 +77,7 @@ class AggregateSourceLocatorTest extends TestCase
         );
     }
 
-    public function testWillNotResolveWithEmptyLocatorsList() : void
+    public function testWillNotResolveWithEmptyLocatorsList(): void
     {
         self::assertNull(
             (new AggregateSourceLocator([]))->locateIdentifier(
@@ -87,7 +87,7 @@ class AggregateSourceLocatorTest extends TestCase
         );
     }
 
-    public function testTwoStringSourceLocatorsResolveCorrectly() : void
+    public function testTwoStringSourceLocatorsResolveCorrectly(): void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -101,7 +101,7 @@ class AggregateSourceLocatorTest extends TestCase
         self::assertSame('Foo', $reflection->getName());
     }
 
-    public function testLocateIdentifiersByTypeAggregatesSource() : void
+    public function testLocateIdentifiersByTypeAggregatesSource(): void
     {
         $identifierType = new IdentifierType();
 

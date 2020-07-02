@@ -174,7 +174,7 @@ class ReflectionProperty extends CoreReflectionProperty
         $this->accessible = true;
     }
 
-    public function isAccessible() : bool
+    public function isAccessible(): bool
     {
         return $this->accessible || $this->isPublic();
     }

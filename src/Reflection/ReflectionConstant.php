@@ -17,6 +17,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 use Roave\BetterReflection\Util\GetLastDocComment;
+
 use function array_slice;
 use function assert;
 use function count;
@@ -51,7 +52,7 @@ class ReflectionConstant implements Reflection
      *
      * @throws IdentifierNotFound
      */
-    public static function createFromName(string $constantName) : self
+    public static function createFromName(string $constantName): self
     {
         return (new BetterReflection())->constantReflector()->reflect($constantName);
     }
@@ -69,7 +70,7 @@ class ReflectionConstant implements Reflection
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
         ?int $positionInNode = null
-    ) : self {
+    ): self {
         return $node instanceof Node\Stmt\Const_
             ? self::createFromConstKeyword($reflector, $node, $locatedSource, $namespace, $positionInNode)
             : self::createFromDefineFunctionCall($reflector, $node, $locatedSource);
@@ -81,7 +82,7 @@ class ReflectionConstant implements Reflection
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace,
         int $positionInNode
-    ) : self {
+    ): self {
         $constant                     = new self();
         $constant->reflector          = $reflector;
         $constant->node               = $node;
@@ -99,7 +100,7 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node\Expr\FuncCall $node,
         LocatedSource $locatedSource
-    ) : self {
+    ): self {
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
 
         $constant                = new self();
@@ -114,7 +115,7 @@ class ReflectionConstant implements Reflection
      * Get the "short" name of the constant (e.g. for A\B\FOO, this will return
      * "FOO").
      */
-    public function getShortName() : string
+    public function getShortName(): string
     {
         if ($this->node instanceof Node\Expr\FuncCall) {
             $nameParts = explode('\\', $this->getNameFromDefineFunctionCall($this->node));
@@ -130,7 +131,7 @@ class ReflectionConstant implements Reflection
      * Get the "full" name of the constant (e.g. for A\B\FOO, this will return
      * "A\B\FOO").
      */
-    public function getName() : string
+    public function getName(): string
     {
         if (! $this->inNamespace()) {
             return $this->getShortName();
@@ -153,7 +154,7 @@ class ReflectionConstant implements Reflection
      *
      * @psalm-suppress PossiblyNullPropertyFetch
      */
-    public function getNamespaceName() : string
+    public function getNamespaceName(): string
     {
         if (! $this->inNamespace()) {
             return '';
@@ -170,7 +171,7 @@ class ReflectionConstant implements Reflection
      * Decide if this constant is part of a namespace. Returns false if the constant
      * is in the global namespace or does not have a specified namespace.
      */
-    public function inNamespace() : bool
+    public function inNamespace(): bool
     {
         if ($this->node instanceof Node\Expr\FuncCall) {
             return substr_count($this->getNameFromDefineFunctionCall($this->node), '\\') !== 0;
@@ -180,7 +181,7 @@ class ReflectionConstant implements Reflection
             && $this->declaringNamespace->name !== null;
     }
 
-    public function getExtensionName() : ?string
+    public function getExtensionName(): ?string
     {
         return $this->locatedSource->getExtensionName();
     }
@@ -188,7 +189,7 @@ class ReflectionConstant implements Reflection
     /**
      * Is this an internal constant?
      */
-    public function isInternal() : bool
+    public function isInternal(): bool
     {
         return $this->locatedSource->isInternal();
     }
@@ -197,7 +198,7 @@ class ReflectionConstant implements Reflection
      * Is this a user-defined function (will always return the opposite of
      * whatever isInternal returns).
      */
-    public function isUserDefined() : bool
+    public function isUserDefined(): bool
     {
         return ! $this->isInternal();
     }
@@ -228,12 +229,12 @@ class ReflectionConstant implements Reflection
         return $this->value;
     }
 
-    public function getFileName() : ?string
+    public function getFileName(): ?string
     {
         return $this->locatedSource->getFileName();
     }
 
-    public function getLocatedSource() : LocatedSource
+    public function getLocatedSource(): LocatedSource
     {
         return $this->locatedSource;
     }
@@ -241,7 +242,7 @@ class ReflectionConstant implements Reflection
     /**
      * Get the line number that this constant starts on.
      */
-    public function getStartLine() : int
+    public function getStartLine(): int
     {
         return $this->node->getStartLine();
     }
@@ -249,17 +250,17 @@ class ReflectionConstant implements Reflection
     /**
      * Get the line number that this constant ends on.
      */
-    public function getEndLine() : int
+    public function getEndLine(): int
     {
         return $this->node->getEndLine();
     }
 
-    public function getStartColumn() : int
+    public function getStartColumn(): int
     {
         return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
     }
 
-    public function getEndColumn() : int
+    public function getEndColumn(): int
     {
         return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
     }
@@ -267,12 +268,12 @@ class ReflectionConstant implements Reflection
     /**
      * Returns the doc comment for this constant
      */
-    public function getDocComment() : string
+    public function getDocComment(): string
     {
         return GetLastDocComment::forNode($this->node);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return ReflectionConstantStringCast::toString($this);
     }
@@ -280,12 +281,12 @@ class ReflectionConstant implements Reflection
     /**
      * @return Node\Stmt\Const_|Node\Expr\FuncCall
      */
-    public function getAst() : Node
+    public function getAst(): Node
     {
         return $this->node;
     }
 
-    private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node) : string
+    private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node): string
     {
         $nameNode = $node->args[0]->value;
         assert($nameNode instanceof Node\Scalar\String_);

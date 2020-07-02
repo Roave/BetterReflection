@@ -13,7 +13,7 @@ use Roave\BetterReflection\Util\FileHelper;
  */
 class LocatedSourceTest extends TestCase
 {
-    public function testValuesHappyPath() : void
+    public function testValuesHappyPath(): void
     {
         $source        = '<?php echo "Hello world";';
         $file          = FileHelper::normalizeWindowsPath(__DIR__ . '/../../Fixture/NoNamespace.php');
@@ -26,7 +26,7 @@ class LocatedSourceTest extends TestCase
         self::assertNull($locatedSource->getExtensionName());
     }
 
-    public function testValuesWithNullFilename() : void
+    public function testValuesWithNullFilename(): void
     {
         $source        = '<?php echo "Hello world";';
         $file          = null;
@@ -39,7 +39,7 @@ class LocatedSourceTest extends TestCase
         self::assertNull($locatedSource->getExtensionName());
     }
 
-    public function testEmptyStringSourceAllowed() : void
+    public function testEmptyStringSourceAllowed(): void
     {
         $source        = '';
         $file          = null;

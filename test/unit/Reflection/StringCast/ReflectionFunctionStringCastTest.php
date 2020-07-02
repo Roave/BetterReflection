@@ -20,7 +20,7 @@ class ReflectionFunctionStringCastTest extends TestCase
 
     private ClassReflector $classReflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +30,7 @@ class ReflectionFunctionStringCastTest extends TestCase
         $this->classReflector = $betterReflection->classReflector();
     }
 
-    public function toStringProvider() : array
+    public function toStringProvider(): array
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\functionWithoutParameters', "Function [ <user> function Roave\BetterReflectionTest\Fixture\\functionWithoutParameters ] {\n  @@ %s/Fixture/StringCastFunctions.php 5 - 7\n}"],
@@ -41,7 +41,7 @@ class ReflectionFunctionStringCastTest extends TestCase
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString(string $functionName, string $expectedString) : void
+    public function testToString(string $functionName, string $expectedString): void
     {
         $reflector          = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastFunctions.php', $this->astLocator), $this->classReflector);
         $functionReflection = $reflector->reflect($functionName);

@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use TypeError;
+
 use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
@@ -391,7 +392,7 @@ class ReflectionMethod extends CoreReflectionMethod
         $this->accessible = true;
     }
 
-    private function isAccessible() : bool
+    private function isAccessible(): bool
     {
         return $this->accessible || $this->isPublic();
     }

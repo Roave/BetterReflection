@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
  */
 class EvaledClosureCannotBeLocatedTest extends TestCase
 {
-    public function testCreate() : void
+    public function testCreate(): void
     {
         $exception = EvaledClosureCannotBeLocated::create();
 

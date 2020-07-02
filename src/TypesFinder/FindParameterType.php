@@ -13,6 +13,7 @@ use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
+
 use function explode;
 
 class FindParameterType
@@ -35,7 +36,7 @@ class FindParameterType
      *
      * @return Type[]
      */
-    public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace, ParamNode $node) : array
+    public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace, ParamNode $node): array
     {
         $docComment = $function->getDocComment();
 

@@ -18,14 +18,14 @@ class ReflectionParameterStringCastTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    public function toStringProvider() : array
+    public function toStringProvider(): array
     {
         return [
             ['parametersWithBuiltInTypes', 'string', 'Parameter #0 [ <required> string $string ]'],
@@ -80,7 +80,7 @@ class ReflectionParameterStringCastTest extends TestCase
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString(string $methodName, string $parameterName, string $expectedString) : void
+    public function testToString(string $methodName, string $parameterName, string $expectedString): void
     {
         $reflector        = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastParameters.php', $this->astLocator));
         $classReflection  = $reflector->reflect(StringCastParameters::class);

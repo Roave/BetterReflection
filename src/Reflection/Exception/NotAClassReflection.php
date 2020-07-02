@@ -6,11 +6,12 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use UnexpectedValueException;
+
 use function sprintf;
 
 class NotAClassReflection extends UnexpectedValueException
 {
-    public static function fromReflectionClass(ReflectionClass $class) : self
+    public static function fromReflectionClass(ReflectionClass $class): self
     {
         $type = 'interface';
 

@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Util\Autoload\ClassLoaderMethod\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed;
+
 use function sprintf;
 use function uniqid;
 
@@ -15,7 +16,7 @@ use function uniqid;
  */
 final class SignatureCheckFailedTest extends TestCase
 {
-    public function testFromReflectionClass() : void
+    public function testFromReflectionClass(): void
     {
         $className  = uniqid('class name', true);
         $reflection = $this->createMock(ReflectionClass::class);

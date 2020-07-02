@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhp
  */
 class CouldNotFindPhpStormStubsTest extends TestCase
 {
-    public function testCreate() : void
+    public function testCreate(): void
     {
         $exception = CouldNotFindPhpStormStubs::create();
 

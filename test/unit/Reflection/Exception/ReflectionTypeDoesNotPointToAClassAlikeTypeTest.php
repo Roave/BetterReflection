@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionType;
  */
 class ReflectionTypeDoesNotPointToAClassAlikeTypeTest extends TestCase
 {
-    public function testFor() : void
+    public function testFor(): void
     {
         $type = $this->createMock(ReflectionType::class);
 

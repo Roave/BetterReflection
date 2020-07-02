@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function assert;
 use function realpath;
 use function sprintf;
@@ -29,7 +30,7 @@ class ClosureSourceLocatorTest extends TestCase
 
     private Reflector $reflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +38,7 @@ class ClosureSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    public function closuresProvider() : array
+    public function closuresProvider(): array
     {
         $fileWithClosureInNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
         $fileWithClosureNoNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
@@ -51,7 +52,7 @@ class ClosureSourceLocatorTest extends TestCase
     /**
      * @dataProvider closuresProvider
      */
-    public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
+    public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
     {
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
@@ -73,7 +74,7 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertStringContainsString('Hello world!', $reflection->getLocatedSource()->getSource());
     }
 
-    public function testEvaledClosureThrowsInvalidFileLocation() : void
+    public function testEvaledClosureThrowsInvalidFileLocation(): void
     {
         $this->expectException(EvaledClosureCannotBeLocated::class);
 
@@ -93,7 +94,7 @@ class ClosureSourceLocatorTest extends TestCase
     /**
      * @dataProvider closuresProvider
      */
-    public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine) : void
+    public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
     {
         /** @var ReflectionFunction[] $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
@@ -113,9 +114,9 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertStringContainsString('Hello world!', $reflections[0]->getLocatedSource()->getSource());
     }
 
-    public function testLocateIdentifiersByTypeWithClassIdentifier() : void
+    public function testLocateIdentifiersByTypeWithClassIdentifier(): void
     {
-        $closure = static function () : void {
+        $closure = static function (): void {
         };
 
         /** @var ReflectionFunction[] $reflections */
@@ -127,7 +128,7 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertCount(0, $reflections);
     }
 
-    public function exceptionIfTwoClosuresOnSameLineProvider() : array
+    public function exceptionIfTwoClosuresOnSameLineProvider(): array
     {
         $file     = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
         $closures = require $file;
@@ -141,7 +142,7 @@ class ClosureSourceLocatorTest extends TestCase
     /**
      * @dataProvider exceptionIfTwoClosuresOnSameLineProvider
      */
-    public function testTwoClosuresSameLineFails(string $file, Closure $closure) : void
+    public function testTwoClosuresSameLineFails(string $file, Closure $closure): void
     {
         $this->expectException(TwoClosuresOnSameLine::class);
         $this->expectExceptionMessage(sprintf('Two closures on line 3 in %s', $file));

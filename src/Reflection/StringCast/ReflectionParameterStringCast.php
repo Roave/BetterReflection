@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+
 use function is_array;
 use function is_string;
 use function sprintf;
@@ -17,7 +18,7 @@ use function var_export;
  */
 final class ReflectionParameterStringCast
 {
-    public static function toString(ReflectionParameter $parameterReflection) : string
+    public static function toString(ReflectionParameter $parameterReflection): string
     {
         return sprintf(
             'Parameter #%d [ %s %s%s%s$%s%s ]',
@@ -31,7 +32,7 @@ final class ReflectionParameterStringCast
         );
     }
 
-    private static function typeToString(ReflectionParameter $parameterReflection) : string
+    private static function typeToString(ReflectionParameter $parameterReflection): string
     {
         if (! $parameterReflection->hasType()) {
             return '';
@@ -53,7 +54,7 @@ final class ReflectionParameterStringCast
         return $type . ' or NULL ';
     }
 
-    private static function valueToString(ReflectionParameter $parameterReflection) : string
+    private static function valueToString(ReflectionParameter $parameterReflection): string
     {
         if (! ($parameterReflection->isOptional() && $parameterReflection->isDefaultValueAvailable())) {
             return '';

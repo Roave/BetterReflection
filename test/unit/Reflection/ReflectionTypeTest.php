@@ -21,20 +21,20 @@ class ReflectionTypeTest extends TestCase
     /** @var Reflector|MockObject */
     private $reflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    public function testCreateFromType() : void
+    public function testCreateFromType(): void
     {
         $typeInfo = ReflectionType::createFromTypeAndReflector('string', false, $this->reflector);
         self::assertInstanceOf(ReflectionType::class, $typeInfo);
     }
 
-    public function testAllowsNull() : void
+    public function testAllowsNull(): void
     {
         $noNullType = ReflectionType::createFromTypeAndReflector('string', false, $this->reflector);
         self::assertFalse($noNullType->allowsNull());
@@ -43,7 +43,7 @@ class ReflectionTypeTest extends TestCase
         self::assertTrue($allowsNullType->allowsNull());
     }
 
-    public function testIsBuiltin() : void
+    public function testIsBuiltin(): void
     {
         self::assertTrue(ReflectionType::createFromTypeAndReflector('string', false, $this->reflector)->isBuiltin());
         self::assertTrue(ReflectionType::createFromTypeAndReflector('int', false, $this->reflector)->isBuiltin());
@@ -54,7 +54,7 @@ class ReflectionTypeTest extends TestCase
         self::assertFalse(ReflectionType::createFromTypeAndReflector('\foo', false, $this->reflector)->isBuiltin());
     }
 
-    public function testGetName() : void
+    public function testGetName(): void
     {
         self::assertSame('int', ReflectionType::createFromTypeAndReflector('int', false, $this->reflector)->getName());
         self::assertSame('string', ReflectionType::createFromTypeAndReflector('string', false, $this->reflector)->getName());
@@ -70,7 +70,7 @@ class ReflectionTypeTest extends TestCase
         self::assertSame('Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector('\Foo\Bar\Baz', false, $this->reflector)->getName());
     }
 
-    public function testImplicitCastToString() : void
+    public function testImplicitCastToString(): void
     {
         self::assertSame('int', (string) ReflectionType::createFromTypeAndReflector('int', false, $this->reflector));
         self::assertSame('string', (string) ReflectionType::createFromTypeAndReflector('string', false, $this->reflector));
@@ -86,7 +86,7 @@ class ReflectionTypeTest extends TestCase
         self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector('\Foo\Bar\Baz', false, $this->reflector));
     }
 
-    public function testWillDisallowFetchingTargetClassForInternalTypes() : void
+    public function testWillDisallowFetchingTargetClassForInternalTypes(): void
     {
         $type = ReflectionType::createFromTypeAndReflector(
             'int',
@@ -104,7 +104,7 @@ class ReflectionTypeTest extends TestCase
         $type->targetReflectionClass();
     }
 
-    public function testWillDisallowRetrievingIncompatibleReflectionTypesForClassTypes() : void
+    public function testWillDisallowRetrievingIncompatibleReflectionTypesForClassTypes(): void
     {
         $type = ReflectionType::createFromTypeAndReflector(
             '\Foo\Bar',
@@ -126,7 +126,7 @@ class ReflectionTypeTest extends TestCase
         $type->targetReflectionClass();
     }
 
-    public function testWillRetrieveTargetClass() : void
+    public function testWillRetrieveTargetClass(): void
     {
         $type = ReflectionType::createFromTypeAndReflector(
             'Foo\Bar',

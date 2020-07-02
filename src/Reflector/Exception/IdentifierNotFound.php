@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflector\Exception;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use RuntimeException;
+
 use function sprintf;
 
 class IdentifierNotFound extends RuntimeException
@@ -19,12 +20,12 @@ class IdentifierNotFound extends RuntimeException
         $this->identifier = $identifier;
     }
 
-    public function getIdentifier() : Identifier
+    public function getIdentifier(): Identifier
     {
         return $this->identifier;
     }
 
-    public static function fromIdentifier(Identifier $identifier) : self
+    public static function fromIdentifier(Identifier $identifier): self
     {
         return new self(sprintf(
             '%s "%s" could not be found in the located source',

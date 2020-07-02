@@ -8,6 +8,7 @@ use phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Types\Context;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
+
 use function assert;
 use function count;
 use function reset;
@@ -20,7 +21,7 @@ class ResolveTypesTest extends TestCase
     /**
      * @return array
      */
-    public function basicTypesToResolveProvider() : array
+    public function basicTypesToResolveProvider(): array
     {
         return [
             [['array'], [Types\Array_::class]],
@@ -45,7 +46,7 @@ class ResolveTypesTest extends TestCase
      *
      * @dataProvider basicTypesToResolveProvider
      */
-    public function testResolveTypesWithBasicTypes(array $inputTypes, array $expectedInstances) : void
+    public function testResolveTypesWithBasicTypes(array $inputTypes, array $expectedInstances): void
     {
         $resolvedTypes = (new ResolveTypes())->__invoke($inputTypes, new Context(''));
 
@@ -59,7 +60,7 @@ class ResolveTypesTest extends TestCase
     /**
      * @return array
      */
-    public function contextualTypesToResolveProvider() : array
+    public function contextualTypesToResolveProvider(): array
     {
         return [
             ['Zap', '\Foo\Awesome\Zap'],
@@ -73,7 +74,7 @@ class ResolveTypesTest extends TestCase
     /**
      * @dataProvider contextualTypesToResolveProvider
      */
-    public function testResolveTypesWithContextualTypes(string $inputType, string $expectedType) : void
+    public function testResolveTypesWithContextualTypes(string $inputType, string $expectedType): void
     {
         $context = new Context(
             'Foo\Awesome',

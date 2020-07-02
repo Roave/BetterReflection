@@ -8,6 +8,7 @@ use PhpParser\Lexer;
 use PhpParser\Node\Scalar\LNumber;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
+
 use function get_class;
 use function sprintf;
 
@@ -16,7 +17,7 @@ use function sprintf;
  */
 class NoNodePositionTest extends TestCase
 {
-    public function testFromPosition() : void
+    public function testFromPosition(): void
     {
         $node = new LNumber(123);
 

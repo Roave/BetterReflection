@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
  */
 class TwoClosuresOnSameLineTest extends TestCase
 {
-    public function testCreate() : void
+    public function testCreate(): void
     {
         $exception = TwoClosuresOnSameLine::create('foo.php', 123);
 

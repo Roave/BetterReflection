@@ -14,7 +14,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
  */
 class AggregateSourceStubberTest extends TestCase
 {
-    public function testTraverseAllGivenSourceStubbersAndFailToGenerateClassStub() : void
+    public function testTraverseAllGivenSourceStubbersAndFailToGenerateClassStub(): void
     {
         $sourceStubber1 = $this->createMock(SourceStubber::class);
         $sourceStubber2 = $this->createMock(SourceStubber::class);
@@ -25,7 +25,7 @@ class AggregateSourceStubberTest extends TestCase
         self::assertNull((new AggregateSourceStubber($sourceStubber1, $sourceStubber2))->generateClassStub('SomeClass'));
     }
 
-    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateClassStub() : void
+    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateClassStub(): void
     {
         $sourceStubber1 = $this->createMock(SourceStubber::class);
         $sourceStubber2 = $this->createMock(SourceStubber::class);
@@ -50,7 +50,7 @@ class AggregateSourceStubberTest extends TestCase
         );
     }
 
-    public function testTraverseAllGivenSourceStubbersAndFailToGenerateFunctionStub() : void
+    public function testTraverseAllGivenSourceStubbersAndFailToGenerateFunctionStub(): void
     {
         $sourceStubber1 = $this->createMock(SourceStubber::class);
         $sourceStubber2 = $this->createMock(SourceStubber::class);
@@ -61,7 +61,7 @@ class AggregateSourceStubberTest extends TestCase
         self::assertNull((new AggregateSourceStubber($sourceStubber1, $sourceStubber2))->generateFunctionStub('someFunction'));
     }
 
-    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateFunctionStub() : void
+    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateFunctionStub(): void
     {
         $sourceStubber1 = $this->createMock(SourceStubber::class);
         $sourceStubber2 = $this->createMock(SourceStubber::class);
@@ -86,7 +86,7 @@ class AggregateSourceStubberTest extends TestCase
         );
     }
 
-    public function testTraverseAllGivenSourceStubbersAndFailToGenerateConstantStub() : void
+    public function testTraverseAllGivenSourceStubbersAndFailToGenerateConstantStub(): void
     {
         $sourceStubber1 = $this->createMock(SourceStubber::class);
         $sourceStubber2 = $this->createMock(SourceStubber::class);
@@ -97,7 +97,7 @@ class AggregateSourceStubberTest extends TestCase
         self::assertNull((new AggregateSourceStubber($sourceStubber1, $sourceStubber2))->generateConstantStub('SOME_CONSTANT'));
     }
 
-    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateConstantStub() : void
+    public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateConstantStub(): void
     {
         $sourceStubber1 = $this->createMock(SourceStubber::class);
         $sourceStubber2 = $this->createMock(SourceStubber::class);

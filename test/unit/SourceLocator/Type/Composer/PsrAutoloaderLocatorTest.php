@@ -18,6 +18,7 @@ use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets\Foo;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Bar\FooBar as FooBar1;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo\Foo as Foo1;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function array_map;
 use function sort;
 
@@ -33,7 +34,7 @@ class PsrAutoloaderLocatorTest extends TestCase
 
     private PsrAutoloaderLocator $psrLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -58,7 +59,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         $this
             ->psrMapping
             ->method('resolvePossibleFilePaths')
-            ->willReturnCallback(static function (Identifier $identifier) : array {
+            ->willReturnCallback(static function (Identifier $identifier): array {
                 if ($identifier->getName() === Foo::class) {
                     return [__DIR__ . '/../../../Assets/DirectoryScannerAssets/Foo.php'];
                 }
@@ -75,7 +76,7 @@ class PsrAutoloaderLocatorTest extends TestCase
             });
     }
 
-    public function testWillLocateExistingFileWithMatchingClass() : void
+    public function testWillLocateExistingFileWithMatchingClass(): void
     {
         $located = $this->psrLocator->locateIdentifier(
             $this->reflector,
@@ -89,7 +90,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         self::assertSame(Foo::class, $located->getName());
     }
 
-    public function testWillNotLocateNonExistingFileWithMatchingPsr4Class() : void
+    public function testWillNotLocateNonExistingFileWithMatchingPsr4Class(): void
     {
         self::assertNull($this->psrLocator->locateIdentifier(
             $this->reflector,
@@ -100,7 +101,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         ));
     }
 
-    public function testWillNotLocateExistingFileWithMatchingPsr4ClassAndNoContents() : void
+    public function testWillNotLocateExistingFileWithMatchingPsr4ClassAndNoContents(): void
     {
         self::assertNull($this->psrLocator->locateIdentifier(
             $this->reflector,
@@ -111,7 +112,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         ));
     }
 
-    public function testWillNotLocateClassNotMatchingPsr4Mappings() : void
+    public function testWillNotLocateClassNotMatchingPsr4Mappings(): void
     {
         self::assertNull($this->psrLocator->locateIdentifier(
             $this->reflector,
@@ -122,7 +123,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         ));
     }
 
-    public function testWillLocateAllClassesInMappedPsr4Paths() : void
+    public function testWillLocateAllClassesInMappedPsr4Paths(): void
     {
         $astLocator = BetterReflectionSingleton::instance()
             ->astLocator();
@@ -147,7 +148,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         ];
 
         $actual = array_map(
-            static function (Reflection $reflection) : string {
+            static function (Reflection $reflection): string {
                 return $reflection->getName();
             },
             $locator->locateIdentifiersByType(

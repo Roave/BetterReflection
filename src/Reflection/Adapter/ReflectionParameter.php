@@ -8,6 +8,7 @@ use Exception;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+
 use function assert;
 
 class ReflectionParameter extends CoreReflectionParameter

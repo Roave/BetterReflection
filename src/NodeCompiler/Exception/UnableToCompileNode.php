@@ -8,6 +8,7 @@ use LogicException;
 use PhpParser\Node;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+
 use function assert;
 use function get_class;
 use function reset;
@@ -17,12 +18,12 @@ class UnableToCompileNode extends LogicException
 {
     private ?string $constantName = null;
 
-    public function constantName() : ?string
+    public function constantName(): ?string
     {
         return $this->constantName;
     }
 
-    public static function forUnRecognizedExpressionInContext(Node\Expr $expression, CompilerContext $context) : self
+    public static function forUnRecognizedExpressionInContext(Node\Expr $expression, CompilerContext $context): self
     {
         return new self(sprintf(
             'Unable to compile expression in %s: unrecognized node type %s at line %d',
@@ -36,7 +37,7 @@ class UnableToCompileNode extends LogicException
         CompilerContext $fetchContext,
         ReflectionClass $targetClass,
         Node\Expr\ClassConstFetch $constantFetch
-    ) : self {
+    ): self {
         assert($constantFetch->name instanceof Node\Identifier);
 
         return new self(sprintf(
@@ -51,7 +52,7 @@ class UnableToCompileNode extends LogicException
     public static function becauseOfNotFoundConstantReference(
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch
-    ) : self {
+    ): self {
         $constantName = reset($constantFetch->name->parts);
 
         $exception = new self(sprintf(
@@ -66,7 +67,7 @@ class UnableToCompileNode extends LogicException
         return $exception;
     }
 
-    private static function compilerContextToContextDescription(CompilerContext $fetchContext) : string
+    private static function compilerContextToContextDescription(CompilerContext $fetchContext): string
     {
         // @todo improve in https://github.com/Roave/BetterReflection/issues/434
         return $fetchContext->hasSelf()

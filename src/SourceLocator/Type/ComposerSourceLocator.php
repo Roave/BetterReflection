@@ -11,6 +11,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+
 use function file_get_contents;
 
 /**
@@ -36,7 +37,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier) : ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
     {
         if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
             return null;

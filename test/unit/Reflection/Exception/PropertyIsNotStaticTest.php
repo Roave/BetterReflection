@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\PropertyIsNotStatic;
  */
 class PropertyIsNotStaticTest extends TestCase
 {
-    public function testFromName() : void
+    public function testFromName(): void
     {
         $exception = PropertyIsNotStatic::fromName('boo');
 

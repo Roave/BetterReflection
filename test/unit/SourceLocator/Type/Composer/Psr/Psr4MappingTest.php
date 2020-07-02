@@ -9,6 +9,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
+
 use function sys_get_temp_dir;
 use function tempnam;
 use function uniqid;
@@ -24,7 +25,7 @@ class Psr4MappingTest extends TestCase
      *
      * @dataProvider mappings
      */
-    public function testExpectedDirectories(array $mappings, array $expectedDirectories) : void
+    public function testExpectedDirectories(array $mappings, array $expectedDirectories): void
     {
         self::assertEquals($expectedDirectories, Psr4Mapping::fromArrayMappings($mappings)->directories());
     }
@@ -34,13 +35,13 @@ class Psr4MappingTest extends TestCase
      *
      * @dataProvider mappings
      */
-    public function testIdempotentConstructor(array $mappings) : void
+    public function testIdempotentConstructor(array $mappings): void
     {
         self::assertEquals(Psr4Mapping::fromArrayMappings($mappings), Psr4Mapping::fromArrayMappings($mappings));
     }
 
     /** @return array<string, array<int, array<string, array<int, string>>|array<int, string>>> */
-    public function mappings() : array
+    public function mappings(): array
     {
         return [
             'one directory, one prefix'                  => [
@@ -75,7 +76,7 @@ class Psr4MappingTest extends TestCase
      *
      * @dataProvider classLookupMappings
      */
-    public function testClassLookups(array $mappings, Identifier $identifier, array $expectedFiles) : void
+    public function testClassLookups(array $mappings, Identifier $identifier, array $expectedFiles): void
     {
         self::assertEquals(
             $expectedFiles,
@@ -84,7 +85,7 @@ class Psr4MappingTest extends TestCase
     }
 
     /** @return array<string, array<int, array<string, array<int, string>>|array<int, string>>> */
-    public function classLookupMappings() : array
+    public function classLookupMappings(): array
     {
         return [
             'empty mappings, no match'                         => [
@@ -128,7 +129,7 @@ class Psr4MappingTest extends TestCase
      *
      * @dataProvider invalidMappings
      */
-    public function testRejectsInvalidMappings(array $invalidMappings) : void
+    public function testRejectsInvalidMappings(array $invalidMappings): void
     {
         $this->expectException(InvalidPrefixMapping::class);
 
@@ -136,7 +137,7 @@ class Psr4MappingTest extends TestCase
     }
 
     /** @return array<string, array<int, array<string, array<int, string>>>> */
-    public function invalidMappings() : array
+    public function invalidMappings(): array
     {
         return [
             'array contains empty prefixes'                            => [['' => 'bar']],

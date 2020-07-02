@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
  */
 class EvaledLocatedSourceTest extends TestCase
 {
-    public function testInternalsLocatedSource() : void
+    public function testInternalsLocatedSource(): void
     {
         $locatedSource = new EvaledLocatedSource('foo');
 
