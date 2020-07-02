@@ -39,7 +39,7 @@
         "phpstan/phpstan": "^0.12.25",
         "phpunit/phpunit": "^9.2.5",
         "vimeo/psalm": "3.11.2",
-        "infection/infection": "^0.16.3"
+        "infection/infection": "^0.16.4"
     },
     "autoload": {
         "psr-4": {
