@@ -163,7 +163,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array<int|string, array<string>> $paths
+     * @param array<int|string, array<string>>                                                                                                                                                  $paths
      * @param array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
      *
      * @return array<int|string, string|array<string>>
