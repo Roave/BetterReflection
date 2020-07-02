@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function sprintf;
 
 /**
@@ -24,7 +25,7 @@ use function sprintf;
  */
 final class UnableToCompileNodeTest extends TestCase
 {
-    public function testDefaults() : void
+    public function testDefaults(): void
     {
         $exception = new UnableToCompileNode();
 
@@ -32,7 +33,7 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @dataProvider supportedContextTypes */
-    public function testBecauseOfNotFoundConstantReference(CompilerContext $context) : void
+    public function testBecauseOfNotFoundConstantReference(CompilerContext $context): void
     {
         $constantName = 'FOO';
 
@@ -56,7 +57,7 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @dataProvider supportedContextTypes */
-    public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context) : void
+    public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context): void
     {
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
@@ -82,7 +83,7 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @dataProvider supportedContextTypes */
-    public function testForUnRecognizedExpressionInContext(CompilerContext $context) : void
+    public function testForUnRecognizedExpressionInContext(CompilerContext $context): void
     {
         $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
 
@@ -98,7 +99,7 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @return CompilerContext[] */
-    public function supportedContextTypes() : array
+    public function supportedContextTypes(): array
     {
         $reflector = new ClassReflector(new StringSourceLocator(
             '<?php class EmptyClass {}',

@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+
 use function sprintf;
 
 /**
@@ -15,7 +16,7 @@ use function sprintf;
  */
 class InvalidAbstractFunctionNodeTypeTest extends TestCase
 {
-    public function testFromNode() : void
+    public function testFromNode(): void
     {
         $node      = new Node\Scalar\LNumber(5);
         $exception = InvalidAbstractFunctionNodeType::fromNode($node);

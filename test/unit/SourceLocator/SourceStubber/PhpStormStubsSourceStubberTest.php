@@ -20,6 +20,7 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function array_filter;
 use function array_map;
 use function array_merge;
@@ -31,6 +32,7 @@ use function get_defined_functions;
 use function in_array;
 use function sort;
 use function sprintf;
+
 use const PHP_VERSION_ID;
 
 /**
@@ -48,7 +50,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     private ConstantReflector $constantReflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -67,7 +69,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @return string[][]
      */
-    public function internalClassesProvider() : array
+    public function internalClassesProvider(): array
     {
         $classNames = array_merge(
             get_declared_classes(),
@@ -76,12 +78,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
         );
 
         return array_map(
-            static function (string $className) : array {
+            static function (string $className): array {
                 return [$className];
             },
             array_filter(
                 $classNames,
-                static function (string $className) : bool {
+                static function (string $className): bool {
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
@@ -98,7 +100,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider internalClassesProvider
      */
-    public function testInternalClasses(string $className) : void
+    public function testInternalClasses(string $className): void
     {
         $class = $this->classReflector->reflect($className);
 
@@ -115,7 +117,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSameClassAttributes($internalReflection, $class);
     }
 
-    private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameParentClass(CoreReflectionClass $original, ReflectionClass $stubbed): void
     {
         $originalParentClass = $original->getParentClass();
         $stubbedParentClass  = $stubbed->getParentClass();
@@ -126,7 +128,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         );
     }
 
-    private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameInterfaces(CoreReflectionClass $original, ReflectionClass $stubbed): void
     {
         $originalInterfacesNames = $original->getInterfaceNames();
         $stubbedInterfacesNames  = $stubbed->getInterfaceNames();
@@ -137,7 +139,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($originalInterfacesNames, $stubbedInterfacesNames);
     }
 
-    private function assertSameClassAttributes(CoreReflectionClass $original, ReflectionClass $stubbed) : void
+    private function assertSameClassAttributes(CoreReflectionClass $original, ReflectionClass $stubbed): void
     {
         self::assertSame($original->getName(), $stubbed->getName());
 
@@ -161,16 +163,16 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertEquals($original->getConstants(), $stubbed->getConstants());
     }
 
-    private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed) : void
+    private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
     {
         $originalParameterNames = array_map(
-            static function (CoreReflectionParameter $parameter) : string {
+            static function (CoreReflectionParameter $parameter): string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
             $original->getParameters(),
         );
         $stubParameterNames     = array_map(
-            static function (ReflectionParameter $parameter) : string {
+            static function (ReflectionParameter $parameter): string {
                 return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
             },
             $stubbed->getParameters(),
@@ -206,7 +208,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         CoreReflectionMethod $originalMethod,
         CoreReflectionParameter $original,
         ReflectionParameter $stubbed
-    ) : void {
+    ): void {
         $parameterName = $original->getDeclaringClass()->getName()
             . '#' . $originalMethod->getName()
             . '.' . $original->getName();
@@ -224,12 +226,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         // Bugs in PHP
-        if (! in_array($parameterName, [
-            'RecursiveIteratorIterator#getSubIterator.level',
-            'RecursiveIteratorIterator#setMaxDepth.max_depth',
-            'SplTempFileObject#__construct.max_memory',
-            'MultipleIterator#__construct.flags',
-        ], true)) {
+        if (
+            ! in_array($parameterName, [
+                'RecursiveIteratorIterator#getSubIterator.level',
+                'RecursiveIteratorIterator#setMaxDepth.max_depth',
+                'SplTempFileObject#__construct.max_memory',
+                'MultipleIterator#__construct.flags',
+            ], true)
+        ) {
             self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         }
 
@@ -247,11 +251,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
         } else {
             // Bugs in PHP
-            if (! in_array($parameterName, [
-                'Error#__construct.previous',
-                'Exception#__construct.previous',
-                'Closure#bind.closure',
-            ], true)) {
+            if (
+                ! in_array($parameterName, [
+                    'Error#__construct.previous',
+                    'Exception#__construct.previous',
+                    'Closure#bind.closure',
+                ], true)
+            ) {
                 self::assertNull($stubbed->getClass(), $parameterName);
             }
         }
@@ -260,7 +266,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @return string[][]
      */
-    public function internalFunctionsProvider() : array
+    public function internalFunctionsProvider(): array
     {
         $functionNames = get_defined_functions()['internal'];
 
@@ -268,12 +274,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $missingFunctionsInStubs = ['sapi_windows_set_ctrl_handler', 'sapi_windows_generate_ctrl_event'];
 
         return array_map(
-            static function (string $functionName) : array {
+            static function (string $functionName): array {
                 return [$functionName];
             },
             array_filter(
                 $functionNames,
-                static function (string $functionName) use ($missingFunctionsInStubs) : bool {
+                static function (string $functionName) use ($missingFunctionsInStubs): bool {
                     if (in_array($functionName, $missingFunctionsInStubs, true)) {
                         return false;
                     }
@@ -290,7 +296,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider internalFunctionsProvider
      */
-    public function testInternalFunctions(string $functionName) : void
+    public function testInternalFunctions(string $functionName): void
     {
         $stubbedReflection = $this->functionReflector->reflect($functionName);
 
@@ -301,53 +307,55 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $originalReflection = new CoreReflectionFunction($functionName);
 
         // Needs fixes in JetBrains/phpstorm-stubs
-        if (in_array($functionName, [
-            'setlocale',
-            'sprintf',
-            'printf',
-            'fprintf',
-            'trait_exists',
-            'strtok',
-            'strtr',
-            'hrtime',
-            'forward_static_call',
-            'forward_static_call_array',
-            'pack',
-            'min',
-            'max',
-            'var_dump',
-            'register_shutdown_function',
-            'register_tick_function',
-            'compact',
-            'array_map',
-            'array_merge',
-            'array_merge_recursive',
-            'array_replace',
-            'array_replace_recursive',
-            'array_intersect',
-            'array_intersect_key',
-            'array_intersect_ukey',
-            'array_intersect_assoc',
-            'array_uintersect',
-            'array_uintersect_assoc',
-            'array_intersect_uassoc',
-            'array_uintersect_uassoc',
-            'array_diff',
-            'array_diff_key',
-            'array_diff_ukey',
-            'array_diff_assoc',
-            'array_udiff',
-            'array_udiff_assoc',
-            'array_diff_uassoc',
-            'array_udiff_uassoc',
-            'array_multisort',
-            'dns_get_record',
-            'extract',
-            'pos',
-            'setcookie',
-            'setrawcookie',
-            'sapi_windows_vt100_support',
-        ], true)) {
+        if (
+            in_array($functionName, [
+                'setlocale',
+                'sprintf',
+                'printf',
+                'fprintf',
+                'trait_exists',
+                'strtok',
+                'strtr',
+                'hrtime',
+                'forward_static_call',
+                'forward_static_call_array',
+                'pack',
+                'min',
+                'max',
+                'var_dump',
+                'register_shutdown_function',
+                'register_tick_function',
+                'compact',
+                'array_map',
+                'array_merge',
+                'array_merge_recursive',
+                'array_replace',
+                'array_replace_recursive',
+                'array_intersect',
+                'array_intersect_key',
+                'array_intersect_ukey',
+                'array_intersect_assoc',
+                'array_uintersect',
+                'array_uintersect_assoc',
+                'array_intersect_uassoc',
+                'array_uintersect_uassoc',
+                'array_diff',
+                'array_diff_key',
+                'array_diff_ukey',
+                'array_diff_assoc',
+                'array_udiff',
+                'array_udiff_assoc',
+                'array_diff_uassoc',
+                'array_udiff_uassoc',
+                'array_multisort',
+                'dns_get_record',
+                'extract',
+                'pos',
+                'setcookie',
+                'setrawcookie',
+                'sapi_windows_vt100_support',
+            ], true)
+        ) {
             return;
         }
 
@@ -382,11 +390,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $class = $originalReflectionParameter->getClass();
             if ($class) {
                 // Needs fixes in JetBrains/phpstorm-stubs
-                if (! in_array($parameterName, [
-                    'iterator_to_array.iterator',
-                    'iterator_count.iterator',
-                    'iterator_apply.iterator',
-                ], true)) {
+                if (
+                    ! in_array($parameterName, [
+                        'iterator_to_array.iterator',
+                        'iterator_count.iterator',
+                        'iterator_apply.iterator',
+                    ], true)
+                ) {
                     $stubbedClass = $stubbedReflectionParameter->getClass();
                     self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
                     self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
@@ -400,7 +410,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @return array<int, array<int, mixed>>
      */
-    public function internalConstantsProvider() : array
+    public function internalConstantsProvider(): array
     {
         $provider = [];
 
@@ -415,13 +425,15 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
             foreach ($extensionConstants as $constantName => $constantValue) {
                 // Needs fixes in JetBrains/phpstorm-stubs
-                if (in_array($constantName, [
-                    'PHP_WINDOWS_NT_DOMAIN_CONTROLLER',
-                    'PHP_WINDOWS_NT_SERVER',
-                    'PHP_WINDOWS_NT_WORKSTATION',
-                    'PHP_WINDOWS_EVENT_CTRL_C',
-                    'PHP_WINDOWS_EVENT_CTRL_BREAK',
-                ], true)) {
+                if (
+                    in_array($constantName, [
+                        'PHP_WINDOWS_NT_DOMAIN_CONTROLLER',
+                        'PHP_WINDOWS_NT_SERVER',
+                        'PHP_WINDOWS_NT_WORKSTATION',
+                        'PHP_WINDOWS_EVENT_CTRL_C',
+                        'PHP_WINDOWS_EVENT_CTRL_BREAK',
+                    ], true)
+                ) {
                     continue;
                 }
 
@@ -442,7 +454,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
      *
      * @dataProvider internalConstantsProvider
      */
-    public function testInternalConstants(string $constantName, $constantValue, string $extensionName) : void
+    public function testInternalConstants(string $constantName, $constantValue, string $extensionName): void
     {
         $constantReflection = $this->constantReflector->reflect($constantName);
 
@@ -464,7 +476,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($constantValue, $constantReflection->getValue());
     }
 
-    public function dataClassInNamespace() : array
+    public function dataClassInNamespace(): array
     {
         return [
             ['http\\Client'],
@@ -476,14 +488,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataClassInNamespace
      */
-    public function testClassInNamespace(string $className) : void
+    public function testClassInNamespace(string $className): void
     {
         $classReflection = $this->classReflector->reflect($className);
 
         $this->assertSame($className, $classReflection->getName());
     }
 
-    public function dataFunctionInNamespace() : array
+    public function dataFunctionInNamespace(): array
     {
         return [
             ['Couchbase\\basicDecoderV1'],
@@ -495,14 +507,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataFunctionInNamespace
      */
-    public function testFunctionInNamespace(string $functionName) : void
+    public function testFunctionInNamespace(string $functionName): void
     {
         $functionReflection = $this->functionReflector->reflect($functionName);
 
         $this->assertSame($functionName, $functionReflection->getName());
     }
 
-    public function dataConstantInNamespace() : array
+    public function dataConstantInNamespace(): array
     {
         return [
             ['http\\Client\\Curl\\AUTH_ANY'],
@@ -514,29 +526,29 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataConstantInNamespace
      */
-    public function testConstantInNamespace(string $constantName) : void
+    public function testConstantInNamespace(string $constantName): void
     {
         $constantReflection = $this->constantReflector->reflect($constantName);
 
         $this->assertSame($constantName, $constantReflection->getName());
     }
 
-    public function testNoStubForUnknownClass() : void
+    public function testNoStubForUnknownClass(): void
     {
         self::assertNull($this->sourceStubber->generateClassStub('SomeClass'));
     }
 
-    public function testNoStubForUnknownFunction() : void
+    public function testNoStubForUnknownFunction(): void
     {
         self::assertNull($this->sourceStubber->generateFunctionStub('someFunction'));
     }
 
-    public function testNoStubForUnknownConstant() : void
+    public function testNoStubForUnknownConstant(): void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
     }
 
-    public function dataCaseInsensitiveClass() : array
+    public function dataCaseInsensitiveClass(): array
     {
         return [
             [
@@ -553,14 +565,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataCaseInsensitiveClass
      */
-    public function testCaseInsensitiveClass(string $className, string $expectedClassName) : void
+    public function testCaseInsensitiveClass(string $className, string $expectedClassName): void
     {
         $classReflection = $this->classReflector->reflect($className);
 
         $this->assertSame($expectedClassName, $classReflection->getName());
     }
 
-    public function dataCaseInsensitiveFunction() : array
+    public function dataCaseInsensitiveFunction(): array
     {
         return [
             [
@@ -577,14 +589,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataCaseInsensitiveFunction
      */
-    public function testCaseInsensitiveFunction(string $functionName, string $expectedFunctionName) : void
+    public function testCaseInsensitiveFunction(string $functionName, string $expectedFunctionName): void
     {
         $functionReflection = $this->functionReflector->reflect($functionName);
 
         $this->assertSame($expectedFunctionName, $functionReflection->getName());
     }
 
-    public function dataCaseInsensitiveConstant() : array
+    public function dataCaseInsensitiveConstant(): array
     {
         return [
             [
@@ -605,14 +617,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataCaseInsensitiveConstant
      */
-    public function testCaseInsensitiveConstant(string $constantName, string $expectedConstantName) : void
+    public function testCaseInsensitiveConstant(string $constantName, string $expectedConstantName): void
     {
         $constantReflector = $this->constantReflector->reflect($constantName);
 
         $this->assertSame($expectedConstantName, $constantReflector->getName());
     }
 
-    public function dataCaseSensitiveConstant() : array
+    public function dataCaseSensitiveConstant(): array
     {
         return [
             ['date_atom'],
@@ -624,7 +636,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataCaseSensitiveConstant
      */
-    public function testCaseSensitiveConstant(string $constantName) : void
+    public function testCaseSensitiveConstant(string $constantName): void
     {
         self::expectException(IdentifierNotFound::class);
 

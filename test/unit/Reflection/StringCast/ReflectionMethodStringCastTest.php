@@ -23,7 +23,7 @@ class ReflectionMethodStringCastTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -33,7 +33,7 @@ class ReflectionMethodStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    public function toStringProvider() : array
+    public function toStringProvider(): array
     {
         return [
             ['__construct', "Method [ <user, ctor> public method __construct ] {\n  @@ %s/Fixture/StringCastMethods.php 19 - 21\n}"],
@@ -54,7 +54,7 @@ class ReflectionMethodStringCastTest extends TestCase
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString(string $methodName, string $expectedString) : void
+    public function testToString(string $methodName, string $expectedString): void
     {
         $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastMethods.php', $this->astLocator));
         $classReflection = $reflector->reflect(StringCastMethods::class);
@@ -62,7 +62,7 @@ class ReflectionMethodStringCastTest extends TestCase
         self::assertStringMatchesFormat($expectedString, (string) $classReflection->getMethod($methodName));
     }
 
-    public function testToStringForInternal() : void
+    public function testToStringForInternal(): void
     {
         // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
         $classReflection = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(Exception::class);

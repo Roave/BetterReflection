@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
+
 use function count;
 use function sprintf;
 
@@ -27,7 +28,7 @@ class FindReturnTypeTest extends TestCase
     /**
      * @return array
      */
-    public function returnTypeProvider() : array
+    public function returnTypeProvider(): array
     {
         return [
             ['@return int|string', [Types\Integer::class, Types\String_::class]],
@@ -44,7 +45,7 @@ class FindReturnTypeTest extends TestCase
      *
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances) : void
+    public function testFindReturnTypeForFunction(string $docBlock, array $expectedInstances): void
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
@@ -69,7 +70,7 @@ class FindReturnTypeTest extends TestCase
      *
      * @dataProvider returnTypeProvider
      */
-    public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances) : void
+    public function testFindReturnTypeForMethod(string $docBlock, array $expectedInstances): void
     {
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
@@ -89,7 +90,7 @@ class FindReturnTypeTest extends TestCase
         }
     }
 
-    public function testFindReturnTypeForFunctionWithNoDocBlock() : void
+    public function testFindReturnTypeForFunctionWithNoDocBlock(): void
     {
         $function = $this->createMock(ReflectionFunction::class);
 
@@ -112,7 +113,7 @@ class FindReturnTypeTest extends TestCase
         array $aliasesToFQCNs,
         string $returnType,
         array $expectedTypes
-    ) : void {
+    ): void {
         $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 
         $function = $this->createMock(ReflectionFunctionAbstract::class);
@@ -135,7 +136,7 @@ class FindReturnTypeTest extends TestCase
         self::assertEquals($expectedTypes, (new FindReturnType())->__invoke($function, $namespace));
     }
 
-    public function aliasedReturnTypesProvider() : array
+    public function aliasedReturnTypesProvider(): array
     {
         return [
             'No namespace' => [

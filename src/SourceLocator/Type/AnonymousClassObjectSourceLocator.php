@@ -23,6 +23,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
+
 use function array_filter;
 use function array_values;
 use function assert;
@@ -52,7 +53,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
         return $this->getReflectionClass($reflector, $identifier->getType());
     }
@@ -62,12 +63,12 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType) : array
+    public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         return array_filter([$this->getReflectionClass($reflector, $identifierType)]);
     }
 
-    private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType) : ?ReflectionClass
+    private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType): ?ReflectionClass
     {
         if (! $identifierType->isClass()) {
             return null;
@@ -83,7 +84,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $fileName = FileHelper::normalizeWindowsPath($fileName);
 
-        $nodeVisitor = new class($fileName, $this->coreClassReflection->getStartLine()) extends NodeVisitorAbstract
+        $nodeVisitor = new class ($fileName, $this->coreClassReflection->getStartLine()) extends NodeVisitorAbstract
         {
             private string $fileName;
 
@@ -112,10 +113,10 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                 return null;
             }
 
-            public function getAnonymousClassNode() : ?Class_
+            public function getAnonymousClassNode(): ?Class_
             {
                 /** @var Class_[] $anonymousClassNodesOnSameLine */
-                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, function (Class_ $node) : bool {
+                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, function (Class_ $node): bool {
                     return $node->getLine() === $this->startLine;
                 }));
 

@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+
 use function function_exists;
 
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
@@ -24,7 +25,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      * @throws IdentifierNotFound
      */
-    public static function createFromName(string $functionName) : self
+    public static function createFromName(string $functionName): self
     {
         return (new BetterReflection())->functionReflector()->reflect($functionName);
     }
@@ -32,7 +33,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      * @throws IdentifierNotFound
      */
-    public static function createFromClosure(Closure $closure) : self
+    public static function createFromClosure(Closure $closure): self
     {
         $configuration = new BetterReflection();
 
@@ -42,7 +43,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         ))->reflect(self::CLOSURE_NAME);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return ReflectionFunctionStringCast::toString($this);
     }
@@ -57,7 +58,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         FunctionNode $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null
-    ) : self {
+    ): self {
         $function = new self();
 
         $function->populateFunctionAbstract($reflector, $node, $locatedSource, $namespaceNode);
@@ -77,7 +78,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      *
      * @todo https://github.com/Roave/BetterReflection/issues/14
      */
-    public function isDisabled() : bool
+    public function isDisabled(): bool
     {
         return false;
     }
@@ -86,7 +87,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
      */
-    public function getClosure() : Closure
+    public function getClosure(): Closure
     {
         $this->assertIsNoClosure();
 
@@ -134,7 +135,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      * @throws NotImplemented
      */
-    private function assertIsNoClosure() : void
+    private function assertIsNoClosure(): void
     {
         if ($this->isClosure()) {
             throw new NotImplemented('Not implemented for closures');
@@ -146,7 +147,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      *
      * @psalm-assert callable-string $functionName
      */
-    private function assertFunctionExist(string $functionName) : void
+    private function assertFunctionExist(string $functionName): void
     {
         if (! function_exists($functionName)) {
             throw FunctionDoesNotExist::fromName($functionName);

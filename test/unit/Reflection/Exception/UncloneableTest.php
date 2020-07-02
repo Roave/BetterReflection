@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
  */
 class UncloneableTest extends TestCase
 {
-    public function testFromNonObject() : void
+    public function testFromNonObject(): void
     {
         $exception = Uncloneable::fromClass('foo');
 

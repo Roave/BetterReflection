@@ -22,14 +22,14 @@ class CompilerContextTest extends TestCase
 {
     private Locator $astLocator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    public function testCreatingContextWithoutSelf() : void
+    public function testCreatingContextWithoutSelf(): void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
         $context   = new CompilerContext($reflector, null);
@@ -42,7 +42,7 @@ class CompilerContextTest extends TestCase
         $context->getSelf();
     }
 
-    public function testCreatingContextWithSelf() : void
+    public function testCreatingContextWithSelf(): void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
         $self      = $reflector->reflect('Foo');
@@ -54,7 +54,7 @@ class CompilerContextTest extends TestCase
         self::assertSame($self, $context->getSelf());
     }
 
-    public function testGetFileName() : void
+    public function testGetFileName(): void
     {
         $filename = FileHelper::normalizeWindowsPath(__DIR__ . '/CompilerContextTest.php');
 
@@ -66,7 +66,7 @@ class CompilerContextTest extends TestCase
         self::assertSame($filename, $context->getFileName());
     }
 
-    public function testGetFileNameWithoutSelf() : void
+    public function testGetFileNameWithoutSelf(): void
     {
         $filename = __DIR__ . '/CompilerContextTest.php';
 
@@ -78,7 +78,7 @@ class CompilerContextTest extends TestCase
         $context->getFileName();
     }
 
-    public function testClassMagicConstantAsDefaultValueFromClass() : void
+    public function testClassMagicConstantAsDefaultValueFromClass(): void
     {
         $phpCode = '<?php
         namespace Foo;
@@ -93,7 +93,7 @@ class CompilerContextTest extends TestCase
         self::assertSame('Foo\Bar', $classInfo->getProperty('property')->getDefaultValue());
     }
 
-    public function testClassMagicConstantAsDefaultValueFromFunction() : void
+    public function testClassMagicConstantAsDefaultValueFromFunction(): void
     {
         $phpCode = '<?php
         namespace Foo;

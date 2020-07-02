@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\Missing
  */
 class MissingInstalledJsonTest extends TestCase
 {
-    public function testInProjectPath() : void
+    public function testInProjectPath(): void
     {
         self::assertSame(
             'Could not locate a "vendor/composer/installed.json" file in "foo/bar"',

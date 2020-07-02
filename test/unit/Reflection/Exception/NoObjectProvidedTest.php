@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
  */
 class NoObjectProvidedTest extends TestCase
 {
-    public function testFromClassName() : void
+    public function testFromClassName(): void
     {
         $exception = NoObjectProvided::create();
 

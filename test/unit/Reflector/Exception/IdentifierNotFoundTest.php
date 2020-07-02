@@ -14,7 +14,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
  */
 class IdentifierNotFoundTest extends TestCase
 {
-    public function testFromNonObject() : void
+    public function testFromNonObject(): void
     {
         $identifier = new Identifier('myIdentifier', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 

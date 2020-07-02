@@ -8,7 +8,7 @@ use LogicException;
 
 class EvaledAnonymousClassCannotBeLocated extends LogicException
 {
-    public static function create() : self
+    public static function create(): self
     {
         return new self('Evaled anonymous class cannot be located');
     }

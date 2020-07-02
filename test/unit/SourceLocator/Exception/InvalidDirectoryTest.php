@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use stdClass;
+
 use function sprintf;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -21,7 +22,7 @@ class InvalidDirectoryTest extends TestCase
      *
      * @dataProvider nonStringValuesProvider
      */
-    public function testFromNonStringValue(string $expectedMessage, $value) : void
+    public function testFromNonStringValue(string $expectedMessage, $value): void
     {
         $exception = InvalidDirectory::fromNonStringValue($value);
 
@@ -32,7 +33,7 @@ class InvalidDirectoryTest extends TestCase
     /**
      * @return string[][]|mixed[][]
      */
-    public function nonStringValuesProvider() : array
+    public function nonStringValuesProvider(): array
     {
         return [
             ['Expected string, stdClass given', new stdClass()],
@@ -44,7 +45,7 @@ class InvalidDirectoryTest extends TestCase
         ];
     }
 
-    public function testFromNonDirectoryWithNonExistingPath() : void
+    public function testFromNonDirectoryWithNonExistingPath(): void
     {
         $directory = uniqid(sys_get_temp_dir() . 'non-existing', true);
         $exception = InvalidDirectory::fromNonDirectory($directory);
@@ -53,7 +54,7 @@ class InvalidDirectoryTest extends TestCase
         self::assertSame(sprintf('"%s" does not exist', $directory), $exception->getMessage());
     }
 
-    public function testFromNonDirectoryWithFile() : void
+    public function testFromNonDirectoryWithFile(): void
     {
         $exception = InvalidDirectory::fromNonDirectory(__FILE__);
 

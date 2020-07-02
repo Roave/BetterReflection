@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
  */
 class ObjectNotInstanceOfClassTest extends TestCase
 {
-    public function testFromClassName() : void
+    public function testFromClassName(): void
     {
         $exception = ObjectNotInstanceOfClass::fromClassName('Foo');
 

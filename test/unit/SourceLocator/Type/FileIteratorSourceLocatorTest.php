@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function array_map;
 use function sort;
 
@@ -24,7 +25,7 @@ class FileIteratorSourceLocatorTest extends TestCase
 {
     private FileIteratorSourceLocator $sourceLocator;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +38,7 @@ class FileIteratorSourceLocatorTest extends TestCase
         );
     }
 
-    public function testScanDirectoryClasses() : void
+    public function testScanDirectoryClasses(): void
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new ClassReflector($this->sourceLocator),
@@ -47,7 +48,7 @@ class FileIteratorSourceLocatorTest extends TestCase
         self::assertCount(2, $classes);
 
         $classNames = array_map(
-            static function (ReflectionClass $reflectionClass) : string {
+            static function (ReflectionClass $reflectionClass): string {
                 return $reflectionClass->getName();
             },
             $classes,
@@ -59,7 +60,7 @@ class FileIteratorSourceLocatorTest extends TestCase
         self::assertEquals(DirectoryScannerAssets\Foo::class, $classNames[1]);
     }
 
-    public function testLocateIdentifier() : void
+    public function testLocateIdentifier(): void
     {
         $class = $this->sourceLocator->locateIdentifier(
             new ClassReflector($this->sourceLocator),

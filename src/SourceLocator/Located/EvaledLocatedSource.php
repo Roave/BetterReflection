@@ -14,7 +14,7 @@ class EvaledLocatedSource extends LocatedSource
         parent::__construct($source, null);
     }
 
-    public function isEvaled() : bool
+    public function isEvaled(): bool
     {
         return true;
     }

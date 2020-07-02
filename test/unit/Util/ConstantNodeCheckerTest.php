@@ -14,7 +14,7 @@ use Roave\BetterReflection\Util\ConstantNodeChecker;
  */
 class ConstantNodeCheckerTest extends TestCase
 {
-    public function testWithoutName() : void
+    public function testWithoutName(): void
     {
         self::expectException(InvalidConstantNode::class);
 
@@ -23,7 +23,7 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    public function testDifferentName() : void
+    public function testDifferentName(): void
     {
         self::expectException(InvalidConstantNode::class);
 
@@ -32,7 +32,7 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    public function testInvalidArgumentsCount() : void
+    public function testInvalidArgumentsCount(): void
     {
         self::expectException(InvalidConstantNode::class);
 
@@ -41,7 +41,7 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    public function testNameAsNotString() : void
+    public function testNameAsNotString(): void
     {
         self::expectException(InvalidConstantNode::class);
 
@@ -50,7 +50,7 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    public function testValueAsFunctionCall() : void
+    public function testValueAsFunctionCall(): void
     {
         self::expectException(InvalidConstantNode::class);
 
@@ -59,7 +59,7 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    public function testValueAsVariable() : void
+    public function testValueAsVariable(): void
     {
         self::expectException(InvalidConstantNode::class);
 
@@ -71,7 +71,7 @@ class ConstantNodeCheckerTest extends TestCase
     /**
      * @return Node\Expr[][]
      */
-    public function validValuesProvider() : array
+    public function validValuesProvider(): array
     {
         return [
             [new Node\Scalar\String_('foo')],
@@ -91,7 +91,7 @@ class ConstantNodeCheckerTest extends TestCase
     /**
      * @dataProvider validValuesProvider
      */
-    public function testValidValues(Node\Expr $valueNode) : void
+    public function testValidValues(Node\Expr $valueNode): void
     {
         self::expectNotToPerformAssertions();
 

@@ -40,6 +40,7 @@ use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
 use TraitWithMethod;
+
 use function basename;
 
 /**
@@ -53,7 +54,7 @@ class ReflectionMethodTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -64,7 +65,7 @@ class ReflectionMethodTest extends TestCase
         $this->reflector     = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
-    public function testCreateFromName() : void
+    public function testCreateFromName(): void
     {
         $method = ReflectionMethod::createFromName(SplDoublyLinkedList::class, 'add');
 
@@ -72,7 +73,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('add', $method->getName());
     }
 
-    public function testCreateFromInstance() : void
+    public function testCreateFromInstance(): void
     {
         $method = ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'add');
 
@@ -83,7 +84,7 @@ class ReflectionMethodTest extends TestCase
     /**
      * @return array
      */
-    public function visibilityProvider() : array
+    public function visibilityProvider(): array
     {
         return [
             'publicMethod' => ['publicMethod', true, false, false, false, false, false],
@@ -107,7 +108,7 @@ class ReflectionMethodTest extends TestCase
         bool $shouldBeFinal,
         bool $shouldBeAbstract,
         bool $shouldBeStatic
-    ) : void {
+    ): void {
         $classInfo        = $this->reflector->reflect(Methods::class);
         $reflectionMethod = $classInfo->getMethod($methodName);
 
@@ -119,7 +120,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($shouldBeStatic, $reflectionMethod->isStatic());
     }
 
-    public function testIsAbstractForMethodInInterface() : void
+    public function testIsAbstractForMethodInInterface(): void
     {
         $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
         $methodInfo = $classInfo->getMethod('someMethod');
@@ -127,7 +128,7 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($methodInfo->isAbstract());
     }
 
-    public function testIsConstructorDestructor() : void
+    public function testIsConstructorDestructor(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -138,7 +139,7 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($method->isDestructor());
     }
 
-    public function testIsConstructorDestructorIsCaseInsensitive() : void
+    public function testIsConstructorDestructorIsCaseInsensitive(): void
     {
         $classInfo = $this->reflector->reflect(UpperCaseConstructDestruct::class);
 
@@ -149,7 +150,7 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($method->isDestructor());
     }
 
-    public function testIsConstructorWhenPhp4Style() : void
+    public function testIsConstructorWhenPhp4Style(): void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php', $this->astLocator));
         $classInfo = $reflector->reflect(Php4StyleConstruct::class);
@@ -158,7 +159,7 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($method->isConstructor());
     }
 
-    public function testsIsConstructorWhenPhp4StyleInNamespace() : void
+    public function testsIsConstructorWhenPhp4StyleInNamespace(): void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php', $this->astLocator));
         $classInfo = $reflector->reflect(Php4StyleConstructInNamespace::class);
@@ -167,7 +168,7 @@ class ReflectionMethodTest extends TestCase
         self::assertFalse($method->isConstructor());
     }
 
-    public function testIsConstructorWhenPhp4StyleCaseInsensitive() : void
+    public function testIsConstructorWhenPhp4StyleCaseInsensitive(): void
     {
         $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php', $this->astLocator));
         $classInfo = $reflector->reflect(Php4StyleCaseInsensitiveConstruct::class);
@@ -176,7 +177,7 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($method->isConstructor());
     }
 
-    public function testGetParameters() : void
+    public function testGetParameters(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -190,7 +191,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('parameter2', $params[1]->getName());
     }
 
-    public function testGetNumberOfParameters() : void
+    public function testGetNumberOfParameters(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -201,7 +202,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(2, $method2->getNumberOfParameters(), 'Failed asserting methodWithOptionalParameters has 2 params');
     }
 
-    public function testGetNumberOfOptionalParameters() : void
+    public function testGetNumberOfOptionalParameters(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
 
@@ -212,7 +213,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(1, $method2->getNumberOfRequiredParameters(), 'Failed asserting methodWithOptionalParameters has 1 required param');
     }
 
-    public function testGetFileName() : void
+    public function testGetFileName(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod('methodWithParameters');
@@ -222,7 +223,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('Methods.php', basename($detectedFilename));
     }
 
-    public function testMethodNameWithNamespace() : void
+    public function testMethodNameWithNamespace(): void
     {
         $classInfo  = $this->reflector->reflect(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
@@ -233,7 +234,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('someMethod', $methodInfo->getShortName());
     }
 
-    public function testGetDocBlockReturnTypes() : void
+    public function testGetDocBlockReturnTypes(): void
     {
         $php = '<?php
         class Foo {
@@ -255,7 +256,7 @@ class ReflectionMethodTest extends TestCase
         self::assertInstanceOf(Integer::class, $types[0]);
     }
 
-    public function testGetObjectReturnTypes() : void
+    public function testGetObjectReturnTypes(): void
     {
         $php = '<?php
         namespace A;
@@ -274,7 +275,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('object', (string) $returnType);
     }
 
-    public function modifierProvider() : array
+    public function modifierProvider(): array
     {
         return [
             ['publicMethod', CoreReflectionMethod::IS_PUBLIC, ['public']],
@@ -292,7 +293,7 @@ class ReflectionMethodTest extends TestCase
      *
      * @dataProvider modifierProvider
      */
-    public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames) : void
+    public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         $method    = $classInfo->getMethod($methodName);
@@ -304,7 +305,7 @@ class ReflectionMethodTest extends TestCase
         );
     }
 
-    public function prototypeProvider() : array
+    public function prototypeProvider(): array
     {
         return [
             ['Zoom\B', 'foo', 'Zoom\FooInterface'],
@@ -324,7 +325,7 @@ class ReflectionMethodTest extends TestCase
     /**
      * @dataProvider prototypeProvider
      */
-    public function testGetPrototype(string $class, string $method, ?string $expectedPrototype) : void
+    public function testGetPrototype(string $class, string $method, ?string $expectedPrototype): void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
         $reflector = new ClassReflector(new SingleFileSourceLocator($fixture, $this->astLocator));
@@ -338,7 +339,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
 
-    public function overwrittenMethodProvider() : array
+    public function overwrittenMethodProvider(): array
     {
         return [
             ['FooInterface', 'foo', null],
@@ -349,13 +350,13 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
         self::assertStringMatchesFormat("Method [ <user> public method publicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 15 - 17\n}", (string) $classInfo->getMethod('publicMethod'));
     }
 
-    public function testGetDeclaringAndImplementingClassWithMethodFromTrait() : void
+    public function testGetDeclaringAndImplementingClassWithMethodFromTrait(): void
     {
         $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
@@ -366,7 +367,7 @@ class ReflectionMethodTest extends TestCase
         self::assertNotSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
     }
 
-    public function testGetDeclaringAndImplementingClassWithMethodFromClass() : void
+    public function testGetDeclaringAndImplementingClassWithMethodFromClass(): void
     {
         $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
@@ -377,7 +378,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
     }
 
-    public function testGetDeclaringAndImplementingClassWithMethodFromParentClass() : void
+    public function testGetDeclaringAndImplementingClassWithMethodFromParentClass(): void
     {
         $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $classReflector->reflect(ExtendedClassWithMethodsAndTraitMethods::class)->getParentClass();
@@ -388,7 +389,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
     }
 
-    public function testGetExtensionName() : void
+    public function testGetExtensionName(): void
     {
         $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(ReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
@@ -396,7 +397,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('Reflection', $method->getExtensionName());
     }
 
-    public function testIsInternal() : void
+    public function testIsInternal(): void
     {
         $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(ReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
@@ -404,7 +405,7 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($method->isInternal());
     }
 
-    public function testGetClosureOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
+    public function testGetClosureOfStaticMethodThrowsExceptionWhenClassDoesNotExist(): void
     {
         $php = <<<'PHP'
 <?php
@@ -424,7 +425,7 @@ PHP;
         $methodReflection->getClosure();
     }
 
-    public function testGetClosureOfStaticMethod() : void
+    public function testGetClosureOfStaticMethod(): void
     {
         $classWithStaticMethodFile = __DIR__ . '/../Fixture/ClassWithStaticMethod.php';
         require_once $classWithStaticMethodFile;
@@ -438,7 +439,7 @@ PHP;
         self::assertSame(3, $closure(1, 2));
     }
 
-    public function testGetClosureOfObjectMethodThrowsExceptionWhenNoObject() : void
+    public function testGetClosureOfObjectMethodThrowsExceptionWhenNoObject(): void
     {
         $this->expectException(NoObjectProvided::class);
 
@@ -448,7 +449,7 @@ PHP;
         $methodReflection->getClosure(null);
     }
 
-    public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
 
@@ -458,7 +459,7 @@ PHP;
         $methodReflection->getClosure(new stdClass());
     }
 
-    public function testGetClosureOfObjectMethod() : void
+    public function testGetClosureOfObjectMethod(): void
     {
         $classWithNonStaticMethodFile = __DIR__ . '/../Fixture/ClassWithNonStaticMethod.php';
         require_once $classWithNonStaticMethodFile;
@@ -474,7 +475,7 @@ PHP;
         self::assertSame(103, $closure(1, 2));
     }
 
-    public function testInvokeOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
+    public function testInvokeOfStaticMethodThrowsExceptionWhenClassDoesNotExist(): void
     {
         $php = <<<'PHP'
 <?php
@@ -494,7 +495,7 @@ PHP;
         $methodReflection->invoke();
     }
 
-    public function testInvokeArgsOfStaticMethodThrowsExceptionWhenClassDoesNotExist() : void
+    public function testInvokeArgsOfStaticMethodThrowsExceptionWhenClassDoesNotExist(): void
     {
         $php = <<<'PHP'
 <?php
@@ -514,7 +515,7 @@ PHP;
         $methodReflection->invokeArgs();
     }
 
-    public function testInvokeOfStaticMethod() : void
+    public function testInvokeOfStaticMethod(): void
     {
         $classWithStaticMethodFile = __DIR__ . '/../Fixture/ClassWithStaticMethod.php';
         require_once $classWithStaticMethodFile;
@@ -526,7 +527,7 @@ PHP;
         self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
     }
 
-    public function testInvokeOfObjectMethodThrowsExceptionWhenNoObject() : void
+    public function testInvokeOfObjectMethodThrowsExceptionWhenNoObject(): void
     {
         $this->expectException(NoObjectProvided::class);
 
@@ -536,7 +537,7 @@ PHP;
         $methodReflection->invoke(null);
     }
 
-    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenNoObject() : void
+    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenNoObject(): void
     {
         $this->expectException(NoObjectProvided::class);
 
@@ -546,7 +547,7 @@ PHP;
         $methodReflection->invokeArgs(null);
     }
 
-    public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
 
@@ -556,7 +557,7 @@ PHP;
         $methodReflection->invoke(new stdClass());
     }
 
-    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass() : void
+    public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
 
@@ -566,7 +567,7 @@ PHP;
         $methodReflection->invokeArgs(new stdClass());
     }
 
-    public function testInvokeOfObjectMethod() : void
+    public function testInvokeOfObjectMethod(): void
     {
         $classWithNonStaticMethodFile = __DIR__ . '/../Fixture/ClassWithNonStaticMethod.php';
         require_once $classWithNonStaticMethodFile;
@@ -580,7 +581,7 @@ PHP;
         self::assertSame(107, $methodReflection->invoke($object, 3, 4));
     }
 
-    public function testInterfaceMethodBodyAst() : void
+    public function testInterfaceMethodBodyAst(): void
     {
         $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
         $methodInfo = $classInfo->getMethod('someMethod');

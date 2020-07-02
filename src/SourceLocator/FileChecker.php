@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator;
 
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
+
 use function file_exists;
 use function is_file;
 use function is_readable;
@@ -15,7 +16,7 @@ class FileChecker
     /**
      * @throws InvalidFileLocation
      */
-    public static function assertReadableFile(string $filename) : void
+    public static function assertReadableFile(string $filename): void
     {
         if (empty($filename)) {
             throw new InvalidFileLocation('Filename was empty');

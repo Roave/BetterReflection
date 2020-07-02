@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
  */
 class StubDataTest extends TestCase
 {
-    public function testGetters() : void
+    public function testGetters(): void
     {
         $stub          = '<?php';
         $extensionName = 'Core';

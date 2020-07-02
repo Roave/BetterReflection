@@ -18,7 +18,7 @@ class InvalidFileInfoTest extends TestCase
      *
      * @dataProvider nonSplFileInfoProvider
      */
-    public function testFromNonSplFileInfo(string $expectedMessage, $value) : void
+    public function testFromNonSplFileInfo(string $expectedMessage, $value): void
     {
         $exception = InvalidFileInfo::fromNonSplFileInfo($value);
 
@@ -29,7 +29,7 @@ class InvalidFileInfoTest extends TestCase
     /**
      * @return string[][]|mixed[][]
      */
-    public function nonSplFileInfoProvider() : array
+    public function nonSplFileInfoProvider(): array
     {
         return [
             ['Expected an iterator of SplFileInfo instances, stdClass given instead', new stdClass()],

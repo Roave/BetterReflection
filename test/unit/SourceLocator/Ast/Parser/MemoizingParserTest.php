@@ -10,6 +10,7 @@ use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
+
 use function array_map;
 use function array_unique;
 use function count;
@@ -22,12 +23,12 @@ use function uniqid;
  */
 class MemoizingParserTest extends TestCase
 {
-    public function testParse() : void
+    public function testParse(): void
     {
         $wrappedParser = $this->createMock(Parser::class);
 
         $randomCodeStrings = array_unique(array_map(
-            static function () : string {
+            static function (): string {
                 return uniqid('code', true);
             },
             range(0, 100),
@@ -38,7 +39,7 @@ class MemoizingParserTest extends TestCase
         $wrappedParser
             ->expects(self::exactly($randomCodeStringsCount))
             ->method('parse')
-            ->willReturnCallback(static function () : array {
+            ->willReturnCallback(static function (): array {
                 return [new Name('bool')];
             });
 
@@ -54,7 +55,7 @@ class MemoizingParserTest extends TestCase
         }
 
         $nodeIdentifiers = array_map(
-            static function (array $nodes) : string {
+            static function (array $nodes): string {
                 return spl_object_hash($nodes[0]);
             },
             $producedNodes,
@@ -64,7 +65,7 @@ class MemoizingParserTest extends TestCase
         self::assertEquals($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
     }
 
-    public function testParsedCodeIsDifferentAtEachParserLookup() : void
+    public function testParsedCodeIsDifferentAtEachParserLookup(): void
     {
         $code          = '<?php echo "hello world";';
         $wrappedParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);

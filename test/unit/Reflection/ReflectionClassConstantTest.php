@@ -16,7 +16,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 class ReflectionClassConstantTest extends TestCase
 {
-    private function getComposerLocator() : ComposerSourceLocator
+    private function getComposerLocator(): ComposerSourceLocator
     {
         return new ComposerSourceLocator(
             require __DIR__ . '/../../../vendor/autoload.php',
@@ -24,7 +24,7 @@ class ReflectionClassConstantTest extends TestCase
         );
     }
 
-    private function getExampleConstant(string $name) : ?ReflectionClassConstant
+    private function getExampleConstant(string $name): ?ReflectionClassConstant
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -32,31 +32,31 @@ class ReflectionClassConstantTest extends TestCase
         return $classInfo->getReflectionConstant($name);
     }
 
-    public function testDefaultVisibility() : void
+    public function testDefaultVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
         self::assertTrue($const->isPublic());
     }
 
-    public function testPublicVisibility() : void
+    public function testPublicVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_3');
         self::assertTrue($const->isPublic());
     }
 
-    public function testProtectedVisibility() : void
+    public function testProtectedVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_4');
         self::assertTrue($const->isProtected());
     }
 
-    public function testPrivateVisibility() : void
+    public function testPrivateVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_5');
         self::assertTrue($const->isPrivate());
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
@@ -64,12 +64,12 @@ class ReflectionClassConstantTest extends TestCase
     /**
      * @dataProvider getModifiersProvider
      */
-    public function testGetModifiers(string $const, int $expected) : void
+    public function testGetModifiers(string $const, int $expected): void
     {
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
-    public function getModifiersProvider() : array
+    public function getModifiersProvider(): array
     {
         return [
             ['MY_CONST_1', ReflectionProperty::IS_PUBLIC],
@@ -79,19 +79,19 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    public function testGetDocComment() : void
+    public function testGetDocComment(): void
     {
         $const = $this->getExampleConstant('MY_CONST_2');
         self::assertStringContainsString('This comment for constant should be used.', $const->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment() : void
+    public function testGetDocCommentReturnsEmptyStringWithNoComment(): void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
         self::assertSame('', $const->getDocComment());
     }
 
-    public function testGetDeclaringClass() : void
+    public function testGetDeclaringClass(): void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
@@ -102,7 +102,7 @@ class ReflectionClassConstantTest extends TestCase
     /**
      * @dataProvider startEndLineProvider
      */
-    public function testStartEndLine(string $php, int $startLine, int $endLine) : void
+    public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
         $reflector       = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection = $reflector->reflect('\T');
@@ -111,7 +111,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
-    public function startEndLineProvider() : array
+    public function startEndLineProvider(): array
     {
         return [
             ["<?php\nclass T {\nconst TEST = 1; }", 3, 3],
@@ -121,7 +121,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    public function columnsProvider() : array
+    public function columnsProvider(): array
     {
         return [
             ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
@@ -133,7 +133,7 @@ class ReflectionClassConstantTest extends TestCase
     /**
      * @dataProvider columnsProvider
      */
-    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector          = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection    = $reflector->reflect('T');
@@ -143,7 +143,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    public function getAstProvider() : array
+    public function getAstProvider(): array
     {
         return [
             ['TEST', 0],
@@ -154,7 +154,7 @@ class ReflectionClassConstantTest extends TestCase
     /**
      * @dataProvider getAstProvider
      */
-    public function testGetAst(string $constantName, int $positionInAst) : void
+    public function testGetAst(string $constantName, int $positionInAst): void
     {
         $php = <<<'PHP'
 <?php

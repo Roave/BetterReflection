@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastClass;
 use Roave\BetterReflectionTest\Fixture\StringCastClassObject;
+
 use function file_get_contents;
 
 /**
@@ -27,7 +28,7 @@ class ReflectionClassStringCastTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +38,7 @@ class ReflectionClassStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClass.php', $this->astLocator));
         $classReflection = $reflector->reflect(StringCastClass::class);
@@ -48,7 +49,7 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
-    public function testFinalClassToString() : void
+    public function testFinalClassToString(): void
     {
         $php = '<?php final class StringCastFinalClass {}';
 
@@ -58,7 +59,7 @@ class ReflectionClassStringCastTest extends TestCase
         self::assertStringStartsWith('Class [ <user> final class StringCastFinalClass ]', (string) $classReflection);
     }
 
-    public function testInternalClassToString() : void
+    public function testInternalClassToString(): void
     {
         $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber));
 
@@ -69,7 +70,7 @@ class ReflectionClassStringCastTest extends TestCase
         self::assertStringStartsWith('Class [ <internal:Core> class Exception implements Throwable ]', (string) $classReflection);
     }
 
-    public function testInterfaceToString() : void
+    public function testInterfaceToString(): void
     {
         $php = '<?php interface StringCastInterface {}';
 
@@ -79,7 +80,7 @@ class ReflectionClassStringCastTest extends TestCase
         self::assertStringStartsWith('Interface [ <user> interface StringCastInterface ]', (string) $classReflection);
     }
 
-    public function testTraitToString() : void
+    public function testTraitToString(): void
     {
         $php = '<?php trait StringCastTrait {}';
 
@@ -89,7 +90,7 @@ class ReflectionClassStringCastTest extends TestCase
         self::assertStringStartsWith('Trait [ <user> trait StringCastTrait ]', (string) $classReflection);
     }
 
-    public function testClassObjectToString() : void
+    public function testClassObjectToString(): void
     {
         $stringCastClassObjectFilename = __DIR__ . '/../../Fixture/StringCastClassObject.php';
         require_once $stringCastClassObjectFilename;

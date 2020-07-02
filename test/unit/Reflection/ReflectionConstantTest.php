@@ -17,6 +17,7 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use const E_ALL;
 
 /**
@@ -30,7 +31,7 @@ class ReflectionConstantTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -40,7 +41,7 @@ class ReflectionConstantTest extends TestCase
         $this->sourceStubber  = $configuration->sourceStubber();
     }
 
-    public function testNameMethodsWithNoNamespaceByConst() : void
+    public function testNameMethodsWithNoNamespaceByConst(): void
     {
         $php = '<?php const FOO = 1;';
 
@@ -53,7 +54,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('FOO', $reflection->getShortName());
     }
 
-    public function testNameMethodsWithNoNamespaceByDefine() : void
+    public function testNameMethodsWithNoNamespaceByDefine(): void
     {
         $php = '<?php define("FOO", 1);';
 
@@ -66,7 +67,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('FOO', $reflection->getShortName());
     }
 
-    public function testNameMethodsInNamespace() : void
+    public function testNameMethodsInNamespace(): void
     {
         $php = '<?php namespace A\B { const FOO = 1; }';
 
@@ -79,7 +80,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('FOO', $reflection->getShortName());
     }
 
-    public function testNameMethodsInExplicitGlobalNamespace() : void
+    public function testNameMethodsInExplicitGlobalNamespace(): void
     {
         $php = '<?php namespace { const FOO = 1; }';
 
@@ -92,7 +93,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('FOO', $reflection->getShortName());
     }
 
-    public function testIsUserDefined() : void
+    public function testIsUserDefined(): void
     {
         $php = '<?php const FOO = 1;';
 
@@ -104,7 +105,7 @@ class ReflectionConstantTest extends TestCase
         self::assertNull($reflection->getExtensionName());
     }
 
-    public function testIsInternal() : void
+    public function testIsInternal(): void
     {
         $reflector  = new ConstantReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber), $this->classReflector);
         $reflection = $reflector->reflect('E_ALL');
@@ -114,7 +115,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('Core', $reflection->getExtensionName());
     }
 
-    public function testGetValueByConst() : void
+    public function testGetValueByConst(): void
     {
         $php = '<?php const FOO = 1;';
 
@@ -124,7 +125,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame(1, $reflection->getValue());
     }
 
-    public function testGetValueByDefine() : void
+    public function testGetValueByDefine(): void
     {
         $php = '<?php define("FOO", E_ALL);';
 
@@ -134,7 +135,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame(E_ALL, $reflection->getValue());
     }
 
-    public function testStaticCreationFromNameByConst() : void
+    public function testStaticCreationFromNameByConst(): void
     {
         require_once __DIR__ . '/../Fixture/Constants.php';
         $reflection = ReflectionConstant::createFromName('Roave\BetterReflectionTest\Fixture\BY_CONST');
@@ -143,7 +144,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('BY_CONST', $reflection->getShortName());
     }
 
-    public function testStaticCreationFromNameByDefine() : void
+    public function testStaticCreationFromNameByDefine(): void
     {
         require_once __DIR__ . '/../Fixture/Constants.php';
         $reflection = ReflectionConstant::createFromName('BY_DEFINE');
@@ -152,7 +153,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('BY_DEFINE', $reflection->getShortName());
     }
 
-    public function testStaticCreationFromNameByDefineWithNamespace() : void
+    public function testStaticCreationFromNameByDefineWithNamespace(): void
     {
         require_once __DIR__ . '/../Fixture/Constants.php';
         $reflection = ReflectionConstant::createFromName('Roave\BetterReflectionTest\Fixture\BY_DEFINE');
@@ -161,7 +162,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('BY_DEFINE', $reflection->getShortName());
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         require_once __DIR__ . '/../Fixture/Constants.php';
         $reflection = ReflectionConstant::createFromName('Roave\BetterReflectionTest\Fixture\BY_CONST');
@@ -169,7 +170,7 @@ class ReflectionConstantTest extends TestCase
         self::assertStringMatchesFormat("Constant [ <user> boolean Roave\BetterReflectionTest\Fixture\BY_CONST ] {\n  @@ %s/Fixture/Constants.php 5 - 5\n 1 }", (string) $reflection);
     }
 
-    public function testGetFileName() : void
+    public function testGetFileName(): void
     {
         $reflector  = new ConstantReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Constants.php', $this->astLocator), $this->classReflector);
         $reflection = $reflector->reflect('Roave\BetterReflectionTest\Fixture\BY_CONST');
@@ -177,7 +178,7 @@ class ReflectionConstantTest extends TestCase
         self::assertStringContainsString('Fixture/Constants.php', $reflection->getFileName());
     }
 
-    public function testGetFileNameOfUnlocatedSource() : void
+    public function testGetFileNameOfUnlocatedSource(): void
     {
         $php = '<?php const FOO = 1;';
 
@@ -187,7 +188,7 @@ class ReflectionConstantTest extends TestCase
         self::assertNull($reflection->getFileName());
     }
 
-    public function testGetLocatedSource() : void
+    public function testGetLocatedSource(): void
     {
         $node          = new Node\Stmt\Const_([new Node\Const_('FOO', BuilderHelpers::normalizeValue(1))]);
         $locatedSource = new LocatedSource('<?php const FOO = 1', null);
@@ -197,7 +198,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame($locatedSource, $reflection->getLocatedSource());
     }
 
-    public function testGetDocCommentByConst() : void
+    public function testGetDocCommentByConst(): void
     {
         $php = '<?php
             /**
@@ -212,7 +213,7 @@ class ReflectionConstantTest extends TestCase
         self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
-    public function testGetDocCommentByDefine() : void
+    public function testGetDocCommentByDefine(): void
     {
         $php = '<?php
             /**
@@ -227,7 +228,7 @@ class ReflectionConstantTest extends TestCase
         self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
-    public function startEndLineProvider() : array
+    public function startEndLineProvider(): array
     {
         return [
             ["<?php\n\nconst FOO = [\n];\n", 3, 4],
@@ -239,7 +240,7 @@ class ReflectionConstantTest extends TestCase
     /**
      * @dataProvider startEndLineProvider
      */
-    public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd) : void
+    public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector  = new ConstantReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $reflection = $reflector->reflect('FOO');
@@ -248,7 +249,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame($expectedEnd, $reflection->getEndLine());
     }
 
-    public function columnsProvider() : array
+    public function columnsProvider(): array
     {
         return [
             ["<?php\n\nconst FOO = [\n];\n", 1, 2],
@@ -262,7 +263,7 @@ class ReflectionConstantTest extends TestCase
      *
      * @dataProvider columnsProvider
      */
-    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn) : void
+    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector  = new ConstantReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $reflection = $reflector->reflect('FOO');
@@ -271,7 +272,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame($endColumn, $reflection->getEndColumn());
     }
 
-    public function testGetAstByConst() : void
+    public function testGetAstByConst(): void
     {
         $php = '<?php const FOO = 1;';
 
@@ -284,7 +285,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('FOO', $ast->consts[0]->name->name);
     }
 
-    public function testGetAstByDefine() : void
+    public function testGetAstByDefine(): void
     {
         $php = '<?php define("FOO", 1);';
 

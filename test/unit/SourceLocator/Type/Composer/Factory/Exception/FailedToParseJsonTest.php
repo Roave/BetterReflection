@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedT
  */
 class FailedToParseJsonTest extends TestCase
 {
-    public function testInFile() : void
+    public function testInFile(): void
     {
         self::assertSame(
             'Could not parse JSON file "foo/bar"',

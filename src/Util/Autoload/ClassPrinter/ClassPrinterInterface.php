@@ -8,5 +8,5 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 
 interface ClassPrinterInterface
 {
-    public function __invoke(ReflectionClass $classInfo) : string;
+    public function __invoke(ReflectionClass $classInfo): string;
 }

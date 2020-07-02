@@ -10,6 +10,7 @@ use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+
 use function array_combine;
 use function array_map;
 use function get_class_methods;
@@ -19,11 +20,11 @@ use function get_class_methods;
  */
 class ReflectionClassConstantTest extends TestCase
 {
-    public function coreReflectionMethodNamesProvider() : array
+    public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionClassConstant::class);
 
-        return array_combine($methods, array_map(static function (string $i) : array {
+        return array_combine($methods, array_map(static function (string $i): array {
             return [$i];
         }, $methods));
     }
@@ -31,13 +32,13 @@ class ReflectionClassConstantTest extends TestCase
     /**
      * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionMethods(string $methodName) : void
+    public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionClassConstantAdapterReflection = new CoreReflectionClass(ReflectionClassConstantAdapter::class);
         self::assertTrue($reflectionClassConstantAdapterReflection->hasMethod($methodName));
     }
 
-    public function methodExpectationProvider() : array
+    public function methodExpectationProvider(): array
     {
         return [
             ['__toString', '', []],
@@ -58,7 +59,7 @@ class ReflectionClassConstantTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $returnValue, array $args) : void
+    public function testAdapterMethods(string $methodName, $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
@@ -71,7 +72,7 @@ class ReflectionClassConstantTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testGetDocCommentReturnsFalseWhenNoDocComment() : void
+    public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
     {
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant

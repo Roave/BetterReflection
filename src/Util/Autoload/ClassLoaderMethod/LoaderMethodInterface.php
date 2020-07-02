@@ -8,5 +8,5 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 
 interface LoaderMethodInterface
 {
-    public function __invoke(ReflectionClass $classInfo) : void;
+    public function __invoke(ReflectionClass $classInfo): void;
 }

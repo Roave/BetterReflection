@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
  */
 class FunctionDoesNotExistTest extends TestCase
 {
-    public function testFromName() : void
+    public function testFromName(): void
     {
         $exception = FunctionDoesNotExist::fromName('boo');
 

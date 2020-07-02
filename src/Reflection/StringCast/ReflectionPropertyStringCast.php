@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionProperty;
+
 use function sprintf;
 
 /**
@@ -12,7 +13,7 @@ use function sprintf;
  */
 final class ReflectionPropertyStringCast
 {
-    public static function toString(ReflectionProperty $propertyReflection) : string
+    public static function toString(ReflectionProperty $propertyReflection): string
     {
         $stateModifier = '';
 
@@ -29,7 +30,7 @@ final class ReflectionPropertyStringCast
         );
     }
 
-    private static function visibilityToString(ReflectionProperty $propertyReflection) : string
+    private static function visibilityToString(ReflectionProperty $propertyReflection): string
     {
         if ($propertyReflection->isProtected()) {
             return 'protected';

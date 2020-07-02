@@ -6,16 +6,17 @@ namespace Roave\BetterReflection\Util;
 
 use function preg_match;
 use function str_replace;
+
 use const DIRECTORY_SEPARATOR;
 
 class FileHelper
 {
-    public static function normalizeWindowsPath(string $path) : string
+    public static function normalizeWindowsPath(string $path): string
     {
         return str_replace('\\', '/', $path);
     }
 
-    public static function normalizeSystemPath(string $originalPath) : string
+    public static function normalizeSystemPath(string $originalPath): string
     {
         $path = self::normalizeWindowsPath($originalPath);
         preg_match('~^([a-z]+)\\:\\/\\/(.+)~', $path, $matches);

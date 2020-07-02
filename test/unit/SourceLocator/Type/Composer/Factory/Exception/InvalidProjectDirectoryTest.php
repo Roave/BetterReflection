@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\Invalid
  */
 class InvalidProjectDirectoryTest extends TestCase
 {
-    public function testAtPath() : void
+    public function testAtPath(): void
     {
         self::assertSame(
             'Could not locate project directory "foo/bar"',

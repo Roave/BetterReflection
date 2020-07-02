@@ -20,7 +20,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->betterClassConstant->getName();
     }
@@ -38,7 +38,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Constant is public
      */
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->betterClassConstant->isPublic();
     }
@@ -46,7 +46,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Constant is private
      */
-    public function isPrivate() : bool
+    public function isPrivate(): bool
     {
         return $this->betterClassConstant->isPrivate();
     }
@@ -54,7 +54,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Constant is protected
      */
-    public function isProtected() : bool
+    public function isProtected(): bool
     {
         return $this->betterClassConstant->isProtected();
     }
@@ -62,7 +62,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Returns a bitfield of the access modifiers for this constant
      */
-    public function getModifiers() : int
+    public function getModifiers(): int
     {
         return $this->betterClassConstant->getModifiers();
     }
@@ -70,7 +70,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     /**
      * Get the declaring class
      */
-    public function getDeclaringClass() : ReflectionClass
+    public function getDeclaringClass(): ReflectionClass
     {
         return new ReflectionClass($this->betterClassConstant->getDeclaringClass());
     }
@@ -90,7 +90,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
      *
      * @link https://php.net/manual/en/reflector.tostring.php
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->betterClassConstant->__toString();
     }

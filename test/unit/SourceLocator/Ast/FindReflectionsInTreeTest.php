@@ -27,12 +27,12 @@ class FindReflectionsInTreeTest extends TestCase
     /**
      * @return Node[]
      */
-    private function getAstForSource(LocatedSource $source) : array
+    private function getAstForSource(LocatedSource $source): array
     {
         return BetterReflectionSingleton::instance()->phpParser()->parse($source->getSource());
     }
 
-    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst() : void
+    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInEmptyAst(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -53,7 +53,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst() : void
+    public function testInvokeDoesNotCallReflectNodesWhenNoNodesFoundInPopulatedAst(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -74,7 +74,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForClassWithoutNamespace() : void
+    public function testInvokeCallsReflectNodesForClassWithoutNamespace(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -98,7 +98,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForNamespacedClass() : void
+    public function testInvokeCallsReflectNodesForNamespacedClass(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -122,7 +122,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForFunction() : void
+    public function testInvokeCallsReflectNodesForFunction(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -146,7 +146,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForConstantByConst() : void
+    public function testInvokeCallsReflectNodesForConstantByConst(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -170,7 +170,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForConstantByConstWithMoreConstants() : void
+    public function testInvokeCallsReflectNodesForConstantByConstWithMoreConstants(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -195,7 +195,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForConstantByDefine() : void
+    public function testInvokeCallsReflectNodesForConstantByDefine(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -225,7 +225,7 @@ PHP;
         );
     }
 
-    public function testInvokeCallsReflectNodesForNotGlobalDefine() : void
+    public function testInvokeCallsReflectNodesForNotGlobalDefine(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -261,7 +261,7 @@ PHP;
         );
     }
 
-    public function testNoInvokeCallsReflectNodesForClassConstant() : void
+    public function testNoInvokeCallsReflectNodesForClassConstant(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -285,7 +285,7 @@ PHP;
         );
     }
 
-    public function testAnonymousClassCreatedInFunction() : void
+    public function testAnonymousClassCreatedInFunction(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -310,7 +310,7 @@ PHP;
         );
     }
 
-    private function createFindReflectionsInTree(NodeToReflection $strategy, ?FunctionReflector $functionReflector = null) : FindReflectionsInTree
+    private function createFindReflectionsInTree(NodeToReflection $strategy, ?FunctionReflector $functionReflector = null): FindReflectionsInTree
     {
         return new FindReflectionsInTree($strategy, function () use ($functionReflector) {
             if ($functionReflector === null) {

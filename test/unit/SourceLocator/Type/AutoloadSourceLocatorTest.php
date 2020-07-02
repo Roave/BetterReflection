@@ -26,6 +26,7 @@ use Roave\BetterReflectionTest\Fixture\BrokenAutoloaderException;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassNotInPhar;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+
 use function class_exists;
 use function file_exists;
 use function file_get_contents;
@@ -51,7 +52,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     private ClassReflector $classReflector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -66,7 +67,7 @@ class AutoloadSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testClassLoads() : void
+    public function testClassLoads(): void
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
 
@@ -77,7 +78,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertSame('ExampleClass', $classInfo->getShortName());
     }
 
-    public function testClassLoadsWorksWithExistingClass() : void
+    public function testClassLoadsWorksWithExistingClass(): void
     {
         $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
 
@@ -93,7 +94,7 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadableInterface() : void
+    public function testCanLocateAutoloadableInterface(): void
     {
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
 
@@ -112,7 +113,7 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadedInterface() : void
+    public function testCanLocateAutoloadedInterface(): void
     {
         self::assertTrue(interface_exists(AutoloadableInterface::class));
 
@@ -129,7 +130,7 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadableTrait() : void
+    public function testCanLocateAutoloadableTrait(): void
     {
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
 
@@ -148,7 +149,7 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanLocateAutoloadedTrait() : void
+    public function testCanLocateAutoloadedTrait(): void
     {
         self::assertTrue(trait_exists(AutoloadableTrait::class));
 
@@ -162,7 +163,7 @@ class AutoloadSourceLocatorTest extends TestCase
         );
     }
 
-    public function testFunctionLoads() : void
+    public function testFunctionLoads(): void
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
@@ -172,7 +173,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertSame('myFunction', $classInfo->getShortName());
     }
 
-    public function testFunctionReflectionFailsWhenFunctionNotDefined() : void
+    public function testFunctionReflectionFailsWhenFunctionNotDefined(): void
     {
         $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
@@ -180,7 +181,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflector->reflect('this function does not exist, hopefully');
     }
 
-    public function testConstantLoadsByConst() : void
+    public function testConstantLoadsByConst(): void
     {
         $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
@@ -197,7 +198,7 @@ class AutoloadSourceLocatorTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testAutoloadSourceLocatorWillNotFindConstantDeclarationFileIfDeclarationFileIsRemoved() : void
+    public function testAutoloadSourceLocatorWillNotFindConstantDeclarationFileIfDeclarationFileIsRemoved(): void
     {
         $constantName        = str_replace('.', '', uniqid('constant_name', true));
         $temporarySourceFile = tempnam(sys_get_temp_dir(), 'AutoloadSourceLocatorTest');
@@ -230,7 +231,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName);
     }
 
-    public function testConstantLoadsByDefine() : void
+    public function testConstantLoadsByDefine(): void
     {
         $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
@@ -241,7 +242,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertSame('BY_DEFINE', $reflection->getShortName());
     }
 
-    public function testConstantLoadsByDefineWithNamespace() : void
+    public function testConstantLoadsByDefineWithNamespace(): void
     {
         $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
@@ -252,7 +253,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertSame('BY_DEFINE', $reflection->getShortName());
     }
 
-    public function testInternalConstantDoesNotLoad() : void
+    public function testInternalConstantDoesNotLoad(): void
     {
         $this->expectException(IdentifierNotFound::class);
 
@@ -260,7 +261,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflector->reflect('E_ALL');
     }
 
-    public function testConstantReflectionFailsWhenConstantNotDefined() : void
+    public function testConstantReflectionFailsWhenConstantNotDefined(): void
     {
         $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
 
@@ -268,7 +269,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflector->reflect('this constant does not exist, hopefully');
     }
 
-    public function testNullReturnedWhenInvalidTypeGiven() : void
+    public function testNullReturnedWhenInvalidTypeGiven(): void
     {
         $locator = new AutoloadSourceLocator($this->astLocator);
 
@@ -282,7 +283,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertNull($locator->locateIdentifier($this->getMockReflector(), $identifier));
     }
 
-    public function testReturnsNullWhenUnableToAutoload() : void
+    public function testReturnsNullWhenUnableToAutoload(): void
     {
         $sourceLocator = new AutoloadSourceLocator($this->astLocator);
 
@@ -292,7 +293,7 @@ class AutoloadSourceLocatorTest extends TestCase
         ));
     }
 
-    public function testShouldNotConsiderEvaledSources() : void
+    public function testShouldNotConsiderEvaledSources(): void
     {
         $className = uniqid('generatedClassName', false);
 
@@ -304,7 +305,7 @@ class AutoloadSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullWithInternalFunctions() : void
+    public function testReturnsNullWithInternalFunctions(): void
     {
         self::assertNull(
             (new AutoloadSourceLocator($this->astLocator))
@@ -315,7 +316,7 @@ class AutoloadSourceLocatorTest extends TestCase
         );
     }
 
-    public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories() : void
+    public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories(): void
     {
         spl_autoload_register([$this, 'autoload']);
 
@@ -335,7 +336,7 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace.
      */
-    public function autoload(string $className) : bool
+    public function autoload(string $className): bool
     {
         if ($className !== AutoloadableClassWithTwoDirectories::class) {
             return false;
@@ -352,10 +353,10 @@ class AutoloadSourceLocatorTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testWillLocateSourcesInPharPath() : void
+    public function testWillLocateSourcesInPharPath(): void
     {
         require_once 'phar://' . __DIR__ . '/../../Fixture/autoload.phar/vendor/autoload.php';
-        spl_autoload_register(static function (string $class) : void {
+        spl_autoload_register(static function (string $class): void {
             if ($class !== ClassNotInPhar::class) {
                 return;
             }
@@ -371,10 +372,10 @@ class AutoloadSourceLocatorTest extends TestCase
         $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
     }
 
-    public function testBrokenAutoloader() : void
+    public function testBrokenAutoloader(): void
     {
-        $getErrorHandler = static function () : ?callable {
-            $errorHandler = set_error_handler(static function () : bool {
+        $getErrorHandler = static function (): ?callable {
+            $errorHandler = set_error_handler(static function (): bool {
                 return true;
             });
             restore_error_handler();
@@ -383,7 +384,7 @@ class AutoloadSourceLocatorTest extends TestCase
         };
 
         $toBeThrown           = new BrokenAutoloaderException();
-        $brokenAutoloader     = static function () use ($toBeThrown) : void {
+        $brokenAutoloader     = static function () use ($toBeThrown): void {
             throw $toBeThrown;
         };
         $previousErrorHandler = $getErrorHandler();

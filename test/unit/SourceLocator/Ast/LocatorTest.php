@@ -27,23 +27,23 @@ class LocatorTest extends TestCase
 {
     private Locator $locator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $betterReflection = BetterReflectionSingleton::instance();
 
-        $this->locator = new Locator($betterReflection->phpParser(), static function () use ($betterReflection) : FunctionReflector {
+        $this->locator = new Locator($betterReflection->phpParser(), static function () use ($betterReflection): FunctionReflector {
             return $betterReflection->functionReflector();
         });
     }
 
-    private function getIdentifier(string $name, string $type) : Identifier
+    private function getIdentifier(string $name, string $type): Identifier
     {
         return new Identifier($name, new IdentifierType($type));
     }
 
-    public function testReflectingWithinNamespace() : void
+    public function testReflectingWithinNamespace(): void
     {
         $php = '<?php
         namespace Foo;
@@ -59,7 +59,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
-    public function testTheReflectionLookupIsCaseInsensitive() : void
+    public function testTheReflectionLookupIsCaseInsensitive(): void
     {
         $php = '<?php
         namespace Foo;
@@ -75,7 +75,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
-    public function testReflectingTopLevelClass() : void
+    public function testReflectingTopLevelClass(): void
     {
         $php = '<?php
         class Foo {}
@@ -90,7 +90,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionClass::class, $classInfo);
     }
 
-    public function testReflectingTopLevelFunction() : void
+    public function testReflectingTopLevelFunction(): void
     {
         $php = '<?php
         function foo() {}
@@ -105,7 +105,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionFunction::class, $functionInfo);
     }
 
-    public function testReflectingTopLevelConstantByConst() : void
+    public function testReflectingTopLevelConstantByConst(): void
     {
         $php = '<?php
         const FOO = 1;
@@ -120,7 +120,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionConstant::class, $constantInfo);
     }
 
-    public function testReflectingTopLevelConstantByDefine() : void
+    public function testReflectingTopLevelConstantByDefine(): void
     {
         $php = '<?php
         define("FOO", 1);
@@ -135,7 +135,7 @@ class LocatorTest extends TestCase
         self::assertInstanceOf(ReflectionConstant::class, $constantInfo);
     }
 
-    public function testReflectThrowsExceptionWhenClassNotFoundAndNoNodesExist() : void
+    public function testReflectThrowsExceptionWhenClassNotFoundAndNoNodesExist(): void
     {
         $php = '<?php';
 
@@ -147,7 +147,7 @@ class LocatorTest extends TestCase
         );
     }
 
-    public function testReflectThrowsExceptionWhenClassNotFoundButNodesExist() : void
+    public function testReflectThrowsExceptionWhenClassNotFoundButNodesExist(): void
     {
         $php = "<?php
         namespace Foo;
@@ -162,7 +162,7 @@ class LocatorTest extends TestCase
         );
     }
 
-    public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode() : void
+    public function testFindReflectionsOfTypeThrowsParseToAstFailureExceptionWithInvalidCode(): void
     {
         $phpCode = '<?php syntax error';
 

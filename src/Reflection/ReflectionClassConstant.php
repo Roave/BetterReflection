@@ -45,7 +45,7 @@ class ReflectionClassConstant
         ClassConst $node,
         int $positionInNode,
         ReflectionClass $owner
-    ) : self {
+    ): self {
         $ref                 = new self();
         $ref->node           = $node;
         $ref->positionInNode = $positionInNode;
@@ -59,7 +59,7 @@ class ReflectionClassConstant
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->node->consts[$this->positionInNode]->name->name;
     }
@@ -87,7 +87,7 @@ class ReflectionClassConstant
     /**
      * Constant is public
      */
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->node->isPublic();
     }
@@ -95,7 +95,7 @@ class ReflectionClassConstant
     /**
      * Constant is private
      */
-    public function isPrivate() : bool
+    public function isPrivate(): bool
     {
         return $this->node->isPrivate();
     }
@@ -103,7 +103,7 @@ class ReflectionClassConstant
     /**
      * Constant is protected
      */
-    public function isProtected() : bool
+    public function isProtected(): bool
     {
         return $this->node->isProtected();
     }
@@ -111,7 +111,7 @@ class ReflectionClassConstant
     /**
      * Returns a bitfield of the access modifiers for this constant
      */
-    public function getModifiers() : int
+    public function getModifiers(): int
     {
         $val  = 0;
         $val += $this->isPublic() ? ReflectionProperty::IS_PUBLIC : 0;
@@ -124,7 +124,7 @@ class ReflectionClassConstant
     /**
      * Get the line number that this constant starts on.
      */
-    public function getStartLine() : int
+    public function getStartLine(): int
     {
         return $this->node->getStartLine();
     }
@@ -132,17 +132,17 @@ class ReflectionClassConstant
     /**
      * Get the line number that this constant ends on.
      */
-    public function getEndLine() : int
+    public function getEndLine(): int
     {
         return $this->node->getEndLine();
     }
 
-    public function getStartColumn() : int
+    public function getStartColumn(): int
     {
         return CalculateReflectionColumn::getStartColumn($this->owner->getLocatedSource()->getSource(), $this->node);
     }
 
-    public function getEndColumn() : int
+    public function getEndColumn(): int
     {
         return CalculateReflectionColumn::getEndColumn($this->owner->getLocatedSource()->getSource(), $this->node);
     }
@@ -150,7 +150,7 @@ class ReflectionClassConstant
     /**
      * Get the declaring class
      */
-    public function getDeclaringClass() : ReflectionClass
+    public function getDeclaringClass(): ReflectionClass
     {
         return $this->owner;
     }
@@ -158,22 +158,22 @@ class ReflectionClassConstant
     /**
      * Returns the doc comment for this constant
      */
-    public function getDocComment() : string
+    public function getDocComment(): string
     {
         return GetLastDocComment::forNode($this->node);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return ReflectionClassConstantStringCast::toString($this);
     }
 
-    public function getAst() : ClassConst
+    public function getAst(): ClassConst
     {
         return $this->node;
     }
 
-    public function getPositionInAst() : int
+    public function getPositionInAst(): int
     {
         return $this->positionInNode;
     }

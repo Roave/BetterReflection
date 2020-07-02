@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
+
 use function ob_end_clean;
 use function ob_get_contents;
 use function ob_start;
@@ -17,7 +18,7 @@ use function ob_start;
  */
 final class EvalLoaderTest extends TestCase
 {
-    public function testEvalExecutes() : void
+    public function testEvalExecutes(): void
     {
         $reflectionClass = $this->createMock(ReflectionClass::class);
 

@@ -22,7 +22,7 @@ class ResolveTypes
      *
      * @return Type[]
      */
-    public function __invoke(array $stringTypes, Context $context) : array
+    public function __invoke(array $stringTypes, Context $context): array
     {
         $resolvedTypes = [];
 

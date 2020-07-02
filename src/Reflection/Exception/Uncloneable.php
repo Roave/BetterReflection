@@ -8,7 +8,7 @@ use LogicException;
 
 class Uncloneable extends LogicException
 {
-    public static function fromClass(string $className) : self
+    public static function fromClass(string $className): self
     {
         return new self('Trying to clone an uncloneable object of class ' . $className);
     }

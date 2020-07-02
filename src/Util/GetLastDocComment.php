@@ -11,7 +11,7 @@ use PhpParser\NodeAbstract;
  */
 final class GetLastDocComment
 {
-    public static function forNode(NodeAbstract $node) : string
+    public static function forNode(NodeAbstract $node): string
     {
         $docComment = $node->getDocComment();
 

@@ -16,7 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
  */
 class IdentifierTest extends TestCase
 {
-    public function testGetName() : void
+    public function testGetName(): void
     {
         $beforeName = '\Some\Thing\Here';
         $afterName  = 'Some\Thing\Here';
@@ -25,7 +25,7 @@ class IdentifierTest extends TestCase
         self::assertSame($afterName, $identifier->getName());
     }
 
-    public function testGetType() : void
+    public function testGetType(): void
     {
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
@@ -33,7 +33,7 @@ class IdentifierTest extends TestCase
         self::assertSame($identifierType, $identifier->getType());
     }
 
-    public function testIsTypesForClass() : void
+    public function testIsTypesForClass(): void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -42,7 +42,7 @@ class IdentifierTest extends TestCase
         self::assertFalse($identifier->isConstant());
     }
 
-    public function testIsTypesForFunction() : void
+    public function testIsTypesForFunction(): void
     {
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
@@ -51,7 +51,7 @@ class IdentifierTest extends TestCase
         self::assertFalse($identifier->isConstant());
     }
 
-    public function testIsTypesForConstant() : void
+    public function testIsTypesForConstant(): void
     {
         $identifier = new Identifier('FOO', new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT));
 
@@ -60,25 +60,25 @@ class IdentifierTest extends TestCase
         self::assertTrue($identifier->isConstant());
     }
 
-    public function testGetNameForClosure() : void
+    public function testGetNameForClosure(): void
     {
         $identifier = new Identifier(ReflectionFunctionAbstract::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
         self::assertSame(ReflectionFunctionAbstract::CLOSURE_NAME, $identifier->getName());
     }
 
-    public function testGetNameForAnonymousClass() : void
+    public function testGetNameForAnonymousClass(): void
     {
         $identifier = new Identifier(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX . ' filename.php', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $identifier->getName());
     }
 
-    public function testGetNameForWildcard() : void
+    public function testGetNameForWildcard(): void
     {
         $identifier = new Identifier(Identifier::WILDCARD, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
         self::assertSame(Identifier::WILDCARD, $identifier->getName());
     }
 
-    public function validNamesProvider() : array
+    public function validNamesProvider(): array
     {
         return [
             ['Foo', 'Foo'],
@@ -101,13 +101,13 @@ class IdentifierTest extends TestCase
     /**
      * @dataProvider validNamesProvider
      */
-    public function testValidName(string $name, string $expectedName) : void
+    public function testValidName(string $name, string $expectedName): void
     {
         $identifier = new Identifier($name, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
         self::assertSame($expectedName, $identifier->getName());
     }
 
-    public function invalidNamesProvider() : array
+    public function invalidNamesProvider(): array
     {
         return [
             [''],
@@ -120,7 +120,7 @@ class IdentifierTest extends TestCase
     /**
      * @dataProvider invalidNamesProvider
      */
-    public function testThrowExceptionForInvalidName(string $invalidName) : void
+    public function testThrowExceptionForInvalidName(string $invalidName): void
     {
         $this->expectException(InvalidIdentifierName::class);
         new Identifier($invalidName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));

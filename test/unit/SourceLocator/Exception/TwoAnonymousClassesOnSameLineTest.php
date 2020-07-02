@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine
  */
 class TwoAnonymousClassesOnSameLineTest extends TestCase
 {
-    public function testCreate() : void
+    public function testCreate(): void
     {
         $exception = TwoAnonymousClassesOnSameLine::create('foo.php', 123);
 

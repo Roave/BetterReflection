@@ -20,6 +20,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function count;
 use function sprintf;
 
@@ -31,7 +32,7 @@ class FindParameterTypeTest extends TestCase
     /**
      * @return array
      */
-    public function parameterTypeProvider() : array
+    public function parameterTypeProvider(): array
     {
         return [
             ['@param int|string $foo', 'foo', [Types\Integer::class, Types\String_::class]],
@@ -47,7 +48,7 @@ class FindParameterTypeTest extends TestCase
         ];
     }
 
-    public function testNamespaceResolutionForProperty() : void
+    public function testNamespaceResolutionForProperty(): void
     {
         $php = '<?php
             namespace MyNamespace;
@@ -76,7 +77,7 @@ class FindParameterTypeTest extends TestCase
      *
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances) : void
+    public function testFindParameterTypeForFunction(string $docBlock, string $nodeName, array $expectedInstances): void
     {
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
@@ -102,7 +103,7 @@ class FindParameterTypeTest extends TestCase
      *
      * @dataProvider parameterTypeProvider
      */
-    public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances) : void
+    public function testFindParameterTypeForMethod(string $docBlock, string $nodeName, array $expectedInstances): void
     {
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
@@ -123,7 +124,7 @@ class FindParameterTypeTest extends TestCase
         }
     }
 
-    public function testFindParameterTypeForFunctionWithNoDocBlock() : void
+    public function testFindParameterTypeForFunctionWithNoDocBlock(): void
     {
         $node = new ParamNode(new Variable('foo'));
 
@@ -148,7 +149,7 @@ class FindParameterTypeTest extends TestCase
         array $aliasesToFQCNs,
         string $docBlockType,
         array $expectedTypes
-    ) : void {
+    ): void {
         $docBlock = sprintf("/**\n * @param %s \$foo\n */", $docBlockType);
 
         $parameterNode = new ParamNode(new Variable('foo'));
@@ -173,7 +174,7 @@ class FindParameterTypeTest extends TestCase
         self::assertEquals($expectedTypes, (new FindParameterType())->__invoke($function, $namespace, $parameterNode));
     }
 
-    public function aliasedParameterTypesProvider() : array
+    public function aliasedParameterTypesProvider(): array
     {
         return [
             'No namespace' => [

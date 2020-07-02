@@ -16,6 +16,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+
 use function assert;
 use function uniqid;
 
@@ -28,7 +29,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -46,7 +47,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    public function testCanReflectEvaledClass() : void
+    public function testCanReflectEvaledClass(): void
     {
         $className = uniqid('foo', false);
 
@@ -65,7 +66,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         self::assertStringMatchesFormat('%Aclass%A' . $className . '%A', $source->getSource());
     }
 
-    public function testCanReflectEvaledInterface() : void
+    public function testCanReflectEvaledInterface(): void
     {
         $interfaceName = uniqid('foo', false);
 
@@ -82,7 +83,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         self::assertStringMatchesFormat('%Ainterface%A' . $interfaceName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
-    public function testCanReflectEvaledTrait() : void
+    public function testCanReflectEvaledTrait(): void
     {
         $traitName = uniqid('foo', false);
 
@@ -99,7 +100,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         self::assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
-    public function testCanReflectEvaledLocatedSourceClass() : void
+    public function testCanReflectEvaledLocatedSourceClass(): void
     {
         $reflector = new ClassReflector(new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber));
         $className = uniqid('foo', false);
@@ -116,7 +117,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         self::assertCount(1, $class->getMethods());
     }
 
-    public function testCannotReflectRequiredClass() : void
+    public function testCannotReflectRequiredClass(): void
     {
         self::assertNull(
             (new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber))
@@ -124,7 +125,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForNonExistentCode() : void
+    public function testReturnsNullForNonExistentCode(): void
     {
         $locator = new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber);
         self::assertNull(
@@ -138,7 +139,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         );
     }
 
-    public function testReturnsNullForFunctions() : void
+    public function testReturnsNullForFunctions(): void
     {
         $locator = new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber);
         self::assertNull(

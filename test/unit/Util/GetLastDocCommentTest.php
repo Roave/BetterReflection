@@ -15,7 +15,7 @@ use Roave\BetterReflection\Util\GetLastDocComment;
  */
 class GetLastDocCommentTest extends TestCase
 {
-    public function testWithComment() : void
+    public function testWithComment(): void
     {
         $comment = new Comment('/* An ordinary comment */');
         $node    = new Function_('test', [], ['comments' => [$comment]]);
@@ -23,14 +23,14 @@ class GetLastDocCommentTest extends TestCase
         self::assertSame('', GetLastDocComment::forNode($node));
     }
 
-    public function testWithoutComment() : void
+    public function testWithoutComment(): void
     {
         $node = new Function_('test');
 
         self::assertSame('', GetLastDocComment::forNode($node));
     }
 
-    public function testWithMixedCommentTypes() : void
+    public function testWithMixedCommentTypes(): void
     {
         $comment    = new Comment('/* An ordinary comment */');
         $docComment = new Doc('/** Property description */');
@@ -39,7 +39,7 @@ class GetLastDocCommentTest extends TestCase
         self::assertSame('/** Property description */', GetLastDocComment::forNode($node));
     }
 
-    public function testWithMultipleDocComments() : void
+    public function testWithMultipleDocComments(): void
     {
         $comment1 = new Doc('/** First doc comment */');
         $comment2 = new Doc('/** Second doc comment */');

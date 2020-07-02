@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use RuntimeException;
+
 use function get_class;
 use function gettype;
 use function is_object;
@@ -15,7 +16,7 @@ class InvalidFileInfo extends RuntimeException
     /**
      * @param mixed $nonSplFileInfo
      */
-    public static function fromNonSplFileInfo($nonSplFileInfo) : self
+    public static function fromNonSplFileInfo($nonSplFileInfo): self
     {
         return new self(sprintf(
             'Expected an iterator of SplFileInfo instances, %s given instead',

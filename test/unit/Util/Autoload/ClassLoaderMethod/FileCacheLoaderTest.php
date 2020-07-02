@@ -11,6 +11,7 @@ use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 use Roave\Signature\CheckerInterface;
 use Roave\Signature\SignerInterface;
+
 use function file_exists;
 use function sha1;
 use function uniqid;
@@ -21,7 +22,7 @@ use function unlink;
  */
 final class FileCacheLoaderTest extends TestCase
 {
-    public function testFileCacheWriterCreatesFileWithPrintedCode() : void
+    public function testFileCacheWriterCreatesFileWithPrintedCode(): void
     {
         $className         = uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
@@ -51,7 +52,7 @@ final class FileCacheLoaderTest extends TestCase
         unlink($generatedFilename);
     }
 
-    public function testExceptionThrownWhenSignatureFailedToVerify() : void
+    public function testExceptionThrownWhenSignatureFailedToVerify(): void
     {
         $className         = uniqid(__METHOD__, true);
         $generatedFilename = __DIR__ . '/' . sha1($className);
@@ -84,7 +85,7 @@ final class FileCacheLoaderTest extends TestCase
         }
     }
 
-    public function testDefaultFileCacheLoader() : void
+    public function testDefaultFileCacheLoader(): void
     {
         $default = FileCacheLoader::defaultFileCacheLoader(__DIR__);
         self::assertInstanceOf(FileCacheLoader::class, $default);

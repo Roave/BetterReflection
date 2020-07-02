@@ -12,7 +12,7 @@ use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
  */
 class InternalLocatedSourceTest extends TestCase
 {
-    public function testInternalsLocatedSource() : void
+    public function testInternalsLocatedSource(): void
     {
         $locatedSource = new InternalLocatedSource('foo', 'fooExt');
 

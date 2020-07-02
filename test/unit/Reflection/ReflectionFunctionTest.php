@@ -29,7 +29,7 @@ class ReflectionFunctionTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +39,7 @@ class ReflectionFunctionTest extends TestCase
         $this->sourceStubber  = $configuration->sourceStubber();
     }
 
-    public function testNameMethodsWithNoNamespace() : void
+    public function testNameMethodsWithNoNamespace(): void
     {
         $php = '<?php function foo() {}';
 
@@ -52,7 +52,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame('foo', $function->getShortName());
     }
 
-    public function testNameMethodsInNamespace() : void
+    public function testNameMethodsInNamespace(): void
     {
         $php = '<?php namespace A\B { function foo() {} }';
 
@@ -65,7 +65,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame('foo', $function->getShortName());
     }
 
-    public function testNameMethodsInExplicitGlobalNamespace() : void
+    public function testNameMethodsInExplicitGlobalNamespace(): void
     {
         $php = '<?php namespace { function foo() {} }';
 
@@ -78,7 +78,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame('foo', $function->getShortName());
     }
 
-    public function testIsDisabled() : void
+    public function testIsDisabled(): void
     {
         $php = '<?php function foo() {}';
 
@@ -88,7 +88,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertFalse($function->isDisabled());
     }
 
-    public function testIsUserDefined() : void
+    public function testIsUserDefined(): void
     {
         $php = '<?php function foo() {}';
 
@@ -100,7 +100,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertNull($function->getExtensionName());
     }
 
-    public function testIsInternal() : void
+    public function testIsInternal(): void
     {
         $reflector = new FunctionReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber), $this->classReflector);
         $function  = $reflector->reflect('min');
@@ -110,14 +110,14 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame('standard', $function->getExtensionName());
     }
 
-    public function testStaticCreationFromName() : void
+    public function testStaticCreationFromName(): void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
         $reflection = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
         self::assertSame('myFunction', $reflection->getShortName());
     }
 
-    public function testCreateFromClosure() : void
+    public function testCreateFromClosure(): void
     {
         $myClosure  = static function () {
             return 5;
@@ -126,9 +126,9 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
     }
 
-    public function testCreateFromClosureCanReflectTypeHints() : void
+    public function testCreateFromClosureCanReflectTypeHints(): void
     {
-        $myClosure  = static function (stdClass $theParam) : int {
+        $myClosure  = static function (stdClass $theParam): int {
             return 5;
         };
         $reflection = ReflectionFunction::createFromClosure($myClosure);
@@ -137,7 +137,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame('stdClass', $theParam->getName());
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
         $functionInfo = ReflectionFunction::createFromName('Roave\BetterReflectionTest\Fixture\myFunction');
@@ -145,7 +145,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertStringMatchesFormat("Function [ <user> function Roave\BetterReflectionTest\Fixture\myFunction ] {\n  @@ %s/test/unit/Fixture/Functions.php 5 - 6\n}", (string) $functionInfo);
     }
 
-    public function testGetDocBlockReturnTypes() : void
+    public function testGetDocBlockReturnTypes(): void
     {
         $php = '<?php
             /**
@@ -163,7 +163,7 @@ class ReflectionFunctionTest extends TestCase
         self::assertInstanceOf(Boolean::class, $types[0]);
     }
 
-    public function testGetClosure() : void
+    public function testGetClosure(): void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
 
@@ -175,9 +175,9 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(5, $closure(2, 3));
     }
 
-    public function testGetClosureThrowsExceptionWhenFunctionIsClosure() : void
+    public function testGetClosureThrowsExceptionWhenFunctionIsClosure(): void
     {
-        $closure = static function () : void {
+        $closure = static function (): void {
         };
 
         $functionReflection = ReflectionFunction::createFromClosure($closure);
@@ -187,7 +187,7 @@ class ReflectionFunctionTest extends TestCase
         $functionReflection->getClosure();
     }
 
-    public function testGetClosureThrowsExceptionWhenFunctionDoesNotExist() : void
+    public function testGetClosureThrowsExceptionWhenFunctionDoesNotExist(): void
     {
         $php = '<?php function foo() {}';
 
@@ -199,7 +199,7 @@ class ReflectionFunctionTest extends TestCase
         $functionReflection->getClosure();
     }
 
-    public function testInvoke() : void
+    public function testInvoke(): void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
 
@@ -209,9 +209,9 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(10, $functionReflection->invokeArgs([3, 7]));
     }
 
-    public function testInvokeThrowsExceptionWhenFunctionIsClosure() : void
+    public function testInvokeThrowsExceptionWhenFunctionIsClosure(): void
     {
-        $closure = static function () : void {
+        $closure = static function (): void {
         };
 
         $functionReflection = ReflectionFunction::createFromClosure($closure);
@@ -221,9 +221,9 @@ class ReflectionFunctionTest extends TestCase
         $functionReflection->invoke();
     }
 
-    public function testInvokeArgsThrowsExceptionWhenFunctionIsClosure() : void
+    public function testInvokeArgsThrowsExceptionWhenFunctionIsClosure(): void
     {
-        $closure = static function () : void {
+        $closure = static function (): void {
         };
 
         $functionReflection = ReflectionFunction::createFromClosure($closure);
@@ -233,7 +233,7 @@ class ReflectionFunctionTest extends TestCase
         $functionReflection->invokeArgs();
     }
 
-    public function testInvokeThrowsExceptionWhenFunctionDoesNotExist() : void
+    public function testInvokeThrowsExceptionWhenFunctionDoesNotExist(): void
     {
         $php = '<?php function foo() {}';
 
@@ -245,7 +245,7 @@ class ReflectionFunctionTest extends TestCase
         $functionReflection->invoke();
     }
 
-    public function testInvokeArgsThrowsExceptionWhenFunctionDoesNotExist() : void
+    public function testInvokeArgsThrowsExceptionWhenFunctionDoesNotExist(): void
     {
         $php = '<?php function foo() {}';
 

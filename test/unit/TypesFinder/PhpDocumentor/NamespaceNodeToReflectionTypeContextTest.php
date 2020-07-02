@@ -23,12 +23,12 @@ class NamespaceNodeToReflectionTypeContextTest extends TestCase
     /**
      * @dataProvider expectedContextsProvider
      */
-    public function testConversion(?Namespace_ $namespace, Context $expectedContext) : void
+    public function testConversion(?Namespace_ $namespace, Context $expectedContext): void
     {
         self::assertEquals($expectedContext, (new NamespaceNodeToReflectionTypeContext())->__invoke($namespace));
     }
 
-    public function expectedContextsProvider() : array
+    public function expectedContextsProvider(): array
     {
         $namespaceWithImports = new Namespace_(
             new Name('With\\Imports'),

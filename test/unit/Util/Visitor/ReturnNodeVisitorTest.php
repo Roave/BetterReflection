@@ -14,7 +14,7 @@ use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
  */
 class ReturnNodeVisitorTest extends TestCase
 {
-    public function outOfScopeNodeTypeProvider() : array
+    public function outOfScopeNodeTypeProvider(): array
     {
         return [
             'onlyExpectedNodesAdded' => [
@@ -50,7 +50,7 @@ class ReturnNodeVisitorTest extends TestCase
      *
      * @dataProvider outOfScopeNodeTypeProvider
      */
-    public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns) : void
+    public function testOnlyExpectedReturnNodesAreReturned(array $statements, int $expectedReturns): void
     {
         $visitor = new ReturnNodeVisitor();
 
