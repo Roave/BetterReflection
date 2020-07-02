@@ -38,7 +38,7 @@
         "doctrine/coding-standard": "^8.0.0",
         "phpstan/phpstan": "^0.12.25",
         "phpunit/phpunit": "^9.2.5",
-        "vimeo/psalm": "3.11.2",
+        "vimeo/psalm": "3.12.1",
         "infection/infection": "^0.16.4"
     },
     "autoload": {
