@@ -33,6 +33,8 @@ class ReflectionClass extends CoreReflectionClass
     public function __construct(BetterReflectionClass $betterReflectionClass)
     {
         $this->betterReflectionClass = $betterReflectionClass;
+
+        unset($this->name);
     }
 
     /**
@@ -67,6 +69,22 @@ class ReflectionClass extends CoreReflectionClass
     public function __toString()
     {
         return $this->betterReflectionClass->__toString();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+     */
+    public function __get($name)
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionClass->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 
     /**
