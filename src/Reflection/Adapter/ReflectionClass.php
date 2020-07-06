@@ -250,9 +250,9 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getConstants()
+    public function getConstants(int $filter = null)
     {
-        return $this->betterReflectionClass->getConstants();
+        return $this->betterReflectionClass->getConstants($filter);
     }
 
     /**
@@ -279,11 +279,11 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getReflectionConstants()
+    public function getReflectionConstants(int $filter = null)
     {
         return array_values(array_map(static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
-        }, $this->betterReflectionClass->getReflectionConstants()));
+        }, $this->betterReflectionClass->getReflectionConstants($filter)));
     }
 
     /**

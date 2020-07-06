@@ -335,7 +335,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function invoke($object = null, $args = null)
+    public function invoke($object = null, $arg = null, ...$args)
     {
         if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');

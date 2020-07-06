@@ -226,9 +226,9 @@ class ReflectionObject extends CoreReflectionObject
     /**
      * {@inheritDoc}
      */
-    public function getConstants()
+    public function getConstants(int $filter = null)
     {
-        return $this->betterReflectionObject->getConstants();
+        return $this->betterReflectionObject->getConstants($filter);
     }
 
     /**
