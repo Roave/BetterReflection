@@ -258,9 +258,6 @@ abstract class ReflectionFunctionAbstract
         return $this->node instanceof Node\Expr\Closure;
     }
 
-    /**
-     * Is this function deprecated?
-     */
     public function isDeprecated(): bool
     {
         $docComment = $this->getDocComment();

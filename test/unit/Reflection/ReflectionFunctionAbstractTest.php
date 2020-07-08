@@ -150,7 +150,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    public function testIsInternal() : void
+    public function testIsInternal(): void
     {
         $php = '<?php function foo() {}';
 
@@ -733,7 +733,7 @@ PHP;
     /**
      * @dataProvider deprecatedDocCommentsProvider
      */
-    public function testFunctionsCanBeDeprecated(string $comment) : void
+    public function testFunctionsCanBeDeprecated(string $comment): void
     {
         $php = sprintf('<?php
         %s
