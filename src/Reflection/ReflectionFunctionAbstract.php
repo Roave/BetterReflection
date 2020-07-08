@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use LogicException;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -262,7 +263,16 @@ abstract class ReflectionFunctionAbstract
      */
     public function isDeprecated(): bool
     {
-        return strpos($this->getDocComment(), '@deprecated') !== false;
+        $docComment = $this->getDocComment();
+
+        if ($docComment === '') {
+            return false;
+        }
+
+        $docBlockFactory = DocBlockFactory::createInstance();
+        $docBlock = $docBlockFactory->create($docComment);
+
+        return $docBlock->hasTag('deprecated');
     }
 
     public function isInternal(): bool

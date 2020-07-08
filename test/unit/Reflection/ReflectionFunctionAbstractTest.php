@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Generator;
 use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
@@ -122,9 +123,14 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($function->isClosure());
     }
 
-    public function testIsDeprecated(): void
+    /**
+     * @dataProvider nonDeprecatedProvider
+     */
+    public function testIsDeprecated(string $comment) : void
     {
-        $php = '<?php function foo() {}';
+        $php = sprintf('<?php 
+        %s
+        function foo() {}', $comment);
 
         $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
@@ -132,7 +138,19 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertFalse($function->isDeprecated());
     }
 
-    public function testIsInternal(): void
+    public function nonDeprecatedProvider(): array
+    {
+        return [
+            [''],
+            [
+                '/** 
+                  * @deprecatedPolicy
+                  */'
+            ]
+        ];
+    }
+
+    public function testIsInternal() : void
     {
         $php = '<?php function foo() {}';
 
@@ -712,17 +730,34 @@ PHP;
         self::assertSame(10, $first->getEndLine());
     }
 
-    public function testFunctionsCanBeDeprecated() : void
+    /**
+     * @dataProvider deprecatedDocCommentsProvider
+     */
+    public function testFunctionsCanBeDeprecated(string $comment) : void
     {
-        $php = '<?php
-        /** 
-         * @deprecated since 7.1
-         */
-        function foo() {}';
+        $php = sprintf('<?php
+        %s
+        function foo() {}', $comment);
 
         $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
-        $this->assertTrue($function->isDeprecated());
+        self::assertTrue($function->isDeprecated());
+    }
+
+    public function deprecatedDocCommentsProvider(): array
+    {
+        return [
+            [
+                '/** 
+                  * @deprecated since 7.1
+                  */'
+            ],
+            [
+                '/** 
+                  * @deprecated
+                  */'
+            ]
+        ];
     }
 }
