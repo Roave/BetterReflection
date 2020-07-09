@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Generator;
 use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
@@ -37,6 +36,7 @@ use function assert;
 use function current;
 use function next;
 use function reset;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
@@ -126,7 +126,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     /**
      * @dataProvider nonDeprecatedProvider
      */
-    public function testIsDeprecated(string $comment) : void
+    public function testIsDeprecated(string $comment): void
     {
         $php = sprintf('<?php 
         %s
@@ -145,8 +145,8 @@ class ReflectionFunctionAbstractTest extends TestCase
             [
                 '/** 
                   * @deprecatedPolicy
-                  */'
-            ]
+                  */',
+            ],
         ];
     }
 
@@ -751,13 +751,13 @@ PHP;
             [
                 '/** 
                   * @deprecated since 7.1
-                  */'
+                  */',
             ],
             [
                 '/** 
                   * @deprecated
-                  */'
-            ]
+                  */',
+            ],
         ];
     }
 }
