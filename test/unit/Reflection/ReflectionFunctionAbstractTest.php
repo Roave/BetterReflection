@@ -36,6 +36,7 @@ use function assert;
 use function current;
 use function next;
 use function reset;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
@@ -122,14 +123,31 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($function->isClosure());
     }
 
-    public function testIsDeprecated(): void
+    /**
+     * @dataProvider nonDeprecatedProvider
+     */
+    public function testIsDeprecated(string $comment): void
     {
-        $php = '<?php function foo() {}';
+        $php = sprintf('<?php 
+        %s
+        function foo() {}', $comment);
 
         $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
         $function  = $reflector->reflect('foo');
 
         self::assertFalse($function->isDeprecated());
+    }
+
+    public function nonDeprecatedProvider(): array
+    {
+        return [
+            [''],
+            [
+                '/** 
+                  * @deprecatedPolicy
+                  */',
+            ],
+        ];
     }
 
     public function testIsInternal(): void
@@ -710,5 +728,36 @@ PHP;
         self::assertInstanceOf(Closure::class, $first->expr);
         self::assertSame(8, $first->getStartLine());
         self::assertSame(10, $first->getEndLine());
+    }
+
+    /**
+     * @dataProvider deprecatedDocCommentsProvider
+     */
+    public function testFunctionsCanBeDeprecated(string $comment): void
+    {
+        $php = sprintf('<?php
+        %s
+        function foo() {}', $comment);
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $function  = $reflector->reflect('foo');
+
+        self::assertTrue($function->isDeprecated());
+    }
+
+    public function deprecatedDocCommentsProvider(): array
+    {
+        return [
+            [
+                '/** 
+                  * @deprecated since 7.1
+                  */',
+            ],
+            [
+                '/** 
+                  * @deprecated
+                  */',
+            ],
+        ];
     }
 }

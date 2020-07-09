@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use LogicException;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -256,18 +257,18 @@ abstract class ReflectionFunctionAbstract
         return $this->node instanceof Node\Expr\Closure;
     }
 
-    /**
-     * Is this function deprecated?
-     *
-     * Note - we cannot reflect on internal functions (as there is no PHP source
-     * code we can access. This means, at present, we can only EVER return false
-     * from this function.
-     *
-     * @see https://github.com/Roave/BetterReflection/issues/38
-     */
     public function isDeprecated(): bool
     {
-        return false;
+        $docComment = $this->getDocComment();
+
+        if ($docComment === '') {
+            return false;
+        }
+
+        $docBlockFactory = DocBlockFactory::createInstance();
+        $docBlock        = $docBlockFactory->create($docComment);
+
+        return $docBlock->hasTag('deprecated');
     }
 
     public function isInternal(): bool
