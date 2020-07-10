@@ -36,6 +36,8 @@ use stdClass;
 
 use function sprintf;
 
+use const SORT_ASC as SORT_ASC_TEST;
+
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
  */
@@ -81,6 +83,28 @@ class ReflectionParameterTest extends TestCase
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('a', $parameterInfo->getName());
+    }
+
+    public function testParamWithConstant(): void
+    {
+        // @codingStandardsIgnoreStart
+        $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC): void {
+        }, 'sort');
+        // @codingStandardsIgnoreEnd
+
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame(false, $parameterInfo->allowsNull());
+    }
+
+    public function testParamWithConstantAlias(): void
+    {
+        $this->markTestSkipped('@todo - implement reflection of constants aliases');
+
+        $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC_TEST): void {
+        }, 'sort');
+
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertSame(false, $parameterInfo->allowsNull());
     }
 
     public function testCreateFromSpecWithArray(): void
