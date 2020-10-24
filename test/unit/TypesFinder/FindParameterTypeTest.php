@@ -38,6 +38,7 @@ class FindParameterTypeTest extends TestCase
             ['@param int|string $foo', 'foo', [Types\Integer::class, Types\String_::class]],
             ['@param array $foo', 'foo', [Types\Array_::class]],
             ['@param \stdClass $foo', 'foo', [Types\Object_::class]],
+            ['@param array{foo: string|int} $foo', 'foo', []],
             ['@param int|int[]|int[][] $foo', 'foo', [Types\Integer::class, Types\Array_::class, Types\Array_::class]],
             ['', 'foo', []],
             ['@param ?string $foo', 'foo', [Types\Nullable::class]],
