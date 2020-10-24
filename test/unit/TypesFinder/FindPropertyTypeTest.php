@@ -34,6 +34,7 @@ class FindPropertyTypeTest extends TestCase
         return [
             ['@var int|string $foo', [Types\Integer::class, Types\String_::class]],
             ['@var array $foo', [Types\Array_::class]],
+            ['@var array{foo: string|int} $foo', []],
             ['@var \stdClass $foo', [Types\Object_::class]],
             ['@var int|int[]|int[][] $foo', [Types\Integer::class, Types\Array_::class, Types\Array_::class]],
             ['', []],

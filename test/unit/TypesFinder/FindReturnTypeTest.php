@@ -33,6 +33,7 @@ class FindReturnTypeTest extends TestCase
         return [
             ['@return int|string', [Types\Integer::class, Types\String_::class]],
             ['@return array', [Types\Array_::class]],
+            ['@return array{foo: string|int}', []],
             ['@return \stdClass', [Types\Object_::class]],
             ['@return int|int[]|int[][]', [Types\Integer::class, Types\Array_::class, Types\Array_::class]],
             ['@return int A comment about the return type', [Types\Integer::class]],

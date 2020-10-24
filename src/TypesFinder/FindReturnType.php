@@ -43,13 +43,16 @@ class FindReturnType
 
         $context = $this->makeContext->__invoke($namespace);
 
-        /** @var Return_[] $returnTags */
         $returnTags = $this
             ->docBlockFactory
             ->create($docComment, $context)
             ->getTagsByName('return');
 
         foreach ($returnTags as $returnTag) {
+            if (! $returnTag instanceof Return_) {
+                continue;
+            }
+
             return $this->resolveTypes->__invoke(explode('|', (string) $returnTag->getType()), $context);
         }
 
