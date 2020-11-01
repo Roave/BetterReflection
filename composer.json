@@ -36,9 +36,9 @@
     ],
     "require-dev": {
         "doctrine/coding-standard": "^8.2.0",
-        "phpstan/phpstan": "^0.12.25",
+        "phpstan/phpstan": "0.12.25",
         "phpunit/phpunit": "^9.2.6",
-        "vimeo/psalm": "3.13.1",
+        "vimeo/psalm": "^4.1",
         "infection/infection": "^0.16.4"
     },
     "autoload": {

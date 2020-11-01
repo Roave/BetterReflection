@@ -27,6 +27,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
+use Webmozart\Assert\Assert;
 
 use function class_exists;
 use function func_num_args;
@@ -317,16 +318,24 @@ class ReflectionProperty
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            return Closure::bind(function (string $declaringClassName, string $propertyName) {
+            $closure = Closure::bind(function (string $declaringClassName, string $propertyName) {
                 return $declaringClassName::${$propertyName};
-            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName());
+            }, null, $declaringClassName);
+
+            Assert::notFalse($closure);
+
+            return $closure->__invoke($declaringClassName, $this->getName());
         }
 
         $instance = $this->assertObject($object);
 
-        return Closure::bind(function (object $instance, string $propertyName) {
+        $closure = Closure::bind(function (object $instance, string $propertyName) {
             return $instance->{$propertyName};
-        }, $instance, $declaringClassName)->__invoke($instance, $this->getName());
+        }, $instance, $declaringClassName);
+
+        Assert::notFalse($closure);
+
+        return $closure->__invoke($instance, $this->getName());
     }
 
     /**
@@ -345,18 +354,26 @@ class ReflectionProperty
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            Closure::bind(function (string $declaringClassName, string $propertyName, $value): void {
+            $closure = Closure::bind(function (string $declaringClassName, string $propertyName, $value): void {
                 $declaringClassName::${$propertyName} = $value;
-            }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
+            }, null, $declaringClassName);
+
+            Assert::notFalse($closure);
+
+            $closure->__invoke($declaringClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
 
             return;
         }
 
         $instance = $this->assertObject($object);
 
-        Closure::bind(function ($instance, string $propertyName, $value): void {
+        $closure = Closure::bind(function ($instance, string $propertyName, $value): void {
             $instance->{$propertyName} = $value;
-        }, $instance, $declaringClassName)->__invoke($instance, $this->getName(), $value);
+        }, $instance, $declaringClassName);
+
+        Assert::notFalse($closure);
+
+        $closure->__invoke($instance, $this->getName(), $value);
     }
 
     /**
