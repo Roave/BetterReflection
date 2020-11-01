@@ -33,7 +33,7 @@
         <PossiblyFalseArgument errorLevel="suppress" />
         <PossiblyNullArgument errorLevel="suppress" />
 
-        <TypeCoercion errorLevel="suppress" />
+        <PropertyTypeCoercion errorLevel="suppress" />
 
         <UndefinedPropertyAssignment>
             <errorLevel type="suppress">

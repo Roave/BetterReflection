@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
+use Webmozart\Assert\Assert;
 
 use function class_exists;
 use function get_class;
@@ -340,9 +341,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        return Closure::bind(function (string $declaringClassName, string $methodName, array $methodArgs) {
+        $closure = Closure::bind(function (string $declaringClassName, string $methodName, array $methodArgs) {
             return $declaringClassName::{$methodName}(...$methodArgs);
-        }, null, $declaringClassName)->__invoke($declaringClassName, $this->getName(), $args);
+        }, null, $declaringClassName);
+
+        Assert::notFalse($closure);
+
+        return $closure->__invoke($declaringClassName, $this->getName(), $args);
     }
 
     /**
@@ -352,9 +357,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function callObjectMethod(object $object, array $args)
     {
-        return Closure::bind(function ($object, string $methodName, array $methodArgs) {
+        $closure = Closure::bind(function ($object, string $methodName, array $methodArgs) {
             return $object->{$methodName}(...$methodArgs);
-        }, $object, $this->getDeclaringClass()->getName())->__invoke($object, $this->getName(), $args);
+        }, $object, $this->getDeclaringClass()->getName());
+
+        Assert::notFalse($closure);
+
+        return $closure->__invoke($object, $this->getName(), $args);
     }
 
     /**

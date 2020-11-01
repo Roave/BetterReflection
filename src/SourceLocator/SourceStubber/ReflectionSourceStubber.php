@@ -75,6 +75,10 @@ final class ReflectionSourceStubber implements SourceStubber
             return null;
         }
 
+        /**
+         * @psalm-var class-string|trait-string $className
+         * @phpstan-var string $className
+         */
         $classReflection = new CoreReflectionClass($className);
         $classNode       = $this->createClass($classReflection);
 

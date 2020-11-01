@@ -506,10 +506,10 @@ class ReflectionObject extends ReflectionClass
     }
 
     public function addProperty(
-        string $methodName,
+        string $propertyName,
         int $visibility = CoreReflectionProperty::IS_PUBLIC,
         bool $static = false
     ): void {
-        $this->reflectionClass->addProperty($methodName, $visibility, $static);
+        $this->reflectionClass->addProperty($propertyName, $visibility, $static);
     }
 }
