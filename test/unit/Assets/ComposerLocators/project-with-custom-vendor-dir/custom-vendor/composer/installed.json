@@ -1,0 +1,66 @@
+[
+  {
+    "name": "a/b",
+    "autoload": {
+      "psr-4": {
+        "A\\B\\": "src/ab_PSR-4_Sources",
+        "C\\D\\": [
+          "src/ab_PSR-4_Sources"
+        ]
+      },
+      "psr-0": {
+        "A_B_": "src/ab_PSR-0_Sources",
+        "C_D_": [
+          "src/ab_PSR-0_Sources"
+        ]
+      },
+      "classmap": [
+        "src/ab_ClassmapDir",
+        "src/ab_ClassmapFile"
+      ],
+      "files": [
+        "src/ab_File1.php",
+        "src/ab_File2.php"
+      ]
+    }
+  },
+  {
+    "name": "e/f",
+    "autoload": {
+      "psr-4": {
+        "E\\F\\": [
+          "src/ef_PSR-4_Sources"
+        ]
+      },
+      "psr-0": {
+        "E_F_": [
+          "src/ef_PSR-0_Sources"
+        ]
+      },
+      "classmap": [
+        "src/ef_ClassmapDir",
+        "src/ef_ClassmapFile"
+      ],
+      "files": [
+        "src/ef_File1.php",
+        "src/ef_File2.php"
+      ]
+    }
+  },
+  {
+    "name": "this-has/no-autoload-definitions"
+  },
+  {
+    "name": "this-has/empty-autoload-definitions",
+    "autoload": {}
+  },
+  {
+    "name": "this-has/empty-autoload-definition-blocks",
+    "autoload": {
+      "psr-0": {},
+      "psr-4": {},
+      "classmap": [],
+      "files": []
+    }
+  }
+]
