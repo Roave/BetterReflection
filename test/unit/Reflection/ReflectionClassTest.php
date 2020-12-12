@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Qux;
 use Reflection as CoreReflection;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -1811,6 +1812,33 @@ PHP;
         ];
 
         self::assertSame($expectedConstants, $classInfo->getConstants());
+    }
+
+    public function getConstantsWithFilterDataProvider(): array
+    {
+        return [
+            [CoreReflectionClassConstant::IS_PUBLIC, 3],
+            [CoreReflectionClassConstant::IS_PROTECTED, 1],
+            [CoreReflectionClassConstant::IS_PRIVATE, 1],
+            [
+                CoreReflectionClassConstant::IS_PUBLIC |
+                CoreReflectionClassConstant::IS_PROTECTED |
+                CoreReflectionClassConstant::IS_PRIVATE,
+                5,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getConstantsWithFilterDataProvider
+     */
+    public function testGetConstantsWithFilter(int $filter, int $count): void
+    {
+        $reflector = new ClassReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflect(ExampleClass::class);
+
+        self::assertCount($count, $classInfo->getConstants($filter));
+        self::assertCount($count, $classInfo->getReflectionConstants($filter));
     }
 
     public function testGetImmediateConstants(): void
