@@ -15,6 +15,10 @@ use Roave\BetterReflection\Util\GetLastDocComment;
 
 class ReflectionClassConstant
 {
+    public const IS_PUBLIC    = 1;
+    public const IS_PROTECTED = 2;
+    public const IS_PRIVATE   = 4;
+
     private bool $valueWasCached = false;
 
     /** @var scalar|array<scalar>|null const value */

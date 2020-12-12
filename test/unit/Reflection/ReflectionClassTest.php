@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Qux;
 use Reflection as CoreReflection;
 use ReflectionClass as CoreReflectionClass;
-use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -1817,13 +1816,13 @@ PHP;
     public function getConstantsWithFilterDataProvider(): array
     {
         return [
-            [CoreReflectionClassConstant::IS_PUBLIC, 3],
-            [CoreReflectionClassConstant::IS_PROTECTED, 1],
-            [CoreReflectionClassConstant::IS_PRIVATE, 1],
+            [ReflectionClassConstant::IS_PUBLIC, 3],
+            [ReflectionClassConstant::IS_PROTECTED, 1],
+            [ReflectionClassConstant::IS_PRIVATE, 1],
             [
-                CoreReflectionClassConstant::IS_PUBLIC |
-                CoreReflectionClassConstant::IS_PROTECTED |
-                CoreReflectionClassConstant::IS_PRIVATE,
+                ReflectionClassConstant::IS_PUBLIC |
+                ReflectionClassConstant::IS_PROTECTED |
+                ReflectionClassConstant::IS_PRIVATE,
                 5,
             ],
         ];
