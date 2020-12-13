@@ -79,4 +79,10 @@ abstract class ClassForSourceStubber extends \Roave\BetterReflectionTest\Fixture
     public function &methodReturnsReference() : array
     {
     }
+    public function methodWithStaticReturnValue() : static
+    {
+    }
+    public function methodWithMixedReturnValue() : mixed
+    {
+    }
 }
