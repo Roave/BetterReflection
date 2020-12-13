@@ -51,7 +51,6 @@ class ReflectionTypeTest extends TestCase
         self::assertTrue(ReflectionType::createFromTypeAndReflector('object', false, $this->reflector)->isBuiltin());
         self::assertTrue(ReflectionType::createFromTypeAndReflector('iterable', false, $this->reflector)->isBuiltin());
         self::assertTrue(ReflectionType::createFromTypeAndReflector('mixed', false, $this->reflector)->isBuiltin());
-        self::assertTrue(ReflectionType::createFromTypeAndReflector('static', false, $this->reflector)->isBuiltin());
         self::assertFalse(ReflectionType::createFromTypeAndReflector('foo', false, $this->reflector)->isBuiltin());
         self::assertFalse(ReflectionType::createFromTypeAndReflector('\foo', false, $this->reflector)->isBuiltin());
     }

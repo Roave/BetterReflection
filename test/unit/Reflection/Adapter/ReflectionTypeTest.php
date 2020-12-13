@@ -102,4 +102,14 @@ class ReflectionTypeTest extends TestCase
 
         self::assertFalse($reflectionTypeAdapter->isBuiltin());
     }
+
+    public function testStaticIsNotBuiltin(): void
+    {
+        $reflector = $this->createMock(Reflector::class);
+        assert($reflector instanceof Reflector);
+        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('static', false, $reflector);
+        $reflectionTypeAdapter = new ReflectionTypeAdapter($betterReflectionType);
+
+        self::assertFalse($reflectionTypeAdapter->isBuiltin());
+    }
 }

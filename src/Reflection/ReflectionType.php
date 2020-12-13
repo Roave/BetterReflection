@@ -28,6 +28,7 @@ class ReflectionType
         'object'   => null,
         'void'     => null,
         'mixed'    => null,
+        'static'   => null,
     ];
 
     private string $type;
