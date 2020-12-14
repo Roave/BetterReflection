@@ -38,19 +38,27 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw InvalidProjectDirectory::atPath($installationPath);
         }
 
-        $composerJsonPath  = $realInstallationPath . '/composer.json';
-        $installedJsonPath = $realInstallationPath . '/vendor/composer/installed.json';
+        $composerJsonPath = $realInstallationPath . '/composer.json';
 
         if (! file_exists($composerJsonPath)) {
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
+        /**
+         * @psalm-var array{
+         * autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>},
+         * config: array{vendor-dir?: string}
+         * }|null $composer
+         */
+        $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
+        $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
+
+        $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
+
         if (! file_exists($installedJsonPath)) {
             throw MissingInstalledJson::inProjectPath($installationPath);
         }
 
-        /** @var array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}|null $composer */
-        $composer = json_decode((string) file_get_contents($composerJsonPath), true);
         /** @var array{packages: list<array>}|list<array>|null $installedJson */
         $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
@@ -67,10 +75,10 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
         $classMapPaths       = array_merge(
             $this->prefixPaths($this->packageToClassMapPaths($composer), $realInstallationPath . '/'),
-            ...array_map(function (array $package) use ($realInstallationPath): array {
+            ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
                 return $this->prefixPaths(
                     $this->packageToClassMapPaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package),
+                    $this->packagePrefixPath($realInstallationPath, $package, $vendorDir),
                 );
             }, $installed),
         );
@@ -78,10 +86,10 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
         $filePaths           = array_merge(
             $this->prefixPaths($this->packageToFilePaths($composer), $realInstallationPath . '/'),
-            ...array_map(function (array $package) use ($realInstallationPath): array {
+            ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
                 return $this->prefixPaths(
                     $this->packageToFilePaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package),
+                    $this->packagePrefixPath($realInstallationPath, $package, $vendorDir),
                 );
             }, $installed),
         );
@@ -91,11 +99,12 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(array_merge_recursive(
                         $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $realInstallationPath),
-                        ...array_map(function (array $package) use ($realInstallationPath): array {
+                        ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr4AutoloadNamespaces($package),
                                 $realInstallationPath,
                                 $package,
+                                $vendorDir,
                             );
                         }, $installed),
                     )),
@@ -104,11 +113,12 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(array_merge_recursive(
                         $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $realInstallationPath),
-                        ...array_map(function (array $package) use ($realInstallationPath): array {
+                        ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
                             return $this->prefixWithPackagePath(
                                 $this->packageToPsr0AutoloadNamespaces($package),
                                 $realInstallationPath,
                                 $package,
+                                $vendorDir,
                             );
                         }, $installed),
                     )),
@@ -169,9 +179,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     /**
      * @param array{name: string} $package
      */
-    private function packagePrefixPath(string $trimmedInstallationPath, array $package): string
+    private function packagePrefixPath(string $trimmedInstallationPath, array $package, string $vendorDir): string
     {
-        return $trimmedInstallationPath . '/vendor/' . $package['name'] . '/';
+        return $trimmedInstallationPath . '/' . $vendorDir . '/' . $package['name'] . '/';
     }
 
     /**
@@ -180,9 +190,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
      *
      * @return array<string, array<int, string>>
      */
-    private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package): array
+    private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package, string $vendorDir): array
     {
-        $prefix = $this->packagePrefixPath($trimmedInstallationPath, $package);
+        $prefix = $this->packagePrefixPath($trimmedInstallationPath, $package, $vendorDir);
 
         return array_map(function (array $paths) use ($prefix): array {
             return $this->prefixPaths($paths, $prefix);

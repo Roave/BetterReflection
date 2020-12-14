@@ -45,10 +45,10 @@ class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
     {
         $astLocator = BetterReflectionSingleton::instance()->astLocator();
 
-        $projectA                 = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-a');
-        $projectComposerV2        = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-using-composer-v2');
-        $projectWithPsrCollisions = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-with-psr-collisions');
-        $projectALocator          = new AggregateSourceLocator([
+        $projectA                         = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-a');
+        $projectComposerV2                = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-using-composer-v2');
+        $projectWithPsrCollisions         = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-with-psr-collisions');
+        $projectALocator                  = new AggregateSourceLocator([
             new PsrAutoloaderLocator(
                 Psr4Mapping::fromArrayMappings([
                     'ProjectA\\'    => [
@@ -134,6 +134,94 @@ class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
                 $astLocator,
             ),
         ]);
+        $projectCustomVendorDir           = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-with-custom-vendor-dir');
+        $projectCustomVendorDirLocator    = new AggregateSourceLocator([
+            new PsrAutoloaderLocator(
+                Psr4Mapping::fromArrayMappings([
+                    'ProjectA\\'    => [
+                        $projectCustomVendorDir . '/src/root_PSR-4_Sources',
+                    ],
+                    'ProjectA\\B\\' => [
+                        $projectCustomVendorDir . '/src/root_PSR-4_Sources',
+                    ],
+                    'A\\B\\'        => [
+                        $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_PSR-4_Sources',
+                    ],
+                    'C\\D\\'        => [
+                        $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_PSR-4_Sources',
+                    ],
+                    'E\\F\\'        => [
+                        $projectCustomVendorDir . '/custom-vendor/e/f/src/ef_PSR-4_Sources',
+                    ],
+                ]),
+                $astLocator,
+            ),
+            new PsrAutoloaderLocator(
+                Psr0Mapping::fromArrayMappings([
+                    'ProjectA_A_' => [
+                        $projectCustomVendorDir . '/src/root_PSR-0_Sources',
+                    ],
+                    'ProjectA_B_' => [
+                        $projectCustomVendorDir . '/src/root_PSR-0_Sources',
+                    ],
+                    'A_B_'        => [
+                        $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_PSR-0_Sources',
+                    ],
+                    'C_D_'        => [
+                        $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_PSR-0_Sources',
+                    ],
+                    'E_F_'        => [
+                        $projectCustomVendorDir . '/custom-vendor/e/f/src/ef_PSR-0_Sources',
+                    ],
+                ]),
+                $astLocator,
+            ),
+            new DirectoriesSourceLocator(
+                [
+                    $projectCustomVendorDir . '/src/root_ClassmapDir',
+                    $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_ClassmapDir',
+                    $projectCustomVendorDir . '/custom-vendor/e/f/src/ef_ClassmapDir',
+                ],
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/src/root_ClassmapFile',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_ClassmapFile',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/custom-vendor/e/f/src/ef_ClassmapFile',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/src/root_File1.php',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/src/root_File2.php',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_File1.php',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/custom-vendor/a/b/src/ab_File2.php',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/custom-vendor/e/f/src/ef_File1.php',
+                $astLocator,
+            ),
+            new SingleFileSourceLocator(
+                $projectCustomVendorDir . '/custom-vendor/e/f/src/ef_File2.php',
+                $astLocator,
+            ),
+        ]);
+        $projectCustomVendorDirComposerV2 = realpath(__DIR__ . '/../../../../Assets/ComposerLocators/project-with-custom-vendor-dir-using-composer-v2');
 
         $expectedLocators = [
             [
@@ -194,6 +282,28 @@ class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
                 // Relative paths are turned into absolute paths too
                 __DIR__ . '/../../../../Assets/ComposerLocators/project-a',
                 $projectALocator,
+            ],
+            [
+                $projectCustomVendorDir,
+                $projectCustomVendorDirLocator,
+            ],
+            [
+                $projectCustomVendorDirComposerV2,
+                new AggregateSourceLocator([
+                    new PsrAutoloaderLocator(
+                        Psr4Mapping::fromArrayMappings([
+                            'A\\B\\'        => [
+                                $projectCustomVendorDirComposerV2 . '/custom-vendor/a/b/src/ab_PSR-4_Sources',
+                            ],
+                        ]),
+                        $astLocator,
+                    ),
+                    new PsrAutoloaderLocator(
+                        Psr0Mapping::fromArrayMappings([]),
+                        $astLocator,
+                    ),
+                    new DirectoriesSourceLocator([], $astLocator),
+                ]),
             ],
         ];
 
