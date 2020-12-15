@@ -490,16 +490,14 @@ class ReflectionClass implements Reflection
     /**
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as constant values.
-
-     * @see ReflectionClass::getConstants() for the usage of filter
      *
      * @return array<string, scalar|array<scalar>|null>
      */
-    public function getConstants(?int $filter = null): array
+    public function getConstants(): array
     {
         return array_map(static function (ReflectionClassConstant $classConstant) {
             return $classConstant->getValue();
-        }, $this->getReflectionConstants($filter));
+        }, $this->getReflectionConstants());
     }
 
     /**
@@ -586,11 +584,9 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @see ReflectionClass::getConstants() for the usage of filter
-     *
      * @return array<string, ReflectionClassConstant> indexed by name
      */
-    public function getReflectionConstants(?int $filter = null): array
+    public function getReflectionConstants(): array
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
@@ -628,16 +624,7 @@ class ReflectionClass implements Reflection
             $reflectionConstants[$constantName] = $constant;
         }
 
-        if ($filter === null) {
-            return $reflectionConstants;
-        }
-
-        return array_filter(
-            $reflectionConstants,
-            static function (ReflectionClassConstant $constant) use ($filter): bool {
-                return (bool) ($filter & $constant->getModifiers());
-            },
-        );
+        return $reflectionConstants;
     }
 
     /**

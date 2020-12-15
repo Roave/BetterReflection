@@ -1813,33 +1813,6 @@ PHP;
         self::assertSame($expectedConstants, $classInfo->getConstants());
     }
 
-    public function getConstantsWithFilterDataProvider(): array
-    {
-        return [
-            [ReflectionClassConstant::IS_PUBLIC, 3],
-            [ReflectionClassConstant::IS_PROTECTED, 1],
-            [ReflectionClassConstant::IS_PRIVATE, 1],
-            [
-                ReflectionClassConstant::IS_PUBLIC |
-                ReflectionClassConstant::IS_PROTECTED |
-                ReflectionClassConstant::IS_PRIVATE,
-                5,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider getConstantsWithFilterDataProvider
-     */
-    public function testGetConstantsWithFilter(int $filter, int $count): void
-    {
-        $reflector = new ClassReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflect(ExampleClass::class);
-
-        self::assertCount($count, $classInfo->getConstants($filter));
-        self::assertCount($count, $classInfo->getReflectionConstants($filter));
-    }
-
     public function testGetImmediateConstants(): void
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(
