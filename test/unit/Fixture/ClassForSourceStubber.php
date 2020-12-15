@@ -143,12 +143,4 @@ abstract class ClassForSourceStubber extends ParentClassForSourceStubber impleme
     public function &methodReturnsReference() : array
     {
     }
-
-    public function methodWithStaticReturnValue() : static
-    {
-    }
-
-    public function methodWithMixedReturnValue() : mixed
-    {
-    }
 }
