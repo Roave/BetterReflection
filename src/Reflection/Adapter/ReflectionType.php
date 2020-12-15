@@ -39,7 +39,7 @@ class ReflectionType extends CoreReflectionType
     {
         $type = (string) $this->betterReflectionType;
 
-        if ($type === 'self' || $type === 'parent') {
+        if ($type === 'self' || $type === 'parent' || $type === 'static') {
             return false;
         }
 

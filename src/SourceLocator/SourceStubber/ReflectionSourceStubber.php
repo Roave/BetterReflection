@@ -492,7 +492,11 @@ final class ReflectionSourceStubber implements SourceStubber
     private function formatType(CoreReflectionNamedType $type): NodeAbstract
     {
         $name     = $type->getName();
-        $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent'], true) ? new Name($name) : new FullyQualified($name);
+        $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent', 'static'], true) ? new Name($name) : new FullyQualified($name);
+
+        if ($name === 'mixed') {
+            return $nameNode;
+        }
 
         return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
     }

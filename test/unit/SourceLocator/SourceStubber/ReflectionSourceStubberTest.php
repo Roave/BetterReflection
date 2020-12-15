@@ -25,6 +25,7 @@ use Roave\BetterReflectionTest\Fixture\ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\ClassForSourceStubberWithDefaultStaticProperty;
 use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
+use Roave\BetterReflectionTest\Fixture\PHP8ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
 use stdClass;
 use Traversable;
@@ -38,6 +39,8 @@ use function get_declared_traits;
 use function in_array;
 use function preg_match;
 use function sort;
+
+use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber
@@ -108,6 +111,21 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertNotNull($stubData);
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
+    }
+
+    public function testClassStubWithPHP8Syntax(): void
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->markTestSkipped('Test runs only on PHP8');
+        }
+
+        require __DIR__ . '/../../Fixture/PHP8ClassForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(PHP8ClassForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/PHP8ClassForSourceStubberExpected.php', $stubData->getStub());
         self::assertNull($stubData->getExtensionName());
     }
 

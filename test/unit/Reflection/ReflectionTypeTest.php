@@ -50,6 +50,7 @@ class ReflectionTypeTest extends TestCase
         self::assertTrue(ReflectionType::createFromTypeAndReflector('array', false, $this->reflector)->isBuiltin());
         self::assertTrue(ReflectionType::createFromTypeAndReflector('object', false, $this->reflector)->isBuiltin());
         self::assertTrue(ReflectionType::createFromTypeAndReflector('iterable', false, $this->reflector)->isBuiltin());
+        self::assertTrue(ReflectionType::createFromTypeAndReflector('mixed', false, $this->reflector)->isBuiltin());
         self::assertFalse(ReflectionType::createFromTypeAndReflector('foo', false, $this->reflector)->isBuiltin());
         self::assertFalse(ReflectionType::createFromTypeAndReflector('\foo', false, $this->reflector)->isBuiltin());
     }
@@ -65,6 +66,7 @@ class ReflectionTypeTest extends TestCase
         self::assertSame('void', ReflectionType::createFromTypeAndReflector('void', false, $this->reflector)->getName());
         self::assertSame('object', ReflectionType::createFromTypeAndReflector('object', false, $this->reflector)->getName());
         self::assertSame('iterable', ReflectionType::createFromTypeAndReflector('iterable', false, $this->reflector)->getName());
+        self::assertSame('mixed', ReflectionType::createFromTypeAndReflector('mixed', false, $this->reflector)->getName());
 
         self::assertSame('Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector('Foo\Bar\Baz', false, $this->reflector)->getName());
         self::assertSame('Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector('\Foo\Bar\Baz', false, $this->reflector)->getName());
@@ -81,6 +83,7 @@ class ReflectionTypeTest extends TestCase
         self::assertSame('void', (string) ReflectionType::createFromTypeAndReflector('void', false, $this->reflector));
         self::assertSame('object', (string) ReflectionType::createFromTypeAndReflector('object', false, $this->reflector));
         self::assertSame('iterable', (string) ReflectionType::createFromTypeAndReflector('iterable', false, $this->reflector));
+        self::assertSame('mixed', (string) ReflectionType::createFromTypeAndReflector('mixed', false, $this->reflector));
 
         self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector('Foo\Bar\Baz', false, $this->reflector));
         self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector('\Foo\Bar\Baz', false, $this->reflector));

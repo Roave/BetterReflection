@@ -27,6 +27,8 @@ class ReflectionType
         'iterable' => null,
         'object'   => null,
         'void'     => null,
+        'mixed'    => null,
+        'static'   => null,
     ];
 
     private string $type;
