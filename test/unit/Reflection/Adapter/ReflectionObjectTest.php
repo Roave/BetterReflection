@@ -75,6 +75,7 @@ class ReflectionObjectTest extends TestCase
             ['getProperties', null, [$mockProperty], []],
             ['hasConstant', null, true, ['foo']],
             ['getConstant', null, 'a', ['foo']],
+            ['getReflectionConstants', null, ['a', 'b'], []],
             ['getInterfaces', null, [$mockClassLike], []],
             ['getInterfaceNames', null, ['a', 'b'], []],
             ['isInterface', null, true, []],
