@@ -7,12 +7,14 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_combine;
+use function array_filter;
 use function array_map;
 use function array_values;
 use function assert;
@@ -228,7 +230,23 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getConstants(?int $filter = null)
     {
-        return $this->betterReflectionObject->getConstants($filter);
+        $reflectionConstants = $this->betterReflectionObject->getReflectionConstants();
+
+        if ($filter !== null) {
+            $reflectionConstants = array_filter(
+                $reflectionConstants,
+                static function (BetterReflectionClassConstant $betterConstant) use ($filter): bool {
+                    return (bool) ($betterConstant->getModifiers() & $filter);
+                },
+            );
+        }
+
+        return array_map(
+            static function (BetterReflectionClassConstant $betterConstant) {
+                return $betterConstant->getValue();
+            },
+            $reflectionConstants,
+        );
     }
 
     /**

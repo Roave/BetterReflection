@@ -190,9 +190,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getConstants(?int $filter = null): array
+    public function getConstants(): array
     {
-        return $this->reflectionClass->getConstants($filter);
+        return $this->reflectionClass->getConstants();
     }
 
     /**
@@ -224,9 +224,9 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getReflectionConstants(?int $filter = null): array
+    public function getReflectionConstants(): array
     {
-        return $this->reflectionClass->getReflectionConstants($filter);
+        return $this->reflectionClass->getReflectionConstants();
     }
 
     public function getConstructor(): ReflectionMethod
