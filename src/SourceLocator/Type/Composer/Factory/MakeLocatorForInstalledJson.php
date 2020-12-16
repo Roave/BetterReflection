@@ -8,6 +8,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingInstalledJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
@@ -37,10 +38,25 @@ final class MakeLocatorForInstalledJson
             throw InvalidProjectDirectory::atPath($installationPath);
         }
 
-        $installedJsonPath = $realInstallationPath . '/vendor/composer/installed.json';
+        $composerJsonPath = $realInstallationPath . '/composer.json';
+
+        if (! file_exists($composerJsonPath)) {
+            throw MissingComposerJson::inProjectPath($installationPath);
+        }
+
+        /**
+         * @psalm-var array{
+         * autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>},
+         * config: array{vendor-dir?: string}
+         * }|null $composer
+         */
+        $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
+        $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
+
+        $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
 
         if (! file_exists($installedJsonPath)) {
-            throw MissingInstalledJson::inProjectPath($installationPath);
+            throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 
         /** @var array{packages: list<array>}|list<array>|null $installedJson */
