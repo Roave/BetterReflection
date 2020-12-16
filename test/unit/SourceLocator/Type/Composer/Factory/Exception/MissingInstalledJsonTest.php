@@ -15,8 +15,8 @@ class MissingInstalledJsonTest extends TestCase
     public function testInProjectPath(): void
     {
         self::assertSame(
-            'Could not locate a "vendor/composer/installed.json" file in "foo/bar"',
-            MissingInstalledJson::inProjectPath('foo/bar')
+            'Could not locate a "composer/installed.json" file in "foo/bar/vendor"',
+            MissingInstalledJson::inProjectPath('foo/bar/vendor')
                 ->getMessage(),
         );
     }
