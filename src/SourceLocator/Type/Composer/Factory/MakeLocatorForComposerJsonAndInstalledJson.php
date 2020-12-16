@@ -56,7 +56,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
 
         if (! file_exists($installedJsonPath)) {
-            throw MissingInstalledJson::inProjectPath($installationPath);
+            throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 
         /** @var array{packages: list<array>}|list<array>|null $installedJson */
