@@ -27,6 +27,7 @@ use function is_array;
 use function is_dir;
 use function json_decode;
 use function realpath;
+use function rtrim;
 
 final class MakeLocatorForComposerJsonAndInstalledJson
 {
