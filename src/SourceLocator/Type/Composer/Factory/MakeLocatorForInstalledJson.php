@@ -52,6 +52,7 @@ final class MakeLocatorForInstalledJson
          */
         $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
+        $vendorDir = rtrim($vendorDir, '/');
 
         $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
 

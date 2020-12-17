@@ -1,5 +1,5 @@
 {
   "config": {
-    "vendor-dir": "custom-vendor"
+    "vendor-dir": "custom-vendor/"
   }
 }
