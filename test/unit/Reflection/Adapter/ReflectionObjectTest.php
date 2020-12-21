@@ -55,6 +55,8 @@ class ReflectionObjectTest extends TestCase
 
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
+        $mockConstant = $this->createMock(BetterReflectionClassConstant::class);
+
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
@@ -75,7 +77,8 @@ class ReflectionObjectTest extends TestCase
             ['getProperties', null, [$mockProperty], []],
             ['hasConstant', null, true, ['foo']],
             ['getConstant', null, 'a', ['foo']],
-            ['getReflectionConstants', null, ['a', 'b'], []],
+            ['getReflectionConstant', null, $mockConstant, ['foo']],
+            ['getReflectionConstants', null, [$mockConstant], []],
             ['getInterfaces', null, [$mockClassLike], []],
             ['getInterfaceNames', null, ['a', 'b'], []],
             ['isInterface', null, true, []],
