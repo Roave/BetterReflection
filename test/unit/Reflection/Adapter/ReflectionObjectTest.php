@@ -10,6 +10,7 @@ use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
@@ -500,5 +501,51 @@ class ReflectionObjectTest extends TestCase
 
         self::assertCount(1, $protectedConstants);
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
+    }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+
+        $betterReflectionObject
+            ->expects($this->once())
+            ->method('getReflectionConstant')
+            ->with('NON_EXISTENT_CONSTANT')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getReflectionConstant('NON_EXISTENT_CONSTANT'));
+    }
+
+    public function testGetReflectionConstantReturnsClassConstantAdapterWhenConstantExists(): void
+    {
+        $betterReflectionObject        = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+
+        $betterReflectionObject
+            ->expects($this->once())
+            ->method('getReflectionConstant')
+            ->with('SOME_CONSTANT')
+            ->willReturn($betterReflectionClassConstant);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstant('SOME_CONSTANT'));
+    }
+
+    public function testGetReflectionConstantsReturnsClassConstantAdapter(): void
+    {
+        $betterReflectionObject        = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+
+        $betterReflectionObject
+            ->expects($this->once())
+            ->method('getReflectionConstants')
+            ->willReturn([$betterReflectionClassConstant]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertContainsOnlyInstancesOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstants());
     }
 }

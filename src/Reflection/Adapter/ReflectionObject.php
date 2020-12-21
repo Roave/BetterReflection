@@ -260,6 +260,33 @@ class ReflectionObject extends CoreReflectionObject
     /**
      * {@inheritDoc}
      */
+    public function getReflectionConstant($name)
+    {
+        $betterReflectionConstant = $this->betterReflectionObject->getReflectionConstant($name);
+
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return new ReflectionClassConstant($betterReflectionConstant);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReflectionConstants()
+    {
+        return array_values(array_map(
+            static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
+                return new ReflectionClassConstant($betterConstant);
+            },
+            $this->betterReflectionObject->getReflectionConstants(),
+        ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getInterfaces()
     {
         $interfaces = $this->betterReflectionObject->getInterfaces();
