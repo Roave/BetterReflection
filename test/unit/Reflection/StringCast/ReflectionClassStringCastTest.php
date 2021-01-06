@@ -67,7 +67,7 @@ class ReflectionClassStringCastTest extends TestCase
         $classReflection = $reflector->reflect(Exception::class);
         // phpcs:enable
 
-        self::assertStringStartsWith('Class [ <internal:Core> class Exception implements Throwable ]', (string) $classReflection);
+        self::assertStringStartsWith('Class [ <internal:Core> class Exception implements Throwable, Stringable ]', (string) $classReflection);
     }
 
     public function testInterfaceToString(): void
