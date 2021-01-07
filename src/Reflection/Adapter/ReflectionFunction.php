@@ -253,7 +253,7 @@ class ReflectionFunction extends CoreReflectionFunction
     /**
      * {@inheritDoc}
      */
-    public function invoke($args = null)
+    public function invoke($arg = null, ...$args)
     {
         try {
             return $this->betterReflectionFunction->invoke(...func_get_args());

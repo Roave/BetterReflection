@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProp
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_combine;
+use function array_filter;
 use function array_map;
 use function array_values;
 use function assert;
@@ -250,9 +251,11 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getConstants()
+    public function getConstants(?int $filter = null)
     {
-        return $this->betterReflectionClass->getConstants();
+        return array_map(static function (BetterReflectionClassConstant $betterConstant) {
+            return $betterConstant->getValue();
+        }, $this->filterBetterReflectionClassConstants($filter));
     }
 
     /**
@@ -279,11 +282,30 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getReflectionConstants()
+    public function getReflectionConstants(?int $filter = null)
     {
         return array_values(array_map(static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
             return new ReflectionClassConstant($betterConstant);
-        }, $this->betterReflectionClass->getReflectionConstants()));
+        }, $this->filterBetterReflectionClassConstants($filter)));
+    }
+
+    /**
+     * @return array<string, BetterReflectionClassConstant>
+     */
+    private function filterBetterReflectionClassConstants(?int $filter): array
+    {
+        $reflectionConstants = $this->betterReflectionClass->getReflectionConstants();
+
+        if ($filter !== null) {
+            $reflectionConstants = array_filter(
+                $this->betterReflectionClass->getReflectionConstants(),
+                static function (BetterReflectionClassConstant $betterConstant) use ($filter): bool {
+                    return (bool) ($betterConstant->getModifiers() & $filter);
+                },
+            );
+        }
+
+        return $reflectionConstants;
     }
 
     /**
