@@ -14,7 +14,6 @@ use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflection;
-use ReflectionFunctionAbstract;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -57,10 +56,10 @@ class ReflectionPropertyTest extends TestCase
 
     public function testCreateFromName(): void
     {
-        $property = ReflectionProperty::createFromName(ReflectionFunctionAbstract::class, 'name');
+        $property = ReflectionProperty::createFromName(ReflectionProperty::class, 'node');
 
         self::assertInstanceOf(ReflectionProperty::class, $property);
-        self::assertSame('name', $property->getName());
+        self::assertSame('node', $property->getName());
     }
 
     public function testCreateFromInstance(): void
