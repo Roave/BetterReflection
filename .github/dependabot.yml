@@ -1,0 +1,17 @@
+version: 2
+updates:
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  versioning-strategy: increase
+  ignore:
+  - dependency-name: phpstan/phpstan
+    versions:
+    - 0.12.65
+    - 0.12.70
+  - dependency-name: vimeo/psalm
+    versions:
+    - 4.3.2
+    - 4.4.1
