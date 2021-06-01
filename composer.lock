@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28c7dc961c1ae758e3ec7f1a2c92aed7",
+    "content-hash": "a08e37b6355dd419534c20f2211eb933",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1819,20 +1819,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.25",
+            "version": "0.12.88",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "9619551d68b2d4c0d681a8df73f3c847c798ee64"
+                "reference": "464d1a81af49409c41074aa6640ed0c4cbd9bb68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9619551d68b2d4c0d681a8df73f3c847c798ee64",
-                "reference": "9619551d68b2d4c0d681a8df73f3c847c798ee64",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/464d1a81af49409c41074aa6640ed0c4cbd9bb68",
+                "reference": "464d1a81af49409c41074aa6640ed0c4cbd9bb68",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.1|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -1871,7 +1871,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-10T20:36:16+00:00"
+            "time": "2021-05-17T12:24:49+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
