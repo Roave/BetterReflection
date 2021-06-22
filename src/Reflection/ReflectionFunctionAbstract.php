@@ -55,7 +55,7 @@ abstract class ReflectionFunctionAbstract
 
     private Reflector $reflector;
 
-    private static ?Parser $parser;
+    private static ?Parser $parser = null;
 
     protected function __construct()
     {
