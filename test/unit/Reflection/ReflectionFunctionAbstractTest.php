@@ -745,6 +745,32 @@ PHP;
         self::assertTrue($function->isDeprecated());
     }
 
+    /**
+     * Set $parser = null in case the error below occur when excute with phpunit's data provider
+     * Error : Typed static property Roave\BetterReflection\Reflection\ReflectionFunctionAbstract::$parser must not be accessed before initialization
+     *
+     * @dataProvider getDataForTypedAccessTest
+     */
+    public function testAccessTypedConstantWithDataProvider(array $data): void
+    {
+        $x = ReflectionFunctionAbstract::CLOSURE_NAME;
+
+        $this->assertEquals('{closure}', $x);
+    }
+
+    /**
+     * data provider for test access typed constant
+     * 
+     * @return array[]
+     */
+    public function getDataForTypedAccessTest(): array
+    {
+        return [
+            [['aaa']],
+            [['bbb']],
+        ];
+    }
+
     public function deprecatedDocCommentsProvider(): array
     {
         return [
