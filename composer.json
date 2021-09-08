@@ -3,7 +3,7 @@
     "description": "Better Reflection - an improved code reflection API",
     "license": "MIT",
     "require": {
-        "php": ">=7.4.1,<7.5.0",
+        "php": "~8.0.0",
         "ext-json": "*",
         "jetbrains/phpstorm-stubs": "2020.2",
         "nikic/php-parser": "^4.10.4",
@@ -35,8 +35,8 @@
 
     ],
     "require-dev": {
-        "doctrine/coding-standard": "^8.2.0",
-        "phpstan/phpstan": "0.12.25",
+        "doctrine/coding-standard": "^9.0.0",
+        "phpstan/phpstan": "0.12.98",
         "phpunit/phpunit": "^9.5.4",
         "vimeo/psalm": "^4.2",
         "roave/infection-static-analysis-plugin": "^1.2",

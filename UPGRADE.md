@@ -3,6 +3,11 @@
 This document serves as a reference to upgrade your current BetterReflection installation if improvements, deprecations
 or backwards compatibility (BC) breakages occur.
 
+## 5.0.0
+
+### BC Breaks
+* Only PHP 8.0 is supported.
+
 ## 4.0.0
 
 ### BC Breaks
