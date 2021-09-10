@@ -44,20 +44,20 @@ class ReflectionObject extends ReflectionClass
      * @throws ReflectionException
      * @throws IdentifierNotFound
      */
-    public static function createFromInstance(object $object): ReflectionClass
+    public static function createFromInstance(object $instance): ReflectionClass
     {
-        $className = get_class($object);
+        $className = get_class($instance);
 
         if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
             $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
-                $object,
+                $instance,
                 (new BetterReflection())->phpParser(),
             ));
         } else {
             $reflector = (new BetterReflection())->classReflector();
         }
 
-        return new self($reflector, $reflector->reflect($className), $object);
+        return new self($reflector, $reflector->reflect($className), $instance);
     }
 
     /**
@@ -500,9 +500,9 @@ class ReflectionObject extends ReflectionClass
         $this->reflectionClass->addMethod($methodName);
     }
 
-    public function removeProperty(string $methodName): bool
+    public function removeProperty(string $propertyName): bool
     {
-        return $this->reflectionClass->removeProperty($methodName);
+        return $this->reflectionClass->removeProperty($propertyName);
     }
 
     public function addProperty(

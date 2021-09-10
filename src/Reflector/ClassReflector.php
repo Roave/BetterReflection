@@ -29,9 +29,9 @@ class ClassReflector implements Reflector
      *
      * @throws IdentifierNotFound
      */
-    public function reflect(string $className): Reflection
+    public function reflect(string $identifierName): Reflection
     {
-        $identifier = new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
+        $identifier = new Identifier($identifierName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
         assert($classInfo instanceof ReflectionClass || $classInfo === null);

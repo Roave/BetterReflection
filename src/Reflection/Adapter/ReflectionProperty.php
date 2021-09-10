@@ -75,18 +75,12 @@ class ReflectionProperty extends CoreReflectionProperty
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function hasType()
+    public function hasType(): bool
     {
         return $this->betterReflectionProperty->hasType();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getType()
+    public function getType(): ?ReflectionType
     {
         return ReflectionNamedType::fromReturnTypeOrNull($this->betterReflectionProperty->getType());
     }

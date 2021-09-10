@@ -174,18 +174,12 @@ class ReflectionParameter extends CoreReflectionParameter
         return $this->betterReflectionParameter->getDefaultValueConstantName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function hasType()
+    public function hasType(): bool
     {
         return $this->betterReflectionParameter->hasType();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getType()
+    public function getType(): ?ReflectionType
     {
         return ReflectionNamedType::fromReturnTypeOrNull($this->betterReflectionParameter->getType());
     }

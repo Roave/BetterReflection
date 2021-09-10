@@ -17,9 +17,7 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
-use function assert;
 use function func_num_args;
-use function is_array;
 use function is_object;
 use function sprintf;
 use function strtolower;
@@ -322,22 +320,12 @@ class ReflectionClass extends CoreReflectionClass
             return $trait->getName();
         }, $traits);
 
-        $traitsByName = array_combine(
+        return array_combine(
             $traitNames,
             array_map(static function (BetterReflectionClass $trait): self {
                 return new self($trait);
             }, $traits),
         );
-
-        assert(
-            is_array($traitsByName),
-            sprintf(
-                'Could not create an array<trait-string, ReflectionClass> for class "%s"',
-                $this->betterReflectionClass->getName(),
-            ),
-        );
-
-        return $traitsByName;
     }
 
     /**
@@ -453,7 +441,9 @@ class ReflectionClass extends CoreReflectionClass
             return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
-        $realParentClassName = $parentClassNames[strtolower($class)] ?? $class;
+        $lowercasedClass = strtolower($class);
+
+        $realParentClassName = $parentClassNames[$lowercasedClass] ?? $class;
 
         return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($class);
     }

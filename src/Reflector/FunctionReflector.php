@@ -32,9 +32,9 @@ class FunctionReflector implements Reflector
      *
      * @throws IdentifierNotFound
      */
-    public function reflect(string $functionName): Reflection
+    public function reflect(string $identifierName): Reflection
     {
-        $identifier = new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
+        $identifier = new Identifier($identifierName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
         $functionInfo = $this->sourceLocator->locateIdentifier($this->classReflector, $identifier);
         assert($functionInfo instanceof ReflectionFunction || $functionInfo === null);

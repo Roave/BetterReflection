@@ -226,9 +226,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      */
     private function createStub(Node $node): string
     {
-        $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
+        if (! ($node instanceof Node\Expr\FuncCall)) {
+            $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
 
-        if (isset($nodeWithNamespaceName->namespacedName)) {
             $namespaceBuilder = $this->builderFactory->namespace($nodeWithNamespaceName->namespacedName->slice(0, -1));
             $namespaceBuilder->addStmt($node);
 

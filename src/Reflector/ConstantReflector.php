@@ -32,9 +32,9 @@ class ConstantReflector implements Reflector
      *
      * @throws IdentifierNotFound
      */
-    public function reflect(string $constantName): Reflection
+    public function reflect(string $identifierName): Reflection
     {
-        $identifier = new Identifier($constantName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT));
+        $identifier = new Identifier($identifierName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT));
 
         $constantInfo = $this->sourceLocator->locateIdentifier($this->classReflector, $identifier);
         assert($constantInfo instanceof ReflectionConstant || $constantInfo === null);
