@@ -35,24 +35,6 @@ class ReflectionObject extends CoreReflectionObject
 
     /**
      * {@inheritDoc}
-     *
-     * @throws CoreReflectionException
-     */
-    public static function export($argument, $return = null)
-    {
-        $output = BetterReflectionObject::createFromInstance($argument)->__toString();
-
-        if ($return) {
-            return $output;
-        }
-
-        echo $output;
-
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
      */
     public function __toString()
     {

@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use InvalidArgumentException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 
@@ -23,7 +21,6 @@ use function assert;
 use function func_num_args;
 use function is_array;
 use function is_object;
-use function is_string;
 use function sprintf;
 use function strtolower;
 
@@ -36,32 +33,6 @@ class ReflectionClass extends CoreReflectionClass
         $this->betterReflectionClass = $betterReflectionClass;
 
         unset($this->name);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws CoreReflectionException
-     */
-    public static function export($argument, $return = false)
-    {
-        if (is_string($argument) || is_object($argument)) {
-            if (is_string($argument)) {
-                $output = BetterReflectionClass::createFromName($argument)->__toString();
-            } else {
-                $output = BetterReflectionObject::createFromInstance($argument)->__toString();
-            }
-
-            if ($return) {
-                return $output;
-            }
-
-            echo $output;
-
-            return null;
-        }
-
-        throw new InvalidArgumentException('Class name must be provided');
     }
 
     /**

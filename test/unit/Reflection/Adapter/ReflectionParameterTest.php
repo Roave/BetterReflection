@@ -13,7 +13,6 @@ use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunc
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
-use Throwable;
 
 use function array_combine;
 use function array_map;
@@ -101,12 +100,5 @@ class ReflectionParameterTest extends TestCase
 
         $adapter = new ReflectionParameterAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
-    }
-
-    public function testExport(): void
-    {
-        $this->expectException(Throwable::class);
-        $this->expectExceptionMessage('Unable to export statically');
-        ReflectionParameterAdapter::export('foo', 0);
     }
 }

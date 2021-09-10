@@ -16,7 +16,6 @@ function test ($a, $b = 1, $c = "") {
 
 $func = new ReflectionFunction("test");
 
-var_dump($func->export("test"));
 echo "--getName--\n";
 var_dump($func->getName());
 echo "--isInternal--\n";
@@ -49,21 +48,7 @@ var_dump($func->getNumberOfRequiredParameters());
 echo "Done\n";
 
 ?>
---EXPECTF--	
-/**
-hoho
-*/
-Function [ <user> function test ] {
-  @@ %s 6 - 8
-
-  - Parameters [3] {
-    Parameter #0 [ <required> $a ]
-    Parameter #1 [ <optional> $b = 1 ]
-    Parameter #2 [ <optional> $c = '' ]
-  }
-}
-
-NULL
+--EXPECTF--
 --getName--
 string(4) "test"
 --isInternal--

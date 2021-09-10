@@ -134,14 +134,6 @@ class ReflectionClassTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    public function testExport(): void
-    {
-        $exported = ReflectionClassAdapter::export('\stdClass', true);
-
-        self::assertIsString($exported);
-        self::assertStringContainsString('stdClass', $exported);
-    }
-
     public function testGetFileNameReturnsFalseWhenNoFileName(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);

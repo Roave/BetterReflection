@@ -21,7 +21,6 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
-use Throwable;
 use TypeError;
 
 use function array_combine;
@@ -145,13 +144,6 @@ class ReflectionMethodTest extends TestCase
             default:
                 self::assertEquals($returnValue, $adapterReturnValue);
         }
-    }
-
-    public function testExport(): void
-    {
-        $this->expectException(Throwable::class);
-        $this->expectExceptionMessage('Unable to export statically');
-        ReflectionMethodAdapter::export('\stdClass', 'foo');
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName(): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use Exception;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -22,16 +21,6 @@ class ReflectionProperty extends CoreReflectionProperty
     public function __construct(BetterReflectionProperty $betterReflectionProperty)
     {
         $this->betterReflectionProperty = $betterReflectionProperty;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws Exception
-     */
-    public static function export($class, $name, $return = null)
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**
