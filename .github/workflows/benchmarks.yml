@@ -57,7 +57,7 @@ jobs:
         run: "composer install --no-interaction --no-progress"
 
       - name: "Install PhpBench"
-        run: "composer require --dev --prefer-stable --no-interaction --no-progress phpbench/phpbench:^0.17.0"
+        run: "composer require --with-all-dependencies --dev --prefer-stable --no-interaction --no-progress phpbench/phpbench:^1.1.1"
 
       - name: "PhpBench"
         run: "vendor/bin/phpbench run --progress=dots --iterations=1"
