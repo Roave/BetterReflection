@@ -274,7 +274,7 @@ class ReflectionObject extends CoreReflectionObject
     /**
      * {@inheritDoc}
      */
-    public function getReflectionConstants()
+    public function getReflectionConstants(?int $filter = null)
     {
         return array_values(array_map(
             static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
