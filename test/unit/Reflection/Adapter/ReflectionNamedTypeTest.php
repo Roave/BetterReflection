@@ -8,12 +8,10 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType as CoreReflectionNamedType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
-use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
 use function array_combine;
 use function array_map;
-use function assert;
 use function get_class_methods;
 
 /**
@@ -57,7 +55,7 @@ class ReflectionNamedTypeTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionType::class);
+        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())
@@ -72,42 +70,5 @@ class ReflectionNamedTypeTest extends TestCase
 
         $adapter = new ReflectionNamedTypeAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
-    }
-
-    public function testIsInstanceOfCoreReflectionType(): void
-    {
-        $reflectionStub = $this->createMock(BetterReflectionType::class);
-        $adapter        = ReflectionNamedTypeAdapter::fromReturnTypeOrNull($reflectionStub);
-        $this->assertInstanceOf(CoreReflectionNamedType::class, $adapter);
-    }
-
-    public function testSelfIsNotBuiltin(): void
-    {
-        $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector);
-        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('self', false, $reflector);
-        $reflectionTypeAdapter = new ReflectionNamedTypeAdapter($betterReflectionType);
-
-        self::assertFalse($reflectionTypeAdapter->isBuiltin());
-    }
-
-    public function testParentIsNotBuiltin(): void
-    {
-        $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector);
-        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('parent', false, $reflector);
-        $reflectionTypeAdapter = new ReflectionNamedTypeAdapter($betterReflectionType);
-
-        self::assertFalse($reflectionTypeAdapter->isBuiltin());
-    }
-
-    public function testStaticIsNotBuiltin(): void
-    {
-        $reflector = $this->createMock(Reflector::class);
-        assert($reflector instanceof Reflector);
-        $betterReflectionType  = BetterReflectionType::createFromTypeAndReflector('static', false, $reflector);
-        $reflectionTypeAdapter = new ReflectionNamedTypeAdapter($betterReflectionType);
-
-        self::assertFalse($reflectionTypeAdapter->isBuiltin());
     }
 }

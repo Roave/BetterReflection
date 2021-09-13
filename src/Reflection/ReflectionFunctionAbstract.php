@@ -12,7 +12,6 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
-use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
@@ -412,11 +411,7 @@ abstract class ReflectionFunctionAbstract
             return null;
         }
 
-        if ($returnType instanceof NullableType) {
-            return ReflectionType::createFromTypeAndReflector((string) $returnType->type, true, $this->reflector);
-        }
-
-        return ReflectionType::createFromTypeAndReflector((string) $returnType, false, $this->reflector);
+        return ReflectionType::createFromTypeAndReflector($returnType);
     }
 
     /**

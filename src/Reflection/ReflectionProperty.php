@@ -402,11 +402,7 @@ class ReflectionProperty
             return null;
         }
 
-        if ($type instanceof NullableType) {
-            $type = $type->type;
-        }
-
-        return ReflectionType::createFromTypeAndReflector((string) $type, $this->allowsNull(), $this->reflector);
+        return ReflectionType::createFromTypeAndReflector($type);
     }
 
     /**

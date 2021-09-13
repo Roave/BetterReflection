@@ -11,8 +11,8 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -134,7 +134,7 @@ class ReflectionMethodTest extends TestCase
                 break;
 
             case 'getReturnType':
-                self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $adapterReturnValue);
+                self::assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
                 break;
 
             case 'getPrototype':

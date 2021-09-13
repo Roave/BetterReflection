@@ -372,11 +372,9 @@ class ReflectionParameter
             return null;
         }
 
-        if ($type instanceof NullableType) {
-            $type = $type->type;
-        }
+        $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
 
-        return ReflectionType::createFromTypeAndReflector((string) $type, $this->allowsNull(), $this->reflector);
+        return ReflectionType::createFromTypeAndReflector($type, $allowsNull);
     }
 
     /**

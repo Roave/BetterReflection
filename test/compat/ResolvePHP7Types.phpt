@@ -58,5 +58,5 @@ array(2) {
   ["builtIn"]=>
   bool(true)
   ["type"]=>
-  string(6) "string"
+  string(7) "?string"
 }

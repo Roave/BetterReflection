@@ -61,13 +61,3 @@ parameters:
             message: "#^Property PhpParser\\\\Node\\\\Expr\\\\Closure\\:\\:\\$stmts \\(array\\<PhpParser\\\\Node\\\\Stmt\\>\\|null\\) does not accept array\\<int, PhpParser\\\\Node\\>\\.$#"
             count: 1
             path: %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php
-
-        -
-            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionParameter\\:\\:getType\\(\\) should return Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionType\\|null but returns Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionNamedType\\|null\\.$#"
-            count: 1
-            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionParameter.php
-
-        -
-            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionProperty\\:\\:getType\\(\\) should return Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionType\\|null but returns Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionNamedType\\|null\\.$#"
-            count: 1
-            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionProperty.php
