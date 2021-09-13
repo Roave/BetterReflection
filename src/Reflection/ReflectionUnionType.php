@@ -11,17 +11,17 @@ use function implode;
 
 class ReflectionUnionType extends ReflectionType
 {
-    /** @var ReflectionType[] */
+    /** @var list<ReflectionNamedType|ReflectionUnionType> */
     private array $types;
 
     public function __construct(UnionType $type, bool $allowsNull)
     {
         parent::__construct($allowsNull);
-        $this->types = array_map(static fn ($type): ReflectionType => ReflectionType::createFromTypeAndReflector($type), $type->types);
+        $this->types = array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType => ReflectionType::createFromTypeAndReflector($type), $type->types);
     }
 
     /**
-     * @return ReflectionType[]
+     * @return list<ReflectionNamedType|ReflectionUnionType>
      */
     public function getTypes(): array
     {

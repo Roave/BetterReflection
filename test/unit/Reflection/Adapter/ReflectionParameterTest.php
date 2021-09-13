@@ -12,8 +12,8 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionP
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 
 use function array_combine;
 use function array_map;
@@ -50,7 +50,7 @@ class ReflectionParameterTest extends TestCase
 
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
-        $mockType = $this->createMock(BetterReflectionType::class);
+        $mockType = $this->createMock(BetterReflectionNamedType::class);
 
         return [
             ['__toString', null, '', []],

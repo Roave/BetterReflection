@@ -80,37 +80,20 @@ class ReflectionTypeTest extends TestCase
         self::assertFalse($reflectionType->isBuiltin());
     }
 
-    public function testGetName(): void
-    {
-        self::assertSame('int', ReflectionType::createFromTypeAndReflector(new Identifier('int'))->getName());
-        self::assertSame('string', ReflectionType::createFromTypeAndReflector(new Identifier('string'))->getName());
-        self::assertSame('array', ReflectionType::createFromTypeAndReflector(new Identifier('array'))->getName());
-        self::assertSame('callable', ReflectionType::createFromTypeAndReflector(new Identifier('callable'))->getName());
-        self::assertSame('bool', ReflectionType::createFromTypeAndReflector(new Identifier('bool'))->getName());
-        self::assertSame('float', ReflectionType::createFromTypeAndReflector(new Identifier('float'))->getName());
-        self::assertSame('void', ReflectionType::createFromTypeAndReflector(new Identifier('void'))->getName());
-        self::assertSame('object', ReflectionType::createFromTypeAndReflector(new Identifier('object'))->getName());
-        self::assertSame('iterable', ReflectionType::createFromTypeAndReflector(new Identifier('iterable'))->getName());
-        self::assertSame('mixed', ReflectionType::createFromTypeAndReflector(new Identifier('mixed'))->getName());
-
-        self::assertSame('Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector(new Identifier('Foo\Bar\Baz'))->getName());
-        self::assertSame('\Foo\Bar\Baz', ReflectionType::createFromTypeAndReflector(new Identifier('\Foo\Bar\Baz'))->getName());
-    }
-
     public function testImplicitCastToString(): void
     {
-        self::assertSame('int', (string) ReflectionType::createFromTypeAndReflector(new Identifier('int'))->getName());
-        self::assertSame('string', (string) ReflectionType::createFromTypeAndReflector(new Identifier('string'))->getName());
-        self::assertSame('array', (string) ReflectionType::createFromTypeAndReflector(new Identifier('array'))->getName());
-        self::assertSame('callable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('callable'))->getName());
-        self::assertSame('bool', (string) ReflectionType::createFromTypeAndReflector(new Identifier('bool'))->getName());
-        self::assertSame('float', (string) ReflectionType::createFromTypeAndReflector(new Identifier('float'))->getName());
-        self::assertSame('void', (string) ReflectionType::createFromTypeAndReflector(new Identifier('void'))->getName());
-        self::assertSame('object', (string) ReflectionType::createFromTypeAndReflector(new Identifier('object'))->getName());
-        self::assertSame('iterable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('iterable'))->getName());
-        self::assertSame('mixed', (string) ReflectionType::createFromTypeAndReflector(new Identifier('mixed'))->getName());
+        self::assertSame('int', (string) ReflectionType::createFromTypeAndReflector(new Identifier('int')));
+        self::assertSame('string', (string) ReflectionType::createFromTypeAndReflector(new Identifier('string')));
+        self::assertSame('array', (string) ReflectionType::createFromTypeAndReflector(new Identifier('array')));
+        self::assertSame('callable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('callable')));
+        self::assertSame('bool', (string) ReflectionType::createFromTypeAndReflector(new Identifier('bool')));
+        self::assertSame('float', (string) ReflectionType::createFromTypeAndReflector(new Identifier('float')));
+        self::assertSame('void', (string) ReflectionType::createFromTypeAndReflector(new Identifier('void')));
+        self::assertSame('object', (string) ReflectionType::createFromTypeAndReflector(new Identifier('object')));
+        self::assertSame('iterable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('iterable')));
+        self::assertSame('mixed', (string) ReflectionType::createFromTypeAndReflector(new Identifier('mixed')));
 
-        self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('Foo\Bar\Baz'))->getName());
-        self::assertSame('\Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('\Foo\Bar\Baz'))->getName());
+        self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('Foo\Bar\Baz')));
+        self::assertSame('\Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('\Foo\Bar\Baz')));
     }
 }

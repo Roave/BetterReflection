@@ -7,8 +7,9 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
 use function array_combine;
 use function array_map;
@@ -31,10 +32,10 @@ class ReflectionTypeTest extends TestCase
      */
     public function testCoreReflectionTypes(string $methodName): void
     {
-        $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionTypeAdapter::class);
+        $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
 
         self::assertTrue($reflectionTypeAdapterReflection->hasMethod($methodName));
-        self::assertSame(ReflectionTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
+        self::assertSame(ReflectionNamedTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
@@ -52,7 +53,7 @@ class ReflectionTypeTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionType::class);
+        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())
@@ -65,7 +66,7 @@ class ReflectionTypeTest extends TestCase
             $this->expectException($expectedException);
         }
 
-        $adapter = new ReflectionTypeAdapter($reflectionStub);
+        $adapter = ReflectionTypeAdapter::fromTypeOrNull($reflectionStub);
         $adapter->{$methodName}(...$args);
     }
 
@@ -76,6 +77,6 @@ class ReflectionTypeTest extends TestCase
 
     public function testFromTypeOrNullWithBetterReflectionType(): void
     {
-        self::assertInstanceOf(ReflectionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionType::class)));
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
     }
 }
