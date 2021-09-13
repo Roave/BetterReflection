@@ -24,7 +24,6 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function array_filter;
 use function array_map;
 use function array_merge;
-use function array_values;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
@@ -136,16 +135,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         sort($originalInterfacesNames);
         sort($stubbedInterfacesNames);
-
-        // Skip assertions for new interfaces added in PHP8
-        if (PHP_VERSION_ID < 80000) {
-            $stubbedInterfacesNames = array_values(array_filter(
-                $stubbedInterfacesNames,
-                static function (string $interfaceName): bool {
-                    return $interfaceName !== 'Stringable';
-                },
-            ));
-        }
 
         self::assertSame($originalInterfacesNames, $stubbedInterfacesNames);
     }
@@ -373,12 +362,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
         // Needs fixes in JetBrains/phpstorm-stubs or PHP
         if (in_array($functionName, ['get_resources', 'sapi_windows_cp_get', 'stream_context_set_option'], true)) {
             return;
-        }
-
-        // The number of arguments in the signature of this function changed in PHP8
-        if ($originalReflection->getName() !== 'debug_zval_dump' && PHP_VERSION_ID < 80000) {
-            self::assertSame($originalReflection->getNumberOfParameters(), $stubbedReflection->getNumberOfParameters());
-            self::assertSame($originalReflection->getNumberOfRequiredParameters(), $stubbedReflection->getNumberOfRequiredParameters());
         }
 
         $stubbedReflectionParameters = $stubbedReflection->getParameters();

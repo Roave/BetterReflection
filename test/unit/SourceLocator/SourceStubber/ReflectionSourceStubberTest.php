@@ -40,8 +40,6 @@ use function in_array;
 use function preg_match;
 use function sort;
 
-use const PHP_VERSION_ID;
-
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber
  */
@@ -116,10 +114,6 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testClassStubWithPHP8Syntax(): void
     {
-        if (PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('Test runs only on PHP8');
-        }
-
         require __DIR__ . '/../../Fixture/PHP8ClassForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(PHP8ClassForSourceStubber::class);
