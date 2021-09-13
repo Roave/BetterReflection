@@ -296,8 +296,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                     // Some constants has different values on different systems, some are not actual in stubs
                     if (defined($constantName)) {
+                        // @ because access to deprecated constant throws deprecated warning
                         /** @var scalar|scalar[]|null $constantValue */
-                        $constantValue        = constant($constantName);
+                        $constantValue        = @constant($constantName);
                         $node->args[1]->value = BuilderHelpers::normalizeValue($constantValue);
                     }
 
