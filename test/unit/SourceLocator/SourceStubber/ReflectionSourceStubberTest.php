@@ -8,6 +8,7 @@ use ClassWithoutNamespaceForSourceStubber;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
+use ReflectionFunction as CoreReflectionFunction;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -35,6 +36,7 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function get_defined_functions;
 use function in_array;
 use function sort;
 
@@ -49,6 +51,8 @@ class ReflectionSourceStubberTest extends TestCase
 
     private ClassReflector $classReflector;
 
+    private FunctionReflector $functionReflector;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,6 +63,7 @@ class ReflectionSourceStubberTest extends TestCase
             $this->stubber,
         );
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
+        $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
     }
 
     public function testCanStubClass(): void
@@ -322,10 +327,42 @@ class ReflectionSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return string[][]
+     */
+    public function internalFunctionsProvider(): array
+    {
+        $functionNames = get_defined_functions()['internal'];
+
+        return array_map(
+            static function (string $functionName): array {
+                return [$functionName];
+            },
+            array_filter(
+                $functionNames,
+                static function (string $functionName): bool {
+                    $reflection = new CoreReflectionFunction($functionName);
+
+                    return $reflection->isInternal();
+                },
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider internalFunctionsProvider
+     */
+    public function testInternalFunctionsReturnType(string $functionName): void
+    {
+        $stubbedReflection  = $this->functionReflector->reflect($functionName);
+        $originalReflection = new CoreReflectionFunction($functionName);
+
+        self::assertSame((string) $originalReflection->getReturnType(), (string) $stubbedReflection->getReturnType());
+    }
+
     public function testFunctionWithParameterPassedByReference(): void
     {
-        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $functionReflection = $reflector->reflect('sort');
+        $functionReflection = $this->functionReflector->reflect('sort');
 
         self::assertSame('sort', $functionReflection->getName());
         self::assertSame(2, $functionReflection->getNumberOfParameters());
@@ -339,8 +376,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testFunctionWithOptionalParameter(): void
     {
-        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $functionReflection = $reflector->reflect('preg_match');
+        $functionReflection = $this->functionReflector->reflect('preg_match');
 
         self::assertSame('preg_match', $functionReflection->getName());
         self::assertSame(5, $functionReflection->getNumberOfParameters());
@@ -364,8 +400,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional): void
     {
-        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $functionReflection = $reflector->reflect($functionName);
+        $functionReflection = $this->functionReflector->reflect($functionName);
 
         self::assertSame($functionName, $functionReflection->getName());
 
