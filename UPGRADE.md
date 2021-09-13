@@ -14,6 +14,10 @@ or backwards compatibility (BC) breakages occur.
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionObject::export()` 
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionParameter::export()` 
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionProperty::export()` 
+* Casting to string is compatible with PHP: 
+  * `string or NULL` is now `?string` 
+  * `boolean` is now `bool`
+  * `integer` is now `int`
 
 ## 4.0.0
 

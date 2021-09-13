@@ -35,6 +35,7 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function in_array;
 use function sort;
 
 /**
@@ -190,7 +191,7 @@ class ReflectionSourceStubberTest extends TestCase
                     }
 
                     // There are problems with some extensions
-                    return !in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'imagick'], true);
+                    return ! in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'imagick'], true);
                 },
             ),
         );

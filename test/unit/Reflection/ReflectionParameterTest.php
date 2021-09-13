@@ -339,9 +339,9 @@ class ReflectionParameterTest extends TestCase
     public function nullableParameterTypeFunctionProvider(): array
     {
         return [
-            ['nullableIntParam', 'int'],
-            ['nullableClassParam', stdClass::class],
-            ['nullableStringParamWithDefaultValue', 'string'],
+            ['nullableIntParam', '?int'],
+            ['nullableClassParam', '?' . stdClass::class],
+            ['nullableStringParamWithDefaultValue', '?string'],
         ];
     }
 

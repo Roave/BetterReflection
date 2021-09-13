@@ -533,6 +533,10 @@ class ReflectionParameter
             return $parentClass->getName();
         }
 
+        if ($typeHint === 'resource') {
+            return null;
+        }
+
         if ($namedType->isBuiltin()) {
             return null;
         }
