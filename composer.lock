@@ -4,28 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c43b3eee1ebccf508e095a4fea4a5474",
+    "content-hash": "39fea267792c6e85ee974b1a290e10d1",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2020.2",
+            "version": "v2021.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "55746ac77eecd0cd757b52151b9df9002da554af"
+                "reference": "a09a014a1984d2ac875c6b1220b7f17ca7d0a873"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/55746ac77eecd0cd757b52151b9df9002da554af",
-                "reference": "55746ac77eecd0cd757b52151b9df9002da554af",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/a09a014a1984d2ac875c6b1220b7f17ca7d0a873",
+                "reference": "a09a014a1984d2ac875c6b1220b7f17ca7d0a873",
                 "shasum": ""
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "nikic/php-parser": "^4",
-                "php": "^7.4",
-                "phpdocumentor/reflection-docblock": "dev-master",
-                "phpunit/phpunit": "^9"
+                "friendsofphp/php-cs-fixer": "@stable",
+                "nikic/php-parser": "@stable",
+                "php": "^8.0",
+                "phpdocumentor/reflection-docblock": "@stable",
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "autoload": {
@@ -50,9 +50,9 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2020.2"
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2021.2"
             },
-            "time": "2020-09-16T15:54:07+00:00"
+            "time": "2021-06-06T20:58:57+00:00"
         },
         {
             "name": "nikic/php-parser",
