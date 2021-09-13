@@ -38,6 +38,8 @@ use function sprintf;
  */
 class PhpStormStubsSourceStubberTest extends TestCase
 {
+    private const EXTENSIONS = ['Core', 'standard', 'pcre', 'SPL'];
+
     private PhpStormStubsSourceStubber $sourceStubber;
 
     private PhpInternalSourceLocator $phpInternalSourceLocator;
@@ -89,7 +91,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
                     }
 
                     // Check only always enabled extensions
-                    return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
+                    return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
             ),
         );
@@ -290,7 +292,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
                     $reflection = new CoreReflectionFunction($functionName);
 
                     // Check only always enabled extensions
-                    return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
+                    return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
             ),
         );
@@ -381,7 +383,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         foreach ($constants as $extensionName => $extensionConstants) {
             // Check only always enabled extensions
-            if (! in_array($extensionName, ['Core', 'standard', 'pcre', 'SPL'], true)) {
+            if (! in_array($extensionName, self::EXTENSIONS, true)) {
                 continue;
             }
 
