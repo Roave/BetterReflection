@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
 use ClassWithoutNamespaceForSourceStubber;
-use Closure;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
@@ -36,8 +35,6 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
-use function in_array;
-use function preg_match;
 use function sort;
 
 /**
@@ -192,8 +189,8 @@ class ReflectionSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // Classes in "memcache" extension contain methods with parameters without name
-                    return $reflection->getExtensionName() !== 'memcache';
+                    // There are problems with some extensions
+                    return !in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'imagick'], true);
                 },
             ),
         );
@@ -302,24 +299,13 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
         self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
-        if (! ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable')) {
-            // Bug in PHP: https://3v4l.org/EeHXS
-            self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
-        }
+        self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
 
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
-        if ($original->getDeclaringClass()->getName() !== 'FFI') {
-            // Parameters can be passed by reference and also by value
-            self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-        }
 
-        if (
-            ! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)
-            && ! preg_match('~^RedisCluster#\w+.arg$~', $parameterName)
-        ) {
-            // Parameters are variadic but not optional
-            self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
-        }
+        self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
+
+        self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
 
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
@@ -344,7 +330,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame(2, $functionReflection->getNumberOfParameters());
 
         $parameterReflection = $functionReflection->getParameters()[0];
-        self::assertSame('arg', $parameterReflection->getName());
+        self::assertSame('array', $parameterReflection->getName());
         self::assertFalse($parameterReflection->isOptional());
         self::assertTrue($parameterReflection->isPassedByReference());
         self::assertFalse($parameterReflection->canBePassedByValue());
@@ -360,7 +346,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame(2, $functionReflection->getNumberOfRequiredParameters());
 
         $parameterReflection = $functionReflection->getParameters()[2];
-        self::assertSame('subpatterns', $parameterReflection->getName());
+        self::assertSame('matches', $parameterReflection->getName());
         self::assertTrue($parameterReflection->isOptional());
     }
 

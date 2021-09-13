@@ -49,6 +49,7 @@
     </InternalMethod>
   </file>
   <file src="src/SourceLocator/SourceStubber/ReflectionSourceStubber.php">
+    <PossiblyInvalidArgument occurrences="3"/>
     <InternalClass occurrences="1">
       <code>BuilderHelpers::normalizeValue($constantReflection-&gt;getValue())</code>
     </InternalClass>
