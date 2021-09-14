@@ -44,7 +44,7 @@ class ReflectionClassConstant
         Reflector $reflector,
         ClassConst $node,
         int $positionInNode,
-        ReflectionClass $owner
+        ReflectionClass $owner,
     ): self {
         $ref                 = new self();
         $ref->node           = $node;

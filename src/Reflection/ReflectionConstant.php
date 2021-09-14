@@ -68,7 +68,7 @@ class ReflectionConstant implements Reflection
         Node $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
-        ?int $positionInNode = null
+        ?int $positionInNode = null,
     ): self {
         return $node instanceof Node\Stmt\Const_
             ? self::createFromConstKeyword($reflector, $node, $locatedSource, $namespace, $positionInNode)
@@ -80,7 +80,7 @@ class ReflectionConstant implements Reflection
         Node\Stmt\Const_ $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace,
-        int $positionInNode
+        int $positionInNode,
     ): self {
         $constant                     = new self();
         $constant->reflector          = $reflector;
@@ -98,7 +98,7 @@ class ReflectionConstant implements Reflection
     private static function createFromDefineFunctionCall(
         Reflector $reflector,
         Node\Expr\FuncCall $node,
-        LocatedSource $locatedSource
+        LocatedSource $locatedSource,
     ): self {
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
 

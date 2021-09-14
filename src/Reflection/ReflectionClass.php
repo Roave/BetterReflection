@@ -132,7 +132,7 @@ class ReflectionClass implements Reflection
         Reflector $reflector,
         ClassLikeNode $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $namespace = null
+        ?NamespaceNode $namespace = null,
     ): self {
         $class = new self();
 
@@ -1493,7 +1493,7 @@ class ReflectionClass implements Reflection
     public function addProperty(
         string $propertyName,
         int $visibility = CoreReflectionProperty::IS_PUBLIC,
-        bool $static = false
+        bool $static = false,
     ): void {
         $type = 0;
         switch ($visibility) {

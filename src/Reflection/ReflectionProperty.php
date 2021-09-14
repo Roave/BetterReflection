@@ -89,7 +89,7 @@ class ReflectionProperty
         ?Namespace_ $declaringNamespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
-        bool $declaredAtCompileTime = true
+        bool $declaredAtCompileTime = true,
     ): self {
         $prop                        = new self();
         $prop->reflector             = $reflector;

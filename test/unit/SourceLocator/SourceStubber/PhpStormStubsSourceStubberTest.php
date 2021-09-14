@@ -215,7 +215,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     private function assertSameParameterAttributes(
         CoreReflectionMethod $originalMethod,
         CoreReflectionParameter $original,
-        ReflectionParameter $stubbed
+        ReflectionParameter $stubbed,
     ): void {
         $parameterName = $original->getDeclaringClass()->getName()
             . '#' . $originalMethod->getName()

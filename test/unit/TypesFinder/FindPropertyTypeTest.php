@@ -119,7 +119,7 @@ class FindPropertyTypeTest extends TestCase
         ?string $namespaceName,
         array $aliasesToFQCNs,
         string $docBlockType,
-        array $expectedTypes
+        array $expectedTypes,
     ): void {
         $docBlock = sprintf("/**\n * @var %s\n */", $docBlockType);
 

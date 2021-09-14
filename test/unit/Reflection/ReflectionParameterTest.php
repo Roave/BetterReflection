@@ -263,7 +263,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testGetType(
         string $parameterToTest,
-        string $expectedType
+        string $expectedType,
     ): void {
         $classInfo = $this->reflector->reflect(Methods::class);
 

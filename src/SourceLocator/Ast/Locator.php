@@ -44,7 +44,7 @@ class Locator
     public function findReflection(
         Reflector $reflector,
         LocatedSource $locatedSource,
-        Identifier $identifier
+        Identifier $identifier,
     ): Reflection {
         return $this->findInArray(
             $this->findReflectionsOfType(
@@ -66,7 +66,7 @@ class Locator
     public function findReflectionsOfType(
         Reflector $reflector,
         LocatedSource $locatedSource,
-        IdentifierType $identifierType
+        IdentifierType $identifierType,
     ): array {
         try {
             return $this->findReflectionsInTree->__invoke(

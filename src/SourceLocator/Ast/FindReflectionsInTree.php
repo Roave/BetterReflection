@@ -56,7 +56,7 @@ final class FindReflectionsInTree
         Reflector $reflector,
         array $ast,
         IdentifierType $identifierType,
-        LocatedSource $locatedSource
+        LocatedSource $locatedSource,
     ): array {
         $nodeVisitor = new class ($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke()) extends NodeVisitorAbstract
         {
@@ -80,7 +80,7 @@ final class FindReflectionsInTree
                 IdentifierType $identifierType,
                 LocatedSource $locatedSource,
                 AstConversionStrategy $astConversionStrategy,
-                FunctionReflector $functionReflector
+                FunctionReflector $functionReflector,
             ) {
                 $this->reflector             = $reflector;
                 $this->identifierType        = $identifierType;

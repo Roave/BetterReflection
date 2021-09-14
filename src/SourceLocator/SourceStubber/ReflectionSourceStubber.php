@@ -482,7 +482,7 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function parameterDefaultValue(
         ReflectionParameter $parameterReflection,
-        CoreReflectionFunctionAbstract $functionReflectionAbstract
+        CoreReflectionFunctionAbstract $functionReflectionAbstract,
     ): mixed {
         if ($functionReflectionAbstract->isInternal()) {
             return null;

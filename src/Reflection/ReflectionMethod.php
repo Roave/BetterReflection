@@ -46,7 +46,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         ?Namespace_ $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
-        ?string $aliasName = null
+        ?string $aliasName = null,
     ): self {
         $method                    = new self();
         $method->declaringClass    = $declaringClass;

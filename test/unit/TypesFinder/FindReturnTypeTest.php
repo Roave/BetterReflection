@@ -113,7 +113,7 @@ class FindReturnTypeTest extends TestCase
         ?string $namespaceName,
         array $aliasesToFQCNs,
         string $returnType,
-        array $expectedTypes
+        array $expectedTypes,
     ): void {
         $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 

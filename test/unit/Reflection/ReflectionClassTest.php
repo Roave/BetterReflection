@@ -1008,7 +1008,7 @@ PHP;
         string $className,
         string $methodName,
         string $declaringClassShortName,
-        string $implementingClassShortName
+        string $implementingClassShortName,
     ): void {
         $reflector = new ClassReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitWithAbstractMethod.php',

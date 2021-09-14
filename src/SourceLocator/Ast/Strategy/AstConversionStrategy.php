@@ -23,6 +23,6 @@ interface AstConversionStrategy
         Node $node,
         LocatedSource $locatedSource,
         ?Node\Stmt\Namespace_ $namespace,
-        ?int $positionInNode = null
+        ?int $positionInNode = null,
     ): ?Reflection;
 }

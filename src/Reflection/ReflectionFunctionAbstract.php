@@ -70,7 +70,7 @@ abstract class ReflectionFunctionAbstract
         Reflector $reflector,
         Node\FunctionLike $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $declaringNamespace = null
+        ?NamespaceNode $declaringNamespace = null,
     ): void {
         $this->reflector          = $reflector;
         $this->node               = $node;

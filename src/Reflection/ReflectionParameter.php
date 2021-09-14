@@ -68,7 +68,7 @@ class ReflectionParameter
     public static function createFromClassNameAndMethod(
         string $className,
         string $methodName,
-        string $parameterName
+        string $parameterName,
     ): self {
         return ReflectionClass::createFromName($className)
             ->getMethod($methodName)
@@ -83,7 +83,7 @@ class ReflectionParameter
     public static function createFromClassInstanceAndMethod(
         object $instance,
         string $methodName,
-        string $parameterName
+        string $parameterName,
     ): self {
         return ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
@@ -149,7 +149,7 @@ class ReflectionParameter
         ParamNode $node,
         ?Namespace_ $declaringNamespace,
         ReflectionFunctionAbstract $function,
-        int $parameterIndex
+        int $parameterIndex,
     ): self {
         $param                     = new self();
         $param->reflector          = $reflector;

@@ -27,7 +27,7 @@ class NodeToReflection implements AstConversionStrategy
         Node $node,
         LocatedSource $locatedSource,
         ?Node\Stmt\Namespace_ $namespace,
-        ?int $positionInNode = null
+        ?int $positionInNode = null,
     ): ?Reflection {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
