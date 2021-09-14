@@ -843,7 +843,6 @@ class ReflectionClass implements Reflection
 
         if ($this->cachedParentClass === null) {
             $parent = $this->reflector->reflect($this->node->extends->toString());
-            // @TODO use actual `ClassReflector` or `FunctionReflector`?
             assert($parent instanceof self);
 
             $this->cachedParentClass = $parent;
