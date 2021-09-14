@@ -20,14 +20,8 @@ use function file_get_contents;
 
 final class PsrAutoloaderLocator implements SourceLocator
 {
-    private PsrAutoloaderMapping $mapping;
-
-    private Locator $astLocator;
-
-    public function __construct(PsrAutoloaderMapping $mapping, Locator $astLocator)
+    public function __construct(private PsrAutoloaderMapping $mapping, private Locator $astLocator)
     {
-        $this->mapping    = $mapping;
-        $this->astLocator = $astLocator;
     }
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection

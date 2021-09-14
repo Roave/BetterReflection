@@ -15,14 +15,8 @@ use function assert;
 
 class FunctionReflector implements Reflector
 {
-    private SourceLocator $sourceLocator;
-
-    private ClassReflector $classReflector;
-
-    public function __construct(SourceLocator $sourceLocator, ClassReflector $classReflector)
+    public function __construct(private SourceLocator $sourceLocator, private ClassReflector $classReflector)
     {
-        $this->sourceLocator  = $sourceLocator;
-        $this->classReflector = $classReflector;
     }
 
     /**

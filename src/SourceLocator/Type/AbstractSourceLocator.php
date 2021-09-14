@@ -15,8 +15,6 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 abstract class AbstractSourceLocator implements SourceLocator
 {
-    private AstLocator $astLocator;
-
     /**
      * Children should implement this method and return a LocatedSource object
      * which contains the source and the file from which it was located.
@@ -27,9 +25,8 @@ abstract class AbstractSourceLocator implements SourceLocator
      */
     abstract protected function createLocatedSource(Identifier $identifier): ?LocatedSource;
 
-    public function __construct(AstLocator $astLocator)
+    public function __construct(private AstLocator $astLocator)
     {
-        $this->astLocator = $astLocator;
     }
 
     /**

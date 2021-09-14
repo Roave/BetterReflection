@@ -11,11 +11,8 @@ use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUni
 
 class ReflectionType extends CoreReflectionType
 {
-    private BetterReflectionType $betterReflectionType;
-
-    public function __construct(BetterReflectionType $betterReflectionType)
+    public function __construct(private BetterReflectionType $betterReflectionType)
     {
-        $this->betterReflectionType = $betterReflectionType;
     }
 
     public static function fromTypeOrNull(?BetterReflectionType $betterReflectionType): ReflectionUnionType|ReflectionNamedType|self|null

@@ -11,11 +11,8 @@ use PhpParser\Node\UnionType;
 
 abstract class ReflectionType
 {
-    private bool $allowsNull;
-
-    protected function __construct(bool $allowsNull)
+    protected function __construct(private bool $allowsNull)
     {
-        $this->allowsNull = $allowsNull;
     }
 
     /**

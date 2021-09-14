@@ -38,15 +38,12 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 {
     private CoreReflectionClass $coreClassReflection;
 
-    private Parser $parser;
-
     /**
      * @throws ReflectionException
      */
-    public function __construct(object $anonymousClassObject, Parser $parser)
+    public function __construct(object $anonymousClassObject, private Parser $parser)
     {
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
-        $this->parser              = $parser;
     }
 
     /**
@@ -91,17 +88,11 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $nodeVisitor = new class ($fileName, $this->coreClassReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            private string $fileName;
-
-            private int $startLine;
-
             /** @var Class_[] */
             private array $anonymousClassNodes = [];
 
-            public function __construct(string $fileName, int $startLine)
+            public function __construct(private string $fileName, private int $startLine)
             {
-                $this->fileName  = $fileName;
-                $this->startLine = $startLine;
             }
 
             /**

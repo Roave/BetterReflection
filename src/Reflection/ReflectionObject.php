@@ -25,17 +25,8 @@ use function preg_match;
 
 class ReflectionObject extends ReflectionClass
 {
-    private ReflectionClass $reflectionClass;
-
-    private object $object;
-
-    private Reflector $reflector;
-
-    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, object $object)
+    private function __construct(private Reflector $reflector, private ReflectionClass $reflectionClass, private object $object)
     {
-        $this->reflector       = $reflector;
-        $this->reflectionClass = $reflectionClass;
-        $this->object          = $object;
     }
 
     /**

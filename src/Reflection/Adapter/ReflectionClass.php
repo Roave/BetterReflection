@@ -24,12 +24,8 @@ use function strtolower;
 
 class ReflectionClass extends CoreReflectionClass
 {
-    private BetterReflectionClass $betterReflectionClass;
-
-    public function __construct(BetterReflectionClass $betterReflectionClass)
+    public function __construct(private BetterReflectionClass $betterReflectionClass)
     {
-        $this->betterReflectionClass = $betterReflectionClass;
-
         unset($this->name);
     }
 

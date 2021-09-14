@@ -14,13 +14,10 @@ use TypeError;
 
 class ReflectionProperty extends CoreReflectionProperty
 {
-    private BetterReflectionProperty $betterReflectionProperty;
-
     private bool $accessible = false;
 
-    public function __construct(BetterReflectionProperty $betterReflectionProperty)
+    public function __construct(private BetterReflectionProperty $betterReflectionProperty)
     {
-        $this->betterReflectionProperty = $betterReflectionProperty;
     }
 
     /**

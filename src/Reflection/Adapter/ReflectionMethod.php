@@ -17,13 +17,10 @@ use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
-    private BetterReflectionMethod $betterReflectionMethod;
-
     private bool $accessible = false;
 
-    public function __construct(BetterReflectionMethod $betterReflectionMethod)
+    public function __construct(private BetterReflectionMethod $betterReflectionMethod)
     {
-        $this->betterReflectionMethod = $betterReflectionMethod;
     }
 
     /**

@@ -11,13 +11,9 @@ use function sprintf;
 
 class IdentifierNotFound extends RuntimeException
 {
-    private Identifier $identifier;
-
-    public function __construct(string $message, Identifier $identifier)
+    public function __construct(string $message, private Identifier $identifier)
     {
         parent::__construct($message);
-
-        $this->identifier = $identifier;
     }
 
     public function getIdentifier(): Identifier

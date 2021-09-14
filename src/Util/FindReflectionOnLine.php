@@ -24,14 +24,8 @@ use function method_exists;
 
 final class FindReflectionOnLine
 {
-    private SourceLocator $sourceLocator;
-
-    private Locator $astLocator;
-
-    public function __construct(SourceLocator $sourceLocator, Locator $astLocator)
+    public function __construct(private SourceLocator $sourceLocator, private Locator $astLocator)
     {
-        $this->sourceLocator = $sourceLocator;
-        $this->astLocator    = $astLocator;
     }
 
     /**

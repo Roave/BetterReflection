@@ -25,16 +25,12 @@ class Locator
 {
     private FindReflectionsInTree $findReflectionsInTree;
 
-    private Parser $parser;
-
     /**
      * @param Closure(): FunctionReflector $functionReflectorGetter
      */
-    public function __construct(Parser $parser, Closure $functionReflectorGetter)
+    public function __construct(private Parser $parser, Closure $functionReflectorGetter)
     {
         $this->findReflectionsInTree = new FindReflectionsInTree(new NodeToReflection(), $functionReflectorGetter);
-
-        $this->parser = $parser;
     }
 
     /**

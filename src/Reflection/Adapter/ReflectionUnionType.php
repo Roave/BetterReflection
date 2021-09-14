@@ -12,11 +12,8 @@ use function array_map;
 
 class ReflectionUnionType extends CoreReflectionUnionType
 {
-    private BetterReflectionUnionType $betterReflectionType;
-
-    public function __construct(BetterReflectionUnionType $betterReflectionType)
+    public function __construct(private BetterReflectionUnionType $betterReflectionType)
     {
-        $this->betterReflectionType = $betterReflectionType;
     }
 
     /**

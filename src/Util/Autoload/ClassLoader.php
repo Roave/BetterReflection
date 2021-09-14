@@ -21,11 +21,8 @@ final class ClassLoader
     /** @var ReflectionClass[] */
     private array $reflections = [];
 
-    private LoaderMethodInterface $loaderMethod;
-
-    public function __construct(LoaderMethodInterface $loaderMethod)
+    public function __construct(private LoaderMethodInterface $loaderMethod)
     {
-        $this->loaderMethod = $loaderMethod;
         spl_autoload_register($this, true, true);
     }
 

@@ -46,8 +46,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         __DIR__ . '/../../../vendor/jetbrains/phpstorm-stubs',
     ];
 
-    private Parser $phpParser;
-
     private BuilderFactory $builderFactory;
 
     private Standard $prettyPrinter;
@@ -82,9 +80,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var array<lowercase-string, string> */
     private static array $constantMap;
 
-    public function __construct(Parser $phpParser)
+    public function __construct(private Parser $phpParser)
     {
-        $this->phpParser      = $phpParser;
         $this->builderFactory = new BuilderFactory();
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
 

@@ -14,17 +14,14 @@ use function spl_object_hash;
 
 final class MemoizingSourceLocator implements SourceLocator
 {
-    private SourceLocator $wrappedSourceLocator;
-
     /** @var Reflection[]|null[] indexed by reflector key and identifier cache key */
     private array $cacheByIdentifierKeyAndOid = [];
 
     /** @var Reflection[][] indexed by reflector key and identifier type cache key */
     private array $cacheByIdentifierTypeKeyAndOid = [];
 
-    public function __construct(SourceLocator $wrappedSourceLocator)
+    public function __construct(private SourceLocator $wrappedSourceLocator)
     {
-        $this->wrappedSourceLocator = $wrappedSourceLocator;
     }
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection

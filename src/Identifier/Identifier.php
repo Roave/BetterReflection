@@ -20,15 +20,11 @@ class Identifier
 
     private string $name;
 
-    private IdentifierType $type;
-
     /**
      * @throws InvalidIdentifierName
      */
-    public function __construct(string $name, IdentifierType $type)
+    public function __construct(string $name, private IdentifierType $type)
     {
-        $this->type = $type;
-
         if (
             $name === self::WILDCARD
             || $name === ReflectionFunctionAbstract::CLOSURE_NAME
