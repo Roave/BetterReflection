@@ -783,6 +783,40 @@ PHP;
         }
     }
 
+    public function testAnonymousClassWithParent(): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/AnonymousClassInstanceWithParent.php',
+            $this->astLocator,
+        ));
+
+        $allClassesInfo = $reflector->getAllClasses();
+        self::assertCount(3, $allClassesInfo);
+
+        $classInfo = $allClassesInfo[2];
+
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(Fixture\FixtureParent::class, $classInfo->getName());
+    }
+
+    public function testAnonymousClassWithInterface(): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/AnonymousClassInstanceWithInterface.php',
+            $this->astLocator,
+        ));
+
+        $allClassesInfo = $reflector->getAllClasses();
+        self::assertCount(3, $allClassesInfo);
+
+        $classInfo = $allClassesInfo[2];
+
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(Fixture\FixtureInterface::class, $classInfo->getName());
+    }
+
     public function testIsAnonymousWithAnonymousClassInString(): void
     {
         $php = '<?php

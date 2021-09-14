@@ -2,20 +2,19 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-interface FixtureInterface {
-    public function test(): void;
+class FixtureParent {
+    public function test(): void
+    {
+
+    }
 }
 
 interface FixtureSecondInterface {
     public function secondTest(): void;
 }
 
-return new class implements FixtureInterface, FixtureSecondInterface
+return new class extends FixtureParent implements FixtureSecondInterface
 {
-    public function test(): void
-    {
-    }
-
     public function secondTest(): void
     {
     }

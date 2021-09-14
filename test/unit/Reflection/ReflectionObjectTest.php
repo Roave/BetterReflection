@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use FixtureInterface;
 use InvalidArgumentException;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
@@ -21,6 +20,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\FixtureInterfaceRequire;
 use stdClass;
 
 use function array_map;
@@ -72,7 +72,7 @@ class ReflectionObjectTest extends TestCase
 
     public function testReflectionForAnonymousClassWithInterface(): void
     {
-        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstanceWithInterface.php'));
+        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstanceWithInterfaceForRequire.php'));
 
         $anonymousClass = require $file;
 
@@ -80,8 +80,8 @@ class ReflectionObjectTest extends TestCase
 
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());
-        self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $classInfo->getName());
-        self::assertContains(FixtureInterface::class, $classInfo->getInterfaceNames());
+        self::assertStringStartsWith(FixtureInterfaceRequire::class, $classInfo->getName());
+        self::assertContains(FixtureInterfaceRequire::class, $classInfo->getInterfaceNames());
         self::assertTrue($classInfo->isInstantiable());
     }
 
