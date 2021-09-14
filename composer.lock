@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39fea267792c6e85ee974b1a290e10d1",
+    "content-hash": "8510ee6cf605c31e76cf74d892208a6f",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -696,21 +696,21 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.4.6",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "f27e06cd9675801df441b3656569b328e04aa37c"
+                "reference": "84674dd3a7575ba617f5a76d7e9e29a7d3891339"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/f27e06cd9675801df441b3656569b328e04aa37c",
-                "reference": "f27e06cd9675801df441b3656569b328e04aa37c",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/84674dd3a7575ba617f5a76d7e9e29a7d3891339",
+                "reference": "84674dd3a7575ba617f5a76d7e9e29a7d3891339",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0",
-                "psr/log": "^1.0"
+                "psr/log": "^1 || ^2 || ^3"
             },
             "require-dev": {
                 "phpstan/phpstan": "^0.12.55",
@@ -740,7 +740,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/xdebug-handler/issues",
-                "source": "https://github.com/composer/xdebug-handler/tree/1.4.6"
+                "source": "https://github.com/composer/xdebug-handler/tree/2.0.2"
             },
             "funding": [
                 {
@@ -756,7 +756,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-25T17:01:18+00:00"
+            "time": "2021-07-31T17:03:58+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -1249,20 +1249,20 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.20.2",
+            "version": "0.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "6035c1566af6a5a8d833a276351e5e18ed412305"
+                "reference": "cfc3263e0f562c49fbdfb4a7899222443fdc9690"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/6035c1566af6a5a8d833a276351e5e18ed412305",
-                "reference": "6035c1566af6a5a8d833a276351e5e18ed412305",
+                "url": "https://api.github.com/repos/infection/infection/zipball/cfc3263e0f562c49fbdfb4a7899222443fdc9690",
+                "reference": "cfc3263e0f562c49fbdfb4a7899222443fdc9690",
                 "shasum": ""
             },
             "require": {
-                "composer/xdebug-handler": "^1.3.3",
+                "composer/xdebug-handler": "^2.0",
                 "ext-dom": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
@@ -1270,11 +1270,12 @@
                 "infection/extension-installer": "^0.1.0",
                 "infection/include-interceptor": "^0.2.4",
                 "justinrainbow/json-schema": "^5.2",
-                "nikic/php-parser": "^4.10.2",
-                "ocramius/package-versions": "^1.2 || ^2.0",
+                "nikic/php-parser": "^4.10.3",
+                "ocramius/package-versions": "^1.9.0 || ^2.0",
                 "ondram/ci-detector": "^3.3.0",
-                "php": "^7.4 || ^8.0",
-                "sanmai/pipeline": "^3.1 || ^5.0",
+                "php": "^7.4.7 || ^8.0",
+                "sanmai/later": "^0.1.1",
+                "sanmai/pipeline": "^5.1",
                 "sebastian/diff": "^3.0.2 || ^4.0",
                 "seld/jsonlint": "^1.7",
                 "symfony/console": "^3.4.29 || ^4.1.19 || ^5.0",
@@ -1299,10 +1300,9 @@
                 "phpstan/phpstan-strict-rules": "^0.12.5",
                 "phpstan/phpstan-webmozart-assert": "^0.12.2",
                 "phpunit/phpunit": "^9.3.11",
-                "symfony/phpunit-bridge": "^4.4.14 || ^5.1.6",
+                "symfony/phpunit-bridge": "^4.4.18 || ^5.1.10",
                 "symfony/yaml": "^5.0",
-                "thecodingmachine/phpstan-safe-rule": "^1.0",
-                "vimeo/psalm": "^4.0"
+                "thecodingmachine/phpstan-safe-rule": "^1.0"
             },
             "bin": [
                 "bin/infection"
@@ -1358,9 +1358,19 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.20.2"
+                "source": "https://github.com/infection/infection/tree/0.24.0"
             },
-            "time": "2020-11-20T17:15:57+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/infection",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/infection",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2021-07-25T18:53:30+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -2490,30 +2500,30 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.4",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+                "reference": "ef29f6d262798707a9edd554e2b82517ef3a9376"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/ef29f6d262798707a9edd554e2b82517ef3a9376",
+                "reference": "ef29f6d262798707a9edd554e2b82517ef3a9376",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
+                    "Psr\\Log\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2534,33 +2544,34 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
+                "source": "https://github.com/php-fig/log/tree/2.0.0"
             },
-            "time": "2021-05-03T11:20:27+00:00"
+            "time": "2021-07-14T16:41:46+00:00"
         },
         {
             "name": "roave/infection-static-analysis-plugin",
-            "version": "1.7.1",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "36d171236fa44b485538c88f56fd1f536b903036"
+                "reference": "458ac62500e384e016fa7f063f0fcec11bc99266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/36d171236fa44b485538c88f56fd1f536b903036",
-                "reference": "36d171236fa44b485538c88f56fd1f536b903036",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/458ac62500e384e016fa7f063f0fcec11bc99266",
+                "reference": "458ac62500e384e016fa7f063f0fcec11bc99266",
                 "shasum": ""
             },
             "require": {
-                "infection/infection": "0.20.2",
+                "infection/infection": "0.24.0",
                 "ocramius/package-versions": "^1.9.0 || ^2.0.0",
                 "php": "~7.4.7|~8.0.0",
-                "vimeo/psalm": "^4.3.2"
+                "sanmai/later": "^0.1.2",
+                "vimeo/psalm": "^4.8.1"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^8.2.0",
-                "phpunit/phpunit": "^9.5.0"
+                "doctrine/coding-standard": "^9.0.0",
+                "phpunit/phpunit": "^9.5.7"
             },
             "bin": [
                 "bin/roave-infection-static-analysis-plugin"
@@ -2584,9 +2595,67 @@
             "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
             "support": {
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.7.1"
+                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.9.0"
             },
-            "time": "2021-03-04T16:33:09+00:00"
+            "time": "2021-07-26T23:32:43+00:00"
+        },
+        {
+            "name": "sanmai/later",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sanmai/later.git",
+                "reference": "9b659fecef2030193fd02402955bc39629d5606f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sanmai/later/zipball/9b659fecef2030193fd02402955bc39629d5606f",
+                "reference": "9b659fecef2030193fd02402955bc39629d5606f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.13",
+                "infection/infection": ">=0.10.5",
+                "phan/phan": ">=2",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpstan/phpstan": ">=0.10",
+                "phpunit/phpunit": ">=7.4",
+                "vimeo/psalm": ">=2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Later\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Kopytko",
+                    "email": "alexey@kopytko.com"
+                }
+            ],
+            "description": "Later: deferred wrapper object",
+            "support": {
+                "issues": "https://github.com/sanmai/later/issues",
+                "source": "https://github.com/sanmai/later/tree/0.1.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sanmai",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-01-02T10:26:44+00:00"
         },
         {
             "name": "sanmai/pipeline",
