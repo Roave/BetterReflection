@@ -17,6 +17,7 @@
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>
     </rule>
 
+    <rule ref="SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch"/>
     <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall"/>
     <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration"/>
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint"/>

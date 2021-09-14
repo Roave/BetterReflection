@@ -270,7 +270,7 @@ class ReflectionFunction extends CoreReflectionFunction
     {
         try {
             return $this->betterReflectionFunction->getClosure();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
     }

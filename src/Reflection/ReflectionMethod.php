@@ -149,7 +149,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
         try {
             return $this->getPrototype();
-        } catch (Exception\MethodPrototypeNotFound $e) {
+        } catch (Exception\MethodPrototypeNotFound) {
             return $this;
         }
     }

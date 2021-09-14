@@ -144,7 +144,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         try {
             return new ReflectionMethod($this->betterReflectionClass->getConstructor());
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException) {
             return null;
         }
     }

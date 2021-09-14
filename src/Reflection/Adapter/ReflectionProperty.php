@@ -50,7 +50,7 @@ class ReflectionProperty extends CoreReflectionProperty
 
         try {
             return $this->betterReflectionProperty->getValue($object);
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -68,7 +68,7 @@ class ReflectionProperty extends CoreReflectionProperty
 
         try {
             $this->betterReflectionProperty->setValue($object, $value);
-        } catch (NoObjectProvided | NotAnObject $e) {
+        } catch (NoObjectProvided | NotAnObject) {
             return;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);

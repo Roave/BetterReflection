@@ -253,7 +253,7 @@ class ReflectionClassTest extends TestCase
 
         try {
             $classInfo->getMethods();
-        } catch (IdentifierNotFound $e) {
+        } catch (IdentifierNotFound) {
             // Ignore error for the first time
         }
 

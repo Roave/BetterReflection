@@ -284,7 +284,7 @@ final class ReflectionSourceStubber implements SourceStubber
             if (array_key_exists($propertyReflection->getName(), $defaultProperties)) {
                 try {
                     $propertyNode->setDefault($defaultProperties[$propertyReflection->getName()]);
-                } catch (LogicException $e) {
+                } catch (LogicException) {
                     // Unsupported value
                 }
             }

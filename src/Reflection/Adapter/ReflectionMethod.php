@@ -306,7 +306,7 @@ class ReflectionMethod extends CoreReflectionMethod
     {
         try {
             return $this->betterReflectionMethod->getClosure($object);
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -332,7 +332,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
         try {
             return $this->betterReflectionMethod->invoke(...func_get_args());
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -350,7 +350,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
         try {
             return $this->betterReflectionMethod->invokeArgs($object, $args);
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);

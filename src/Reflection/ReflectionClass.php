@@ -490,7 +490,7 @@ class ReflectionClass implements Reflection
             $this->getMethod($methodName);
 
             return true;
-        } catch (OutOfBoundsException $exception) {
+        } catch (OutOfBoundsException) {
             return false;
         }
     }
@@ -1255,7 +1255,7 @@ class ReflectionClass implements Reflection
 
         try {
             return $this->getConstructor()->isPublic();
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException) {
             return true;
         }
     }

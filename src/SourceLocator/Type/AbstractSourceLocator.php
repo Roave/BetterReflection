@@ -47,7 +47,7 @@ abstract class AbstractSourceLocator implements SourceLocator
 
         try {
             return $this->astLocator->findReflection($reflector, $locatedSource, $identifier);
-        } catch (IdentifierNotFound $exception) {
+        } catch (IdentifierNotFound) {
             return null;
         }
     }

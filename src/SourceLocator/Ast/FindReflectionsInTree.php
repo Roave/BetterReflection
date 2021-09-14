@@ -132,7 +132,7 @@ final class FindReflectionsInTree
                 if ($node instanceof Node\Expr\FuncCall) {
                     try {
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
-                    } catch (InvalidConstantNode $e) {
+                    } catch (InvalidConstantNode) {
                         return null;
                     }
 
@@ -144,7 +144,7 @@ final class FindReflectionsInTree
                                 $this->functionReflector->reflect($namespacedName->toString());
 
                                 return null;
-                            } catch (IdentifierNotFound $e) {
+                            } catch (IdentifierNotFound) {
                                 // Global define()
                             }
                         }

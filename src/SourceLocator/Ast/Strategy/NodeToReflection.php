@@ -58,7 +58,7 @@ class NodeToReflection implements AstConversionStrategy
         if ($node instanceof Node\Expr\FuncCall) {
             try {
                 return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
-            } catch (InvalidConstantNode $e) {
+            } catch (InvalidConstantNode) {
                 // Ignore
             }
         }

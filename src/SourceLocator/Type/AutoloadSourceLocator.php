@@ -230,7 +230,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         foreach (array_reverse(get_included_files()) as $includedFileName) {
             try {
                 FileChecker::assertReadableFile($includedFileName);
-            } catch (InvalidFileLocation $ignored) {
+            } catch (InvalidFileLocation) {
                 continue;
             }
 
@@ -273,7 +273,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                 if ($node instanceof Node\Expr\FuncCall) {
                     try {
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
-                    } catch (InvalidConstantNode $e) {
+                    } catch (InvalidConstantNode) {
                         return null;
                     }
 
