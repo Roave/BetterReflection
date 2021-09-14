@@ -20,7 +20,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Webmozart\Assert\Assert;
 
 use function class_exists;
-use function get_class;
 use function sprintf;
 use function strtolower;
 
@@ -297,15 +296,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     /**
-     * @param mixed ...$args
-     *
-     * @return mixed
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function invoke(?object $object = null, ...$args)
+    public function invoke(?object $object = null, mixed ...$args): mixed
     {
         return $this->invokeArgs($object, $args);
     }
@@ -313,13 +308,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     /**
      * @param mixed[] $args
      *
-     * @return mixed
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function invokeArgs(?object $object = null, array $args = [])
+    public function invokeArgs(?object $object = null, array $args = []): mixed
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -334,10 +327,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
     /**
      * @param mixed[] $args
-     *
-     * @return mixed
      */
-    private function callStaticMethod(array $args)
+    private function callStaticMethod(array $args): mixed
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -352,10 +343,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
     /**
      * @param mixed[] $args
-     *
-     * @return mixed
      */
-    private function callObjectMethod(object $object, array $args)
+    private function callObjectMethod(object $object, array $args): mixed
     {
         $closure = Closure::bind(function ($object, string $methodName, array $methodArgs) {
             return $object->{$methodName}(...$methodArgs);
@@ -388,7 +377,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        if (get_class($object) !== $declaringClassName) {
+        if ($object::class !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
 

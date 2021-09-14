@@ -44,11 +44,9 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @param string $name
      *
-     * @return mixed
-     *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      */
-    public function __get($name)
+    public function __get($name): mixed
     {
         if ($name === 'name') {
             return $this->betterReflectionClass->getName();

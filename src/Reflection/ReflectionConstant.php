@@ -29,8 +29,7 @@ class ReflectionConstant implements Reflection
 {
     private Reflector $reflector;
 
-    /** @var Node\Stmt\Const_|Node\Expr\FuncCall */
-    private $node;
+    private Node\Stmt\Const_|Node\Expr\FuncCall $node;
 
     private LocatedSource $locatedSource;
 
@@ -39,7 +38,7 @@ class ReflectionConstant implements Reflection
     private ?int $positionInNode;
 
     /** @var scalar|array<scalar>|null const value */
-    private $value;
+    private string|int|float|bool|array|null $value = null;
 
     private bool $valueWasCached = false;
 
@@ -208,7 +207,7 @@ class ReflectionConstant implements Reflection
      *
      * @return scalar|array<scalar>|null
      */
-    public function getValue()
+    public function getValue(): string|int|float|bool|array|null
     {
         if ($this->valueWasCached !== false) {
             return $this->value;

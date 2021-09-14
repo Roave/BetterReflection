@@ -528,7 +528,7 @@ class ReflectionClass implements Reflection
      *
      * @return scalar|array<scalar>|null
      */
-    public function getConstant(string $name)
+    public function getConstant(string $name): string|int|float|bool|array|null
     {
         $reflectionConstant = $this->getReflectionConstant($name);
 
@@ -1369,14 +1369,12 @@ class ReflectionClass implements Reflection
      * PropertyDoesNotExist exception if it does not exist or is not static.
      * (note, differs very slightly from internal reflection behaviour)
      *
-     * @return mixed
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function getStaticPropertyValue(string $propertyName)
+    public function getStaticPropertyValue(string $propertyName): mixed
     {
         $property = $this->getProperty($propertyName);
 
@@ -1390,14 +1388,12 @@ class ReflectionClass implements Reflection
     /**
      * Set the value of a static property
      *
-     * @param mixed $value
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function setStaticPropertyValue(string $propertyName, $value): void
+    public function setStaticPropertyValue(string $propertyName, mixed $value): void
     {
         $property = $this->getProperty($propertyName);
 

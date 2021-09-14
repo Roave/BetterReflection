@@ -101,14 +101,10 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     }
 
     /**
-     * @param mixed ...$args
-     *
-     * @return mixed
-     *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
      */
-    public function invoke(...$args)
+    public function invoke(mixed ...$args): mixed
     {
         return $this->invokeArgs($args);
     }
@@ -116,12 +112,10 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      * @param mixed[] $args
      *
-     * @return mixed
-     *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
      */
-    public function invokeArgs(array $args = [])
+    public function invokeArgs(array $args = []): mixed
     {
         $this->assertIsNoClosure();
 

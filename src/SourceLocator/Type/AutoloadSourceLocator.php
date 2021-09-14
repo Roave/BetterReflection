@@ -254,8 +254,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         {
             private ?string $constantName;
 
-            /** @var Node\Stmt\Const_|Node\Expr\FuncCall|null */
-            private $node;
+            private Node\Stmt\Const_|Node\Expr\FuncCall|null $node = null;
 
             public function enterNode(Node $node): ?int
             {

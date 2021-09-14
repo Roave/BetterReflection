@@ -10,7 +10,6 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 
 use function assert;
-use function get_class;
 use function reset;
 use function sprintf;
 
@@ -28,7 +27,7 @@ class UnableToCompileNode extends LogicException
         return new self(sprintf(
             'Unable to compile expression in %s: unrecognized node type %s at line %d',
             self::compilerContextToContextDescription($context),
-            get_class($expression),
+            $expression::class,
             $expression->getLine(),
         ));
     }

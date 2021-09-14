@@ -18,7 +18,7 @@ class ReflectionClassConstant
     private bool $valueWasCached = false;
 
     /** @var scalar|array<scalar>|null const value */
-    private $value;
+    private string|int|float|bool|array|null $value = null;
 
     private Reflector $reflector;
 
@@ -69,7 +69,7 @@ class ReflectionClassConstant
      *
      * @return scalar|array<scalar>|null
      */
-    public function getValue()
+    public function getValue(): string|int|float|bool|array|null
     {
         if ($this->valueWasCached !== false) {
             return $this->value;

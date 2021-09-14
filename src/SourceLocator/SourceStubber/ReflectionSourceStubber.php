@@ -480,13 +480,10 @@ final class ReflectionSourceStubber implements SourceStubber
         $parameterNode->setType($this->formatType($parameterType));
     }
 
-    /**
-     * @return mixed
-     */
     private function parameterDefaultValue(
         ReflectionParameter $parameterReflection,
         CoreReflectionFunctionAbstract $functionReflectionAbstract
-    ) {
+    ): mixed {
         if ($functionReflectionAbstract->isInternal()) {
             return null;
         }

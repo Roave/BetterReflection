@@ -406,11 +406,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /**
-     * @param mixed $constantValue
-     *
      * @dataProvider internalConstantsProvider
      */
-    public function testInternalConstants(string $constantName, $constantValue, string $extensionName): void
+    public function testInternalConstants(string $constantName, mixed $constantValue, string $extensionName): void
     {
         $constantReflection = $this->constantReflector->reflect($constantName);
 

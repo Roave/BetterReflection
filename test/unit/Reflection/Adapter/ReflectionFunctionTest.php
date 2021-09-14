@@ -89,12 +89,11 @@ class ReflectionFunctionTest extends TestCase
     }
 
     /**
-     * @param mixed   $returnValue
      * @param mixed[] $args
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
 

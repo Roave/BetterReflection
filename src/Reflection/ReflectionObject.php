@@ -21,7 +21,6 @@ use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
 use function array_merge;
-use function get_class;
 use function preg_match;
 
 class ReflectionObject extends ReflectionClass
@@ -47,7 +46,7 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromInstance(object $instance): ReflectionClass
     {
-        $className = get_class($instance);
+        $className = $instance::class;
 
         $betterReflection = new BetterReflection();
 
@@ -201,10 +200,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getConstants();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConstant(string $name)
+    public function getConstant(string $name): string|int|float|bool|array|null
     {
         return $this->reflectionClass->getConstant($name);
     }
@@ -473,10 +469,7 @@ class ReflectionObject extends ReflectionClass
         $this->reflectionClass->setStaticPropertyValue($propertyName, $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStaticPropertyValue(string $propertyName)
+    public function getStaticPropertyValue(string $propertyName): mixed
     {
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
     }

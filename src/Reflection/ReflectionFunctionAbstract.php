@@ -49,8 +49,7 @@ abstract class ReflectionFunctionAbstract
 
     private LocatedSource $locatedSource;
 
-    /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null */
-    private $node;
+    private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null $node = null;
 
     private Reflector $reflector;
 

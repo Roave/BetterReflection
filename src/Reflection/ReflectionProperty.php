@@ -31,7 +31,6 @@ use Webmozart\Assert\Assert;
 
 use function class_exists;
 use function func_num_args;
-use function get_class;
 use function is_object;
 
 class ReflectionProperty
@@ -244,7 +243,7 @@ class ReflectionProperty
      *
      * @return scalar|array<scalar>|null
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): string|int|float|bool|array|null
     {
         $defaultValueNode = $this->node->props[$this->positionInNode]->default;
 
@@ -305,13 +304,11 @@ class ReflectionProperty
     }
 
     /**
-     * @return mixed
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function getValue(?object $object = null)
+    public function getValue(?object $object = null): mixed
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -339,15 +336,12 @@ class ReflectionProperty
     }
 
     /**
-     * @param mixed      $object
-     * @param mixed|null $value
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function setValue($object, $value = null): void
+    public function setValue(mixed $object, mixed $value = null): void
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -444,15 +438,13 @@ class ReflectionProperty
     }
 
     /**
-     * @param mixed $object
-     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      *
      * @psalm-assert object $object
      */
-    private function assertObject($object): object
+    private function assertObject(mixed $object): object
     {
         if ($object === null) {
             throw NoObjectProvided::create();
@@ -464,7 +456,7 @@ class ReflectionProperty
 
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        if (get_class($object) !== $declaringClassName) {
+        if ($object::class !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
 

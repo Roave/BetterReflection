@@ -29,14 +29,11 @@ use function uniqid;
  */
 class MemoizingSourceLocatorTest extends TestCase
 {
-    /** @var Reflector|MockObject */
-    private $reflector1;
+    private Reflector|MockObject $reflector1;
 
-    /** @var Reflector|MockObject */
-    private $reflector2;
+    private Reflector|MockObject $reflector2;
 
-    /** @var SourceLocator|MockObject */
-    private $wrappedLocator;
+    private SourceLocator|MockObject $wrappedLocator;
 
     private MemoizingSourceLocator $memoizingLocator;
 

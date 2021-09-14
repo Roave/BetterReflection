@@ -65,12 +65,11 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @param mixed   $returnValue
      * @param mixed[] $args
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 

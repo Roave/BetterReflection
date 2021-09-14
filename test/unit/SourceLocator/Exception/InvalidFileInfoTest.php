@@ -14,11 +14,9 @@ use stdClass;
 class InvalidFileInfoTest extends TestCase
 {
     /**
-     * @param mixed $value
-     *
      * @dataProvider nonSplFileInfoProvider
      */
-    public function testFromNonSplFileInfo(string $expectedMessage, $value): void
+    public function testFromNonSplFileInfo(string $expectedMessage, mixed $value): void
     {
         $exception = InvalidFileInfo::fromNonSplFileInfo($value);
 

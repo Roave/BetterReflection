@@ -31,10 +31,7 @@ class ReflectionNamedType extends ReflectionType
 
     private string $name;
 
-    /**
-     * @param Identifier|Name $type
-     */
-    public function __construct($type, bool $allowsNull)
+    public function __construct(Identifier|Name $type, bool $allowsNull)
     {
         parent::__construct($allowsNull);
         $this->name = (string) $type;
