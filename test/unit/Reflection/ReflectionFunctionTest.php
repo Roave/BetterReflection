@@ -17,6 +17,8 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
+use stdClass;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
@@ -138,7 +140,20 @@ class ReflectionFunctionTest extends TestCase
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
         $theParam = $reflection->getParameter('theParam')->getClass();
-        self::assertSame('stdClass', $theParam->getName());
+        self::assertSame(stdClass::class, $theParam->getName());
+    }
+
+    public function testCreateFromClosureCanReflectTypesInNamespace(): void
+    {
+        // phpcs:disable SlevomatCodingStandard.Functions.RequireArrowFunction
+        $myClosure = static function (ClassWithStaticMethod $theParam): int {
+            return 5;
+        };
+        // phpcs:enable
+        $reflection = ReflectionFunction::createFromClosure($myClosure);
+
+        $theParam = $reflection->getParameter('theParam')->getClass();
+        self::assertSame(ClassWithStaticMethod::class, $theParam->getName());
     }
 
     public function testToString(): void
