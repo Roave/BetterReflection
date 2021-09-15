@@ -22,6 +22,11 @@ parameters:
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
             path: %currentWorkingDirectory%/src/SourceLocator/Type/AutoloadSourceLocator.php
+        # https://github.com/nikic/PHP-Parser/pull/808
+        -
+            message: "#^Property PhpParser\\\\Node\\\\Expr\\\\ArrowFunction\\:\\:\\$expr \\(PhpParser\\\\Node\\\\Expr\\) does not accept null\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php
         # Will be fixed later
         -
             message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionClass\\:\\:getReflectionConstant\\(\\) should return ReflectionClassConstant but returns false\\.$#"
@@ -52,8 +57,3 @@ parameters:
             message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionObject\\:\\:isInstance\\(\\) should return bool but returns null\\.$#"
             count: 1
             path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionObject.php
-
-        -
-            message: "#^Property PhpParser\\\\Node\\\\Expr\\\\Closure\\:\\:\\$stmts \\(array\\<PhpParser\\\\Node\\\\Stmt\\>\\|null\\) does not accept array\\<int, PhpParser\\\\Node\\>\\.$#"
-            count: 1
-            path: %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php

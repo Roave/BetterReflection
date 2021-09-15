@@ -102,11 +102,9 @@ final class ClosureSourceLocator implements SourceLocator
                     return null;
                 }
 
-                if (! ($node instanceof Node\Expr\Closure)) {
-                    return null;
+                if ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction) {
+                    $this->closureNodes[] = [$node, $this->currentNamespace];
                 }
-
-                $this->closureNodes[] = [$node, $this->currentNamespace];
 
                 return null;
             }

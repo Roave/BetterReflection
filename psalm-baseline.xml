@@ -16,11 +16,6 @@
       <code>public function newInstanceWithoutConstructor()</code>
     </MethodSignatureMismatch>
   </file>
-  <file src="src/Reflection/ReflectionFunctionAbstract.php">
-    <PossiblyNullPropertyAssignmentValue occurrences="1">
-      <code>$this-&gt;loadStaticParser()-&gt;parse('&lt;?php ' . $newBody)</code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
   <file src="src/Reflection/ReflectionMethod.php">
     <InvalidStringClass occurrences="1">
       <code>$declaringClassName::{$methodName}(...$methodArgs)</code>

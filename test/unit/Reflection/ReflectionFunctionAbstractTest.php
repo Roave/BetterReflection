@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
@@ -589,6 +590,18 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame("echo 'Hello world!';", $function->getBodyCode());
     }
 
+    public function testSetBodyFromClosureWithArrowFunction(): void
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $function  = $reflector->reflect('foo');
+
+        $function->setBodyFromClosure(static fn (): string => 'Hello world!');
+
+        self::assertSame("return 'Hello world!';", $function->getBodyCode());
+    }
+
     public function testSetBodyFromString(): void
     {
         $php = '<?php function foo() {}';
@@ -601,15 +614,15 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame("echo 'Hello world!';", $function->getBodyCode());
     }
 
-    public function testSetBodyFromAstWithInvalidArgumentsThrowsException(): void
+    public function testSetBodyFromStringForArrowFunction(): void
     {
-        $php = '<?php function foo() {}';
+        $arrowFunction = static fn () => 10;
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $function = ReflectionFunction::createFromClosure($arrowFunction);
 
-        $this->expectException(TypeError::class);
-        $function->setBodyFromAst([1]);
+        $function->setBodyFromString("'Hello world!';");
+
+        self::assertSame("'Hello world!'", $function->getBodyCode());
     }
 
     public function testSetBodyFromAst(): void
@@ -626,6 +639,47 @@ class ReflectionFunctionAbstractTest extends TestCase
         ]);
 
         self::assertSame("echo 'Hello world!';", $function->getBodyCode());
+    }
+
+    public function testSetBodyFromAstForArrowFunction(): void
+    {
+        $arrowFunction = static fn () => 10;
+
+        $function = ReflectionFunction::createFromClosure($arrowFunction);
+
+        $function->setBodyFromAst([
+            new Return_(
+                new String_('Hello world!'),
+            ),
+        ]);
+
+        self::assertSame("'Hello world!'", $function->getBodyCode());
+    }
+
+    public function testSetBodyFromAstWithInvalidArgumentsThrowsException(): void
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
+        $function  = $reflector->reflect('foo');
+
+        $this->expectException(TypeError::class);
+        $function->setBodyFromAst([1]);
+    }
+
+    public function testSetBodyFromAstForArrowFunctionWithInvalidArgumentsThrowsException(): void
+    {
+        $arrowFunction = static fn () => 10;
+
+        $function = ReflectionFunction::createFromClosure($arrowFunction);
+
+        $this->expectException(InvalidArrowFunctionBodyNode::class);
+
+        $function->setBodyFromAst([
+            new Echo_([
+                new String_('Hello world!'),
+            ]),
+        ]);
     }
 
     public function testAddParameter(): void
