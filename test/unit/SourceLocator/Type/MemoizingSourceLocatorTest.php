@@ -51,9 +51,7 @@ class MemoizingSourceLocatorTest extends TestCase
         $this->wrappedLocator   = $this->createMock(SourceLocator::class);
         $this->memoizingLocator = new MemoizingSourceLocator($this->wrappedLocator);
         $this->identifierNames  = array_unique(array_map(
-            static function (): string {
-                return uniqid('identifier', true);
-            },
+            static fn (): string => uniqid('identifier', true),
             range(1, 20),
         ));
         $this->identifierCount  = count($this->identifierNames);
@@ -63,14 +61,12 @@ class MemoizingSourceLocatorTest extends TestCase
     {
         $this->assertMemoization(
             array_map(
-                static function (string $identifier): Identifier {
-                    return new Identifier(
-                        $identifier,
-                        new IdentifierType(
-                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)],
-                        ),
-                    );
-                },
+                static fn (string $identifier): Identifier => new Identifier(
+                    $identifier,
+                    new IdentifierType(
+                        [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)],
+                    ),
+                ),
                 $this->identifierNames,
             ),
             $this->identifierCount,
@@ -81,15 +77,11 @@ class MemoizingSourceLocatorTest extends TestCase
     public function testLocateIdentifiersDistinguishesBetweenIdentifierTypes(): void
     {
         $classIdentifiers    = array_map(
-            static function (string $identifier): Identifier {
-                return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
-            },
+            static fn (string $identifier): Identifier => new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
             $this->identifierNames,
         );
         $functionIdentifiers = array_map(
-            static function (string $identifier): Identifier {
-                return new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
-            },
+            static fn (string $identifier): Identifier => new Identifier($identifier, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
             $this->identifierNames,
         );
 
@@ -104,14 +96,12 @@ class MemoizingSourceLocatorTest extends TestCase
     {
         $this->assertMemoization(
             array_map(
-                static function (string $identifier): Identifier {
-                    return new Identifier(
-                        $identifier,
-                        new IdentifierType(
-                            [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)],
-                        ),
-                    );
-                },
+                static fn (string $identifier): Identifier => new Identifier(
+                    $identifier,
+                    new IdentifierType(
+                        [IdentifierType::IDENTIFIER_CLASS, IdentifierType::IDENTIFIER_FUNCTION][random_int(0, 1)],
+                    ),
+                ),
                 $this->identifierNames,
             ),
             $this->identifierCount * 2,
@@ -193,9 +183,7 @@ class MemoizingSourceLocatorTest extends TestCase
             ->method('locateIdentifier')
             ->with(
                 self::logicalOr(...$reflectors),
-                self::callback(static function (Identifier $identifier) use ($identifiers) {
-                    return in_array($identifier, $identifiers, true);
-                }),
+                self::callback(static fn (Identifier $identifier) => in_array($identifier, $identifiers, true)),
             )
             ->willReturnCallback(function (
                 Reflector $reflector,

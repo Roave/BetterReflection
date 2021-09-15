@@ -71,9 +71,7 @@ final class MakeLocatorForComposerJson
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
-            ...array_map(static function (string $file) use ($astLocator): array {
-                return [new SingleFileSourceLocator($file, $astLocator)];
-            }, array_merge($classMapFiles, $filePaths)),
+            ...array_map(static fn (string $file): array => [new SingleFileSourceLocator($file, $astLocator)], array_merge($classMapFiles, $filePaths)),
         ));
     }
 
@@ -84,9 +82,7 @@ final class MakeLocatorForComposerJson
      */
     private function packageToPsr4AutoloadNamespaces(array $package): array
     {
-        return array_map(static function ($namespacePaths): array {
-            return (array) $namespacePaths;
-        }, $package['autoload']['psr-4'] ?? []);
+        return array_map(static fn ($namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-4'] ?? []);
     }
 
     /**
@@ -96,9 +92,7 @@ final class MakeLocatorForComposerJson
      */
     private function packageToPsr0AutoloadNamespaces(array $package): array
     {
-        return array_map(static function ($namespacePaths): array {
-            return (array) $namespacePaths;
-        }, $package['autoload']['psr-0'] ?? []);
+        return array_map(static fn ($namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-0'] ?? []);
     }
 
     /**
@@ -128,9 +122,7 @@ final class MakeLocatorForComposerJson
      */
     private function prefixWithInstallationPath(array $paths, string $trimmedInstallationPath): array
     {
-        return array_map(function (array $paths) use ($trimmedInstallationPath): array {
-            return $this->prefixPaths($paths, $trimmedInstallationPath);
-        }, $paths);
+        return array_map(fn (array $paths): array => $this->prefixPaths($paths, $trimmedInstallationPath), $paths);
     }
 
     /**
@@ -140,8 +132,6 @@ final class MakeLocatorForComposerJson
      */
     private function prefixPaths(array $paths, string $prefix): array
     {
-        return array_map(static function (string $path) use ($prefix) {
-            return $prefix . $path;
-        }, $paths);
+        return array_map(static fn (string $path) => $prefix . $path, $paths);
     }
 }

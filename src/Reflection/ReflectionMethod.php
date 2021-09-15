@@ -283,16 +283,12 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            return function (...$args) {
-                return $this->callStaticMethod($args);
-            };
+            return fn (...$args) => $this->callStaticMethod($args);
         }
 
         $instance = $this->assertObject($object);
 
-        return function (...$args) use ($instance) {
-            return $this->callObjectMethod($instance, $args);
-        };
+        return fn (...$args) => $this->callObjectMethod($instance, $args);
     }
 
     /**
@@ -332,9 +328,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        $closure = Closure::bind(function (string $declaringClassName, string $methodName, array $methodArgs) {
-            return $declaringClassName::{$methodName}(...$methodArgs);
-        }, null, $declaringClassName);
+        $closure = Closure::bind(fn (string $declaringClassName, string $methodName, array $methodArgs) => $declaringClassName::{$methodName}(...$methodArgs), null, $declaringClassName);
 
         Assert::notFalse($closure);
 
@@ -346,9 +340,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function callObjectMethod(object $object, array $args): mixed
     {
-        $closure = Closure::bind(function ($object, string $methodName, array $methodArgs) {
-            return $object->{$methodName}(...$methodArgs);
-        }, $object, $this->getDeclaringClass()->getName());
+        $closure = Closure::bind(fn ($object, string $methodName, array $methodArgs) => $object->{$methodName}(...$methodArgs), $object, $this->getDeclaringClass()->getName());
 
         Assert::notFalse($closure);
 

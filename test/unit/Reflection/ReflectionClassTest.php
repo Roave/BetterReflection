@@ -269,9 +269,7 @@ class ReflectionClassTest extends TestCase
             $this->astLocator,
         )))->reflect(MethodsOrder::class);
 
-        $actualMethodNames = array_map(static function (ReflectionMethod $method): string {
-            return $method->getName();
-        }, $classInfo->getMethods());
+        $actualMethodNames = array_map(static fn (ReflectionMethod $method): string => $method->getName(), $classInfo->getMethods());
 
         $expectedMethodNames = [
             'f1',
@@ -1582,15 +1580,11 @@ PHP;
         ));
 
         $cInterfaces = array_map(
-            static function (ReflectionClass $interface): string {
-                return $interface->getShortName();
-            },
+            static fn (ReflectionClass $interface): string => $interface->getShortName(),
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\C::class)->getImmediateInterfaces(),
         );
         $dInterfaces = array_map(
-            static function (ReflectionClass $interface): string {
-                return $interface->getShortName();
-            },
+            static fn (ReflectionClass $interface): string => $interface->getShortName(),
             $reflector->reflect(ClassWithInterfacesExtendingInterfaces\D::class)->getImmediateInterfaces(),
         );
 

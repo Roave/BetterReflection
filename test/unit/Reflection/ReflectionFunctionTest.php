@@ -119,18 +119,22 @@ class ReflectionFunctionTest extends TestCase
 
     public function testCreateFromClosure(): void
     {
-        $myClosure  = static function () {
+        // phpcs:disable SlevomatCodingStandard.Functions.RequireArrowFunction
+        $myClosure = static function () {
             return 5;
         };
+        // phpcs:enable
         $reflection = ReflectionFunction::createFromClosure($myClosure);
         self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
     }
 
     public function testCreateFromClosureCanReflectTypeHints(): void
     {
-        $myClosure  = static function (stdClass $theParam): int {
+        // phpcs:disable SlevomatCodingStandard.Functions.RequireArrowFunction
+        $myClosure = static function (stdClass $theParam): int {
             return 5;
         };
+        // phpcs:enable
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
         $theParam = $reflection->getParameter('theParam')->getClass();

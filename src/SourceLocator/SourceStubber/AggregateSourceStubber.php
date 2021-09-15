@@ -45,8 +45,6 @@ class AggregateSourceStubber implements SourceStubber
 
     public function generateConstantStub(string $constantName): ?StubData
     {
-        return array_reduce($this->sourceStubbers, static function (?StubData $stubData, SourceStubber $sourceStubber) use ($constantName): ?StubData {
-            return $stubData ?? $sourceStubber->generateConstantStub($constantName);
-        }, null);
+        return array_reduce($this->sourceStubbers, static fn (?StubData $stubData, SourceStubber $sourceStubber): ?StubData => $stubData ?? $sourceStubber->generateConstantStub($constantName), null);
     }
 }

@@ -183,9 +183,7 @@ class ReflectionSourceStubberTest extends TestCase
         );
 
         return array_map(
-            static function (string $symbol): array {
-                return [$symbol];
-            },
+            static fn (string $symbol): array => [$symbol],
             array_filter(
                 $allSymbols,
                 static function (string $symbol): bool {
@@ -263,15 +261,11 @@ class ReflectionSourceStubberTest extends TestCase
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
     {
         $originalParameterNames = array_map(
-            static function (CoreReflectionParameter $parameter): string {
-                return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
-            },
+            static fn (CoreReflectionParameter $parameter): string => $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName(),
             $original->getParameters(),
         );
         $stubParameterNames     = array_map(
-            static function (ReflectionParameter $parameter): string {
-                return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
-            },
+            static fn (ReflectionParameter $parameter): string => $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName(),
             $stubbed->getParameters(),
         );
 
@@ -339,9 +333,7 @@ class ReflectionSourceStubberTest extends TestCase
         $functionNames = get_defined_functions()['internal'];
 
         return array_map(
-            static function (string $functionName): array {
-                return [$functionName];
-            },
+            static fn (string $functionName): array => [$functionName],
             array_filter(
                 $functionNames,
                 static function (string $functionName): bool {

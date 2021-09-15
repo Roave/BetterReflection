@@ -94,9 +94,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
 
         return array_map(
-            static function (string $symbol): array {
-                return [$symbol];
-            },
+            static fn (string $symbol): array => [$symbol],
             array_filter(
                 $allSymbols,
                 static function (string $symbol): bool {
@@ -140,9 +138,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         $allSymbols = get_defined_functions()['internal'];
 
         return array_map(
-            static function (string $symbol): array {
-                return [$symbol];
-            },
+            static fn (string $symbol): array => [$symbol],
             $allSymbols,
         );
     }
@@ -172,23 +168,16 @@ class PhpInternalSourceLocatorTest extends TestCase
         $allSymbols = get_defined_constants(true);
 
         return array_map(
-            static function (string $symbol): array {
-                return [$symbol];
-            },
+            static fn (string $symbol): array => [$symbol],
             array_filter(
                 array_keys(
                     array_merge(
                         ...array_values(
-                            array_filter($allSymbols, static function (string $extensionName): bool {
-                                return $extensionName !== 'user';
-                            }, ARRAY_FILTER_USE_KEY),
+                            array_filter($allSymbols, static fn (string $extensionName): bool => $extensionName !== 'user', ARRAY_FILTER_USE_KEY),
                         ),
                     ),
                 ),
-                static function (string $constantName): bool {
-                    // Not supported because of resource as value
-                    return ! in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true);
-                },
+                static fn (string $constantName): bool => ! in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true),
             ),
         );
     }

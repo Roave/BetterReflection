@@ -48,9 +48,7 @@ class FileIteratorSourceLocatorTest extends TestCase
         self::assertCount(2, $classes);
 
         $classNames = array_map(
-            static function (ReflectionClass $reflectionClass): string {
-                return $reflectionClass->getName();
-            },
+            static fn (ReflectionClass $reflectionClass): string => $reflectionClass->getName(),
             $classes,
         );
 

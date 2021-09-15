@@ -95,9 +95,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
         $this->assertFunctionExist($functionName);
 
-        return static function (...$args) use ($functionName) {
-            return $functionName(...$args);
-        };
+        return static fn (...$args) => $functionName(...$args);
     }
 
     /**

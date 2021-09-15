@@ -112,9 +112,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             public function getAnonymousClassNode(): ?Class_
             {
                 /** @var Class_[] $anonymousClassNodesOnSameLine */
-                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, function (Class_ $node): bool {
-                    return $node->getLine() === $this->startLine;
-                }));
+                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, fn (Class_ $node): bool => $node->getLine() === $this->startLine));
 
                 if (! $anonymousClassNodesOnSameLine) {
                     return null;

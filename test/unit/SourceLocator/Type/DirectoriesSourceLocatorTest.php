@@ -50,9 +50,7 @@ class DirectoriesSourceLocatorTest extends TestCase
         self::assertCount(4, $classes);
 
         $classNames = array_map(
-            static function (ReflectionClass $reflectionClass): string {
-                return $reflectionClass->getName();
-            },
+            static fn (ReflectionClass $reflectionClass): string => $reflectionClass->getName(),
             $classes,
         );
 

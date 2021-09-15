@@ -28,9 +28,7 @@ class MemoizingParserTest extends TestCase
         $wrappedParser = $this->createMock(Parser::class);
 
         $randomCodeStrings = array_unique(array_map(
-            static function (): string {
-                return uniqid('code', true);
-            },
+            static fn (): string => uniqid('code', true),
             range(0, 100),
         ));
 
@@ -39,9 +37,7 @@ class MemoizingParserTest extends TestCase
         $wrappedParser
             ->expects(self::exactly($randomCodeStringsCount))
             ->method('parse')
-            ->willReturnCallback(static function (): array {
-                return [new Name('bool')];
-            });
+            ->willReturnCallback(static fn (): array => [new Name('bool')]);
 
         $parser = new MemoizingParser($wrappedParser);
 
@@ -55,9 +51,7 @@ class MemoizingParserTest extends TestCase
         }
 
         $nodeIdentifiers = array_map(
-            static function (array $nodes): string {
-                return spl_object_hash($nodes[0]);
-            },
+            static fn (array $nodes): string => spl_object_hash($nodes[0]),
             $producedNodes,
         );
 

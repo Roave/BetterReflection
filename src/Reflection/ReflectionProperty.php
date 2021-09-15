@@ -315,9 +315,7 @@ class ReflectionProperty
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            $closure = Closure::bind(function (string $declaringClassName, string $propertyName) {
-                return $declaringClassName::${$propertyName};
-            }, null, $declaringClassName);
+            $closure = Closure::bind(fn (string $declaringClassName, string $propertyName) => $declaringClassName::${$propertyName}, null, $declaringClassName);
 
             Assert::notFalse($closure);
 
@@ -326,9 +324,7 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        $closure = Closure::bind(function (object $instance, string $propertyName) {
-            return $instance->{$propertyName};
-        }, $instance, $declaringClassName);
+        $closure = Closure::bind(fn (object $instance, string $propertyName) => $instance->{$propertyName}, $instance, $declaringClassName);
 
         Assert::notFalse($closure);
 

@@ -23,9 +23,7 @@ class ReflectionTypeTest extends TestCase
     {
         $methods = get_class_methods(CoreReflectionType::class);
 
-        return array_combine($methods, array_map(static function (string $i): array {
-            return [$i];
-        }, $methods));
+        return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
     /**

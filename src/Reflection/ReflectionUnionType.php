@@ -17,9 +17,7 @@ class ReflectionUnionType extends ReflectionType
     public function __construct(UnionType $type, bool $allowsNull)
     {
         parent::__construct($allowsNull);
-        $this->types = array_map(static function ($type): ReflectionType {
-            return ReflectionType::createFromTypeAndReflector($type);
-        }, $type->types);
+        $this->types = array_map(static fn ($type): ReflectionType => ReflectionType::createFromTypeAndReflector($type), $type->types);
     }
 
     /**
@@ -32,8 +30,6 @@ class ReflectionUnionType extends ReflectionType
 
     public function __toString(): string
     {
-        return implode('|', array_map(static function (ReflectionType $type): string {
-            return (string) $type;
-        }, $this->types));
+        return implode('|', array_map(static fn (ReflectionType $type): string => (string) $type, $this->types));
     }
 }
