@@ -6,7 +6,6 @@ or backwards compatibility (BC) breakages occur.
 ## 5.0.0
 
 ### BC Breaks
-* Only PHP 8.0 is supported.
 * Adapters don't have `::export()` method anymore because these methods were removed from PHP. These methods has been removed:
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionClass::export()` 
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionFunction::export()` 
