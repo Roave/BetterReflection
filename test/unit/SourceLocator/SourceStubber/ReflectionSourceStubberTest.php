@@ -306,8 +306,9 @@ class ReflectionSourceStubberTest extends TestCase
             . '.' . $original->getName();
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
-        self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
-        self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
+        // @ because isArray() and isCallable() are deprecated
+        self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
+        self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
 
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
 
@@ -318,7 +319,8 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
-        $class = $original->getClass();
+        // @ because getClass() is deprecated
+        $class = @$original->getClass();
         if ($class) {
             $stubbedClass = $stubbed->getClass();
 

@@ -225,7 +225,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         // Needs fixes in JetBrains/phpstorm-stubs
         if ($parameterName !== 'SplFixedArray#fromArray.array') {
-            self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
+            // @ because isArray() is deprecated
+            self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
         }
 
         if (
@@ -237,7 +238,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 'RecursiveCallbackFilterIterator#__construct.callback',
             ], true)
         ) {
-            self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
+            // @ because isCallable() is deprecated
+            self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
         }
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
@@ -254,7 +256,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
-        $class = $original->getClass();
+        // @ because getClass() is deprecated
+        $class = @$original->getClass();
         if ($class) {
             $stubbedClass = $stubbed->getClass();
 
@@ -353,11 +356,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             self::assertSame($originalReflectionParameter->isPassedByReference(), $stubbedReflectionParameter->isPassedByReference(), $parameterName);
             self::assertSame($originalReflectionParameter->canBePassedByValue(), $stubbedReflectionParameter->canBePassedByValue(), $parameterName);
 
-            self::assertSame($originalReflectionParameter->isCallable(), $stubbedReflectionParameter->isCallable(), $parameterName);
+            // @ because isCallable() is deprecated
+            self::assertSame(@$originalReflectionParameter->isCallable(), $stubbedReflectionParameter->isCallable(), $parameterName);
 
             self::assertSame($originalReflectionParameter->isVariadic(), $stubbedReflectionParameter->isVariadic(), $parameterName);
 
-            $class = $originalReflectionParameter->getClass();
+            // @ because getClass() is deprecated
+            $class = @$originalReflectionParameter->getClass();
             if ($class) {
                 // Needs fixes in JetBrains/phpstorm-stubs
                 if ($parameterName !== 'assert.description') {
@@ -366,7 +371,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
                     self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
                 }
             } else {
-                self::assertNull($originalReflectionParameter->getClass(), $parameterName);
+                self::assertNull($class, $parameterName);
             }
         }
     }
