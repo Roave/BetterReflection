@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use PhpParser\Node;
-use PhpParser\Node\FunctionLike as FunctionNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -50,20 +49,14 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
     /**
      * @internal
-     *
-     * @param Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
         Reflector $reflector,
-        FunctionNode $node,
+        Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null,
     ): self {
-        $function = new self();
-
-        $function->populateFunctionAbstract($reflector, $node, $locatedSource, $namespaceNode);
-
-        return $function;
+        return new self($reflector, $node, $locatedSource, $namespaceNode);
     }
 
     /**

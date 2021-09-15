@@ -11,7 +11,6 @@ use PhpParser\Node\Stmt\Namespace_;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\InvalidAbstractFunctionNodeType;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
@@ -37,8 +36,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      * @internal
      *
      * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     *
-     * @throws InvalidAbstractFunctionNodeType
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -48,13 +45,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         ReflectionClass $implementingClass,
         ?string $aliasName = null,
     ): self {
-        $method                    = new self();
+        $method                    = new self($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
         $method->methodNode        = $node;
         $method->aliasName         = $aliasName;
-
-        $method->populateFunctionAbstract($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
 
         return $method;
     }
