@@ -504,15 +504,17 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MethodSignatureMismatch
      */
-    public function implementsInterface($interface)
+    public function implementsInterface(CoreReflectionClass|string $interface)
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
 
         $interfaceNames = array_combine(array_map(static fn (string $interfaceName): string => strtolower($interfaceName), $realInterfaceNames), $realInterfaceNames);
 
-        $realInterfaceName = $interfaceNames[strtolower($interface)] ?? $interface;
+        $interfaceName = $interface instanceof CoreReflectionClass ? $interface->getName() : $interface;
+
+        $realInterfaceName = $interfaceNames[strtolower($interfaceName)] ?? $interfaceName;
 
         return $this->betterReflectionClass->implementsInterface($realInterfaceName);
     }

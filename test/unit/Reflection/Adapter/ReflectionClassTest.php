@@ -419,6 +419,27 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($reflectionClassAdapter->isSubclassOf('Foo'));
     }
 
+    public function testImplementsInterfaceWithObject(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getInterfaceNames')
+            ->willReturn(['Foo']);
+        $betterReflectionClass
+            ->method('implementsInterface')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        $fooClassMock = $this->createMock(CoreReflectionClass::class);
+        $fooClassMock
+            ->method('getName')
+            ->willReturn('Foo');
+
+        self::assertTrue($reflectionClassAdapter->implementsInterface($fooClassMock));
+    }
+
     public function testImplementsInterfaceIsCaseInsensitive(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
