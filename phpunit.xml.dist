@@ -15,5 +15,6 @@
     </listeners>
     <php>
         <ini name="error_reporting" value="E_ALL"/>
+        <ini name="memory_limit" value="-1"/>
     </php>
 </phpunit>
