@@ -197,9 +197,10 @@ class ReflectionFunction extends CoreReflectionFunction
     }
 
     /**
-     * {@inheritDoc}
+     * @phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
+     * @return array<string, scalar>
      */
-    public function getStaticVariables()
+    public function getStaticVariables(): array
     {
         throw new NotImplemented('Not implemented');
     }
@@ -239,7 +240,7 @@ class ReflectionFunction extends CoreReflectionFunction
     /**
      * {@inheritDoc}
      */
-    public function invoke($arg = null, ...$args)
+    public function invoke(mixed ...$args)
     {
         try {
             return $this->betterReflectionFunction->invoke(...func_get_args());
@@ -249,7 +250,7 @@ class ReflectionFunction extends CoreReflectionFunction
     }
 
     /**
-     * {@inheritDoc}
+     * @param mixed[] $args
      */
     public function invokeArgs(array $args)
     {

@@ -411,10 +411,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getInterfaceNames();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isInstance($object): bool
+    public function isInstance(object $object): bool
     {
         return $this->reflectionClass->isInstance($object);
     }
@@ -452,10 +449,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getStaticProperties();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStaticPropertyValue(string $propertyName, $value): void
+    public function setStaticPropertyValue(string $propertyName, mixed $value): void
     {
         $this->reflectionClass->setStaticPropertyValue($propertyName, $value);
     }

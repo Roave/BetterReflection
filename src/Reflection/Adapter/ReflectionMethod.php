@@ -192,18 +192,16 @@ class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->getShortName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getStartLine()
+    public function getStartLine(): int
     {
         return $this->betterReflectionMethod->getStartLine();
     }
 
     /**
-     * {@inheritDoc}
+     * @phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
+     * @return array<string, scalar>
      */
-    public function getStaticVariables()
+    public function getStaticVariables(): array
     {
         throw new NotImplemented('Not implemented');
     }
@@ -321,7 +319,7 @@ class ReflectionMethod extends CoreReflectionMethod
     /**
      * {@inheritDoc}
      */
-    public function invoke($object = null, $arg = null, ...$args)
+    public function invoke(?object $object = null, mixed ...$args)
     {
         if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');
@@ -337,9 +335,9 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * {@inheritDoc}
+     * @param mixed[] $args
      */
-    public function invokeArgs($object = null, array $args = [])
+    public function invokeArgs(?object $object = null, array $args = [])
     {
         if (! $this->isAccessible()) {
             throw new CoreReflectionException('Method not accessible');

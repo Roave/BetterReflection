@@ -55,9 +55,9 @@ class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MethodSignatureMismatch
      */
-    public function setValue($object, $value = null)
+    public function setValue(mixed $object, mixed $value = null): void
     {
         if (! $this->isAccessible()) {
             throw new CoreReflectionException('Property not accessible');
