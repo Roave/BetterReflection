@@ -224,6 +224,27 @@ class ReflectionObjectTest extends TestCase
         self::assertSame('foo', $reflectionObjectAdapter->getMethod('FOO')->getName());
     }
 
+    public function testIsSubclassOfWithObject(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getParentClassNames')
+            ->willReturn(['Foo']);
+        $betterReflectionObject
+            ->method('isSubclassOf')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $fooClassMock = $this->createMock(CoreReflectionClass::class);
+        $fooClassMock
+            ->method('getName')
+            ->willReturn('Foo');
+
+        self::assertTrue($reflectionObjectAdapter->isSubclassOf($fooClassMock));
+    }
+
     public function testIsSubclassOfIsCaseInsensitive(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);

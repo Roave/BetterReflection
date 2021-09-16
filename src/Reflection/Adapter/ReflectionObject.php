@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -399,17 +400,18 @@ class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MethodSignatureMismatch
      */
-    public function isSubclassOf($class)
+    public function isSubclassOf(CoreReflectionClass|string $class)
     {
         $realParentClassNames = $this->betterReflectionObject->getParentClassNames();
 
         $parentClassNames = array_combine(array_map(static fn (string $parentClassName): string => strtolower($parentClassName), $realParentClassNames), $realParentClassNames);
 
-        $lowercasedClass = strtolower($class);
+        $className           = $class instanceof CoreReflectionClass ? $class->getName() : $class;
+        $lowercasedClassName = strtolower($className);
 
-        $realParentClassName = $parentClassNames[$lowercasedClass] ?? $class;
+        $realParentClassName = $parentClassNames[$lowercasedClassName] ?? $className;
 
         return $this->betterReflectionObject->isSubclassOf($realParentClassName);
     }
