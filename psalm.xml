@@ -14,6 +14,8 @@
     </projectFiles>
 
     <issueHandlers>
+		<MissingImmutableAnnotation errorLevel="suppress" />
+
         <MissingClosureReturnType errorLevel="suppress" />
         <MissingReturnType errorLevel="suppress" />
 

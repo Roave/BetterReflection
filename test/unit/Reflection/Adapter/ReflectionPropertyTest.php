@@ -17,7 +17,6 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use stdClass;
-use Throwable;
 
 use function array_combine;
 use function array_map;
@@ -82,13 +81,6 @@ class ReflectionPropertyTest extends TestCase
 
         $adapter = new ReflectionPropertyAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
-    }
-
-    public function testExport(): void
-    {
-        $this->expectException(Throwable::class);
-        $this->expectExceptionMessage('Unable to export statically');
-        ReflectionPropertyAdapter::export('foo', 0);
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment(): void

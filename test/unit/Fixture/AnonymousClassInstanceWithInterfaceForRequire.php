@@ -2,15 +2,15 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-interface FixtureInterface {
+interface FixtureInterfaceRequire {
     public function test(): void;
 }
 
-interface FixtureSecondInterface {
+interface FixtureSecondInterfaceRequire {
     public function secondTest(): void;
 }
 
-return new class implements FixtureInterface, FixtureSecondInterface
+return new class implements FixtureInterfaceRequire, FixtureSecondInterfaceRequire
 {
     public function test(): void
     {

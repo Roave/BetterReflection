@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
 use ClassWithoutNamespaceForSourceStubber;
-use Closure;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
+use ReflectionFunction as CoreReflectionFunction;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -36,11 +36,9 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function get_defined_functions;
 use function in_array;
-use function preg_match;
 use function sort;
-
-use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber
@@ -53,6 +51,8 @@ class ReflectionSourceStubberTest extends TestCase
 
     private ClassReflector $classReflector;
 
+    private FunctionReflector $functionReflector;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,6 +63,7 @@ class ReflectionSourceStubberTest extends TestCase
             $this->stubber,
         );
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
+        $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
     }
 
     public function testCanStubClass(): void
@@ -116,10 +117,6 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testClassStubWithPHP8Syntax(): void
     {
-        if (PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('Test runs only on PHP8');
-        }
-
         require __DIR__ . '/../../Fixture/PHP8ClassForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(PHP8ClassForSourceStubber::class);
@@ -198,8 +195,8 @@ class ReflectionSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // Classes in "memcache" extension contain methods with parameters without name
-                    return $reflection->getExtensionName() !== 'memcache';
+                    // There are problems with some extensions
+                    return ! in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'imagick'], true);
                 },
             ),
         );
@@ -295,6 +292,8 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($original->isStatic(), $stubbed->isStatic());
         self::assertSame($original->isFinal(), $stubbed->isFinal());
         self::assertSame($original->isAbstract(), $stubbed->isAbstract());
+
+        self::assertSame((string) $original->getReturnType(), (string) $stubbed->getReturnType());
     }
 
     private function assertSameParameterAttributes(
@@ -307,30 +306,21 @@ class ReflectionSourceStubberTest extends TestCase
             . '.' . $original->getName();
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
-        self::assertSame($original->isArray(), $stubbed->isArray(), $parameterName);
-        if (! ($original->getDeclaringClass()->getName() === Closure::class && $originalMethod->getName() === 'fromCallable')) {
-            // Bug in PHP: https://3v4l.org/EeHXS
-            self::assertSame($original->isCallable(), $stubbed->isCallable(), $parameterName);
-        }
+        // @ because isArray() and isCallable() are deprecated
+        self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
+        self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
 
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
-        if ($original->getDeclaringClass()->getName() !== 'FFI') {
-            // Parameters can be passed by reference and also by value
-            self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-        }
 
-        if (
-            ! in_array($parameterName, ['mysqli_stmt#bind_param.vars', 'mysqli_stmt#bind_result.vars'], true)
-            && ! preg_match('~^RedisCluster#\w+.arg$~', $parameterName)
-        ) {
-            // Parameters are variadic but not optional
-            self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
-        }
+        self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
+
+        self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
 
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
-        $class = $original->getClass();
+        // @ because getClass() is deprecated
+        $class = @$original->getClass();
         if ($class) {
             $stubbedClass = $stubbed->getClass();
 
@@ -341,16 +331,48 @@ class ReflectionSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return string[][]
+     */
+    public function internalFunctionsProvider(): array
+    {
+        $functionNames = get_defined_functions()['internal'];
+
+        return array_map(
+            static function (string $functionName): array {
+                return [$functionName];
+            },
+            array_filter(
+                $functionNames,
+                static function (string $functionName): bool {
+                    $reflection = new CoreReflectionFunction($functionName);
+
+                    return $reflection->isInternal();
+                },
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider internalFunctionsProvider
+     */
+    public function testInternalFunctionsReturnType(string $functionName): void
+    {
+        $stubbedReflection  = $this->functionReflector->reflect($functionName);
+        $originalReflection = new CoreReflectionFunction($functionName);
+
+        self::assertSame((string) $originalReflection->getReturnType(), (string) $stubbedReflection->getReturnType());
+    }
+
     public function testFunctionWithParameterPassedByReference(): void
     {
-        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $functionReflection = $reflector->reflect('sort');
+        $functionReflection = $this->functionReflector->reflect('sort');
 
         self::assertSame('sort', $functionReflection->getName());
         self::assertSame(2, $functionReflection->getNumberOfParameters());
 
         $parameterReflection = $functionReflection->getParameters()[0];
-        self::assertSame('arg', $parameterReflection->getName());
+        self::assertSame('array', $parameterReflection->getName());
         self::assertFalse($parameterReflection->isOptional());
         self::assertTrue($parameterReflection->isPassedByReference());
         self::assertFalse($parameterReflection->canBePassedByValue());
@@ -358,15 +380,14 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testFunctionWithOptionalParameter(): void
     {
-        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $functionReflection = $reflector->reflect('preg_match');
+        $functionReflection = $this->functionReflector->reflect('preg_match');
 
         self::assertSame('preg_match', $functionReflection->getName());
         self::assertSame(5, $functionReflection->getNumberOfParameters());
         self::assertSame(2, $functionReflection->getNumberOfRequiredParameters());
 
         $parameterReflection = $functionReflection->getParameters()[2];
-        self::assertSame('subpatterns', $parameterReflection->getName());
+        self::assertSame('matches', $parameterReflection->getName());
         self::assertTrue($parameterReflection->isOptional());
     }
 
@@ -383,8 +404,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional): void
     {
-        $reflector          = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $functionReflection = $reflector->reflect($functionName);
+        $functionReflection = $this->functionReflector->reflect($functionName);
 
         self::assertSame($functionName, $functionReflection->getName());
 

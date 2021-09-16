@@ -17,9 +17,7 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
-use function assert;
 use function func_num_args;
-use function is_array;
 use function is_object;
 use function sprintf;
 use function strtolower;
@@ -31,24 +29,6 @@ class ReflectionObject extends CoreReflectionObject
     public function __construct(BetterReflectionObject $betterReflectionObject)
     {
         $this->betterReflectionObject = $betterReflectionObject;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws CoreReflectionException
-     */
-    public static function export($argument, $return = null)
-    {
-        $output = BetterReflectionObject::createFromInstance($argument)->__toString();
-
-        if ($return) {
-            return $output;
-        }
-
-        echo $output;
-
-        return null;
     }
 
     /**
@@ -274,7 +254,7 @@ class ReflectionObject extends CoreReflectionObject
     /**
      * {@inheritDoc}
      */
-    public function getReflectionConstants()
+    public function getReflectionConstants(?int $filter = null)
     {
         return array_values(array_map(
             static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
@@ -327,22 +307,12 @@ class ReflectionObject extends CoreReflectionObject
             return $trait->getName();
         }, $traits);
 
-        $traitsByName = array_combine(
+        return array_combine(
             $traitNames,
             array_map(static function (BetterReflectionClass $trait): ReflectionClass {
                 return new ReflectionClass($trait);
             }, $traits),
         );
-
-        assert(
-            is_array($traitsByName),
-            sprintf(
-                'Could not create an array<trait-string, ReflectionClass> for class "%s"',
-                $this->betterReflectionObject->getName(),
-            ),
-        );
-
-        return $traitsByName;
     }
 
     /**
@@ -458,7 +428,9 @@ class ReflectionObject extends CoreReflectionObject
             return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
-        $realParentClassName = $parentClassNames[strtolower($class)] ?? $class;
+        $lowercasedClass = strtolower($class);
+
+        $realParentClassName = $parentClassNames[$lowercasedClass] ?? $class;
 
         return $this->betterReflectionObject->isSubclassOf($realParentClassName);
     }

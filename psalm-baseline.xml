@@ -1,47 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.11.2@d470903722cfcbc1cd04744c5491d3e6d13ec3d9">
-  <file src="src/BetterReflection.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>$this-&gt;sourceStubber</code>
-    </DocblockTypeContradiction>
-  </file>
+<files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
   <file src="src/Reflection/Adapter/ReflectionClass.php">
     <MethodSignatureMismatch occurrences="5">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
       <code>public function newInstance($arg = null, ...$args)</code>
-      <code>public function newInstanceWithoutConstructor()</code>
       <code>public function newInstanceArgs(?array $args = null)</code>
+      <code>public function newInstanceWithoutConstructor()</code>
     </MethodSignatureMismatch>
-    <PossiblyInvalidArgument occurrences="4">
-      <code>$class</code>
-      <code>$realParentClassName</code>
-      <code>$interface</code>
-      <code>$realInterfaceName</code>
-    </PossiblyInvalidArgument>
-    <RedundantCondition occurrences="1">
-      <code>is_object($argument)</code>
-    </RedundantCondition>
   </file>
   <file src="src/Reflection/Adapter/ReflectionObject.php">
     <MethodSignatureMismatch occurrences="5">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
       <code>public function newInstance($arg = null, ...$args)</code>
-      <code>public function newInstanceWithoutConstructor()</code>
       <code>public function newInstanceArgs(?array $args = null)</code>
+      <code>public function newInstanceWithoutConstructor()</code>
     </MethodSignatureMismatch>
-    <PossiblyInvalidArgument occurrences="4">
-      <code>$class</code>
-      <code>$realParentClassName</code>
-      <code>$interface</code>
-      <code>$realInterfaceName</code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/Reflection/ReflectionFunctionAbstract.php">
-    <PossiblyInvalidCast occurrences="1">
-      <code>$returnType</code>
-    </PossiblyInvalidCast>
     <PossiblyNullPropertyAssignmentValue occurrences="2">
       <code>$functionNode-&gt;getStmts()</code>
       <code>$this-&gt;loadStaticParser()-&gt;parse('&lt;?php ' . $newBody)</code>
@@ -53,37 +30,26 @@
     </InvalidStringClass>
   </file>
   <file src="src/Reflection/ReflectionParameter.php">
-    <PossiblyInvalidCast occurrences="1">
-      <code>$type</code>
-    </PossiblyInvalidCast>
     <UndefinedPropertyFetch occurrences="1">
       <code>$this-&gt;node-&gt;var-&gt;name</code>
     </UndefinedPropertyFetch>
-  </file>
-  <file src="src/Reflection/ReflectionProperty.php">
-    <PossiblyInvalidCast occurrences="1">
-      <code>$type</code>
-    </PossiblyInvalidCast>
   </file>
   <file src="src/SourceLocator/Ast/FindReflectionsInTree.php">
     <InternalClass occurrences="1">
       <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
     </InternalClass>
-    <InternalMethod occurrences="1">
-      <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
-    </InternalMethod>
   </file>
   <file src="src/SourceLocator/SourceStubber/PhpStormStubsSourceStubber.php">
     <InternalClass occurrences="2">
-      <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
       <code>BuilderHelpers::normalizeValue($constantValue)</code>
-    </InternalClass>
-    <InternalMethod occurrences="2">
       <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
+    </InternalClass>
+    <InternalMethod occurrences="1">
       <code>BuilderHelpers::normalizeValue($constantValue)</code>
     </InternalMethod>
   </file>
   <file src="src/SourceLocator/SourceStubber/ReflectionSourceStubber.php">
+    <PossiblyInvalidArgument occurrences="3"/>
     <InternalClass occurrences="1">
       <code>BuilderHelpers::normalizeValue($constantReflection-&gt;getValue())</code>
     </InternalClass>
@@ -95,15 +61,9 @@
     </PossiblyNullIterator>
   </file>
   <file src="src/SourceLocator/Type/AutoloadSourceLocator.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>self::$currentAstLocator</code>
-    </DocblockTypeContradiction>
     <InternalClass occurrences="1">
       <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
     </InternalClass>
-    <InternalMethod occurrences="1">
-      <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
-    </InternalMethod>
   </file>
   <file src="src/SourceLocator/Type/ClosureSourceLocator.php">
     <PossiblyNullReference occurrences="1">

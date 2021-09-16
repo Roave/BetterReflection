@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use ReflectionClass as CoreReflectionClass;
@@ -74,6 +75,10 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             return null;
         }
 
+        if (! $this->coreClassReflection->isAnonymous()) {
+            return null;
+        }
+
         $fileName = $this->coreClassReflection->getFileName();
 
         if (strpos($fileName, 'eval()\'d code') !== false) {
@@ -136,6 +141,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         $ast          = $this->parser->parse($fileContents);
 
         $nodeTraverser = new NodeTraverser();
+        $nodeTraverser->addVisitor(new NameResolver());
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 

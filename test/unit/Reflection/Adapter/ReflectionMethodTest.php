@@ -11,8 +11,8 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -21,7 +21,6 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
-use Throwable;
 use TypeError;
 
 use function array_combine;
@@ -135,7 +134,7 @@ class ReflectionMethodTest extends TestCase
                 break;
 
             case 'getReturnType':
-                self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $adapterReturnValue);
+                self::assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
                 break;
 
             case 'getPrototype':
@@ -145,13 +144,6 @@ class ReflectionMethodTest extends TestCase
             default:
                 self::assertEquals($returnValue, $adapterReturnValue);
         }
-    }
-
-    public function testExport(): void
-    {
-        $this->expectException(Throwable::class);
-        $this->expectExceptionMessage('Unable to export statically');
-        ReflectionMethodAdapter::export('\stdClass', 'foo');
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName(): void

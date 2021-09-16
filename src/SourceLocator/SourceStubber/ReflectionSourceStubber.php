@@ -27,7 +27,7 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\TraitUseAdaptation;
-use PhpParser\NodeAbstract;
+use PhpParser\Node\UnionType;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant;
@@ -37,6 +37,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
+use ReflectionUnionType as CoreReflectionUnionType;
 use Reflector as CoreReflector;
 
 use function array_diff;
@@ -119,6 +120,13 @@ final class ReflectionSourceStubber implements SourceStubber
 
         $this->addDocComment($functionNode, $functionReflection);
         $this->addParameters($functionNode, $functionReflection);
+
+        $returnType = $functionReflection->getReturnType();
+        assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType === null);
+
+        if ($returnType !== null) {
+            $functionNode->setReturnType($this->formatType($returnType));
+        }
 
         $extensionName = $functionReflection->getExtensionName() ?: null;
 
@@ -375,7 +383,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $this->addParameters($methodNode, $methodReflection);
 
             $returnType = $methodReflection->getReturnType();
-            assert($returnType instanceof CoreReflectionNamedType || $returnType === null);
+            assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType === null);
 
             if ($returnType !== null) {
                 $methodNode->setReturnType($this->formatType($returnType));
@@ -463,7 +471,7 @@ final class ReflectionSourceStubber implements SourceStubber
         }
 
         $parameterType = $parameterReflection->getType();
-        assert($parameterType instanceof CoreReflectionNamedType || $parameterType === null);
+        assert($parameterType instanceof CoreReflectionNamedType || $parameterType instanceof CoreReflectionUnionType || $parameterType === null);
 
         if ($parameterType === null) {
             return;
@@ -486,19 +494,33 @@ final class ReflectionSourceStubber implements SourceStubber
         return $parameterReflection->getDefaultValue();
     }
 
-    /**
-     * @return Name|FullyQualified|NullableType
-     */
-    private function formatType(CoreReflectionNamedType $type): NodeAbstract
+    private function formatType(CoreReflectionNamedType|CoreReflectionUnionType $type): Name|FullyQualified|NullableType|UnionType
     {
-        $name     = $type->getName();
-        $nameNode = $type->isBuiltin() || in_array($name, ['self', 'parent', 'static'], true) ? new Name($name) : new FullyQualified($name);
+        if ($type instanceof CoreReflectionUnionType) {
+            $types = [];
 
-        if ($name === 'mixed') {
+            foreach ($type->getTypes() as $innerType) {
+                $types[] = $this->formatNamedType($innerType);
+            }
+
+            return new UnionType($types);
+        }
+
+        $name     = $type->getName();
+        $nameNode = $this->formatNamedType($type);
+
+        if (! $type->allowsNull() || $name === 'mixed') {
             return $nameNode;
         }
 
-        return $type->allowsNull() ? new NullableType($nameNode) : $nameNode;
+        return new NullableType($nameNode);
+    }
+
+    private function formatNamedType(CoreReflectionNamedType $type): Name|FullyQualified
+    {
+        $name = $type->getName();
+
+        return $type->isBuiltin() || in_array($name, ['self', 'parent', 'static'], true) ? new Name($name) : new FullyQualified($name);
     }
 
     private function generateStubInNamespace(Node $node, string $namespaceName): string

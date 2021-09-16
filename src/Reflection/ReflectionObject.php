@@ -17,11 +17,12 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
 use function array_merge;
 use function get_class;
-use function strpos;
+use function preg_match;
 
 class ReflectionObject extends ReflectionClass
 {
@@ -44,20 +45,25 @@ class ReflectionObject extends ReflectionClass
      * @throws ReflectionException
      * @throws IdentifierNotFound
      */
-    public static function createFromInstance(object $object): ReflectionClass
+    public static function createFromInstance(object $instance): ReflectionClass
     {
-        $className = get_class($object);
+        $className = get_class($instance);
 
-        if (strpos($className, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0) {
-            $reflector = new ClassReflector(new AnonymousClassObjectSourceLocator(
-                $object,
-                (new BetterReflection())->phpParser(),
-            ));
+        $betterReflection = new BetterReflection();
+
+        if (preg_match(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX_REGEXP, $className) === 1) {
+            $reflector = new ClassReflector(new AggregateSourceLocator([
+                $betterReflection->sourceLocator(),
+                new AnonymousClassObjectSourceLocator(
+                    $instance,
+                    $betterReflection->phpParser(),
+                ),
+            ]));
         } else {
-            $reflector = (new BetterReflection())->classReflector();
+            $reflector = $betterReflection->classReflector();
         }
 
-        return new self($reflector, $reflector->reflect($className), $object);
+        return new self($reflector, $reflector->reflect($className), $instance);
     }
 
     /**
@@ -500,9 +506,9 @@ class ReflectionObject extends ReflectionClass
         $this->reflectionClass->addMethod($methodName);
     }
 
-    public function removeProperty(string $methodName): bool
+    public function removeProperty(string $propertyName): bool
     {
-        return $this->reflectionClass->removeProperty($methodName);
+        return $this->reflectionClass->removeProperty($propertyName);
     }
 
     public function addProperty(

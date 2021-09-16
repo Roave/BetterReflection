@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionType as CoreReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 
 class ReflectionType extends CoreReflectionType
 {
@@ -16,10 +18,18 @@ class ReflectionType extends CoreReflectionType
         $this->betterReflectionType = $betterReflectionType;
     }
 
-    public static function fromReturnTypeOrNull(?BetterReflectionType $betterReflectionType): ?self
+    public static function fromTypeOrNull(?BetterReflectionType $betterReflectionType): ReflectionUnionType|ReflectionNamedType|self|null
     {
         if ($betterReflectionType === null) {
             return null;
+        }
+
+        if ($betterReflectionType instanceof BetterReflectionUnionType) {
+            return new ReflectionUnionType($betterReflectionType);
+        }
+
+        if ($betterReflectionType instanceof BetterReflectionNamedType) {
+            return new ReflectionNamedType($betterReflectionType);
         }
 
         return new self($betterReflectionType);
@@ -33,16 +43,5 @@ class ReflectionType extends CoreReflectionType
     public function allowsNull(): bool
     {
         return $this->betterReflectionType->allowsNull();
-    }
-
-    public function isBuiltin(): bool
-    {
-        $type = (string) $this->betterReflectionType;
-
-        if ($type === 'self' || $type === 'parent' || $type === 'static') {
-            return false;
-        }
-
-        return $this->betterReflectionType->isBuiltin();
     }
 }

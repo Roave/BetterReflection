@@ -33,6 +33,7 @@ use function in_array;
 use function is_array;
 use function is_object;
 use function is_string;
+use function preg_match;
 use function sprintf;
 use function strtolower;
 
@@ -372,11 +373,9 @@ class ReflectionParameter
             return null;
         }
 
-        if ($type instanceof NullableType) {
-            $type = $type->type;
-        }
+        $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
 
-        return ReflectionType::createFromTypeAndReflector((string) $type, $this->allowsNull(), $this->reflector);
+        return ReflectionType::createFromTypeAndReflector($type, $allowsNull);
     }
 
     /**
@@ -410,7 +409,7 @@ class ReflectionParameter
      */
     public function isArray(): bool
     {
-        return strtolower((string) $this->getType()) === 'array';
+        return preg_match('~^\??array$~i', (string) $this->getType()) === 1;
     }
 
     /**
@@ -418,7 +417,7 @@ class ReflectionParameter
      */
     public function isCallable(): bool
     {
-        return strtolower((string) $this->getType()) === 'callable';
+        return preg_match('~^\??callable$~i', (string) $this->getType()) === 1;
     }
 
     /**
@@ -497,8 +496,26 @@ class ReflectionParameter
         }
 
         $type = $this->getType();
-        assert($type instanceof ReflectionType);
-        $typeHint = (string) $type;
+        assert($type instanceof ReflectionNamedType || $type instanceof ReflectionUnionType);
+
+        if ($type instanceof ReflectionUnionType) {
+            foreach ($type->getTypes() as $innerType) {
+                assert($innerType instanceof ReflectionNamedType);
+                $innerTypeClassName = $this->getClassNameFromNamedType($innerType);
+                if ($innerTypeClassName !== null) {
+                    return $innerTypeClassName;
+                }
+            }
+
+            return null;
+        }
+
+        return $this->getClassNameFromNamedType($type);
+    }
+
+    private function getClassNameFromNamedType(ReflectionNamedType $namedType): ?string
+    {
+        $typeHint = $namedType->getName();
 
         if ($typeHint === 'self') {
             $declaringClass = $this->getDeclaringClass();
@@ -516,7 +533,7 @@ class ReflectionParameter
             return $parentClass->getName();
         }
 
-        if ($type->isBuiltin()) {
+        if ($namedType->isBuiltin()) {
             return null;
         }
 

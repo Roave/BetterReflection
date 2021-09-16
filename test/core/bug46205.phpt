@@ -2,7 +2,7 @@
 Bug #46205 (Closure - Memory leaks when ReflectionException is thrown)
 --FILE--
 <?php
-$x = new reflectionmethod('reflectionparameter', 'export');
+$x = new reflectionmethod('reflectionparameter', '__toString');
 $y = function() { };
 
 try {

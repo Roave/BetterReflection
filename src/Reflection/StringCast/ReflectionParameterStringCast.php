@@ -38,20 +38,7 @@ final class ReflectionParameterStringCast
             return '';
         }
 
-        $mapping = [
-            'int' => 'integer',
-            'bool' => 'boolean',
-        ];
-
-        $originalType = (string) $parameterReflection->getType();
-
-        $type = $mapping[$originalType] ?? $originalType;
-
-        if (! $parameterReflection->allowsNull()) {
-            return $type . ' ';
-        }
-
-        return $type . ' or NULL ';
+        return (string) $parameterReflection->getType() . ' ';
     }
 
     private static function valueToString(ReflectionParameter $parameterReflection): string

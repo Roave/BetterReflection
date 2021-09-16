@@ -5,24 +5,15 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ReflectionNamedType as CoreReflectionNamedType;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
 class ReflectionNamedType extends CoreReflectionNamedType
 {
-    private BetterReflectionType $betterReflectionType;
+    private BetterReflectionNamedType $betterReflectionType;
 
-    public function __construct(BetterReflectionType $betterReflectionType)
+    public function __construct(BetterReflectionNamedType $betterReflectionType)
     {
         $this->betterReflectionType = $betterReflectionType;
-    }
-
-    public static function fromReturnTypeOrNull(?BetterReflectionType $betterReflectionType): ?self
-    {
-        if ($betterReflectionType === null) {
-            return null;
-        }
-
-        return new self($betterReflectionType);
     }
 
     public function getName(): string
@@ -42,12 +33,6 @@ class ReflectionNamedType extends CoreReflectionNamedType
 
     public function isBuiltin(): bool
     {
-        $type = (string) $this->betterReflectionType;
-
-        if ($type === 'self' || $type === 'parent' || $type === 'static') {
-            return false;
-        }
-
         return $this->betterReflectionType->isBuiltin();
     }
 }

@@ -54,7 +54,9 @@ use function strtolower;
 
 class ReflectionClass implements Reflection
 {
-    public const ANONYMOUS_CLASS_NAME_PREFIX = 'class@anonymous';
+    public const ANONYMOUS_CLASS_NAME_PREFIX        = 'class@anonymous';
+    public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
+    private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
 
     private Reflector $reflector;
 
@@ -160,7 +162,26 @@ class ReflectionClass implements Reflection
             $fileName = sha1($this->locatedSource->getSource());
         }
 
-        return sprintf('%s%c%s(%d)', self::ANONYMOUS_CLASS_NAME_PREFIX, "\0", $fileName, $this->getStartLine());
+        return sprintf('%s%s%c%s(%d)', $this->getAnonymousClassNamePrefix(), self::ANONYMOUS_CLASS_NAME_SUFFIX, "\0", $fileName, $this->getStartLine());
+    }
+
+    /**
+     * PHP creates the name of the anonymous class based on first parent
+     * or implemented interface.
+     */
+    private function getAnonymousClassNamePrefix(): string
+    {
+        $parentClassNames = $this->getParentClassNames();
+        if ($parentClassNames !== []) {
+            return $parentClassNames[0];
+        }
+
+        $interfaceNames = $this->getInterfaceNames();
+        if ($interfaceNames !== []) {
+            return $interfaceNames[0];
+        }
+
+        return 'class';
     }
 
     /**
@@ -843,7 +864,6 @@ class ReflectionClass implements Reflection
 
         if ($this->cachedParentClass === null) {
             $parent = $this->reflector->reflect($this->node->extends->toString());
-            // @TODO use actual `ClassReflector` or `FunctionReflector`?
             assert($parent instanceof self);
 
             $this->cachedParentClass = $parent;
@@ -970,13 +990,8 @@ class ReflectionClass implements Reflection
      */
     private function reflectClassForNamedNode(Node\Name $node): self
     {
-        // @TODO use actual `ClassReflector` or `FunctionReflector`?
-        if ($this->isAnonymous()) {
-            $class = (new BetterReflection())->classReflector()->reflect($node->toString());
-        } else {
-            $class = $this->reflector->reflect($node->toString());
-            assert($class instanceof self);
-        }
+        $class = $this->reflector->reflect($node->toString());
+        assert($class instanceof self);
 
         return $class;
     }

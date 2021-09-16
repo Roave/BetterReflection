@@ -47,9 +47,9 @@ final class FileReadTrapStreamWrapper
      * @param string[]                              $streamWrapperProtocols
      *
      * @return mixed
+     * @psalm-return ExecutedMethodReturnType
      *
      * @psalm-template ExecutedMethodReturnType of mixed
-     * @psalm-return ExecutedMethodReturnType
      */
     public static function withStreamWrapperOverride(
         callable $executeMeWithinStreamWrapperOverride,

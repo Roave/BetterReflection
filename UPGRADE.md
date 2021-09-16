@@ -3,6 +3,21 @@
 This document serves as a reference to upgrade your current BetterReflection installation if improvements, deprecations
 or backwards compatibility (BC) breakages occur.
 
+## 5.0.0
+
+### BC Breaks
+* Adapters don't have `::export()` method anymore because these methods were removed from PHP. These methods has been removed:
+  * `\Roave\BetterReflection\Reflection\Adapter\ReflectionClass::export()` 
+  * `\Roave\BetterReflection\Reflection\Adapter\ReflectionFunction::export()` 
+  * `\Roave\BetterReflection\Reflection\Adapter\ReflectionMethod::export()` 
+  * `\Roave\BetterReflection\Reflection\Adapter\ReflectionObject::export()` 
+  * `\Roave\BetterReflection\Reflection\Adapter\ReflectionParameter::export()` 
+  * `\Roave\BetterReflection\Reflection\Adapter\ReflectionProperty::export()` 
+* Casting to string is compatible with PHP: 
+  * `string or NULL` is now `?string` 
+  * `boolean` is now `bool`
+  * `integer` is now `int`
+
 ## 4.0.0
 
 ### BC Breaks

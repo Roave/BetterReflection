@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use Exception;
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -25,16 +24,6 @@ class ReflectionMethod extends CoreReflectionMethod
     public function __construct(BetterReflectionMethod $betterReflectionMethod)
     {
         $this->betterReflectionMethod = $betterReflectionMethod;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws Exception
-     */
-    public static function export($class, $name, $return = null)
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**
@@ -195,7 +184,7 @@ class ReflectionMethod extends CoreReflectionMethod
      */
     public function getReturnType()
     {
-        return ReflectionNamedType::fromReturnTypeOrNull($this->betterReflectionMethod->getReturnType());
+        return ReflectionType::fromTypeOrNull($this->betterReflectionMethod->getReturnType());
     }
 
     /**

@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="test/bootstrap.php" colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="test/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
     <testsuites>
         <testsuite name="unit">
             <directory>./test/unit</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
     <listeners>
-        <listener class="Roave\BetterReflectionTest\TestListener" file="test/unit/TestListener.php" />
+        <listener class="Roave\BetterReflectionTest\TestListener" file="test/unit/TestListener.php"/>
     </listeners>
     <php>
         <ini name="error_reporting" value="E_ALL"/>
+        <ini name="memory_limit" value="-1"/>
     </php>
 </phpunit>

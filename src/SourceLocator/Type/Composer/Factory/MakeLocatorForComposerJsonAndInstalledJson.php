@@ -47,7 +47,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
         /**
          * @psalm-var array{
-         * autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>},
+         * autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>},
          * config: array{vendor-dir?: string}
          * }|null $composer
          */
@@ -72,7 +72,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}>|null $installed*/
+        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}}>|null $installed*/
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
@@ -135,7 +135,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -147,7 +147,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -159,7 +159,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<int, string>
      */
@@ -169,7 +169,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<int, string>
      */

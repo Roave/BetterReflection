@@ -29,7 +29,7 @@ use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
-use Roave\BetterReflectionTest\Fixture\Php7ParameterTypeDeclarations;
+use Roave\BetterReflectionTest\Fixture\PhpParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
 use stdClass;
@@ -286,7 +286,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testPhp7TypeDeclarationWithIntBuiltinType(): void
     {
-        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
 
         $intParamType = $method->getParameter('intParam')->getType();
@@ -297,7 +297,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testPhp7TypeDeclarationWithClassTypeIsNotBuiltin(): void
     {
-        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
 
         $classParamType = $method->getParameter('classParam')->getType();
@@ -308,29 +308,40 @@ class ReflectionParameterTest extends TestCase
 
     public function testPhp7TypeDeclarationWithoutType(): void
     {
-        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
 
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    public function testPhp7TypeDeclarationWithStringTypeThatAllowsNull(): void
+    public function testPhpTypeDeclarationWithNullDefaultValueAllowsNull(): void
     {
-        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
 
         $stringParamType = $method->getParameter('stringParamAllowsNull')->getType();
-        self::assertSame('string', (string) $stringParamType);
+        self::assertSame('?string', (string) $stringParamType);
         self::assertTrue($stringParamType->isBuiltin());
         self::assertTrue($stringParamType->allowsNull());
+    }
+
+    public function testPhpTypeDeclarationWithNullConstantDefaultValueDoesNotAllowNull(): void
+    {
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
+        $method    = $classInfo->getMethod('foo');
+
+        $stringParamType = $method->getParameter('stringWithNullConstantDefaultValueDoesNotAllowNull')->getType();
+        self::assertSame('string', (string) $stringParamType);
+        self::assertTrue($stringParamType->isBuiltin());
+        self::assertFalse($stringParamType->allowsNull());
     }
 
     public function nullableParameterTypeFunctionProvider(): array
     {
         return [
-            ['nullableIntParam', 'int'],
-            ['nullableClassParam', stdClass::class],
-            ['nullableStringParamWithDefaultValue', 'string'],
+            ['nullableIntParam', '?int'],
+            ['nullableClassParam', '?' . stdClass::class],
+            ['nullableStringParamWithDefaultValue', '?string'],
         ];
     }
 
@@ -350,7 +361,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testHasTypeReturnsTrueWithType(): void
     {
-        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
 
         self::assertTrue($method->getParameter('intParam')->hasType());
@@ -358,7 +369,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testHasTypeReturnsFalseWithoutType(): void
     {
-        $classInfo = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $method    = $classInfo->getMethod('foo');
 
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
@@ -369,7 +380,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testSetType(): void
     {
-        $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo     = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $methodInfo    = $classInfo->getMethod('foo');
         $parameterInfo = $methodInfo->getParameter('intParam');
 
@@ -387,7 +398,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testRemoveType(): void
     {
-        $classInfo     = $this->reflector->reflect(Php7ParameterTypeDeclarations::class);
+        $classInfo     = $this->reflector->reflect(PhpParameterTypeDeclarations::class);
         $methodInfo    = $classInfo->getMethod('foo');
         $parameterInfo = $methodInfo->getParameter('intParam');
 

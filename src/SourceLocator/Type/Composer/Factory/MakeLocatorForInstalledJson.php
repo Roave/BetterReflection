@@ -47,7 +47,7 @@ final class MakeLocatorForInstalledJson
 
         /**
          * @psalm-var array{
-         * autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>},
+         * autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>},
          * config: array{vendor-dir?: string}
          * }|null $composer
          */
@@ -68,7 +68,7 @@ final class MakeLocatorForInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}}>|null $installed */
+        /** @var list<array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}}>|null $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
@@ -131,7 +131,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -143,7 +143,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<string, array<int, string>>
      */
@@ -155,7 +155,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<int, string>
      */
@@ -165,7 +165,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<int, string>
      */
@@ -175,7 +175,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package, string $vendorDir): string
     {
@@ -183,8 +183,8 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array<int|string, array<string>>                                                                                                                                                  $paths
-     * @param array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>>, psr-0: array<string, array<int, string>>}} $package
+     * @param array<int|string, array<string>>                                                                                                                                                                $paths
+     * @param array{name: string, autoload: array{classmap: array<int, string>, files: array<int, string>, psr-4: array<string, array<int, string>|string>, psr-0: array<string, array<int, string>|string>}} $package
      *
      * @return array<int|string, string|array<string>>
      */

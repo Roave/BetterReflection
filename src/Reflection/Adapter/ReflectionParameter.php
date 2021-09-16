@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use Exception;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
@@ -18,16 +17,6 @@ class ReflectionParameter extends CoreReflectionParameter
     public function __construct(BetterReflectionParameter $betterReflectionParameter)
     {
         $this->betterReflectionParameter = $betterReflectionParameter;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws Exception
-     */
-    public static function export($function, $parameter, $return = null)
-    {
-        throw new Exception('Unable to export statically');
     }
 
     /**
@@ -185,19 +174,16 @@ class ReflectionParameter extends CoreReflectionParameter
         return $this->betterReflectionParameter->getDefaultValueConstantName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function hasType()
+    public function hasType(): bool
     {
         return $this->betterReflectionParameter->hasType();
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MismatchingDocblockReturnType
      */
-    public function getType()
+    public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionType|null
     {
-        return ReflectionNamedType::fromReturnTypeOrNull($this->betterReflectionParameter->getType());
+        return ReflectionType::fromTypeOrNull($this->betterReflectionParameter->getType());
     }
 }

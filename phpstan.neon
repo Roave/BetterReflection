@@ -15,6 +15,10 @@ parameters:
             paths:
                 - %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php
                 - %currentWorkingDirectory%/src/Reflection/ReflectionParameter.php
+        -
+            message: "#^Parameter \\#1 \\$callback of function spl_autoload_register expects \\(callable\\(string\\)\\: void\\)\\|null, \\$this\\(Roave\\\\BetterReflection\\\\Util\\\\Autoload\\\\ClassLoader\\) given\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Util/Autoload/ClassLoader.php
         # Impossible to define type hint for anonymous class
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(clearNodes|getClassNodes|getFunctionNodes|getConstantNodes)\(\)#'
@@ -22,8 +26,38 @@ parameters:
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
             path: %currentWorkingDirectory%/src/SourceLocator/Type/AutoloadSourceLocator.php
-        # ClassLoader is a pseudo-callable
+        # Will be fixed later
         -
-            message: "#^Parameter \\#1 \\$autoload_function of function spl_autoload_register expects callable\\(string\\)\\: void, \\$this\\(Roave\\\\BetterReflection\\\\Util\\\\Autoload\\\\ClassLoader\\) given\\.$#"
+            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionClass\\:\\:getReflectionConstant\\(\\) should return ReflectionClassConstant but returns false\\.$#"
             count: 1
-            path: src/Util/Autoload/ClassLoader.php
+            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionClass.php
+
+        -
+            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionClass\\:\\:isInstance\\(\\) should return bool but returns null\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionClass.php
+
+        -
+            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionFunction\\:\\:getClosure\\(\\) should return Closure but returns null\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionFunction.php
+
+        -
+            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionMethod\\:\\:getClosure\\(\\) should return Closure but returns null\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionMethod.php
+
+        -
+            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionObject\\:\\:getReflectionConstant\\(\\) should return ReflectionClassConstant but returns false\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionObject.php
+
+        -
+            message: "#^Method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionObject\\:\\:isInstance\\(\\) should return bool but returns null\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/Adapter/ReflectionObject.php
+
+        -
+            message: "#^Property PhpParser\\\\Node\\\\Expr\\\\Closure\\:\\:\\$stmts \\(array\\<PhpParser\\\\Node\\\\Stmt\\>\\|null\\) does not accept array\\<int, PhpParser\\\\Node\\>\\.$#"
+            count: 1
+            path: %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php

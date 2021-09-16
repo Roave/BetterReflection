@@ -15,7 +15,6 @@ use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunc
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
-use Throwable;
 
 use function array_combine;
 use function array_map;
@@ -112,13 +111,6 @@ class ReflectionFunctionTest extends TestCase
 
         $adapter = new ReflectionFunctionAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
-    }
-
-    public function testExport(): void
-    {
-        $this->expectException(Throwable::class);
-        $this->expectExceptionMessage('Unable to export statically');
-        ReflectionFunctionAdapter::export('str_replace');
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName(): void

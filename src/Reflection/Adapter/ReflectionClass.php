@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use InvalidArgumentException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 
@@ -19,11 +17,8 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
-use function assert;
 use function func_num_args;
-use function is_array;
 use function is_object;
-use function is_string;
 use function sprintf;
 use function strtolower;
 
@@ -36,32 +31,6 @@ class ReflectionClass extends CoreReflectionClass
         $this->betterReflectionClass = $betterReflectionClass;
 
         unset($this->name);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws CoreReflectionException
-     */
-    public static function export($argument, $return = false)
-    {
-        if (is_string($argument) || is_object($argument)) {
-            if (is_string($argument)) {
-                $output = BetterReflectionClass::createFromName($argument)->__toString();
-            } else {
-                $output = BetterReflectionObject::createFromInstance($argument)->__toString();
-            }
-
-            if ($return) {
-                return $output;
-            }
-
-            echo $output;
-
-            return null;
-        }
-
-        throw new InvalidArgumentException('Class name must be provided');
     }
 
     /**
@@ -351,22 +320,12 @@ class ReflectionClass extends CoreReflectionClass
             return $trait->getName();
         }, $traits);
 
-        $traitsByName = array_combine(
+        return array_combine(
             $traitNames,
             array_map(static function (BetterReflectionClass $trait): self {
                 return new self($trait);
             }, $traits),
         );
-
-        assert(
-            is_array($traitsByName),
-            sprintf(
-                'Could not create an array<trait-string, ReflectionClass> for class "%s"',
-                $this->betterReflectionClass->getName(),
-            ),
-        );
-
-        return $traitsByName;
     }
 
     /**
@@ -482,7 +441,9 @@ class ReflectionClass extends CoreReflectionClass
             return strtolower($parentClassName);
         }, $realParentClassNames), $realParentClassNames);
 
-        $realParentClassName = $parentClassNames[strtolower($class)] ?? $class;
+        $lowercasedClass = strtolower($class);
+
+        $realParentClassName = $parentClassNames[$lowercasedClass] ?? $class;
 
         return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($class);
     }

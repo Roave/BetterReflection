@@ -482,9 +482,9 @@ class ReflectionFunctionAbstractTest extends TestCase
     public function nullableReturnTypeFunctionProvider(): array
     {
         return [
-            ['returnsNullableInt', 'int'],
-            ['returnsNullableString', 'string'],
-            ['returnsNullableObject', stdClass::class],
+            ['returnsNullableInt', '?int'],
+            ['returnsNullableString', '?string'],
+            ['returnsNullableObject', '?' . stdClass::class],
         ];
     }
 
