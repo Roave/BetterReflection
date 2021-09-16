@@ -15,7 +15,6 @@ use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
@@ -221,20 +220,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         $function  = $reflector->reflect('foo');
 
         self::assertSame($expectingGenerator, $function->isGenerator());
-    }
-
-    public function testIsGeneratorWhenNodeNotSet(): void
-    {
-        $php          = '<?php function foo() { yield 1; }';
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
-
-        $rfaRef     = new ReflectionClass(ReflectionFunctionAbstract::class);
-        $rfaRefNode = $rfaRef->getProperty('node');
-        $rfaRefNode->setAccessible(true);
-        $rfaRefNode->setValue($functionInfo, null);
-
-        self::assertFalse($functionInfo->isGenerator());
     }
 
     public function startEndLineProvider(): array

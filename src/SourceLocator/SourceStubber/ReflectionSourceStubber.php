@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 use LogicException;
-use PhpParser\Builder;
 use PhpParser\Builder\Class_;
-use PhpParser\Builder\Declaration;
 use PhpParser\Builder\Function_;
 use PhpParser\Builder\FunctionLike;
 use PhpParser\Builder\Interface_;
@@ -38,7 +36,6 @@ use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use ReflectionUnionType as CoreReflectionUnionType;
-use Reflector as CoreReflector;
 
 use function array_diff;
 use function array_key_exists;
@@ -76,10 +73,7 @@ final class ReflectionSourceStubber implements SourceStubber
             return null;
         }
 
-        /**
-         * @psalm-var class-string|trait-string $className
-         * @phpstan-var string $className
-         */
+        /** @psalm-var class-string|trait-string $className */
         $classReflection = new CoreReflectionClass($className);
         $classNode       = $this->createClass($classReflection);
 
@@ -177,10 +171,7 @@ final class ReflectionSourceStubber implements SourceStubber
         return null;
     }
 
-    /**
-     * @return Class_|Interface_|Trait_
-     */
-    private function createClass(CoreReflectionClass $classReflection): Declaration
+    private function createClass(CoreReflectionClass $classReflection): Class_|Interface_|Trait_
     {
         if ($classReflection->isTrait()) {
             return $this->builderFactory->trait($classReflection->getShortName());
@@ -193,12 +184,10 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->builderFactory->class($classReflection->getShortName());
     }
 
-    /**
-     * @param Class_|Interface_|Trait_|Method|Property|Function_                                     $node
-     * @param CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection
-     */
-    private function addDocComment(Builder $node, CoreReflector $reflection): void
-    {
+    private function addDocComment(
+        Class_|Interface_|Trait_|Method|Property|Function_ $node,
+        CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection,
+    ): void {
         if ($reflection->getDocComment() === false) {
             return;
         }
@@ -220,10 +209,7 @@ final class ReflectionSourceStubber implements SourceStubber
         $classNode->makeFinal();
     }
 
-    /**
-     * @param Class_|Interface_ $classNode
-     */
-    private function addExtendsAndImplements(Declaration $classNode, CoreReflectionClass $classReflection): void
+    private function addExtendsAndImplements(Class_|Interface_ $classNode, CoreReflectionClass $classReflection): void
     {
         $parentClass = $classReflection->getParentClass();
         $interfaces  = $classReflection->getInterfaceNames();
@@ -246,7 +232,7 @@ final class ReflectionSourceStubber implements SourceStubber
         }
     }
 
-    private function addTraitUse(Declaration $classNode, CoreReflectionClass $classReflection): void
+    private function addTraitUse(Class_|Trait_ $classNode, CoreReflectionClass $classReflection): void
     {
         $alreadyUsedTraitNames = [];
 
@@ -267,7 +253,7 @@ final class ReflectionSourceStubber implements SourceStubber
         }
     }
 
-    private function addProperties(Declaration $classNode, CoreReflectionClass $classReflection): void
+    private function addProperties(Class_|Trait_ $classNode, CoreReflectionClass $classReflection): void
     {
         $defaultProperties = $classReflection->getDefaultProperties();
 
@@ -336,7 +322,7 @@ final class ReflectionSourceStubber implements SourceStubber
         $propertyNode->makePrivate();
     }
 
-    private function addConstants(Declaration $classNode, CoreReflectionClass $classReflection): void
+    private function addConstants(Class_|Interface_|Trait_ $classNode, CoreReflectionClass $classReflection): void
     {
         foreach ($classReflection->getReflectionConstants() as $constantReflection) {
             if ($constantReflection->getDeclaringClass()->getName() !== $classReflection->getName()) {
@@ -369,7 +355,7 @@ final class ReflectionSourceStubber implements SourceStubber
         return ClassNode::MODIFIER_PUBLIC;
     }
 
-    private function addMethods(Declaration $classNode, CoreReflectionClass $classReflection): void
+    private function addMethods(Class_|Interface_|Trait_ $classNode, CoreReflectionClass $classReflection): void
     {
         foreach ($classReflection->getMethods() as $methodReflection) {
             if (! $this->isMethodDeclaredInClass($methodReflection, $classReflection)) {

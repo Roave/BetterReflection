@@ -19,8 +19,7 @@
     </MethodSignatureMismatch>
   </file>
   <file src="src/Reflection/ReflectionFunctionAbstract.php">
-    <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>$functionNode-&gt;getStmts()</code>
+    <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;loadStaticParser()-&gt;parse('&lt;?php ' . $newBody)</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>

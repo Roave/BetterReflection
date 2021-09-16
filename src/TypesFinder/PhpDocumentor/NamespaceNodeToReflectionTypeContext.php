@@ -41,8 +41,7 @@ class NamespaceNodeToReflectionTypeContext
             ...array_merge(
                 [],
                 ...array_map(
-                    /** @param Use_|GroupUse $use */
-                    static function ($use): array {
+                    static function (Use_|GroupUse $use): array {
                         return array_map(
                             static function (UseUse $useUse) use ($use): array {
                                 if ($use instanceof GroupUse) {
