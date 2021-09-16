@@ -20,12 +20,10 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class StringSourceLocator extends AbstractSourceLocator
 {
-    private string $source;
-
     /**
      * @throws EmptyPhpSourceCode
      */
-    public function __construct(string $source, Locator $astLocator)
+    public function __construct(private string $source, Locator $astLocator)
     {
         parent::__construct($astLocator);
 
@@ -37,8 +35,6 @@ class StringSourceLocator extends AbstractSourceLocator
                 'Source code string was empty',
             );
         }
-
-        $this->source = $source;
     }
 
     /**

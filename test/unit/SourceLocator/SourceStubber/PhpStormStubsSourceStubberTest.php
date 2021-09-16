@@ -78,9 +78,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         );
 
         return array_map(
-            static function (string $className): array {
-                return [$className];
-            },
+            static fn (string $className): array => [$className],
             array_filter(
                 $classNames,
                 static function (string $className): bool {
@@ -165,15 +163,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
     {
         $originalParameterNames = array_map(
-            static function (CoreReflectionParameter $parameter): string {
-                return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
-            },
+            static fn (CoreReflectionParameter $parameter): string => $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName(),
             $original->getParameters(),
         );
         $stubParameterNames     = array_map(
-            static function (ReflectionParameter $parameter): string {
-                return $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName();
-            },
+            static fn (ReflectionParameter $parameter): string => $parameter->getDeclaringFunction()->getName() . '.' . $parameter->getName(),
             $stubbed->getParameters(),
         );
 
@@ -215,7 +209,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     private function assertSameParameterAttributes(
         CoreReflectionMethod $originalMethod,
         CoreReflectionParameter $original,
-        ReflectionParameter $stubbed
+        ReflectionParameter $stubbed,
     ): void {
         $parameterName = $original->getDeclaringClass()->getName()
             . '#' . $originalMethod->getName()
@@ -286,9 +280,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionNames = get_defined_functions()['internal'];
 
         return array_map(
-            static function (string $functionName): array {
-                return [$functionName];
-            },
+            static fn (string $functionName): array => [$functionName],
             array_filter(
                 $functionNames,
                 static function (string $functionName): bool {
@@ -406,11 +398,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /**
-     * @param mixed $constantValue
-     *
      * @dataProvider internalConstantsProvider
      */
-    public function testInternalConstants(string $constantName, $constantValue, string $extensionName): void
+    public function testInternalConstants(string $constantName, mixed $constantValue, string $extensionName): void
     {
         $constantReflection = $this->constantReflector->reflect($constantName);
 

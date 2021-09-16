@@ -12,11 +12,8 @@ use function array_map;
 
 class ReflectionUnionType extends CoreReflectionUnionType
 {
-    private BetterReflectionUnionType $betterReflectionType;
-
-    public function __construct(BetterReflectionUnionType $betterReflectionType)
+    public function __construct(private BetterReflectionUnionType $betterReflectionType)
     {
-        $this->betterReflectionType = $betterReflectionType;
     }
 
     /**
@@ -24,9 +21,7 @@ class ReflectionUnionType extends CoreReflectionUnionType
      */
     public function getTypes(): array
     {
-        return array_map(static function (BetterReflectionType $type) {
-            return ReflectionType::fromTypeOrNull($type);
-        }, $this->betterReflectionType->getTypes());
+        return array_map(static fn (BetterReflectionType $type) => ReflectionType::fromTypeOrNull($type), $this->betterReflectionType->getTypes());
     }
 
     public function __toString(): string

@@ -17,13 +17,10 @@ use function func_get_args;
 
 class ReflectionMethod extends CoreReflectionMethod
 {
-    private BetterReflectionMethod $betterReflectionMethod;
-
     private bool $accessible = false;
 
-    public function __construct(BetterReflectionMethod $betterReflectionMethod)
+    public function __construct(private BetterReflectionMethod $betterReflectionMethod)
     {
-        $this->betterReflectionMethod = $betterReflectionMethod;
     }
 
     /**
@@ -306,7 +303,7 @@ class ReflectionMethod extends CoreReflectionMethod
     {
         try {
             return $this->betterReflectionMethod->getClosure($object);
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -332,7 +329,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
         try {
             return $this->betterReflectionMethod->invoke(...func_get_args());
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);
@@ -350,7 +347,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
         try {
             return $this->betterReflectionMethod->invokeArgs($object, $args);
-        } catch (NoObjectProvided | TypeError $e) {
+        } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), 0, $e);

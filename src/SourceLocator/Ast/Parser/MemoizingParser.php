@@ -21,11 +21,8 @@ final class MemoizingParser implements Parser
     /** @var string[] indexed by source hash */
     private array $sourceHashToAst = [];
 
-    private Parser $wrappedParser;
-
-    public function __construct(Parser $wrappedParser)
+    public function __construct(private Parser $wrappedParser)
     {
-        $this->wrappedParser = $wrappedParser;
     }
 
     /**

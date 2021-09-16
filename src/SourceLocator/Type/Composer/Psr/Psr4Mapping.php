@@ -41,9 +41,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
 
         $instance->mappings = array_map(
             static function (array $directories): array {
-                return array_map(static function (string $directory): string {
-                    return rtrim($directory, '/');
-                }, $directories);
+                return array_map(static fn (string $directory): string => rtrim($directory, '/'), $directories);
             },
             $mappings,
         );
@@ -70,9 +68,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
                     return [];
                 }
 
-                return array_map(static function (string $path) use ($subPath): string {
-                    return rtrim($path, '/') . '/' . $subPath . '.php';
-                }, $paths);
+                return array_map(static fn (string $path): string => rtrim($path, '/') . '/' . $subPath . '.php', $paths);
             }, $matchingPrefixes, array_keys($matchingPrefixes)),
         )));
     }
@@ -82,9 +78,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
     {
         return array_filter(
             $this->mappings,
-            static function (string $prefix) use ($className): bool {
-                return strpos($className, $prefix) === 0;
-            },
+            static fn (string $prefix): bool => strpos($className, $prefix) === 0,
             ARRAY_FILTER_USE_KEY,
         );
     }

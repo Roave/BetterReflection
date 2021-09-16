@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 
-use function get_class;
 use function sprintf;
 
 class InvalidAbstractFunctionNodeType extends InvalidArgumentException
@@ -20,7 +19,7 @@ class InvalidAbstractFunctionNodeType extends InvalidArgumentException
             ReflectionFunctionAbstract::class,
             Node\Stmt\ClassMethod::class,
             Node\FunctionLike::class,
-            get_class($node),
+            $node::class,
         ));
     }
 }

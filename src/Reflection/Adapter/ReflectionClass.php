@@ -24,12 +24,8 @@ use function strtolower;
 
 class ReflectionClass extends CoreReflectionClass
 {
-    private BetterReflectionClass $betterReflectionClass;
-
-    public function __construct(BetterReflectionClass $betterReflectionClass)
+    public function __construct(private BetterReflectionClass $betterReflectionClass)
     {
-        $this->betterReflectionClass = $betterReflectionClass;
-
         unset($this->name);
     }
 
@@ -44,11 +40,9 @@ class ReflectionClass extends CoreReflectionClass
     /**
      * @param string $name
      *
-     * @return mixed
-     *
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      */
-    public function __get($name)
+    public function __get($name): mixed
     {
         if ($name === 'name') {
             return $this->betterReflectionClass->getName();
@@ -146,7 +140,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         try {
             return new ReflectionMethod($this->betterReflectionClass->getConstructor());
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException) {
             return null;
         }
     }
@@ -172,9 +166,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getMethods($filter = null)
     {
-        return array_map(static function (BetterReflectionMethod $method): ReflectionMethod {
-            return new ReflectionMethod($method);
-        }, $this->betterReflectionClass->getMethods($filter));
+        return array_map(static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method), $this->betterReflectionClass->getMethods($filter));
     }
 
     /**
@@ -204,9 +196,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getProperties($filter = null)
     {
-        return array_values(array_map(static function (BetterReflectionProperty $property): ReflectionProperty {
-            return new ReflectionProperty($property);
-        }, $this->betterReflectionClass->getProperties($filter)));
+        return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionClass->getProperties($filter)));
     }
 
     /**
@@ -222,9 +212,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getConstants(?int $filter = null)
     {
-        return array_map(static function (BetterReflectionClassConstant $betterConstant) {
-            return $betterConstant->getValue();
-        }, $this->filterBetterReflectionClassConstants($filter));
+        return array_map(static fn (BetterReflectionClassConstant $betterConstant) => $betterConstant->getValue(), $this->filterBetterReflectionClassConstants($filter));
     }
 
     /**
@@ -253,9 +241,7 @@ class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants(?int $filter = null)
     {
-        return array_values(array_map(static function (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant {
-            return new ReflectionClassConstant($betterConstant);
-        }, $this->filterBetterReflectionClassConstants($filter)));
+        return array_values(array_map(static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant), $this->filterBetterReflectionClassConstants($filter)));
     }
 
     /**
@@ -268,9 +254,7 @@ class ReflectionClass extends CoreReflectionClass
         if ($filter !== null) {
             $reflectionConstants = array_filter(
                 $this->betterReflectionClass->getReflectionConstants(),
-                static function (BetterReflectionClassConstant $betterConstant) use ($filter): bool {
-                    return (bool) ($betterConstant->getModifiers() & $filter);
-                },
+                static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
             );
         }
 
@@ -316,15 +300,11 @@ class ReflectionClass extends CoreReflectionClass
         $traits = $this->betterReflectionClass->getTraits();
 
         /** @var array<trait-string> $traitNames */
-        $traitNames = array_map(static function (BetterReflectionClass $trait): string {
-            return $trait->getName();
-        }, $traits);
+        $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
             $traitNames,
-            array_map(static function (BetterReflectionClass $trait): self {
-                return new self($trait);
-            }, $traits),
+            array_map(static fn (BetterReflectionClass $trait): self => new self($trait), $traits),
         );
     }
 
@@ -437,9 +417,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
 
-        $parentClassNames = array_combine(array_map(static function (string $parentClassName): string {
-            return strtolower($parentClassName);
-        }, $realParentClassNames), $realParentClassNames);
+        $parentClassNames = array_combine(array_map(static fn (string $parentClassName): string => strtolower($parentClassName), $realParentClassNames), $realParentClassNames);
 
         $lowercasedClass = strtolower($class);
 
@@ -531,9 +509,7 @@ class ReflectionClass extends CoreReflectionClass
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
 
-        $interfaceNames = array_combine(array_map(static function (string $interfaceName): string {
-            return strtolower($interfaceName);
-        }, $realInterfaceNames), $realInterfaceNames);
+        $interfaceNames = array_combine(array_map(static fn (string $interfaceName): string => strtolower($interfaceName), $realInterfaceNames), $realInterfaceNames);
 
         $realInterfaceName = $interfaceNames[strtolower($interface)] ?? $interface;
 

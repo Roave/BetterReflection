@@ -57,7 +57,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         Reflector $reflector,
         FunctionNode $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $namespaceNode = null
+        ?NamespaceNode $namespaceNode = null,
     ): self {
         $function = new self();
 
@@ -95,20 +95,14 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
         $this->assertFunctionExist($functionName);
 
-        return static function (...$args) use ($functionName) {
-            return $functionName(...$args);
-        };
+        return static fn (...$args) => $functionName(...$args);
     }
 
     /**
-     * @param mixed ...$args
-     *
-     * @return mixed
-     *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
      */
-    public function invoke(...$args)
+    public function invoke(mixed ...$args): mixed
     {
         return $this->invokeArgs($args);
     }
@@ -116,12 +110,10 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
     /**
      * @param mixed[] $args
      *
-     * @return mixed
-     *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist
      */
-    public function invokeArgs(array $args = [])
+    public function invokeArgs(array $args = []): mixed
     {
         $this->assertIsNoClosure();
 

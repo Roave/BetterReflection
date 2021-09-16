@@ -284,7 +284,7 @@ final class ReflectionSourceStubber implements SourceStubber
             if (array_key_exists($propertyReflection->getName(), $defaultProperties)) {
                 try {
                     $propertyNode->setDefault($defaultProperties[$propertyReflection->getName()]);
-                } catch (LogicException $e) {
+                } catch (LogicException) {
                     // Unsupported value
                 }
             }
@@ -480,13 +480,10 @@ final class ReflectionSourceStubber implements SourceStubber
         $parameterNode->setType($this->formatType($parameterType));
     }
 
-    /**
-     * @return mixed
-     */
     private function parameterDefaultValue(
         ReflectionParameter $parameterReflection,
-        CoreReflectionFunctionAbstract $functionReflectionAbstract
-    ) {
+        CoreReflectionFunctionAbstract $functionReflectionAbstract,
+    ): mixed {
         if ($functionReflectionAbstract->isInternal()) {
             return null;
         }

@@ -24,14 +24,8 @@ use function method_exists;
 
 final class FindReflectionOnLine
 {
-    private SourceLocator $sourceLocator;
-
-    private Locator $astLocator;
-
-    public function __construct(SourceLocator $sourceLocator, Locator $astLocator)
+    public function __construct(private SourceLocator $sourceLocator, private Locator $astLocator)
     {
-        $this->sourceLocator = $sourceLocator;
-        $this->astLocator    = $astLocator;
     }
 
     /**
@@ -39,13 +33,11 @@ final class FindReflectionOnLine
      *
      * Returns null if no reflections found on the line.
      *
-     * @return ReflectionMethod|ReflectionClass|ReflectionFunction|ReflectionConstant|Reflection|null
-     *
      * @throws InvalidFileLocation
      * @throws ParseToAstFailure
      * @throws InvalidArgumentException
      */
-    public function __invoke(string $filename, int $lineNumber)
+    public function __invoke(string $filename, int $lineNumber): ReflectionMethod|ReflectionClass|ReflectionFunction|ReflectionConstant|Reflection|null
     {
         $reflections = $this->computeReflections($filename);
 
@@ -95,11 +87,9 @@ final class FindReflectionOnLine
     /**
      * Check to see if the line is within the boundaries of the reflection specified.
      *
-     * @param ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection
-     *
      * @throws InvalidArgumentException
      */
-    private function containsLine($reflection, int $lineNumber): bool
+    private function containsLine(ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection, int $lineNumber): bool
     {
         if (! method_exists($reflection, 'getStartLine')) {
             throw new InvalidArgumentException('Reflection does not have getStartLine method');

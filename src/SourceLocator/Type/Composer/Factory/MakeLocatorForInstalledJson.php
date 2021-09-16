@@ -73,23 +73,19 @@ final class MakeLocatorForInstalledJson
 
         $classMapPaths       = array_merge(
             [],
-            ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
-                return $this->prefixPaths(
-                    $this->packageToClassMapPaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package, $vendorDir),
-                );
-            }, $installed),
+            ...array_map(fn (array $package): array => $this->prefixPaths(
+                $this->packageToClassMapPaths($package),
+                $this->packagePrefixPath($realInstallationPath, $package, $vendorDir),
+            ), $installed),
         );
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
         $classMapDirectories = array_filter($classMapPaths, 'is_dir');
         $filePaths           = array_merge(
             [],
-            ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
-                return $this->prefixPaths(
-                    $this->packageToFilePaths($package),
-                    $this->packagePrefixPath($realInstallationPath, $package, $vendorDir),
-                );
-            }, $installed),
+            ...array_map(fn (array $package): array => $this->prefixPaths(
+                $this->packageToFilePaths($package),
+                $this->packagePrefixPath($realInstallationPath, $package, $vendorDir),
+            ), $installed),
         );
 
         return new AggregateSourceLocator(array_merge(
@@ -97,36 +93,30 @@ final class MakeLocatorForInstalledJson
                 new PsrAutoloaderLocator(
                     Psr4Mapping::fromArrayMappings(array_merge_recursive(
                         [],
-                        ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
-                            return $this->prefixWithPackagePath(
-                                $this->packageToPsr4AutoloadNamespaces($package),
-                                $realInstallationPath,
-                                $package,
-                                $vendorDir,
-                            );
-                        }, $installed),
+                        ...array_map(fn (array $package): array => $this->prefixWithPackagePath(
+                            $this->packageToPsr4AutoloadNamespaces($package),
+                            $realInstallationPath,
+                            $package,
+                            $vendorDir,
+                        ), $installed),
                     )),
                     $astLocator,
                 ),
                 new PsrAutoloaderLocator(
                     Psr0Mapping::fromArrayMappings(array_merge_recursive(
                         [],
-                        ...array_map(function (array $package) use ($realInstallationPath, $vendorDir): array {
-                            return $this->prefixWithPackagePath(
-                                $this->packageToPsr0AutoloadNamespaces($package),
-                                $realInstallationPath,
-                                $package,
-                                $vendorDir,
-                            );
-                        }, $installed),
+                        ...array_map(fn (array $package): array => $this->prefixWithPackagePath(
+                            $this->packageToPsr0AutoloadNamespaces($package),
+                            $realInstallationPath,
+                            $package,
+                            $vendorDir,
+                        ), $installed),
                     )),
                     $astLocator,
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
-            ...array_map(static function (string $file) use ($astLocator): array {
-                return [new SingleFileSourceLocator($file, $astLocator)];
-            }, array_merge($classMapFiles, $filePaths)),
+            ...array_map(static fn (string $file): array => [new SingleFileSourceLocator($file, $astLocator)], array_merge($classMapFiles, $filePaths)),
         ));
     }
 
@@ -137,9 +127,7 @@ final class MakeLocatorForInstalledJson
      */
     private function packageToPsr4AutoloadNamespaces(array $package): array
     {
-        return array_map(static function ($namespacePaths): array {
-            return (array) $namespacePaths;
-        }, $package['autoload']['psr-4'] ?? []);
+        return array_map(static fn ($namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-4'] ?? []);
     }
 
     /**
@@ -149,9 +137,7 @@ final class MakeLocatorForInstalledJson
      */
     private function packageToPsr0AutoloadNamespaces(array $package): array
     {
-        return array_map(static function ($namespacePaths): array {
-            return (array) $namespacePaths;
-        }, $package['autoload']['psr-0'] ?? []);
+        return array_map(static fn ($namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-0'] ?? []);
     }
 
     /**
@@ -192,9 +178,7 @@ final class MakeLocatorForInstalledJson
     {
         $prefix = $this->packagePrefixPath($trimmedInstallationPath, $package, $vendorDir);
 
-        return array_map(function (array $paths) use ($prefix): array {
-            return $this->prefixPaths($paths, $prefix);
-        }, $paths);
+        return array_map(fn (array $paths): array => $this->prefixPaths($paths, $prefix), $paths);
     }
 
     /**
@@ -204,8 +188,6 @@ final class MakeLocatorForInstalledJson
      */
     private function prefixPaths(array $paths, string $prefix): array
     {
-        return array_map(static function (string $path) use ($prefix) {
-            return $prefix . $path;
-        }, $paths);
+        return array_map(static fn (string $path) => $prefix . $path, $paths);
     }
 }

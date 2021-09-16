@@ -32,14 +32,12 @@ class FileIteratorSourceLocator implements SourceLocator
     /** @var Iterator<SplFileInfo> */
     private Iterator $fileSystemIterator;
 
-    private Locator $astLocator;
-
     /**
      * @param Iterator<SplFileInfo> $fileInfoIterator note: only SplFileInfo allowed in this iterator
      *
      * @throws InvalidFileInfo In case of iterator not contains only SplFileInfo.
      */
-    public function __construct(Iterator $fileInfoIterator, Locator $astLocator)
+    public function __construct(Iterator $fileInfoIterator, private Locator $astLocator)
     {
         foreach ($fileInfoIterator as $fileInfo) {
             if (! $fileInfo instanceof SplFileInfo) {
@@ -48,7 +46,6 @@ class FileIteratorSourceLocator implements SourceLocator
         }
 
         $this->fileSystemIterator = $fileInfoIterator;
-        $this->astLocator         = $astLocator;
     }
 
     /**

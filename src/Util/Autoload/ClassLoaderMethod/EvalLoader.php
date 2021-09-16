@@ -9,11 +9,8 @@ use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
 final class EvalLoader implements LoaderMethodInterface
 {
-    private ClassPrinterInterface $classPrinter;
-
-    public function __construct(ClassPrinterInterface $classPrinter)
+    public function __construct(private ClassPrinterInterface $classPrinter)
     {
-        $this->classPrinter = $classPrinter;
     }
 
     public function __invoke(ReflectionClass $classInfo): void

@@ -162,11 +162,9 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /**
-     * @param mixed $expectedValue
-     *
      * @dataProvider nodeProvider
      */
-    public function testVariousNodeCompilations(string $phpCode, $expectedValue): void
+    public function testVariousNodeCompilations(string $phpCode, mixed $expectedValue): void
     {
         $node = $this->parseCode($phpCode);
 

@@ -375,9 +375,7 @@ class AutoloadSourceLocatorTest extends TestCase
     public function testBrokenAutoloader(): void
     {
         $getErrorHandler = static function (): ?callable {
-            $errorHandler = set_error_handler(static function (): bool {
-                return true;
-            });
+            $errorHandler = set_error_handler(static fn (): bool => true);
             restore_error_handler();
 
             return $errorHandler;

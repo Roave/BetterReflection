@@ -23,18 +23,14 @@ use function file_get_contents;
  */
 class SingleFileSourceLocator extends AbstractSourceLocator
 {
-    private string $fileName;
-
     /**
      * @throws InvalidFileLocation
      */
-    public function __construct(string $fileName, Locator $astLocator)
+    public function __construct(private string $fileName, Locator $astLocator)
     {
         FileChecker::assertReadableFile($fileName);
 
         parent::__construct($astLocator);
-
-        $this->fileName = $fileName;
     }
 
     /**

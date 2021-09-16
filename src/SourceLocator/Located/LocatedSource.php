@@ -16,15 +16,13 @@ use Roave\BetterReflection\Util\FileHelper;
  */
 class LocatedSource
 {
-    private string $source;
-
     private ?string $filename;
 
     /**
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    public function __construct(string $source, ?string $filename)
+    public function __construct(private string $source, ?string $filename)
     {
         if ($filename !== null) {
             FileChecker::assertReadableFile($filename);
@@ -32,7 +30,6 @@ class LocatedSource
             $filename = FileHelper::normalizeWindowsPath($filename);
         }
 
-        $this->source   = $source;
         $this->filename = $filename;
     }
 

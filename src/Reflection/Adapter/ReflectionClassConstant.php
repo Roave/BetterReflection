@@ -9,11 +9,8 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectio
 
 class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-    private BetterReflectionClassConstant $betterClassConstant;
-
-    public function __construct(BetterReflectionClassConstant $betterClassConstant)
+    public function __construct(private BetterReflectionClassConstant $betterClassConstant)
     {
-        $this->betterClassConstant = $betterClassConstant;
     }
 
     /**
@@ -30,7 +27,7 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
      *
      * @return scalar|array<scalar>|null
      */
-    public function getValue()
+    public function getValue(): string|int|float|bool|array|null
     {
         return $this->betterClassConstant->getValue();
     }
@@ -77,10 +74,8 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Returns the doc comment for this constant
-     *
-     * @return string|false
      */
-    public function getDocComment()
+    public function getDocComment(): string|false
     {
         return $this->betterClassConstant->getDocComment() ?: false;
     }

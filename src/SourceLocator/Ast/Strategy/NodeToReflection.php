@@ -27,7 +27,7 @@ class NodeToReflection implements AstConversionStrategy
         Node $node,
         LocatedSource $locatedSource,
         ?Node\Stmt\Namespace_ $namespace,
-        ?int $positionInNode = null
+        ?int $positionInNode = null,
     ): ?Reflection {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
@@ -58,7 +58,7 @@ class NodeToReflection implements AstConversionStrategy
         if ($node instanceof Node\Expr\FuncCall) {
             try {
                 return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
-            } catch (InvalidConstantNode $e) {
+            } catch (InvalidConstantNode) {
                 // Ignore
             }
         }

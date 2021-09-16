@@ -10,22 +10,18 @@ use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_key_exists;
-use function get_class;
 use function spl_object_hash;
 
 final class MemoizingSourceLocator implements SourceLocator
 {
-    private SourceLocator $wrappedSourceLocator;
-
     /** @var Reflection[]|null[] indexed by reflector key and identifier cache key */
     private array $cacheByIdentifierKeyAndOid = [];
 
     /** @var Reflection[][] indexed by reflector key and identifier type cache key */
     private array $cacheByIdentifierTypeKeyAndOid = [];
 
-    public function __construct(SourceLocator $wrappedSourceLocator)
+    public function __construct(private SourceLocator $wrappedSourceLocator)
     {
-        $this->wrappedSourceLocator = $wrappedSourceLocator;
     }
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
@@ -57,7 +53,7 @@ final class MemoizingSourceLocator implements SourceLocator
 
     private function reflectorCacheKey(Reflector $reflector): string
     {
-        return 'type:' . get_class($reflector)
+        return 'type:' . $reflector::class
             . '#oid:' . spl_object_hash($reflector);
     }
 

@@ -46,15 +46,14 @@ final class FileReadTrapStreamWrapper
      * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
      * @param string[]                              $streamWrapperProtocols
      *
-     * @return mixed
      * @psalm-return ExecutedMethodReturnType
      *
      * @psalm-template ExecutedMethodReturnType of mixed
      */
     public static function withStreamWrapperOverride(
         callable $executeMeWithinStreamWrapperOverride,
-        array $streamWrapperProtocols = self::DEFAULT_STREAM_WRAPPER_PROTOCOLS
-    ) {
+        array $streamWrapperProtocols = self::DEFAULT_STREAM_WRAPPER_PROTOCOLS,
+    ): mixed {
         self::$registeredStreamWrapperProtocols = $streamWrapperProtocols;
         self::$autoloadLocatedFile              = null;
 
@@ -115,7 +114,7 @@ final class FileReadTrapStreamWrapper
      *
      * @return mixed[]|bool
      */
-    public function url_stat($path, $flags)
+    public function url_stat($path, $flags): array|bool
     {
         if (self::$registeredStreamWrapperProtocols === null) {
             throw new LogicException(self::class . ' not registered: cannot operate. Do not call this method directly.');

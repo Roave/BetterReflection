@@ -27,9 +27,7 @@ class ReflectionParameterTest extends TestCase
     {
         $methods = get_class_methods(CoreReflectionParameter::class);
 
-        return array_combine($methods, array_map(static function (string $i): array {
-            return [$i];
-        }, $methods));
+        return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
     /**
@@ -78,12 +76,11 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @param mixed   $returnValue
      * @param mixed[] $args
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);
 

@@ -23,12 +23,9 @@ use function file_get_contents;
  */
 class ComposerSourceLocator extends AbstractSourceLocator
 {
-    private ClassLoader $classLoader;
-
-    public function __construct(ClassLoader $classLoader, Locator $astLocator)
+    public function __construct(private ClassLoader $classLoader, Locator $astLocator)
     {
         parent::__construct($astLocator);
-        $this->classLoader = $classLoader;
     }
 
     /**

@@ -29,7 +29,7 @@ class CompileNodeToValue
      *
      * @throws Exception\UnableToCompileNode
      */
-    public function __invoke(Node $node, CompilerContext $context)
+    public function __invoke(Node $node, CompilerContext $context): string|int|float|bool|array|null
     {
         if ($node instanceof Node\Stmt\Expression) {
             return $this($node->expr, $context);
@@ -65,7 +65,7 @@ class CompileNodeToValue
      *
      * @throws Exception\UnableToCompileNode
      */
-    private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context)
+    private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context): string|int|float|bool|array|null
     {
         $firstName = reset($constNode->name->parts);
         switch ($firstName) {
@@ -95,7 +95,7 @@ class CompileNodeToValue
      * @throws IdentifierNotFound
      * @throws Exception\UnableToCompileNode If a referenced constant could not be located on the expected referenced class.
      */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context)
+    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context): string|int|float|bool|array|null
     {
         assert($node->name instanceof Node\Identifier);
         $nodeName = $node->name->name;

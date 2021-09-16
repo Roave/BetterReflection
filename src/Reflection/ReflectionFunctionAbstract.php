@@ -49,8 +49,7 @@ abstract class ReflectionFunctionAbstract
 
     private LocatedSource $locatedSource;
 
-    /** @var Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null */
-    private $node;
+    private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|null $node = null;
 
     private Reflector $reflector;
 
@@ -71,7 +70,7 @@ abstract class ReflectionFunctionAbstract
         Reflector $reflector,
         Node\FunctionLike $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $declaringNamespace = null
+        ?NamespaceNode $declaringNamespace = null,
     ): void {
         $this->reflector          = $reflector;
         $this->node               = $node;
@@ -182,9 +181,7 @@ abstract class ReflectionFunctionAbstract
     {
         return count(array_filter(
             $this->getParameters(),
-            static function (ReflectionParameter $p): bool {
-                return ! $p->isOptional();
-            },
+            static fn (ReflectionParameter $p): bool => ! $p->isOptional(),
         ));
     }
 
@@ -534,9 +531,7 @@ abstract class ReflectionFunctionAbstract
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator              = static function (Node ...$node): array {
-            return $node;
-        };
+        $validator              = static fn (Node ...$node): array => $node;
         $this->getNode()->stmts = $validator(...$nodes);
     }
 

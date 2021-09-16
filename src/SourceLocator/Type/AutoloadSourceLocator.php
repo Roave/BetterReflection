@@ -173,9 +173,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
     private function silenceErrors(): void
     {
-        set_error_handler(static function (): bool {
-            return true;
-        });
+        set_error_handler(static fn (): bool => true);
     }
 
     /**
@@ -230,7 +228,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         foreach (array_reverse(get_included_files()) as $includedFileName) {
             try {
                 FileChecker::assertReadableFile($includedFileName);
-            } catch (InvalidFileLocation $ignored) {
+            } catch (InvalidFileLocation) {
                 continue;
             }
 
@@ -254,8 +252,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         {
             private ?string $constantName;
 
-            /** @var Node\Stmt\Const_|Node\Expr\FuncCall|null */
-            private $node;
+            private Node\Stmt\Const_|Node\Expr\FuncCall|null $node = null;
 
             public function enterNode(Node $node): ?int
             {
@@ -274,7 +271,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                 if ($node instanceof Node\Expr\FuncCall) {
                     try {
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
-                    } catch (InvalidConstantNode $e) {
+                    } catch (InvalidConstantNode) {
                         return null;
                     }
 

@@ -29,8 +29,7 @@ class ReflectionConstant implements Reflection
 {
     private Reflector $reflector;
 
-    /** @var Node\Stmt\Const_|Node\Expr\FuncCall */
-    private $node;
+    private Node\Stmt\Const_|Node\Expr\FuncCall $node;
 
     private LocatedSource $locatedSource;
 
@@ -39,7 +38,7 @@ class ReflectionConstant implements Reflection
     private ?int $positionInNode;
 
     /** @var scalar|array<scalar>|null const value */
-    private $value;
+    private string|int|float|bool|array|null $value = null;
 
     private bool $valueWasCached = false;
 
@@ -69,7 +68,7 @@ class ReflectionConstant implements Reflection
         Node $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
-        ?int $positionInNode = null
+        ?int $positionInNode = null,
     ): self {
         return $node instanceof Node\Stmt\Const_
             ? self::createFromConstKeyword($reflector, $node, $locatedSource, $namespace, $positionInNode)
@@ -81,7 +80,7 @@ class ReflectionConstant implements Reflection
         Node\Stmt\Const_ $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace,
-        int $positionInNode
+        int $positionInNode,
     ): self {
         $constant                     = new self();
         $constant->reflector          = $reflector;
@@ -99,7 +98,7 @@ class ReflectionConstant implements Reflection
     private static function createFromDefineFunctionCall(
         Reflector $reflector,
         Node\Expr\FuncCall $node,
-        LocatedSource $locatedSource
+        LocatedSource $locatedSource,
     ): self {
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
 
@@ -208,7 +207,7 @@ class ReflectionConstant implements Reflection
      *
      * @return scalar|array<scalar>|null
      */
-    public function getValue()
+    public function getValue(): string|int|float|bool|array|null
     {
         if ($this->valueWasCached !== false) {
             return $this->value;

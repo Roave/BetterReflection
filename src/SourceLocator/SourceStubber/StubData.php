@@ -9,14 +9,8 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
  */
 class StubData
 {
-    private string $stub;
-
-    private ?string $extensionName;
-
-    public function __construct(string $stub, ?string $extensionName)
+    public function __construct(private string $stub, private ?string $extensionName)
     {
-        $this->stub          = $stub;
-        $this->extensionName = $extensionName;
     }
 
     public function getStub(): string

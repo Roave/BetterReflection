@@ -15,11 +15,8 @@ use function func_get_args;
 
 class ReflectionFunction extends CoreReflectionFunction
 {
-    private BetterReflectionFunction $betterReflectionFunction;
-
-    public function __construct(BetterReflectionFunction $betterReflectionFunction)
+    public function __construct(private BetterReflectionFunction $betterReflectionFunction)
     {
-        $this->betterReflectionFunction = $betterReflectionFunction;
     }
 
     /**
@@ -270,7 +267,7 @@ class ReflectionFunction extends CoreReflectionFunction
     {
         try {
             return $this->betterReflectionFunction->getClosure();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
     }

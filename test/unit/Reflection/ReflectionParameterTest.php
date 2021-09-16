@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use Foo;
-use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param;
@@ -142,13 +141,6 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('a', $parameterInfo->getName());
     }
 
-    public function testCreateFromSpecWithInvalidArgumentThrowsException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Could not create reflection from the spec given');
-        ReflectionParameter::createFromSpec(123, 'a');
-    }
-
     /**
      * @return array
      */
@@ -166,11 +158,9 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @param mixed $expectedValue
-     *
      * @dataProvider defaultParameterProvider
      */
-    public function testDefaultParametersTypes(string $defaultExpression, $expectedValue): void
+    public function testDefaultParametersTypes(string $defaultExpression, mixed $expectedValue): void
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
 
@@ -273,7 +263,7 @@ class ReflectionParameterTest extends TestCase
      */
     public function testGetType(
         string $parameterToTest,
-        string $expectedType
+        string $expectedType,
     ): void {
         $classInfo = $this->reflector->reflect(Methods::class);
 

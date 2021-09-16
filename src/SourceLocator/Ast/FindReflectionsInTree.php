@@ -29,20 +29,13 @@ use function count;
  */
 final class FindReflectionsInTree
 {
-    private AstConversionStrategy $astConversionStrategy;
-
     private FunctionReflector $functionReflector;
-
-    /** @var Closure(): FunctionReflector */
-    private Closure $functionReflectorGetter;
 
     /**
      * @param Closure(): FunctionReflector $functionReflectorGetter
      */
-    public function __construct(AstConversionStrategy $astConversionStrategy, Closure $functionReflectorGetter)
+    public function __construct(private AstConversionStrategy $astConversionStrategy, private Closure $functionReflectorGetter)
     {
-        $this->astConversionStrategy   = $astConversionStrategy;
-        $this->functionReflectorGetter = $functionReflectorGetter;
     }
 
     /**
@@ -56,37 +49,22 @@ final class FindReflectionsInTree
         Reflector $reflector,
         array $ast,
         IdentifierType $identifierType,
-        LocatedSource $locatedSource
+        LocatedSource $locatedSource,
     ): array {
         $nodeVisitor = new class ($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke()) extends NodeVisitorAbstract
         {
             /** @var Reflection[] */
             private array $reflections = [];
 
-            private Reflector $reflector;
-
-            private IdentifierType $identifierType;
-
-            private LocatedSource $locatedSource;
-
-            private AstConversionStrategy $astConversionStrategy;
-
             private ?Namespace_ $currentNamespace = null;
 
-            private FunctionReflector $functionReflector;
-
             public function __construct(
-                Reflector $reflector,
-                IdentifierType $identifierType,
-                LocatedSource $locatedSource,
-                AstConversionStrategy $astConversionStrategy,
-                FunctionReflector $functionReflector
+                private Reflector $reflector,
+                private IdentifierType $identifierType,
+                private LocatedSource $locatedSource,
+                private AstConversionStrategy $astConversionStrategy,
+                private FunctionReflector $functionReflector,
             ) {
-                $this->reflector             = $reflector;
-                $this->identifierType        = $identifierType;
-                $this->locatedSource         = $locatedSource;
-                $this->astConversionStrategy = $astConversionStrategy;
-                $this->functionReflector     = $functionReflector;
             }
 
             /**
@@ -132,7 +110,7 @@ final class FindReflectionsInTree
                 if ($node instanceof Node\Expr\FuncCall) {
                     try {
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
-                    } catch (InvalidConstantNode $e) {
+                    } catch (InvalidConstantNode) {
                         return null;
                     }
 
@@ -144,7 +122,7 @@ final class FindReflectionsInTree
                                 $this->functionReflector->reflect($namespacedName->toString());
 
                                 return null;
-                            } catch (IdentifierNotFound $e) {
+                            } catch (IdentifierNotFound) {
                                 // Global define()
                             }
                         }

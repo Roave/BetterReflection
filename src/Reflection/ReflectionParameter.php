@@ -48,7 +48,7 @@ class ReflectionParameter
     private int $parameterIndex;
 
     /** @var scalar|array<scalar>|null */
-    private $defaultValue;
+    private string|int|float|bool|array|null $defaultValue = null;
 
     private bool $isDefaultValueConstant = false;
 
@@ -68,7 +68,7 @@ class ReflectionParameter
     public static function createFromClassNameAndMethod(
         string $className,
         string $methodName,
-        string $parameterName
+        string $parameterName,
     ): self {
         return ReflectionClass::createFromName($className)
             ->getMethod($methodName)
@@ -83,7 +83,7 @@ class ReflectionParameter
     public static function createFromClassInstanceAndMethod(
         object $instance,
         string $methodName,
-        string $parameterName
+        string $parameterName,
     ): self {
         return ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
@@ -112,7 +112,7 @@ class ReflectionParameter
      * @throws Exception
      * @throws InvalidArgumentException
      */
-    public static function createFromSpec($spec, string $parameterName): self
+    public static function createFromSpec(array|string|Closure $spec, string $parameterName): self
     {
         if (is_array($spec) && count($spec) === 2 && is_string($spec[1])) {
             if (is_object($spec[0])) {
@@ -149,7 +149,7 @@ class ReflectionParameter
         ParamNode $node,
         ?Namespace_ $declaringNamespace,
         ReflectionFunctionAbstract $function,
-        int $parameterIndex
+        int $parameterIndex,
     ): self {
         $param                     = new self();
         $param->reflector          = $reflector;
@@ -286,7 +286,7 @@ class ReflectionParameter
      * @throws LogicException
      * @throws UnableToCompileNode
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): string|int|float|bool|array|null
     {
         $defaultValueNode = $this->parseDefaultValueNode();
 

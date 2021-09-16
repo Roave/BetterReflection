@@ -76,7 +76,7 @@ final class FileCacheLoaderTest extends TestCase
         try {
             (new FileCacheLoader(__DIR__, $printer, $signer, $checker))->__invoke($classInfo);
             self::fail('Expected exception did not occur: ' . SignatureCheckFailed::class);
-        } catch (SignatureCheckFailed $signatureCheckFailed) {
+        } catch (SignatureCheckFailed) {
             return;
         } finally {
             if (file_exists($generatedFilename)) {

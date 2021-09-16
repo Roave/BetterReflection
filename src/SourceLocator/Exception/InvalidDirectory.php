@@ -7,7 +7,6 @@ namespace Roave\BetterReflection\SourceLocator\Exception;
 use RuntimeException;
 
 use function file_exists;
-use function get_class;
 use function gettype;
 use function is_object;
 use function sprintf;
@@ -32,7 +31,7 @@ class InvalidDirectory extends RuntimeException
     {
         return new self(sprintf(
             'Expected string, %s given',
-            is_object($nonStringValue) ? get_class($nonStringValue) : gettype($nonStringValue),
+            is_object($nonStringValue) ? $nonStringValue::class : gettype($nonStringValue),
         ));
     }
 }

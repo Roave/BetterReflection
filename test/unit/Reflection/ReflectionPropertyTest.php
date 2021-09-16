@@ -609,7 +609,7 @@ PHP;
      */
     public function testHasType(
         string $propertyName,
-        bool $expectedHasType
+        bool $expectedHasType,
     ): void {
         $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
         $propertyReflection = $classReflection->getProperty($propertyName);
@@ -636,7 +636,7 @@ PHP;
      */
     public function testGetType(
         string $propertyName,
-        string $expectedType
+        string $expectedType,
     ): void {
         $classReflection    = $this->reflector->reflect(Php74PropertyTypeDeclarations::class);
         $propertyReflection = $classReflection->getProperty($propertyName);

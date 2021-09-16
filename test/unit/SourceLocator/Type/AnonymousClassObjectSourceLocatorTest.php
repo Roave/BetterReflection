@@ -17,7 +17,6 @@ use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function assert;
-use function get_class;
 use function realpath;
 use function sprintf;
 
@@ -63,7 +62,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
-                get_class($class),
+                $class::class,
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );
@@ -150,7 +149,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
-                get_class($class),
+                $class::class,
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );
@@ -176,7 +175,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
             new Identifier(
-                get_class($class),
+                $class::class,
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );

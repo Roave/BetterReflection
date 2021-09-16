@@ -22,24 +22,12 @@ use function str_replace;
 
 final class FileCacheLoader implements LoaderMethodInterface
 {
-    private string $cacheDirectory;
-
-    private ClassPrinterInterface $classPrinter;
-
-    private SignerInterface $signer;
-
-    private CheckerInterface $checker;
-
     public function __construct(
-        string $cacheDirectory,
-        ClassPrinterInterface $classPrinter,
-        SignerInterface $signer,
-        CheckerInterface $checker
+        private string $cacheDirectory,
+        private ClassPrinterInterface $classPrinter,
+        private SignerInterface $signer,
+        private CheckerInterface $checker,
     ) {
-        $this->cacheDirectory = $cacheDirectory;
-        $this->classPrinter   = $classPrinter;
-        $this->signer         = $signer;
-        $this->checker        = $checker;
     }
 
     /**

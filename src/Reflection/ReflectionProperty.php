@@ -31,7 +31,6 @@ use Webmozart\Assert\Assert;
 
 use function class_exists;
 use function func_num_args;
-use function get_class;
 use function is_object;
 
 class ReflectionProperty
@@ -90,7 +89,7 @@ class ReflectionProperty
         ?Namespace_ $declaringNamespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
-        bool $declaredAtCompileTime = true
+        bool $declaredAtCompileTime = true,
     ): self {
         $prop                        = new self();
         $prop->reflector             = $reflector;
@@ -244,7 +243,7 @@ class ReflectionProperty
      *
      * @return scalar|array<scalar>|null
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): string|int|float|bool|array|null
     {
         $defaultValueNode = $this->node->props[$this->positionInNode]->default;
 
@@ -305,22 +304,18 @@ class ReflectionProperty
     }
 
     /**
-     * @return mixed
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function getValue(?object $object = null)
+    public function getValue(?object $object = null): mixed
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            $closure = Closure::bind(function (string $declaringClassName, string $propertyName) {
-                return $declaringClassName::${$propertyName};
-            }, null, $declaringClassName);
+            $closure = Closure::bind(fn (string $declaringClassName, string $propertyName) => $declaringClassName::${$propertyName}, null, $declaringClassName);
 
             Assert::notFalse($closure);
 
@@ -329,9 +324,7 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        $closure = Closure::bind(function (object $instance, string $propertyName) {
-            return $instance->{$propertyName};
-        }, $instance, $declaringClassName);
+        $closure = Closure::bind(fn (object $instance, string $propertyName) => $instance->{$propertyName}, $instance, $declaringClassName);
 
         Assert::notFalse($closure);
 
@@ -339,15 +332,12 @@ class ReflectionProperty
     }
 
     /**
-     * @param mixed      $object
-     * @param mixed|null $value
-     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      */
-    public function setValue($object, $value = null): void
+    public function setValue(mixed $object, mixed $value = null): void
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -444,15 +434,13 @@ class ReflectionProperty
     }
 
     /**
-     * @param mixed $object
-     *
      * @throws NoObjectProvided
      * @throws NotAnObject
      * @throws ObjectNotInstanceOfClass
      *
      * @psalm-assert object $object
      */
-    private function assertObject($object): object
+    private function assertObject(mixed $object): object
     {
         if ($object === null) {
             throw NoObjectProvided::create();
@@ -464,7 +452,7 @@ class ReflectionProperty
 
         $declaringClassName = $this->getDeclaringClass()->getName();
 
-        if (get_class($object) !== $declaringClassName) {
+        if ($object::class !== $declaringClassName) {
             throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
         }
 

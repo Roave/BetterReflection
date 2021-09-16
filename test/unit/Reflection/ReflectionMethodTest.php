@@ -107,7 +107,7 @@ class ReflectionMethodTest extends TestCase
         bool $shouldBeProtected,
         bool $shouldBeFinal,
         bool $shouldBeAbstract,
-        bool $shouldBeStatic
+        bool $shouldBeStatic,
     ): void {
         $classInfo        = $this->reflector->reflect(Methods::class);
         $reflectionMethod = $classInfo->getMethod($methodName);

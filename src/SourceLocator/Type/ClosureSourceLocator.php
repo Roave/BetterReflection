@@ -38,12 +38,9 @@ final class ClosureSourceLocator implements SourceLocator
 {
     private CoreFunctionReflection $coreFunctionReflection;
 
-    private Parser $parser;
-
-    public function __construct(Closure $closure, Parser $parser)
+    public function __construct(Closure $closure, private Parser $parser)
     {
         $this->coreFunctionReflection = new CoreFunctionReflection($closure);
-        $this->parser                 = $parser;
     }
 
     /**
@@ -84,19 +81,13 @@ final class ClosureSourceLocator implements SourceLocator
 
         $nodeVisitor = new class ($fileName, $this->coreFunctionReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            private string $fileName;
-
-            private int $startLine;
-
             /** @var (Node|null)[][] */
             private array $closureNodes = [];
 
             private ?Namespace_ $currentNamespace = null;
 
-            public function __construct(string $fileName, int $startLine)
+            public function __construct(private string $fileName, private int $startLine)
             {
-                $this->fileName  = $fileName;
-                $this->startLine = $startLine;
             }
 
             /**
@@ -141,9 +132,7 @@ final class ClosureSourceLocator implements SourceLocator
             public function getClosureNodes(): ?array
             {
                 /** @var (Node|null)[][] $closureNodesDataOnSameLine */
-                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, function (array $nodes): bool {
-                    return $nodes[0]->getLine() === $this->startLine;
-                }));
+                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, fn (array $nodes): bool => $nodes[0]->getLine() === $this->startLine));
 
                 if (! $closureNodesDataOnSameLine) {
                     return null;

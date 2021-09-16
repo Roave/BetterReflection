@@ -21,22 +21,12 @@ use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
 use function array_merge;
-use function get_class;
 use function preg_match;
 
 class ReflectionObject extends ReflectionClass
 {
-    private ReflectionClass $reflectionClass;
-
-    private object $object;
-
-    private Reflector $reflector;
-
-    private function __construct(Reflector $reflector, ReflectionClass $reflectionClass, object $object)
+    private function __construct(private Reflector $reflector, private ReflectionClass $reflectionClass, private object $object)
     {
-        $this->reflector       = $reflector;
-        $this->reflectionClass = $reflectionClass;
-        $this->object          = $object;
     }
 
     /**
@@ -47,7 +37,7 @@ class ReflectionObject extends ReflectionClass
      */
     public static function createFromInstance(object $instance): ReflectionClass
     {
-        $className = get_class($instance);
+        $className = $instance::class;
 
         $betterReflection = new BetterReflection();
 
@@ -201,10 +191,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getConstants();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConstant(string $name)
+    public function getConstant(string $name): string|int|float|bool|array|null
     {
         return $this->reflectionClass->getConstant($name);
     }
@@ -473,10 +460,7 @@ class ReflectionObject extends ReflectionClass
         $this->reflectionClass->setStaticPropertyValue($propertyName, $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStaticPropertyValue(string $propertyName)
+    public function getStaticPropertyValue(string $propertyName): mixed
     {
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
     }
@@ -514,7 +498,7 @@ class ReflectionObject extends ReflectionClass
     public function addProperty(
         string $propertyName,
         int $visibility = CoreReflectionProperty::IS_PUBLIC,
-        bool $static = false
+        bool $static = false,
     ): void {
         $this->reflectionClass->addProperty($propertyName, $visibility, $static);
     }

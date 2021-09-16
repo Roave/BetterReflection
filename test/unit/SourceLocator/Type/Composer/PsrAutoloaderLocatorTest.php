@@ -148,9 +148,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         ];
 
         $actual = array_map(
-            static function (Reflection $reflection): string {
-                return $reflection->getName();
-            },
+            static fn (Reflection $reflection): string => $reflection->getName(),
             $locator->locateIdentifiersByType(
                 new ClassReflector($locator),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),

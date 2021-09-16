@@ -20,14 +20,8 @@ use function file_get_contents;
 
 final class PsrAutoloaderLocator implements SourceLocator
 {
-    private PsrAutoloaderMapping $mapping;
-
-    private Locator $astLocator;
-
-    public function __construct(PsrAutoloaderMapping $mapping, Locator $astLocator)
+    public function __construct(private PsrAutoloaderMapping $mapping, private Locator $astLocator)
     {
-        $this->mapping    = $mapping;
-        $this->astLocator = $astLocator;
     }
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
@@ -46,7 +40,7 @@ final class PsrAutoloaderLocator implements SourceLocator
                     ),
                     $identifier,
                 );
-            } catch (IdentifierNotFound $exception) {
+            } catch (IdentifierNotFound) {
                 // on purpose - autoloading is allowed to fail, and silently-failing autoloaders are normal/endorsed
             }
         }

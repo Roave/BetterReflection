@@ -9,11 +9,8 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 
 class ReflectionNamedType extends CoreReflectionNamedType
 {
-    private BetterReflectionNamedType $betterReflectionType;
-
-    public function __construct(BetterReflectionNamedType $betterReflectionType)
+    public function __construct(private BetterReflectionNamedType $betterReflectionType)
     {
-        $this->betterReflectionType = $betterReflectionType;
     }
 
     public function getName(): string

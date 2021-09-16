@@ -18,8 +18,7 @@ use Roave\BetterReflection\Reflector\Reflector;
  */
 class ReflectionTypeTest extends TestCase
 {
-    /** @var Reflector|MockObject */
-    private $reflector;
+    private Reflector|MockObject $reflector;
 
     protected function setUp(): void
     {

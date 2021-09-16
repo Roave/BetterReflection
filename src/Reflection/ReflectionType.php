@@ -11,19 +11,14 @@ use PhpParser\Node\UnionType;
 
 abstract class ReflectionType
 {
-    private bool $allowsNull;
-
-    protected function __construct(bool $allowsNull)
+    protected function __construct(private bool $allowsNull)
     {
-        $this->allowsNull = $allowsNull;
     }
 
     /**
-     * @param Identifier|Name|NullableType|UnionType $type
-     *
      * @return ReflectionNamedType|ReflectionUnionType
      */
-    public static function createFromTypeAndReflector($type, bool $forceAllowsNull = false): self
+    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType $type, bool $forceAllowsNull = false): self
     {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
