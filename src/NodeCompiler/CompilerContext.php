@@ -8,6 +8,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
 use RuntimeException;
 
+/**
+ * @internal
+ */
 class CompilerContext
 {
     public function __construct(private Reflector $reflector, private ?ReflectionClass $self)

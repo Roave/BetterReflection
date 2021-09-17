@@ -18,6 +18,7 @@ or backwards compatibility (BC) breakages occur.
   * `string or NULL` is now `?string` 
   * `boolean` is now `bool`
   * `integer` is now `int`
+* `CompilerContext` is marked as `@internal`.
 
 ## 4.0.0
 
