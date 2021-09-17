@@ -1882,4 +1882,122 @@ PHP;
         self::assertCount(2, $constants);
         self::assertSame($expectedConstants, $constants);
     }
+
+    public function testTraitRenamingMethodWithWrongCaseShouldStillWork(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            
+            trait MyTrait
+            {
+                protected function myMethod() : void{
+                
+                }
+            }
+            
+            class HelloWorld
+            {
+                use MyTrait {
+                    MyMethod as myRenamedMethod;
+                }
+                
+                public function sayHello(int $date): void
+                {
+                    $this->myRenamedMethod();
+                }
+            }
+        PHP;
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
+        self::assertTrue($reflection->hasMethod('myRenamedMethod'));
+    }
+
+    public function testTraitSeparateUsesWithMethodRename(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            
+            trait HelloWorldTraitTest
+            {
+            }
+            
+            trait HelloWorldTrait
+            {
+               public function sayHello(): void
+               {
+            
+               }
+            }
+            
+            class HelloWorld
+            {
+               use HelloWorldTraitTest;
+               use HelloWorldTrait {
+                   sayHello as hello;
+               }
+            }
+        PHP;
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
+        self::assertTrue($reflection->hasMethod('hello'));
+    }
+
+    public function testTraitMultipleUsesWithMethodRename(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            
+            trait HelloWorldTraitTest
+            {
+            }
+            
+            trait HelloWorldTrait
+            {
+               public function sayHello(): void
+               {
+            
+               }
+            }
+            
+            class HelloWorld
+            {
+               use HelloWorldTraitTest, HelloWorldTrait {
+                   sayHello as hello;
+               }
+            }
+        PHP;
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
+        self::assertTrue($reflection->hasMethod('hello'));
+    }
+
+    public function testTraitMethodWithModifiedVisibility(): void
+    {
+        $php = <<<'PHP'
+            <?php
+        
+            trait BarTrait {
+                private function privateMethod() {}
+                protected function protectedMethod() {}
+            }
+            
+            class Foo
+            {
+                use BarTrait {
+                    protectedMethod as public;
+                    privateMethod as protected privateMethodRenamed;
+                }
+            }
+        PHP;
+
+        $reflection      = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $protectedMethod = $reflection->getMethod('protectedMethod');
+        self::assertTrue($protectedMethod->isPublic());
+
+        $privateMethod = $reflection->getMethod('privateMethod');
+        self::assertTrue($privateMethod->isProtected());
+
+        $privateMethod = $reflection->getMethod('privateMethodRenamed');
+        self::assertTrue($privateMethod->isProtected());
+    }
 }
