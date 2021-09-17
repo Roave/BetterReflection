@@ -8,6 +8,7 @@ use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use ReflectionFunction as CoreFunctionReflection;
@@ -150,6 +151,7 @@ final class ClosureSourceLocator implements SourceLocator
         $ast          = $this->parser->parse($fileContents);
 
         $nodeTraverser = new NodeTraverser();
+        $nodeTraverser->addVisitor(new NameResolver());
         $nodeTraverser->addVisitor($nodeVisitor);
         $nodeTraverser->traverse($ast);
 
