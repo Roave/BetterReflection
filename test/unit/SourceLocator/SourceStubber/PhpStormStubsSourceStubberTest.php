@@ -149,11 +149,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
 
         foreach ($original->getMethods() as $method) {
-            // Needs fix in JetBrains/phpstorm-stubs
-            if ($original->getName() === 'Generator' && $method->getName() === 'throw') {
-                continue;
-            }
-
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 

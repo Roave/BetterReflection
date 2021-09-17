@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
+use Generator;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
 use PhpParser\BuilderFactory;
 use PhpParser\BuilderHelpers;
@@ -120,6 +121,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         if ($className === Traversable::class) {
             // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
             $stub = str_replace(' extends \iterable', '', $stub);
+        } elseif ($className === Generator::class) {
+            $stub = str_replace('PS_UNRESERVE_PREFIX_throw', 'throw', $stub);
         }
 
         return new StubData($stub, $this->getExtensionFromFilePath($filePath));
