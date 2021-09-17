@@ -228,16 +228,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function isConstructor(): bool
     {
-        if (strtolower($this->getName()) === '__construct') {
-            return true;
-        }
-
-        $declaringClass = $this->getDeclaringClass();
-        if ($declaringClass->inNamespace()) {
-            return false;
-        }
-
-        return strtolower($this->getName()) === strtolower($declaringClass->getShortName());
+        return strtolower($this->getName()) === '__construct';
     }
 
     /**
