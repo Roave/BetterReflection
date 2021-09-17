@@ -1911,4 +1911,63 @@ PHP;
         $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
         self::assertTrue($reflection->hasMethod('myRenamedMethod'));
     }
+
+    public function testTraitSeparateUsesWithMethodRename(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            
+            trait HelloWorldTraitTest
+            {
+            }
+            
+            trait HelloWorldTrait
+            {
+               public function sayHello(): void
+               {
+            
+               }
+            }
+            
+            class HelloWorld
+            {
+               use HelloWorldTraitTest;
+               use HelloWorldTrait {
+                   sayHello as hello;
+               }
+            }
+        PHP;
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
+        self::assertTrue($reflection->hasMethod('hello'));
+    }
+
+    public function testTraitMultipleUsesWithMethodRename(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            
+            trait HelloWorldTraitTest
+            {
+            }
+            
+            trait HelloWorldTrait
+            {
+               public function sayHello(): void
+               {
+            
+               }
+            }
+            
+            class HelloWorld
+            {
+               use HelloWorldTraitTest, HelloWorldTrait {
+                   sayHello as hello;
+               }
+            }
+        PHP;
+
+        $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
+        self::assertTrue($reflection->hasMethod('hello'));
+    }
 }

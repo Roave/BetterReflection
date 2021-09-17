@@ -45,6 +45,7 @@ use function array_reverse;
 use function array_slice;
 use function array_values;
 use function assert;
+use function end;
 use function implode;
 use function in_array;
 use function ltrim;
@@ -1038,7 +1039,7 @@ class ReflectionClass implements Reflection
             foreach ($adaptations as $adaptation) {
                 $usedTrait = $adaptation->trait;
                 if ($usedTrait === null) {
-                    $usedTrait = $traitNames[0];
+                    $usedTrait = end($traitNames);
                 }
 
                 if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias && $adaptation->newName) {
