@@ -59,6 +59,8 @@ class ReflectionPropertyTest extends TestCase
             ['getDocComment', '', []],
             ['hasType', true, []],
             ['getType', $mockType, []],
+            ['hasDefaultValue', true, []],
+            ['getDefaultValue', null, []],
         ];
     }
 

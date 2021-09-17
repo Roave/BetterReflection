@@ -673,7 +673,11 @@ PHP;
 
         self::assertSame([
             'hasDefault' => 123,
+            'hasNullAsDefault' => null,
             'noDefault' => null,
+            'hasDefaultWithType' => 123,
+            'hasNullAsDefaultWithType' => null,
+            'noDefaultWithType' => null,
         ], $classInfo->getDefaultProperties());
     }
 
