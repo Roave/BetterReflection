@@ -1970,4 +1970,34 @@ PHP;
         $reflection = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('HelloWorld');
         self::assertTrue($reflection->hasMethod('hello'));
     }
+
+    public function testTraitMethodWithModifiedVisibility(): void
+    {
+        $php = <<<'PHP'
+            <?php
+        
+            trait BarTrait {
+                private function privateMethod() {}
+                protected function protectedMethod() {}
+            }
+            
+            class Foo
+            {
+                use BarTrait {
+                    protectedMethod as public;
+                    privateMethod as protected privateMethodRenamed;
+                }
+            }
+        PHP;
+
+        $reflection      = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $protectedMethod = $reflection->getMethod('protectedMethod');
+        self::assertTrue($protectedMethod->isPublic());
+
+        $privateMethod = $reflection->getMethod('privateMethod');
+        self::assertTrue($privateMethod->isProtected());
+
+        $privateMethod = $reflection->getMethod('privateMethodRenamed');
+        self::assertTrue($privateMethod->isProtected());
+    }
 }
