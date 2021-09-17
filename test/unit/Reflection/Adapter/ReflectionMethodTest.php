@@ -295,36 +295,6 @@ class ReflectionMethodTest extends TestCase
         self::assertNull($reflectionMethodAdapter->invokeArgs(null, []));
     }
 
-    public function testInvokeReturnsNullWhenNotAnObject(): void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('isPublic')
-            ->willReturn(true);
-        $betterReflectionMethod
-            ->method('invoke')
-            ->willThrowException(new TypeError());
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-
-        self::assertNull($reflectionMethodAdapter->invoke('string'));
-    }
-
-    public function testInvokeArgsReturnsNullWhenNotAnObject(): void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('isPublic')
-            ->willReturn(true);
-        $betterReflectionMethod
-            ->method('invokeArgs')
-            ->willThrowException(new TypeError());
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-
-        self::assertNull($reflectionMethodAdapter->invokeArgs('string', []));
-    }
-
     public function testInvokeThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);

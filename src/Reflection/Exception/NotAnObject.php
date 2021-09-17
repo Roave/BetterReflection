@@ -12,9 +12,7 @@ use function sprintf;
 class NotAnObject extends InvalidArgumentException
 {
     /**
-     * @param bool|int|float|string|array|resource|null $nonObject
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
+     * @param bool|int|float|string|mixed[]|resource|null $nonObject
      */
     public static function fromNonObject($nonObject): self
     {

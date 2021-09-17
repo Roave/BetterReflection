@@ -1,13 +1,9 @@
 parameters:
-    level: 5
+    level: 6
+    checkGenericClassInNonGenericObjectType: false
 
     paths:
         - src
-
-    excludes_analyse:
-        # references huge array PhpStormStubsMap
-        # can be removed once updated to PHPStan 0.12.26
-        - src/SourceLocator/SourceStubber/PhpStormStubsSourceStubber.php
 
     ignoreErrors:
         -

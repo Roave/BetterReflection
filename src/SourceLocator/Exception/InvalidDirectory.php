@@ -23,9 +23,7 @@ class InvalidDirectory extends RuntimeException
     }
 
     /**
-     * @param resource|float|int|bool|object|array|null $nonStringValue
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
+     * @param resource|float|int|bool|object|mixed[]|null $nonStringValue
      */
     public static function fromNonStringValue($nonStringValue): self
     {

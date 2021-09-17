@@ -198,9 +198,9 @@ class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<string, scalar|array<scalar>|null>
      */
-    public function getConstants(?int $filter = null)
+    public function getConstants(?int $filter = null): array
     {
         $reflectionConstants = $this->betterReflectionObject->getReflectionConstants();
 
@@ -282,13 +282,16 @@ class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<trait-string, ReflectionClass>
      */
-    public function getTraits()
+    public function getTraits(): array
     {
         $traits = $this->betterReflectionObject->getTraits();
 
-        /** @var array<trait-string> $traitNames */
+        /**
+         * @psalm-var list<trait-string> $traitNames
+         * @phpstan-var list<class-string> $traitNames
+         */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
@@ -362,9 +365,9 @@ class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MethodSignatureMismatch
      */
-    public function newInstance($arg = null, ...$args)
+    public function newInstance(mixed ...$args): self
     {
         throw new Exception\NotImplemented('Not implemented');
     }

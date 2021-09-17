@@ -208,9 +208,9 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<string, scalar|array<scalar>|null>
      */
-    public function getConstants(?int $filter = null)
+    public function getConstants(?int $filter = null): array
     {
         return array_map(static fn (BetterReflectionClassConstant $betterConstant) => $betterConstant->getValue(), $this->filterBetterReflectionClassConstants($filter));
     }
@@ -293,13 +293,16 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<trait-string, CoreReflectionClass>
      */
-    public function getTraits()
+    public function getTraits(): array
     {
         $traits = $this->betterReflectionClass->getTraits();
 
-        /** @var array<trait-string> $traitNames */
+        /**
+         * @psalm-var array<trait-string> $traitNames
+         * @phpstan-var array<class-string> $traitNames
+         */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
@@ -372,10 +375,7 @@ class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->isInstance($object);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function newInstance($arg = null, ...$args)
+    public function newInstance(mixed ...$args): self
     {
         throw new Exception\NotImplemented('Not implemented');
     }

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
   <file src="src/Reflection/Adapter/ReflectionClass.php">
-    <MethodSignatureMismatch occurrences="5">
+    <MethodSignatureMismatch occurrences="4">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
-      <code>public function newInstance($arg = null, ...$args)</code>
       <code>public function newInstanceArgs(?array $args = null)</code>
       <code>public function newInstanceWithoutConstructor()</code>
     </MethodSignatureMismatch>
   </file>
   <file src="src/Reflection/Adapter/ReflectionObject.php">
-    <MethodSignatureMismatch occurrences="5">
+    <MethodSignatureMismatch occurrences="4">
       <code>public function getName()</code>
       <code>public function getTraitNames()</code>
-      <code>public function newInstance($arg = null, ...$args)</code>
       <code>public function newInstanceArgs(?array $args = null)</code>
       <code>public function newInstanceWithoutConstructor()</code>
     </MethodSignatureMismatch>
