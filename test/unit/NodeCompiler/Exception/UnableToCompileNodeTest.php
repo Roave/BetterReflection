@@ -42,7 +42,7 @@ final class UnableToCompileNodeTest extends TestCase
             new ConstFetch(new Name($constantName)),
         );
 
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
+        $contextName = $context->inClass() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         self::assertSame(
             sprintf(
@@ -59,7 +59,7 @@ final class UnableToCompileNodeTest extends TestCase
     /** @dataProvider supportedContextTypes */
     public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context): void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
+        $contextName = $context->inClass() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         $targetClass = $this->createMock(ReflectionClass::class);
 
@@ -85,7 +85,7 @@ final class UnableToCompileNodeTest extends TestCase
     /** @dataProvider supportedContextTypes */
     public function testForUnRecognizedExpressionInContext(CompilerContext $context): void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
+        $contextName = $context->inClass() ? 'EmptyClass' : 'unknown context (probably a function)';
 
         self::assertSame(
             'Unable to compile expression in ' . $contextName
@@ -107,8 +107,8 @@ final class UnableToCompileNodeTest extends TestCase
         ));
 
         return [
-            [new CompilerContext($reflector, null)],
-            [new CompilerContext($reflector, $reflector->reflect('EmptyClass'))],
+            [new CompilerContext($reflector, null, null, null, null)],
+            [new CompilerContext($reflector, null, null, $reflector->reflect('EmptyClass'), null)],
         ];
     }
 }

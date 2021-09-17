@@ -69,8 +69,8 @@ class UnableToCompileNode extends LogicException
     private static function compilerContextToContextDescription(CompilerContext $fetchContext): string
     {
         // @todo improve in https://github.com/Roave/BetterReflection/issues/434
-        return $fetchContext->hasSelf()
-            ? $fetchContext->getSelf()->getName()
+        return $fetchContext->inClass()
+            ? $fetchContext->getClass()->getName()
             : 'unknown context (probably a function)';
     }
 }
