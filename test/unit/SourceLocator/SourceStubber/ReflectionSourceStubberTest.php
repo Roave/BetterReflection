@@ -295,11 +295,17 @@ class ReflectionSourceStubberTest extends TestCase
         CoreReflectionParameter $original,
         ReflectionParameter $stubbed,
     ): void {
-        $parameterName = $original->getDeclaringClass()->getName()
-            . '#' . $originalMethod->getName()
-            . '.' . $original->getName();
+        $methodName    = $original->getDeclaringClass()->getName() . '#' . $originalMethod->getName();
+        $parameterName = $methodName . '.' . $original->getName();
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
+
+        if ($original->isDefaultValueAvailable()) {
+            self::assertSame($original->getDefaultValue(), $stubbed->getDefaultValue(), $parameterName);
+        } else {
+            self::assertSame($original->isDefaultValueAvailable(), $stubbed->isDefaultValueAvailable(), $parameterName);
+        }
+
         // @ because isArray() and isCallable() are deprecated
         self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
         self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
@@ -308,7 +314,21 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
 
-        self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
+        // These methods report parameters as optional but without default value
+        if (
+            ! in_array($methodName, [
+                'DatePeriod#__construct',
+                'IntlCalendar#set',
+                'IntlGregorianCalendar#__construct',
+                'Phar#setStub',
+                'PharData#setStub',
+                'ReflectionClass#getStaticPropertyValue',
+                'ReflectionProperty#setValue',
+                'SoapHeader#__construct',
+            ], true)
+        ) {
+            self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
+        }
 
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
