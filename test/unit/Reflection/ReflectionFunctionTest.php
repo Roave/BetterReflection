@@ -156,6 +156,35 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(ClassWithStaticMethod::class, $theParam->getName());
     }
 
+    public function testCreateFromClosureWithArrowFunction(): void
+    {
+        $myClosure = static fn (): int => 5;
+
+        $reflection = ReflectionFunction::createFromClosure($myClosure);
+
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
+    }
+
+    public function testCreateFromClosureWithArrowFunctionCanReflectTypeHints(): void
+    {
+        $myClosure = static fn (stdClass $theParam): int => 5;
+
+        $reflection = ReflectionFunction::createFromClosure($myClosure);
+
+        $theParam = $reflection->getParameter('theParam')->getClass();
+        self::assertSame(stdClass::class, $theParam->getName());
+    }
+
+    public function testCreateFromClosureWithArrowFunctionCanReflectTypesInNamespace(): void
+    {
+        $myClosure = static fn (ClassWithStaticMethod $theParam): int => 5;
+
+        $reflection = ReflectionFunction::createFromClosure($myClosure);
+
+        $theParam = $reflection->getParameter('theParam')->getClass();
+        self::assertSame(ClassWithStaticMethod::class, $theParam->getName());
+    }
+
     public function testToString(): void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';

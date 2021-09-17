@@ -52,7 +52,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public static function createFromNode(
         Reflector $reflector,
-        Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node,
+        Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null,
     ): self {

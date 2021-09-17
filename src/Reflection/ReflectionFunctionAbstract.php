@@ -22,6 +22,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
@@ -48,7 +49,7 @@ abstract class ReflectionFunctionAbstract
 
     protected function __construct(
         private Reflector $reflector,
-        private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure $node,
+        private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
         private ?NamespaceNode $declaringNamespace = null,
     ) {
@@ -96,7 +97,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getShortName(): string
     {
-        if ($this->node instanceof Node\Expr\Closure) {
+        if ($this->node instanceof Node\Expr\Closure || $this->node instanceof Node\Expr\ArrowFunction) {
             return self::CLOSURE_NAME;
         }
 
@@ -212,7 +213,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function isClosure(): bool
     {
-        return $this->node instanceof Node\Expr\Closure;
+        return $this->node instanceof Node\Expr\Closure || $this->node instanceof Node\Expr\ArrowFunction;
     }
 
     public function isDeprecated(): bool
@@ -408,7 +409,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function getBodyAst(): array
     {
-        return $this->node->stmts ?? [];
+        return $this->node->getStmts() ?? [];
     }
 
     /**
@@ -427,13 +428,20 @@ abstract class ReflectionFunctionAbstract
             $printer = new StandardPrettyPrinter();
         }
 
+        if ($this->node instanceof Node\Expr\ArrowFunction) {
+            /** @var non-empty-list<Node\Stmt\Return_> $ast */
+            $ast = $this->getBodyAst();
+
+            return $printer->prettyPrintExpr($ast[0]->expr);
+        }
+
         return $printer->prettyPrint($this->getBodyAst());
     }
 
     /**
      * Fetch the AST for this method or function.
      */
-    public function getAst(): Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure
+    public function getAst(): Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction
     {
         return $this->node;
     }
@@ -455,9 +463,9 @@ abstract class ReflectionFunctionAbstract
             new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
         );
         assert($closureReflection instanceof self);
-        assert($closureReflection->node instanceof Node\Expr\Closure);
+        assert($closureReflection->node instanceof Node\Expr\Closure || $closureReflection->node instanceof Node\Expr\ArrowFunction);
 
-        $this->node->stmts = $closureReflection->node->getStmts();
+        $this->setBodyFromAst($closureReflection->node->getStmts());
     }
 
     /**
@@ -469,14 +477,16 @@ abstract class ReflectionFunctionAbstract
      */
     public function setBodyFromString(string $newBody): void
     {
-        $this->node->stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
+        $stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
+
+        $this->setBodyFromAst($stmts);
     }
 
     /**
      * Override the method or function's body of statements with an entirely new
      * body of statements within the reflection.
      *
-     * @param Node[] $nodes
+     * @param list<Node\Stmt> $nodes
      *
      * @example
      * // $ast should be an array of Nodes
@@ -484,10 +494,25 @@ abstract class ReflectionFunctionAbstract
      */
     public function setBodyFromAst(array $nodes): void
     {
-        // This slightly confusing code simply type-checks the $sourceLocators
+        // This slightly confusing code simply type-checks the $nodes
         // array by unpacking them and splatting them in the closure.
-        $validator         = static fn (Node ...$node): array => $node;
-        $this->node->stmts = $validator(...$nodes);
+        $validator = static fn (Node\Stmt ...$node): array => $node;
+        $stmts     = $validator(...$nodes);
+
+        if ($this->node instanceof Node\Expr\ArrowFunction) {
+            if ($nodes === []) {
+                /** @psalm-suppress PossiblyNullPropertyAssignmentValue https://github.com/nikic/PHP-Parser/pull/808 */
+                $this->node->expr = null;
+            } elseif (isset($nodes[0]->expr)) {
+                $this->node->expr = $nodes[0]->expr;
+            } else {
+                throw InvalidArrowFunctionBodyNode::create($nodes[0]);
+            }
+
+            return;
+        }
+
+        $this->node->stmts = $stmts;
     }
 
     /**

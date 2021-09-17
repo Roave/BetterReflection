@@ -40,12 +40,16 @@ class ClosureSourceLocatorTest extends TestCase
 
     public function closuresProvider(): array
     {
-        $fileWithClosureInNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
-        $fileWithClosureNoNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
+        $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
+        $fileWithClosureNoNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
+        $fileWithArrowFunctionInNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ArrowFunctionInNamespace.php'));
+        $fileWithArrowFunctionNoNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ArrowFunctionNoNamespace.php'));
 
         return [
             [require $fileWithClosureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
             [require $fileWithClosureNoNamespace, '', $fileWithClosureNoNamespace, 3, 6],
+            [require $fileWithArrowFunctionInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithArrowFunctionInNamespace, 5, 5],
+            [require $fileWithArrowFunctionNoNamespace, '', $fileWithArrowFunctionNoNamespace, 3, 3],
         ];
     }
 
