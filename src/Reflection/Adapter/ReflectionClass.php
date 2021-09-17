@@ -411,19 +411,20 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MethodSignatureMismatch
      */
-    public function isSubclassOf($class)
+    public function isSubclassOf(CoreReflectionClass|string $class)
     {
         $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
 
         $parentClassNames = array_combine(array_map(static fn (string $parentClassName): string => strtolower($parentClassName), $realParentClassNames), $realParentClassNames);
 
-        $lowercasedClass = strtolower($class);
+        $className           = $class instanceof CoreReflectionClass ? $class->getName() : $class;
+        $lowercasedClassName = strtolower($className);
 
-        $realParentClassName = $parentClassNames[$lowercasedClass] ?? $class;
+        $realParentClassName = $parentClassNames[$lowercasedClassName] ?? $className;
 
-        return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($class);
+        return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($className);
     }
 
     /**
@@ -503,15 +504,17 @@ class ReflectionClass extends CoreReflectionClass
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress MethodSignatureMismatch
      */
-    public function implementsInterface($interface)
+    public function implementsInterface(CoreReflectionClass|string $interface)
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
 
         $interfaceNames = array_combine(array_map(static fn (string $interfaceName): string => strtolower($interfaceName), $realInterfaceNames), $realInterfaceNames);
 
-        $realInterfaceName = $interfaceNames[strtolower($interface)] ?? $interface;
+        $interfaceName = $interface instanceof CoreReflectionClass ? $interface->getName() : $interface;
+
+        $realInterfaceName = $interfaceNames[strtolower($interfaceName)] ?? $interfaceName;
 
         return $this->betterReflectionClass->implementsInterface($realInterfaceName);
     }

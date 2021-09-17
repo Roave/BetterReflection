@@ -358,6 +358,27 @@ class ReflectionClassTest extends TestCase
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
     }
 
+    public function testIsSubclassOfWithObject(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getParentClassNames')
+            ->willReturn(['Foo']);
+        $betterReflectionClass
+            ->method('isSubclassOf')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        $fooClassMock = $this->createMock(CoreReflectionClass::class);
+        $fooClassMock
+            ->method('getName')
+            ->willReturn('Foo');
+
+        self::assertTrue($reflectionClassAdapter->isSubclassOf($fooClassMock));
+    }
+
     public function testIsSubclassOfIsCaseInsensitive(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
@@ -396,6 +417,27 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertTrue($reflectionClassAdapter->isSubclassOf('Foo'));
+    }
+
+    public function testImplementsInterfaceWithObject(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getInterfaceNames')
+            ->willReturn(['Foo']);
+        $betterReflectionClass
+            ->method('implementsInterface')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        $fooClassMock = $this->createMock(CoreReflectionClass::class);
+        $fooClassMock
+            ->method('getName')
+            ->willReturn('Foo');
+
+        self::assertTrue($reflectionClassAdapter->implementsInterface($fooClassMock));
     }
 
     public function testImplementsInterfaceIsCaseInsensitive(): void
