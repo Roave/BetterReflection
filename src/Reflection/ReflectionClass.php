@@ -1068,7 +1068,7 @@ class ReflectionClass implements Reflection
         return sprintf(
             '%s::%s',
             $className,
-            $methodName,
+            strtolower($methodName),
         );
     }
 
