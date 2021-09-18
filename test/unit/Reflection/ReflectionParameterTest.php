@@ -86,10 +86,8 @@ class ReflectionParameterTest extends TestCase
 
     public function testParamWithConstant(): void
     {
-        // @codingStandardsIgnoreStart
         $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC): void {
         }, 'sort');
-        // @codingStandardsIgnoreEnd
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame(false, $parameterInfo->allowsNull());
@@ -97,8 +95,6 @@ class ReflectionParameterTest extends TestCase
 
     public function testParamWithConstantAlias(): void
     {
-        $this->markTestSkipped('@todo - implement reflection of constants aliases');
-
         $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC_TEST): void {
         }, 'sort');
 
