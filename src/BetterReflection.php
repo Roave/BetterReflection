@@ -77,7 +77,7 @@ final class BetterReflection
     {
         return $this->phpParser
             ?? $this->phpParser = new MemoizingParser(
-                (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
+                (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
                     'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
                 ])),
             );
