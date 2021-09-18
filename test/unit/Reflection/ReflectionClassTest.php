@@ -26,6 +26,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -2003,5 +2004,75 @@ PHP;
 
         $privateMethod = $reflection->getMethod('privateMethodRenamed');
         self::assertTrue($privateMethod->isProtected());
+    }
+
+    public function testHasStringableInterface(): void
+    {
+        $php = <<<'PHP'
+            <?php
+        
+            class ClassHasStringable implements Stringable
+            {
+                public function __toString(): string
+                {
+                }
+            }
+
+            class ClassHasStringableAutomatically
+            {
+                public function __toString(): string
+                {
+                }
+            }
+
+            interface InterfaceHasStringable extends \Stringable
+            {
+            }
+
+            interface InterfaceHasStringableAutomatically
+            {
+                public function __toString();
+            }
+        PHP;
+
+        $reflector = new ClassReflector(new AggregateSourceLocator([
+            new StringSourceLocator($php, $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classImplementingStringable = $reflector->reflect('ClassHasStringable');
+        self::assertContains('Stringable', $classImplementingStringable->getInterfaceNames());
+
+        $classNotImplementingStringable = $reflector->reflect('ClassHasStringableAutomatically');
+        self::assertContains('Stringable', $classNotImplementingStringable->getInterfaceNames());
+
+        $interfaceExtendingStringable = $reflector->reflect('InterfaceHasStringable');
+        self::assertContains('Stringable', $interfaceExtendingStringable->getInterfaceNames());
+
+        $interfaceNotExtendingStringable = $reflector->reflect('InterfaceHasStringableAutomatically');
+        self::assertContains('Stringable', $interfaceNotExtendingStringable->getInterfaceNames());
+    }
+
+    public function testHasAllInterfacesWithStringable(): void
+    {
+        $php = <<<'PHP'
+            <?php
+        
+            abstract class HasStringable implements Iterator
+            {
+                public function __toString(): string
+                {
+                }
+            }
+        PHP;
+
+        $reflector = new ClassReflector(new AggregateSourceLocator([
+            new StringSourceLocator($php, $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $class = $reflector->reflect('HasStringable');
+
+        self::assertSame(['Iterator', 'Traversable', 'Stringable'], $class->getInterfaceNames());
     }
 }
