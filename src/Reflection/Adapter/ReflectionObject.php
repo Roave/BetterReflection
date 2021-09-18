@@ -553,7 +553,7 @@ class ReflectionObject extends CoreReflectionObject
 
     public function isAnonymous(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionObject->isAnonymous();
     }
 
     public function isIterable(): bool
