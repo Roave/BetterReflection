@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5471653dd1135c8b2cf75c1a604b41e3",
+    "content-hash": "6833f09e21cd1a341a573f6ed3549476",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -271,26 +271,26 @@
         },
         {
             "name": "roave/signature",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/Signature.git",
-                "reference": "5b5bb9499cfbcc78d9f472e03af1e97e4341ec7c"
+                "reference": "b100e2c40e51f3c56a0b29faf3e7ca75c33df60b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/Signature/zipball/5b5bb9499cfbcc78d9f472e03af1e97e4341ec7c",
-                "reference": "5b5bb9499cfbcc78d9f472e03af1e97e4341ec7c",
+                "url": "https://api.github.com/repos/Roave/Signature/zipball/b100e2c40e51f3c56a0b29faf3e7ca75c33df60b",
+                "reference": "b100e2c40e51f3c56a0b29faf3e7ca75c33df60b",
                 "shasum": ""
             },
             "require": {
-                "php": "7.4.*|8.0.*"
+                "php": "7.4.*|8.0.*|8.1.*"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^8.2",
-                "infection/infection": "^0.20.2",
-                "phpunit/phpunit": "^9.5.1",
-                "vimeo/psalm": "^4.4"
+                "doctrine/coding-standard": "^9.0",
+                "infection/infection": "^0.25.1",
+                "phpunit/phpunit": "^9.5.9",
+                "vimeo/psalm": "^4.10.1"
             },
             "type": "library",
             "autoload": {
@@ -305,9 +305,9 @@
             "description": "Sign and verify stuff",
             "support": {
                 "issues": "https://github.com/Roave/Signature/issues",
-                "source": "https://github.com/Roave/Signature/tree/1.4.0"
+                "source": "https://github.com/Roave/Signature/tree/1.5.0"
             },
-            "time": "2021-01-25T09:39:37+00:00"
+            "time": "2021-09-18T13:37:44+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
