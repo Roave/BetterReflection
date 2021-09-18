@@ -501,6 +501,11 @@ PHP;
         self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
     }
 
+    /**
+     * Calling static trait method is deprecated in PHP 8.1, it should only be called on a class using the trait
+     *
+     * @requires PHP < 8.1
+     */
     public function testInvokeOfStaticMethodOnTrait(): void
     {
         $traitWithStaticMethodFile = __DIR__ . '/../Fixture/TraitWithStaticMethod.php';
@@ -513,6 +518,11 @@ PHP;
         self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
     }
 
+    /**
+     * Calling static trait method is deprecated in PHP 8.1, it should only be called on a class using the trait
+     *
+     * @requires PHP < 8.1
+     */
     public function testInvokeOfStaticTraitMethodWithStaticClass(): void
     {
         $traitWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
