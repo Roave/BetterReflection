@@ -20,7 +20,7 @@ class MyClass
 
 use Roave\BetterReflection\BetterReflection;
 
-$classInfo     = (new BetterReflection())->classReflector()->reflect('MyClass');
+$classInfo     = (new BetterReflection())->reflector()->reflectClass('MyClass');
 $methodInfo    = $classInfo->getMethod('myMethod');
 $parameterInfo = $methodInfo->getParameter('myParameter');
 

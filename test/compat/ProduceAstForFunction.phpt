@@ -18,12 +18,9 @@ $sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocat
     (new Roave\BetterReflection\BetterReflection())->astLocator()
 );
 
-$reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
-    $sourceLocator,
-    new \Roave\BetterReflection\Reflector\ClassReflector($sourceLocator)
-);
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector($sourceLocator);
 
-$functionInfo = $reflector->reflect('adder');
+$functionInfo = $reflector->reflectFunction('adder');
 var_dump($functionInfo->getAst() instanceof PhpParser\Node\Stmt\Function_);
 
 ?>

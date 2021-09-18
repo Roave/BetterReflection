@@ -10,8 +10,8 @@ few lines of code:
 <?php
 
 $classInfo = (new \Roave\BetterReflection\BetterReflection())
-    ->classReflector()
-    ->reflect(\Foo\Bar\MyClass::class);
+    ->reflector()
+    ->reflectClass(\Foo\Bar\MyClass::class);
 
 // Retrieves the AST statements array *within* the method's curly braces
 $ast = $classInfo->getMethod('foo')->getBodyAst();
@@ -33,8 +33,8 @@ and `ReflectionFunction`.
 <?php
 
 $classInfo = (new \Roave\BetterReflection\BetterReflection())
-    ->classReflector()
-    ->reflect(\Foo\Bar\MyClass::class);
+    ->reflector()
+    ->reflectClass(\Foo\Bar\MyClass::class);
 
 // Retrieves AST nodes for the entire class (including the class definition)
 $ast = $classInfo->getAst();

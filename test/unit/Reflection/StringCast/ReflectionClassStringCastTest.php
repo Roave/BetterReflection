@@ -7,7 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\StringCast;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionObject;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -40,8 +40,8 @@ class ReflectionClassStringCastTest extends TestCase
 
     public function testToString(): void
     {
-        $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClass.php', $this->astLocator));
-        $classReflection = $reflector->reflect(StringCastClass::class);
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClass.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(StringCastClass::class);
 
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../../Fixture/StringCastClassExpected.txt'),
@@ -53,18 +53,18 @@ class ReflectionClassStringCastTest extends TestCase
     {
         $php = '<?php final class StringCastFinalClass {}';
 
-        $reflector       = new ClassReflector(new StringSourceLocator($php, $this->astLocator));
-        $classReflection = $reflector->reflect('StringCastFinalClass');
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('StringCastFinalClass');
 
         self::assertStringStartsWith('Class [ <user> final class StringCastFinalClass ]', (string) $classReflection);
     }
 
     public function testInternalClassToString(): void
     {
-        $reflector = new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber));
+        $reflector = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber));
 
         // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
-        $classReflection = $reflector->reflect(Exception::class);
+        $classReflection = $reflector->reflectClass(Exception::class);
         // phpcs:enable
 
         self::assertStringStartsWith('Class [ <internal:Core> class Exception implements Throwable, Stringable ]', (string) $classReflection);
@@ -74,8 +74,8 @@ class ReflectionClassStringCastTest extends TestCase
     {
         $php = '<?php interface StringCastInterface {}';
 
-        $reflector       = new ClassReflector(new StringSourceLocator($php, $this->astLocator));
-        $classReflection = $reflector->reflect('StringCastInterface');
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('StringCastInterface');
 
         self::assertStringStartsWith('Interface [ <user> interface StringCastInterface ]', (string) $classReflection);
     }
@@ -84,8 +84,8 @@ class ReflectionClassStringCastTest extends TestCase
     {
         $php = '<?php trait StringCastTrait {}';
 
-        $reflector       = new ClassReflector(new StringSourceLocator($php, $this->astLocator));
-        $classReflection = $reflector->reflect('StringCastTrait');
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('StringCastTrait');
 
         self::assertStringStartsWith('Trait [ <user> trait StringCastTrait ]', (string) $classReflection);
     }
@@ -95,8 +95,8 @@ class ReflectionClassStringCastTest extends TestCase
         $stringCastClassObjectFilename = __DIR__ . '/../../Fixture/StringCastClassObject.php';
         require_once $stringCastClassObjectFilename;
 
-        $reflector       = new ClassReflector(new SingleFileSourceLocator($stringCastClassObjectFilename, $this->astLocator));
-        $classReflection = $reflector->reflect(StringCastClassObject::class);
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator($stringCastClassObjectFilename, $this->astLocator));
+        $classReflection = $reflector->reflectClass(StringCastClassObject::class);
 
         $object = new StringCastClassObject();
 

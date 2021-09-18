@@ -21,8 +21,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -44,26 +43,23 @@ class ReflectionFunctionAbstractTest extends TestCase
 {
     private Parser $parser;
 
-    private ClassReflector $classReflector;
-
     private Locator $astLocator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $configuration        = BetterReflectionSingleton::instance();
-        $this->parser         = $configuration->phpParser();
-        $this->classReflector = $configuration->classReflector();
-        $this->astLocator     = $configuration->astLocator();
+        $configuration    = BetterReflectionSingleton::instance();
+        $this->parser     = $configuration->phpParser();
+        $this->astLocator = $configuration->astLocator();
     }
 
     public function testNameMethodsWithNamespace(): void
     {
         $php = '<?php namespace Foo { function bar() {}}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('Foo\bar');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('Foo\bar');
 
         self::assertSame('Foo\bar', $functionInfo->getName());
         self::assertSame('Foo', $functionInfo->getNamespaceName());
@@ -74,8 +70,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
 
         self::assertSame('foo', $functionInfo->getName());
         self::assertSame('', $functionInfo->getNamespaceName());
@@ -84,14 +80,13 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testNameMethodsWithClosure(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new ClosureSourceLocator(
                 static function (): void {
                 },
                 $this->parser,
             ),
-            $this->classReflector,
-        ))->reflect('foo');
+        ))->reflectFunction('foo');
 
         self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
         self::assertSame('Roave\BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
@@ -102,22 +97,21 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertFalse($function->isClosure());
     }
 
     public function testIsClosureWithClosure(): void
     {
-        $function = (new FunctionReflector(
+        $function = (new DefaultReflector(
             new ClosureSourceLocator(
                 static function (): void {
                 },
                 $this->parser,
             ),
-            $this->classReflector,
-        ))->reflect(ReflectionFunctionAbstract::CLOSURE_NAME);
+        ))->reflectFunction(ReflectionFunctionAbstract::CLOSURE_NAME);
 
         self::assertTrue($function->isClosure());
     }
@@ -131,8 +125,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         %s
         function foo() {}', $comment);
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertFalse($function->isDeprecated());
     }
@@ -153,8 +147,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertFalse($function->isInternal());
         self::assertTrue($function->isUserDefined());
@@ -174,8 +168,8 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testIsVariadic(string $php, bool $expectingVariadic): void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertSame($expectingVariadic, $function->isVariadic());
     }
@@ -216,8 +210,8 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testIsGenerator(string $php, bool $expectingGenerator): void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertSame($expectingGenerator, $function->isGenerator());
     }
@@ -236,8 +230,8 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertSame($expectedStart, $function->getStartLine());
         self::assertSame($expectedEnd, $function->getEndLine());
@@ -260,8 +254,8 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertSame($startColumn, $function->getStartColumn());
         self::assertSame($endColumn, $function->getEndColumn());
@@ -280,8 +274,8 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testReturnsReference(string $php, bool $expectingReturnsReference): void
     {
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertSame($expectingReturnsReference, $function->returnsReference());
     }
@@ -298,8 +292,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         function foo() {}
         ';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
 
         self::assertStringContainsString('This function comment should be used.', $functionInfo->getDocComment());
     }
@@ -310,8 +304,8 @@ class ReflectionFunctionAbstractTest extends TestCase
           function foo() {}
         ';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
         $function->setDocCommentFromString('/**  * doc comment */');
 
         self::assertSame('/**  * doc comment */', $function->getDocComment());
@@ -321,8 +315,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
 
         self::assertSame('', $functionInfo->getDocComment());
     }
@@ -331,8 +325,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo($a, $b, $c = 1) {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
 
         self::assertSame(3, $functionInfo->getNumberOfParameters());
         self::assertSame(2, $functionInfo->getNumberOfRequiredParameters());
@@ -342,8 +336,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo($a, $b, $c = 1) {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
 
         $paramInfo = $functionInfo->getParameter('a');
 
@@ -355,18 +349,17 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo($a, $b, $c = 1) {}';
 
-        $reflector    = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $functionInfo = $reflector->reflect('foo');
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
 
         self::assertNull($functionInfo->getParameter('d'));
     }
 
     public function testGetFileName(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Functions.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
+        ))->reflectFunction('Roave\BetterReflectionTest\Fixture\myFunction');
 
         self::assertStringContainsString('Fixture/Functions.php', $functionInfo->getFileName());
     }
@@ -375,7 +368,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $functionInfo = (new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector))->reflect('foo');
+        $functionInfo = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectFunction('foo');
 
         self::assertNull($functionInfo->getFileName());
     }
@@ -384,7 +377,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $node          = new Function_('foo');
         $locatedSource = new LocatedSource('<?php function foo() {}', null);
-        $reflector     = new FunctionReflector(new StringSourceLocator('<?php', $this->astLocator), $this->classReflector);
+        $reflector     = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
         $functionInfo  = ReflectionFunction::createFromNode($reflector, $node, $locatedSource);
 
         self::assertSame($locatedSource, $functionInfo->getLocatedSource());
@@ -398,8 +391,8 @@ class ReflectionFunctionAbstractTest extends TestCase
              */
             function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $types = $function->getDocBlockReturnTypes();
 
@@ -424,10 +417,9 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testGetReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect($functionToReflect);
+        ))->reflectFunction($functionToReflect);
 
         $reflectionType = $functionInfo->getReturnType();
         self::assertInstanceOf(ReflectionType::class, $reflectionType);
@@ -436,30 +428,27 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testGetReturnTypeReturnsNullWhenTypeIsNotDeclared(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect('returnsNothing');
+        ))->reflectFunction('returnsNothing');
 
         self::assertNull($functionInfo->getReturnType());
     }
 
     public function testHasReturnTypeWhenTypeDeclared(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect('returnsString');
+        ))->reflectFunction('returnsString');
 
         self::assertTrue($functionInfo->hasReturnType());
     }
 
     public function testHasReturnTypeWhenTypeIsNotDeclared(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect('returnsNothing');
+        ))->reflectFunction('returnsNothing');
 
         self::assertFalse($functionInfo->hasReturnType());
     }
@@ -478,10 +467,9 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testGetNullableReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php71NullableReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect($functionToReflect);
+        ))->reflectFunction($functionToReflect);
 
         $reflectionType = $functionInfo->getReturnType();
         self::assertInstanceOf(ReflectionType::class, $reflectionType);
@@ -491,10 +479,9 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testSetReturnType(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect('returnsString');
+        ))->reflectFunction('returnsString');
 
         $functionInfo->setReturnType('int');
 
@@ -504,10 +491,9 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testRemoveReturnType(): void
     {
-        $functionInfo = (new FunctionReflector(
+        $functionInfo = (new DefaultReflector(
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-            $this->classReflector,
-        ))->reflect('returnsString');
+        ))->reflectFunction('returnsString');
 
         $functionInfo->removeReturnType();
 
@@ -519,7 +505,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $functionInfo = (new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector))->reflect('foo');
+        $functionInfo = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectFunction('foo');
 
         $this->expectException(Uncloneable::class);
         $unused = clone $functionInfo;
@@ -533,8 +519,8 @@ class ReflectionFunctionAbstractTest extends TestCase
             }
         ';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $ast = $function->getBodyAst();
 
@@ -551,8 +537,8 @@ class ReflectionFunctionAbstractTest extends TestCase
             }
         ";
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertSame(
             "echo 'Hello world';",
@@ -566,8 +552,8 @@ class ReflectionFunctionAbstractTest extends TestCase
             function foo() {}
         ';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $ast = $function->getAst();
 
@@ -579,8 +565,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $function->setBodyFromClosure(static function (): void {
             echo 'Hello world!';
@@ -593,8 +579,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $function->setBodyFromClosure(static fn (): string => 'Hello world!');
 
@@ -605,8 +591,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $function->setBodyFromString("echo 'Hello world!';");
 
@@ -628,8 +614,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $function->setBodyFromAst([
             new Echo_([
@@ -659,8 +645,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $this->expectException(TypeError::class);
         $function->setBodyFromAst([1]);
@@ -685,8 +671,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo() {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $function->addParameter('myNewParam');
 
@@ -697,8 +683,8 @@ class ReflectionFunctionAbstractTest extends TestCase
     {
         $php = '<?php function foo($a, $b) {}';
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $function->removeParameter('a');
 
@@ -717,8 +703,8 @@ function foo($a) {
 }
 PHP;
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $nodes = $function->getReturnStatementsAst();
 
@@ -751,8 +737,8 @@ function foo($a) {
 }
 PHP;
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         $nodes = $function->getReturnStatementsAst();
 
@@ -777,8 +763,8 @@ PHP;
         %s
         function foo() {}', $comment);
 
-        $reflector = new FunctionReflector(new StringSourceLocator($php, $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
 
         self::assertTrue($function->isDeprecated());
     }

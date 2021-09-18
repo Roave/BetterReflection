@@ -15,8 +15,9 @@ The first entry point is a minimal service locator provided by the library:
 
 $betterReflection = new \Roave\BetterReflection\BetterReflection();
 
-$class    = $betterReflection->classReflector()->reflect('ClassName');
-$function = $betterReflection->functionReflector()->reflect('functionName');
+$reflector = $betterReflection->reflector();
+$class     = $reflector->reflectClass('ClassName');
+$function  = $reflector->reflectFunction('functionName');
 ```
 
 #### 1.2 The `Reflection*` static methods
@@ -45,7 +46,7 @@ use a default set of pre-configured Source Locators:
 
 #### 1.3 Manually instantiating  `*Reflector` objects
 
-The second entry point is the `ClassReflector` and `FunctionReflector` objects, to which you must provide specific 
+The second entry point is the `Reflector` objects, to which you must provide specific 
 instructions on how Better Reflection is to find code, in the form of the Source Locators.
 
 ## 2. Source Locators

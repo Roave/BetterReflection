@@ -6,8 +6,7 @@ namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -41,8 +40,8 @@ class Boo
 }
 PHP;
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $class     = $reflector->reflect('Foo\Boo');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $class     = $reflector->reflectClass('Foo\Boo');
 
         $context = new CompilerContext($reflector, $class);
 
@@ -55,18 +54,16 @@ PHP;
 
     public function testCreatingContextWithoutClass(): void
     {
-        $sourceLocator     = new StringSourceLocator('<?php function foo() {}', $this->astLocator);
-        $classReflector    = new ClassReflector($sourceLocator);
-        $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
-        $context           = new CompilerContext($classReflector, $functionReflector->reflect('foo'));
+        $reflector = new DefaultReflector(new StringSourceLocator('<?php function foo() {}', $this->astLocator));
+        $context   = new CompilerContext($reflector, $reflector->reflectFunction('foo'));
 
         self::assertNull($context->getClass());
     }
 
     public function testCreatingContextWithoutFunction(): void
     {
-        $classReflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
-        $context        = new CompilerContext($classReflector, $classReflector->reflect('Foo'));
+        $reflector = new DefaultReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
+        $context   = new CompilerContext($reflector, $reflector->reflectClass('Foo'));
 
         self::assertNull($context->getFunction());
     }
@@ -83,8 +80,8 @@ class Bar {
 }
 PHP;
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Foo\Bar');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Foo\Bar');
 
         self::assertSame('Foo\Bar', $classInfo->getProperty('property')->getDefaultValue());
     }
@@ -101,11 +98,8 @@ function baz($parameter = __CLASS__)
 }
 PHP;
 
-        $reflector    = new FunctionReflector(
-            new StringSourceLocator($phpCode, $this->astLocator),
-            BetterReflectionSingleton::instance()->classReflector(),
-        );
-        $functionInfo = $reflector->reflect('Foo\baz');
+        $reflector    = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('Foo\baz');
         self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());
     }
 }

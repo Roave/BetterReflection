@@ -20,9 +20,9 @@ $sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocat
     (new Roave\BetterReflection\BetterReflection())->astLocator()
 );
 
-$reflector = new \Roave\BetterReflection\Reflector\ClassReflector($sourceLocator);
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector($sourceLocator);
 
-$classInfo = $reflector->reflect(MyClassInString::class);
+$classInfo = $reflector->reflectClass(MyClassInString::class);
 var_dump($classInfo->getAst() instanceof \PhpParser\Node\Stmt\Class_);
 
 ?>

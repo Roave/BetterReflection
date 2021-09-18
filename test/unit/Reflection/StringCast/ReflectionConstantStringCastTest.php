@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\ConstantReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
@@ -54,8 +53,8 @@ class ReflectionConstantStringCastTest extends TestCase
             new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
         ]);
 
-        $reflector          = new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator));
-        $constantReflection = $reflector->reflect($constantName);
+        $reflector          = new DefaultReflector($sourceLocator);
+        $constantReflection = $reflector->reflectConstant($constantName);
 
         self::assertStringMatchesFormat($expectedString, (string) $constantReflection);
     }

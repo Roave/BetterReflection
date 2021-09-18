@@ -53,7 +53,7 @@ class ReflectionConstant implements Reflection
      */
     public static function createFromName(string $constantName): self
     {
-        return (new BetterReflection())->constantReflector()->reflect($constantName);
+        return (new BetterReflection())->reflector()->reflectConstant($constantName);
     }
 
     /**

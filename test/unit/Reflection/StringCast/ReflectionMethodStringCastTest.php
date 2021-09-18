@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -56,8 +56,8 @@ class ReflectionMethodStringCastTest extends TestCase
      */
     public function testToString(string $methodName, string $expectedString): void
     {
-        $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastMethods.php', $this->astLocator));
-        $classReflection = $reflector->reflect(StringCastMethods::class);
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastMethods.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(StringCastMethods::class);
 
         self::assertStringMatchesFormat($expectedString, (string) $classReflection->getMethod($methodName));
     }
@@ -65,7 +65,7 @@ class ReflectionMethodStringCastTest extends TestCase
     public function testToStringForInternal(): void
     {
         // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
-        $classReflection = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(Exception::class);
+        $classReflection = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(Exception::class);
         // phpcs:enable
 
         self::assertSame("Method [ <internal:Core, prototype Throwable> final public method getMessage ] {\n}", (string) $classReflection->getMethod('getMessage'));

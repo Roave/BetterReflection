@@ -14,10 +14,9 @@ use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\ConstantReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -49,9 +48,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     private PhpInternalSourceLocator $phpInternalSourceLocator;
 
-    private ClassReflector $classReflector;
-
-    private FunctionReflector $functionReflector;
+    private Reflector $reflector;
 
     protected function setUp(): void
     {
@@ -62,8 +59,7 @@ class ReflectionSourceStubberTest extends TestCase
             BetterReflectionSingleton::instance()->astLocator(),
             $this->stubber,
         );
-        $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
-        $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
+        $this->reflector                = new DefaultReflector($this->phpInternalSourceLocator);
     }
 
     public function testCanStubClass(): void
@@ -212,7 +208,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testInternalClasses(string $className): void
     {
-        $class = $this->classReflector->reflect($className);
+        $class = $this->reflector->reflectClass($className);
 
         self::assertInstanceOf(ReflectionClass::class, $class);
         self::assertSame($className, $class->getName());
@@ -359,7 +355,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testInternalFunctionsReturnType(string $functionName): void
     {
-        $stubbedReflection  = $this->functionReflector->reflect($functionName);
+        $stubbedReflection  = $this->reflector->reflectFunction($functionName);
         $originalReflection = new CoreReflectionFunction($functionName);
 
         self::assertSame((string) $originalReflection->getReturnType(), (string) $stubbedReflection->getReturnType());
@@ -367,7 +363,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testFunctionWithParameterPassedByReference(): void
     {
-        $functionReflection = $this->functionReflector->reflect('sort');
+        $functionReflection = $this->reflector->reflectFunction('sort');
 
         self::assertSame('sort', $functionReflection->getName());
         self::assertSame(2, $functionReflection->getNumberOfParameters());
@@ -381,7 +377,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testFunctionWithOptionalParameter(): void
     {
-        $functionReflection = $this->functionReflector->reflect('preg_match');
+        $functionReflection = $this->reflector->reflectFunction('preg_match');
 
         self::assertSame('preg_match', $functionReflection->getName());
         self::assertSame(5, $functionReflection->getNumberOfParameters());
@@ -405,7 +401,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional): void
     {
-        $functionReflection = $this->functionReflector->reflect($functionName);
+        $functionReflection = $this->reflector->reflectFunction($functionName);
 
         self::assertSame($functionName, $functionReflection->getName());
 
@@ -453,7 +449,6 @@ class ReflectionSourceStubberTest extends TestCase
     {
         self::expectException(IdentifierNotFound::class);
 
-        $reflector = new ConstantReflector($this->phpInternalSourceLocator, $this->classReflector);
-        $reflector->reflect($constantName);
+        $this->reflector->reflectConstant($constantName);
     }
 }

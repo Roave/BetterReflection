@@ -161,8 +161,7 @@ class CompileNodeToValue
         }
 
         if ($classInfo === null) {
-            $classInfo = $context->getReflector()->reflect($className);
-            assert($classInfo instanceof ReflectionClass);
+            $classInfo = $context->getReflector()->reflectClass($className);
         }
 
         $reflectionConstant = $classInfo->getReflectionConstant($nodeName);

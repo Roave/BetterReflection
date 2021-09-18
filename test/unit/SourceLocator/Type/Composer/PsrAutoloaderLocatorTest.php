@@ -9,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Reflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr4Mapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\PsrAutoloaderMapping;
 use Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator;
@@ -30,7 +31,7 @@ class PsrAutoloaderLocatorTest extends TestCase
     /** @var PsrAutoloaderMapping&MockObject */
     private $psrMapping;
 
-    private ClassReflector $reflector;
+    private Reflector $reflector;
 
     private PsrAutoloaderLocator $psrLocator;
 
@@ -38,16 +39,13 @@ class PsrAutoloaderLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $astLocator = BetterReflectionSingleton::instance()
-            ->astLocator();
-
         $this->psrMapping = $this->createMock(PsrAutoloaderMapping::class);
         $this->psrLocator = new PsrAutoloaderLocator(
             $this->psrMapping,
             BetterReflectionSingleton::instance()
                 ->astLocator(),
         );
-        $this->reflector  = new ClassReflector($this->psrLocator);
+        $this->reflector  = new DefaultReflector($this->psrLocator);
         $this
             ->psrMapping
             ->method('directories')
@@ -150,7 +148,7 @@ class PsrAutoloaderLocatorTest extends TestCase
         $actual = array_map(
             static fn (Reflection $reflection): string => $reflection->getName(),
             $locator->locateIdentifiersByType(
-                new ClassReflector($locator),
+                new DefaultReflector($locator),
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );

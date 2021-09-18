@@ -11,10 +11,8 @@ use ReflectionClass;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\ConstantReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
-use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -51,15 +49,15 @@ class AutoloadSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
 
-    private ClassReflector $classReflector;
+    private Reflector $reflector;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $configuration        = BetterReflectionSingleton::instance();
-        $this->astLocator     = $configuration->astLocator();
-        $this->classReflector = $configuration->classReflector();
+        $configuration    = BetterReflectionSingleton::instance();
+        $this->astLocator = $configuration->astLocator();
+        $this->reflector  = $configuration->reflector();
     }
 
     /** @return Reflector&MockObject */
@@ -70,10 +68,10 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testClassLoads(): void
     {
-        $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         self::assertFalse(class_exists(ExampleClass::class, false));
-        $classInfo = $reflector->reflect(ExampleClass::class);
+        $classInfo = $reflector->reflectClass(ExampleClass::class);
         self::assertFalse(class_exists(ExampleClass::class, false));
 
         self::assertSame('ExampleClass', $classInfo->getShortName());
@@ -81,13 +79,13 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testClassLoadsWorksWithExistingClass(): void
     {
-        $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator));
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         // Ensure class is loaded first
         new ClassForHinting();
         self::assertTrue(class_exists(ClassForHinting::class, false));
 
-        $classInfo = $reflector->reflect(ClassForHinting::class);
+        $classInfo = $reflector->reflectClass(ClassForHinting::class);
 
         self::assertSame('ClassForHinting', $classInfo->getShortName());
     }
@@ -166,28 +164,28 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testFunctionLoads(): void
     {
-        $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         require_once __DIR__ . '/../../Fixture/Functions.php';
-        $classInfo = $reflector->reflect('Roave\BetterReflectionTest\Fixture\myFunction');
+        $classInfo = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\myFunction');
 
         self::assertSame('myFunction', $classInfo->getShortName());
     }
 
     public function testFunctionReflectionFailsWhenFunctionNotDefined(): void
     {
-        $reflector = new FunctionReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         $this->expectException(IdentifierNotFound::class);
-        $reflector->reflect('this function does not exist, hopefully');
+        $reflector->reflectFunction('this function does not exist, hopefully');
     }
 
     public function testConstantLoadsByConst(): void
     {
-        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         require_once __DIR__ . '/../../Fixture/Constants.php';
-        $reflection = $reflector->reflect('Roave\BetterReflectionTest\Fixture\BY_CONST_2');
+        $reflection = $reflector->reflectConstant('Roave\BetterReflectionTest\Fixture\BY_CONST_2');
 
         self::assertSame('Roave\BetterReflectionTest\Fixture\BY_CONST_2', $reflection->getName());
         self::assertSame('BY_CONST_2', $reflection->getShortName());
@@ -213,31 +211,31 @@ class AutoloadSourceLocatorTest extends TestCase
 
         require $temporarySourceFile;
 
-        $sourceLocator     = new AutoloadSourceLocator($this->astLocator);
-        $constantReflector = (new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator)));
+        $sourceLocator = new AutoloadSourceLocator($this->astLocator);
+        $reflector     = new DefaultReflector($sourceLocator);
 
         self::assertSame(
             'Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName,
-            $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName)
+            $reflector->reflectConstant('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName)
                 ->getName(),
         );
 
         unlink($temporarySourceFile);
 
-        $sourceLocator     = new AutoloadSourceLocator($this->astLocator);
-        $constantReflector = (new ConstantReflector($sourceLocator, new ClassReflector($sourceLocator)));
+        $sourceLocator   = new AutoloadSourceLocator($this->astLocator);
+        $secondReflector = new DefaultReflector($sourceLocator);
 
         $this->expectException(IdentifierNotFound::class);
 
-        $constantReflector->reflect('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName);
+        $secondReflector->reflectConstant('Roave\BetterReflectionTest\SourceLocator\Type\\' . $constantName);
     }
 
     public function testConstantLoadsByDefine(): void
     {
-        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         require_once __DIR__ . '/../../Fixture/Constants.php';
-        $reflection = $reflector->reflect('BY_DEFINE');
+        $reflection = $reflector->reflectConstant('BY_DEFINE');
 
         self::assertSame('BY_DEFINE', $reflection->getName());
         self::assertSame('BY_DEFINE', $reflection->getShortName());
@@ -245,10 +243,10 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testConstantLoadsByDefineWithNamespace(): void
     {
-        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         require_once __DIR__ . '/../../Fixture/Constants.php';
-        $reflection = $reflector->reflect('Roave\BetterReflectionTest\Fixture\BY_DEFINE');
+        $reflection = $reflector->reflectConstant('Roave\BetterReflectionTest\Fixture\BY_DEFINE');
 
         self::assertSame('Roave\BetterReflectionTest\Fixture\BY_DEFINE', $reflection->getName());
         self::assertSame('BY_DEFINE', $reflection->getShortName());
@@ -258,24 +256,24 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         $this->expectException(IdentifierNotFound::class);
 
-        $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
-        $reflector->reflect(ReflectionClass::class);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
+        $reflector->reflectClass(ReflectionClass::class);
     }
 
     public function testInternalConstantDoesNotLoad(): void
     {
         $this->expectException(IdentifierNotFound::class);
 
-        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
-        $reflector->reflect('E_ALL');
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
+        $reflector->reflectConstant('E_ALL');
     }
 
     public function testConstantReflectionFailsWhenConstantNotDefined(): void
     {
-        $reflector = new ConstantReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         $this->expectException(IdentifierNotFound::class);
-        $reflector->reflect('this constant does not exist, hopefully');
+        $reflector->reflectConstant('this constant does not exist, hopefully');
     }
 
     public function testNullReturnedWhenInvalidTypeGiven(): void
@@ -297,7 +295,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $sourceLocator = new AutoloadSourceLocator($this->astLocator);
 
         self::assertNull($sourceLocator->locateIdentifier(
-            new ClassReflector($sourceLocator),
+            new DefaultReflector($sourceLocator),
             new Identifier('Some\Class\That\Cannot\Exist', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         ));
     }
@@ -373,10 +371,10 @@ class AutoloadSourceLocatorTest extends TestCase
             include_once __DIR__ . '/../../Fixture/ClassNotInPhar.php';
         });
 
-        $sourceLocator  = new AutoloadSourceLocator($this->astLocator);
-        $classReflector = new ClassReflector($sourceLocator);
+        $sourceLocator = new AutoloadSourceLocator($this->astLocator);
+        $reflector     = new DefaultReflector($sourceLocator);
 
-        $reflection = $classReflector->reflect(AutoloadableClassInPhar::class);
+        $reflection = $reflector->reflectClass(AutoloadableClassInPhar::class);
 
         $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
     }

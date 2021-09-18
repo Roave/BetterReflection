@@ -20,7 +20,8 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
@@ -48,7 +49,7 @@ use function basename;
  */
 class ReflectionMethodTest extends TestCase
 {
-    private ClassReflector $reflector;
+    private Reflector $reflector;
 
     private Locator $astLocator;
 
@@ -62,7 +63,7 @@ class ReflectionMethodTest extends TestCase
 
         $this->astLocator    = $betterReflection->astLocator();
         $this->sourceStubber = $betterReflection->sourceStubber();
-        $this->reflector     = new ClassReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $this->reflector     = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromName(): void
@@ -109,7 +110,7 @@ class ReflectionMethodTest extends TestCase
         bool $shouldBeAbstract,
         bool $shouldBeStatic,
     ): void {
-        $classInfo        = $this->reflector->reflect(Methods::class);
+        $classInfo        = $this->reflector->reflectClass(Methods::class);
         $reflectionMethod = $classInfo->getMethod($methodName);
 
         self::assertSame($shouldBePublic, $reflectionMethod->isPublic());
@@ -122,7 +123,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsAbstractForMethodInInterface(): void
     {
-        $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
+        $classInfo  = $this->reflector->reflectClass(InterfaceWithMethod::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
         self::assertTrue($methodInfo->isAbstract());
@@ -130,7 +131,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsConstructorDestructor(): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
 
         $method = $classInfo->getMethod('__construct');
         self::assertTrue($method->isConstructor());
@@ -141,7 +142,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsConstructorDestructorIsCaseInsensitive(): void
     {
-        $classInfo = $this->reflector->reflect(UpperCaseConstructDestruct::class);
+        $classInfo = $this->reflector->reflectClass(UpperCaseConstructDestruct::class);
 
         $method = $classInfo->getMethod('__CONSTRUCT');
         self::assertTrue($method->isConstructor());
@@ -152,7 +153,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetParameters(): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
 
         $method = $classInfo->getMethod('methodWithParameters');
         $params = $method->getParameters();
@@ -166,7 +167,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetNumberOfParameters(): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
 
         $method1 = $classInfo->getMethod('methodWithParameters');
         self::assertSame(2, $method1->getNumberOfParameters(), 'Failed asserting methodWithParameters has 2 params');
@@ -177,7 +178,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetNumberOfOptionalParameters(): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
 
         $method1 = $classInfo->getMethod('methodWithParameters');
         self::assertSame(2, $method1->getNumberOfRequiredParameters(), 'Failed asserting methodWithParameters has 2 required params');
@@ -188,7 +189,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetFileName(): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
         $method    = $classInfo->getMethod('methodWithParameters');
 
         $detectedFilename = $method->getFileName();
@@ -198,7 +199,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testMethodNameWithNamespace(): void
     {
-        $classInfo  = $this->reflector->reflect(ExampleClass::class);
+        $classInfo  = $this->reflector->reflectClass(ExampleClass::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
         self::assertFalse($methodInfo->inNamespace());
@@ -218,8 +219,8 @@ class ReflectionMethodTest extends TestCase
         }
         ';
 
-        $methodInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))
-            ->reflect('Foo')
+        $methodInfo = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))
+            ->reflectClass('Foo')
             ->getMethod('someMethod');
 
         $types = $methodInfo->getDocBlockReturnTypes();
@@ -238,8 +239,8 @@ class ReflectionMethodTest extends TestCase
         }
         ';
 
-        $returnType = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))
-            ->reflect(Foo::class)
+        $returnType = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))
+            ->reflectClass(Foo::class)
             ->getMethod('someMethod')
             ->getReturnType();
 
@@ -268,7 +269,7 @@ class ReflectionMethodTest extends TestCase
      */
     public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
         $method    = $classInfo->getMethod($methodName);
 
         self::assertSame($expectedModifier, $method->getModifiers());
@@ -301,13 +302,13 @@ class ReflectionMethodTest extends TestCase
     public function testGetPrototype(string $class, string $method, ?string $expectedPrototype): void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
-        $reflector = new ClassReflector(new SingleFileSourceLocator($fixture, $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator($fixture, $this->astLocator));
 
         if ($expectedPrototype === null) {
             $this->expectException(MethodPrototypeNotFound::class);
         }
 
-        $b = $reflector->reflect($class)->getMethod($method)->getPrototype();
+        $b = $reflector->reflectClass($class)->getMethod($method)->getPrototype();
         self::assertInstanceOf(ReflectionMethod::class, $b);
         self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
@@ -325,14 +326,14 @@ class ReflectionMethodTest extends TestCase
 
     public function testToString(): void
     {
-        $classInfo = $this->reflector->reflect(Methods::class);
+        $classInfo = $this->reflector->reflectClass(Methods::class);
         self::assertStringMatchesFormat("Method [ <user> public method publicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 15 - 17\n}", (string) $classInfo->getMethod('publicMethod'));
     }
 
     public function testGetDeclaringAndImplementingClassWithMethodFromTrait(): void
     {
-        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
-        $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithMethodsAndTraitMethods::class);
         $methodReflection = $classReflection->getMethod('methodFromTrait');
 
         self::assertSame(TraitWithMethod::class, $methodReflection->getDeclaringClass()->getName());
@@ -342,8 +343,8 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetDeclaringAndImplementingClassWithMethodFromClass(): void
     {
-        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
-        $classReflection  = $classReflector->reflect(ClassWithMethodsAndTraitMethods::class);
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithMethodsAndTraitMethods::class);
         $methodReflection = $classReflection->getMethod('methodFromClass');
 
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
@@ -353,8 +354,8 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetDeclaringAndImplementingClassWithMethodFromParentClass(): void
     {
-        $classReflector   = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
-        $classReflection  = $classReflector->reflect(ExtendedClassWithMethodsAndTraitMethods::class)->getParentClass();
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ExtendedClassWithMethodsAndTraitMethods::class)->getParentClass();
         $methodReflection = $classReflection->getMethod('methodFromClass');
 
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
@@ -364,7 +365,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetExtensionName(): void
     {
-        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(ReflectionClass::class);
+        $classInfo = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(ReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
 
         self::assertSame('Reflection', $method->getExtensionName());
@@ -372,7 +373,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsInternal(): void
     {
-        $classInfo = (new ClassReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflect(ReflectionClass::class);
+        $classInfo = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(ReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
 
         self::assertTrue($method->isInternal());
@@ -392,7 +393,7 @@ PHP;
 
         $this->expectException(ClassDoesNotExist::class);
 
-        $classReflection  = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $classReflection  = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $methodReflection = $classReflection->getMethod('boo');
 
         $methodReflection->getClosure();
@@ -403,7 +404,7 @@ PHP;
         $classWithStaticMethodFile = __DIR__ . '/../Fixture/ClassWithStaticMethod.php';
         require_once $classWithStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithStaticMethodFile, $this->astLocator)))->reflect(ClassWithStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($classWithStaticMethodFile, $this->astLocator)))->reflectClass(ClassWithStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $closure = $methodReflection->getClosure();
@@ -416,7 +417,7 @@ PHP;
     {
         $this->expectException(NoObjectProvided::class);
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->getClosure(null);
@@ -426,7 +427,7 @@ PHP;
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->getClosure(new stdClass());
@@ -437,7 +438,7 @@ PHP;
         $classWithNonStaticMethodFile = __DIR__ . '/../Fixture/ClassWithNonStaticMethod.php';
         require_once $classWithNonStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithNonStaticMethodFile, $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($classWithNonStaticMethodFile, $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $object = new ClassWithNonStaticMethod();
@@ -462,7 +463,7 @@ PHP;
 
         $this->expectException(ClassDoesNotExist::class);
 
-        $classReflection  = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $classReflection  = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $methodReflection = $classReflection->getMethod('boo');
 
         $methodReflection->invoke();
@@ -482,7 +483,7 @@ PHP;
 
         $this->expectException(ClassDoesNotExist::class);
 
-        $classReflection  = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
+        $classReflection  = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $methodReflection = $classReflection->getMethod('boo');
 
         $methodReflection->invokeArgs();
@@ -493,7 +494,7 @@ PHP;
         $classWithStaticMethodFile = __DIR__ . '/../Fixture/ClassWithStaticMethod.php';
         require_once $classWithStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithStaticMethodFile, $this->astLocator)))->reflect(ClassWithStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($classWithStaticMethodFile, $this->astLocator)))->reflectClass(ClassWithStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         self::assertSame(3, $methodReflection->invoke(null, 1, 2));
@@ -505,7 +506,7 @@ PHP;
         $traitWithStaticMethodFile = __DIR__ . '/../Fixture/TraitWithStaticMethod.php';
         require_once $traitWithStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($traitWithStaticMethodFile, $this->astLocator)))->reflect(TraitWithStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($traitWithStaticMethodFile, $this->astLocator)))->reflectClass(TraitWithStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         self::assertSame(3, $methodReflection->invoke(null, 1, 2));
@@ -517,7 +518,7 @@ PHP;
         $traitWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
         require_once $traitWithUsedStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($traitWithUsedStaticMethodFile, $this->astLocator)))->reflect(TraitWithStaticMethodToUse::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($traitWithUsedStaticMethodFile, $this->astLocator)))->reflectClass(TraitWithStaticMethodToUse::class);
         $methodReflection = $classReflection->getMethod('getClass');
 
         self::assertSame(TraitWithStaticMethodToUse::class, $methodReflection->invoke());
@@ -528,7 +529,7 @@ PHP;
         $classWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
         require_once $classWithUsedStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithUsedStaticMethodFile, $this->astLocator)))->reflect(ClassUsesTraitWithStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($classWithUsedStaticMethodFile, $this->astLocator)))->reflectClass(ClassUsesTraitWithStaticMethod::class);
         $methodReflection = $classReflection->getMethod('getClass');
 
         self::assertSame(ClassUsesTraitWithStaticMethod::class, $methodReflection->invoke());
@@ -538,7 +539,7 @@ PHP;
     {
         $this->expectException(NoObjectProvided::class);
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->invoke(null);
@@ -548,7 +549,7 @@ PHP;
     {
         $this->expectException(NoObjectProvided::class);
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->invokeArgs(null);
@@ -558,7 +559,7 @@ PHP;
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->invoke(new stdClass());
@@ -568,7 +569,7 @@ PHP;
     {
         $this->expectException(ObjectNotInstanceOfClass::class);
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $methodReflection->invokeArgs(new stdClass());
@@ -579,7 +580,7 @@ PHP;
         $classWithNonStaticMethodFile = __DIR__ . '/../Fixture/ClassWithNonStaticMethod.php';
         require_once $classWithNonStaticMethodFile;
 
-        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithNonStaticMethodFile, $this->astLocator)))->reflect(ClassWithNonStaticMethod::class);
+        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($classWithNonStaticMethodFile, $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
 
         $object = new ClassWithNonStaticMethod();
@@ -590,7 +591,7 @@ PHP;
 
     public function testInterfaceMethodBodyAst(): void
     {
-        $classInfo  = $this->reflector->reflect(InterfaceWithMethod::class);
+        $classInfo  = $this->reflector->reflectClass(InterfaceWithMethod::class);
         $methodInfo = $classInfo->getMethod('someMethod');
 
         self::assertSame([], $methodInfo->getBodyAst());

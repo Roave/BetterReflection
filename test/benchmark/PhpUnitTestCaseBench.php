@@ -10,7 +10,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use function array_map;
 use function array_merge;
 
@@ -19,7 +19,7 @@ use function array_merge;
  */
 class PhpUnitTestCaseBench
 {
-    /** @var ClassReflector */
+    /** @var Reflector */
     private $reflector;
 
     /** @var ReflectionProperty[] */
@@ -34,8 +34,8 @@ class PhpUnitTestCaseBench
     public function __construct()
     {
         $reflection       = new BetterReflection();
-        $this->reflector  = $reflection->classReflector();
-        $reflectionClass  = $this->reflector->reflect(TestCase::class);
+        $this->reflector  = $reflection->reflector();
+        $reflectionClass  = $this->reflector->reflectClass(TestCase::class);
         $this->methods    = $reflectionClass->getMethods();
         $this->properties = $reflectionClass->getProperties();
         $this->parameters = array_merge([], ...array_map(static function (ReflectionMethod $method) : array {
@@ -45,7 +45,7 @@ class PhpUnitTestCaseBench
 
     public function benchReflectClass() : void
     {
-        $this->reflector->reflect(TestCase::class);
+        $this->reflector->reflectClass(TestCase::class);
     }
 
     public function benchReflectPropertiesDocTypes() : void

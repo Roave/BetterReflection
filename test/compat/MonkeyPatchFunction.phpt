@@ -22,12 +22,9 @@ $sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocat
     (new Roave\BetterReflection\BetterReflection())->astLocator()
 );
 
-$reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
-    $sourceLocator,
-    new \Roave\BetterReflection\Reflector\ClassReflector($sourceLocator)
-);
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector($sourceLocator);
 
-$functionInfo = $reflector->reflect('increment');
+$functionInfo = $reflector->reflectFunction('increment');
 
 // Note, when outputting the code, formatting is lost, so the needless parens will not be expected
 $functionInfo->setBodyFromString('return ($a + 2);');
