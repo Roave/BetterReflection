@@ -237,6 +237,11 @@ class ReflectionProperty
         return GetLastDocComment::forNode($this->node);
     }
 
+    public function hasDefaultValue(): bool
+    {
+        return ! $this->hasType() || $this->node->props[$this->positionInNode]->default !== null;
+    }
+
     /**
      * Get the default value of the property (as defined before constructor is
      * called, when the property is defined)

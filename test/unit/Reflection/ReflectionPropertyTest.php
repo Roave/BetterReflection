@@ -244,12 +244,28 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('Property [ <default> public $publicProperty ]', (string) $classInfo->getProperty('publicProperty'));
     }
 
-    public function testGetDefaultProperty(): void
+    public function propertyDefaultValueProvider(): array
+    {
+        return [
+            ['hasDefault', true, 123],
+            ['hasNullAsDefault', true, null],
+            ['noDefault', true, null],
+            ['hasDefaultWithType', true, 123],
+            ['hasNullAsDefaultWithType', true, null],
+            ['noDefaultWithType', false, null],
+        ];
+    }
+
+    /**
+     * @dataProvider propertyDefaultValueProvider
+     */
+    public function testPropertyDefaultValue(string $propertyName, bool $hasDefaultValue, mixed $defaultValue): void
     {
         $classInfo = (new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator)))->reflect('Foo');
+        $property  = $classInfo->getProperty($propertyName);
 
-        self::assertSame(123, $classInfo->getProperty('hasDefault')->getDefaultValue());
-        self::assertNull($classInfo->getProperty('noDefault')->getDefaultValue());
+        self::assertSame($hasDefaultValue, $property->hasDefaultValue());
+        self::assertSame($defaultValue, $property->getDefaultValue());
     }
 
     public function testCannotClone(): void
