@@ -43,7 +43,9 @@ class ReflectionObjectTest extends TestCase
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionObjectAdapterReflection = new CoreReflectionClass(ReflectionObjectAdapter::class);
+
         self::assertTrue($reflectionObjectAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionObjectAdapter::class, $reflectionObjectAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
@@ -103,6 +105,9 @@ class ReflectionObjectTest extends TestCase
             ['inNamespace', null, true, []],
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
+            ['isAnonymous', NotImplemented::class, null, []],
+            ['isIterable', NotImplemented::class, null, []],
+            ['getAttributes', NotImplemented::class, null, []],
         ];
     }
 

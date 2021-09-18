@@ -550,4 +550,22 @@ class ReflectionObject extends CoreReflectionObject
     {
         return $this->betterReflectionObject->getShortName();
     }
+
+    public function isAnonymous(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    public function isIterable(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
 }
