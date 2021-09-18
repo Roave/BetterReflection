@@ -268,7 +268,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 }
 
                 if ($node instanceof Node\Stmt\Function_) {
-                    /** @psalm-suppress UndefinedPropertyFetch */
                     $nodeName                       = $node->namespacedName->toString();
                     $this->functionNodes[$nodeName] = $node;
 
