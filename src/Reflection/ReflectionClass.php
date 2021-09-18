@@ -34,6 +34,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
+use Stringable;
 use Traversable;
 
 use function array_combine;
@@ -951,6 +952,27 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * @param array<class-string, self> $interfaces
+     *
+     * @return array<class-string, self>
+     */
+    private function addStringableInterface(array $interfaces): array
+    {
+        if (array_key_exists(Stringable::class, $interfaces)) {
+            return $interfaces;
+        }
+
+        foreach ($this->node->getMethods() as $methodNode) {
+            if ($methodNode->name->toLowerString() === '__tostring') {
+                $interfaces[Stringable::class] = $this->reflectClassForNamedNode(new Node\Name(Stringable::class));
+                break;
+            }
+        }
+
+        return $interfaces;
+    }
+
+    /**
      * Given an AST Node\Name, create a new ReflectionClass for the element.
      */
     private function reflectClassForNamedNode(Node\Name $node): self
@@ -1276,14 +1298,14 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return array<string, ReflectionClass>
+     * @return array<class-string, ReflectionClass>
      */
     private function getCurrentClassImplementedInterfacesIndexedByName(): array
     {
         $node = $this->node;
 
         if ($node instanceof ClassNode) {
-            return array_merge(
+            $interfaces = array_merge(
                 [],
                 ...array_map(
                     fn (Node\Name $interfaceName): array => $this
@@ -1292,6 +1314,8 @@ class ReflectionClass implements Reflection
                     $node->implements,
                 ),
             );
+
+            return $this->addStringableInterface($interfaces);
         }
 
         // assumption: first key is the current interface
@@ -1315,7 +1339,7 @@ class ReflectionClass implements Reflection
     /**
      * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
      *
-     * @return array<string, ReflectionClass> parent interfaces of this interface
+     * @return array<class-string, ReflectionClass> parent interfaces of this interface
      *
      * @throws NotAnInterfaceReflection
      */
@@ -1328,7 +1352,8 @@ class ReflectionClass implements Reflection
         $node = $this->node;
         assert($node instanceof InterfaceNode);
 
-        return array_merge(
+        /** @var array<class-string, self> $interfaces */
+        $interfaces = array_merge(
             [$this->getName() => $this],
             ...array_map(
                 fn (Node\Name $interfaceName): array => $this
@@ -1337,6 +1362,8 @@ class ReflectionClass implements Reflection
                 $node->extends,
             ),
         );
+
+        return $this->addStringableInterface($interfaces);
     }
 
     /**
