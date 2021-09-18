@@ -25,9 +25,10 @@ class UnableToCompileNode extends LogicException
     public static function forUnRecognizedExpressionInContext(Node\Expr $expression, CompilerContext $context): self
     {
         return new self(sprintf(
-            'Unable to compile expression in %s: unrecognized node type %s at line %d',
+            'Unable to compile expression in %s: unrecognized node type %s in file %s (line %d)',
             self::compilerContextToContextDescription($context),
             $expression::class,
+            self::getFileName($context),
             $expression->getLine(),
         ));
     }
@@ -40,10 +41,11 @@ class UnableToCompileNode extends LogicException
         assert($constantFetch->name instanceof Node\Identifier);
 
         return new self(sprintf(
-            'Could not locate constant %s::%s while trying to evaluate constant expression in %s at line %s',
+            'Could not locate constant %s::%s while trying to evaluate constant expression in %s in file %s (line %d)',
             $targetClass->getName(),
             $constantFetch->name->name,
             self::compilerContextToContextDescription($fetchContext),
+            self::getFileName($fetchContext),
             $constantFetch->getLine(),
         ));
     }
@@ -55,9 +57,10 @@ class UnableToCompileNode extends LogicException
         $constantName = reset($constantFetch->name->parts);
 
         $exception = new self(sprintf(
-            'Could not locate constant "%s" while evaluating expression in %s at line %s',
+            'Could not locate constant "%s" while evaluating expression in %s in file %s (line %d)',
             $constantName,
             self::compilerContextToContextDescription($fetchContext),
+            self::getFileName($fetchContext),
             $constantFetch->getLine(),
         ));
 
@@ -66,11 +69,25 @@ class UnableToCompileNode extends LogicException
         return $exception;
     }
 
+    private static function getFileName(CompilerContext $fetchContext): string
+    {
+        return $fetchContext->getFileName() ?? '""';
+    }
+
     private static function compilerContextToContextDescription(CompilerContext $fetchContext): string
     {
-        // @todo improve in https://github.com/Roave/BetterReflection/issues/434
-        return $fetchContext->hasSelf()
-            ? $fetchContext->getSelf()->getName()
-            : 'unknown context (probably a function)';
+        if ($fetchContext->inClass() && $fetchContext->inFunction()) {
+            return sprintf('method %s::%s()', $fetchContext->getClass()->getName(), $fetchContext->getFunction()->getName());
+        }
+
+        if ($fetchContext->inClass()) {
+            return sprintf('class %s', $fetchContext->getClass()->getName());
+        }
+
+        if ($fetchContext->inFunction()) {
+            return sprintf('function %s()', $fetchContext->getFunction()->getName());
+        }
+
+        return 'unknown context';
     }
 }

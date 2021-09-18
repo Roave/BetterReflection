@@ -5,32 +5,17 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\NodeCompiler;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflector\Reflector;
 use RuntimeException;
 
+/**
+ * @internal
+ */
 class CompilerContext
 {
-    public function __construct(private Reflector $reflector, private ?ReflectionClass $self)
+    public function __construct(private Reflector $reflector, private ?string $fileName, private ?string $namespace, private ?ReflectionClass $class, private ?ReflectionFunctionAbstract $function)
     {
-    }
-
-    /**
-     * Does the current context have a "self" or "this"
-     *
-     * (e.g. if the context is a function, then no, there will be no self)
-     */
-    public function hasSelf(): bool
-    {
-        return $this->self !== null;
-    }
-
-    public function getSelf(): ReflectionClass
-    {
-        if (! $this->hasSelf()) {
-            throw new RuntimeException('The current context does not have a class for self');
-        }
-
-        return $this->self;
     }
 
     public function getReflector(): Reflector
@@ -38,8 +23,41 @@ class CompilerContext
         return $this->reflector;
     }
 
-    public function getFileName(): string
+    public function getFileName(): ?string
     {
-        return $this->getSelf()->getFileName();
+        return $this->fileName;
+    }
+
+    public function getNamespace(): ?string
+    {
+        return $this->namespace;
+    }
+
+    public function inClass(): bool
+    {
+        return $this->class !== null;
+    }
+
+    public function getClass(): ReflectionClass
+    {
+        if (! $this->inClass()) {
+            throw new RuntimeException('The current context does not have a class');
+        }
+
+        return $this->class;
+    }
+
+    public function inFunction(): bool
+    {
+        return $this->function !== null;
+    }
+
+    public function getFunction(): ReflectionFunctionAbstract
+    {
+        if (! $this->inFunction()) {
+            throw new RuntimeException('The current context does not have a function');
+        }
+
+        return $this->function;
     }
 }

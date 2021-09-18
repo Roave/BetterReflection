@@ -291,9 +291,17 @@ class ReflectionParameter
         $defaultValueNode = $this->parseDefaultValueNode();
 
         if ($defaultValueNode) {
+            $namespaceName = $this->getDeclaringClass()?->getNamespaceName() ?? $this->function->getNamespaceName();
+
             $this->defaultValue = (new CompileNodeToValue())->__invoke(
                 $defaultValueNode,
-                new CompilerContext($this->reflector, $this->getDeclaringClass()),
+                new CompilerContext(
+                    $this->reflector,
+                    $this->function->getFileName(),
+                    $namespaceName,
+                    $this->getDeclaringClass(),
+                    $this->function,
+                ),
             );
         }
 

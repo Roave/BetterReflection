@@ -15,6 +15,7 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
@@ -33,7 +34,7 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @dataProvider supportedContextTypes */
-    public function testBecauseOfNotFoundConstantReference(CompilerContext $context): void
+    public function testBecauseOfNotFoundConstantReference(CompilerContext $context, string $contextName): void
     {
         $constantName = 'FOO';
 
@@ -42,11 +43,9 @@ final class UnableToCompileNodeTest extends TestCase
             new ConstFetch(new Name($constantName)),
         );
 
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
-
         self::assertSame(
             sprintf(
-                'Could not locate constant "%s" while evaluating expression in %s at line -1',
+                'Could not locate constant "%s" while evaluating expression in %s in file someFile (line -1)',
                 $constantName,
                 $contextName,
             ),
@@ -57,10 +56,8 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @dataProvider supportedContextTypes */
-    public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context): void
+    public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context, string $contextName): void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
-
         $targetClass = $this->createMock(ReflectionClass::class);
 
         $targetClass
@@ -69,8 +66,10 @@ final class UnableToCompileNodeTest extends TestCase
             ->willReturn('An\\Example');
 
         self::assertSame(
-            'Could not locate constant An\Example::SOME_CONSTANT while trying to evaluate constant expression in '
-            . $contextName . ' at line -1',
+            sprintf(
+                'Could not locate constant An\Example::SOME_CONSTANT while trying to evaluate constant expression in %s in file someFile (line -1)',
+                $contextName,
+            ),
             UnableToCompileNode::becauseOfNotFoundClassConstantReference(
                 $context,
                 $targetClass,
@@ -83,14 +82,14 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @dataProvider supportedContextTypes */
-    public function testForUnRecognizedExpressionInContext(CompilerContext $context): void
+    public function testForUnRecognizedExpressionInContext(CompilerContext $context, string $contextName): void
     {
-        $contextName = $context->hasSelf() ? 'EmptyClass' : 'unknown context (probably a function)';
-
         self::assertSame(
-            'Unable to compile expression in ' . $contextName
-            . ': unrecognized node type ' . Yield_::class
-            . ' at line -1',
+            sprintf(
+                'Unable to compile expression in %s: unrecognized node type %s in file someFile (line -1)',
+                $contextName,
+                Yield_::class,
+            ),
             UnableToCompileNode::forUnRecognizedExpressionInContext(
                 new Yield_(new String_('')),
                 $context,
@@ -101,14 +100,35 @@ final class UnableToCompileNodeTest extends TestCase
     /** @return CompilerContext[] */
     public function supportedContextTypes(): array
     {
-        $reflector = new ClassReflector(new StringSourceLocator(
-            '<?php class EmptyClass {}',
-            BetterReflectionSingleton::instance()->astLocator(),
-        ));
+        $php = <<<'PHP'
+            <?php
+            
+            class SomeClass
+            {
+                public function someMethod()
+                {
+                }
+            }
+
+            function someFunction()
+            {
+            }
+        PHP;
+
+        $sourceLocator     = new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator());
+        $classReflector    = new ClassReflector($sourceLocator);
+        $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
+
+        $namespace = null;
+        $class     = $classReflector->reflect('SomeClass');
+        $method    = $class->getMethod('someMethod');
+        $function  = $functionReflector->reflect('someFunction');
 
         return [
-            [new CompilerContext($reflector, null)],
-            [new CompilerContext($reflector, $reflector->reflect('EmptyClass'))],
+            [new CompilerContext($classReflector, 'someFile', $namespace, null, null), 'unknown context'],
+            [new CompilerContext($classReflector, 'someFile', $namespace, $class, null), 'class SomeClass'],
+            [new CompilerContext($classReflector, 'someFile', $namespace, $class, $method), 'method SomeClass::someMethod()'],
+            [new CompilerContext($classReflector, 'someFile', $namespace, null, $function), 'function someFunction()'],
         ];
     }
 }

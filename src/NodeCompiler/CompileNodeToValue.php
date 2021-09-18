@@ -17,6 +17,7 @@ use function defined;
 use function dirname;
 use function realpath;
 use function reset;
+use function sprintf;
 
 class CompileNodeToValue
 {
@@ -48,8 +49,47 @@ class CompileNodeToValue
                 return $this->compileDirConstant($context);
             }
 
+            if ($node instanceof Node\Scalar\MagicConst\File) {
+                return $this->compileFileConstant($context);
+            }
+
             if ($node instanceof Node\Scalar\MagicConst\Class_) {
                 return $this->compileClassConstant($context);
+            }
+
+            if ($node instanceof Node\Scalar\MagicConst\Line) {
+                return $node->getLine();
+            }
+
+            if ($node instanceof Node\Scalar\MagicConst\Namespace_) {
+                return $context->getNamespace() ?? '';
+            }
+
+            if ($node instanceof Node\Scalar\MagicConst\Method) {
+                if ($context->inClass() && $context->inFunction()) {
+                    return sprintf('%s::%s', $context->getClass()->getName(), $context->getFunction()->getName());
+                }
+
+                if ($context->inFunction()) {
+                    return $context->getFunction()->getName();
+                }
+
+                return '';
+            }
+
+            if ($node instanceof Node\Scalar\MagicConst\Function_) {
+                return $context->inFunction() ? $context->getFunction()->getName() : '';
+            }
+
+            if ($node instanceof Node\Scalar\MagicConst\Trait_) {
+                if ($context->inClass()) {
+                    $class = $context->getClass();
+                    if ($class->isTrait()) {
+                        return $class->getName();
+                    }
+                }
+
+                return '';
             }
 
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
@@ -109,9 +149,9 @@ class CompileNodeToValue
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
-            $classInfo = $context->getSelf()->hasConstant($nodeName) ? $context->getSelf() : null;
+            $classInfo = $context->getClass()->hasConstant($nodeName) ? $context->getClass() : null;
         } elseif ($className === 'parent') {
-            $classInfo = $context->getSelf()->getParentClass();
+            $classInfo = $context->getClass()->getParentClass();
         }
 
         if ($classInfo === null) {
@@ -127,7 +167,13 @@ class CompileNodeToValue
 
         return $this->__invoke(
             $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
-            new CompilerContext($context->getReflector(), $classInfo),
+            new CompilerContext(
+                $context->getReflector(),
+                $context->getFileName(),
+                $context->getNamespace(),
+                $classInfo,
+                $context->inFunction() ? $context->getFunction() : null,
+            ),
         );
     }
 
@@ -136,7 +182,15 @@ class CompileNodeToValue
      */
     private function compileDirConstant(CompilerContext $context): string
     {
-        return FileHelper::normalizeWindowsPath(dirname(realpath($context->getFileName())));
+        return dirname($this->compileFileConstant($context));
+    }
+
+    /**
+     * Compile a __FILE__ node
+     */
+    private function compileFileConstant(CompilerContext $context): string
+    {
+        return FileHelper::normalizeWindowsPath(realpath($context->getFileName()));
     }
 
     /**
@@ -144,17 +198,17 @@ class CompileNodeToValue
      */
     private function compileClassConstant(CompilerContext $context): string
     {
-        return $context->hasSelf() ? $context->getSelf()->getName() : '';
+        return $context->inClass() ? $context->getClass()->getName() : '';
     }
 
     private function resolveClassNameForClassNameConstant(string $className, CompilerContext $context): string
     {
         if ($className === 'self' || $className === 'static') {
-            return $context->getSelf()->getName();
+            return $context->getClass()->getName();
         }
 
         if ($className === 'parent') {
-            $parentClass = $context->getSelf()->getParentClass();
+            $parentClass = $context->getClass()->getParentClass();
             assert($parentClass instanceof ReflectionClass);
 
             return $parentClass->getName();

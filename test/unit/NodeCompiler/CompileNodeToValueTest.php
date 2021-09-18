@@ -14,11 +14,18 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ConstantReflector;
+use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
+use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\MagicConstantsClass;
+use Roave\BetterReflectionTest\Fixture\MagicConstantsTrait;
 
 use function define;
+use function realpath;
 use function sprintf;
 use function uniqid;
 
@@ -34,13 +41,16 @@ class CompileNodeToValueTest extends TestCase
 
     private Locator $astLocator;
 
+    private ClassReflector $classReflector;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $configuration    = BetterReflectionSingleton::instance();
-        $this->parser     = $configuration->phpParser();
-        $this->astLocator = $configuration->astLocator();
+        $configuration        = BetterReflectionSingleton::instance();
+        $this->parser         = $configuration->phpParser();
+        $this->astLocator     = $configuration->astLocator();
+        $this->classReflector = $configuration->classReflector();
     }
 
     private function parseCode(string $phpCode): Node
@@ -50,13 +60,16 @@ class CompileNodeToValueTest extends TestCase
 
     private function getDummyContext(): CompilerContext
     {
-        return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php', $this->astLocator)), null);
+        return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php', $this->astLocator)), null, null, null, null);
     }
 
     private function getDummyContextWithEmptyClass(): CompilerContext
     {
         return new CompilerContext(
             new ClassReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
+            null,
+            null,
+            null,
             null,
         );
     }
@@ -177,7 +190,7 @@ class CompileNodeToValueTest extends TestCase
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage(sprintf(
-            'Unable to compile expression in unknown context (probably a function): unrecognized node type %s at line -1',
+            'Unable to compile expression in unknown context: unrecognized node type %s in file "" (line -1)',
             Yield_::class,
         ));
 
@@ -187,7 +200,7 @@ class CompileNodeToValueTest extends TestCase
     public function testExceptionThrownWhenUndefinedConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context (probably a function) at line -1');
+        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context in file "" (line -1)');
 
         (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
     }
@@ -195,7 +208,7 @@ class CompileNodeToValueTest extends TestCase
     public function testExceptionThrownWhenUndefinedClassConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context (probably a function) at line -1');
+        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context in file "" (line -1)');
 
         (new CompileNodeToValue())
             ->__invoke(
@@ -474,5 +487,172 @@ PHP;
         self::assertSame('selfConstant', $classInfo->getProperty('selfConstant')->getDefaultValue());
         self::assertSame('staticConstant', $classInfo->getProperty('staticConstant')->getDefaultValue());
         self::assertSame('parentConstant', $classInfo->getProperty('parentConstant')->getDefaultValue());
+    }
+
+    public function magicConstantsWithoutNamespaceProvider(): array
+    {
+        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+
+        return [
+            ['_DIR', $dir],
+            ['_FILE', $dir . '/MagicConstants.php'],
+            ['_LINE', 7],
+            ['_NAMESPACE', ''],
+            ['_CLASS', ''],
+            ['_TRAIT', ''],
+            ['_METHOD', ''],
+            ['_FUNCTION', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider magicConstantsWithoutNamespaceProvider
+     */
+    public function testMagicConstantsWithoutNamespace(string $constantName, mixed $expectedValue): void
+    {
+        $reflector = new ConstantReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator), $this->classReflector);
+        $constant  = $reflector->reflect($constantName);
+
+        self::assertSame($expectedValue, $constant->getValue());
+    }
+
+    public function magicConstantsInNamespaceProvider(): array
+    {
+        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+
+        return [
+            ['_DIR', $dir],
+            ['_FILE', $dir . '/MagicConstants.php'],
+            ['_LINE', 20],
+            ['_NAMESPACE', 'Roave\BetterReflectionTest\Fixture'],
+            ['_CLASS', ''],
+            ['_TRAIT', ''],
+            ['_METHOD', ''],
+            ['_FUNCTION', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider magicConstantsInNamespaceProvider
+     */
+    public function testMagicConstantsInNamespace(string $constantName, mixed $expectedValue): void
+    {
+        $reflector = new ConstantReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator), $this->classReflector);
+        $constant  = $reflector->reflect('Roave\BetterReflectionTest\Fixture\\' . $constantName);
+
+        self::assertSame($expectedValue, $constant->getValue());
+    }
+
+    public function magicConstantsInTraitProvider(): array
+    {
+        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+
+        return [
+            ['dir', $dir],
+            ['file', $dir . '/MagicConstants.php'],
+            ['line', 31],
+            ['namespace', 'Roave\BetterReflectionTest\Fixture'],
+            ['class', 'Roave\BetterReflectionTest\Fixture\MagicConstantsTrait'],
+            ['trait', 'Roave\BetterReflectionTest\Fixture\MagicConstantsTrait'],
+            ['method', ''],
+            ['function', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider magicConstantsInTraitProvider
+     */
+    public function testMagicConstantsInTrait(string $propertyName, mixed $expectedValue): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $class     = $reflector->reflect(MagicConstantsTrait::class);
+        $property  = $class->getProperty($propertyName);
+
+        self::assertSame($expectedValue, $property->getDefaultValue());
+    }
+
+    public function magicConstantsInClassProvider(): array
+    {
+        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+
+        return [
+            ['dir', $dir],
+            ['file', $dir . '/MagicConstants.php'],
+            ['line', 43],
+            ['namespace', 'Roave\BetterReflectionTest\Fixture'],
+            ['class', 'Roave\BetterReflectionTest\Fixture\MagicConstantsClass'],
+            ['trait', ''],
+            ['method', ''],
+            ['function', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider magicConstantsInClassProvider
+     */
+    public function testMagicConstantsInClass(string $propertyName, mixed $expectedValue): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $class     = $reflector->reflect(MagicConstantsClass::class);
+        $property  = $class->getProperty($propertyName);
+
+        self::assertSame($expectedValue, $property->getDefaultValue());
+    }
+
+    public function magicConstantsInMethodProvider(): array
+    {
+        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+
+        return [
+            ['dir', $dir],
+            ['file', $dir . '/MagicConstants.php'],
+            ['line', 53],
+            ['namespace', 'Roave\BetterReflectionTest\Fixture'],
+            ['class', 'Roave\BetterReflectionTest\Fixture\MagicConstantsClass'],
+            ['trait', ''],
+            ['method', 'Roave\BetterReflectionTest\Fixture\MagicConstantsClass::magicConstantsMethod'],
+            ['function', 'magicConstantsMethod'],
+        ];
+    }
+
+    /**
+     * @dataProvider magicConstantsInMethodProvider
+     */
+    public function testMagicConstantsInMethod(string $parameterName, mixed $expectedValue): void
+    {
+        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $class     = $reflector->reflect(MagicConstantsClass::class);
+        $method    = $class->getMethod('magicConstantsMethod');
+        $parameter = $method->getParameter($parameterName);
+
+        self::assertSame($expectedValue, $parameter->getDefaultValue());
+    }
+
+    public function magicConstantsInFunctionProvider(): array
+    {
+        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+
+        return [
+            ['dir', $dir],
+            ['file', $dir . '/MagicConstants.php'],
+            ['line', 67],
+            ['namespace', 'Roave\BetterReflectionTest\Fixture'],
+            ['class', ''],
+            ['trait', ''],
+            ['method', 'Roave\BetterReflectionTest\Fixture\magicConstantsFunction'],
+            ['function', 'Roave\BetterReflectionTest\Fixture\magicConstantsFunction'],
+        ];
+    }
+
+    /**
+     * @dataProvider magicConstantsInFunctionProvider
+     */
+    public function testMagicConstantsInFunction(string $parameterName, mixed $expectedValue): void
+    {
+        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator), $this->classReflector);
+        $function  = $reflector->reflect('Roave\BetterReflectionTest\Fixture\magicConstantsFunction');
+        $parameter = $function->getParameter($parameterName);
+
+        self::assertSame($expectedValue, $parameter->getDefaultValue());
     }
 }

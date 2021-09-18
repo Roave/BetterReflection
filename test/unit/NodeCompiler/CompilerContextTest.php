@@ -9,9 +9,7 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use RuntimeException;
 
@@ -29,79 +27,89 @@ class CompilerContextTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    public function testCreatingContextWithoutSelf(): void
+    public function testCreatingContext(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+class Boo
+{
+    public function baz($parameter = __CLASS__)
+    {
+    }
+}
+PHP;
+
+        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $class     = $reflector->reflect('Foo\Boo');
+        $function  = $class->getMethod('baz');
+
+        $context = new CompilerContext($reflector, null, $class->getNamespaceName(), $class, $function);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame($class->getNamespaceName(), $context->getNamespace());
+        self::assertTrue($context->inClass());
+        self::assertSame($class, $context->getClass());
+        self::assertTrue($context->inFunction());
+        self::assertSame($function, $context->getFunction());
+    }
+
+    public function testCreatingContextWithoutClass(): void
     {
         $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
-        $context   = new CompilerContext($reflector, null);
+        $context   = new CompilerContext($reflector, null, null, null, null);
 
-        self::assertFalse($context->hasSelf());
-        self::assertSame($reflector, $context->getReflector());
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The current context does not have a class for self');
-        $context->getSelf();
-    }
-
-    public function testCreatingContextWithSelf(): void
-    {
-        $reflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
-        $self      = $reflector->reflect('Foo');
-
-        $context = new CompilerContext($reflector, $self);
-
-        self::assertTrue($context->hasSelf());
-        self::assertSame($reflector, $context->getReflector());
-        self::assertSame($self, $context->getSelf());
-    }
-
-    public function testGetFileName(): void
-    {
-        $filename = FileHelper::normalizeWindowsPath(__DIR__ . '/CompilerContextTest.php');
-
-        $reflector = new ClassReflector(new SingleFileSourceLocator($filename, $this->astLocator));
-        $self      = $reflector->reflect(self::class);
-
-        $context = new CompilerContext($reflector, $self);
-
-        self::assertSame($filename, $context->getFileName());
-    }
-
-    public function testGetFileNameWithoutSelf(): void
-    {
-        $filename = __DIR__ . '/CompilerContextTest.php';
-
-        $reflector = new ClassReflector(new SingleFileSourceLocator($filename, $this->astLocator));
-        $context   = new CompilerContext($reflector, null);
+        self::assertFalse($context->inClass());
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The current context does not have a class for self');
-        $context->getFileName();
+        $this->expectExceptionMessage('The current context does not have a class');
+        $context->getClass();
+    }
+
+    public function testCreatingContextWithoutFunction(): void
+    {
+        $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
+        $context   = new CompilerContext($reflector, null, null, null, null);
+
+        self::assertFalse($context->inFunction());
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The current context does not have a function');
+        $context->getFunction();
     }
 
     public function testClassMagicConstantAsDefaultValueFromClass(): void
     {
-        $phpCode = '<?php
-        namespace Foo;
-        
-        class Bar {
-            public $property = __CLASS__;
-        }
-        ';
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+class Bar {
+    public $property = __CLASS__;
+}
+PHP;
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Foo\Bar');
+
         self::assertSame('Foo\Bar', $classInfo->getProperty('property')->getDefaultValue());
     }
 
     public function testClassMagicConstantAsDefaultValueFromFunction(): void
     {
-        $phpCode = '<?php
-        namespace Foo;
-        
-        function baz($parameter = __CLASS__)
-        {
-        }
-        ';
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+function baz($parameter = __CLASS__)
+{
+}
+PHP;
 
         $reflector    = new FunctionReflector(
             new StringSourceLocator($phpCode, $this->astLocator),
