@@ -66,6 +66,7 @@ class ReflectionPropertyTest extends TestCase
             ['getDefaultValue', null, null, []],
             ['isPromoted', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
+            ['isReadOnly', NotImplemented::class, null, []],
         ];
     }
 
@@ -151,21 +152,6 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         self::assertNull($reflectionPropertyAdapter->setValue(null));
-    }
-
-    public function testGetValueReturnsNullWhenNotAnObject(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(true);
-        $betterReflectionProperty
-            ->method('getValue')
-            ->willThrowException(NotAnObject::fromNonObject('string'));
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        self::assertNull($reflectionPropertyAdapter->getValue('string'));
     }
 
     public function testSetValueReturnsNullWhenNotAnObject(): void

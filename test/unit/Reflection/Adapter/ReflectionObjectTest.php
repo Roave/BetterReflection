@@ -19,7 +19,6 @@ use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
-use TypeError;
 
 use function array_combine;
 use function array_map;
@@ -107,6 +106,7 @@ class ReflectionObjectTest extends TestCase
             ['getShortName', null, '', []],
             ['isAnonymous', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
+            ['isEnum', NotImplemented::class, null, []],
         ];
     }
 
@@ -443,29 +443,16 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
-    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
             ->method('getExtensionName')
-            ->willReturn(null);
+            ->willReturn('');
 
         $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertFalse($betterReflectionObject->getExtensionName());
-    }
-
-    public function testIsInstanceReturnsNullWithNonObjectParameter(): void
-    {
-        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
-        $betterReflectionObject
-            ->method('isInstance')
-            ->with('string')
-            ->willThrowException(new TypeError());
-
-        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
-
-        self::assertNull($betterReflectionObject->isInstance('string'));
+        self::assertSame('', $betterReflectionObject->getExtensionName());
     }
 
     public function testGetConstantsWithFilter(): void

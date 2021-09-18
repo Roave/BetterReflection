@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use ReflectionAttribute as CoreReflectionAttribute;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
@@ -16,42 +19,27 @@ class ReflectionParameter extends CoreReflectionParameter
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->betterReflectionParameter->__toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->betterReflectionParameter->getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isPassedByReference()
+    public function isPassedByReference(): bool
     {
         return $this->betterReflectionParameter->isPassedByReference();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function canBePassedByValue()
+    public function canBePassedByValue(): bool
     {
         return $this->betterReflectionParameter->canBePassedByValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDeclaringFunction()
+    public function getDeclaringFunction(): CoreReflectionFunctionAbstract
     {
         $function = $this->betterReflectionParameter->getDeclaringFunction();
         assert($function instanceof BetterReflectionMethod || $function instanceof \Roave\BetterReflection\Reflection\ReflectionFunction);
@@ -63,10 +51,7 @@ class ReflectionParameter extends CoreReflectionParameter
         return new ReflectionFunction($function);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDeclaringClass()
+    public function getDeclaringClass(): ?CoreReflectionClass
     {
         $declaringClass = $this->betterReflectionParameter->getDeclaringClass();
 
@@ -77,10 +62,7 @@ class ReflectionParameter extends CoreReflectionParameter
         return new ReflectionClass($declaringClass);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getClass()
+    public function getClass(): ?CoreReflectionClass
     {
         $class = $this->betterReflectionParameter->getClass();
 
@@ -91,82 +73,52 @@ class ReflectionParameter extends CoreReflectionParameter
         return new ReflectionClass($class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isArray()
+    public function isArray(): bool
     {
         return $this->betterReflectionParameter->isArray();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isCallable()
+    public function isCallable(): bool
     {
         return $this->betterReflectionParameter->isCallable();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function allowsNull()
+    public function allowsNull(): bool
     {
         return $this->betterReflectionParameter->allowsNull();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->betterReflectionParameter->getPosition();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return $this->betterReflectionParameter->isOptional();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isVariadic()
+    public function isVariadic(): bool
     {
         return $this->betterReflectionParameter->isVariadic();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isDefaultValueAvailable()
+    public function isDefaultValueAvailable(): bool
     {
         return $this->betterReflectionParameter->isDefaultValueAvailable();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->betterReflectionParameter->getDefaultValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isDefaultValueConstant()
+    public function isDefaultValueConstant(): bool
     {
         return $this->betterReflectionParameter->isDefaultValueConstant();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDefaultValueConstantName()
+    public function getDefaultValueConstantName(): string
     {
         return $this->betterReflectionParameter->getDefaultValueConstantName();
     }
@@ -187,7 +139,7 @@ class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * {@inheritDoc}
+     * @return list<CoreReflectionAttribute>
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {

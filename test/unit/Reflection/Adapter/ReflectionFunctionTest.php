@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunc
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Util\FileHelper;
+use Throwable;
 
 use function array_combine;
 use function array_map;
@@ -81,12 +82,16 @@ class ReflectionFunctionTest extends TestCase
             ['isGenerator', null, true, []],
             ['isVariadic', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
+            ['hasTentativeReturnType', NotImplemented::class, null, []],
+            ['getTentativeReturnType', NotImplemented::class, null, []],
+            ['getClosureUsedVariables', NotImplemented::class, null, []],
 
             // ReflectionFunction
             ['isDisabled', null, false, []],
             ['invoke', null, null, []],
             ['invokeArgs', null, null, [[]]],
             ['getClosure', null, $closure, []],
+            ['isStatic', NotImplemented::class, null, []],
         ];
     }
 
@@ -152,20 +157,22 @@ class ReflectionFunctionTest extends TestCase
         self::assertFalse($reflectionFunctionAdapter->getDocComment());
     }
 
-    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
             ->method('getExtensionName')
-            ->willReturn(null);
+            ->willReturn('');
 
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
-        self::assertFalse($betterReflectionFunction->getExtensionName());
+        self::assertSame('', $betterReflectionFunction->getExtensionName());
     }
 
     public function testGetClosureReturnsNullWhenError(): void
     {
+        self::expectException(Throwable::class);
+
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
             ->method('getClosure')
@@ -173,7 +180,7 @@ class ReflectionFunctionTest extends TestCase
 
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
-        self::assertNull($betterReflectionFunction->getClosure());
+        $betterReflectionFunction->getClosure();
     }
 
     public function testInvokeThrowsExceptionWhenError(): void
