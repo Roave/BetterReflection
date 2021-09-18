@@ -193,8 +193,8 @@ class ReflectionSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // There are problems with some extensions
-                    return ! in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'imagick'], true);
+                    // Check only always enabled extensions
+                    return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
                 },
             ),
         );
@@ -313,23 +313,7 @@ class ReflectionSourceStubberTest extends TestCase
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-
-        // These methods report parameters as optional but without default value
-        if (
-            ! in_array($methodName, [
-                'DatePeriod#__construct',
-                'IntlCalendar#set',
-                'IntlGregorianCalendar#__construct',
-                'Phar#setStub',
-                'PharData#setStub',
-                'ReflectionClass#getStaticPropertyValue',
-                'ReflectionProperty#setValue',
-                'SoapHeader#__construct',
-            ], true)
-        ) {
-            self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
-        }
-
+        self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 
