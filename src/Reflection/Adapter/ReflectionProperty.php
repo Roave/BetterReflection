@@ -171,4 +171,22 @@ class ReflectionProperty extends CoreReflectionProperty
     {
         return $this->betterReflectionProperty->getDefaultValue();
     }
+
+    public function isInitialized(?object $object = null): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    public function isPromoted(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
 }

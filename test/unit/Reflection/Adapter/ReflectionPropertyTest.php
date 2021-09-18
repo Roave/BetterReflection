@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -40,7 +41,9 @@ class ReflectionPropertyTest extends TestCase
     public function testCoreReflectionProperties(string $methodName): void
     {
         $reflectionPropertyAdapterReflection = new CoreReflectionClass(ReflectionPropertyAdapter::class);
+
         self::assertTrue($reflectionPropertyAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionPropertyAdapter::class, $reflectionPropertyAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
@@ -48,19 +51,22 @@ class ReflectionPropertyTest extends TestCase
         $mockType = $this->createMock(BetterReflectionType::class);
 
         return [
-            ['__toString', '', []],
-            ['getName', '', []],
-            ['isPublic', true, []],
-            ['isPrivate', true, []],
-            ['isProtected', true, []],
-            ['isStatic', true, []],
-            ['isDefault', true, []],
-            ['getModifiers', 123, []],
-            ['getDocComment', '', []],
-            ['hasType', true, []],
-            ['getType', $mockType, []],
-            ['hasDefaultValue', true, []],
-            ['getDefaultValue', null, []],
+            ['__toString', null, '', []],
+            ['getName', null, '', []],
+            ['isPublic', null, true, []],
+            ['isPrivate', null, true, []],
+            ['isProtected', null, true, []],
+            ['isStatic', null, true, []],
+            ['isDefault', null, true, []],
+            ['getModifiers', null, 123, []],
+            ['getDocComment', null, '', []],
+            ['hasType', null, true, []],
+            ['getType', null, $mockType, []],
+            ['hasDefaultValue', null, true, []],
+            ['getDefaultValue', null, null, []],
+            ['isInitialized', NotImplemented::class, null, []],
+            ['isPromoted', NotImplemented::class, null, []],
+            ['getAttributes', NotImplemented::class, null, []],
         ];
     }
 
@@ -69,14 +75,20 @@ class ReflectionPropertyTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, mixed $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 
-        $reflectionStub->expects($this->once())
-            ->method($methodName)
-            ->with(...$args)
-            ->will($this->returnValue($returnValue));
+        if ($expectedException === null) {
+            $reflectionStub->expects($this->once())
+                ->method($methodName)
+                ->with(...$args)
+                ->will($this->returnValue($returnValue));
+        }
+
+        if ($expectedException !== null) {
+            $this->expectException($expectedException);
+        }
 
         $adapter = new ReflectionPropertyAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
