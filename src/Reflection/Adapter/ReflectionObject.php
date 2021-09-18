@@ -495,6 +495,11 @@ class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isIterateable();
     }
 
+    public function isIterable(): bool
+    {
+        return $this->isIterateable();
+    }
+
     /**
      * @psalm-suppress MethodSignatureMismatch
      */
@@ -554,11 +559,6 @@ class ReflectionObject extends CoreReflectionObject
     public function isAnonymous(): bool
     {
         return $this->betterReflectionObject->isAnonymous();
-    }
-
-    public function isIterable(): bool
-    {
-        throw new Exception\NotImplemented('Not implemented');
     }
 
     /**

@@ -106,7 +106,6 @@ class ReflectionObjectTest extends TestCase
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
             ['isAnonymous', null, true, []],
-            ['isIterable', NotImplemented::class, null, []],
             ['getAttributes', NotImplemented::class, null, []],
         ];
     }
