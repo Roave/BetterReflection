@@ -176,6 +176,11 @@ class ReflectionMethod extends CoreReflectionMethod
         return $wrappedParameters;
     }
 
+    public function hasReturnType(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -379,5 +384,13 @@ class ReflectionMethod extends CoreReflectionMethod
     private function isAccessible(): bool
     {
         return $this->accessible || $this->isPublic();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
     }
 }
