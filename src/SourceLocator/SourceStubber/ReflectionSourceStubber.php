@@ -286,7 +286,7 @@ final class ReflectionSourceStubber implements SourceStubber
             }
 
             $propertyType = $propertyReflection->getType();
-            assert($propertyType instanceof CoreReflectionNamedType || $propertyType === null);
+            assert($propertyType instanceof CoreReflectionNamedType || $propertyType instanceof CoreReflectionUnionType || $propertyType === null);
 
             if ($propertyType !== null) {
                 $propertyNode->setType($this->formatType($propertyType));
