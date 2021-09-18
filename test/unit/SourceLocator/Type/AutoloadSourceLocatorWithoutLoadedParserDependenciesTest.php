@@ -30,7 +30,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
             MemoizingParser::class . ' was not loaded into memory',
         );
 
-        $parser            = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, new Emulative([
+        $parser            = (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
             'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
         ]));
         $functionReflector = null;
