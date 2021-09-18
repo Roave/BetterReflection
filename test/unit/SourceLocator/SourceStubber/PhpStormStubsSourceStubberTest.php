@@ -46,6 +46,8 @@ use function realpath;
 use function sort;
 use function sprintf;
 
+use const PHP_VERSION_ID;
+
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber
  */
@@ -95,6 +97,17 @@ class PhpStormStubsSourceStubberTest extends TestCase
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
+                        return false;
+                    }
+
+                    // Missing in JetBrains/phpstorm-stubs
+                    if (
+                        in_array($className, [
+                            'Fiber',
+                            'FiberError',
+                            'ReturnTypeWillChange',
+                        ], true)
+                    ) {
                         return false;
                     }
 
@@ -154,9 +167,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSameParentClass($original, $stubbed);
 
         // Needs fix in JetBrains/phpstorm-stubs
-        if ($original->getName() !== 'SplFixedArray') {
-            $this->assertSameInterfaces($original, $stubbed);
+        if ($original->getName() === 'SplFixedArray') {
+            return;
         }
+
+        $this->assertSameInterfaces($original, $stubbed);
 
         foreach ($original->getMethods() as $method) {
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
@@ -178,20 +193,29 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $methodName = $original->getDeclaringClass()->getName() . '#' . $original->getName();
 
-        self::assertSame($original->isPublic(), $stubbed->isPublic());
-        self::assertSame($original->isPrivate(), $stubbed->isPrivate());
-        self::assertSame($original->isProtected(), $stubbed->isProtected());
-        self::assertSame($original->returnsReference(), $stubbed->returnsReference());
-        self::assertSame($original->isStatic(), $stubbed->isStatic());
-        self::assertSame($original->isFinal(), $stubbed->isFinal());
+        self::assertSame($original->isPublic(), $stubbed->isPublic(), $methodName);
+        self::assertSame($original->isPrivate(), $stubbed->isPrivate(), $methodName);
+        self::assertSame($original->isProtected(), $stubbed->isProtected(), $methodName);
+        self::assertSame($original->returnsReference(), $stubbed->returnsReference(), $methodName);
+        self::assertSame($original->isStatic(), $stubbed->isStatic(), $methodName);
+
+        // Modified in PHP 8.1
+        if (! (PHP_VERSION_ID >= 80100 && in_array($methodName, ['Error#__clone', 'Exception#__clone'], true))) {
+            self::assertSame($original->isFinal(), $stubbed->isFinal(), $methodName);
+        }
 
         // Needs fixes in JetBrains/phpstorm-stubs
         if (
             in_array($methodName, [
+                'BackedEnum#from',
+                'BackedEnum#tryFrom',
                 'Closure#__invoke',
                 'Directory#read',
                 'Directory#rewind',
                 'Directory#close',
+                'SplFileObject#fputcsv',
+                'SplFileObject#fputcsv',
+                'SplTempFileObject#fputcsv',
                 'WeakReference#create',
             ], true)
         ) {
@@ -332,6 +356,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 'array_diff_uassoc',
                 'array_udiff_uassoc',
                 'array_multisort',
+                'fputcsv',
                 'extract',
                 'setcookie',
                 'setrawcookie',
@@ -392,6 +417,13 @@ class PhpStormStubsSourceStubberTest extends TestCase
             foreach ($extensionConstants as $constantName => $constantValue) {
                 // Not supported because of resource as value
                 if (in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)) {
+                    continue;
+                }
+
+                // Missing in JetBrains/phpstorm-stubs
+                if (
+                    in_array($constantName, ['IMAGETYPE_AVIF'], true)
+                ) {
                     continue;
                 }
 
