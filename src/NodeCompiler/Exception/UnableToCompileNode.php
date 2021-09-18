@@ -76,16 +76,19 @@ class UnableToCompileNode extends LogicException
 
     private static function compilerContextToContextDescription(CompilerContext $fetchContext): string
     {
-        if ($fetchContext->inClass() && $fetchContext->inFunction()) {
-            return sprintf('method %s::%s()', $fetchContext->getClass()->getName(), $fetchContext->getFunction()->getName());
+        $class    = $fetchContext->getClass();
+        $function = $fetchContext->getFunction();
+
+        if ($class !== null && $function !== null) {
+            return sprintf('method %s::%s()', $class->getName(), $function->getName());
         }
 
-        if ($fetchContext->inClass()) {
-            return sprintf('class %s', $fetchContext->getClass()->getName());
+        if ($class !== null) {
+            return sprintf('class %s', $class->getName());
         }
 
-        if ($fetchContext->inFunction()) {
-            return sprintf('function %s()', $fetchContext->getFunction()->getName());
+        if ($function !== null) {
+            return sprintf('function %s()', $function->getName());
         }
 
         return 'unknown context';

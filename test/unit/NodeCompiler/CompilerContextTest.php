@@ -11,7 +11,6 @@ use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use RuntimeException;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompilerContext
@@ -51,9 +50,7 @@ PHP;
         self::assertSame($reflector, $context->getReflector());
         self::assertNull($context->getFileName());
         self::assertSame($class->getNamespaceName(), $context->getNamespace());
-        self::assertTrue($context->inClass());
         self::assertSame($class, $context->getClass());
-        self::assertTrue($context->inFunction());
         self::assertSame($function, $context->getFunction());
     }
 
@@ -62,11 +59,7 @@ PHP;
         $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
         $context   = new CompilerContext($reflector, null, null, null, null);
 
-        self::assertFalse($context->inClass());
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The current context does not have a class');
-        $context->getClass();
+        self::assertNull($context->getClass());
     }
 
     public function testCreatingContextWithoutFunction(): void
@@ -74,11 +67,7 @@ PHP;
         $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
         $context   = new CompilerContext($reflector, null, null, null, null);
 
-        self::assertFalse($context->inFunction());
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The current context does not have a function');
-        $context->getFunction();
+        self::assertNull($context->getFunction());
     }
 
     public function testClassMagicConstantAsDefaultValueFromClass(): void

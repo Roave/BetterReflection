@@ -66,27 +66,29 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Method) {
-                if ($context->inClass() && $context->inFunction()) {
-                    return sprintf('%s::%s', $context->getClass()->getName(), $context->getFunction()->getName());
+                $class    = $context->getClass();
+                $function = $context->getFunction();
+
+                if ($class !== null && $function !== null) {
+                    return sprintf('%s::%s', $class->getName(), $function->getName());
                 }
 
-                if ($context->inFunction()) {
-                    return $context->getFunction()->getName();
+                if ($function !== null) {
+                    return $function->getName();
                 }
 
                 return '';
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Function_) {
-                return $context->inFunction() ? $context->getFunction()->getName() : '';
+                return $context->getFunction()?->getName() ?? '';
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Trait_) {
-                if ($context->inClass()) {
-                    $class = $context->getClass();
-                    if ($class->isTrait()) {
-                        return $class->getName();
-                    }
+                $class = $context->getClass();
+
+                if ($class !== null && $class->isTrait()) {
+                    return $class->getName();
                 }
 
                 return '';
@@ -149,9 +151,13 @@ class CompileNodeToValue
         $classInfo = null;
 
         if ($className === 'self' || $className === 'static') {
-            $classInfo = $context->getClass()->hasConstant($nodeName) ? $context->getClass() : null;
+            $classContext = $context->getClass();
+            assert($classContext !== null);
+            $classInfo = $classContext->hasConstant($nodeName) ? $classContext : null;
         } elseif ($className === 'parent') {
-            $classInfo = $context->getClass()->getParentClass();
+            $classContext = $context->getClass();
+            assert($classContext !== null);
+            $classInfo = $classContext->getParentClass();
         }
 
         if ($classInfo === null) {
@@ -172,7 +178,7 @@ class CompileNodeToValue
                 $context->getFileName(),
                 $context->getNamespace(),
                 $classInfo,
-                $context->inFunction() ? $context->getFunction() : null,
+                $context->getFunction(),
             ),
         );
     }
@@ -198,17 +204,20 @@ class CompileNodeToValue
      */
     private function compileClassConstant(CompilerContext $context): string
     {
-        return $context->inClass() ? $context->getClass()->getName() : '';
+        return $context->getClass()?->getName() ?? '';
     }
 
     private function resolveClassNameForClassNameConstant(string $className, CompilerContext $context): string
     {
+        $classContext = $context->getClass();
+        assert($classContext !== null);
+
         if ($className === 'self' || $className === 'static') {
-            return $context->getClass()->getName();
+            return $classContext->getName();
         }
 
         if ($className === 'parent') {
-            $parentClass = $context->getClass()->getParentClass();
+            $parentClass = $classContext->getParentClass();
             assert($parentClass instanceof ReflectionClass);
 
             return $parentClass->getName();
