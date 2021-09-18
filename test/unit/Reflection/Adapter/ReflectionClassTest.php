@@ -106,7 +106,6 @@ class ReflectionClassTest extends TestCase
             ['inNamespace', null, true, []],
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
-            ['isIterable', NotImplemented::class, null, []],
             ['getAttributes', NotImplemented::class, null, []],
         ];
     }
