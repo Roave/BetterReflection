@@ -193,8 +193,8 @@ class ReflectionSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // There are problems with some extensions
-                    return ! in_array($reflection->getExtensionName(), ['FFI', 'memcache', 'imagick'], true);
+                    // Check only always enabled extensions
+                    return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
                 },
             ),
         );
@@ -295,11 +295,17 @@ class ReflectionSourceStubberTest extends TestCase
         CoreReflectionParameter $original,
         ReflectionParameter $stubbed,
     ): void {
-        $parameterName = $original->getDeclaringClass()->getName()
-            . '#' . $originalMethod->getName()
-            . '.' . $original->getName();
+        $methodName    = $original->getDeclaringClass()->getName() . '#' . $originalMethod->getName();
+        $parameterName = $methodName . '.' . $original->getName();
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
+
+        if ($original->isDefaultValueAvailable()) {
+            self::assertSame($original->getDefaultValue(), $stubbed->getDefaultValue(), $parameterName);
+        } else {
+            self::assertSame($original->isDefaultValueAvailable(), $stubbed->isDefaultValueAvailable(), $parameterName);
+        }
+
         // @ because isArray() and isCallable() are deprecated
         self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
         self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
@@ -307,9 +313,7 @@ class ReflectionSourceStubberTest extends TestCase
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
-
         self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
-
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
 

@@ -437,10 +437,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $parameterNode = $this->builderFactory->param($parameterReflection->getName());
 
             $this->addParameterModifiers($parameterReflection, $parameterNode);
-
-            if ($parameterReflection->isOptional() && ! $parameterReflection->isVariadic()) {
-                $parameterNode->setDefault($this->parameterDefaultValue($parameterReflection, $functionReflectionAbstract));
-            }
+            $this->setParameterDefaultValue($parameterReflection, $parameterNode);
 
             $functionNode->addParam($parameterNode);
         }
@@ -466,15 +463,21 @@ final class ReflectionSourceStubber implements SourceStubber
         $parameterNode->setType($this->formatType($parameterType));
     }
 
-    private function parameterDefaultValue(
-        ReflectionParameter $parameterReflection,
-        CoreReflectionFunctionAbstract $functionReflectionAbstract,
-    ): mixed {
-        if ($functionReflectionAbstract->isInternal()) {
-            return null;
+    private function setParameterDefaultValue(ReflectionParameter $parameterReflection, Param $parameterNode): void
+    {
+        if (! $parameterReflection->isOptional()) {
+            return;
         }
 
-        return $parameterReflection->getDefaultValue();
+        if ($parameterReflection->isVariadic()) {
+            return;
+        }
+
+        if (! $parameterReflection->isDefaultValueAvailable()) {
+            return;
+        }
+
+        $parameterNode->setDefault($parameterReflection->getDefaultValue());
     }
 
     private function formatType(CoreReflectionNamedType|CoreReflectionUnionType $type): Name|FullyQualified|NullableType|UnionType
