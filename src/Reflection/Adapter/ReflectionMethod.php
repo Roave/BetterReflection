@@ -178,7 +178,7 @@ class ReflectionMethod extends CoreReflectionMethod
 
     public function hasReturnType(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionMethod->hasReturnType();
     }
 
     /**

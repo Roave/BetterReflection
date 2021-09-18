@@ -82,7 +82,7 @@ class ReflectionMethodTest extends TestCase
             ['getNumberOfParameters', null, 123, []],
             ['getNumberOfRequiredParameters', null, 123, []],
             ['getParameters', null, [$mockParameter], []],
-            ['hasReturnType', NotImplemented::class, null, []],
+            ['hasReturnType', null, true, []],
             ['getReturnType', null, $mockType, []],
             ['getShortName', null, '', []],
             ['getStaticVariables', NotImplemented::class, null, []],
