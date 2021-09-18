@@ -16,7 +16,6 @@ use function constant;
 use function defined;
 use function dirname;
 use function realpath;
-use function reset;
 use function sprintf;
 
 class CompileNodeToValue
@@ -109,8 +108,7 @@ class CompileNodeToValue
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context): string|int|float|bool|array|null
     {
-        $firstName = reset($constNode->name->parts);
-        switch ($firstName) {
+        switch ($constNode->name->toLowerString()) {
             case 'null':
                 return null;
 
@@ -121,12 +119,33 @@ class CompileNodeToValue
                 return true;
 
             default:
-                if (! defined($firstName)) {
-                    throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode);
+                $constantName = $constNode->name->toString();
+
+                if ($context->getNamespace() !== null && $constNode->name->isUnqualified()) {
+                    $namespacedConstantName = sprintf('%s\\%s', $context->getNamespace(), $constantName);
+
+                    try {
+                        return $this->getConstantValue($namespacedConstantName, $context);
+                    } catch (IdentifierNotFound) {
+                        // Try constant name without namespace
+                    }
                 }
 
-                return constant($firstName);
+                try {
+                    return $this->getConstantValue($constantName, $context);
+                } catch (IdentifierNotFound) {
+                    throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode, $constantName);
+                }
         }
+    }
+
+    private function getConstantValue(string $constantName, CompilerContext $context): mixed
+    {
+        if (defined($constantName)) {
+            return constant($constantName);
+        }
+
+        return $context->getReflector()->reflectConstant($constantName)->getValue();
     }
 
     /**
@@ -170,13 +189,7 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::becauseOfNotFoundClassConstantReference($context, $classInfo, $node);
         }
 
-        return $this->__invoke(
-            $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
-            new CompilerContext(
-                $context->getReflector(),
-                $classInfo,
-            ),
-        );
+        return $reflectionConstant->getValue();
     }
 
     /**

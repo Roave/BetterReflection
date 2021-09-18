@@ -42,6 +42,7 @@ final class UnableToCompileNodeTest extends TestCase
         $exception = UnableToCompileNode::becauseOfNotFoundConstantReference(
             $context,
             new ConstFetch(new Name($constantName)),
+            $constantName,
         );
 
         self::assertSame(

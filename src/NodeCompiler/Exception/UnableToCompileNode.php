@@ -10,7 +10,6 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 
 use function assert;
-use function reset;
 use function sprintf;
 
 class UnableToCompileNode extends LogicException
@@ -53,9 +52,8 @@ class UnableToCompileNode extends LogicException
     public static function becauseOfNotFoundConstantReference(
         CompilerContext $fetchContext,
         Node\Expr\ConstFetch $constantFetch,
+        string $constantName,
     ): self {
-        $constantName = reset($constantFetch->name->parts);
-
         $exception = new self(sprintf(
             'Could not locate constant "%s" while evaluating expression in %s in file %s (line %d)',
             $constantName,

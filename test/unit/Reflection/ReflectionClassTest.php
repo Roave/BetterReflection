@@ -674,6 +674,7 @@ PHP;
         )))->reflectClass('Foo');
 
         self::assertSame([
+            'fromTrait' => 'const',
             'hasDefault' => 123,
             'hasNullAsDefault' => null,
             'noDefault' => null,

@@ -11,7 +11,6 @@ use LogicException;
 use OutOfBoundsException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
-use PhpParser\Node\Expr;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
@@ -20,6 +19,7 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
@@ -32,7 +32,6 @@ use function is_object;
 use function is_string;
 use function preg_match;
 use function sprintf;
-use function strtolower;
 
 class ReflectionParameter
 {
@@ -43,6 +42,8 @@ class ReflectionParameter
     private ReflectionFunctionAbstract $function;
 
     private int $parameterIndex;
+
+    private bool $isDefaultValueParsed = false;
 
     /** @var scalar|array<scalar>|null */
     private string|int|float|bool|array|null $defaultValue = null;
@@ -161,13 +162,55 @@ class ReflectionParameter
     /**
      * @throws LogicException
      */
-    private function parseDefaultValueNode(): ?Expr
+    private function parseDefaultValueNode(): void
     {
         if (! $this->isDefaultValueAvailable()) {
             throw new LogicException('This parameter does not have a default value available');
         }
 
+        if ($this->isDefaultValueParsed) {
+            return;
+        }
+
+        $compilerContext = new CompilerContext(
+            $this->reflector,
+            $this,
+        );
+
         $defaultValueNode = $this->node->default;
+
+        if (
+            $defaultValueNode instanceof Node\Expr\ConstFetch
+            && ! in_array($defaultValueNode->name->toLowerString(), ['true', 'false', 'null'], true)
+        ) {
+            $this->isDefaultValueConstant = true;
+
+            $constantName = $defaultValueNode->name->toString();
+
+            if ($compilerContext->getNamespace() !== null && $defaultValueNode->name->isUnqualified()) {
+                $namespacedConstantName = sprintf('%s\\%s', $compilerContext->getNamespace(), $constantName);
+
+                try {
+                    $constantReflection = $this->reflector->reflectConstant($namespacedConstantName);
+
+                    $this->defaultValueConstantName = $constantReflection->getName();
+                    $this->defaultValue             = $constantReflection->getValue();
+                    $this->isDefaultValueParsed     = true;
+
+                    return;
+                } catch (IdentifierNotFound) {
+                    // Try constant name without namespace
+                }
+            }
+
+            $constantReflection = $this->reflector->reflectConstant($constantName);
+
+            $this->defaultValueConstantName = $constantReflection->getName();
+            $this->defaultValue             = $constantReflection->getValue();
+            $this->isDefaultValueParsed     = true;
+
+            return;
+        }
 
         if ($defaultValueNode instanceof Node\Expr\ClassConstFetch) {
             assert($defaultValueNode->class instanceof Node\Name);
@@ -176,31 +219,34 @@ class ReflectionParameter
             $className = $defaultValueNode->class->toString();
 
             if ($className === 'self' || $className === 'static') {
-                $constantName = $defaultValueNode->name->name;
-                $className    = $this->findParentClassDeclaringConstant($constantName);
+                $constantName = $defaultValueNode->name->toString();
+                $className    = $this->findClassDeclaringConstant($constantName);
             }
 
             $this->isDefaultValueConstant   = true;
             $this->defaultValueConstantName = $className . '::' . $defaultValueNode->name->name;
-        } elseif (
-            $defaultValueNode instanceof Node\Expr\ConstFetch
-            && ! in_array(strtolower($defaultValueNode->name->parts[0]), ['true', 'false', 'null'], true)
-        ) {
-            $this->isDefaultValueConstant   = true;
-            $this->defaultValueConstantName = $defaultValueNode->name->parts[0];
         }
 
-        return $defaultValueNode;
+        $this->defaultValue = (new CompileNodeToValue())->__invoke(
+            $defaultValueNode,
+            $compilerContext,
+        );
+
+        $this->isDefaultValueParsed = true;
     }
 
     /**
      * @throws LogicException
      */
-    private function findParentClassDeclaringConstant(string $constantName): string
+    private function findClassDeclaringConstant(string $constantName): string
     {
         $method = $this->function;
         assert($method instanceof ReflectionMethod);
-        $class = $method->getDeclaringClass();
+        $class = $method->getImplementingClass();
+
+        if ($constantName === 'class') {
+            return $class->getName();
+        }
 
         do {
             if ($class->hasConstant($constantName)) {
@@ -247,6 +293,15 @@ class ReflectionParameter
         return null;
     }
 
+    public function getImplementingClass(): ?ReflectionClass
+    {
+        if ($this->function instanceof ReflectionMethod) {
+            return $this->function->getImplementingClass();
+        }
+
+        return null;
+    }
+
     /**
      * Is the parameter optional?
      *
@@ -285,17 +340,7 @@ class ReflectionParameter
      */
     public function getDefaultValue(): string|int|float|bool|array|null
     {
-        $defaultValueNode = $this->parseDefaultValueNode();
-
-        if ($defaultValueNode) {
-            $this->defaultValue = (new CompileNodeToValue())->__invoke(
-                $defaultValueNode,
-                new CompilerContext(
-                    $this->reflector,
-                    $this,
-                ),
-            );
-        }
+        $this->parseDefaultValueNode();
 
         return $this->defaultValue;
     }

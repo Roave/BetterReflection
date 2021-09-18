@@ -62,7 +62,11 @@ class CompilerContext
             return null;
         }
 
-        return $this->contextReflection->getDeclaringClass();
+        if ($this->contextReflection instanceof ReflectionClassConstant) {
+            return $this->contextReflection->getDeclaringClass();
+        }
+
+        return $this->contextReflection->getImplementingClass();
     }
 
     public function getFunction(): ?ReflectionFunctionAbstract
