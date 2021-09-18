@@ -558,4 +558,17 @@ class ReflectionClass extends CoreReflectionClass
     {
         return $this->betterReflectionClass->getShortName();
     }
+
+    public function isIterable(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
 }
