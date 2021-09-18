@@ -89,4 +89,12 @@ class ReflectionClassConstant extends CoreReflectionClassConstant
     {
         return $this->betterClassConstant->__toString();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
 }
