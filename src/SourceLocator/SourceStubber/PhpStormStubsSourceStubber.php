@@ -257,6 +257,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     $nodeName                    = $node->namespacedName->toString();
                     $this->classNodes[$nodeName] = $node;
 
+                    foreach ($node->getConstants() as $constantsNode) {
+                        foreach ($constantsNode->consts as $constNode) {
+                            $constClassName = sprintf('%s::%s', $nodeName, $constNode->name->toString());
+                            $this->updateConstantValue($constNode, $constClassName);
+                        }
+                    }
+
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
 
@@ -270,8 +277,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
-                        /** @psalm-suppress UndefinedPropertyFetch */
-                        $constNodeName                       = $constNode->namespacedName->toString();
+                        $constNodeName = $constNode->namespacedName->toString();
+
+                        $this->updateConstantValue($constNode, $constNodeName);
+
                         $this->constantNodes[$constNodeName] = $node;
                     }
 
@@ -294,13 +303,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         $nameNode->value = $constantName;
                     }
 
-                    // Some constants has different values on different systems, some are not actual in stubs
-                    if (defined($constantName)) {
-                        // @ because access to deprecated constant throws deprecated warning
-                        /** @var scalar|scalar[]|null $constantValue */
-                        $constantValue        = @constant($constantName);
-                        $node->args[1]->value = BuilderHelpers::normalizeValue($constantValue);
-                    }
+                    $this->updateConstantValue($node, $constantName);
 
                     $this->constantNodes[$constantName] = $node;
 
@@ -347,6 +350,27 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 $this->classNodes    = [];
                 $this->functionNodes = [];
                 $this->constantNodes = [];
+            }
+
+            /**
+             * Some constants has different values on different systems, some are not actual in stubs.
+             */
+            private function updateConstantValue(Node\Expr\FuncCall|Node\Const_ $node, string $constantName): void
+            {
+                if (! defined($constantName)) {
+                    return;
+                }
+
+                // @ because access to deprecated constant throws deprecated warning
+                /** @var scalar|scalar[]|null $constantValue */
+                $constantValue           = @constant($constantName);
+                $normalizedConstantValue = BuilderHelpers::normalizeValue($constantValue);
+
+                if ($node instanceof Node\Expr\FuncCall) {
+                    $node->args[1]->value = $normalizedConstantValue;
+                } else {
+                    $node->value = $normalizedConstantValue;
+                }
             }
         };
     }

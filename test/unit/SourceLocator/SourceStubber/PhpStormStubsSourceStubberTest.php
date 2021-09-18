@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function array_filter;
@@ -30,6 +31,7 @@ use function get_declared_traits;
 use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
+use function realpath;
 use function sort;
 use function sprintf;
 
@@ -586,5 +588,46 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::expectException(IdentifierNotFound::class);
 
         $this->constantReflector->reflect($constantName);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testUpdateConstantValue(): void
+    {
+        require __DIR__ . '/../../Fixture/FakeConstants.php';
+
+        $sourceStubber = new PhpStormStubsSourceStubber(BetterReflectionSingleton::instance()->phpParser());
+
+        $stubberReflection = new CoreReflectionClass($sourceStubber);
+
+        $stubDirectoryReflection = $stubberReflection->getProperty('stubsDirectory');
+        $stubDirectoryReflection->setAccessible(true);
+        $stubDirectoryReflection->setValue($sourceStubber, FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture')));
+
+        $classMapReflection = $stubberReflection->getProperty('classMap');
+        $classMapReflection->setAccessible(true);
+        $classMapValue                                                     = $classMapReflection->getValue();
+        $classMapValue['roave\betterreflectiontest\fixture\fakeconstants'] = '/FakeConstantsStub.php';
+        $classMapReflection->setValue($classMapValue);
+
+        $constantMapReflection = $stubberReflection->getProperty('constantMap');
+        $constantMapReflection->setAccessible(true);
+        $constantMapValue                                                      = $constantMapReflection->getValue();
+        $constantMapValue['define_constant']                                   = '/FakeConstantsStub.php';
+        $constantMapValue['roave\betterreflectiontest\fixture\const_constant'] = '/FakeConstantsStub.php';
+        $constantMapReflection->setValue($constantMapValue);
+
+        $classConstantStub = $sourceStubber->generateClassStub('Roave\BetterReflectionTest\Fixture\FakeConstants');
+        self::assertNotNull($classConstantStub);
+        self::assertStringContainsString("const CLASS_CONSTANT = 'actualValue';", $classConstantStub->getStub());
+
+        $defineConstantStub = $sourceStubber->generateConstantStub('DEFINE_CONSTANT');
+        self::assertNotNull($defineConstantStub);
+        self::assertStringContainsString("define('DEFINE_CONSTANT', 'actualValue');", $defineConstantStub->getStub());
+
+        $constConstantStub = $sourceStubber->generateConstantStub('Roave\BetterReflectionTest\Fixture\CONST_CONSTANT');
+        self::assertNotNull($constConstantStub);
+        self::assertStringContainsString("const CONST_CONSTANT = 'actualValue';", $constConstantStub->getStub());
     }
 }
