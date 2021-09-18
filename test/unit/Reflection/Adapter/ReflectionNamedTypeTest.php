@@ -32,7 +32,9 @@ class ReflectionNamedTypeTest extends TestCase
     public function testCoreReflectionTypes(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
+
         self::assertTrue($reflectionTypeAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionNamedTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array

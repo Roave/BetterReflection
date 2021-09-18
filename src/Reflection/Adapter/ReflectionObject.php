@@ -495,6 +495,11 @@ class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isIterateable();
     }
 
+    public function isIterable(): bool
+    {
+        return $this->isIterateable();
+    }
+
     /**
      * @psalm-suppress MethodSignatureMismatch
      */
@@ -549,5 +554,18 @@ class ReflectionObject extends CoreReflectionObject
     public function getShortName()
     {
         return $this->betterReflectionObject->getShortName();
+    }
+
+    public function isAnonymous(): bool
+    {
+        return $this->betterReflectionObject->isAnonymous();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
     }
 }

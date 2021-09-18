@@ -38,7 +38,9 @@ class ReflectionFunctionTest extends TestCase
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionFunctionAdapterReflection = new CoreReflectionClass(ReflectionFunctionAdapter::class);
+
         self::assertTrue($reflectionFunctionAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionFunctionAdapter::class, $reflectionFunctionAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
@@ -71,12 +73,14 @@ class ReflectionFunctionTest extends TestCase
             ['getNumberOfParameters', null, 123, []],
             ['getNumberOfRequiredParameters', null, 123, []],
             ['getParameters', null, [$mockParameter], []],
+            ['hasReturnType', null, true, []],
             ['getReturnType', null, $mockType, []],
             ['getShortName', null, '', []],
             ['getStaticVariables', NotImplemented::class, null, []],
             ['returnsReference', null, true, []],
             ['isGenerator', null, true, []],
             ['isVariadic', null, true, []],
+            ['getAttributes', NotImplemented::class, null, []],
 
             // ReflectionFunction
             ['isDisabled', null, false, []],

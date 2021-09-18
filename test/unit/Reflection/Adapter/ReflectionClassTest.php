@@ -43,7 +43,9 @@ class ReflectionClassTest extends TestCase
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionClassAdapterReflection = new CoreReflectionClass(ReflectionClassAdapter::class);
+
         self::assertTrue($reflectionClassAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionClassAdapter::class, $reflectionClassAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
@@ -104,6 +106,7 @@ class ReflectionClassTest extends TestCase
             ['inNamespace', null, true, []],
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
+            ['getAttributes', NotImplemented::class, null, []],
         ];
     }
 

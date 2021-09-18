@@ -183,4 +183,17 @@ class ReflectionParameter extends CoreReflectionParameter
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionParameter->getType());
     }
+
+    public function isPromoted(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
 }

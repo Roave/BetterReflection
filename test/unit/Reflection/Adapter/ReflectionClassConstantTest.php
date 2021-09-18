@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
@@ -33,21 +34,24 @@ class ReflectionClassConstantTest extends TestCase
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionClassConstantAdapterReflection = new CoreReflectionClass(ReflectionClassConstantAdapter::class);
+
         self::assertTrue($reflectionClassConstantAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionClassConstantAdapter::class, $reflectionClassConstantAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
     {
         return [
-            ['__toString', '', []],
-            ['getName', '', []],
-            ['getValue', null, []],
-            ['isPublic', true, []],
-            ['isPrivate', true, []],
-            ['isProtected', true, []],
-            ['getModifiers', 123, []],
-            ['getDeclaringClass', $this->createMock(BetterReflectionClass::class), []],
-            ['getDocComment', '', []],
+            ['__toString', null, '', []],
+            ['getName', null, '', []],
+            ['getValue', null, null, []],
+            ['isPublic', null, true, []],
+            ['isPrivate', null, true, []],
+            ['isProtected', null, true, []],
+            ['getModifiers', null, 123, []],
+            ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
+            ['getDocComment', null, '', []],
+            ['getAttributes', NotImplemented::class, null, []],
         ];
     }
 
@@ -56,14 +60,20 @@ class ReflectionClassConstantTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, mixed $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
-        $reflectionStub->expects($this->once())
-            ->method($methodName)
-            ->with(...$args)
-            ->will($this->returnValue($returnValue));
+        if ($expectedException === null) {
+            $reflectionStub->expects($this->once())
+                ->method($methodName)
+                ->with(...$args)
+                ->will($this->returnValue($returnValue));
+        }
+
+        if ($expectedException !== null) {
+            $this->expectException($expectedException);
+        }
 
         $adapter = new ReflectionClassConstantAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);

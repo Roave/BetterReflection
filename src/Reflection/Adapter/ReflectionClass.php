@@ -503,6 +503,11 @@ class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->isIterateable();
     }
 
+    public function isIterable(): bool
+    {
+        return $this->isIterateable();
+    }
+
     /**
      * @psalm-suppress MethodSignatureMismatch
      */
@@ -557,5 +562,13 @@ class ReflectionClass extends CoreReflectionClass
     public function getShortName()
     {
         return $this->betterReflectionClass->getShortName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
     }
 }

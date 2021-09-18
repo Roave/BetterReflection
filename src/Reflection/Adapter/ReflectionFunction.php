@@ -172,6 +172,11 @@ class ReflectionFunction extends CoreReflectionFunction
         return $wrappedParameters;
     }
 
+    public function hasReturnType(): bool
+    {
+        return $this->betterReflectionFunction->hasReturnType();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -271,5 +276,13 @@ class ReflectionFunction extends CoreReflectionFunction
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
     }
 }

@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
@@ -36,7 +37,9 @@ class ReflectionParameterTest extends TestCase
     public function testCoreReflectionParameters(string $methodName): void
     {
         $reflectionParameterAdapterReflection = new CoreReflectionClass(ReflectionParameterAdapter::class);
+
         self::assertTrue($reflectionParameterAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionParameterAdapter::class, $reflectionParameterAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
@@ -72,6 +75,8 @@ class ReflectionParameterTest extends TestCase
             ['getDefaultValueConstantName', null, 'foo', []],
             ['hasType', null, true, []],
             ['getType', null, $mockType, []],
+            ['isPromoted', NotImplemented::class, null, []],
+            ['getAttributes', NotImplemented::class, null, []],
         ];
     }
 
