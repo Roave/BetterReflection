@@ -59,11 +59,6 @@
     "suggest": {
         "composer/composer": "Required to use the ComposerSourceLocator"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.0-dev"
-        }
-    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
