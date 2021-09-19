@@ -9,7 +9,7 @@
         "nikic/php-parser": "^4.12.0",
         "phpdocumentor/reflection-docblock": "^5.2.2",
         "phpdocumentor/type-resolver": "^1.5.0",
-        "roave/signature": "^1.4"
+        "roave/signature": "^1.5"
     },
     "authors": [
         {
@@ -39,8 +39,7 @@
         "phpstan/phpstan": "0.12.98",
         "phpunit/phpunit": "^9.5.9",
         "vimeo/psalm": "^4.10.0",
-        "roave/infection-static-analysis-plugin": "^1.9.0",
-        "infection/infection": "^0.24.0"
+        "roave/infection-static-analysis-plugin": "^1.10.0"
     },
     "autoload": {
         "psr-4": {
