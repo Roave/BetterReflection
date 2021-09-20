@@ -364,9 +364,6 @@ class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isInstance($object);
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
     public function newInstance(mixed ...$args): self
     {
         throw new Exception\NotImplemented('Not implemented');

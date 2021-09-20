@@ -77,9 +77,6 @@ class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->hasType();
     }
 
-    /**
-     * @psalm-suppress MismatchingDocblockReturnType
-     */
     public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionProperty->getType());

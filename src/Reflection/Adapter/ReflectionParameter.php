@@ -176,9 +176,6 @@ class ReflectionParameter extends CoreReflectionParameter
         return $this->betterReflectionParameter->hasType();
     }
 
-    /**
-     * @psalm-suppress MismatchingDocblockReturnType
-     */
     public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionParameter->getType());

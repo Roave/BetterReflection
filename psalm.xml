@@ -8,6 +8,7 @@
     totallyTyped="false"
     usePhpDocPropertiesWithoutMagicCall="true"
     allowPhpStormGenerics="true"
+    findUnusedPsalmSuppress="true"
 >
     <projectFiles>
         <directory name="src" />

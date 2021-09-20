@@ -140,10 +140,7 @@ class ReflectionConstant implements Reflection
             return $this->getNameFromDefineFunctionCall($this->node);
         }
 
-        /**
-         * @psalm-suppress UndefinedPropertyFetch
-         * @psalm-suppress PossiblyNullArrayOffset
-         */
+        /** @psalm-suppress PossiblyNullArrayOffset */
         return $this->node->consts[$this->positionInNode]->namespacedName->toString();
     }
 
@@ -218,7 +215,6 @@ class ReflectionConstant implements Reflection
             ? $this->node->args[1]->value
             : $this->node->consts[$this->positionInNode]->value;
 
-        /** @psalm-suppress UndefinedPropertyFetch */
         $this->value          = (new CompileNodeToValue())->__invoke(
             $valueNode,
             new CompilerContext($this->reflector, $this->getFileName(), $this->getNamespaceName(), null, null),
