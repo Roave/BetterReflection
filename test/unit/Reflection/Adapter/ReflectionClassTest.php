@@ -106,7 +106,7 @@ class ReflectionClassTest extends TestCase
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
             ['getAttributes', NotImplemented::class, null, []],
-            ['isEnum', NotImplemented::class, null, []],
+            ['isEnum', null, true, []],
         ];
     }
 

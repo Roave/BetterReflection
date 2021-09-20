@@ -9,6 +9,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Namespace_;
@@ -67,7 +68,7 @@ class ReflectionClass implements Reflection
 
     private LocatedSource $locatedSource;
 
-    private ClassNode|InterfaceNode|TraitNode $node;
+    private ClassNode|InterfaceNode|TraitNode|EnumNode $node;
 
     /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
     private ?array $cachedReflectionConstants = null;
@@ -131,12 +132,12 @@ class ReflectionClass implements Reflection
      *
      * @internal
      *
-     * @param ClassNode|InterfaceNode|TraitNode $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param NamespaceNode|null                $namespace optional - if omitted, we assume it is global namespaced class
+     * @param ClassNode|InterfaceNode|TraitNode|EnumNode $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param NamespaceNode|null                         $namespace optional - if omitted, we assume it is global namespaced class
      */
     public static function createFromNode(
         Reflector $reflector,
-        ClassNode|InterfaceNode|TraitNode $node,
+        ClassNode|InterfaceNode|TraitNode|EnumNode $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
     ): self {
@@ -1326,6 +1327,11 @@ class ReflectionClass implements Reflection
         return $this->isInstantiable() && $this->implementsInterface(Traversable::class);
     }
 
+    public function isEnum(): bool
+    {
+        return $this->node instanceof Node\Stmt\Enum_;
+    }
+
     /**
      * @return array<class-string, ReflectionClass>
      */
@@ -1461,7 +1467,7 @@ class ReflectionClass implements Reflection
     /**
      * Retrieve the AST node for this class
      */
-    public function getAst(): ClassNode|InterfaceNode|TraitNode
+    public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
     {
         return $this->node;
     }

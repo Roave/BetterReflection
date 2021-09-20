@@ -78,6 +78,7 @@ final class FindReflectionsInTree
                         $node instanceof Node\Stmt\Class_
                         || $node instanceof Node\Stmt\Interface_
                         || $node instanceof Node\Stmt\Trait_
+                        || $node instanceof Node\Stmt\Enum_
                     )
                 ) {
                     $classNamespace      = $node->name === null ? null : $this->currentNamespace;
