@@ -12,7 +12,7 @@ use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 use Roave\Signature\CheckerInterface;
 use Roave\Signature\SignerInterface;
 
-use function file_exists;
+use function is_file;
 use function sha1;
 use function uniqid;
 use function unlink;
@@ -79,7 +79,7 @@ final class FileCacheLoaderTest extends TestCase
         } catch (SignatureCheckFailed) {
             return;
         } finally {
-            if (file_exists($generatedFilename)) {
+            if (is_file($generatedFilename)) {
                 unlink($generatedFilename);
             }
         }

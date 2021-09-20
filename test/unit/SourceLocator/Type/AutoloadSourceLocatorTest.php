@@ -28,10 +28,10 @@ use Roave\BetterReflectionTest\Fixture\ClassNotInPhar;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 use function class_exists;
-use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function interface_exists;
+use function is_file;
 use function restore_error_handler;
 use function set_error_handler;
 use function spl_autoload_register;
@@ -342,8 +342,8 @@ class AutoloadSourceLocatorTest extends TestCase
             return false;
         }
 
-        self::assertFalse(file_exists(__DIR__ . '/AutoloadableClassWithTwoDirectories.php'));
-        self::assertTrue(file_exists(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
+        self::assertFalse(is_file(__DIR__ . '/AutoloadableClassWithTwoDirectories.php'));
+        self::assertTrue(is_file(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
 
         include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
 

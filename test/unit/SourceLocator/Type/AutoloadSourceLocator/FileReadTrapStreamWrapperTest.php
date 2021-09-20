@@ -12,8 +12,8 @@ use Throwable;
 use UnexpectedValueException;
 
 use function class_exists;
-use function file_exists;
 use function file_get_contents;
+use function is_file;
 use function uniqid;
 
 /**
@@ -37,8 +37,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should be null when being first used');
                     }
 
-                    if (! file_exists(__FILE__)) {
-                        throw new UnexpectedValueException('file_exists() should operate as usual');
+                    if (! is_file(__FILE__)) {
+                        throw new UnexpectedValueException('is_file() should operate as usual');
                     }
 
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
@@ -77,8 +77,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should be null when being first used');
                     }
 
-                    if (file_exists($nonExistingFilePath)) {
-                        throw new UnexpectedValueException('file_exists() should operate as usual - file does indeed not exist');
+                    if (is_file($nonExistingFilePath)) {
+                        throw new UnexpectedValueException('is_file() should operate as usual - file does indeed not exist');
                     }
 
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
@@ -115,8 +115,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should be null when being first used');
                     }
 
-                    if (! file_exists(__FILE__)) {
-                        throw new UnexpectedValueException('file_exists() should operate as usual - stream wrapper not active');
+                    if (! is_file(__FILE__)) {
+                        throw new UnexpectedValueException('is_file() should operate as usual - stream wrapper not active');
                     }
 
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
@@ -150,8 +150,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
                 'another value produced by the function',
                 FileReadTrapStreamWrapper::withStreamWrapperOverride(
                     static function () use ($thrown): string {
-                        if (! file_exists(__FILE__)) {
-                            throw new UnexpectedValueException('file_exists() should operate as usual');
+                        if (! is_file(__FILE__)) {
+                            throw new UnexpectedValueException('is_file() should operate as usual');
                         }
 
                         throw $thrown;
@@ -184,8 +184,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
             'another value produced by the function',
             FileReadTrapStreamWrapper::withStreamWrapperOverride(
                 static function () use ($nonExistingFile): string {
-                    if (file_exists($nonExistingFile)) {
-                        throw new UnexpectedValueException('file_exists() should report `false` for a non-existing file');
+                    if (is_file($nonExistingFile)) {
+                        throw new UnexpectedValueException('is_file() should report `false` for a non-existing file');
                     }
 
                     if (file_get_contents($nonExistingFile) !== false) {
