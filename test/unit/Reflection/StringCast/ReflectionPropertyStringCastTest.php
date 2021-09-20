@@ -32,6 +32,9 @@ class ReflectionPropertyStringCastTest extends TestCase
             ['protectedProperty', 'Property [ <default> protected $protectedProperty ]'],
             ['privateProperty', 'Property [ <default> private $privateProperty ]'],
             ['publicStaticProperty', 'Property [ public static $publicStaticProperty ]'],
+            ['namedTypeProperty', 'Property [ <default> public int $namedTypeProperty ]'],
+            ['unionTypeProperty', 'Property [ <default> public int|bool $unionTypeProperty ]'],
+            ['nullableTypeProperty', 'Property [ <default> public ?int $nullableTypeProperty ]'],
         ];
     }
 
