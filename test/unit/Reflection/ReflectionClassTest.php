@@ -760,6 +760,10 @@ PHP;
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(Fixture\FixtureParent::class, $classInfo->getName());
+
+        $parent = $classInfo->getParentClass();
+        self::assertNotNull($parent);
+        self::assertSame(Fixture\FixtureParent::class, $parent->getName());
     }
 
     public function testAnonymousClassWithInterface(): void
@@ -777,6 +781,7 @@ PHP;
         self::assertTrue($classInfo->isAnonymous());
         self::assertFalse($classInfo->inNamespace());
         self::assertStringStartsWith(Fixture\FixtureInterface::class, $classInfo->getName());
+        self::assertSame([Fixture\FixtureInterface::class, Fixture\FixtureSecondInterface::class], $classInfo->getInterfaceNames());
     }
 
     public function testIsAnonymousWithAnonymousClassInString(): void
