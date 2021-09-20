@@ -21,11 +21,14 @@ final class ReflectionPropertyStringCast
             $stateModifier = $propertyReflection->isDefault() ? ' <default>' : ' <dynamic>';
         }
 
+        $type = $propertyReflection->getType();
+
         return sprintf(
-            'Property [%s %s%s $%s ]',
+            'Property [%s %s%s%s $%s ]',
             $stateModifier,
             self::visibilityToString($propertyReflection),
             $propertyReflection->isStatic() ? ' static' : '',
+            $type !== null ? sprintf(' %s', $type->__toString()) : '',
             $propertyReflection->getName(),
         );
     }

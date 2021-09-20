@@ -35,6 +35,10 @@ abstract class StringCastClass extends StringCastClassParent implements StringCa
     public $publicProperty = true;
     public static $publicStaticProperty = null;
 
+    public int $namedTypeProperty = 0;
+    public int|bool $unionTypeProperty = false;
+    public ?int $nullableTypeProperty = null;
+
     public function __construct()
     {
     }
