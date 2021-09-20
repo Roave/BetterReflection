@@ -230,6 +230,11 @@ class ReflectionProperty
         }
     }
 
+    public function isReadOnly(): bool
+    {
+        return $this->node->isReadonly();
+    }
+
     /**
      * Get the DocBlock type hints as an array of strings.
      *

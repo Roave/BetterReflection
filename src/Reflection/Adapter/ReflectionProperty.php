@@ -165,6 +165,6 @@ final class ReflectionProperty extends CoreReflectionProperty
 
     public function isReadOnly(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionProperty->isReadOnly();
     }
 }
