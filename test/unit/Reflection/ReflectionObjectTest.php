@@ -184,7 +184,6 @@ class ReflectionObjectTest extends TestCase
             'createFromNode',
             'createFromInstance',
             '__toString',
-            'export',
             '__clone',
         ];
 
