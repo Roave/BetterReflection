@@ -69,7 +69,7 @@ class ReflectionClass implements Reflection
     private ClassLikeNode $node;
 
     /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
-    private ?array $cachedReflectionConstants = null;
+    private ?array $cachedConstants = null;
 
     /** @var array<string, ReflectionProperty>|null */
     private ?array $cachedImmediateProperties = null;
@@ -501,9 +501,9 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, scalar|array<scalar>|null>
      */
-    public function getImmediateConstants(): array
+    public function getImmediateConstantsValues(): array
     {
-        return array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $this->getImmediateReflectionConstants());
+        return array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $this->getImmediateConstants());
     }
 
     /**
@@ -512,9 +512,9 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, scalar|array<scalar>|null>
      */
-    public function getConstants(): array
+    public function getConstantsValues(): array
     {
-        return array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $this->getReflectionConstants());
+        return array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $this->getConstants());
     }
 
     /**
@@ -524,9 +524,9 @@ class ReflectionClass implements Reflection
      *
      * @return scalar|array<scalar>|null
      */
-    public function getConstant(string $name): string|int|float|bool|array|null
+    public function getConstantValue(string $name): string|int|float|bool|array|null
     {
-        $reflectionConstant = $this->getReflectionConstant($name);
+        $reflectionConstant = $this->getConstant($name);
 
         if (! $reflectionConstant) {
             return null;
@@ -540,7 +540,7 @@ class ReflectionClass implements Reflection
      */
     public function hasConstant(string $name): bool
     {
-        return $this->getReflectionConstant($name) !== null;
+        return $this->getConstant($name) !== null;
     }
 
     /**
@@ -548,9 +548,9 @@ class ReflectionClass implements Reflection
      *
      * Returns null if not specified.
      */
-    public function getReflectionConstant(string $name): ?ReflectionClassConstant
+    public function getConstant(string $name): ?ReflectionClassConstant
     {
-        return $this->getReflectionConstants()[$name] ?? null;
+        return $this->getConstants()[$name] ?? null;
     }
 
     /**
@@ -559,10 +559,10 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, ReflectionClassConstant> indexed by name
      */
-    public function getImmediateReflectionConstants(): array
+    public function getImmediateConstants(): array
     {
-        if ($this->cachedReflectionConstants !== null) {
-            return $this->cachedReflectionConstants;
+        if ($this->cachedConstants !== null) {
+            return $this->cachedConstants;
         }
 
         $constants = array_merge(
@@ -584,7 +584,7 @@ class ReflectionClass implements Reflection
             ),
         );
 
-        return $this->cachedReflectionConstants = array_combine(
+        return $this->cachedConstants = array_combine(
             array_map(
                 static fn (ReflectionClassConstant $constant): string => $constant->getName(),
                 $constants,
@@ -599,24 +599,24 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, ReflectionClassConstant> indexed by name
      */
-    public function getReflectionConstants(): array
+    public function getConstants(): array
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
         /** @var ReflectionClassConstant[] $allReflectionConstants */
         $allReflectionConstants = array_merge(
-            array_values($this->getImmediateReflectionConstants()),
+            array_values($this->getImmediateConstants()),
             ...array_map(
                 static function (ReflectionClass $ancestor): array {
                     return array_filter(
-                        array_values($ancestor->getReflectionConstants()),
+                        array_values($ancestor->getConstants()),
                         static fn (ReflectionClassConstant $classConstant): bool => ! $classConstant->isPrivate(),
                     );
                 },
                 array_filter([$this->getParentClass()]),
             ),
             ...array_map(
-                static fn (ReflectionClass $interface): array => array_values($interface->getReflectionConstants()),
+                static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
                 array_values($this->getInterfaces()),
             ),
         );

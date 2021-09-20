@@ -41,7 +41,7 @@ final class ReflectionClassStringCast
 
         $type = self::typeToString($classReflection);
 
-        $constants         = $classReflection->getReflectionConstants();
+        $constants         = $classReflection->getConstants();
         $staticProperties  = self::getStaticProperties($classReflection);
         $staticMethods     = self::getStaticMethods($classReflection);
         $defaultProperties = self::getDefaultProperties($classReflection);

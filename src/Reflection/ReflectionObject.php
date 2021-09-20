@@ -178,6 +178,37 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
+    public function getImmediateConstantsValues(): array
+    {
+        return $this->reflectionClass->getImmediateConstantsValues();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConstantsValues(): array
+    {
+        return $this->reflectionClass->getConstantsValues();
+    }
+
+    public function getConstantValue(string $name): string|int|float|bool|array|null
+    {
+        return $this->reflectionClass->getConstantValue($name);
+    }
+
+    public function hasConstant(string $name): bool
+    {
+        return $this->reflectionClass->hasConstant($name);
+    }
+
+    public function getConstant(string $name): ?ReflectionClassConstant
+    {
+        return $this->reflectionClass->getConstant($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getImmediateConstants(): array
     {
         return $this->reflectionClass->getImmediateConstants();
@@ -189,37 +220,6 @@ class ReflectionObject extends ReflectionClass
     public function getConstants(): array
     {
         return $this->reflectionClass->getConstants();
-    }
-
-    public function getConstant(string $name): string|int|float|bool|array|null
-    {
-        return $this->reflectionClass->getConstant($name);
-    }
-
-    public function hasConstant(string $name): bool
-    {
-        return $this->reflectionClass->hasConstant($name);
-    }
-
-    public function getReflectionConstant(string $name): ?ReflectionClassConstant
-    {
-        return $this->reflectionClass->getReflectionConstant($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getImmediateReflectionConstants(): array
-    {
-        return $this->reflectionClass->getImmediateReflectionConstants();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReflectionConstants(): array
-    {
-        return $this->reflectionClass->getReflectionConstants();
     }
 
     public function getConstructor(): ReflectionMethod

@@ -255,7 +255,7 @@ class ReflectionSourceStubberTest extends TestCase
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
-        self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        self::assertEquals($original->getConstants(), $stubbed->getConstantsValues());
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void

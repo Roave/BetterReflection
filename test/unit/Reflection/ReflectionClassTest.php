@@ -309,38 +309,38 @@ class ReflectionClassTest extends TestCase
             'MY_CONST_3' => 345,
             'MY_CONST_4' => 456,
             'MY_CONST_5' => 567,
-        ], $classInfo->getConstants());
+        ], $classInfo->getConstantsValues());
     }
 
     public function testGetConstant(): void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        self::assertSame(123, $classInfo->getConstant('MY_CONST_1'));
-        self::assertSame(234, $classInfo->getConstant('MY_CONST_2'));
-        self::assertSame(345, $classInfo->getConstant('MY_CONST_3'));
-        self::assertSame(456, $classInfo->getConstant('MY_CONST_4'));
-        self::assertSame(567, $classInfo->getConstant('MY_CONST_5'));
-        self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
+        self::assertSame(123, $classInfo->getConstantValue('MY_CONST_1'));
+        self::assertSame(234, $classInfo->getConstantValue('MY_CONST_2'));
+        self::assertSame(345, $classInfo->getConstantValue('MY_CONST_3'));
+        self::assertSame(456, $classInfo->getConstantValue('MY_CONST_4'));
+        self::assertSame(567, $classInfo->getConstantValue('MY_CONST_5'));
+        self::assertNull($classInfo->getConstantValue('NON_EXISTENT_CONSTANT'));
     }
 
     public function testGetReflectionConstants(): void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        self::assertCount(5, $classInfo->getReflectionConstants());
+        self::assertCount(5, $classInfo->getConstants());
     }
 
     public function testGetReflectionConstant(): void
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        self::assertSame(123, $classInfo->getReflectionConstant('MY_CONST_1')->getValue());
-        self::assertSame(234, $classInfo->getReflectionConstant('MY_CONST_2')->getValue());
-        self::assertSame(345, $classInfo->getReflectionConstant('MY_CONST_3')->getValue());
-        self::assertSame(456, $classInfo->getReflectionConstant('MY_CONST_4')->getValue());
-        self::assertSame(567, $classInfo->getReflectionConstant('MY_CONST_5')->getValue());
-        self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
+        self::assertSame(123, $classInfo->getConstant('MY_CONST_1')->getValue());
+        self::assertSame(234, $classInfo->getConstant('MY_CONST_2')->getValue());
+        self::assertSame(345, $classInfo->getConstant('MY_CONST_3')->getValue());
+        self::assertSame(456, $classInfo->getConstant('MY_CONST_4')->getValue());
+        self::assertSame(567, $classInfo->getConstant('MY_CONST_5')->getValue());
+        self::assertNull($classInfo->getConstantValue('NON_EXISTENT_CONSTANT'));
     }
 
     public function testGetConstructor(): void
@@ -1772,7 +1772,7 @@ PHP;
             'BAR_DEFAULT' => 4,
         ];
 
-        self::assertSame($expectedConstants, $reflection->getConstants());
+        self::assertSame($expectedConstants, $reflection->getConstantsValues());
 
         array_walk(
             $expectedConstants,
@@ -1780,7 +1780,7 @@ PHP;
                 self::assertTrue($reflection->hasConstant($constantName), 'Constant ' . $constantName . ' not set');
                 self::assertSame(
                     $constantValue,
-                    $reflection->getConstant($constantName),
+                    $reflection->getConstantValue($constantName),
                     'Constant value for ' . $constantName . ' does not match',
                 );
             },
@@ -1802,7 +1802,7 @@ PHP;
             'B' => 'b',
         ];
 
-        self::assertSame($expectedConstants, $classInfo->getConstants());
+        self::assertSame($expectedConstants, $classInfo->getConstantsValues());
     }
 
     public function testGetImmediateConstants(): void
@@ -1812,7 +1812,7 @@ PHP;
             $this->astLocator,
         )))->reflect('Next');
 
-        self::assertSame(['F' => 'ff'], $classInfo->getImmediateConstants());
+        self::assertSame(['F' => 'ff'], $classInfo->getImmediateConstantsValues());
     }
 
     public function testGetReflectionConstantsReturnsInheritedConstants(): void
@@ -1830,7 +1830,7 @@ PHP;
             'B' => 'b',
         ];
 
-        $reflectionConstants = $classInfo->getReflectionConstants();
+        $reflectionConstants = $classInfo->getConstants();
 
         self::assertCount(5, $reflectionConstants);
         self::assertContainsOnlyInstancesOf(ReflectionClassConstant::class, $reflectionConstants);
@@ -1856,7 +1856,7 @@ PHP;
             $this->astLocator,
         )))->reflect('Next');
 
-        $reflectionConstants = $classInfo->getImmediateReflectionConstants();
+        $reflectionConstants = $classInfo->getImmediateConstants();
 
         self::assertCount(1, $reflectionConstants);
         self::assertArrayHasKey('F', $reflectionConstants);
@@ -1882,7 +1882,7 @@ PHP;
 
         $classInfo = (new ClassReflector(new StringSourceLocator($php, $this->astLocator)))->reflect('Foo');
 
-        $constants = $classInfo->getConstants();
+        $constants = $classInfo->getConstantsValues();
 
         self::assertCount(2, $constants);
         self::assertSame($expectedConstants, $constants);

@@ -269,11 +269,11 @@ PHP;
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Foo');
 
-        self::assertSame(1, $classInfo->getReflectionConstant('SECOND')->getValue());
-        self::assertSame(60, $classInfo->getReflectionConstant('MINUTE')->getValue());
-        self::assertSame(3600, $classInfo->getReflectionConstant('HOUR')->getValue());
-        self::assertSame(86400, $classInfo->getReflectionConstant('DAY')->getValue());
-        self::assertSame(604800, $classInfo->getReflectionConstant('WEEK')->getValue());
+        self::assertSame(1, $classInfo->getConstant('SECOND')->getValue());
+        self::assertSame(60, $classInfo->getConstant('MINUTE')->getValue());
+        self::assertSame(3600, $classInfo->getConstant('HOUR')->getValue());
+        self::assertSame(86400, $classInfo->getConstant('DAY')->getValue());
+        self::assertSame(604800, $classInfo->getConstant('WEEK')->getValue());
     }
 
     public function testClassConstantResolutionExternalForMethod(): void
@@ -326,7 +326,7 @@ PHP;
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bat');
-        self::assertSame('Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('Foo', $classInfo->getConstantValue('QUX'));
     }
 
     public function testClassConstantClassNameNamespaceResolution(): void
@@ -343,7 +343,7 @@ PHP;
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
-        self::assertSame('Bar\Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('Bar\Foo', $classInfo->getConstantValue('QUX'));
     }
 
     public function testClassConstantClassNameOutOfScopeResolution(): void
@@ -360,7 +360,7 @@ PHP;
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
-        self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('My\Awesome\Foo', $classInfo->getConstantValue('QUX'));
     }
 
     public function testClassConstantClassNameAliasedResolution(): void
@@ -377,7 +377,7 @@ PHP;
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflect('Bar\Bat');
-        self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('My\Awesome\Foo', $classInfo->getConstantValue('QUX'));
     }
 
     public function testClassConstantResolutionFromParent(): void

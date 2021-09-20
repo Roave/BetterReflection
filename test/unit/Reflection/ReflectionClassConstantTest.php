@@ -29,7 +29,7 @@ class ReflectionClassConstantTest extends TestCase
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
 
-        return $classInfo->getReflectionConstant($name);
+        return $classInfo->getConstant($name);
     }
 
     public function testDefaultVisibility(): void
@@ -95,7 +95,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         $reflector = new ClassReflector($this->getComposerLocator());
         $classInfo = $reflector->reflect(ExampleClass::class);
-        $const     = $classInfo->getReflectionConstant('MY_CONST_1');
+        $const     = $classInfo->getConstant('MY_CONST_1');
         self::assertSame($classInfo, $const->getDeclaringClass());
     }
 
@@ -106,7 +106,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         $reflector       = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection = $reflector->reflect('\T');
-        $constReflection = $classReflection->getReflectionConstant('TEST');
+        $constReflection = $classReflection->getConstant('TEST');
         self::assertEquals($startLine, $constReflection->getStartLine());
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
@@ -137,7 +137,7 @@ class ReflectionClassConstantTest extends TestCase
     {
         $reflector          = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection    = $reflector->reflect('T');
-        $constantReflection = $classReflection->getReflectionConstant('TEST');
+        $constantReflection = $classReflection->getConstant('TEST');
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
@@ -167,7 +167,7 @@ PHP;
 
         $reflector          = new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection    = $reflector->reflect('Foo');
-        $constantReflection = $classReflection->getReflectionConstant($constantName);
+        $constantReflection = $classReflection->getConstant($constantName);
 
         $ast = $constantReflection->getAst();
 

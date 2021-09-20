@@ -77,9 +77,9 @@ class ReflectionObjectTest extends TestCase
             ['getProperty', null, $mockProperty, ['foo']],
             ['getProperties', null, [$mockProperty], []],
             ['hasConstant', null, true, ['foo']],
-            ['getConstant', null, 'a', ['foo']],
-            ['getReflectionConstant', null, $mockConstant, ['foo']],
-            ['getReflectionConstants', null, [$mockConstant], []],
+            ['getConstantValue', null, 'a', ['foo']],
+            ['getConstant', null, $mockConstant, ['foo']],
+            ['getConstants', null, [$mockConstant], []],
             ['getInterfaces', null, [$mockClassLike], []],
             ['getInterfaceNames', null, ['a', 'b'], []],
             ['isInterface', null, true, []],
@@ -512,7 +512,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionObject
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -544,7 +544,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('NON_EXISTENT_CONSTANT')
             ->willReturn(null);
 
@@ -560,7 +560,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('SOME_CONSTANT')
             ->willReturn($betterReflectionClassConstant);
 
@@ -576,7 +576,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([$betterReflectionClassConstant]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);

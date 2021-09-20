@@ -264,7 +264,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionClass
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -335,7 +335,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionClass
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -679,7 +679,7 @@ class ReflectionClassTest extends TestCase
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('FOO')
             ->willReturn(null);
 

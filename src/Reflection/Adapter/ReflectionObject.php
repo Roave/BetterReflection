@@ -202,7 +202,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getConstants(?int $filter = null): array
     {
-        $reflectionConstants = $this->betterReflectionObject->getReflectionConstants();
+        $reflectionConstants = $this->betterReflectionObject->getConstants();
 
         if ($filter !== null) {
             $reflectionConstants = array_filter(
@@ -222,7 +222,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getConstant($name)
     {
-        return $this->betterReflectionObject->getConstant($name);
+        return $this->betterReflectionObject->getConstantValue($name);
     }
 
     /**
@@ -230,7 +230,7 @@ class ReflectionObject extends CoreReflectionObject
      */
     public function getReflectionConstant($name)
     {
-        $betterReflectionConstant = $this->betterReflectionObject->getReflectionConstant($name);
+        $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
 
         if ($betterReflectionConstant === null) {
             return false;
@@ -246,7 +246,7 @@ class ReflectionObject extends CoreReflectionObject
     {
         return array_values(array_map(
             static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant),
-            $this->betterReflectionObject->getReflectionConstants(),
+            $this->betterReflectionObject->getConstants(),
         ));
     }
 
