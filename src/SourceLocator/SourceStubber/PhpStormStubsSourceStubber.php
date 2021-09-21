@@ -396,6 +396,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
         }
 
+        // @codeCoverageIgnoreStart
+        // Untestable code
         throw CouldNotFindPhpStormStubs::create();
+        // @codeCoverageIgnoreEnd
     }
 }

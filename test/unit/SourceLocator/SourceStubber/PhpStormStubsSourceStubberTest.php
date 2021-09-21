@@ -591,6 +591,15 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /**
+     * The second search should use optimization, see code coverage.
+     */
+    public function testCaseSensitiveConstantSearchOptimization(): void
+    {
+        self::assertNull($this->sourceStubber->generateConstantStub('date_atom'));
+        self::assertNull($this->sourceStubber->generateConstantStub('date_atom'));
+    }
+
+    /**
      * @runInSeparateProcess
      */
     public function testUpdateConstantValue(): void
