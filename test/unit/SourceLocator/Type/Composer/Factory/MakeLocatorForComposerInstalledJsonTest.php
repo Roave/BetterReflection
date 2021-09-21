@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
+use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingInstalledJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForInstalledJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
@@ -255,6 +256,17 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
         ];
 
         return array_combine(array_column($expectedLocators, 0), $expectedLocators);
+    }
+
+    public function testWillFailToProduceLocatorForProjectWithoutComposerJson(): void
+    {
+        $this->expectException(MissingComposerJson::class);
+
+        (new MakeLocatorForInstalledJson())
+            ->__invoke(
+                __DIR__ . '/../../../../Assets/ComposerLocators/project-without-composer.json',
+                BetterReflectionSingleton::instance()->astLocator(),
+            );
     }
 
     public function testWillFailToProduceLocatorForProjectWithoutInstalledJson(): void
