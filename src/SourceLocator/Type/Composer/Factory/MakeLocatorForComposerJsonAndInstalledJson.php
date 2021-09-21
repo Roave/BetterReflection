@@ -21,10 +21,10 @@ use function array_filter;
 use function array_map;
 use function array_merge;
 use function array_merge_recursive;
-use function file_exists;
 use function file_get_contents;
 use function is_array;
 use function is_dir;
+use function is_file;
 use function json_decode;
 use function realpath;
 use function rtrim;
@@ -41,7 +41,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
         $composerJsonPath = $realInstallationPath . '/composer.json';
 
-        if (! file_exists($composerJsonPath)) {
+        if (! is_file($composerJsonPath)) {
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
@@ -57,7 +57,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
         $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
 
-        if (! file_exists($installedJsonPath)) {
+        if (! is_file($installedJsonPath)) {
             throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 

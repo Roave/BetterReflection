@@ -30,7 +30,7 @@ class FileCheckerTest extends TestCase
     public function testCheckFileThrowsExceptionIfFileDoesNotExist(): void
     {
         $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('File "sdklfjdfslsdfhlkjsdglkjsdflgkj" does not exist');
+        $this->expectExceptionMessage('"sdklfjdfslsdfhlkjsdglkjsdflgkj" is not a file');
         FileChecker::assertReadableFile('sdklfjdfslsdfhlkjsdglkjsdflgkj');
     }
 
