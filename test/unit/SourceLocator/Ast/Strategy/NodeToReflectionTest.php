@@ -187,18 +187,4 @@ class NodeToReflectionTest extends TestCase
         self::assertInstanceOf(ReflectionConstant::class, $reflection);
         self::assertSame('FOO', $reflection->getName());
     }
-
-    public function testReturnsNullWhenIncompatibleNodeFound(): void
-    {
-        $reflector = $this->createMock(Reflector::class);
-
-        $locatedSource = new LocatedSource('<?php echo "Hello world";', null);
-
-        self::assertNull((new NodeToReflection())->__invoke(
-            $reflector,
-            $this->getFirstAstNodeInString($locatedSource->getSource()),
-            $locatedSource,
-            null,
-        ));
-    }
 }

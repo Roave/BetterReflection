@@ -161,7 +161,7 @@ final class ClosureSourceLocator implements SourceLocator
             new LocatedSource($fileContents, $fileName),
             $closureNodes['namespace'],
         );
-        assert($reflectionFunction instanceof ReflectionFunction || $reflectionFunction === null);
+        assert($reflectionFunction instanceof ReflectionFunction);
 
         return $reflectionFunction;
     }

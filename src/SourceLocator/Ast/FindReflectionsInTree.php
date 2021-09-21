@@ -13,7 +13,9 @@ use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
-use Roave\BetterReflection\Reflection\Reflection;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -43,7 +45,7 @@ final class FindReflectionsInTree
      *
      * @param Node[] $ast
      *
-     * @return Reflection[]
+     * @return list<ReflectionClass|ReflectionFunction|ReflectionConstant>
      */
     public function __invoke(
         Reflector $reflector,
@@ -53,7 +55,7 @@ final class FindReflectionsInTree
     ): array {
         $nodeVisitor = new class ($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke()) extends NodeVisitorAbstract
         {
-            /** @var Reflection[] */
+            /** @var list<ReflectionClass|ReflectionFunction|ReflectionConstant> */
             private array $reflections = [];
 
             private ?Namespace_ $currentNamespace = null;
@@ -147,7 +149,7 @@ final class FindReflectionsInTree
             }
 
             /**
-             * @return Reflection[]
+             * @return list<ReflectionClass|ReflectionFunction|ReflectionConstant>
              */
             public function getReflections(): array
             {
