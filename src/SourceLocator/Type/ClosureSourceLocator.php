@@ -82,7 +82,7 @@ final class ClosureSourceLocator implements SourceLocator
 
         $nodeVisitor = new class ($fileName, $this->coreFunctionReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            /** @var (Node|null)[][] */
+            /** @var list<array{node: Node\Expr\Closure|Node\Expr\ArrowFunction, namespace: Namespace_|null}> */
             private array $closureNodes = [];
 
             private ?Namespace_ $currentNamespace = null;
@@ -103,7 +103,7 @@ final class ClosureSourceLocator implements SourceLocator
                 }
 
                 if ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction) {
-                    $this->closureNodes[] = [$node, $this->currentNamespace];
+                    $this->closureNodes[] = ['node' => $node, 'namespace' => $this->currentNamespace];
                 }
 
                 return null;
@@ -124,15 +124,14 @@ final class ClosureSourceLocator implements SourceLocator
             }
 
             /**
-             * @return (Node|null)[]
+             * @return array{node: Node\Expr\Closure|Node\Expr\ArrowFunction, namespace: Namespace_|null}
              *
              * @throws NoClosureOnLine
              * @throws TwoClosuresOnSameLine
              */
             public function getClosureNodes(): array
             {
-                /** @var (Node|null)[][] $closureNodesDataOnSameLine */
-                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, fn (array $nodes): bool => $nodes[0]->getLine() === $this->startLine));
+                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, fn (array $nodes): bool => $nodes['node']->getLine() === $this->startLine));
 
                 if (! $closureNodesDataOnSameLine) {
                     throw NoClosureOnLine::create($this->fileName, $this->startLine);
@@ -155,13 +154,12 @@ final class ClosureSourceLocator implements SourceLocator
         $nodeTraverser->traverse($ast);
 
         $closureNodes = $nodeVisitor->getClosureNodes();
-        assert($closureNodes[1] instanceof Namespace_ || $closureNodes[1] === null);
 
         $reflectionFunction = (new NodeToReflection())->__invoke(
             $reflector,
-            $closureNodes[0],
+            $closureNodes['node'],
             new LocatedSource($fileContents, $fileName),
-            $closureNodes[1],
+            $closureNodes['namespace'],
         );
         assert($reflectionFunction instanceof ReflectionFunction || $reflectionFunction === null);
 
