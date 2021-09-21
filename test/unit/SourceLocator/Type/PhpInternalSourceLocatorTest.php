@@ -15,6 +15,8 @@ use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
@@ -216,6 +218,27 @@ class PhpInternalSourceLocatorTest extends TestCase
                 new Identifier(
                     'foo',
                     new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
+                ),
+            ),
+        );
+    }
+
+    public function testReturnsNullForNonInternal(): void
+    {
+        $sourceStubber = $this->createMock(SourceStubber::class);
+        $sourceStubber
+            ->method('generateClassStub')
+            ->with('Foo')
+            ->willReturn(new StubData('stub', null));
+
+        $phpInternalSourceLocator = new PhpInternalSourceLocator(BetterReflectionSingleton::instance()->astLocator(), $sourceStubber);
+
+        self::assertNull(
+            $phpInternalSourceLocator->locateIdentifier(
+                $this->getMockReflector(),
+                new Identifier(
+                    'Foo',
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 ),
             ),
         );
