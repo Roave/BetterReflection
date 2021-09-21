@@ -28,12 +28,12 @@ use function array_reverse;
 use function assert;
 use function class_exists;
 use function defined;
-use function file_exists;
 use function file_get_contents;
 use function function_exists;
 use function get_defined_constants;
 use function get_included_files;
 use function interface_exists;
+use function is_file;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
@@ -79,7 +79,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         $potentiallyLocatedFile = $this->attemptAutoloadForIdentifier($identifier);
 
-        if (! ($potentiallyLocatedFile && file_exists($potentiallyLocatedFile))) {
+        if (! ($potentiallyLocatedFile && is_file($potentiallyLocatedFile))) {
             return null;
         }
 

@@ -14,9 +14,9 @@ use Roave\Signature\FileContentChecker;
 use Roave\Signature\FileContentSigner;
 use Roave\Signature\SignerInterface;
 
-use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
+use function is_file;
 use function sha1;
 use function str_replace;
 
@@ -39,7 +39,7 @@ final class FileCacheLoader implements LoaderMethodInterface
     {
         $filename = $this->cacheDirectory . '/' . sha1($classInfo->getName());
 
-        if (! file_exists($filename)) {
+        if (! is_file($filename)) {
             $code = "<?php\n" . $this->classPrinter->__invoke($classInfo);
             file_put_contents(
                 $filename,
