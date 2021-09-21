@@ -260,6 +260,33 @@ PHP;
         );
     }
 
+    public function testNoConstantForInvalidDefine(): void
+    {
+        $strategy = $this->createMock(NodeToReflection::class);
+
+        $strategy->expects($this->never())
+            ->method('__invoke');
+
+        $reflector     = $this->createMock(Reflector::class);
+        $source        = <<<'PHP'
+<?php
+
+$foo = 'foo';
+define($foo, 1);
+PHP;
+        $locatedSource = new LocatedSource($source, null);
+
+        self::assertSame(
+            [],
+            $this->createFindReflectionsInTree($strategy)->__invoke(
+                $reflector,
+                $this->getAstForSource($locatedSource),
+                new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
+                $locatedSource,
+            ),
+        );
+    }
+
     public function testNoInvokeCallsReflectNodesForClassConstant(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
