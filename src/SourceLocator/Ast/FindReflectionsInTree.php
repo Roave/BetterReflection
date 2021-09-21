@@ -78,76 +78,56 @@ final class FindReflectionsInTree
                     return null;
                 }
 
-                if ($node instanceof Node\Stmt\ClassLike) {
-                    $classNamespace = $node->name === null ? null : $this->currentNamespace;
-                    $reflection     = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
-
-                    if ($this->identifierType->isMatchingReflector($reflection)) {
-                        $this->reflections[] = $reflection;
-                    }
+                if ($this->identifierType->isClass() && $node instanceof Node\Stmt\ClassLike) {
+                    $classNamespace      = $node->name === null ? null : $this->currentNamespace;
+                    $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
 
                     return null;
                 }
 
-                if ($node instanceof Node\Stmt\ClassConst) {
-                    return null;
-                }
-
-                if ($node instanceof Node\Stmt\Const_) {
-                    for ($i = 0; $i < count($node->consts); $i++) {
-                        $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace, $i);
-
-                        if (! $this->identifierType->isMatchingReflector($reflection)) {
-                            continue;
+                if ($this->identifierType->isConstant()) {
+                    if ($node instanceof Node\Stmt\Const_) {
+                        for ($i = 0; $i < count($node->consts); $i++) {
+                            $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace, $i);
                         }
 
-                        $this->reflections[] = $reflection;
-                    }
-
-                    return null;
-                }
-
-                if ($node instanceof Node\Expr\FuncCall) {
-                    try {
-                        ConstantNodeChecker::assertValidDefineFunctionCall($node);
-                    } catch (InvalidConstantNode) {
                         return null;
                     }
 
-                    if ($node->name->hasAttribute('namespacedName')) {
-                        $namespacedName = $node->name->getAttribute('namespacedName');
-                        assert($namespacedName instanceof Name);
-                        if (count($namespacedName->parts) > 1) {
-                            try {
-                                $this->functionReflector->reflect($namespacedName->toString());
+                    if ($node instanceof Node\Expr\FuncCall) {
+                        try {
+                            ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                        } catch (InvalidConstantNode) {
+                            return null;
+                        }
 
-                                return null;
-                            } catch (IdentifierNotFound) {
-                                // Global define()
+                        if ($node->name->hasAttribute('namespacedName')) {
+                            $namespacedName = $node->name->getAttribute('namespacedName');
+                            assert($namespacedName instanceof Name);
+                            if (count($namespacedName->parts) > 1) {
+                                try {
+                                    $this->functionReflector->reflect($namespacedName->toString());
+
+                                    return null;
+                                } catch (IdentifierNotFound) {
+                                    // Global define()
+                                }
                             }
                         }
+
+                        $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
+
+                        if ($this->identifierType->isMatchingReflector($reflection)) {
+                            $this->reflections[] = $reflection;
+                        }
+
+                        return null;
                     }
-
-                    $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
-
-                    if ($this->identifierType->isMatchingReflector($reflection)) {
-                        $this->reflections[] = $reflection;
-                    }
-
-                    return null;
                 }
 
-                if (! ($node instanceof Node\Stmt\Function_)) {
-                    return null;
+                if ($this->identifierType->isFunction() && $node instanceof Node\Stmt\Function_) {
+                    $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
                 }
-
-                $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
-
-                if (! $this->identifierType->isMatchingReflector($reflection)) {
-                    return null;
-                }
-
-                $this->reflections[] = $reflection;
 
                 return null;
             }

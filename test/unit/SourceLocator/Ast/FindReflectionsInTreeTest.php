@@ -235,9 +235,8 @@ PHP;
         $functionReflector->method('reflect')
             ->willReturn($mockFunctionReflection);
 
-        $strategy->expects($this->once())
-            ->method('__invoke')
-            ->willReturn($mockFunctionReflection);
+        $strategy->expects($this->never())
+            ->method('__invoke');
 
         $reflector     = $this->createMock(Reflector::class);
         $source        = <<<'PHP'
@@ -267,7 +266,7 @@ PHP;
 
         $mockReflectionClass = $this->createMock(ReflectionClass::class);
 
-        $strategy->expects($this->once())
+        $strategy->expects($this->never())
             ->method('__invoke')
             ->will($this->returnValue($mockReflectionClass));
 
@@ -289,12 +288,11 @@ PHP;
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
-        $mockReflectionFunction = $this->createMock(ReflectionFunction::class);
-        $mockReflectionClass    = $this->createMock(ReflectionClass::class);
+        $mockReflectionClass = $this->createMock(ReflectionClass::class);
 
-        $strategy->expects($this->exactly(2))
+        $strategy->expects($this->once())
             ->method('__invoke')
-            ->willReturnOnConsecutiveCalls($mockReflectionFunction, $mockReflectionClass);
+            ->willReturnOnConsecutiveCalls($mockReflectionClass);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);
