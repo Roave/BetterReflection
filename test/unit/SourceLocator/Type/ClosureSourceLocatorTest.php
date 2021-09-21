@@ -7,17 +7,19 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Closure;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass as CoreReflectionClass;
+use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-use function assert;
 use function realpath;
 use function sprintf;
 
@@ -67,8 +69,8 @@ class ClosureSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             ),
         );
-        assert($reflection instanceof ReflectionFunction);
 
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertTrue($reflection->isClosure());
         self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
         self::assertSame($namespace, $reflection->getNamespaceName());
@@ -116,6 +118,32 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertSame($startLine, $reflections[0]->getStartLine());
         self::assertSame($endLine, $reflections[0]->getEndLine());
         self::assertStringContainsString('Hello world!', $reflections[0]->getLocatedSource()->getSource());
+    }
+
+    public function testExceptionIfClosureNotFoundOnExpectedLine(): void
+    {
+        self::expectException(NoClosureOnLine::class);
+
+        $closure = static function (): void {
+        };
+
+        $sourceLocator = new ClosureSourceLocator($closure, $this->parser);
+
+        $sourceLocatorReflection = new CoreReflectionClass($sourceLocator);
+
+        $coreReflectionPropertyMock = $this->createMock(CoreReflectionFunction::class);
+        $coreReflectionPropertyMock
+            ->method('getFileName')
+            ->willReturn(__FILE__);
+        $coreReflectionPropertyMock
+            ->method('getStartLine')
+            ->willReturn(0);
+
+        $coreReflectionPropertyInSourceLocatatorReflection = $sourceLocatorReflection->getProperty('coreFunctionReflection');
+        $coreReflectionPropertyInSourceLocatatorReflection->setAccessible(true);
+        $coreReflectionPropertyInSourceLocatatorReflection->setValue($sourceLocator, $coreReflectionPropertyMock);
+
+        $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
     }
 
     public function testLocateIdentifiersByTypeWithClassIdentifier(): void

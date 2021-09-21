@@ -57,11 +57,6 @@
       <code>ConstantNodeChecker::assertValidDefineFunctionCall($node)</code>
     </InternalClass>
   </file>
-  <file src="src/SourceLocator/Type/ClosureSourceLocator.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getLine</code>
-    </PossiblyNullReference>
-  </file>
   <file src="src/SourceLocator/Type/Composer/Factory/MakeLocatorForComposerJsonAndInstalledJson.php">
     <InvalidScalarArgument occurrences="2"/>
   </file>

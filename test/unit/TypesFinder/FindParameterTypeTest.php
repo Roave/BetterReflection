@@ -46,6 +46,8 @@ class FindParameterTypeTest extends TestCase
             ['@param ?iterable $foo', 'foo', [Types\Nullable::class]],
             ['@param object $foo', 'foo', [Types\Object_::class]],
             ['@param ?object $foo', 'foo', [Types\Nullable::class]],
+            // Wrong $variable name in annotation
+            ['@param int $foo', 'boo', []],
         ];
     }
 

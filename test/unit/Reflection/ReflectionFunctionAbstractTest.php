@@ -32,7 +32,6 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 use TypeError;
 
-use function assert;
 use function current;
 use function next;
 use function reset;
@@ -728,9 +727,9 @@ PHP;
 
         reset($nodes);
         $first = current($nodes);
-        assert($first instanceof Return_);
+        self::assertInstanceOf(Return_::class, $first);
         $second = next($nodes);
-        assert($second instanceof Return_);
+        self::assertInstanceOf(Return_::class, $second);
 
         self::assertInstanceOf(LNumber::class, $first->expr);
         self::assertInstanceOf(BinaryOp\Plus::class, $second->expr);
@@ -762,8 +761,8 @@ PHP;
 
         reset($nodes);
         $first = current($nodes);
-        assert($first instanceof Return_);
 
+        self::assertInstanceOf(Return_::class, $first);
         self::assertInstanceOf(Closure::class, $first->expr);
         self::assertSame(8, $first->getStartLine());
         self::assertSame(10, $first->getEndLine());

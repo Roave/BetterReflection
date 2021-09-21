@@ -6,17 +6,19 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\NoAnonymousClassOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use stdClass;
 
-use function assert;
 use function realpath;
 use function sprintf;
 
@@ -66,13 +68,28 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );
-        assert($reflection instanceof ReflectionClass);
 
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertTrue($reflection->isAnonymous());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $reflection->getShortName());
         self::assertSame($file, $reflection->getFileName());
         self::assertSame($startLine, $reflection->getStartLine());
         self::assertSame($endLine, $reflection->getEndLine());
+    }
+
+    public function testCannotLocateNonAnonymousClass(): void
+    {
+        $class = new CoreReflectionClass(stdClass::class);
+
+        $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
+            $this->reflector,
+            new Identifier(
+                $class::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
+        );
+
+        self::assertNull($reflection);
     }
 
     public function testLocateIdentifierWithFunctionIdentifier(): void
@@ -87,7 +104,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             ),
         );
-        assert($reflection instanceof ReflectionClass || $reflection === null);
 
         self::assertNull($reflection);
     }
@@ -125,6 +141,35 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         );
 
         self::assertCount(0, $reflections);
+    }
+
+    public function testExceptionIfAnonymousClassNotFoundOnExpectedLine(): void
+    {
+        self::expectException(NoAnonymousClassOnLine::class);
+
+        $anonymousClass = new class {
+        };
+
+        $sourceLocator = new AnonymousClassObjectSourceLocator($anonymousClass, $this->parser);
+
+        $sourceLocatorReflection = new CoreReflectionClass($sourceLocator);
+
+        $coreReflectionPropertyMock = $this->createMock(CoreReflectionClass::class);
+        $coreReflectionPropertyMock
+            ->method('isAnonymous')
+            ->willReturn(true);
+        $coreReflectionPropertyMock
+            ->method('getFileName')
+            ->willReturn(__FILE__);
+        $coreReflectionPropertyMock
+            ->method('getStartLine')
+            ->willReturn(0);
+
+        $coreReflectionPropertyInSourceLocatatorReflection = $sourceLocatorReflection->getProperty('coreClassReflection');
+        $coreReflectionPropertyInSourceLocatatorReflection->setAccessible(true);
+        $coreReflectionPropertyInSourceLocatatorReflection->setValue($sourceLocator, $coreReflectionPropertyMock);
+
+        $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
     }
 
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array

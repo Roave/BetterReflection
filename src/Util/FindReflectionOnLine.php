@@ -20,7 +20,6 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 
 use function array_merge;
-use function method_exists;
 
 final class FindReflectionOnLine
 {
@@ -86,19 +85,9 @@ final class FindReflectionOnLine
 
     /**
      * Check to see if the line is within the boundaries of the reflection specified.
-     *
-     * @throws InvalidArgumentException
      */
-    private function containsLine(ReflectionMethod|ReflectionClass|ReflectionFunction|Reflection $reflection, int $lineNumber): bool
+    private function containsLine(ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionConstant $reflection, int $lineNumber): bool
     {
-        if (! method_exists($reflection, 'getStartLine')) {
-            throw new InvalidArgumentException('Reflection does not have getStartLine method');
-        }
-
-        if (! method_exists($reflection, 'getEndLine')) {
-            throw new InvalidArgumentException('Reflection does not have getEndLine method');
-        }
-
         return $lineNumber >= $reflection->getStartLine() && $lineNumber <= $reflection->getEndLine();
     }
 }

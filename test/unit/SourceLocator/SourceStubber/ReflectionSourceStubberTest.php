@@ -115,6 +115,11 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
+    public function testUnknownClass(): void
+    {
+        self::assertNull($this->stubber->generateClassStub('SomeClass'));
+    }
+
     public function testClassStubWithPHP8Syntax(): void
     {
         require __DIR__ . '/../../Fixture/PHP8ClassForSourceStubber.php';
@@ -408,6 +413,11 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertArrayHasKey($parameterPosition, $parametersReflections);
         self::assertSame($parameterIsVariadic, $parametersReflections[$parameterPosition]->isVariadic());
         self::assertSame($parameterIsOptional, $parametersReflections[$parameterPosition]->isOptional());
+    }
+
+    public function testUnknownFunction(): void
+    {
+        self::assertNull($this->stubber->generateFunctionStub('someFunction'));
     }
 
     public function testCanStubConstant(): void

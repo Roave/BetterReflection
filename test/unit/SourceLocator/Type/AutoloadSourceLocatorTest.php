@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Foo\Bar\AutoloadableClassWithTwoDirectories;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -251,6 +252,14 @@ class AutoloadSourceLocatorTest extends TestCase
 
         self::assertSame('Roave\BetterReflectionTest\Fixture\BY_DEFINE', $reflection->getName());
         self::assertSame('BY_DEFINE', $reflection->getShortName());
+    }
+
+    public function testInternalClassDoesNotLoad(): void
+    {
+        $this->expectException(IdentifierNotFound::class);
+
+        $reflector = new ClassReflector(new AutoloadSourceLocator($this->astLocator), $this->classReflector);
+        $reflector->reflect(ReflectionClass::class);
     }
 
     public function testInternalConstantDoesNotLoad(): void

@@ -235,9 +235,8 @@ PHP;
         $functionReflector->method('reflect')
             ->willReturn($mockFunctionReflection);
 
-        $strategy->expects($this->once())
-            ->method('__invoke')
-            ->willReturn($mockFunctionReflection);
+        $strategy->expects($this->never())
+            ->method('__invoke');
 
         $reflector     = $this->createMock(Reflector::class);
         $source        = <<<'PHP'
@@ -261,13 +260,40 @@ PHP;
         );
     }
 
+    public function testNoConstantForInvalidDefine(): void
+    {
+        $strategy = $this->createMock(NodeToReflection::class);
+
+        $strategy->expects($this->never())
+            ->method('__invoke');
+
+        $reflector     = $this->createMock(Reflector::class);
+        $source        = <<<'PHP'
+<?php
+
+$foo = 'foo';
+define($foo, 1);
+PHP;
+        $locatedSource = new LocatedSource($source, null);
+
+        self::assertSame(
+            [],
+            $this->createFindReflectionsInTree($strategy)->__invoke(
+                $reflector,
+                $this->getAstForSource($locatedSource),
+                new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
+                $locatedSource,
+            ),
+        );
+    }
+
     public function testNoInvokeCallsReflectNodesForClassConstant(): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
         $mockReflectionClass = $this->createMock(ReflectionClass::class);
 
-        $strategy->expects($this->once())
+        $strategy->expects($this->never())
             ->method('__invoke')
             ->will($this->returnValue($mockReflectionClass));
 
@@ -289,12 +315,11 @@ PHP;
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
-        $mockReflectionFunction = $this->createMock(ReflectionFunction::class);
-        $mockReflectionClass    = $this->createMock(ReflectionClass::class);
+        $mockReflectionClass = $this->createMock(ReflectionClass::class);
 
-        $strategy->expects($this->exactly(2))
+        $strategy->expects($this->once())
             ->method('__invoke')
-            ->willReturnOnConsecutiveCalls($mockReflectionFunction, $mockReflectionClass);
+            ->willReturnOnConsecutiveCalls($mockReflectionClass);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {return new class {};}', null);

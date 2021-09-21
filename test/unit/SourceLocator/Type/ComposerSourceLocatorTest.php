@@ -15,8 +15,6 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-use function assert;
-
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator
  */
@@ -49,7 +47,6 @@ class ComposerSourceLocatorTest extends TestCase
             ->with($className)
             ->will($this->returnValue($fileName));
 
-        assert($loader instanceof ClassLoader);
         $locator = new ComposerSourceLocator($loader, $this->astLocator);
 
         $reflectionClass = $locator->locateIdentifier($this->getMockReflector(), new Identifier(
@@ -72,7 +69,6 @@ class ComposerSourceLocatorTest extends TestCase
             ->with($className)
             ->will($this->returnValue(null));
 
-        assert($loader instanceof ClassLoader);
         $locator = new ComposerSourceLocator($loader, $this->astLocator);
 
         self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(
@@ -85,7 +81,6 @@ class ComposerSourceLocatorTest extends TestCase
     {
         $loader = $this->createMock(ClassLoader::class);
 
-        assert($loader instanceof ClassLoader);
         $locator = new ComposerSourceLocator($loader, $this->astLocator);
 
         self::assertNull($locator->locateIdentifier($this->getMockReflector(), new Identifier(

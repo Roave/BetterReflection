@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -17,7 +18,6 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-use function assert;
 use function uniqid;
 
 /**
@@ -56,7 +56,9 @@ class EvaledCodeSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
-        assert($reflection instanceof ReflectionClass);
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+
         $source = $reflection->getLocatedSource();
 
         self::assertInstanceOf(EvaledLocatedSource::class, $source);
@@ -145,6 +147,27 @@ class EvaledCodeSourceLocatorTest extends TestCase
                 new Identifier(
                     'foo',
                     new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+                ),
+            ),
+        );
+    }
+
+    public function testReturnsNullForMissingStub(): void
+    {
+        $sourceStubber = $this->createMock(SourceStubber::class);
+        $sourceStubber
+            ->method('generateClassStub')
+            ->with(CoreReflectionClass::class)
+            ->willReturn(null);
+
+        $sourceLocator = new EvaledCodeSourceLocator($this->astLocator, $sourceStubber);
+
+        self::assertNull(
+            $sourceLocator->locateIdentifier(
+                $this->getMockReflector(),
+                new Identifier(
+                    CoreReflectionClass::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 ),
             ),
         );

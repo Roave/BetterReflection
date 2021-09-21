@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
 use PhpParser\Node;
-use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
-use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -24,11 +22,11 @@ class NodeToReflection implements AstConversionStrategy
      */
     public function __invoke(
         Reflector $reflector,
-        Node $node,
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction|Node\Stmt\Const_|Node\Expr\FuncCall $node,
         LocatedSource $locatedSource,
         ?Node\Stmt\Namespace_ $namespace,
         ?int $positionInNode = null,
-    ): ?Reflection {
+    ): ReflectionClass|ReflectionConstant|ReflectionFunction {
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
                 $reflector,
@@ -39,8 +37,7 @@ class NodeToReflection implements AstConversionStrategy
         }
 
         if (
-            $node instanceof Node\Stmt\ClassMethod
-            || $node instanceof Node\Stmt\Function_
+            $node instanceof Node\Stmt\Function_
             || $node instanceof Node\Expr\Closure
             || $node instanceof Node\Expr\ArrowFunction
         ) {
@@ -56,14 +53,6 @@ class NodeToReflection implements AstConversionStrategy
             return ReflectionConstant::createFromNode($reflector, $node, $locatedSource, $namespace, $positionInNode);
         }
 
-        if ($node instanceof Node\Expr\FuncCall) {
-            try {
-                return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
-            } catch (InvalidConstantNode) {
-                // Ignore
-            }
-        }
-
-        return null;
+        return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
     }
 }

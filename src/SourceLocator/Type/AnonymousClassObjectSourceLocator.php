@@ -20,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\NoAnonymousClassOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -109,13 +110,13 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
                 return null;
             }
 
-            public function getAnonymousClassNode(): ?Class_
+            public function getAnonymousClassNode(): Class_
             {
                 /** @var Class_[] $anonymousClassNodesOnSameLine */
                 $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, fn (Class_ $node): bool => $node->getLine() === $this->startLine));
 
                 if (! $anonymousClassNodesOnSameLine) {
-                    return null;
+                    throw NoAnonymousClassOnLine::create($this->fileName, $this->startLine);
                 }
 
                 if (isset($anonymousClassNodesOnSameLine[1])) {
@@ -140,7 +141,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             new LocatedSource($fileContents, $fileName),
             null,
         );
-        assert($reflectionClass instanceof ReflectionClass || $reflectionClass === null);
+        assert($reflectionClass instanceof ReflectionClass);
 
         return $reflectionClass;
     }
