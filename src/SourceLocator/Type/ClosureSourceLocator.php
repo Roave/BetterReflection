@@ -20,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -29,7 +30,6 @@ use function array_filter;
 use function array_values;
 use function assert;
 use function file_get_contents;
-use function is_array;
 use function strpos;
 
 /**
@@ -124,17 +124,18 @@ final class ClosureSourceLocator implements SourceLocator
             }
 
             /**
-             * @return Node[]|null[]|null
+             * @return (Node|null)[]
              *
+             * @throws NoClosureOnLine
              * @throws TwoClosuresOnSameLine
              */
-            public function getClosureNodes(): ?array
+            public function getClosureNodes(): array
             {
                 /** @var (Node|null)[][] $closureNodesDataOnSameLine */
                 $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, fn (array $nodes): bool => $nodes[0]->getLine() === $this->startLine));
 
                 if (! $closureNodesDataOnSameLine) {
-                    return null;
+                    throw NoClosureOnLine::create($this->fileName, $this->startLine);
                 }
 
                 if (isset($closureNodesDataOnSameLine[1])) {
@@ -154,7 +155,6 @@ final class ClosureSourceLocator implements SourceLocator
         $nodeTraverser->traverse($ast);
 
         $closureNodes = $nodeVisitor->getClosureNodes();
-        assert(is_array($closureNodes));
         assert($closureNodes[1] instanceof Namespace_ || $closureNodes[1] === null);
 
         $reflectionFunction = (new NodeToReflection())->__invoke(
