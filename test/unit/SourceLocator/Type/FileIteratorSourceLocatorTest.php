@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -11,9 +12,11 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use stdClass;
 
 use function array_map;
 use function sort;
@@ -70,5 +73,12 @@ class FileIteratorSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(ReflectionClass::class, $class);
         self::assertSame(DirectoryScannerAssets\Bar\FooBar::class, $class->getName());
+    }
+
+    public function testIteratorWithoutSplFileInfo(): void
+    {
+        self::expectException(InvalidFileInfo::class);
+
+        new FileIteratorSourceLocator(new ArrayIterator([new stdClass()]), BetterReflectionSingleton::instance()->astLocator());
     }
 }
