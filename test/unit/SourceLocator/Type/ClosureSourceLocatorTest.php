@@ -17,7 +17,6 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-use function assert;
 use function realpath;
 use function sprintf;
 
@@ -67,8 +66,8 @@ class ClosureSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             ),
         );
-        assert($reflection instanceof ReflectionFunction);
 
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertTrue($reflection->isClosure());
         self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getShortName());
         self::assertSame($namespace, $reflection->getNamespaceName());

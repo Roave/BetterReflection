@@ -9,7 +9,6 @@ use phpDocumentor\Reflection\Types\Context;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\TypesFinder\ResolveTypes;
 
-use function assert;
 use function count;
 use function reset;
 
@@ -90,7 +89,6 @@ class ResolveTypesTest extends TestCase
         $resolvedType = reset($resolvedTypes);
         self::assertInstanceOf(Types\Object_::class, $resolvedType);
 
-        assert($resolvedType instanceof Types\Object_);
         self::assertSame($expectedType, (string) $resolvedType);
     }
 }

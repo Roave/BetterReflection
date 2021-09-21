@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -14,8 +13,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator;
-
-use function assert;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator
@@ -43,7 +40,6 @@ class AbstractSourceLocatorTest extends TestCase
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
-        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -68,7 +64,6 @@ class AbstractSourceLocatorTest extends TestCase
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
-        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -97,7 +92,6 @@ class AbstractSourceLocatorTest extends TestCase
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
-        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -128,7 +122,6 @@ class AbstractSourceLocatorTest extends TestCase
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
-        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
@@ -152,7 +145,6 @@ class AbstractSourceLocatorTest extends TestCase
             ->setConstructorArgs([$astLocator])
             ->setMethods(['createLocatedSource'])
             ->getMock();
-        assert($sourceLocator instanceof AbstractSourceLocator && $sourceLocator instanceof MockObject);
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')

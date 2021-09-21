@@ -16,7 +16,6 @@ use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-use function assert;
 use function realpath;
 use function sprintf;
 
@@ -66,8 +65,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );
-        assert($reflection instanceof ReflectionClass);
 
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertTrue($reflection->isAnonymous());
         self::assertStringStartsWith(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX, $reflection->getShortName());
         self::assertSame($file, $reflection->getFileName());
@@ -87,7 +86,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             ),
         );
-        assert($reflection instanceof ReflectionClass || $reflection === null);
 
         self::assertNull($reflection);
     }

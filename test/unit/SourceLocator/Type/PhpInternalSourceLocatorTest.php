@@ -25,7 +25,6 @@ use function array_keys;
 use function array_map;
 use function array_merge;
 use function array_values;
-use function assert;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
@@ -70,7 +69,9 @@ class PhpInternalSourceLocatorTest extends TestCase
                 $this->getMockReflector(),
                 new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
             );
-            assert($reflection instanceof ReflectionClass);
+
+            self::assertInstanceOf(ReflectionClass::class, $reflection);
+
             $source = $reflection->getLocatedSource();
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
@@ -118,7 +119,9 @@ class PhpInternalSourceLocatorTest extends TestCase
                 $this->getMockReflector(),
                 new Identifier($functionName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
             );
-            assert($reflection instanceof ReflectionFunction);
+
+            self::assertInstanceOf(ReflectionFunction::class, $reflection);
+
             $source = $reflection->getLocatedSource();
 
             self::assertInstanceOf(InternalLocatedSource::class, $source);
@@ -154,7 +157,9 @@ class PhpInternalSourceLocatorTest extends TestCase
             $this->getMockReflector(),
             new Identifier($constantName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT)),
         );
-        assert($reflection instanceof ReflectionConstant);
+
+        self::assertInstanceOf(ReflectionConstant::class, $reflection);
+
         $source = $reflection->getLocatedSource();
 
         self::assertInstanceOf(InternalLocatedSource::class, $source);
