@@ -8,12 +8,13 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
@@ -65,7 +66,7 @@ class ReflectionPropertyTest extends TestCase
             ['hasDefaultValue', null, true, []],
             ['getDefaultValue', null, null, []],
             ['isPromoted', null, true, []],
-            ['getAttributes', NotImplemented::class, null, []],
+            ['getAttributes', null, [], []],
             ['isReadOnly', null, true, []],
         ];
     }
@@ -305,5 +306,154 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         $reflectionPropertyAdapter->isInitialized(new stdClass());
+    }
+
+    public function testGetAttributes(): void
+    {
+        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1
+            ->method('getName')
+            ->willReturn('SomeAttribute');
+        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2
+            ->method('getName')
+            ->willReturn('AnotherAttribute');
+
+        $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
+
+        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('getAttributes')
+            ->willReturn($betterReflectionAttributes);
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+        $attributes                = $reflectionPropertyAdapter->getAttributes();
+
+        self::assertCount(2, $attributes);
+        self::assertSame('SomeAttribute', $attributes[0]->getName());
+        self::assertSame('AnotherAttribute', $attributes[1]->getName());
+    }
+
+    public function testGetAttributesWithName(): void
+    {
+        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1
+            ->method('getName')
+            ->willReturn('SomeAttribute');
+        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2
+            ->method('getName')
+            ->willReturn('AnotherAttribute');
+
+        $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
+
+        $betterReflectionProperty = $this->getMockBuilder(BetterReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAttributes'])
+            ->getMock();
+
+        $betterReflectionProperty
+            ->method('getAttributes')
+            ->willReturn($betterReflectionAttributes);
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+        $attributes                = $reflectionPropertyAdapter->getAttributes('SomeAttribute');
+
+        self::assertCount(1, $attributes);
+        self::assertSame('SomeAttribute', $attributes[0]->getName());
+    }
+
+    public function testGetAttributesWithInstance(): void
+    {
+        $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass1
+            ->method('getName')
+            ->willReturn('ClassName');
+        $betterReflectionAttributeClass1
+            ->method('isSubclassOf')
+            ->willReturnMap([
+                ['ParentClassName', true],
+                ['InterfaceName', false],
+            ]);
+        $betterReflectionAttributeClass1
+            ->method('implementsInterface')
+            ->willReturnMap([
+                ['ParentClassName', false],
+                ['InterfaceName', false],
+            ]);
+
+        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1
+            ->method('getClass')
+            ->willReturn($betterReflectionAttributeClass1);
+
+        $betterReflectionAttributeClass2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass2
+            ->method('getName')
+            ->willReturn('Whatever');
+        $betterReflectionAttributeClass2
+            ->method('isSubclassOf')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', false],
+                ['InterfaceName', false],
+            ]);
+        $betterReflectionAttributeClass2
+            ->method('implementsInterface')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', false],
+                ['InterfaceName', true],
+            ]);
+
+        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2
+            ->method('getClass')
+            ->willReturn($betterReflectionAttributeClass2);
+
+        $betterReflectionAttributeClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass3
+            ->method('getName')
+            ->willReturn('Whatever');
+        $betterReflectionAttributeClass3
+            ->method('isSubclassOf')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', true],
+                ['InterfaceName', false],
+            ]);
+        $betterReflectionAttributeClass3
+            ->method('implementsInterface')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', false],
+                ['InterfaceName', true],
+            ]);
+
+        $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute3
+            ->method('getClass')
+            ->willReturn($betterReflectionAttributeClass3);
+
+        $betterReflectionAttributes = [
+            $betterReflectionAttribute1,
+            $betterReflectionAttribute2,
+            $betterReflectionAttribute3,
+        ];
+
+        $betterReflectionProperty = $this->getMockBuilder(BetterReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAttributes'])
+            ->getMock();
+
+        $betterReflectionProperty
+            ->method('getAttributes')
+            ->willReturn($betterReflectionAttributes);
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        self::assertCount(1, $reflectionPropertyAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionPropertyAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionPropertyAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
 }

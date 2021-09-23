@@ -8,6 +8,10 @@ parameters:
     bootstrapFiles:
         - stubs/ReflectionIntersectionType.php
 
+    # Needs new PHPStan version with newer stubs
+    excludePaths:
+        - src/Reflection/Adapter/ReflectionAttribute.php
+
     ignoreErrors:
         -
             message: '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'

@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Throwable;
 use TypeError;
+
+use function array_map;
 
 final class ReflectionProperty extends CoreReflectionProperty
 {
@@ -156,11 +158,21 @@ final class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @return list<CoreReflectionAttribute>
+     * @param class-string|null $name
+     *
+     * @return list<ReflectionAttribute>
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
+            $attributes = $this->betterReflectionProperty->getAttributesByInstance($name);
+        } elseif ($name !== null) {
+            $attributes = $this->betterReflectionProperty->getAttributesByName($name);
+        } else {
+            $attributes = $this->betterReflectionProperty->getAttributes();
+        }
+
+        return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
     public function isReadOnly(): bool

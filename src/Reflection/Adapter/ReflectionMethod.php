@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use Closure;
-use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
@@ -13,12 +12,14 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use TypeError;
 use ValueError;
 
+use function array_map;
 use function func_get_args;
 
 final class ReflectionMethod extends CoreReflectionMethod
@@ -290,11 +291,21 @@ final class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @return list<CoreReflectionAttribute>
+     * @param class-string|null $name
+     *
+     * @return list<ReflectionAttribute>
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
+            $attributes = $this->betterReflectionMethod->getAttributesByInstance($name);
+        } elseif ($name !== null) {
+            $attributes = $this->betterReflectionMethod->getAttributesByName($name);
+        } else {
+            $attributes = $this->betterReflectionMethod->getAttributes();
+        }
+
+        return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
     public function hasTentativeReturnType(): bool

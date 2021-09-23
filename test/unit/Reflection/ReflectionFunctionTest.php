@@ -15,8 +15,10 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use stdClass;
 
@@ -344,5 +346,43 @@ class ReflectionFunctionTest extends TestCase
         $this->expectException(FunctionDoesNotExist::class);
 
         $functionReflection->invokeArgs();
+    }
+
+    public function testGetAttributesWithoutAttributes(): void
+    {
+        $php = '<?php function foo() {}';
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('foo');
+        $attributes         = $functionReflection->getAttributes();
+
+        self::assertCount(0, $attributes);
+    }
+
+    public function testGetAttributesWithAttributes(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\functionWithAttributes');
+        $attributes         = $functionReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+    }
+
+    public function testGetAttributesByName(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\functionWithAttributes');
+        $attributes         = $functionReflection->getAttributesByName(Attr::class);
+
+        self::assertCount(1, $attributes);
+    }
+
+    public function testGetAttributesByInstance(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\functionWithAttributes');
+        $attributes         = $functionReflection->getAttributesByInstance(Attr::class);
+
+        self::assertCount(2, $attributes);
     }
 }

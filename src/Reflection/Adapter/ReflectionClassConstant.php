@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClassConstant as CoreReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+
+use function array_map;
 
 final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
@@ -92,11 +94,21 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
     }
 
     /**
-     * @return list<CoreReflectionAttribute>
+     * @param class-string|null $name
+     *
+     * @return list<ReflectionAttribute>
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
+            $attributes = $this->betterClassConstant->getAttributesByInstance($name);
+        } elseif ($name !== null) {
+            $attributes = $this->betterClassConstant->getAttributesByName($name);
+        } else {
+            $attributes = $this->betterClassConstant->getAttributes();
+        }
+
+        return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
     public function isFinal(): bool

@@ -29,7 +29,9 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTraitWithStaticMethod;
+use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithNonStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -605,5 +607,45 @@ PHP;
         $methodInfo = $classInfo->getMethod('someMethod');
 
         self::assertSame([], $methodInfo->getBodyAst());
+    }
+
+    public function testGetAttributesWithoutAttributes(): void
+    {
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ExampleClass::class);
+        $methodReflection = $classReflection->getMethod('__construct');
+        $attributes       = $methodReflection->getAttributes();
+
+        self::assertCount(0, $attributes);
+    }
+
+    public function testGetAttributesWithAttributes(): void
+    {
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection = $classReflection->getMethod('methodWithAttributes');
+        $attributes       = $methodReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+    }
+
+    public function testGetAttributesByName(): void
+    {
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection = $classReflection->getMethod('methodWithAttributes');
+        $attributes       = $methodReflection->getAttributesByName(Attr::class);
+
+        self::assertCount(1, $attributes);
+    }
+
+    public function testGetAttributesByInstance(): void
+    {
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection = $classReflection->getMethod('methodWithAttributes');
+        $attributes       = $methodReflection->getAttributesByInstance(Attr::class);
+
+        self::assertCount(2, $attributes);
     }
 }
