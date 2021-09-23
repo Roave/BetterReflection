@@ -11,14 +11,14 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
 use TypeError;
@@ -56,7 +56,7 @@ class ReflectionMethodTest extends TestCase
 
         $mockMethod = $this->createMock(BetterReflectionMethod::class);
 
-        $mockType = $this->createMock(BetterReflectionType::class);
+        $mockType = $this->createMock(BetterReflectionNamedType::class);
 
         $closure = static function (): void {
         };
@@ -135,7 +135,7 @@ class ReflectionMethodTest extends TestCase
                 break;
 
             case 'getReturnType':
-                self::assertInstanceOf(ReflectionTypeAdapter::class, $adapterReturnValue);
+                self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $adapterReturnValue);
                 break;
 
             case 'getPrototype':

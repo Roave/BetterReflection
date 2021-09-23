@@ -12,8 +12,8 @@ use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunctionAdapter;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_combine;
@@ -47,7 +47,7 @@ class ReflectionFunctionTest extends TestCase
     {
         $mockParameter = $this->createMock(BetterReflectionParameter::class);
 
-        $mockType = $this->createMock(BetterReflectionType::class);
+        $mockType = $this->createMock(BetterReflectionNamedType::class);
 
         $closure = static function (): void {
         };

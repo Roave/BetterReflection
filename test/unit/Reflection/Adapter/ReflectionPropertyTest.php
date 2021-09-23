@@ -15,8 +15,8 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
-use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
 use stdClass;
 
 use function array_combine;
@@ -48,7 +48,7 @@ class ReflectionPropertyTest extends TestCase
 
     public function methodExpectationProvider(): array
     {
-        $mockType = $this->createMock(BetterReflectionType::class);
+        $mockType = $this->createMock(BetterReflectionNamedType::class);
 
         return [
             ['__toString', null, '', []],

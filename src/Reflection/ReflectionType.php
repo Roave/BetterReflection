@@ -15,10 +15,7 @@ abstract class ReflectionType
     {
     }
 
-    /**
-     * @return ReflectionNamedType|ReflectionUnionType
-     */
-    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType $type, bool $forceAllowsNull = false): self
+    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType
     {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
