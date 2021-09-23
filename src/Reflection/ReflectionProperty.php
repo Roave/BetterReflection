@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Closure;
+use Error;
 use InvalidArgumentException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
@@ -27,11 +28,13 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
+use Throwable;
 use Webmozart\Assert\Assert;
 
 use function class_exists;
 use function func_num_args;
 use function is_object;
+use function strpos;
 
 class ReflectionProperty
 {
@@ -200,6 +203,25 @@ class ReflectionProperty
     public function isPromoted(): bool
     {
         return $this->isPromoted;
+    }
+
+    public function isInitialized(?object $object = null): bool
+    {
+        if ($object === null && $this->isStatic()) {
+            return ! $this->hasType() || $this->hasDefaultValue();
+        }
+
+        try {
+            $this->getValue($object);
+
+            return true;
+        } catch (Throwable $e) {
+            if ($e instanceof Error && strpos($e->getMessage(), 'must not be accessed before initialization') !== false) {
+                return false;
+            }
+
+            throw $e;
+        }
     }
 
     /**
