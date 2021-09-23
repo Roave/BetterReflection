@@ -29,6 +29,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
@@ -709,5 +710,39 @@ PHP;
             'public $integerProperty',
             (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
         );
+    }
+
+    public function isInitializedProvider(): array
+    {
+        $object                  = new InitializedProperties();
+        $object::$staticWithType = 0;
+
+        return [
+            ['withoutType', $object, true],
+            ['staticWithoutType', null, true],
+            ['withType', $object, false],
+            ['staticWithType', null, false],
+            ['staticWithType', $object, true],
+            ['staticWithTypeAndDefault', null, true],
+            ['withTypeInitialized', $object, true],
+        ];
+    }
+
+    /**
+     * @dataProvider isInitializedProvider
+     */
+    public function testIsInitialized(string $propertyName, ?object $object, bool $isInitialized): void
+    {
+        $classReflection = $this->reflector->reflect(InitializedProperties::class);
+
+        self::assertSame($isInitialized, $classReflection->getProperty($propertyName)->isInitialized($object));
+    }
+
+    public function testIsInitializedThrowsTypeError(): void
+    {
+        self::expectException(ObjectNotInstanceOfClass::class);
+
+        $classReflection = $this->reflector->reflect(InitializedProperties::class);
+        $classReflection->getProperty('withoutType')->isInitialized(new stdClass());
     }
 }

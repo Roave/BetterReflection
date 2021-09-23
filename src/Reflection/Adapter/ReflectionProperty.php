@@ -171,7 +171,15 @@ class ReflectionProperty extends CoreReflectionProperty
 
     public function isInitialized(?object $object = null): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if (! $this->isAccessible()) {
+            throw new CoreReflectionException('Property not accessible');
+        }
+
+        try {
+            return $this->betterReflectionProperty->isInitialized($object);
+        } catch (Throwable $e) {
+            throw new CoreReflectionException($e->getMessage(), 0, $e);
+        }
     }
 
     public function isPromoted(): bool
