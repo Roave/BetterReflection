@@ -58,6 +58,12 @@ class ReflectionClassConstantTest extends TestCase
         self::assertTrue($const->isPrivate());
     }
 
+    public function testFinal(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_6');
+        self::assertTrue($const->isFinal());
+    }
+
     public function testToString(): void
     {
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
@@ -75,9 +81,11 @@ class ReflectionClassConstantTest extends TestCase
     {
         return [
             ['MY_CONST_1', CoreReflectionClassConstant::IS_PUBLIC],
+            ['MY_CONST_2', CoreReflectionClassConstant::IS_PUBLIC],
             ['MY_CONST_3', CoreReflectionClassConstant::IS_PUBLIC],
             ['MY_CONST_4', CoreReflectionClassConstant::IS_PROTECTED],
             ['MY_CONST_5', CoreReflectionClassConstant::IS_PRIVATE],
+            ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstant::IS_FINAL],
         ];
     }
 

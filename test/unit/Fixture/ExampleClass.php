@@ -21,6 +21,7 @@ namespace Roave\BetterReflectionTest\Fixture {
         public const MY_CONST_3 = 345;
         protected const MY_CONST_4 = 456;
         private const MY_CONST_5 = 567;
+        public final const MY_CONST_6 = 678;
 
         /**
          * @var int|float|\stdClass

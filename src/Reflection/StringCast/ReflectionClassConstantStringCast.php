@@ -20,7 +20,8 @@ final class ReflectionClassConstantStringCast
         $value = $constantReflection->getValue();
 
         return sprintf(
-            "Constant [ %s %s %s ] { %s }\n",
+            "Constant [ %s%s %s %s ] { %s }\n",
+            $constantReflection->isFinal() ? 'final ' : '',
             self::visibilityToString($constantReflection),
             gettype($value),
             $constantReflection->getName(),
