@@ -449,6 +449,11 @@ class ReflectionParameter
         return ! $this->isPassedByReference();
     }
 
+    public function isPromoted(): bool
+    {
+        return $this->node->flags !== 0;
+    }
+
     /**
      * @throws LogicException
      */

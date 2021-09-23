@@ -176,7 +176,7 @@ class ReflectionProperty extends CoreReflectionProperty
 
     public function isPromoted(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionProperty->isPromoted();
     }
 
     /**

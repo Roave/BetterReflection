@@ -49,6 +49,7 @@ use function assert;
 use function end;
 use function implode;
 use function in_array;
+use function is_string;
 use function ltrim;
 use function sha1;
 use function sprintf;
@@ -664,21 +665,52 @@ class ReflectionClass implements Reflection
     {
         if ($this->cachedImmediateProperties === null) {
             $properties = [];
-            foreach ($this->node->stmts as $stmt) {
-                if (! ($stmt instanceof PropertyNode)) {
-                    continue;
-                }
-
-                foreach ($stmt->props as $propertyPositionInNode => $propertyNode) {
-                    $prop                         = ReflectionProperty::createFromNode(
+            foreach ($this->node->getProperties() as $propertiesNode) {
+                foreach ($propertiesNode->props as $propertyPositionInNode => $propertyNode) {
+                    $property                         = ReflectionProperty::createFromNode(
                         $this->reflector,
-                        $stmt,
+                        $propertiesNode,
                         $propertyPositionInNode,
                         $this->declaringNamespace,
                         $this,
                         $this,
+                        false,
                     );
-                    $properties[$prop->getName()] = $prop;
+                    $properties[$property->getName()] = $property;
+                }
+            }
+
+            foreach ($this->node->getMethods() as $methodNode) {
+                if ($methodNode->name->toLowerString() !== '__construct') {
+                    continue;
+                }
+
+                foreach ($methodNode->params as $parameterNode) {
+                    if ($parameterNode->flags === 0) {
+                        // No flags, no promotion
+                        continue;
+                    }
+
+                    $parameterNameNode = $parameterNode->var;
+                    assert($parameterNameNode instanceof Node\Expr\Variable);
+                    assert(is_string($parameterNameNode->name));
+
+                    $propertyNode                     = new Node\Stmt\Property(
+                        $parameterNode->flags,
+                        [new Node\Stmt\PropertyProperty($parameterNameNode->name, $parameterNode->default)],
+                        [],
+                        $parameterNode->type,
+                    );
+                    $property                         = ReflectionProperty::createFromNode(
+                        $this->reflector,
+                        $propertyNode,
+                        0,
+                        $this->declaringNamespace,
+                        $this,
+                        $this,
+                        true,
+                    );
+                    $properties[$property->getName()] = $property;
                 }
             }
 
@@ -734,6 +766,7 @@ class ReflectionClass implements Reflection
                                 $trait->declaringNamespace,
                                 $property->getDeclaringClass(),
                                 $this,
+                                $property->isPromoted(),
                             ), $trait->getProperties($filter));
                         },
                         $this->getTraits(),

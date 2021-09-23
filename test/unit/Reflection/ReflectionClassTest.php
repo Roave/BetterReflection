@@ -384,7 +384,7 @@ class ReflectionClassTest extends TestCase
         $properties = $classInfo->getProperties();
 
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
-        self::assertCount(4, $properties);
+        self::assertCount(5, $properties);
     }
 
     public function testGetPropertiesDeclaredWithOneKeyword(): void
@@ -418,13 +418,13 @@ PHP;
             [CoreReflectionProperty::IS_STATIC, 1],
             [CoreReflectionProperty::IS_PUBLIC, 2],
             [CoreReflectionProperty::IS_PROTECTED, 1],
-            [CoreReflectionProperty::IS_PRIVATE, 1],
+            [CoreReflectionProperty::IS_PRIVATE, 2],
             [
                 CoreReflectionProperty::IS_STATIC |
                 CoreReflectionProperty::IS_PUBLIC |
                 CoreReflectionProperty::IS_PROTECTED |
                 CoreReflectionProperty::IS_PRIVATE,
-                4,
+                5,
             ],
         ];
     }

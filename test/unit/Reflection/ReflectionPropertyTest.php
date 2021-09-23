@@ -212,6 +212,20 @@ class ReflectionPropertyTest extends TestCase
         );
     }
 
+    public function testIsPromoted(): void
+    {
+        $classInfo = $this->reflector->reflect(ExampleClass::class);
+
+        $promotedProperty = $classInfo->getProperty('promotedProperty');
+
+        self::assertTrue($promotedProperty->isPromoted());
+        self::assertTrue($promotedProperty->isPrivate());
+        self::assertTrue($promotedProperty->hasType());
+        self::assertSame('?int', $promotedProperty->getType()->__toString());
+        self::assertTrue($promotedProperty->hasDefaultValue());
+        self:self::assertSame(123, $promotedProperty->getDefaultValue());
+    }
+
     public function testIsDefault(): void
     {
         $classInfo = $this->reflector->reflect(ExampleClass::class);
@@ -232,6 +246,7 @@ class ReflectionPropertyTest extends TestCase
                 null,
                 $classInfo,
                 $classInfo,
+                false,
                 false,
             )
             ->isDefault(),

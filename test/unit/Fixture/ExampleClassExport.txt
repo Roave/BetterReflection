@@ -16,15 +16,21 @@ Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
   - Static methods [0] {
   }
 
-  - Properties [3] {
+  - Properties [4] {
     Property [ <default> private $privateProperty ]
     Property [ <default> protected $protectedProperty ]
     Property [ <default> public $publicProperty ]
+    Property [ <default> private ?int $promotedProperty ]
   }
 
   - Methods [2] {
     Method [ <user, ctor> public method __construct ] {
       @@ %s/test/unit/Fixture/ExampleClass.php 43 - 45
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> ?int $promotedProperty = 123 ]
+        Parameter #1 [ <optional> $noPromotedProperty = NULL ]
+      }
     }
 
     Method [ <user> public method someMethod ] {

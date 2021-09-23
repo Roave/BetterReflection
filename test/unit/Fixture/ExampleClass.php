@@ -40,7 +40,7 @@ namespace Roave\BetterReflectionTest\Fixture {
 
         public static $publicStaticProperty;
 
-        public function __construct()
+        public function __construct(private ?int $promotedProperty = 123, $noPromotedProperty = null)
         {
         }
 

@@ -455,6 +455,19 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($refParam->canBePassedByValue());
     }
 
+    public function testIsPromoted(): void
+    {
+        $classInfo = $this->reflector->reflect(Methods::class);
+
+        $constructor = $classInfo->getConstructor();
+
+        $promoted = $constructor->getParameter('promotedParameter');
+        self::assertTrue($promoted->isPromoted());
+
+        $notPromoted = $constructor->getParameter('notPromotedParameter');
+        self::assertFalse($notPromoted->isPromoted());
+    }
+
     public function testGetDefaultValueAndIsOptional(): void
     {
         $classInfo = $this->reflector->reflect(Methods::class);
