@@ -183,7 +183,7 @@ class ReflectionParameter extends CoreReflectionParameter
 
     public function isPromoted(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionParameter->isPromoted();
     }
 
     /**

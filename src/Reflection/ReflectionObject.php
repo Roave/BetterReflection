@@ -94,6 +94,7 @@ class ReflectionObject extends ReflectionClass
                 $this,
                 $this,
                 false,
+                false,
             );
 
             if ($filter !== null && ! ($filter & $runtimeProperty->getModifiers())) {

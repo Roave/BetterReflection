@@ -75,7 +75,7 @@ class ReflectionParameterTest extends TestCase
             ['getDefaultValueConstantName', null, 'foo', []],
             ['hasType', null, true, []],
             ['getType', null, $mockType, []],
-            ['isPromoted', NotImplemented::class, null, []],
+            ['isPromoted', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
         ];
     }

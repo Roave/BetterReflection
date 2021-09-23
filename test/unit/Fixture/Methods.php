@@ -8,7 +8,7 @@ abstract class Methods
 {
     const SOME_CONST = 1;
 
-    public function __construct()
+    public function __construct(private $promotedParameter, $notPromotedParameter)
     {
     }
 
