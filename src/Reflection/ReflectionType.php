@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use PhpParser\Node\ComplexType;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
-use PhpParser\Node\UnionType;
 
 abstract class ReflectionType
 {
@@ -15,7 +15,7 @@ abstract class ReflectionType
     {
     }
 
-    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType
+    public static function createFromTypeAndReflector(Identifier|Name|ComplexType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType
     {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
@@ -27,6 +27,10 @@ abstract class ReflectionType
             return new ReflectionNamedType($type, $allowsNull);
         }
 
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @phpstan-ignore-next-line
+         */
         return new ReflectionUnionType($type, $allowsNull);
     }
 

@@ -490,7 +490,7 @@ final class ReflectionSourceStubber implements SourceStubber
         $parameterNode->setDefault($parameterReflection->getDefaultValue());
     }
 
-    private function formatType(CoreReflectionNamedType|CoreReflectionUnionType $type): Name|FullyQualified|NullableType|UnionType
+    private function formatType(CoreReflectionNamedType|CoreReflectionUnionType $type): Name|FullyQualified|Node\ComplexType
     {
         if ($type instanceof CoreReflectionUnionType) {
             $types = [];
