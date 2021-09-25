@@ -17,6 +17,8 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
@@ -102,37 +104,45 @@ final class UnableToCompileNodeTest extends TestCase
     public function supportedContextTypes(): array
     {
         $php = <<<'PHP'
-            <?php
-            
-            define('SOME_CONSTANT', 'some_constant');
-            
-            class SomeClass
-            {
-                public function someMethod()
-                {
-                }
-            }
+<?php
 
-            function someFunction()
-            {
-            }
-        PHP;
+namespace Foo;
 
-        $sourceLocator     = new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator());
+const SOME_CONSTANT = 'some_constant';
+
+class SomeClass
+{
+    public function someMethod()
+    {
+    }
+}
+
+function someFunction()
+{
+}
+PHP;
+
+        $astLocator        = BetterReflectionSingleton::instance()->astLocator();
+        $sourceLocator     = new StringSourceLocator($php, $astLocator);
         $classReflector    = new ClassReflector($sourceLocator);
         $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
-        $constantReflector = new ConstantReflector($sourceLocator, $classReflector);
+        $constantReflector = new ConstantReflector(new AggregateSourceLocator([
+            $sourceLocator,
+            new PhpInternalSourceLocator($astLocator, BetterReflectionSingleton::instance()->sourceStubber()),
+        ]), $classReflector);
 
-        $class    = $classReflector->reflect('SomeClass');
-        $method   = $class->getMethod('someMethod');
-        $function = $functionReflector->reflect('someFunction');
-        $constant = $constantReflector->reflect('SOME_CONSTANT');
+        $class          = $classReflector->reflect('Foo\SomeClass');
+        $method         = $class->getMethod('someMethod');
+        $function       = $functionReflector->reflect('Foo\someFunction');
+        $constant       = $constantReflector->reflect('Foo\SOME_CONSTANT');
+        $globalConstant = $constantReflector->reflect('PHP_VERSION_ID');
 
         return [
-            [new CompilerContext($classReflector, $constant), 'unknown context'],
-            [new CompilerContext($classReflector, $class), 'class SomeClass'],
-            [new CompilerContext($classReflector, $method), 'method SomeClass::someMethod()'],
-            [new CompilerContext($classReflector, $function), 'function someFunction()'],
+            [new CompilerContext($classReflector, $globalConstant), 'global namespace'],
+            [new CompilerContext($classReflector, $constant), 'namespace Foo'],
+            [new CompilerContext($classReflector, $class), 'class Foo\SomeClass'],
+            [new CompilerContext($classReflector, $method), 'method Foo\SomeClass::someMethod()'],
+            [new CompilerContext($classReflector, $function), 'function Foo\someFunction()'],
         ];
     }
 }

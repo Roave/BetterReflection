@@ -67,7 +67,7 @@ class CompileNodeToValueTest extends TestCase
         return new CompilerContext($classReflector, $classReflection);
     }
 
-    private function getDummyContextWithConstant(): CompilerContext
+    private function getDummyContextWithGlobalNamespace(): CompilerContext
     {
         $constantReflector  = new ConstantReflector(
             new PhpInternalSourceLocator($this->astLocator, BetterReflectionSingleton::instance()->sourceStubber()),
@@ -197,25 +197,25 @@ class CompileNodeToValueTest extends TestCase
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage(sprintf(
-            'Unable to compile expression in unknown context: unrecognized node type %s in file "" (line -1)',
+            'Unable to compile expression in global namespace: unrecognized node type %s in file "" (line -1)',
             Yield_::class,
         ));
 
-        (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContextWithConstant());
+        (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContextWithGlobalNamespace());
     }
 
     public function testExceptionThrownWhenUndefinedConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context in file "" (line -1)');
+        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in global namespace in file "" (line -1)');
 
-        (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContextWithConstant());
+        (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContextWithGlobalNamespace());
     }
 
     public function testExceptionThrownWhenUndefinedClassConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context in file "" (line -1)');
+        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in global namespace in file "" (line -1)');
 
         (new CompileNodeToValue())
             ->__invoke(
@@ -223,7 +223,7 @@ class CompileNodeToValueTest extends TestCase
                     new Name\FullyQualified('EmptyClass'),
                     new Node\Identifier('FOO'),
                 ),
-                $this->getDummyContextWithConstant(),
+                $this->getDummyContextWithGlobalNamespace(),
             );
     }
 
