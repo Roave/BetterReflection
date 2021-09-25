@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
@@ -60,17 +61,23 @@ class CompileNodeToValueTest extends TestCase
 
     private function getDummyContext(): CompilerContext
     {
-        return new CompilerContext(new ClassReflector(new StringSourceLocator('<?php', $this->astLocator)), null, null, null, null);
+        $classReflector  = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
+        $classReflection = $classReflector->reflect('Foo');
+
+        return new CompilerContext($classReflector, $classReflection);
     }
 
-    private function getDummyContextWithEmptyClass(): CompilerContext
+    private function getDummyContextWithGlobalNamespace(): CompilerContext
     {
+        $constantReflector  = new ConstantReflector(
+            new PhpInternalSourceLocator($this->astLocator, BetterReflectionSingleton::instance()->sourceStubber()),
+            $this->classReflector,
+        );
+        $constantReflection = $constantReflector->reflect('PHP_VERSION_ID');
+
         return new CompilerContext(
             new ClassReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
-            null,
-            null,
-            null,
-            null,
+            $constantReflection,
         );
     }
 
@@ -190,25 +197,25 @@ class CompileNodeToValueTest extends TestCase
     {
         $this->expectException(UnableToCompileNode::class);
         $this->expectExceptionMessage(sprintf(
-            'Unable to compile expression in unknown context: unrecognized node type %s in file "" (line -1)',
+            'Unable to compile expression in global namespace: unrecognized node type %s in file "" (line -1)',
             Yield_::class,
         ));
 
-        (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContext());
+        (new CompileNodeToValue())->__invoke(new Yield_(), $this->getDummyContextWithGlobalNamespace());
     }
 
     public function testExceptionThrownWhenUndefinedConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in unknown context in file "" (line -1)');
+        $this->expectExceptionMessage('Could not locate constant "FOO" while evaluating expression in global namespace in file "" (line -1)');
 
-        (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContext());
+        (new CompileNodeToValue())->__invoke(new ConstFetch(new Name('FOO')), $this->getDummyContextWithGlobalNamespace());
     }
 
     public function testExceptionThrownWhenUndefinedClassConstUsed(): void
     {
         $this->expectException(UnableToCompileNode::class);
-        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in unknown context in file "" (line -1)');
+        $this->expectExceptionMessage('Could not locate constant EmptyClass::FOO while trying to evaluate constant expression in global namespace in file "" (line -1)');
 
         (new CompileNodeToValue())
             ->__invoke(
@@ -216,7 +223,7 @@ class CompileNodeToValueTest extends TestCase
                     new Name\FullyQualified('EmptyClass'),
                     new Node\Identifier('FOO'),
                 ),
-                $this->getDummyContextWithEmptyClass(),
+                $this->getDummyContextWithGlobalNamespace(),
             );
     }
 

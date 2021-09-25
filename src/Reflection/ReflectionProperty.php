@@ -293,10 +293,7 @@ class ReflectionProperty
             $defaultValueNode,
             new CompilerContext(
                 $this->reflector,
-                $declaringClass->getFileName(),
-                $declaringClass->getNamespaceName(),
-                $declaringClass,
-                null,
+                $this,
             ),
         );
     }

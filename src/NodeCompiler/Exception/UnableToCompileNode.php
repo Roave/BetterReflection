@@ -91,6 +91,11 @@ class UnableToCompileNode extends LogicException
             return sprintf('function %s()', $function->getName());
         }
 
-        return 'unknown context';
+        $namespace = $fetchContext->getNamespace();
+        if ($namespace !== '') {
+            return sprintf('namespace %s', $namespace);
+        }
+
+        return 'global namespace';
     }
 }

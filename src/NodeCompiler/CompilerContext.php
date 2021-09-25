@@ -5,7 +5,13 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\NodeCompiler;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\Reflector;
 
 /**
@@ -13,8 +19,10 @@ use Roave\BetterReflection\Reflector\Reflector;
  */
 class CompilerContext
 {
-    public function __construct(private Reflector $reflector, private ?string $fileName, private ?string $namespace, private ?ReflectionClass $class, private ?ReflectionFunctionAbstract $function)
-    {
+    public function __construct(
+        private Reflector $reflector,
+        private ReflectionClass|ReflectionProperty|ReflectionClassConstant|ReflectionMethod|ReflectionFunction|ReflectionParameter|ReflectionConstant $contextReflection,
+    ) {
     }
 
     public function getReflector(): Reflector
@@ -24,21 +32,53 @@ class CompilerContext
 
     public function getFileName(): ?string
     {
-        return $this->fileName;
+        if ($this->contextReflection instanceof ReflectionConstant) {
+            return $this->contextReflection->getFileName();
+        }
+
+        return $this->getClass()?->getFileName() ?? $this->getFunction()?->getFileName();
     }
 
     public function getNamespace(): ?string
     {
-        return $this->namespace;
+        if ($this->contextReflection instanceof ReflectionConstant) {
+            return $this->contextReflection->getNamespaceName();
+        }
+
+        return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName();
     }
 
     public function getClass(): ?ReflectionClass
     {
-        return $this->class;
+        if ($this->contextReflection instanceof ReflectionClass) {
+            return $this->contextReflection;
+        }
+
+        if ($this->contextReflection instanceof ReflectionFunction) {
+            return null;
+        }
+
+        if ($this->contextReflection instanceof ReflectionConstant) {
+            return null;
+        }
+
+        return $this->contextReflection->getDeclaringClass();
     }
 
     public function getFunction(): ?ReflectionFunctionAbstract
     {
-        return $this->function;
+        if ($this->contextReflection instanceof ReflectionMethod) {
+            return $this->contextReflection;
+        }
+
+        if ($this->contextReflection instanceof ReflectionFunction) {
+            return $this->contextReflection;
+        }
+
+        if ($this->contextReflection instanceof ReflectionParameter) {
+            return $this->contextReflection->getDeclaringFunction();
+        }
+
+        return null;
     }
 }
