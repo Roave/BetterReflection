@@ -175,10 +175,7 @@ class CompileNodeToValue
             $reflectionConstant->getAst()->consts[$reflectionConstant->getPositionInAst()]->value,
             new CompilerContext(
                 $context->getReflector(),
-                $context->getFileName(),
-                $context->getNamespace(),
                 $classInfo,
-                $context->getFunction(),
             ),
         );
     }

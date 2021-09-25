@@ -43,29 +43,30 @@ PHP;
 
         $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $class     = $reflector->reflect('Foo\Boo');
-        $function  = $class->getMethod('baz');
 
-        $context = new CompilerContext($reflector, null, $class->getNamespaceName(), $class, $function);
+        $context = new CompilerContext($reflector, $class);
 
         self::assertSame($reflector, $context->getReflector());
         self::assertNull($context->getFileName());
-        self::assertSame($class->getNamespaceName(), $context->getNamespace());
+        self::assertSame('Foo', $context->getNamespace());
         self::assertSame($class, $context->getClass());
-        self::assertSame($function, $context->getFunction());
+        self::assertNull($context->getFunction());
     }
 
     public function testCreatingContextWithoutClass(): void
     {
-        $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
-        $context   = new CompilerContext($reflector, null, null, null, null);
+        $sourceLocator     = new StringSourceLocator('<?php function foo() {}', $this->astLocator);
+        $classReflector    = new ClassReflector($sourceLocator);
+        $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
+        $context           = new CompilerContext($classReflector, $functionReflector->reflect('foo'));
 
         self::assertNull($context->getClass());
     }
 
     public function testCreatingContextWithoutFunction(): void
     {
-        $reflector = new ClassReflector(new StringSourceLocator('<?php', $this->astLocator));
-        $context   = new CompilerContext($reflector, null, null, null, null);
+        $classReflector = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
+        $context        = new CompilerContext($classReflector, $classReflector->reflect('Foo'));
 
         self::assertNull($context->getFunction());
     }

@@ -77,7 +77,7 @@ class ReflectionClassConstant
 
         $this->value          = (new CompileNodeToValue())->__invoke(
             $this->node->consts[$this->positionInNode]->value,
-            new CompilerContext($this->reflector, $this->owner->getFileName(), $this->owner->getNamespaceName(), $this->getDeclaringClass(), null),
+            new CompilerContext($this->reflector, $this),
         );
         $this->valueWasCached = true;
 

@@ -217,7 +217,7 @@ class ReflectionConstant implements Reflection
 
         $this->value          = (new CompileNodeToValue())->__invoke(
             $valueNode,
-            new CompilerContext($this->reflector, $this->getFileName(), $this->getNamespaceName(), null, null),
+            new CompilerContext($this->reflector, $this),
         );
         $this->valueWasCached = true;
 

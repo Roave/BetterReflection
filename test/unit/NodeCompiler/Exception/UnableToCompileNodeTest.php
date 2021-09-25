@@ -15,6 +15,7 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -45,7 +46,7 @@ final class UnableToCompileNodeTest extends TestCase
 
         self::assertSame(
             sprintf(
-                'Could not locate constant "%s" while evaluating expression in %s in file someFile (line -1)',
+                'Could not locate constant "%s" while evaluating expression in %s in file "" (line -1)',
                 $constantName,
                 $contextName,
             ),
@@ -67,7 +68,7 @@ final class UnableToCompileNodeTest extends TestCase
 
         self::assertSame(
             sprintf(
-                'Could not locate constant An\Example::SOME_CONSTANT while trying to evaluate constant expression in %s in file someFile (line -1)',
+                'Could not locate constant An\Example::SOME_CONSTANT while trying to evaluate constant expression in %s in file "" (line -1)',
                 $contextName,
             ),
             UnableToCompileNode::becauseOfNotFoundClassConstantReference(
@@ -86,7 +87,7 @@ final class UnableToCompileNodeTest extends TestCase
     {
         self::assertSame(
             sprintf(
-                'Unable to compile expression in %s: unrecognized node type %s in file someFile (line -1)',
+                'Unable to compile expression in %s: unrecognized node type %s in file "" (line -1)',
                 $contextName,
                 Yield_::class,
             ),
@@ -103,6 +104,8 @@ final class UnableToCompileNodeTest extends TestCase
         $php = <<<'PHP'
             <?php
             
+            define('SOME_CONSTANT', 'some_constant');
+            
             class SomeClass
             {
                 public function someMethod()
@@ -118,17 +121,18 @@ final class UnableToCompileNodeTest extends TestCase
         $sourceLocator     = new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator());
         $classReflector    = new ClassReflector($sourceLocator);
         $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
+        $constantReflector = new ConstantReflector($sourceLocator, $classReflector);
 
-        $namespace = null;
-        $class     = $classReflector->reflect('SomeClass');
-        $method    = $class->getMethod('someMethod');
-        $function  = $functionReflector->reflect('someFunction');
+        $class    = $classReflector->reflect('SomeClass');
+        $method   = $class->getMethod('someMethod');
+        $function = $functionReflector->reflect('someFunction');
+        $constant = $constantReflector->reflect('SOME_CONSTANT');
 
         return [
-            [new CompilerContext($classReflector, 'someFile', $namespace, null, null), 'unknown context'],
-            [new CompilerContext($classReflector, 'someFile', $namespace, $class, null), 'class SomeClass'],
-            [new CompilerContext($classReflector, 'someFile', $namespace, $class, $method), 'method SomeClass::someMethod()'],
-            [new CompilerContext($classReflector, 'someFile', $namespace, null, $function), 'function someFunction()'],
+            [new CompilerContext($classReflector, $constant), 'unknown context'],
+            [new CompilerContext($classReflector, $class), 'class SomeClass'],
+            [new CompilerContext($classReflector, $method), 'method SomeClass::someMethod()'],
+            [new CompilerContext($classReflector, $function), 'function someFunction()'],
         ];
     }
 }
