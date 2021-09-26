@@ -18,7 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 class IdentifierTypeTest extends TestCase
 {
     /**
-     * @return string[][]
+     * @return list<list<string>>
      */
     public function possibleIdentifierTypesProvider(): array
     {

@@ -406,7 +406,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 }
 
                 // @ because access to deprecated constant throws deprecated warning
-                /** @var scalar|scalar[]|null $constantValue */
+                /** @var scalar|list<scalar>|null $constantValue */
                 $constantValue           = @constant($constantName);
                 $normalizedConstantValue = BuilderHelpers::normalizeValue($constantValue);
 

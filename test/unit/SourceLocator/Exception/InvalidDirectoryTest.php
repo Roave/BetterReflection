@@ -29,7 +29,7 @@ class InvalidDirectoryTest extends TestCase
     }
 
     /**
-     * @return string[][]|mixed[][]
+     * @return list<array{0: string, 1: mixed}>
      */
     public function nonStringValuesProvider(): array
     {

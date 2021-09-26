@@ -66,7 +66,7 @@ final class FindReflectionOnLine
     /**
      * Find all class and function reflections in the specified file
      *
-     * @return Reflection[]
+     * @return list<Reflection>
      *
      * @throws ParseToAstFailure
      * @throws InvalidFileLocation

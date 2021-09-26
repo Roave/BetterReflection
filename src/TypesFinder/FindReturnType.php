@@ -31,7 +31,7 @@ class FindReturnType
     /**
      * Given a function, attempt to find the return type.
      *
-     * @return Type[]
+     * @return list<Type>
      */
     public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace): array
     {

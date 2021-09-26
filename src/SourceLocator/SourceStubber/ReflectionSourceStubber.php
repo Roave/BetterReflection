@@ -152,7 +152,7 @@ final class ReflectionSourceStubber implements SourceStubber
     }
 
     /**
-     * @return array{0: scalar|scalar[]|null, 1: string}|null
+     * @return array{0: scalar|list<scalar>|null, 1: string}|null
      */
     private function findConstantData(string $constantName): ?array
     {

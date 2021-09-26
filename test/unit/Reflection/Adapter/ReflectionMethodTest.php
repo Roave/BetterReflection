@@ -107,7 +107,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param mixed[] $args
+     * @param list<mixed> $args
      *
      * @dataProvider methodExpectationProvider
      */

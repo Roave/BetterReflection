@@ -46,7 +46,7 @@ class ReturnNodeVisitorTest extends TestCase
     }
 
     /**
-     * @param Node[] $statements
+     * @param list<Node> $statements
      *
      * @dataProvider outOfScopeNodeTypeProvider
      */

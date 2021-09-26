@@ -128,7 +128,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionClassConstant[] $constants
+     * @param array<ReflectionClassConstant> $constants
      */
     private static function constantsToString(array $constants): string
     {
@@ -140,7 +140,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionProperty[] $properties
+     * @param array<ReflectionProperty> $properties
      */
     private static function propertiesToString(array $properties): string
     {
@@ -152,7 +152,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param ReflectionMethod[] $methods
+     * @param array<ReflectionMethod> $methods
      */
     private static function methodsToString(ReflectionClass $classReflection, array $methods, int $emptyLinesAmongItems = 1): string
     {
@@ -164,7 +164,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @param string[] $items
+     * @param array<string> $items
      */
     private static function itemsToString(array $items, int $emptyLinesAmongItems = 1): string
     {
@@ -179,7 +179,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @return ReflectionProperty[]
+     * @return array<ReflectionProperty>
      */
     private static function getStaticProperties(ReflectionClass $classReflection): array
     {
@@ -187,7 +187,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @return ReflectionMethod[]
+     * @return array<ReflectionMethod>
      */
     private static function getStaticMethods(ReflectionClass $classReflection): array
     {
@@ -195,7 +195,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @return ReflectionProperty[]
+     * @return array<ReflectionProperty>
      */
     private static function getDefaultProperties(ReflectionClass $classReflection): array
     {
@@ -203,7 +203,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @return ReflectionProperty[]
+     * @return array<ReflectionProperty>
      */
     private static function getDynamicProperties(ReflectionClass $classReflection): array
     {
@@ -211,7 +211,7 @@ final class ReflectionClassStringCast
     }
 
     /**
-     * @return ReflectionMethod[]
+     * @return array<ReflectionMethod>
      */
     private static function getMethods(ReflectionClass $classReflection): array
     {

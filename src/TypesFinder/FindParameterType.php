@@ -33,7 +33,7 @@ class FindParameterType
     /**
      * Given a function and parameter, attempt to find the type of the parameter.
      *
-     * @return Type[]
+     * @return list<Type>
      */
     public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace, ParamNode $node): array
     {

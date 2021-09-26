@@ -98,7 +98,7 @@ final class UnableToCompileNodeTest extends TestCase
         );
     }
 
-    /** @return CompilerContext[] */
+    /** @return list<array{0: CompilerContext, 1: string}> */
     public function supportedContextTypes(): array
     {
         $php = <<<'PHP'

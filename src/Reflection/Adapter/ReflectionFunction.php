@@ -255,7 +255,7 @@ class ReflectionFunction extends CoreReflectionFunction
     }
 
     /**
-     * @param mixed[] $args
+     * @param list<mixed> $args
      */
     public function invokeArgs(array $args)
     {

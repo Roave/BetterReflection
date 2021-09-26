@@ -340,7 +340,7 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @param mixed[] $args
+     * @param list<mixed> $args
      */
     public function invokeArgs(?object $object = null, array $args = [])
     {

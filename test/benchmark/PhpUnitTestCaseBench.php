@@ -22,13 +22,13 @@ class PhpUnitTestCaseBench
     /** @var Reflector */
     private $reflector;
 
-    /** @var ReflectionProperty[] */
+    /** @var list<ReflectionProperty> */
     private $properties;
 
-    /** @var ReflectionMethod[] */
+    /** @var list<ReflectionMethod> */
     private $methods;
 
-    /** @var ReflectionParameter[] */
+    /** @var list<ReflectionParameter> */
     private $parameters = [];
 
     public function __construct()

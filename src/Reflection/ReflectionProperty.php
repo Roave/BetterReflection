@@ -228,7 +228,7 @@ class ReflectionProperty
     /**
      * Get the DocBlock type hints as an array of strings.
      *
-     * @return string[]
+     * @return list<string>
      */
     public function getDocBlockTypeStrings(): array
     {
@@ -247,7 +247,7 @@ class ReflectionProperty
      * when you type hint pipe-separated "string|null", in which case this
      * would return an array of Type objects, one for string, one for null.
      *
-     * @return Type[]
+     * @return list<Type>
      */
     public function getDocBlockTypes(): array
     {

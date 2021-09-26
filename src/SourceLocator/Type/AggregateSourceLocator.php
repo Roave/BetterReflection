@@ -14,11 +14,11 @@ use function array_merge;
 
 class AggregateSourceLocator implements SourceLocator
 {
-    /** @var SourceLocator[] */
+    /** @var list<SourceLocator> */
     private array $sourceLocators;
 
     /**
-     * @param SourceLocator[] $sourceLocators
+     * @param list<SourceLocator> $sourceLocators
      */
     public function __construct(array $sourceLocators = [])
     {

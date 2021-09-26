@@ -77,7 +77,7 @@ class DirectoriesSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param string[] $directories
+     * @param list<string> $directories
      *
      * @dataProvider invalidDirectoriesProvider
      */

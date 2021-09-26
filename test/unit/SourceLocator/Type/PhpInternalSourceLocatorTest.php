@@ -86,7 +86,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return list<list<string>>
      */
     public function internalClassesProvider(): array
     {
@@ -136,7 +136,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return list<list<string>>
      */
     public function internalFunctionsProvider(): array
     {
@@ -167,7 +167,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return list<list<string>>
      */
     public function internalConstantsProvider(): array
     {

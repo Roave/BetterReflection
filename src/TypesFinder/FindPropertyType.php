@@ -33,7 +33,7 @@ class FindPropertyType
     /**
      * Given a property, attempt to find the type of the property.
      *
-     * @return Type[]
+     * @return list<Type>
      */
     public function __invoke(ReflectionProperty $reflectionProperty, ?Namespace_ $namespace): array
     {

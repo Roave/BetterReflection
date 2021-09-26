@@ -349,7 +349,7 @@ abstract class ReflectionFunctionAbstract
      * when you type hint pipe-separated "string|null", in which case this
      * would return an array of Type objects, one for string, one for null.
      *
-     * @return Type[]
+     * @return list<Type>
      */
     public function getDocBlockReturnTypes(): array
     {
