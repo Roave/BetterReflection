@@ -366,7 +366,7 @@ abstract class ReflectionFunctionAbstract
      */
     public function hasReturnType(): bool
     {
-        return $this->getReturnType() !== null;
+        return $this->node->getReturnType() !== null;
     }
 
     /**
