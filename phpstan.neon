@@ -5,6 +5,9 @@ parameters:
     paths:
         - src
 
+    bootstrapFiles:
+        - stubs/ReflectionIntersectionType.php
+
     ignoreErrors:
         -
             message: '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'

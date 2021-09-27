@@ -4,6 +4,7 @@
             "src"
         ]
     },
+    "bootstrap": "./infection.bootstrap.php",
     "logs": {
         "text": "php:\/\/stderr",
         "badge": {
