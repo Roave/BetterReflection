@@ -348,7 +348,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the return type declaration (only for PHP 7+ code)
+     * Get the return type declaration
      */
     public function getReturnType(): ReflectionNamedType|ReflectionUnionType|null
     {
@@ -362,7 +362,7 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Do we have a return type declaration (only for PHP 7+ code)
+     * Do we have a return type declaration
      */
     public function hasReturnType(): bool
     {
