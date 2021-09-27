@@ -367,6 +367,24 @@ abstract class ReflectionFunctionAbstract
         return $this->node->getReturnType() !== null;
     }
 
+    public function hasTentativeReturnType(): bool
+    {
+        if ($this->isUserDefined()) {
+            return false;
+        }
+
+        return $this->hasReturnType();
+    }
+
+    public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|null
+    {
+        if ($this->isUserDefined()) {
+            return null;
+        }
+
+        return $this->getReturnType();
+    }
+
     /**
      * Set the return type declaration.
      */
