@@ -77,6 +77,13 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
         return false;
     }
 
+    public function isStatic(): bool
+    {
+        $node = $this->getAst();
+
+        return ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction) && $node->static;
+    }
+
     /**
      * @throws NotImplemented
      * @throws FunctionDoesNotExist

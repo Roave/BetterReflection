@@ -185,6 +185,47 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(ClassWithStaticMethod::class, $theParam->getName());
     }
 
+    public function testIsStaticFromClosure(): void
+    {
+        // phpcs:disable SlevomatCodingStandard.Functions.RequireArrowFunction
+        $closure = static function () {
+            return 5;
+        };
+        // phpcs:enable
+        $reflection = ReflectionFunction::createFromClosure($closure);
+        self::assertTrue($reflection->isStatic());
+    }
+
+    public function testIsNotStaticFromClosure(): void
+    {
+        // phpcs:disable SlevomatCodingStandard.Functions.RequireArrowFunction
+        // phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
+        $closure = function () {
+            return 5;
+        };
+        // phpcs:enable
+        $reflection = ReflectionFunction::createFromClosure($closure);
+        self::assertFalse($reflection->isStatic());
+    }
+
+    public function testIsStaticFromArrowFunction(): void
+    {
+        $closure = static fn () => 5;
+
+        $reflection = ReflectionFunction::createFromClosure($closure);
+        self::assertTrue($reflection->isStatic());
+    }
+
+    public function testIsNotStaticFromArrowFunction(): void
+    {
+        // phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
+        $closure = fn () => 5;
+        // phpcs:enable
+
+        $reflection = ReflectionFunction::createFromClosure($closure);
+        self::assertFalse($reflection->isStatic());
+    }
+
     public function testToString(): void
     {
         require_once __DIR__ . '/../Fixture/Functions.php';
