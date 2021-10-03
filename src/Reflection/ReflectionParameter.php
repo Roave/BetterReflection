@@ -29,13 +29,16 @@ use RuntimeException;
 use function assert;
 use function count;
 use function get_class;
+use function gettype;
 use function in_array;
+use function is_a;
 use function is_array;
 use function is_object;
 use function is_string;
 use function preg_match;
 use function sprintf;
 use function strtolower;
+use function ltrim;
 
 class ReflectionParameter
 {
@@ -47,14 +50,20 @@ class ReflectionParameter
 
     private int $parameterIndex;
 
-    /** @var scalar|array<scalar>|null */
-    private string|int|float|bool|array|null $defaultValue = null;
+    /** 
+     * @var scalar|array<scalar>|null
+     */
+    private string|int|float|bool|array|null $defaultValue;
 
     private bool $isDefaultValueConstant = false;
 
     private ?string $defaultValueConstantName;
 
     private Reflector $reflector;
+
+    private ?bool $isArray;
+
+    private ?bool $isCallable;
 
     private function __construct()
     {
@@ -396,6 +405,7 @@ class ReflectionParameter
      */
     public function setType(string $newParameterType): void
     {
+        $this->removeType();
         $this->node->type = new Node\Name($newParameterType);
     }
 
@@ -405,6 +415,8 @@ class ReflectionParameter
     public function removeType(): void
     {
         $this->node->type = null;
+        $this->isArray = null;
+        $this->isCallable = null;
     }
 
     /**
@@ -412,7 +424,10 @@ class ReflectionParameter
      */
     public function isArray(): bool
     {
-        return preg_match('~^\??array$~i', (string) $this->getType()) === 1;
+        if ($this->isArray === null) {
+            $this->isArray = $this->hasType('array');
+        }
+        return $this->isArray;
     }
 
     /**
@@ -420,7 +435,10 @@ class ReflectionParameter
      */
     public function isCallable(): bool
     {
-        return preg_match('~^\??callable$~i', (string) $this->getType()) === 1;
+        if ($this->isCallable === null) {
+            $this->isCallable = $this->hasType('callable');
+        }
+        return $this->isCallable;
     }
 
     /**
@@ -457,6 +475,48 @@ class ReflectionParameter
         $this->parseDefaultValueNode();
 
         return $this->isDefaultValueConstant;
+    }
+
+    /**
+     * Checks parameter type.
+     */
+    public function hasType(string|ReflectionNamedType $type, bool $ignoreDefaultValue = false): bool
+    {
+        $aliases = ['boolean' => 'bool', 'integer' => 'int', 'double' => 'float', 'NULL' => 'null'];
+
+        $typeName = strtolower(ltrim((string) $type, '?'));
+        $typeName = $aliases[$typeName] ?? $typeName;
+
+        if ($typeName === 'null' && $this->allowsNull()) {
+            return true;
+        }
+        // optional, fast check by default value
+        if (! $ignoreDefaultValue && $this->isDefaultValueAvailable()) {
+            $defaultType = gettype($this->getDefaultValue());
+            if (
+                ($aliases[$defaultType] ?? $defaultType) === $typeName
+                || ($typeName === 'iterable' && $defaultType === 'array')
+            ) {
+                return true;
+            }
+        }
+
+        if ($this->hasType()) {
+            $paramType = $this->getType();
+            $paramTypes = $paramType instanceof ReflectionNamedType
+                ? [$paramType]
+                : $paramType->getTypes();
+            foreach ($paramTypes as $paramType) {
+                if (
+                    strtolower($paramType->getName()) === $typeName
+                    || (! $paramType->isBuiltin() && is_a($paramType->getName(), $typeName, true))
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
