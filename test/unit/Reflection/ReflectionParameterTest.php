@@ -489,7 +489,7 @@ class ReflectionParameterTest extends TestCase
 
         $betterParam = $method->getParameter('optionalParameter');
         $nativeParam = new \ReflectionParameter([Methods::class, 'methodWithOptionalParameters'], 1);
-        self::assertSame($betterParam->isDefaultValueAvailable(), $nativeParam>isDefaultValueAvailable());
+        self::assertSame($betterParam->isDefaultValueAvailable(), $nativeParam->isDefaultValueAvailable());
     }
 
     public function testParameterWithDefaultValueBeforeVariadicParameterShouldBeOptional(): void
