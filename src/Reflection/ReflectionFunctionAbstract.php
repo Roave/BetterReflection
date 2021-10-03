@@ -347,7 +347,7 @@ abstract class ReflectionFunctionAbstract
     /**
      * Get the return type declaration
      */
-    public function getReturnType(): ReflectionNamedType|ReflectionUnionType|null
+    public function getReturnType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         $returnType = $this->node->getReturnType();
         assert($returnType instanceof Node\Identifier || $returnType instanceof Node\Name || $returnType instanceof Node\NullableType || $returnType instanceof Node\UnionType || $returnType instanceof Node\IntersectionType || $returnType === null);
@@ -376,7 +376,7 @@ abstract class ReflectionFunctionAbstract
         return $this->hasReturnType();
     }
 
-    public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|null
+    public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         if ($this->isUserDefined()) {
             return null;

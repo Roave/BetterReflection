@@ -389,6 +389,7 @@ class ReflectionParameterTest extends TestCase
             ['unionNotCallableParameter', false],
             ['unionWithCallableNotCallableParameter', false],
             ['unionWithCallableAndObjectNotArrayParameter', false],
+            ['intersectionNotCallableParameter', false],
         ];
     }
 
@@ -417,6 +418,7 @@ class ReflectionParameterTest extends TestCase
             ['unionNotArrayParameter', false],
             ['unionWithArrayNotArrayParameter', false],
             ['unionWithArrayAndObjectNotArrayParameter', false],
+            ['intersectionNotArrayParameter', false],
         ];
     }
 
@@ -640,28 +642,33 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    public function testGetClassForTypeHintedMethodParameters(): void
+    public function getClassProvider(): array
     {
-        $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object, string|\stdClass $unionWithClass, string|bool $unionWithoutClass) {} }';
+        return [
+            ['untyped', null],
+            ['array', null],
+            ['object', 'stdClass'],
+            ['unionWithClass', 'stdClass'],
+            ['unionWithoutClass', null],
+            ['intersection', null],
+        ];
+    }
 
-        $reflector  = new DefaultReflector(new AggregateSourceLocator([
+    /**
+     * @dataProvider getClassProvider
+     */
+    public function testGetClass(string $parameterName, ?string $className): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
             new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
-            new StringSourceLocator($content, $this->astLocator),
+            new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator),
         ]));
-        $classInfo  = $reflector->reflectClass('Foo');
-        $methodInfo = $classInfo->getMethod('myMethod');
 
-        self::assertNull($methodInfo->getParameter('untyped')->getClass());
-        self::assertNull($methodInfo->getParameter('array')->getClass());
-        self::assertNull($methodInfo->getParameter('unionWithoutClass')->getClass());
+        $classReflection     = $reflector->reflectClass(Methods::class);
+        $methodReflection    = $classReflection->getMethod('methodGetClassParameters');
+        $parameterReflection = $methodReflection->getParameter($parameterName);
 
-        $hintedClassReflection = $methodInfo->getParameter('object')->getClass();
-        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        self::assertSame('stdClass', $hintedClassReflection->getName());
-
-        $fromUnionClassReflection = $methodInfo->getParameter('unionWithClass')->getClass();
-        self::assertInstanceOf(ReflectionClass::class, $fromUnionClassReflection);
-        self::assertSame('stdClass', $fromUnionClassReflection->getName());
+        self::assertSame($className, $parameterReflection->getClass()?->getName());
     }
 
     public function testCannotClone(): void

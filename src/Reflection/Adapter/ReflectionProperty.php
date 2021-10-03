@@ -72,7 +72,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->hasType();
     }
 
-    public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionType|null
+    public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionProperty->getType());
     }

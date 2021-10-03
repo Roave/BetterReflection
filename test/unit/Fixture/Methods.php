@@ -74,6 +74,7 @@ abstract class Methods
         string|bool $unionNotArrayParameter,
         array|string|null $unionWithArrayNotArrayParameter,
         array|object $unionWithArrayAndObjectNotArrayParameter,
+        \stdClass&\Iterator $intersectionNotArrayParameter,
     )
     {
     }
@@ -89,6 +90,18 @@ abstract class Methods
         string|bool $unionNotCallableParameter,
         callable|string|null $unionWithCallableNotCallableParameter,
         callable|object $unionWithCallableAndObjectNotArrayParameter,
+        \stdClass&\Iterator $intersectionNotCallableParameter,
+    )
+    {
+    }
+
+    public function methodGetClassParameters(
+        $untyped,
+        array $array,
+        \stdClass $object,
+        string|\stdClass $unionWithClass,
+        string|bool $unionWithoutClass,
+        \stdClass&\Iterator $intersection,
     )
     {
     }
