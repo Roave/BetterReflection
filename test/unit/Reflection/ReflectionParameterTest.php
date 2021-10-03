@@ -426,6 +426,26 @@ class ReflectionParameterTest extends TestCase
         $arrayParam = $method->getParameter('arrayParameter');
         self::assertTrue($arrayParam->isArray());
     }
+    
+
+    public function testHasType(): void
+    {
+        $classInfo = $this->reflector->reflect(Methods::class);
+        // methodWithTypedParams(\Iterator $iterator, int $integer, $arrayByDefault = [])
+        $method = $classInfo->getMethod('methodWithTypedParams');
+
+        $iteratorParam = $method->getParameter('iterator');
+        self::assertTrue($iteratorParam->hasType(\Iterator::class));
+        self::assertFalse($iteratorParam->hasType('string'));
+
+        $intParam = $method->getParameter('integer');
+        self::assertTrue($intParam->hasType('integer'));
+        self::assertTrue($intParam->hasType('int'));
+
+        $arrayByDefaultParam = $method->getParameter('arrayByDefault');
+        self::assertTrue($arrayByDefaultParam->hasType('array'));
+        self::assertFalse($arrayByDefaultParam->hasType('array', true));
+    }
 
     public function testIsVariadic(): void
     {
