@@ -90,4 +90,8 @@ abstract class Methods
     public function methodWithUpperCasedDefaults($boolUpper = TRUE, $boolLower = false, $nullUpper = NULL)
     {
     }
+    
+    public function methodWithTypedParams(\Iterator $iterator, int $integer, $arrayByDefault = [])
+    {
+    }
 }
