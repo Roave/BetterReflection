@@ -481,6 +481,16 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($secondParam->isOptional());
         self::assertFalse($secondParam->isDefaultValueAvailable());
     }
+    
+    public function testIsDefaultValueAvailable(): void
+    {
+        $classInfo = $this->reflector->reflect(Methods::class);
+        $method    = $classInfo->getMethod('methodWithOptionalParameters');
+
+        $betterParam = $method->getParameter('optionalParameter');
+        $nativeParam = new \ReflectionParameter([Methods::class, 'methodWithOptionalParameters'], 1);
+        self::assertSame($betterParam->isDefaultValueAvailable(), $nativeParam>isDefaultValueAvailable());
+    }
 
     public function testParameterWithDefaultValueBeforeVariadicParameterShouldBeOptional(): void
     {
