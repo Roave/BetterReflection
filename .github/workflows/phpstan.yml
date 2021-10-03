@@ -6,7 +6,7 @@ on:
   pull_request:
   push:
     branches:
-      - "master"
+      - "5.0.x"
 
 jobs:
   static-analysis-phpstan:
