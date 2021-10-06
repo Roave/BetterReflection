@@ -285,10 +285,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                     }
                 }
 
-                if ($node instanceof Node\Stmt\Class_) {
-                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
-                }
-
                 return null;
             }
 
