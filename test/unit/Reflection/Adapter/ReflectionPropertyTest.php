@@ -28,7 +28,7 @@ use function get_class_methods;
  */
 class ReflectionPropertyTest extends TestCase
 {
-    public function coreReflectionPropertyNamesProvider(): array
+    public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionProperty::class);
 
@@ -36,9 +36,9 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /**
-     * @dataProvider coreReflectionPropertyNamesProvider
+     * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionProperties(string $methodName): void
+    public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionPropertyAdapterReflection = new CoreReflectionClass(ReflectionPropertyAdapter::class);
 
