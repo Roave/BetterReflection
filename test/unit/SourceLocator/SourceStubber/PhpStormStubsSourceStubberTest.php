@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
+use CompileError;
+use DateInterval;
+use DateTime;
+use DateTimeInterface;
+use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionMethod as CoreReflectionMethod;
+use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter as CoreReflectionParameter;
+use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -17,12 +24,17 @@ use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\ConstantReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Stringable;
 
 use function array_filter;
+use function array_key_exists;
 use function array_map;
 use function array_merge;
 use function get_declared_classes;
@@ -42,6 +54,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
 {
     private const EXTENSIONS = ['Core', 'standard', 'pcre', 'SPL'];
 
+    private Parser $phpParser;
+
+    private Locator $astLocator;
+
     private PhpStormStubsSourceStubber $sourceStubber;
 
     private PhpInternalSourceLocator $phpInternalSourceLocator;
@@ -58,11 +74,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $betterReflection = BetterReflectionSingleton::instance();
 
-        $this->sourceStubber            = new PhpStormStubsSourceStubber($betterReflection->phpParser());
-        $this->phpInternalSourceLocator = new PhpInternalSourceLocator(
-            $betterReflection->astLocator(),
-            $this->sourceStubber,
-        );
+        $this->phpParser                = $betterReflection->phpParser();
+        $this->astLocator               = $betterReflection->astLocator();
+        $this->sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser);
+        $this->phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
         $this->classReflector           = new ClassReflector($this->phpInternalSourceLocator);
         $this->functionReflector        = new FunctionReflector($this->phpInternalSourceLocator, $this->classReflector);
         $this->constantReflector        = new ConstantReflector($this->phpInternalSourceLocator, $this->classReflector);
@@ -638,5 +653,162 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $constConstantStub = $sourceStubber->generateConstantStub('Roave\BetterReflectionTest\Fixture\CONST_CONSTANT');
         self::assertNotNull($constConstantStub);
         self::assertStringContainsString("const CONST_CONSTANT = 'actualValue';", $constConstantStub->getStub());
+    }
+
+    public function dataClassInPhpVersion(): array
+    {
+        return [
+            [CoreReflectionNamedType::class, 70000, false],
+            [CoreReflectionNamedType::class, 70100, true],
+            [CoreReflectionNamedType::class, 70200, true],
+            [CompileError::class, 70300, true],
+            [CompileError::class, 70000, false],
+            [Stringable::class, 80000, true],
+            [Stringable::class, 70400, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataClassInPhpVersion
+     */
+    public function testClassInPhpVersion(string $className, int $phpVersion, bool $isSupported): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+
+        $stub = $sourceStubber->generateClassStub($className);
+
+        if ($isSupported) {
+            self::assertNotNull($stub, $className);
+        } else {
+            self::assertNull($stub, $className);
+        }
+    }
+
+    public function dataClassConstantInPhpVersion(): array
+    {
+        return [
+            [DateTimeInterface::class, 'ATOM', 70200, true],
+            [DateTimeInterface::class, 'ATOM', 70100, false],
+            [DateTime::class, 'ATOM', 70100, true],
+            [DateTime::class, 'ATOM', 70200, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataClassConstantInPhpVersion
+     */
+    public function testClassConstantInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isSupported): void
+    {
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
+        $classReflector           = new ClassReflector($phpInternalSourceLocator);
+
+        $constants = $classReflector->reflect($className)->getImmediateConstants();
+
+        self::assertSame($isSupported, array_key_exists($constantName, $constants));
+    }
+
+    public function dataMethodInPhpVersion(): array
+    {
+        return [
+            [CoreReflectionProperty::class, 'hasType', 70400, true],
+            [CoreReflectionProperty::class, 'hasType', 70300, false],
+            [CoreReflectionProperty::class, 'getType', 70400, true],
+            [CoreReflectionProperty::class, 'getType', 70300, false],
+            [CoreReflectionClass::class, 'export', 70400, true],
+            [CoreReflectionClass::class, 'export', 80000, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataMethodInPhpVersion
+     */
+    public function testMethodInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isSupported): void
+    {
+        $sourceStubber  = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $sourceLocator  = new AggregateSourceLocator([
+            // We need to hack Stringable to make the test work
+            new StringSourceLocator('<?php interface Stringable {}', $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $sourceStubber),
+        ]);
+        $classReflector = new ClassReflector($sourceLocator);
+
+        self::assertSame($isSupported, $classReflector->reflect($className)->hasMethod($methodName));
+    }
+
+    public function dataPropertyInPhpVersion(): array
+    {
+        return [
+            [DateInterval::class, 'f', 70100, true],
+            [DateInterval::class, 'f', 70000, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataPropertyInPhpVersion
+     */
+    public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported): void
+    {
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
+        $classReflector           = new ClassReflector($phpInternalSourceLocator);
+
+        self::assertSame($isSupported, $classReflector->reflect($className)->hasProperty($propertyName));
+    }
+
+    public function dataFunctionInPhpVersion(): array
+    {
+        return [
+            ['password_algos', 70400, true],
+            ['password_algos', 70300, false],
+            ['array_key_first', 70300, true],
+            ['array_key_first', 70200, false],
+            ['str_starts_with', 80000, true],
+            ['str_starts_with', 70400, false],
+            ['mysql_query', 50400, true],
+            ['mysql_query', 70000, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataFunctionInPhpVersion
+     */
+    public function testFunctionInPhpVersion(string $functionName, int $phpVersion, bool $isSupported): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+
+        $stub = $sourceStubber->generateFunctionStub($functionName);
+
+        if ($isSupported) {
+            self::assertNotNull($stub, $functionName);
+        } else {
+            self::assertNull($stub, $functionName);
+        }
+    }
+
+    public function dataConstantInPhpVersion(): array
+    {
+        return [
+            ['PHP_OS_FAMILY', 70200, true],
+            ['PHP_OS_FAMILY', 70100, false],
+            ['INPUT_SESSION', 70400, true],
+            ['INPUT_SESSION', 80000, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataConstantInPhpVersion
+     */
+    public function testConstantInPhpVersion(string $constantName, int $phpVersion, bool $isSupported): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+
+        $stub = $sourceStubber->generateConstantStub($constantName);
+
+        if ($isSupported) {
+            self::assertNotNull($stub, $constantName);
+        } else {
+            self::assertNull($stub, $constantName);
+        }
     }
 }

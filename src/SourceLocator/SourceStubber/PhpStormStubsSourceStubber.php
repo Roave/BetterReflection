@@ -22,6 +22,7 @@ use Traversable;
 
 use function array_change_key_case;
 use function array_key_exists;
+use function array_map;
 use function assert;
 use function constant;
 use function count;
@@ -31,6 +32,7 @@ use function file_get_contents;
 use function in_array;
 use function is_dir;
 use function is_string;
+use function preg_match;
 use function sprintf;
 use function str_replace;
 use function strtolower;
@@ -57,14 +59,22 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     private NodeVisitorAbstract $cachingVisitor;
 
-    /** @var array<string, Node\Stmt\ClassLike> */
+    /**
+     * `null` means "class is not supported in the required PHP version"
+     *
+     * @var array<string, Node\Stmt\ClassLike|null>
+     */
     private array $classNodes = [];
 
-    /** @var array<string, Node\Stmt\Function_> */
+    /**
+     * `null` means "function is not supported in the required PHP version"
+     *
+     * @var array<string, Node\Stmt\Function_|null>
+     */
     private array $functionNodes = [];
 
     /**
-     * `null` means "failed lookup" for constant that is not case insensitive
+     * `null` means "failed lookup" for constant that is not case insensitive or "constant is not supported in the required PHP version"
      *
      * @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall|null>
      */
@@ -81,7 +91,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var array<lowercase-string, string> */
     private static array $constantMap;
 
-    public function __construct(private Parser $phpParser)
+    public function __construct(private Parser $phpParser, private ?int $phpVersion = null)
     {
         $this->builderFactory = new BuilderFactory();
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
@@ -114,6 +124,16 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         if (! array_key_exists($lowercaseClassName, $this->classNodes)) {
             $this->parseFile($filePath);
+
+            /** @psalm-suppress RedundantCondition */
+            if (! array_key_exists($lowercaseClassName, $this->classNodes)) {
+                // Save `null` so we don't parse the file again for the same $lowercaseClassName
+                $this->classNodes[$lowercaseClassName] = null;
+            }
+        }
+
+        if ($this->classNodes[$lowercaseClassName] === null) {
+            return null;
         }
 
         $stub = $this->createStub($this->classNodes[$lowercaseClassName]);
@@ -140,6 +160,16 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         if (! array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
             $this->parseFile($filePath);
+
+            /** @psalm-suppress RedundantCondition */
+            if (! array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
+                 // Save `null` so we don't parse the file again for the same $lowercaseFunctionName
+                 $this->functionNodes[$lowercaseFunctionName] = null;
+            }
+        }
+
+        if ($this->functionNodes[$lowercaseFunctionName] === null) {
+            return null;
         }
 
         return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName]), $this->getExtensionFromFilePath($filePath));
@@ -198,6 +228,12 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             assert(is_string($className));
             assert($classNode instanceof Node\Stmt\ClassLike);
 
+            if (! $this->isSupportedInPhpVersion($classNode)) {
+                continue;
+            }
+
+            $classNode->stmts = $this->filterStmtsByPhpVersion($classNode->stmts);
+
             $this->classNodes[strtolower($className)] = $classNode;
         }
 
@@ -208,6 +244,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             assert(is_string($functionName));
             assert($functionNode instanceof Node\Stmt\Function_);
 
+            if (! $this->isSupportedInPhpVersion($functionNode)) {
+                continue;
+            }
+
             $this->functionNodes[strtolower($functionName)] = $functionNode;
         }
 
@@ -217,6 +257,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
             assert(is_string($constantName));
             assert($constantNode instanceof Node\Stmt\Const_ || $constantNode instanceof Node\Expr\FuncCall);
+
+            if (! $this->isSupportedInPhpVersion($constantNode)) {
+                continue;
+            }
+
             $this->constantNodes[$constantName] = $constantNode;
         }
     }
@@ -382,6 +427,62 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     private function getAbsoluteFilePath(string $filePath): string
     {
         return sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
+    }
+
+    /**
+     * @param Node\Stmt[] $stmts
+     *
+     * @return Node\Stmt[]
+     */
+    private function filterStmtsByPhpVersion(array $stmts): array
+    {
+        $newStmts = [];
+        foreach ($stmts as $stmt) {
+            if (! $this->isSupportedInPhpVersion($stmt)) {
+                continue;
+            }
+
+            $newStmts[] = $stmt;
+        }
+
+        return $newStmts;
+    }
+
+    private function isSupportedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node): bool
+    {
+        if ($this->phpVersion === null) {
+            return true;
+        }
+
+        $docComment = $node->getDocComment();
+        if ($docComment === null) {
+            return true;
+        }
+
+        if (preg_match('~@since\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $sinceMatches) === 1) {
+            $sincePhpVersion = $this->parsePhpVersion($sinceMatches[1]);
+
+            if ($sincePhpVersion > $this->phpVersion) {
+                return false;
+            }
+        }
+
+        if (preg_match('~@removed\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $removedMatches) === 1) {
+            $removedPhpVersion = $this->parsePhpVersion($removedMatches[1]);
+
+            if ($removedPhpVersion <= $this->phpVersion) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function parsePhpVersion(string $version): int
+    {
+        $parts = array_map('intval', explode('.', $version));
+
+        return $parts[0] * 10000 + $parts[1] * 100 + ($parts[2] ?? 0);
     }
 
     private function getStubsDirectory(): string
