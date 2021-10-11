@@ -14,9 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\ConstantReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -122,27 +120,24 @@ function someFunction()
 }
 PHP;
 
-        $astLocator        = BetterReflectionSingleton::instance()->astLocator();
-        $sourceLocator     = new StringSourceLocator($php, $astLocator);
-        $classReflector    = new ClassReflector($sourceLocator);
-        $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
-        $constantReflector = new ConstantReflector(new AggregateSourceLocator([
-            $sourceLocator,
+        $astLocator = BetterReflectionSingleton::instance()->astLocator();
+        $reflector  = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($php, $astLocator),
             new PhpInternalSourceLocator($astLocator, BetterReflectionSingleton::instance()->sourceStubber()),
-        ]), $classReflector);
+        ]));
 
-        $class          = $classReflector->reflect('Foo\SomeClass');
+        $class          = $reflector->reflectClass('Foo\SomeClass');
         $method         = $class->getMethod('someMethod');
-        $function       = $functionReflector->reflect('Foo\someFunction');
-        $constant       = $constantReflector->reflect('Foo\SOME_CONSTANT');
-        $globalConstant = $constantReflector->reflect('PHP_VERSION_ID');
+        $function       = $reflector->reflectFunction('Foo\someFunction');
+        $constant       = $reflector->reflectConstant('Foo\SOME_CONSTANT');
+        $globalConstant = $reflector->reflectConstant('PHP_VERSION_ID');
 
         return [
-            [new CompilerContext($classReflector, $globalConstant), 'global namespace'],
-            [new CompilerContext($classReflector, $constant), 'namespace Foo'],
-            [new CompilerContext($classReflector, $class), 'class Foo\SomeClass'],
-            [new CompilerContext($classReflector, $method), 'method Foo\SomeClass::someMethod()'],
-            [new CompilerContext($classReflector, $function), 'function Foo\someFunction()'],
+            [new CompilerContext($reflector, $globalConstant), 'global namespace'],
+            [new CompilerContext($reflector, $constant), 'namespace Foo'],
+            [new CompilerContext($reflector, $class), 'class Foo\SomeClass'],
+            [new CompilerContext($reflector, $method), 'method Foo\SomeClass::someMethod()'],
+            [new CompilerContext($reflector, $function), 'function Foo\someFunction()'],
         ];
     }
 }

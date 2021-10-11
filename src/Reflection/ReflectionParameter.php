@@ -20,15 +20,12 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
-use Roave\BetterReflection\Reflector\ClassReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
-use RuntimeException;
 
 use function assert;
 use function count;
-use function get_class;
 use function in_array;
 use function is_array;
 use function is_object;
@@ -475,8 +472,6 @@ class ReflectionParameter
 
     /**
      * Gets a ReflectionClass for the type hint (returns null if not a class)
-     *
-     * @throws RuntimeException
      */
     public function getClass(): ?ReflectionClass
     {
@@ -486,15 +481,7 @@ class ReflectionParameter
             return null;
         }
 
-        if (! $this->reflector instanceof ClassReflector) {
-            throw new RuntimeException(sprintf(
-                'Unable to reflect class type because we were not given a "%s", but a "%s" instead',
-                ClassReflector::class,
-                get_class($this->reflector),
-            ));
-        }
-
-        return $this->reflector->reflect($className);
+        return $this->reflector->reflectClass($className);
     }
 
     private function getClassName(): ?string

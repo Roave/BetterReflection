@@ -1,7 +1,7 @@
 # Basic Usage
 
 The starting point for creating a reflection class does not match the typical core reflection API. Instead of 
-instantiating a `new \ReflectionClass`, you must use the appropriate `\Roave\BetterReflection\Reflector\ClassReflector` 
+instantiating a `new \ReflectionClass`, you must use the appropriate `\Roave\BetterReflection\Reflector\Reflector` 
 helper.
 
 All `*Reflector` classes require a class that implements the `SourceLocator` interface as a dependency.
@@ -19,8 +19,8 @@ autoloader that Composer provides will work with this technique.
 use Roave\BetterReflection\BetterReflection;
 
 $classInfo = (new BetterReflection)
-    ->classReflector()
-    ->reflect(\Foo\Bar\MyClass::class);
+    ->reflector()
+    ->reflectClass(\Foo\Bar\MyClass::class);
 ```
 
 If this instantiation technique is not possible - for example, your autoloader does not load classes from file, then 
@@ -103,7 +103,7 @@ A `SourceLocator` is a callable, which when invoked must be given an `Identifier
 
 ## Reflecting Classes
 
-The `ClassReflector` is used to create Better Reflection `ReflectionClass` instances. You may pass it any 
+The `Reflector` is used to create Better Reflection `ReflectionClass` instances. You may pass it any 
 `SourceLocator` to reflect on any class that can be located using the given that `SourceLocator`.
 
 ### Using the AutoloadSourceLocator
@@ -137,18 +137,18 @@ Here's an example of `MakeLocatorForComposerJsonAndInstalledJson` usage:
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJsonAndInstalledJson;
 
 $astLocator = (new BetterReflection())->astLocator();
-$reflector  = new ClassReflector(new AggregateSourceLocator([
+$reflector  = new \Roave\BetterReflection\Reflector\DefaultReflector(new AggregateSourceLocator([
     (new MakeLocatorForComposerJsonAndInstalledJson)('path/to/the/project', $astLocator),
     new PhpInternalSourceLocator($astLocator)
 ]));
 
-$classes = $reflector->getAllClasses();
+$classes = $reflector->reflectAllClasses();
 ```
 
 ### Using the Composer autoloader directly
@@ -157,14 +157,14 @@ $classes = $reflector->getAllClasses();
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 
 $classLoader = require 'vendor/autoload.php';
 
 $astLocator = (new BetterReflection())->astLocator();
-$reflector = new ClassReflector(new ComposerSourceLocator($classLoader, $astLocator));
-$reflectionClass = $reflector->reflect('Foo\Bar\MyClass');
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector(new ComposerSourceLocator($classLoader, $astLocator));
+$reflectionClass = $reflector->reflectClass('Foo\Bar\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
 echo $reflectionClass->getName(); // Foo\Bar\MyClass
@@ -177,12 +177,12 @@ echo $reflectionClass->getNamespaceName(); // Foo\Bar
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $astLocator = (new BetterReflection())->astLocator();
-$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php', $astLocator));
-$reflectionClass = $reflector->reflect('MyApp\MyClass');
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector(new SingleFileSourceLocator('path/to/MyApp/MyClass.php', $astLocator));
+$reflectionClass = $reflector->reflectClass('MyApp\MyClass');
 
 echo $reflectionClass->getShortName(); // MyClass
 echo $reflectionClass->getName(); // MyApp\MyClass
@@ -195,14 +195,14 @@ echo $reflectionClass->getNamespaceName(); // MyApp
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 
 $code = '<?php class Foo {};';
 
 $astLocator = (new BetterReflection())->astLocator();
-$reflector = new ClassReflector(new StringSourceLocator($code, $astLocator));
-$reflectionClass = $reflector->reflect('Foo');
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector(new StringSourceLocator($code, $astLocator));
+$reflectionClass = $reflector->reflectClass('Foo');
 
 echo $reflectionClass->getShortName(); // Foo
 ```
@@ -213,12 +213,12 @@ echo $reflectionClass->getShortName(); // Foo
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 
 $astLocator = (new BetterReflection())->astLocator();
-$reflector = new ClassReflector(new SingleFileSourceLocator('path/to/file.php', $astLocator));
-$classes = $reflector->getAllClasses();
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector(new SingleFileSourceLocator('path/to/file.php', $astLocator));
+$classes = $reflector->reflectAllClasses();
 ```
 
 ### Fetch reflections of all the classes in one or more directories
@@ -227,19 +227,19 @@ $classes = $reflector->getAllClasses();
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
 $astLocator = (new BetterReflection())->astLocator();
 $directoriesSourceLocator = new DirectoriesSourceLocator(['path/to/directory1'], $astLocator);
-$reflector = new ClassReflector($directoriesSourceLocator);
-$classes = $reflector->getAllClasses();
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector($directoriesSourceLocator);
+$classes = $reflector->reflectAllClasses();
 ```
 
 
 ## Reflecting Functions
 
-The `FunctionReflector` is used to create Better Reflection `ReflectionFunction` instances. You may pass it any 
+The `Reflector` is used to create Better Reflection `ReflectionFunction` instances. You may pass it any 
 `SourceLocator` to reflect on any class that can be located using the given `SourceLocator`.
 
 ### Using the AutoloadSourceLocator
@@ -252,16 +252,15 @@ See example in "Reflecting Classes" section on the same subheading.
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
 $configuration = new BetterReflection();
 $astLocator = $configuration->astLocator();
-$classReflector = $configuration->classReflector();
+$reflector = $configuration->reflector();
 
 $directoriesSourceLocator = new DirectoriesSourceLocator(['path/to/directory1'], $astLocator);
-$reflector = new FunctionReflector($directoriesSourceLocator, $classReflector);
-$functions = $reflector->getAllFunctions();
+$functions = $reflector->reflectAllFunctions();
 ```
 
 ### Reflecting a Closure

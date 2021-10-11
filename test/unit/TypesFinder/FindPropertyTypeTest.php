@@ -13,7 +13,7 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -78,8 +78,8 @@ class FindPropertyTypeTest extends TestCase
             }
         ';
 
-        $prop = (new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator())))
-            ->reflect('MyNamespace\ThingThatLogs')
+        $prop = (new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator())))
+            ->reflectClass('MyNamespace\ThingThatLogs')
             ->getProperty('logger');
 
         self::assertSame(['\Psr\Log\LoggerInterface'], $prop->getDocBlockTypeStrings());

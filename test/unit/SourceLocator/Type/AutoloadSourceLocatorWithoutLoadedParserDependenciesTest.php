@@ -7,8 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use PhpParser\Lexer\Emulative;
 use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
@@ -30,19 +29,16 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
             MemoizingParser::class . ' was not loaded into memory',
         );
 
-        $parser            = (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
+        $parser        = (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
             'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
         ]));
-        $functionReflector = null;
-        $sourceLocator     = new AutoloadSourceLocator(
-            new Locator($parser, static function () use (&$functionReflector): FunctionReflector {
-                return $functionReflector;
-            }),
+        $sourceLocator = new AutoloadSourceLocator(
+            new Locator($parser),
             $parser,
         );
-        $classReflector    = new ClassReflector($sourceLocator);
-        $functionReflector = new FunctionReflector($sourceLocator, $classReflector);
-        $reflection        = $classReflector->reflect(ExampleClass::class);
+
+        $reflector  = new DefaultReflector($sourceLocator);
+        $reflection = $reflector->reflectClass(ExampleClass::class);
 
         self::assertSame(ExampleClass::class, $reflection->getName());
         self::assertFalse(

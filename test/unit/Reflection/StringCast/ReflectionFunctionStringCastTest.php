@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -18,16 +17,13 @@ class ReflectionFunctionStringCastTest extends TestCase
 {
     private Locator $astLocator;
 
-    private ClassReflector $classReflector;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $betterReflection = BetterReflectionSingleton::instance();
 
-        $this->astLocator     = $betterReflection->astLocator();
-        $this->classReflector = $betterReflection->classReflector();
+        $this->astLocator = $betterReflection->astLocator();
     }
 
     public function toStringProvider(): array
@@ -43,8 +39,8 @@ class ReflectionFunctionStringCastTest extends TestCase
      */
     public function testToString(string $functionName, string $expectedString): void
     {
-        $reflector          = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastFunctions.php', $this->astLocator), $this->classReflector);
-        $functionReflection = $reflector->reflect($functionName);
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastFunctions.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction($functionName);
 
         self::assertStringMatchesFormat($expectedString, (string) $functionReflection);
     }

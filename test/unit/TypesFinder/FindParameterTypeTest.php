@@ -16,7 +16,7 @@ use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -67,8 +67,8 @@ class FindParameterTypeTest extends TestCase
             }
         ';
 
-        $param = (new ClassReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator())))
-            ->reflect('MyNamespace\ThingThatLogs')
+        $param = (new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator())))
+            ->reflectClass('MyNamespace\ThingThatLogs')
             ->getMethod('foo')
             ->getParameter('bar');
 

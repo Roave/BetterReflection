@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -43,8 +43,8 @@ class ReflectionPropertyStringCastTest extends TestCase
      */
     public function testToString(string $propertyName, string $expectedString): void
     {
-        $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastProperties.php', $this->astLocator));
-        $classReflection = $reflector->reflect(StringCastProperties::class);
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastProperties.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(StringCastProperties::class);
 
         self::assertSame($expectedString, (string) $classReflection->getProperty($propertyName));
     }

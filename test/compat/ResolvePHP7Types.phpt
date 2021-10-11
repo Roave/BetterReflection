@@ -17,12 +17,9 @@ $sourceLocator = new Roave\BetterReflection\SourceLocator\Type\StringSourceLocat
     (new Roave\BetterReflection\BetterReflection())->astLocator()
 );
 
-$reflector = new \Roave\BetterReflection\Reflector\FunctionReflector(
-    $sourceLocator,
-    new \Roave\BetterReflection\Reflector\ClassReflector($sourceLocator)
-);
+$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector($sourceLocator);
 
-$functionInfo = $reflector->reflect('myFunction');
+$functionInfo = $reflector->reflectFunction('myFunction');
 
 $returnType = $functionInfo->getReturnType();
 

@@ -24,7 +24,7 @@ You can replace the body of the function like so:
 
 use Roave\BetterReflection\BetterReflection;
 
-$classInfo = (new BetterReflection())->classReflector()->reflect('MyClass');
+$classInfo = (new BetterReflection())->reflector()->reflectClass('MyClass');
 
 $classInfo->getMethod('foo')->setBody(function () {
     return 4;

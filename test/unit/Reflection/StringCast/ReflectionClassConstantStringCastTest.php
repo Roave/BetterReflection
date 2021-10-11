@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -40,8 +40,8 @@ class ReflectionClassConstantStringCastTest extends TestCase
      */
     public function testToString(string $constantName, string $expectedString): void
     {
-        $reflector       = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClassConstants.php', $this->astLocator));
-        $classReflection = $reflector->reflect(StringCastConstants::class);
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClassConstants.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(StringCastConstants::class);
 
         self::assertSame($expectedString, (string) $classReflection->getReflectionConstant($constantName));
     }

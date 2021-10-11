@@ -13,9 +13,8 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\ConstantReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -42,16 +41,16 @@ class CompileNodeToValueTest extends TestCase
 
     private Locator $astLocator;
 
-    private ClassReflector $classReflector;
+    private Reflector $reflector;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $configuration        = BetterReflectionSingleton::instance();
-        $this->parser         = $configuration->phpParser();
-        $this->astLocator     = $configuration->astLocator();
-        $this->classReflector = $configuration->classReflector();
+        $configuration    = BetterReflectionSingleton::instance();
+        $this->parser     = $configuration->phpParser();
+        $this->astLocator = $configuration->astLocator();
+        $this->reflector  = $configuration->reflector();
     }
 
     private function parseCode(string $phpCode): Node
@@ -61,22 +60,19 @@ class CompileNodeToValueTest extends TestCase
 
     private function getDummyContext(): CompilerContext
     {
-        $classReflector  = new ClassReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
-        $classReflection = $classReflector->reflect('Foo');
+        $reflector       = new DefaultReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
+        $classReflection = $reflector->reflectClass('Foo');
 
-        return new CompilerContext($classReflector, $classReflection);
+        return new CompilerContext($reflector, $classReflection);
     }
 
     private function getDummyContextWithGlobalNamespace(): CompilerContext
     {
-        $constantReflector  = new ConstantReflector(
-            new PhpInternalSourceLocator($this->astLocator, BetterReflectionSingleton::instance()->sourceStubber()),
-            $this->classReflector,
-        );
-        $constantReflection = $constantReflector->reflect('PHP_VERSION_ID');
+        $reflector          = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, BetterReflectionSingleton::instance()->sourceStubber()));
+        $constantReflection = $reflector->reflectConstant('PHP_VERSION_ID');
 
         return new CompilerContext(
-            new ClassReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
+            new DefaultReflector(new StringSourceLocator('<?php class EmptyClass {}', $this->astLocator)),
             $constantReflection,
         );
     }
@@ -250,8 +246,8 @@ class CompileNodeToValueTest extends TestCase
         }
         ';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo  = $reflector->reflect('Foo');
+        $reflector  = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Foo');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo  = $methodInfo->getParameter('param');
 
@@ -273,8 +269,8 @@ class Foo {
 }
 PHP;
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar\Foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar\Foo');
 
         self::assertSame(1, $classInfo->getReflectionConstant('SECOND')->getValue());
         self::assertSame(60, $classInfo->getReflectionConstant('MINUTE')->getValue());
@@ -295,8 +291,8 @@ PHP;
         }
         ';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo  = $reflector->reflect('Bat');
+        $reflector  = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Bat');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo  = $methodInfo->getParameter('param');
 
@@ -312,8 +308,8 @@ PHP;
         }
         ';
 
-        $reflector  = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo  = $reflector->reflect('Foo');
+        $reflector  = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Foo');
         $methodInfo = $classInfo->getMethod('method');
         $paramInfo  = $methodInfo->getParameter('param');
 
@@ -331,8 +327,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bat');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bat');
         self::assertSame('Foo', $classInfo->getConstant('QUX'));
     }
 
@@ -348,8 +344,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar\Bat');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar\Bat');
         self::assertSame('Bar\Foo', $classInfo->getConstant('QUX'));
     }
 
@@ -365,8 +361,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar\Bat');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar\Bat');
         self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
 
@@ -382,8 +378,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar\Bat');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar\Bat');
         self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
     }
 
@@ -400,8 +396,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar\Bat');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar\Bat');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
@@ -419,8 +415,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar\Bat');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar\Bat');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
@@ -438,8 +434,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Foo\Bar');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Foo\Bar');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
@@ -455,8 +451,8 @@ PHP;
         }
         ';
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Bar');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bar');
         self::assertSame('baz', $classInfo->getProperty('property')->getDefaultValue());
     }
 
@@ -484,8 +480,8 @@ PHP;
         }
 PHP;
 
-        $reflector = new ClassReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflect('Foo');
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Foo');
 
         self::assertSame('Foo', $classInfo->getProperty('selfClass')->getDefaultValue());
         self::assertSame('Foo', $classInfo->getProperty('staticClass')->getDefaultValue());
@@ -517,8 +513,8 @@ PHP;
      */
     public function testMagicConstantsWithoutNamespace(string $constantName, mixed $expectedValue): void
     {
-        $reflector = new ConstantReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator), $this->classReflector);
-        $constant  = $reflector->reflect($constantName);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $constant  = $reflector->reflectConstant($constantName);
 
         self::assertSame($expectedValue, $constant->getValue());
     }
@@ -544,8 +540,8 @@ PHP;
      */
     public function testMagicConstantsInNamespace(string $constantName, mixed $expectedValue): void
     {
-        $reflector = new ConstantReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator), $this->classReflector);
-        $constant  = $reflector->reflect('Roave\BetterReflectionTest\Fixture\\' . $constantName);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $constant  = $reflector->reflectConstant('Roave\BetterReflectionTest\Fixture\\' . $constantName);
 
         self::assertSame($expectedValue, $constant->getValue());
     }
@@ -571,8 +567,8 @@ PHP;
      */
     public function testMagicConstantsInTrait(string $propertyName, mixed $expectedValue): void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
-        $class     = $reflector->reflect(MagicConstantsTrait::class);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $class     = $reflector->reflectClass(MagicConstantsTrait::class);
         $property  = $class->getProperty($propertyName);
 
         self::assertSame($expectedValue, $property->getDefaultValue());
@@ -599,8 +595,8 @@ PHP;
      */
     public function testMagicConstantsInClass(string $propertyName, mixed $expectedValue): void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
-        $class     = $reflector->reflect(MagicConstantsClass::class);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $class     = $reflector->reflectClass(MagicConstantsClass::class);
         $property  = $class->getProperty($propertyName);
 
         self::assertSame($expectedValue, $property->getDefaultValue());
@@ -627,8 +623,8 @@ PHP;
      */
     public function testMagicConstantsInMethod(string $parameterName, mixed $expectedValue): void
     {
-        $reflector = new ClassReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
-        $class     = $reflector->reflect(MagicConstantsClass::class);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $class     = $reflector->reflectClass(MagicConstantsClass::class);
         $method    = $class->getMethod('magicConstantsMethod');
         $parameter = $method->getParameter($parameterName);
 
@@ -656,8 +652,8 @@ PHP;
      */
     public function testMagicConstantsInFunction(string $parameterName, mixed $expectedValue): void
     {
-        $reflector = new FunctionReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator), $this->classReflector);
-        $function  = $reflector->reflect('Roave\BetterReflectionTest\Fixture\magicConstantsFunction');
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/MagicConstants.php', $this->astLocator));
+        $function  = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\magicConstantsFunction');
         $parameter = $function->getParameter($parameterName);
 
         self::assertSame($expectedValue, $parameter->getDefaultValue());

@@ -47,8 +47,8 @@ $ composer require roave/better-reflection
 use Roave\BetterReflection\BetterReflection;
 
 $classInfo = (new BetterReflection())
-    ->classReflector()
-    ->reflect(\Foo\Bar\MyClass::class);
+    ->reflector()
+    ->reflectClass(\Foo\Bar\MyClass::class);
 ```
 
 ## Documentation

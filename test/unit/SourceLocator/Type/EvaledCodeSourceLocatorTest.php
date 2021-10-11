@@ -10,7 +10,7 @@ use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
@@ -101,12 +101,12 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
     public function testCanReflectEvaledLocatedSourceClass(): void
     {
-        $reflector = new ClassReflector(new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber));
+        $reflector = new DefaultReflector(new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber));
         $className = uniqid('foo', false);
 
         eval('class ' . $className . ' {function foo($bar = "baz") {}}');
 
-        $class = $reflector->reflect($className);
+        $class = $reflector->reflectClass($className);
 
         self::assertInstanceOf(ReflectionClass::class, $class);
         self::assertSame($className, $class->getName());

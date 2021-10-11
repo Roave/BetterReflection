@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
-use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
@@ -17,7 +16,6 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
-use Roave\BetterReflection\Reflector\FunctionReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\AstConversionStrategy;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -31,12 +29,7 @@ use function count;
  */
 final class FindReflectionsInTree
 {
-    private FunctionReflector $functionReflector;
-
-    /**
-     * @param Closure(): FunctionReflector $functionReflectorGetter
-     */
-    public function __construct(private AstConversionStrategy $astConversionStrategy, private Closure $functionReflectorGetter)
+    public function __construct(private AstConversionStrategy $astConversionStrategy)
     {
     }
 
@@ -53,7 +46,7 @@ final class FindReflectionsInTree
         IdentifierType $identifierType,
         LocatedSource $locatedSource,
     ): array {
-        $nodeVisitor = new class ($reflector, $identifierType, $locatedSource, $this->astConversionStrategy, $this->functionReflectorGetter->__invoke()) extends NodeVisitorAbstract
+        $nodeVisitor = new class ($reflector, $identifierType, $locatedSource, $this->astConversionStrategy) extends NodeVisitorAbstract
         {
             /** @var list<ReflectionClass|ReflectionFunction|ReflectionConstant> */
             private array $reflections = [];
@@ -65,7 +58,6 @@ final class FindReflectionsInTree
                 private IdentifierType $identifierType,
                 private LocatedSource $locatedSource,
                 private AstConversionStrategy $astConversionStrategy,
-                private FunctionReflector $functionReflector,
             ) {
             }
 
@@ -108,7 +100,7 @@ final class FindReflectionsInTree
                             assert($namespacedName instanceof Name);
                             if (count($namespacedName->parts) > 1) {
                                 try {
-                                    $this->functionReflector->reflect($namespacedName->toString());
+                                    $this->reflector->reflectFunction($namespacedName->toString());
 
                                     return null;
                                 } catch (IdentifierNotFound) {

@@ -13,7 +13,7 @@ use ReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -42,7 +42,7 @@ class ReflectionObject extends ReflectionClass
         $betterReflection = new BetterReflection();
 
         if (preg_match(ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX_REGEXP, $className) === 1) {
-            $reflector = new ClassReflector(new AggregateSourceLocator([
+            $reflector = new DefaultReflector(new AggregateSourceLocator([
                 $betterReflection->sourceLocator(),
                 new AnonymousClassObjectSourceLocator(
                     $instance,
@@ -50,10 +50,10 @@ class ReflectionObject extends ReflectionClass
                 ),
             ]));
         } else {
-            $reflector = $betterReflection->classReflector();
+            $reflector = $betterReflection->reflector();
         }
 
-        return new self($reflector, $reflector->reflect($className), $instance);
+        return new self($reflector, $reflector->reflectClass($className), $instance);
     }
 
     /**

@@ -7,9 +7,8 @@ namespace Roave\BetterReflection;
 use PhpParser\Lexer\Emulative;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use Roave\BetterReflection\Reflector\ClassReflector;
-use Roave\BetterReflection\Reflector\ConstantReflector;
-use Roave\BetterReflection\Reflector\FunctionReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber;
@@ -28,11 +27,7 @@ final class BetterReflection
 {
     private ?SourceLocator $sourceLocator;
 
-    private ?ClassReflector $classReflector;
-
-    private ?FunctionReflector $functionReflector;
-
-    private ?ConstantReflector $constantReflector;
+    private ?Reflector $reflector;
 
     private ?Parser $phpParser;
 
@@ -55,22 +50,10 @@ final class BetterReflection
             ]));
     }
 
-    public function classReflector(): ClassReflector
+    public function reflector(): Reflector
     {
-        return $this->classReflector
-            ?? $this->classReflector = new ClassReflector($this->sourceLocator());
-    }
-
-    public function functionReflector(): FunctionReflector
-    {
-        return $this->functionReflector
-            ?? $this->functionReflector = new FunctionReflector($this->sourceLocator(), $this->classReflector());
-    }
-
-    public function constantReflector(): ConstantReflector
-    {
-        return $this->constantReflector
-            ?? $this->constantReflector = new ConstantReflector($this->sourceLocator(), $this->classReflector());
+        return $this->reflector
+            ?? $this->reflector = new DefaultReflector($this->sourceLocator());
     }
 
     public function phpParser(): Parser
@@ -86,7 +69,7 @@ final class BetterReflection
     public function astLocator(): AstLocator
     {
         return $this->astLocator
-            ?? $this->astLocator = new AstLocator($this->phpParser(), fn (): FunctionReflector => $this->functionReflector());
+            ?? $this->astLocator = new AstLocator($this->phpParser());
     }
 
     public function findReflectionsOnLine(): FindReflectionOnLine

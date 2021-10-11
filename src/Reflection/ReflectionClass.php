@@ -108,7 +108,7 @@ class ReflectionClass implements Reflection
      */
     public static function createFromName(string $className): self
     {
-        return (new BetterReflection())->classReflector()->reflect($className);
+        return (new BetterReflection())->reflector()->reflectClass($className);
     }
 
     /**
@@ -869,10 +869,7 @@ class ReflectionClass implements Reflection
         }
 
         if ($this->cachedParentClass === null) {
-            $parent = $this->reflector->reflect($this->node->extends->toString());
-            assert($parent instanceof self);
-
-            $this->cachedParentClass = $parent;
+            $this->cachedParentClass = $this->reflector->reflectClass($this->node->extends->toString());
         }
 
         if ($this->cachedParentClass->isInterface() || $this->cachedParentClass->isTrait()) {
@@ -1009,10 +1006,7 @@ class ReflectionClass implements Reflection
      */
     private function reflectClassForNamedNode(Node\Name $node): self
     {
-        $class = $this->reflector->reflect($node->toString());
-        assert($class instanceof self);
-
-        return $class;
+        return $this->reflector->reflectClass($node->toString());
     }
 
     /**

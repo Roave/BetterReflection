@@ -11,7 +11,7 @@ use RecursiveIteratorIterator;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
@@ -44,7 +44,7 @@ class FileIteratorSourceLocatorTest extends TestCase
     public function testScanDirectoryClasses(): void
     {
         $classes = $this->sourceLocator->locateIdentifiersByType(
-            new ClassReflector($this->sourceLocator),
+            new DefaultReflector($this->sourceLocator),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         );
 
@@ -64,7 +64,7 @@ class FileIteratorSourceLocatorTest extends TestCase
     public function testLocateIdentifier(): void
     {
         $class = $this->sourceLocator->locateIdentifier(
-            new ClassReflector($this->sourceLocator),
+            new DefaultReflector($this->sourceLocator),
             new Identifier(
                 DirectoryScannerAssets\Bar\FooBar::class,
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),

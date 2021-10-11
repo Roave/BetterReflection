@@ -11,7 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
-use Roave\BetterReflection\Reflector\ClassReflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
@@ -74,7 +74,7 @@ final class FindReflectionOnLine
     private function computeReflections(string $filename): array
     {
         $singleFileSourceLocator = new SingleFileSourceLocator($filename, $this->astLocator);
-        $reflector               = new ClassReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
+        $reflector               = new DefaultReflector(new AggregateSourceLocator([$singleFileSourceLocator, $this->sourceLocator]));
 
         return array_merge(
             $singleFileSourceLocator->locateIdentifiersByType($reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
