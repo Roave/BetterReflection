@@ -17,6 +17,7 @@ use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -295,6 +296,11 @@ class ReflectionProperty
                 $this,
             ),
         );
+    }
+
+    public function isDeprecated(): bool
+    {
+        return DeprecatedHelper::isDeprecated($this->getDocComment());
     }
 
     /**

@@ -40,6 +40,7 @@ use stdClass;
 use TraitWithProperty;
 
 use function count;
+use function sprintf;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
@@ -776,5 +777,45 @@ PHP;
 
         $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
         $classReflection->getProperty('withoutType')->isInitialized(new stdClass());
+    }
+
+    public function deprecatedDocCommentProvider(): array
+    {
+        return [
+            [
+                '/** 
+                  * @deprecated since 8.0
+                  */',
+                true,
+            ],
+            [
+                '/** 
+                  * @deprecated
+                  */',
+                true,
+            ],
+            [
+                '',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deprecatedDocCommentProvider
+     */
+    public function testIsDeprecated(string $docComment, bool $isDeprecated): void
+    {
+        $php = sprintf('<?php
+        class Foo {
+            %s
+            public $foo = "foo";
+        }', $docComment);
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection    = $reflector->reflectClass('Foo');
+        $propertyReflection = $classReflection->getProperty('foo');
+
+        self::assertSame($isDeprecated, $propertyReflection->isDeprecated());
     }
 }

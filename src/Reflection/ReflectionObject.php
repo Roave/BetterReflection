@@ -339,6 +339,11 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->isUserDefined();
     }
 
+    public function isDeprecated(): bool
+    {
+        return $this->reflectionClass->isDeprecated();
+    }
+
     public function isAbstract(): bool
     {
         return $this->reflectionClass->isAbstract();

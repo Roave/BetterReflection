@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use LogicException;
-use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -22,6 +21,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -218,16 +218,7 @@ abstract class ReflectionFunctionAbstract
 
     public function isDeprecated(): bool
     {
-        $docComment = $this->getDocComment();
-
-        if ($docComment === '') {
-            return false;
-        }
-
-        $docBlockFactory = DocBlockFactory::createInstance();
-        $docBlock        = $docBlockFactory->create($docComment);
-
-        return $docBlock->hasTag('deprecated');
+        return DeprecatedHelper::isDeprecated($this->getDocComment());
     }
 
     public function isInternal(): bool
