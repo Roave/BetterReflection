@@ -16,11 +16,6 @@
       <code>public function newInstanceWithoutConstructor()</code>
     </MethodSignatureMismatch>
   </file>
-  <file src="src/Reflection/ReflectionMethod.php">
-    <InvalidStringClass occurrences="1">
-      <code>$declaringClassName::{$methodName}(...$methodArgs)</code>
-    </InvalidStringClass>
-  </file>
   <file src="src/Reflection/ReflectionParameter.php">
     <UndefinedPropertyFetch occurrences="1">
       <code>$this-&gt;node-&gt;var-&gt;name</code>

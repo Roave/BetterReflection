@@ -28,11 +28,14 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\ClassUsesTraitWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithNonStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InterfaceWithMethod;
 use Roave\BetterReflectionTest\Fixture\Methods;
+use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethod;
+use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethodToUse;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
@@ -495,6 +498,40 @@ PHP;
 
         self::assertSame(3, $methodReflection->invoke(null, 1, 2));
         self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
+    }
+
+    public function testInvokeOfStaticMethodOnTrait(): void
+    {
+        $traitWithStaticMethodFile = __DIR__ . '/../Fixture/TraitWithStaticMethod.php';
+        require_once $traitWithStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($traitWithStaticMethodFile, $this->astLocator)))->reflect(TraitWithStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('sum');
+
+        self::assertSame(3, $methodReflection->invoke(null, 1, 2));
+        self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
+    }
+
+    public function testInvokeOfStaticTraitMethodWithStaticClass(): void
+    {
+        $traitWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
+        require_once $traitWithUsedStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($traitWithUsedStaticMethodFile, $this->astLocator)))->reflect(TraitWithStaticMethodToUse::class);
+        $methodReflection = $classReflection->getMethod('getClass');
+
+        self::assertSame(TraitWithStaticMethodToUse::class, $methodReflection->invoke());
+    }
+
+    public function testInvokeOfStaticUsedTraitMethodWithStaticClass(): void
+    {
+        $classWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
+        require_once $classWithUsedStaticMethodFile;
+
+        $classReflection  = (new ClassReflector(new SingleFileSourceLocator($classWithUsedStaticMethodFile, $this->astLocator)))->reflect(ClassUsesTraitWithStaticMethod::class);
+        $methodReflection = $classReflection->getMethod('getClass');
+
+        self::assertSame(ClassUsesTraitWithStaticMethod::class, $methodReflection->invoke());
     }
 
     public function testInvokeOfObjectMethodThrowsExceptionWhenNoObject(): void
