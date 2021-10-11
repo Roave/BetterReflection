@@ -20,7 +20,7 @@ use function get_class_methods;
  */
 class ReflectionTypeTest extends TestCase
 {
-    public function coreReflectionTypeNamesProvider(): array
+    public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionType::class);
 
@@ -28,9 +28,9 @@ class ReflectionTypeTest extends TestCase
     }
 
     /**
-     * @dataProvider coreReflectionTypeNamesProvider
+     * @dataProvider coreReflectionMethodNamesProvider
      */
-    public function testCoreReflectionTypes(string $methodName): void
+    public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
 
