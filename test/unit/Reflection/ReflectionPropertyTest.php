@@ -28,11 +28,13 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassUsesTraitStaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use Roave\BetterReflectionTest\Fixture\TraitStaticPropertyGetSet;
 use stdClass;
 use TraitWithProperty;
 
@@ -459,6 +461,34 @@ PHP;
         $propertyReflection->setValue('value');
 
         self::assertSame('value', StaticPropertyGetSet::$baz);
+        self::assertSame('value', $propertyReflection->getValue());
+    }
+
+    public function testSetAndGetValueOfStaticPropertyOnTrait(): void
+    {
+        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/TraitStaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixture;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))->reflect(TraitStaticPropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('staticProperty');
+
+        $propertyReflection->setValue('value');
+
+        self::assertSame('value', TraitStaticPropertyGetSet::$staticProperty);
+        self::assertSame('value', $propertyReflection->getValue());
+    }
+
+    public function testSetAndGetValueOfStaticPropertyOnClassUsingTrait(): void
+    {
+        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/ClassUsesTraitStaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixture;
+
+        $classReflection    = (new ClassReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))->reflect(ClassUsesTraitStaticPropertyGetSet::class);
+        $propertyReflection = $classReflection->getProperty('staticProperty');
+
+        $propertyReflection->setValue('value');
+
+        self::assertSame('value', ClassUsesTraitStaticPropertyGetSet::$staticProperty);
         self::assertSame('value', $propertyReflection->getValue());
     }
 

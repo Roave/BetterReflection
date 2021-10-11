@@ -21,6 +21,7 @@ use Webmozart\Assert\Assert;
 use function class_exists;
 use function sprintf;
 use function strtolower;
+use function trait_exists;
 
 class ReflectionMethod extends ReflectionFunctionAbstract
 {
@@ -296,10 +297,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function invokeArgs(?object $object = null, array $args = []): mixed
     {
-        $declaringClassName = $this->getDeclaringClass()->getName();
+        $implementingClassName = $this->getImplementingClass()->getName();
 
         if ($this->isStatic()) {
-            $this->assertClassExist($declaringClassName);
+            $this->assertClassExist($implementingClassName);
 
             return $this->callStaticMethod($args);
         }
@@ -312,13 +313,14 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function callStaticMethod(array $args): mixed
     {
-        $declaringClassName = $this->getDeclaringClass()->getName();
+        $implementingClassName = $this->getImplementingClass()->getName();
 
-        $closure = Closure::bind(fn (string $declaringClassName, string $methodName, array $methodArgs) => $declaringClassName::{$methodName}(...$methodArgs), null, $declaringClassName);
+        /** @psalm-suppress InvalidStringClass */
+        $closure = Closure::bind(fn (string $implementingClassName, string $methodName, array $methodArgs) => $implementingClassName::{$methodName}(...$methodArgs), null, $implementingClassName);
 
         Assert::notFalse($closure);
 
-        return $closure->__invoke($declaringClassName, $this->getName(), $args);
+        return $closure->__invoke($implementingClassName, $this->getName(), $args);
     }
 
     /**
@@ -326,7 +328,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function callObjectMethod(object $object, array $args): mixed
     {
-        $closure = Closure::bind(fn ($object, string $methodName, array $methodArgs) => $object->{$methodName}(...$methodArgs), $object, $this->getDeclaringClass()->getName());
+        $closure = Closure::bind(fn ($object, string $methodName, array $methodArgs) => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
 
         Assert::notFalse($closure);
 
@@ -338,7 +340,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     private function assertClassExist(string $className): void
     {
-        if (! class_exists($className, false)) {
+        if (! class_exists($className, false) && ! trait_exists($className, false)) {
             throw new ClassDoesNotExist(sprintf('Method of class %s cannot be used as the class is not loaded', $className));
         }
     }
@@ -353,10 +355,10 @@ class ReflectionMethod extends ReflectionFunctionAbstract
             throw NoObjectProvided::create();
         }
 
-        $declaringClassName = $this->getDeclaringClass()->getName();
+        $implementingClassName = $this->getImplementingClass()->getName();
 
-        if ($object::class !== $declaringClassName) {
-            throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
+        if ($object::class !== $implementingClassName) {
+            throw ObjectNotInstanceOfClass::fromClassName($implementingClassName);
         }
 
         return $object;

@@ -35,6 +35,7 @@ use function class_exists;
 use function func_num_args;
 use function is_object;
 use function strpos;
+use function trait_exists;
 
 class ReflectionProperty
 {
@@ -351,21 +352,21 @@ class ReflectionProperty
      */
     public function getValue(?object $object = null): mixed
     {
-        $declaringClassName = $this->getDeclaringClass()->getName();
+        $implementingClassName = $this->getImplementingClass()->getName();
 
         if ($this->isStatic()) {
-            $this->assertClassExist($declaringClassName);
+            $this->assertClassExist($implementingClassName);
 
-            $closure = Closure::bind(fn (string $declaringClassName, string $propertyName) => $declaringClassName::${$propertyName}, null, $declaringClassName);
+            $closure = Closure::bind(fn (string $implementingClassName, string $propertyName) => $implementingClassName::${$propertyName}, null, $implementingClassName);
 
             Assert::notFalse($closure);
 
-            return $closure->__invoke($declaringClassName, $this->getName());
+            return $closure->__invoke($implementingClassName, $this->getName());
         }
 
         $instance = $this->assertObject($object);
 
-        $closure = Closure::bind(fn (object $instance, string $propertyName) => $instance->{$propertyName}, $instance, $declaringClassName);
+        $closure = Closure::bind(fn (object $instance, string $propertyName) => $instance->{$propertyName}, $instance, $implementingClassName);
 
         Assert::notFalse($closure);
 
@@ -380,18 +381,18 @@ class ReflectionProperty
      */
     public function setValue(mixed $object, mixed $value = null): void
     {
-        $declaringClassName = $this->getDeclaringClass()->getName();
+        $implementingClassName = $this->getImplementingClass()->getName();
 
         if ($this->isStatic()) {
-            $this->assertClassExist($declaringClassName);
+            $this->assertClassExist($implementingClassName);
 
-            $closure = Closure::bind(function (string $declaringClassName, string $propertyName, $value): void {
-                $declaringClassName::${$propertyName} = $value;
-            }, null, $declaringClassName);
+            $closure = Closure::bind(function (string $implementingClassName, string $propertyName, $value): void {
+                $implementingClassName::${$propertyName} = $value;
+            }, null, $implementingClassName);
 
             Assert::notFalse($closure);
 
-            $closure->__invoke($declaringClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
+            $closure->__invoke($implementingClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
 
             return;
         }
@@ -400,7 +401,7 @@ class ReflectionProperty
 
         $closure = Closure::bind(function ($instance, string $propertyName, $value): void {
             $instance->{$propertyName} = $value;
-        }, $instance, $declaringClassName);
+        }, $instance, $implementingClassName);
 
         Assert::notFalse($closure);
 
@@ -469,7 +470,7 @@ class ReflectionProperty
      */
     private function assertClassExist(string $className): void
     {
-        if (! class_exists($className, false)) {
+        if (! class_exists($className, false) && ! trait_exists($className, false)) {
             throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
     }
@@ -491,10 +492,10 @@ class ReflectionProperty
             throw NotAnObject::fromNonObject($object);
         }
 
-        $declaringClassName = $this->getDeclaringClass()->getName();
+        $implementingClassName = $this->getImplementingClass()->getName();
 
-        if ($object::class !== $declaringClassName) {
-            throw ObjectNotInstanceOfClass::fromClassName($declaringClassName);
+        if ($object::class !== $implementingClassName) {
+            throw ObjectNotInstanceOfClass::fromClassName($implementingClassName);
         }
 
         return $object;
