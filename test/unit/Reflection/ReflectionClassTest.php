@@ -45,6 +45,7 @@ use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassExtendingNonAbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\ClassUsesAndRenamesMethodFromTrait;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract;
 use Roave\BetterReflectionTest\Fixture\ClassUsingTraitWithAbstractMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
@@ -964,6 +965,12 @@ PHP;
                 'bar',
                 'ImplementationTrait',
                 'ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract',
+            ],
+            [
+                ClassUsesAndRenamesMethodFromTrait::class,
+                'abstractMethod',
+                'TraitWithNonAbstractMethod',
+                'ClassUsesAndRenamesMethodFromTrait',
             ],
         ];
     }

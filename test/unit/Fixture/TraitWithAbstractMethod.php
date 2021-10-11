@@ -60,3 +60,28 @@ class ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract
     use AbstractTrait;
     use ImplementationTrait;
 }
+
+
+
+abstract class ClassWithAbstractMethod
+{
+    abstract protected function abstractMethod() : void;
+}
+
+abstract class ClassExtendingClassWithAbstractMethod extends ClassWithAbstractMethod
+{
+}
+
+trait TraitWithNonAbstractMethod
+{
+    protected function nonAbstractMethod() : void
+    {
+    }
+}
+
+class ClassUsesAndRenamesMethodFromTrait extends ClassExtendingClassWithAbstractMethod
+{
+    use TraitWithNonAbstractMethod {
+        nonAbstractMethod as abstractMethod;
+    }
+}
