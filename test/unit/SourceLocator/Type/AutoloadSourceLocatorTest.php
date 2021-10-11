@@ -18,6 +18,8 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\AutoloadableAlias;
+use Roave\BetterReflectionTest\Fixture\AutoloadableByAlias;
 use Roave\BetterReflectionTest\Fixture\AutoloadableClassInPhar;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
@@ -160,6 +162,24 @@ class AutoloadSourceLocatorTest extends TestCase
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 ))->getLocatedSource(),
         );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCanLocateAutoloadedClassByAlias(): void
+    {
+        require __DIR__ . '/../../Fixture/AutoloadableByAlias.php';
+
+        self::assertTrue(class_exists(AutoloadableAlias::class, false));
+
+        $reflection = (new AutoloadSourceLocator($this->astLocator))->locateIdentifier($this->getMockReflector(), new Identifier(
+            AutoloadableAlias::class,
+            new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+        ));
+
+        self::assertNotNull($reflection);
+        self::assertSame(AutoloadableByAlias::class, $reflection->getName());
     }
 
     public function testFunctionLoads(): void

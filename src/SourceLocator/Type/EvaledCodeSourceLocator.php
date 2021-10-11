@@ -45,7 +45,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return new EvaledLocatedSource($stubData->getStub());
+        return new EvaledLocatedSource($stubData->getStub(), $classReflection->getName());
     }
 
     private function getInternalReflectionClass(Identifier $identifier): ?ReflectionClass

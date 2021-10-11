@@ -22,7 +22,7 @@ class LocatedSource
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    public function __construct(private string $source, ?string $filename)
+    public function __construct(private string $source, private ?string $name, ?string $filename = null)
     {
         if ($filename !== null) {
             FileChecker::assertReadableFile($filename);
@@ -36,6 +36,11 @@ class LocatedSource
     public function getSource(): string
     {
         return $this->source;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     public function getFileName(): ?string
@@ -62,5 +67,10 @@ class LocatedSource
     public function isEvaled(): bool
     {
         return false;
+    }
+
+    public function getAliasName(): ?string
+    {
+        return null;
     }
 }

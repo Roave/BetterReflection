@@ -231,7 +231,7 @@ class ReflectionObjectTest extends TestCase
 
         $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('locatedSource');
         $mockReflectionClassNodeReflection->setAccessible(true);
-        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, new EvaledLocatedSource($php));
+        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, new EvaledLocatedSource($php, 'stdClass'));
 
         $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('node');
         $mockReflectionClassNodeReflection->setAccessible(true);

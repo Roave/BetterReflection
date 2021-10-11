@@ -54,7 +54,7 @@ class NodeToReflectionTest extends TestCase
     {
         $reflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php class Foo {}', null);
+        $locatedSource = new LocatedSource('<?php class Foo {}', 'Foo');
 
         $reflection = (new NodeToReflection())->__invoke(
             $reflector,
@@ -71,7 +71,7 @@ class NodeToReflectionTest extends TestCase
     {
         $reflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php trait Foo {}', null);
+        $locatedSource = new LocatedSource('<?php trait Foo {}', 'Foo');
 
         $reflection = (new NodeToReflection())->__invoke(
             $reflector,
@@ -89,7 +89,7 @@ class NodeToReflectionTest extends TestCase
     {
         $reflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php interface Foo {}', null);
+        $locatedSource = new LocatedSource('<?php interface Foo {}', 'Foo');
 
         $reflection = (new NodeToReflection())->__invoke(
             $reflector,
@@ -107,7 +107,7 @@ class NodeToReflectionTest extends TestCase
     {
         $reflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php function foo(){}', null);
+        $locatedSource = new LocatedSource('<?php function foo(){}', 'foo');
 
         $reflection = (new NodeToReflection())->__invoke(
             $reflector,
@@ -124,7 +124,7 @@ class NodeToReflectionTest extends TestCase
     {
         $reflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
+        $locatedSource = new LocatedSource('<?php const FOO = 1;', 'FOO');
 
         $reflection = (new NodeToReflection())->__invoke(
             $reflector,
@@ -143,21 +143,21 @@ class NodeToReflectionTest extends TestCase
         $reflector        = $this->createMock(Reflector::class);
         $nodeToReflection = new NodeToReflection();
 
-        $locatedSource = new LocatedSource('<?php const FOO = 1, BOO = 2;', null);
+        $source = '<?php const FOO = 1, BOO = 2;';
 
-        $firstAstNodeInString = $this->getFirstAstNodeInString($locatedSource->getSource());
+        $firstAstNodeInString = $this->getFirstAstNodeInString($source);
 
         $reflection1 = $nodeToReflection->__invoke(
             $reflector,
             $firstAstNodeInString,
-            $locatedSource,
+            new LocatedSource($source, 'FOO', null),
             null,
             0,
         );
         $reflection2 = $nodeToReflection->__invoke(
             $reflector,
             $firstAstNodeInString,
-            $locatedSource,
+            new LocatedSource($source, 'BOO', null),
             null,
             1,
         );
@@ -172,7 +172,7 @@ class NodeToReflectionTest extends TestCase
     {
         $reflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php define("FOO", 1);', null);
+        $locatedSource = new LocatedSource('<?php define("FOO", 1);', 'FOO');
 
         $firstAstNodeInString = $this->getFirstAstNodeInString($locatedSource->getSource());
         self::assertInstanceOf(Node\Stmt\Expression::class, $firstAstNodeInString);

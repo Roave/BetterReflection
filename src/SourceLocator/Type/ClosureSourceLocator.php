@@ -23,7 +23,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\FileChecker;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_filter;
@@ -158,7 +158,7 @@ final class ClosureSourceLocator implements SourceLocator
         $reflectionFunction = (new NodeToReflection())->__invoke(
             $reflector,
             $closureNodes['node'],
-            new LocatedSource($fileContents, $fileName),
+            new AnonymousLocatedSource($fileContents, $fileName),
             $closureNodes['namespace'],
         );
         assert($reflectionFunction instanceof ReflectionFunction);

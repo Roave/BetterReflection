@@ -376,7 +376,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     public function testGetLocatedSource(): void
     {
         $node          = new Function_('foo');
-        $locatedSource = new LocatedSource('<?php function foo() {}', null);
+        $locatedSource = new LocatedSource('<?php function foo() {}', 'foo');
         $reflector     = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
         $functionInfo  = ReflectionFunction::createFromNode($reflector, $node, $locatedSource);
 
