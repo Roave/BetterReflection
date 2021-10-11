@@ -288,8 +288,6 @@ class ReflectionProperty
             return null;
         }
 
-        $declaringClass = $this->getDeclaringClass();
-
         return (new CompileNodeToValue())->__invoke(
             $defaultValueNode,
             new CompilerContext(
