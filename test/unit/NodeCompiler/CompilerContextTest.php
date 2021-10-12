@@ -25,7 +25,7 @@ class CompilerContextTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    public function testCreatingContext(): void
+    public function testCreatingContextFromClass(): void
     {
         $phpCode = <<<'PHP'
 <?php
@@ -52,41 +52,87 @@ PHP;
         self::assertNull($context->getFunction());
     }
 
-    public function testCreatingContextWithoutClass(): void
-    {
-        $reflector = new DefaultReflector(new StringSourceLocator('<?php function foo() {}', $this->astLocator));
-        $context   = new CompilerContext($reflector, $reflector->reflectFunction('foo'));
-
-        self::assertNull($context->getClass());
-    }
-
-    public function testCreatingContextWithoutFunction(): void
-    {
-        $reflector = new DefaultReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
-        $context   = new CompilerContext($reflector, $reflector->reflectClass('Foo'));
-
-        self::assertNull($context->getFunction());
-    }
-
-    public function testClassMagicConstantAsDefaultValueFromClass(): void
+    public function testCreatingContextFromProperty(): void
     {
         $phpCode = <<<'PHP'
 <?php
 
 namespace Foo;
 
-class Bar {
-    public $property = __CLASS__;
+class Boo
+{
+    public $baz;
 }
 PHP;
 
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $classInfo = $reflector->reflectClass('Foo\Bar');
+        $class     = $reflector->reflectClass('Foo\Boo');
+        $property  = $class->getProperty('baz');
 
-        self::assertSame('Foo\Bar', $classInfo->getProperty('property')->getDefaultValue());
+        $context = new CompilerContext($reflector, $property);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertSame($class, $context->getClass());
+        self::assertNull($context->getFunction());
     }
 
-    public function testClassMagicConstantAsDefaultValueFromFunction(): void
+    public function testCreatingContextFromClassConstant(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+class Boo
+{
+    public const BAZ = 'baz';
+}
+PHP;
+
+        $reflector     = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $class         = $reflector->reflectClass('Foo\Boo');
+        $classConstant = $class->getReflectionConstant('BAZ');
+
+        $context = new CompilerContext($reflector, $classConstant);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertSame($class, $context->getClass());
+        self::assertNull($context->getFunction());
+    }
+
+    public function testCreatingContextFromMethod(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+class Boo
+{
+    public function baz($parameter = __CLASS__)
+    {
+    }
+}
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $class     = $reflector->reflectClass('Foo\Boo');
+        $method    = $class->getMethod('baz');
+
+        $context = new CompilerContext($reflector, $method);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertSame($class, $context->getClass());
+        self::assertSame($method, $context->getFunction());
+    }
+
+    public function testCreatingContextFromFunction(): void
     {
         $phpCode = <<<'PHP'
 <?php
@@ -98,8 +144,78 @@ function baz($parameter = __CLASS__)
 }
 PHP;
 
-        $reflector    = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $functionInfo = $reflector->reflectFunction('Foo\baz');
-        self::assertSame('', $functionInfo->getParameter('parameter')->getDefaultValue());
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $function  = $reflector->reflectFunction('Foo\baz');
+
+        $context = new CompilerContext($reflector, $function);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertNull($context->getClass());
+        self::assertSame($function, $context->getFunction());
+    }
+
+    public function testCreatingContextFromParameter(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+function baz($parameter = __CLASS__)
+{
+}
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $function  = $reflector->reflectFunction('Foo\baz');
+        $parameter = $function->getParameter('parameter');
+
+        $context = new CompilerContext($reflector, $parameter);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertNull($context->getClass());
+        self::assertSame($function, $context->getFunction());
+    }
+
+    public function testCreatingContextFromConstant(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+const BAZ = 'baz';
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $constant  = $reflector->reflectConstant('Foo\BAZ');
+
+        $context = new CompilerContext($reflector, $constant);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertNull($context->getClass());
+        self::assertNull($context->getFunction());
+    }
+
+    public function testCreatingContextWithoutNamespace(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+const BAZ = 'baz';
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $constant  = $reflector->reflectConstant('BAZ');
+
+        $context = new CompilerContext($reflector, $constant);
+
+        self::assertSame('', $context->getNamespace());
     }
 }
