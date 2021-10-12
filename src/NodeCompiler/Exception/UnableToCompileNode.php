@@ -12,6 +12,9 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use function assert;
 use function sprintf;
 
+/**
+ * @internal
+ */
 class UnableToCompileNode extends LogicException
 {
     private ?string $constantName = null;
