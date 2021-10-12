@@ -236,7 +236,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return ReflectionMethod[]
+     * @return list<ReflectionMethod>
      */
     private function createMethodsFromTrait(ReflectionMethod $method): array
     {
@@ -435,11 +435,11 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getMethods for the usage of $filter
      *
-     * @return ReflectionMethod[]
+     * @return array<string, ReflectionMethod>
      */
     public function getImmediateMethods(?int $filter = null): array
     {
-        /** @var ReflectionMethod[] $methods */
+        /** @var list<ReflectionMethod> $methods */
         $methods = array_map(
             fn (ClassMethod $methodNode): ReflectionMethod => ReflectionMethod::createFromNode(
                 $this->reflector,
@@ -603,7 +603,7 @@ class ReflectionClass implements Reflection
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
-        /** @var ReflectionClassConstant[] $allReflectionConstants */
+        /** @var list<ReflectionClassConstant> $allReflectionConstants */
         $allReflectionConstants = array_merge(
             array_values($this->getImmediateReflectionConstants()),
             ...array_map(
@@ -1014,7 +1014,7 @@ class ReflectionClass implements Reflection
      * defined. If this class does not have any defined traits, this will
      * return an empty array.
      *
-     * @return string[]
+     * @return list<string>
      */
     public function getTraitNames(): array
     {
@@ -1351,7 +1351,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @return ReflectionClass[] ordered from inheritance root to leaf (this class)
+     * @return list<ReflectionClass> ordered from inheritance root to leaf (this class)
      */
     private function getInheritanceClassHierarchy(): array
     {

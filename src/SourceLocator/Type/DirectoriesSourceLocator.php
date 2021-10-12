@@ -27,7 +27,7 @@ class DirectoriesSourceLocator implements SourceLocator
     private AggregateSourceLocator $aggregateSourceLocator;
 
     /**
-     * @param string[] $directories directories to scan
+     * @param list<string> $directories directories to scan
      *
      * @throws InvalidDirectory
      * @throws InvalidFileInfo

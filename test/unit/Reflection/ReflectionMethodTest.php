@@ -263,7 +263,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param string[] $expectedModifierNames
+     * @param list<string> $expectedModifierNames
      *
      * @dataProvider modifierProvider
      */

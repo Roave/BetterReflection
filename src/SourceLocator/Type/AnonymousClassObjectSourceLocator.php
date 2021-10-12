@@ -89,7 +89,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
         $nodeVisitor = new class ($fileName, $this->coreClassReflection->getStartLine()) extends NodeVisitorAbstract
         {
-            /** @var Class_[] */
+            /** @var list<Class_> */
             private array $anonymousClassNodes = [];
 
             public function __construct(private string $fileName, private int $startLine)
@@ -112,7 +112,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
             public function getAnonymousClassNode(): Class_
             {
-                /** @var Class_[] $anonymousClassNodesOnSameLine */
+                /** @var list<Class_> $anonymousClassNodesOnSameLine */
                 $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, fn (Class_ $node): bool => $node->getLine() === $this->startLine));
 
                 if (! $anonymousClassNodesOnSameLine) {

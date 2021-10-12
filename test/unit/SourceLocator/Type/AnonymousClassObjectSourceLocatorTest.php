@@ -113,7 +113,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
      */
     public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine): void
     {
-        /** @var ReflectionClass[] $reflections */
+        /** @var list<ReflectionClass> $reflections */
         $reflections = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifiersByType(
             $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -134,7 +134,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $anonymousClass = new class {
         };
 
-        /** @var ReflectionClass[] $reflections */
+        /** @var list<ReflectionClass> $reflections */
         $reflections = (new AnonymousClassObjectSourceLocator($anonymousClass, $this->parser))->locateIdentifiersByType(
             $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),

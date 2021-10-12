@@ -6,15 +6,16 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 use function array_merge;
 use function array_reduce;
+use function array_values;
 
 class AggregateSourceStubber implements SourceStubber
 {
-    /** @var SourceStubber[] */
+    /** @var list<SourceStubber> */
     private array $sourceStubbers;
 
     public function __construct(SourceStubber $sourceStubber, SourceStubber ...$otherSourceStubbers)
     {
-        $this->sourceStubbers = array_merge([$sourceStubber], $otherSourceStubbers);
+        $this->sourceStubbers = array_values(array_merge([$sourceStubber], $otherSourceStubbers));
     }
 
     public function generateClassStub(string $className): ?StubData

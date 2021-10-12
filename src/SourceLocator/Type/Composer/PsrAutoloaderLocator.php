@@ -51,7 +51,7 @@ final class PsrAutoloaderLocator implements SourceLocator
     /**
      * Find all identifiers of a type
      *
-     * @return Reflection[]
+     * @return list<Reflection>
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {

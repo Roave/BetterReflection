@@ -25,14 +25,14 @@ use const ARRAY_FILTER_USE_KEY;
 
 final class Psr4Mapping implements PsrAutoloaderMapping
 {
-    /** @var array<string, array<int, string>> */
+    /** @var array<string, list<string>> */
     private array $mappings = [];
 
     private function __construct()
     {
     }
 
-    /** @param array<string, array<int, string>> $mappings */
+    /** @param array<string, list<string>> $mappings */
     public static function fromArrayMappings(array $mappings): self
     {
         self::assertValidMapping($mappings);
@@ -73,7 +73,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
         )));
     }
 
-    /** @return array<string, array<int, string>> */
+    /** @return array<string, list<string>> */
     private function matchingPrefixes(string $className): array
     {
         return array_filter(
@@ -90,7 +90,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
     }
 
     /**
-     * @param array<string, array<int, string>> $mappings
+     * @param array<string, list<string>> $mappings
      *
      * @throws InvalidPrefixMapping
      */

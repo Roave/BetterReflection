@@ -50,7 +50,7 @@ class Locator
     /**
      * Get an array of reflections found in some code.
      *
-     * @return Reflection[]
+     * @return list<Reflection>
      *
      * @throws Exception\ParseToAstFailure
      */
@@ -74,7 +74,7 @@ class Locator
     /**
      * Given an array of Reflections, try to find the identifier.
      *
-     * @param Reflection[] $reflections
+     * @param list<Reflection> $reflections
      *
      * @throws IdentifierNotFound
      */

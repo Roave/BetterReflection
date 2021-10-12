@@ -37,7 +37,7 @@ class MemoizingSourceLocatorTest extends TestCase
 
     private MemoizingSourceLocator $memoizingLocator;
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $identifierNames;
 
     private int $identifierCount;
@@ -111,7 +111,6 @@ class MemoizingSourceLocatorTest extends TestCase
 
     public function testMemoizationByTypeDistinguishesBetweenSourceLocatorsAndType(): void
     {
-        /** @var IdentifierType[] $types */
         $types    = [
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -167,8 +166,8 @@ class MemoizingSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param Identifier[] $identifiers
-     * @param Reflector[]  $reflectors
+     * @param list<Identifier> $identifiers
+     * @param list<Reflector>  $reflectors
      */
     private function assertMemoization(
         array $identifiers,
@@ -219,10 +218,10 @@ class MemoizingSourceLocatorTest extends TestCase
     }
 
     /**
-     * @param Reflector[]  $reflectors
-     * @param Identifier[] $identifiers
+     * @param list<Reflector>  $reflectors
+     * @param list<Identifier> $identifiers
      *
-     * @return Reflection[]|null[]
+     * @return list<Reflection|null>
      */
     private function locateIdentifiers(array $reflectors, array $identifiers): array
     {

@@ -42,7 +42,7 @@ class FindReturnTypeTest extends TestCase
     }
 
     /**
-     * @param string[] $expectedInstances
+     * @param list<string> $expectedInstances
      *
      * @dataProvider returnTypeProvider
      */
@@ -67,7 +67,7 @@ class FindReturnTypeTest extends TestCase
     }
 
     /**
-     * @param string[] $expectedInstances
+     * @param list<string> $expectedInstances
      *
      * @dataProvider returnTypeProvider
      */
@@ -104,8 +104,8 @@ class FindReturnTypeTest extends TestCase
     }
 
     /**
-     * @param string[] $aliasesToFQCNs indexed by alias
-     * @param Type[]   $expectedTypes
+     * @param list<string> $aliasesToFQCNs indexed by alias
+     * @param list<Type>   $expectedTypes
      *
      * @dataProvider aliasedReturnTypesProvider
      */

@@ -31,7 +31,7 @@ final class FileReadTrapStreamWrapper
         'phar',
     ];
 
-    /** @var string[]|null */
+    /** @var list<string>|null */
     private static ?array $registeredStreamWrapperProtocols;
 
     /**
@@ -44,7 +44,7 @@ final class FileReadTrapStreamWrapper
 
     /**
      * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
-     * @param string[]                              $streamWrapperProtocols
+     * @param list<string>                          $streamWrapperProtocols
      *
      * @psalm-return ExecutedMethodReturnType
      *

@@ -31,7 +31,7 @@ class NamespaceNodeToReflectionTypeContext
     }
 
     /**
-     * @return string[] indexed by alias
+     * @return array<string, class-string> indexed by alias
      */
     private function aliasesToFullyQualifiedNames(Namespace_ $namespace): array
     {

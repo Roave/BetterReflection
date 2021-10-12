@@ -173,7 +173,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return list<list<string>>
      */
     public function internalClassesProvider(): array
     {
@@ -331,7 +331,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return list<list<string>>
      */
     public function internalFunctionsProvider(): array
     {

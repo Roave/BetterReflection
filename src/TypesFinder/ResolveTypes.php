@@ -18,9 +18,9 @@ class ResolveTypes
     }
 
     /**
-     * @param string[] $stringTypes
+     * @param list<string> $stringTypes
      *
-     * @return Type[]
+     * @return list<Type>
      */
     public function __invoke(array $stringTypes, Context $context): array
     {

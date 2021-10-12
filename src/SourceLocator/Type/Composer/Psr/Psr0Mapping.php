@@ -18,14 +18,14 @@ use function strpos;
 
 final class Psr0Mapping implements PsrAutoloaderMapping
 {
-    /** @var array<string, array<int, string>> */
+    /** @var array<string, list<string>> */
     private array $mappings = [];
 
     private function __construct()
     {
     }
 
-    /** @param array<string, array<int, string>> $mappings */
+    /** @param array<string, list<string>> $mappings */
     public static function fromArrayMappings(array $mappings): self
     {
         self::assertValidMapping($mappings);
@@ -70,7 +70,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
     }
 
     /**
-     * @param array<string, array<int, string>> $mappings
+     * @param array<string, list<string>> $mappings
      *
      * @throws InvalidPrefixMapping
      */

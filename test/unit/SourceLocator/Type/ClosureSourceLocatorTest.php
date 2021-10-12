@@ -102,7 +102,7 @@ class ClosureSourceLocatorTest extends TestCase
      */
     public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
     {
-        /** @var ReflectionFunction[] $reflections */
+        /** @var list<ReflectionFunction> $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
             $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
@@ -151,7 +151,7 @@ class ClosureSourceLocatorTest extends TestCase
         $closure = static function (): void {
         };
 
-        /** @var ReflectionFunction[] $reflections */
+        /** @var list<ReflectionFunction> $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
             $this->reflector,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),

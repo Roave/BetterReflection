@@ -40,8 +40,8 @@ class ResolveTypesTest extends TestCase
     }
 
     /**
-     * @param string[] $inputTypes
-     * @param string[] $expectedInstances
+     * @param list<string> $inputTypes
+     * @param list<string> $expectedInstances
      *
      * @dataProvider basicTypesToResolveProvider
      */
