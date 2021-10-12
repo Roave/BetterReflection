@@ -439,7 +439,6 @@ class ReflectionParameter
         };
 
         if ($typeReflection instanceof ReflectionUnionType) {
-            /** @var list<ReflectionNamedType> $unionTypes */
             $unionTypes = $typeReflection->getTypes();
 
             foreach ($unionTypes as $unionType) {
@@ -529,7 +528,6 @@ class ReflectionParameter
 
         if ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $innerType) {
-                assert($innerType instanceof ReflectionNamedType);
                 $innerTypeClassName = $this->getClassNameFromNamedType($innerType);
                 if ($innerTypeClassName !== null) {
                     return $innerTypeClassName;
