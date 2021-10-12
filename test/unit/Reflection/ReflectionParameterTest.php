@@ -86,24 +86,20 @@ class ReflectionParameterTest extends TestCase
 
     public function testParamWithConstant(): void
     {
-        // @codingStandardsIgnoreStart
-        $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC): void {
-        }, 'sort');
-        // @codingStandardsIgnoreEnd
-
-        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        self::assertSame(false, $parameterInfo->allowsNull());
-    }
-
-    public function testParamWithConstantAlias(): void
-    {
-        $this->markTestSkipped('@todo - implement reflection of constants aliases');
-
         $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC_TEST): void {
         }, 'sort');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        self::assertSame(false, $parameterInfo->allowsNull());
+        self::assertFalse($parameterInfo->allowsNull());
+    }
+
+    public function testParamWithConstantAlias(): void
+    {
+        $parameterInfo = ReflectionParameter::createFromClosure(static function (int $sort = SORT_ASC_TEST): void {
+        }, 'sort');
+
+        self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
+        self::assertFalse($parameterInfo->allowsNull());
     }
 
     public function testCreateFromSpecWithArray(): void
@@ -561,7 +557,12 @@ class ReflectionParameterTest extends TestCase
 
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName(): void
     {
-        $classInfo = $this->reflector->reflectClass(Methods::class);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/Methods.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflectClass(Methods::class);
         $method    = $classInfo->getMethod('methodWithUpperCasedDefaults');
 
         $boolUpper = $method->getParameter('boolUpper');
@@ -607,12 +608,18 @@ class ReflectionParameterTest extends TestCase
 
         $param3 = $method->getParameter('param3');
         self::assertSame(OtherClass::class . '::MY_CONST', $param3->getDefaultValueConstantName());
+
+        $param6 = $method->getParameter('param6');
+        self::assertSame(ClassWithConstantsAsDefaultValues::class . '::class', $param6->getDefaultValueConstantName());
+
+        $methodFromTrait = $classInfo->getMethod('methodFromTrait');
+
+        $param1 = $methodFromTrait->getParameter('param1');
+        self::assertSame(ClassWithConstantsAsDefaultValues::class . '::MY_CONST', $param1->getDefaultValueConstantName());
     }
 
     public function testGetDefaultValueConstantNameNamespacedConstants(): void
     {
-        $this->markTestSkipped('@todo - implement reflection of constants outside a class');
-
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ClassWithConstantsAsDefaultValues.php',
             $this->astLocator,
@@ -625,6 +632,13 @@ class ReflectionParameterTest extends TestCase
 
         $param5 = $method->getParameter('param5');
         self::assertSame('Roave\BetterReflectionTest\FixtureOther\OTHER_NAMESPACE_CONST', $param5->getDefaultValueConstantName());
+
+        $param7 = $method->getParameter('param7');
+        self::assertSame('GLOBAL_CONST', $param7->getDefaultValueConstantName());
+
+        $param8 = $method->getParameter('param8');
+        self::assertSame('Roave\BetterReflectionTest\Fixture\UNSURE_CONST', $param8->getDefaultValueConstantName());
+        self::assertSame('this', $param8->getDefaultValue());
     }
 
     public function testGetDeclaringFunction(): void

@@ -12,6 +12,7 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -125,7 +126,10 @@ class ReflectionConstantTest extends TestCase
     {
         $php = '<?php define("FOO", E_ALL);';
 
-        $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $reflector  = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($php, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
         $reflection = $reflector->reflectConstant('FOO');
 
         self::assertSame(E_ALL, $reflection->getValue());

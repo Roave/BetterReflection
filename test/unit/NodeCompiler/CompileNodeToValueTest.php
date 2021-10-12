@@ -16,6 +16,9 @@ use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -43,14 +46,17 @@ class CompileNodeToValueTest extends TestCase
 
     private Reflector $reflector;
 
+    private SourceStubber $sourceStubber;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $configuration    = BetterReflectionSingleton::instance();
-        $this->parser     = $configuration->phpParser();
-        $this->astLocator = $configuration->astLocator();
-        $this->reflector  = $configuration->reflector();
+        $configuration       = BetterReflectionSingleton::instance();
+        $this->parser        = $configuration->phpParser();
+        $this->astLocator    = $configuration->astLocator();
+        $this->reflector     = $configuration->reflector();
+        $this->sourceStubber = $configuration->sourceStubber();
     }
 
     private function parseCode(string $phpCode): Node
@@ -60,7 +66,11 @@ class CompileNodeToValueTest extends TestCase
 
     private function getDummyContext(): CompilerContext
     {
-        $reflector       = new DefaultReflector(new StringSourceLocator('<?php class Foo {}', $this->astLocator));
+        $reflector       = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator('<?php class Foo {}', $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+            new AutoloadSourceLocator($this->astLocator),
+        ]));
         $classReflection = $reflector->reflectClass('Foo');
 
         return new CompilerContext($reflector, $classReflection);
@@ -68,7 +78,7 @@ class CompileNodeToValueTest extends TestCase
 
     private function getDummyContextWithGlobalNamespace(): CompilerContext
     {
-        $reflector          = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, BetterReflectionSingleton::instance()->sourceStubber()));
+        $reflector          = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber));
         $constantReflection = $reflector->reflectConstant('PHP_VERSION_ID');
 
         return new CompilerContext(

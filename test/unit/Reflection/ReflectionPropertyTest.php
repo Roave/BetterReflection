@@ -272,6 +272,7 @@ class ReflectionPropertyTest extends TestCase
             ['hasDefaultWithType', true, 123],
             ['hasNullAsDefaultWithType', true, null],
             ['noDefaultWithType', false, null],
+            ['fromTrait', true, 'const'],
         ];
     }
 
