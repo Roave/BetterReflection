@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -27,7 +26,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassWithConstantsAsDefaultValues;
 use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\Php71NullableParameterTypeDeclarations;
+use Roave\BetterReflectionTest\Fixture\NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PhpParameterTypeDeclarations;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use SplDoublyLinkedList;
@@ -300,49 +299,29 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    public function testPhpTypeDeclarationWithNullDefaultValueAllowsNull(): void
-    {
-        $classInfo = $this->reflector->reflectClass(PhpParameterTypeDeclarations::class);
-        $method    = $classInfo->getMethod('foo');
-
-        $stringParamType = $method->getParameter('stringParamAllowsNull')->getType();
-        self::assertSame('?string', (string) $stringParamType);
-        self::assertTrue($stringParamType->isBuiltin());
-        self::assertTrue($stringParamType->allowsNull());
-    }
-
-    public function testPhpTypeDeclarationWithNullConstantDefaultValueDoesNotAllowNull(): void
-    {
-        $classInfo = $this->reflector->reflectClass(PhpParameterTypeDeclarations::class);
-        $method    = $classInfo->getMethod('foo');
-
-        $stringParamType = $method->getParameter('stringWithNullConstantDefaultValueDoesNotAllowNull')->getType();
-        self::assertSame('string', (string) $stringParamType);
-        self::assertTrue($stringParamType->isBuiltin());
-        self::assertFalse($stringParamType->allowsNull());
-    }
-
-    public function nullableParameterTypeFunctionProvider(): array
+    public function allowsNullProvider(): array
     {
         return [
-            ['nullableIntParam', '?int'],
-            ['nullableClassParam', '?' . stdClass::class],
-            ['nullableStringParamWithDefaultValue', '?string'],
+            ['classParam', false],
+            ['noTypeParam', true],
+            ['nullableStringAllowsNull', true],
+            ['unionWithNullOnFirstPositionAllowsNull', true],
+            ['unionWithNullOnLastPositionAllowsNull', true],
+            ['stringParamWithNullDefaultValueAllowsNull', true],
+            ['stringWithNullConstantDefaultValueDoesNotAllowNull', false],
         ];
     }
 
     /**
-     * @dataProvider nullableParameterTypeFunctionProvider
+     * @dataProvider allowsNullProvider
      */
-    public function testGetNullableReturnTypeWithDeclaredType(string $parameterToReflect, string $expectedType): void
+    public function testAllowsNull(string $parameterName, bool $allowsNull): void
     {
-        $classInfo = $this->reflector->reflectClass(Php71NullableParameterTypeDeclarations::class);
-        $parameter = $classInfo->getMethod('foo')->getParameter($parameterToReflect);
+        $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);
+        $method    = $classInfo->getMethod('foo');
+        $parameter = $method->getParameter($parameterName);
 
-        $reflectionType = $parameter->getType();
-        self::assertInstanceOf(ReflectionType::class, $reflectionType);
-        self::assertSame($expectedType, (string) $reflectionType);
-        self::assertTrue($reflectionType->allowsNull());
+        self::assertSame($allowsNull, $parameter->allowsNull());
     }
 
     public function testHasTypeReturnsTrueWithType(): void
@@ -538,21 +517,6 @@ class ReflectionParameterTest extends TestCase
         $variadicParam = $method->getParameter('variadicParameter');
         self::assertTrue($variadicParam->isVariadic());
         self::assertTrue($variadicParam->isOptional());
-    }
-
-    public function testAllowsNull(): void
-    {
-        $classInfo = $this->reflector->reflectClass(Methods::class);
-        $method    = $classInfo->getMethod('methodToCheckAllowsNull');
-
-        $firstParam = $method->getParameter('allowsNull');
-        self::assertTrue($firstParam->allowsNull());
-
-        $secondParam = $method->getParameter('hintDisallowNull');
-        self::assertFalse($secondParam->allowsNull());
-
-        $thirdParam = $method->getParameter('hintAllowNull');
-        self::assertTrue($thirdParam->allowsNull());
     }
 
     public function testIsDefaultValueConstantAndGetDefaultValueConstantName(): void

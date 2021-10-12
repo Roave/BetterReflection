@@ -11,7 +11,6 @@ use LogicException;
 use OutOfBoundsException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
-use PhpParser\Node\NullableType;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -31,6 +30,7 @@ use function is_array;
 use function is_object;
 use function is_string;
 use function sprintf;
+use function strtolower;
 
 class ReflectionParameter
 {
@@ -349,19 +349,21 @@ class ReflectionParameter
      */
     public function allowsNull(): bool
     {
-        if (! $this->hasType()) {
+        $type = $this->getType();
+
+        if ($type === null) {
             return true;
         }
 
-        if ($this->node->type instanceof NullableType) {
-            return true;
+        if ($type instanceof ReflectionUnionType) {
+            foreach ($type->getTypes() as $unionType) {
+                if (strtolower($unionType->getName()) === 'null') {
+                    return true;
+                }
+            }
         }
 
-        if (! $this->isDefaultValueAvailable()) {
-            return false;
-        }
-
-        return $this->getDefaultValue() === null;
+        return $type->allowsNull();
     }
 
     /**
