@@ -111,34 +111,22 @@ class CompileNodeToValue
      */
     private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context): string|int|float|bool|array|null
     {
-        switch ($constNode->name->toLowerString()) {
-            case 'null':
-                return null;
+        $constantName = $constNode->name->toString();
 
-            case 'false':
-                return false;
+        if ($context->getNamespace() !== null && $constNode->name->isUnqualified()) {
+            $namespacedConstantName = sprintf('%s\\%s', $context->getNamespace(), $constantName);
 
-            case 'true':
-                return true;
+            try {
+                return $this->getConstantValue($namespacedConstantName, $context);
+            } catch (IdentifierNotFound) {
+                // Try constant name without namespace
+            }
+        }
 
-            default:
-                $constantName = $constNode->name->toString();
-
-                if ($context->getNamespace() !== null && $constNode->name->isUnqualified()) {
-                    $namespacedConstantName = sprintf('%s\\%s', $context->getNamespace(), $constantName);
-
-                    try {
-                        return $this->getConstantValue($namespacedConstantName, $context);
-                    } catch (IdentifierNotFound) {
-                        // Try constant name without namespace
-                    }
-                }
-
-                try {
-                    return $this->getConstantValue($constantName, $context);
-                } catch (IdentifierNotFound) {
-                    throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode, $constantName);
-                }
+        try {
+            return $this->getConstantValue($constantName, $context);
+        } catch (IdentifierNotFound) {
+            throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode, $constantName);
         }
     }
 
