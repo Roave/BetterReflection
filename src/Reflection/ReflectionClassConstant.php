@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node\Stmt\ClassConst;
 use ReflectionProperty;
+use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
@@ -16,10 +17,7 @@ use Roave\BetterReflection\Util\GetLastDocComment;
 
 class ReflectionClassConstant
 {
-    private bool $valueWasCached = false;
-
-    /** @var scalar|array<scalar>|null const value */
-    private string|int|float|bool|array|null $value = null;
+    private ?CompiledValue $compiledValue = null;
 
     private Reflector $reflector;
 
@@ -72,17 +70,14 @@ class ReflectionClassConstant
      */
     public function getValue(): string|int|float|bool|array|null
     {
-        if ($this->valueWasCached !== false) {
-            return $this->value;
+        if ($this->compiledValue === null) {
+            $this->compiledValue = (new CompileNodeToValue())->__invoke(
+                $this->node->consts[$this->positionInNode]->value,
+                new CompilerContext($this->reflector, $this),
+            );
         }
 
-        $this->value          = (new CompileNodeToValue())->__invoke(
-            $this->node->consts[$this->positionInNode]->value,
-            new CompilerContext($this->reflector, $this),
-        );
-        $this->valueWasCached = true;
-
-        return $this->value;
+        return $this->compiledValue->value;
     }
 
     /**

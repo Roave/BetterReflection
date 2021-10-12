@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
@@ -38,10 +39,7 @@ class ReflectionConstant implements Reflection
 
     private ?int $positionInNode;
 
-    /** @var scalar|array<scalar>|null const value */
-    private string|int|float|bool|array|null $value = null;
-
-    private bool $valueWasCached = false;
+    private ?CompiledValue $compiledValue = null;
 
     private function __construct()
     {
@@ -212,8 +210,8 @@ class ReflectionConstant implements Reflection
      */
     public function getValue(): string|int|float|bool|array|null
     {
-        if ($this->valueWasCached !== false) {
-            return $this->value;
+        if ($this->compiledValue !== null) {
+            return $this->compiledValue->value;
         }
 
         /** @psalm-suppress PossiblyNullArrayOffset */
@@ -221,13 +219,12 @@ class ReflectionConstant implements Reflection
             ? $this->node->args[1]->value
             : $this->node->consts[$this->positionInNode]->value;
 
-        $this->value          = (new CompileNodeToValue())->__invoke(
+        $this->compiledValue = (new CompileNodeToValue())->__invoke(
             $valueNode,
             new CompilerContext($this->reflector, $this),
         );
-        $this->valueWasCached = true;
 
-        return $this->value;
+        return $this->compiledValue->value;
     }
 
     public function getFileName(): ?string
