@@ -18,6 +18,9 @@ use function dirname;
 use function realpath;
 use function sprintf;
 
+/**
+ * @internal
+ */
 class CompileNodeToValue
 {
     /**
