@@ -664,7 +664,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetClassForTypeHintedMethodParameters(): void
     {
-        $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object) {} }';
+        $content = '<?php class Foo { public function myMethod($untyped, array $array, \stdClass $object, string|\stdClass $unionWithClass, string|bool $unionWithoutClass) {} }';
 
         $reflector  = new DefaultReflector(new AggregateSourceLocator([
             new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
@@ -675,10 +675,15 @@ class ReflectionParameterTest extends TestCase
 
         self::assertNull($methodInfo->getParameter('untyped')->getClass());
         self::assertNull($methodInfo->getParameter('array')->getClass());
+        self::assertNull($methodInfo->getParameter('unionWithoutClass')->getClass());
 
         $hintedClassReflection = $methodInfo->getParameter('object')->getClass();
         self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
         self::assertSame('stdClass', $hintedClassReflection->getName());
+
+        $fromUnionClassReflection = $methodInfo->getParameter('unionWithClass')->getClass();
+        self::assertInstanceOf(ReflectionClass::class, $fromUnionClassReflection);
+        self::assertSame('stdClass', $fromUnionClassReflection->getName());
     }
 
     public function testCannotClone(): void
