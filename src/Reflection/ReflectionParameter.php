@@ -478,7 +478,7 @@ class ReflectionParameter
     }
 
     /**
-     * Checks parameter type.
+     * Checks if a parameter has the type specified in `$type`
      */
     public function hasType(string|ReflectionNamedType $type, bool $ignoreDefaultValue = false): bool
     {
