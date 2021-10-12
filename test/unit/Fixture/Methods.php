@@ -63,6 +63,36 @@ abstract class Methods
     ) {
     }
 
+    public function methodIsArrayParameters(
+        $noTypeParameter,
+        bool $boolParameter,
+        array $arrayParameter,
+        ArRaY $arrayCaseInsensitiveParameter,
+        ?array $nullableArrayParameter,
+        null|array $unionArrayParameterNullFirst,
+        array|null $unionArrayParameterNullLast,
+        string|bool $unionNotArrayParameter,
+        array|string|null $unionWithArrayNotArrayParameter,
+        array|object $unionWithArrayAndObjectNotArrayParameter,
+    )
+    {
+    }
+
+    public function methodIsCallableParameters(
+        $noTypeParameter,
+        bool $boolParameter,
+        callable $callableParameter,
+        cAlLaBlE $callableCaseInsensitiveParameter,
+        ?callable $nullableCallableParameter,
+        null|callable $unionCallableParameterNullFirst,
+        callable|null $unionCallableParameterNullLast,
+        string|bool $unionNotCallableParameter,
+        callable|string|null $unionWithCallableNotCallableParameter,
+        callable|object $unionWithCallableAndObjectNotArrayParameter,
+    )
+    {
+    }
+
     public function methodWithVariadic($nonVariadicParameter, ...$variadicParameter)
     {
     }

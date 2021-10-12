@@ -30,7 +30,6 @@ use function in_array;
 use function is_array;
 use function is_object;
 use function is_string;
-use function preg_match;
 use function sprintf;
 use function strtolower;
 
@@ -409,7 +408,7 @@ class ReflectionParameter
      */
     public function isArray(): bool
     {
-        return preg_match('~^\??array$~i', (string) $this->getType()) === 1;
+        return $this->isType($this->getType(), 'array');
     }
 
     /**
@@ -417,7 +416,41 @@ class ReflectionParameter
      */
     public function isCallable(): bool
     {
-        return preg_match('~^\??callable$~i', (string) $this->getType()) === 1;
+        return $this->isType($this->getType(), 'callable');
+    }
+
+    /**
+     * For isArray() and isCallable().
+     */
+    private function isType(ReflectionNamedType|ReflectionUnionType|null $typeReflection, string $type): bool
+    {
+        if ($typeReflection === null) {
+            return false;
+        }
+
+        $isOneOfAllowedTypes = static function (ReflectionNamedType $namedType, string ...$types): bool {
+            foreach ($types as $type) {
+                if (strtolower($namedType->getName()) === $type) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        if ($typeReflection instanceof ReflectionUnionType) {
+            $unionTypes = $typeReflection->getTypes();
+
+            foreach ($unionTypes as $unionType) {
+                if (! $isOneOfAllowedTypes($unionType, $type, 'null')) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return $isOneOfAllowedTypes($typeReflection, $type);
     }
 
     /**
@@ -495,7 +528,6 @@ class ReflectionParameter
 
         if ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $innerType) {
-                assert($innerType instanceof ReflectionNamedType);
                 $innerTypeClassName = $this->getClassNameFromNamedType($innerType);
                 if ($innerTypeClassName !== null) {
                     return $innerTypeClassName;

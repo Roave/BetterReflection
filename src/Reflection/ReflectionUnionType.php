@@ -7,21 +7,27 @@ namespace Roave\BetterReflection\Reflection;
 use PhpParser\Node\UnionType;
 
 use function array_map;
+use function assert;
 use function implode;
 
 class ReflectionUnionType extends ReflectionType
 {
-    /** @var list<ReflectionNamedType|ReflectionUnionType> */
+    /** @var list<ReflectionNamedType> */
     private array $types;
 
     public function __construct(UnionType $type, bool $allowsNull)
     {
         parent::__construct($allowsNull);
-        $this->types = array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType => ReflectionType::createFromTypeAndReflector($type), $type->types);
+        $this->types = array_map(static function ($type): ReflectionNamedType {
+            $reflectionType = ReflectionType::createFromTypeAndReflector($type);
+            assert($reflectionType instanceof ReflectionNamedType);
+
+            return $reflectionType;
+        }, $type->types);
     }
 
     /**
-     * @return list<ReflectionNamedType|ReflectionUnionType>
+     * @return list<ReflectionNamedType>
      */
     public function getTypes(): array
     {
