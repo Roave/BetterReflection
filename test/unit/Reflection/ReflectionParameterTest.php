@@ -90,7 +90,7 @@ class ReflectionParameterTest extends TestCase
         }, 'sort');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        self::assertSame(false, $parameterInfo->allowsNull());
+        self::assertFalse($parameterInfo->allowsNull());
     }
 
     public function testParamWithConstantAlias(): void
@@ -99,7 +99,7 @@ class ReflectionParameterTest extends TestCase
         }, 'sort');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
-        self::assertSame(false, $parameterInfo->allowsNull());
+        self::assertFalse($parameterInfo->allowsNull());
     }
 
     public function testCreateFromSpecWithArray(): void
