@@ -109,10 +109,6 @@ abstract class Methods
     {
     }
 
-    public function methodToCheckAllowsNull($allowsNull, \stdClass $hintDisallowNull, \stdClass $hintAllowNull = null)
-    {
-    }
-
     public function methodWithConstAsDefault($intDefault = 1, $constDefault = self::SOME_CONST, $definedDefault = SOME_DEFINED_VALUE)
     {
     }
