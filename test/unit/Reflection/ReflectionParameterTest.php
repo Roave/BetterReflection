@@ -401,30 +401,60 @@ class ReflectionParameterTest extends TestCase
         );
     }
 
-    public function testIsCallable(): void
+    public function isCallableProvider(): array
     {
-        $classInfo = $this->reflector->reflectClass(Methods::class);
-
-        $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
-
-        $nonCallableParam = $method->getParameter('stdClassParameter');
-        self::assertFalse($nonCallableParam->isCallable());
-
-        $callableParam = $method->getParameter('callableParameter');
-        self::assertTrue($callableParam->isCallable());
+        return [
+            ['noTypeParameter', false],
+            ['boolParameter', false],
+            ['callableParameter', true],
+            ['callableCaseInsensitiveParameter', true],
+            ['nullableCallableParameter', true],
+            ['unionCallableParameterNullFirst', true],
+            ['unionCallableParameterNullLast', true],
+            ['unionNotCallableParameter', false],
+            ['unionWithCallableNotCallableParameter', false],
+            ['unionWithCallableAndObjectNotArrayParameter', false],
+        ];
     }
 
-    public function testIsArray(): void
+    /**
+     * @dataProvider isCallableProvider
+     */
+    public function testIsCallable(string $parameterName, bool $isCallable): void
     {
-        $classInfo = $this->reflector->reflectClass(Methods::class);
+        $classReflection     = $this->reflector->reflectClass(Methods::class);
+        $methodReflection    = $classReflection->getMethod('methodIsCallableParameters');
+        $parameterReflection = $methodReflection->getParameter($parameterName);
 
-        $method = $classInfo->getMethod('methodWithExplicitTypedParameters');
+        self::assertSame($isCallable, $parameterReflection->isCallable());
+    }
 
-        $nonArrayParam = $method->getParameter('stdClassParameter');
-        self::assertFalse($nonArrayParam->isArray());
+    public function isArrayProvider(): array
+    {
+        return [
+            ['noTypeParameter', false],
+            ['boolParameter', false],
+            ['arrayParameter', true],
+            ['arrayCaseInsensitiveParameter', true],
+            ['nullableArrayParameter', true],
+            ['unionArrayParameterNullFirst', true],
+            ['unionArrayParameterNullLast', true],
+            ['unionNotArrayParameter', false],
+            ['unionWithArrayNotArrayParameter', false],
+            ['unionWithArrayAndObjectNotArrayParameter', false],
+        ];
+    }
 
-        $arrayParam = $method->getParameter('arrayParameter');
-        self::assertTrue($arrayParam->isArray());
+    /**
+     * @dataProvider isArrayProvider
+     */
+    public function testIsArray(string $parameterName, bool $isArray): void
+    {
+        $classReflection     = $this->reflector->reflectClass(Methods::class);
+        $methodReflection    = $classReflection->getMethod('methodIsArrayParameters');
+        $parameterReflection = $methodReflection->getParameter($parameterName);
+
+        self::assertSame($isArray, $parameterReflection->isArray());
     }
 
     public function testIsVariadic(): void
