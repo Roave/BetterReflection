@@ -38,7 +38,7 @@ class CompileNodeToValue
             return $this($node->expr, $context);
         }
 
-        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context) {
+        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context): string|int|float|bool|array|null {
             if ($node instanceof Node\Expr\ConstFetch) {
                 return $this->compileConstFetch($node, $context);
             }
