@@ -8,7 +8,6 @@ use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassConst as ConstNode;
-use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
@@ -68,7 +67,7 @@ class ReflectionClass implements Reflection
 
     private LocatedSource $locatedSource;
 
-    private ClassLikeNode $node;
+    private ClassNode|InterfaceNode|TraitNode $node;
 
     /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
     private ?array $cachedReflectionConstants = null;
@@ -132,12 +131,12 @@ class ReflectionClass implements Reflection
      *
      * @internal
      *
-     * @param ClassLikeNode      $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param NamespaceNode|null $namespace optional - if omitted, we assume it is global namespaced class
+     * @param ClassNode|InterfaceNode|TraitNode $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param NamespaceNode|null                $namespace optional - if omitted, we assume it is global namespaced class
      */
     public static function createFromNode(
         Reflector $reflector,
-        ClassLikeNode $node,
+        ClassNode|InterfaceNode|TraitNode $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
     ): self {
@@ -1197,11 +1196,9 @@ class ReflectionClass implements Reflection
      */
     public function getImmediateInterfaces(): array
     {
-        if ($this->isTrait()) {
+        if ($this->node instanceof TraitNode) {
             return [];
         }
-
-        assert($this->node instanceof ClassNode || $this->node instanceof InterfaceNode);
 
         $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
 
@@ -1377,12 +1374,9 @@ class ReflectionClass implements Reflection
      */
     private function getInterfacesHierarchy(): array
     {
-        if (! $this->isInterface()) {
+        if (! $this->node instanceof InterfaceNode) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
-
-        $node = $this->node;
-        assert($node instanceof InterfaceNode);
 
         /** @var array<class-string, self> $interfaces */
         $interfaces = array_merge(
@@ -1391,7 +1385,7 @@ class ReflectionClass implements Reflection
                 fn (Node\Name $interfaceName): array => $this
                         ->reflectClassForNamedNode($interfaceName)
                         ->getInterfacesHierarchy(),
-                $node->extends,
+                $this->node->extends,
             ),
         );
 
@@ -1467,7 +1461,7 @@ class ReflectionClass implements Reflection
     /**
      * Retrieve the AST node for this class
      */
-    public function getAst(): ClassLikeNode
+    public function getAst(): ClassNode|InterfaceNode|TraitNode
     {
         return $this->node;
     }

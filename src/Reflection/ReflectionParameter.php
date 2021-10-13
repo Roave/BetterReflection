@@ -566,12 +566,11 @@ class ReflectionParameter
 
     private function getClassName(): ?string
     {
-        if (! $this->hasType()) {
+        $type = $this->getType();
+
+        if ($type === null) {
             return null;
         }
-
-        $type = $this->getType();
-        assert($type instanceof ReflectionNamedType || $type instanceof ReflectionUnionType);
 
         if ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $innerType) {
