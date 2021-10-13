@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\NodeCompiler\Exception;
 
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
@@ -32,6 +33,23 @@ final class UnableToCompileNodeTest extends TestCase
         $exception = new UnableToCompileNode();
 
         self::assertNull($exception->constantName());
+    }
+
+    /** @dataProvider supportedContextTypes */
+    public function testBecauseOfInitializer(CompilerContext $context, string $contextName): void
+    {
+        $exception = UnableToCompileNode::becauseOfInitializer(
+            $context,
+            new New_(new Name('SomeClass')),
+        );
+
+        self::assertSame(
+            sprintf(
+                'Unable to compile initializer in %s in file "" (line -1)',
+                $contextName,
+            ),
+            $exception->getMessage(),
+        );
     }
 
     /** @dataProvider supportedContextTypes */

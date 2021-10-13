@@ -58,6 +58,10 @@ class CompileNodeToValue
                 return $this->getClassConstantValue($node, $constantName, $context);
             }
 
+            if ($node instanceof Node\Expr\New_) {
+                throw Exception\UnableToCompileNode::becauseOfInitializer($context, $node);
+            }
+
             if ($node instanceof Node\Scalar\MagicConst\Dir) {
                 return $this->compileDirConstant($context);
             }

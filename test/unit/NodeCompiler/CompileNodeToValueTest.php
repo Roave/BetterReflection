@@ -24,6 +24,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\ClassWithNewInInitializers;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsClass;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsTrait;
 
@@ -705,5 +706,24 @@ PHP;
         $parameter = $function->getParameter($parameterName);
 
         self::assertSame($expectedValue, $parameter->getDefaultValue());
+    }
+
+    public function testThrowExceptionWhenValueContainsInitializer(): void
+    {
+        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/NewInInitializers.php'));
+
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage(sprintf(
+            'Unable to compile initializer in method %s::methodWithInitializer() in file %s (line 11)',
+            ClassWithNewInInitializers::class,
+            $file,
+        ));
+
+        $reflector = new DefaultReflector(new SingleFileSourceLocator($file, $this->astLocator));
+        $class     = $reflector->reflectClass(ClassWithNewInInitializers::class);
+        $method    = $class->getMethod('methodWithInitializer');
+        $parameter = $method->getParameter('parameterWithInitializer');
+
+        $parameter->getDefaultValue();
     }
 }
