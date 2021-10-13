@@ -55,9 +55,18 @@ jobs:
         if: ${{ matrix.dependencies == 'locked' }}
         run: "composer install --no-interaction --no-progress"
 
+      - name: "Generate code coverage"
+        run: "vendor/bin/phpunit --coverage-xml=coverage/coverage-xml --log-junit=coverage/junit.xml"
+
+      - name: "Install PHP without pcov"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: memory_limit=-1
+
       - name: "Infection"
-        run: "vendor/bin/roave-infection-static-analysis-plugin"
+        run: "vendor/bin/roave-infection-static-analysis-plugin --coverage=coverage --threads=$(nproc)"
         env:
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-
