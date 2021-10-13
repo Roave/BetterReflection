@@ -13,16 +13,19 @@ final class DeprecatedHelper
 {
     private static ?DocBlockFactory $docBlockFactory = null;
 
+    /**
+     * @psalm-pure
+     */
     public static function isDeprecated(string $docComment): bool
     {
         if ($docComment === '') {
             return false;
         }
 
+        /** @psalm-suppress ImpureStaticProperty, ImpureMethodCall */
         self::$docBlockFactory ??= DocBlockFactory::createInstance();
 
-        $docBlock = self::$docBlockFactory->create($docComment);
-
-        return $docBlock->hasTag('deprecated');
+        /** @psalm-suppress ImpureStaticProperty, ImpureMethodCall */
+        return self::$docBlockFactory->create($docComment)->hasTag('deprecated');
     }
 }
