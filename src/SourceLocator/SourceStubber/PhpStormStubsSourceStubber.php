@@ -8,6 +8,7 @@ use Generator;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
 use PhpParser\BuilderFactory;
 use PhpParser\BuilderHelpers;
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
@@ -33,6 +34,7 @@ use function in_array;
 use function is_dir;
 use function is_string;
 use function preg_match;
+use function preg_replace;
 use function sprintf;
 use function str_replace;
 use function strtolower;
@@ -232,7 +234,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 continue;
             }
 
-            $classNode->stmts = $this->filterStmtsByPhpVersion($classNode->stmts);
+            $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts);
 
             $this->classNodes[strtolower($className)] = $classNode;
         }
@@ -272,6 +274,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     private function createStub(Node $node): string
     {
         if (! ($node instanceof Node\Expr\FuncCall)) {
+            $this->addDeprecatedDocComment($node);
+
             $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
 
             $namespaceBuilder = $this->builderFactory->namespace($nodeWithNamespaceName->namespacedName->slice(0, -1));
@@ -434,7 +438,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      *
      * @return Node\Stmt[]
      */
-    private function filterStmtsByPhpVersion(array $stmts): array
+    private function modifyStmtsByPhpVersion(array $stmts): array
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
@@ -442,10 +446,70 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 continue;
             }
 
+            if (
+                $stmt instanceof Node\Stmt\ClassConst
+                || $stmt instanceof Node\Stmt\Property
+                || $stmt instanceof Node\Stmt\ClassMethod
+            ) {
+                $this->addDeprecatedDocComment($stmt);
+            }
+
             $newStmts[] = $stmt;
         }
 
         return $newStmts;
+    }
+
+    private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node): void
+    {
+        if ($node instanceof Node\Stmt\Const_) {
+            return;
+        }
+
+        if (! $this->isDeprecatedInPhpVersion($node)) {
+            return;
+        }
+
+        $docComment = $node->getDocComment();
+
+        if ($docComment === null) {
+            $docCommentText = '/** @deprecated */';
+        } else {
+            $docCommentText = preg_replace('~(\r?\n\s*)\*/~', '\1* @deprecated\1*/', $docComment->getText());
+        }
+
+        $node->setDocComment(new Doc($docCommentText));
+    }
+
+    private function isDeprecatedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_ $node): bool
+    {
+        foreach ($node->attrGroups as $attributesGroupNode) {
+            foreach ($attributesGroupNode->attrs as $attributeNode) {
+                // The name is sometimes FQN and sometimes not
+                if (
+                    $attributeNode->name->toString() !== 'JetBrains\PhpStorm\Deprecated'
+                    && $attributeNode->name->toString() !== 'Deprecated'
+                ) {
+                    continue;
+                }
+
+                if ($this->phpVersion === null) {
+                    return true;
+                }
+
+                foreach ($attributeNode->args as $attributeArg) {
+                    if ($attributeArg->name?->toString() === 'since') {
+                        assert($attributeArg->value instanceof Node\Scalar\String_);
+
+                        return $this->parsePhpVersion($attributeArg->value->value) <= $this->phpVersion;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function isSupportedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node): bool

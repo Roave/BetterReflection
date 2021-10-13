@@ -188,11 +188,21 @@ final class ReflectionSourceStubber implements SourceStubber
         Class_|Interface_|Trait_|Method|Property|Function_ $node,
         CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection,
     ): void {
-        if ($reflection->getDocComment() === false) {
+        if (
+            ($reflection instanceof CoreReflectionMethod || $reflection instanceof CoreReflectionFunction)
+            && $reflection->isInternal()
+            && $reflection->isDeprecated()
+        ) {
+            $docComment = '/** @deprecated */';
+        } else {
+            $docComment = $reflection->getDocComment();
+        }
+
+        if ($docComment === false) {
             return;
         }
 
-        $node->setDocComment(new Doc($reflection->getDocComment()));
+        $node->setDocComment(new Doc($docComment));
     }
 
     private function addClassModifiers(Class_ $classNode, CoreReflectionClass $classReflection): void

@@ -8,6 +8,7 @@ use PhpParser\Node\Stmt\ClassConst;
 use ReflectionProperty;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
@@ -161,6 +162,11 @@ class ReflectionClassConstant
     public function getDocComment(): string
     {
         return GetLastDocComment::forNode($this->node);
+    }
+
+    public function isDeprecated(): bool
+    {
+        return DeprecatedHelper::isDeprecated($this->getDocComment());
     }
 
     public function __toString(): string

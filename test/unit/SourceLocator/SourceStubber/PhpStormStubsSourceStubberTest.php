@@ -804,4 +804,129 @@ class PhpStormStubsSourceStubberTest extends TestCase
             self::assertNull($stub, $constantName);
         }
     }
+
+    public function dataClassIsDeprecatedInPhpVersion(): array
+    {
+        return [
+            ['Mongo', null, true],
+            ['Mongo', 80000, true],
+            [DateTimeInterface::class, null, false],
+            [DateTimeInterface::class, 70400, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataClassIsDeprecatedInPhpVersion
+     */
+    public function testClassIsDeprecatedInPhpVersion(string $className, ?int $phpVersion, bool $isDeprecated): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
+
+        $classReflection = $reflector->reflectClass($className);
+
+        self::assertSame($isDeprecated, $classReflection->isDeprecated());
+    }
+
+    public function dataClassConstantIsDeprecatedInPhpVersion(): array
+    {
+        return [
+            ['PDO', 'PARAM_BOOL', null, false],
+            ['PDO', 'PARAM_BOOL', 80000, false],
+            ['PDO', 'PGSQL_ASSOC', null, true],
+            ['PDO', 'PGSQL_ASSOC', 80000, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataClassConstantIsDeprecatedInPhpVersion
+     */
+    public function testClassConstantIsDeprecatedInPhpVersion(string $className, string $constantName, ?int $phpVersion, bool $isDeprecated): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
+
+        $classReflection    = $reflector->reflectClass($className);
+        $constantReflection = $classReflection->getReflectionConstant($constantName);
+
+        self::assertSame($isDeprecated, $constantReflection->isDeprecated());
+    }
+
+    public function dataMethodIsDeprecatedInPhpVersion(): array
+    {
+        return [
+            [CoreReflectionClass::class, 'getName', null, false],
+            [CoreReflectionClass::class, 'getName', 70400, false],
+            [CoreReflectionClass::class, 'export', null, true],
+            [CoreReflectionClass::class, 'export', 70400, true],
+            [CoreReflectionClass::class, 'export', 70300, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataMethodIsDeprecatedInPhpVersion
+     */
+    public function testMethodIsDeprecatedInPhpVersion(string $className, string $methodName, ?int $phpVersion, bool $isDeprecated): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $sourceLocator = new AggregateSourceLocator([
+            // We need to hack Stringable to make the test work
+            new StringSourceLocator('<?php interface Stringable {}', $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $sourceStubber),
+        ]);
+        $reflector     = new DefaultReflector($sourceLocator);
+
+        $classReflection  = $reflector->reflectClass($className);
+        $methodReflection = $classReflection->getMethod($methodName);
+
+        self::assertSame($isDeprecated, $methodReflection->isDeprecated());
+    }
+
+    public function dataPropertyIsDeprecatedInPhpVersion(): array
+    {
+        return [
+            ['DateInterval', 'y', null, false],
+            ['DateInterval', 'y', 80000, false],
+            ['DOMDocument', 'actualEncoding', null, true],
+            ['DOMDocument', 'actualEncoding', 80000, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataPropertyIsDeprecatedInPhpVersion
+     */
+    public function testPropertyIsDeprecatedInPhpVersion(string $className, string $propertyName, ?int $phpVersion, bool $isDeprecated): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
+
+        $classReflection    = $reflector->reflectClass($className);
+        $propertyReflection = $classReflection->getProperty($propertyName);
+
+        self::assertSame($isDeprecated, $propertyReflection->isDeprecated());
+    }
+
+    public function dataFunctionIsDeprecatedInPhpVersion(): array
+    {
+        return [
+            ['strpos', null, false],
+            ['strpos', 80000, false],
+            ['create_function', null, true],
+            ['create_function', 70200, true],
+            ['create_function', 70100, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataFunctionIsDeprecatedInPhpVersion
+     */
+    public function testFunctionIsDeprecatedInPhpVersion(string $functionName, ?int $phpVersion, bool $isDeprecated): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
+
+        $functionReflection = $reflector->reflectFunction($functionName);
+
+        self::assertSame($isDeprecated, $functionReflection->isDeprecated());
+    }
 }

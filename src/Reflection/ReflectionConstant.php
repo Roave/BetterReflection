@@ -9,6 +9,7 @@ use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -197,6 +198,11 @@ class ReflectionConstant implements Reflection
     public function isUserDefined(): bool
     {
         return ! $this->isInternal();
+    }
+
+    public function isDeprecated(): bool
+    {
+        return DeprecatedHelper::isDeprecated($this->getDocComment());
     }
 
     /**

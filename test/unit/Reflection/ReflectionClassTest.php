@@ -72,6 +72,7 @@ use function class_exists;
 use function count;
 use function file_get_contents;
 use function sort;
+use function sprintf;
 use function uniqid;
 
 /**
@@ -2087,5 +2088,42 @@ PHP;
         $class = $reflector->reflectClass('HasStringable');
 
         self::assertSame(['Iterator', 'Traversable', 'Stringable'], $class->getInterfaceNames());
+    }
+
+    public function deprecatedDocCommentProvider(): array
+    {
+        return [
+            [
+                '/** 
+                  * @deprecated since 8.0
+                  */',
+                true,
+            ],
+            [
+                '/** 
+                  * @deprecated
+                  */',
+                true,
+            ],
+            [
+                '',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deprecatedDocCommentProvider
+     */
+    public function testIsDeprecated(string $docComment, bool $isDeprecated): void
+    {
+        $php = sprintf('<?php
+        %s
+        class Foo {}', $docComment);
+
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('Foo');
+
+        self::assertSame($isDeprecated, $classReflection->isDeprecated());
     }
 }

@@ -18,6 +18,8 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
+use function sprintf;
+
 use const E_ALL;
 
 /**
@@ -298,5 +300,42 @@ class ReflectionConstantTest extends TestCase
 
         self::assertInstanceOf(Node\Expr\FuncCall::class, $ast);
         self::assertSame('FOO', $ast->args[0]->value->value);
+    }
+
+    public function deprecatedDocCommentProvider(): array
+    {
+        return [
+            [
+                '/** 
+                  * @deprecated since 8.0
+                  */',
+                true,
+            ],
+            [
+                '/** 
+                  * @deprecated
+                  */',
+                true,
+            ],
+            [
+                '',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deprecatedDocCommentProvider
+     */
+    public function testIsDeprecated(string $docComment, bool $isDeprecated): void
+    {
+        $php = sprintf('<?php
+        %s
+        const FOO = "foo";', $docComment);
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $constantReflection = $reflector->reflectConstant('FOO');
+
+        self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
 }

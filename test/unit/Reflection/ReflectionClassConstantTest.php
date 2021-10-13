@@ -14,6 +14,8 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
+use function sprintf;
+
 class ReflectionClassConstantTest extends TestCase
 {
     private function getComposerLocator(): ComposerSourceLocator
@@ -174,5 +176,45 @@ PHP;
         self::assertInstanceOf(ClassConst::class, $ast);
         self::assertSame($positionInAst, $constantReflection->getPositionInAst());
         self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
+    }
+
+    public function deprecatedDocCommentProvider(): array
+    {
+        return [
+            [
+                '/** 
+                  * @deprecated since 8.0
+                  */',
+                true,
+            ],
+            [
+                '/** 
+                  * @deprecated
+                  */',
+                true,
+            ],
+            [
+                '',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deprecatedDocCommentProvider
+     */
+    public function testIsDeprecated(string $docComment, bool $isDeprecated): void
+    {
+        $php = sprintf('<?php
+        class Foo {
+            %s
+            public const FOO = "foo";
+        }', $docComment);
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
+        $classReflection    = $reflector->reflectClass('Foo');
+        $constantReflection = $classReflection->getReflectionConstant('FOO');
+
+        self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
 }
