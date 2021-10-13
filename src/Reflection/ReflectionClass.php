@@ -1374,12 +1374,9 @@ class ReflectionClass implements Reflection
      */
     private function getInterfacesHierarchy(): array
     {
-        if (! $this->isInterface()) {
+        if (! $this->node instanceof InterfaceNode) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
-
-        $node = $this->node;
-        assert($node instanceof InterfaceNode);
 
         /** @var array<class-string, self> $interfaces */
         $interfaces = array_merge(
@@ -1388,7 +1385,7 @@ class ReflectionClass implements Reflection
                 fn (Node\Name $interfaceName): array => $this
                         ->reflectClassForNamedNode($interfaceName)
                         ->getInterfacesHierarchy(),
-                $node->extends,
+                $this->node->extends,
             ),
         );
 
