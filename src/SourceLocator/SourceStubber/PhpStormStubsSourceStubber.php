@@ -434,9 +434,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     /**
-     * @param Node\Stmt[] $stmts
+     * @param list<Node\Stmt> $stmts
      *
-     * @return Node\Stmt[]
+     * @return list<Node\Stmt>
      */
     private function modifyStmtsByPhpVersion(array $stmts): array
     {
