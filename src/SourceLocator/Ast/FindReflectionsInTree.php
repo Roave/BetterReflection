@@ -72,7 +72,14 @@ final class FindReflectionsInTree
                     return null;
                 }
 
-                if ($this->identifierType->isClass() && $node instanceof Node\Stmt\ClassLike) {
+                if (
+                    $this->identifierType->isClass()
+                    && (
+                        $node instanceof Node\Stmt\Class_
+                        || $node instanceof Node\Stmt\Interface_
+                        || $node instanceof Node\Stmt\Trait_
+                    )
+                ) {
                     $classNamespace      = $node->name === null ? null : $this->currentNamespace;
                     $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
 

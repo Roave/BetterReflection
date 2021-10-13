@@ -219,15 +219,22 @@ class ReflectionObjectTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods([$methodName])
             ->getMock();
-        $mockReflectionClass
+
+        $method = $mockReflectionClass
             ->expects($this->atLeastOnce())
             ->method($methodName);
+
+        $php  = '<?php class stdClass {}';
+        $node = $this->parse($php)[0];
+
+        // Cannot be generated because the declared return type is a union, we have to provide a return value
+        if ($methodName === 'getAst') {
+            $method->willReturn($node);
+        }
 
         // Force inject node and locatedSource properties on our ReflectionClass
         // mock so that methods will not fail when they are accessed
         $mockReflectionClassReflection = new CoreReflectionClass(ReflectionClass::class);
-
-        $php = '<?php class stdClass {}';
 
         $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('locatedSource');
         $mockReflectionClassNodeReflection->setAccessible(true);
@@ -235,7 +242,7 @@ class ReflectionObjectTest extends TestCase
 
         $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('node');
         $mockReflectionClassNodeReflection->setAccessible(true);
-        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $this->parse($php)[0]);
+        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $node);
 
         // Create the ReflectionObject from a dummy class
         $reflectionObject = ReflectionObject::createFromInstance(new stdClass());

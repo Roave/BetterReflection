@@ -6,9 +6,11 @@ namespace Roave\BetterReflection\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
-use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
+use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
+use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use ReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
@@ -465,7 +467,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
     }
 
-    public function getAst(): ClassLikeNode
+    public function getAst(): ClassNode|InterfaceNode|TraitNode
     {
         return $this->reflectionClass->getAst();
     }
