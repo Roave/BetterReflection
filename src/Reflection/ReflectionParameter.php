@@ -152,20 +152,20 @@ class ReflectionParameter
     /**
      * @throws LogicException
      */
-    private function compileDefaultValueNode(): void
+    private function getCompiledDefaultValueNode(): CompiledValue
     {
         if (! $this->isDefaultValueAvailable()) {
             throw new LogicException('This parameter does not have a default value available');
         }
 
-        if ($this->compiledDefaultValue !== null) {
-            return;
+        if ($this->compiledDefaultValue === null) {
+            $this->compiledDefaultValue = (new CompileNodeToValue())->__invoke(
+                $this->node->default,
+                new CompilerContext($this->reflector, $this),
+            );
         }
 
-        $this->compiledDefaultValue = (new CompileNodeToValue())->__invoke(
-            $this->node->default,
-            new CompilerContext($this->reflector, $this),
-        );
+        return $this->compiledDefaultValue;
     }
 
     /**
@@ -248,10 +248,7 @@ class ReflectionParameter
      */
     public function getDefaultValue(): string|int|float|bool|array|null
     {
-        $this->compileDefaultValueNode();
-
-        /** @psalm-suppress PossiblyNullPropertyFetch */
-        return $this->compiledDefaultValue->value;
+        return $this->getCompiledDefaultValueNode()->value;
     }
 
     /**
@@ -441,10 +438,7 @@ class ReflectionParameter
      */
     public function isDefaultValueConstant(): bool
     {
-        $this->compileDefaultValueNode();
-
-        /** @psalm-suppress PossiblyNullPropertyFetch */
-        return $this->compiledDefaultValue->constantName !== null;
+        return $this->getCompiledDefaultValueNode()->constantName !== null;
     }
 
     /**
@@ -456,8 +450,7 @@ class ReflectionParameter
             throw new LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
-        /** @psalm-suppress PossiblyNullPropertyFetch */
-        return $this->compiledDefaultValue->constantName;
+        return $this->getCompiledDefaultValueNode()->constantName;
     }
 
     /**
