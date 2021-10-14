@@ -34,6 +34,7 @@ use function uniqid;
 
 use const PHP_EOL;
 use const PHP_INT_MAX;
+use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
@@ -194,9 +195,9 @@ class CompileNodeToValueTest extends TestCase
     {
         $node = $this->parseCode($phpCode);
 
-        $actualValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyContext());
+        $compiledValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyContext());
 
-        self::assertSame($expectedValue, $actualValue);
+        self::assertSame($expectedValue, $compiledValue->value);
     }
 
     public function testExceptionThrownWhenInvalidNodeGiven(): void
@@ -243,8 +244,45 @@ class CompileNodeToValueTest extends TestCase
             (new CompileNodeToValue())->__invoke(
                 new ConstFetch(new Name($constName)),
                 $this->getDummyContext(),
-            ),
+            )->value,
         );
+    }
+
+    public function testConstantResolutionWithAnotherConstant(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+namespace Bar;
+
+const SECOND = 1;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const WEEK = 7 * DAY;
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+
+        self::assertSame(1, $reflector->reflectConstant('Bar\SECOND')->getValue());
+        self::assertSame(60, $reflector->reflectConstant('Bar\MINUTE')->getValue());
+        self::assertSame(3600, $reflector->reflectConstant('Bar\HOUR')->getValue());
+        self::assertSame(86400, $reflector->reflectConstant('Bar\DAY')->getValue());
+        self::assertSame(604800, $reflector->reflectConstant('Bar\WEEK')->getValue());
+    }
+
+    public function testGlobalConstantResolutionInNamespace(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+namespace Bar;
+
+const SOME_CONSTANT = PHP_VERSION_ID;
+PHP;
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $constantReflection = $reflector->reflectConstant('Bar\SOME_CONSTANT');
+
+        self::assertSame(PHP_VERSION_ID, $constantReflection->getValue());
     }
 
     public function testClassConstantResolutionSelfForMethod(): void

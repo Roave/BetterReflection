@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
@@ -55,6 +56,8 @@ class ReflectionProperty
     private bool $declaredAtCompileTime = true;
 
     private Reflector $reflector;
+
+    private ?CompiledValue $compiledDefaultValue = null;
 
     private function __construct()
     {
@@ -289,13 +292,17 @@ class ReflectionProperty
             return null;
         }
 
-        return (new CompileNodeToValue())->__invoke(
-            $defaultValueNode,
-            new CompilerContext(
-                $this->reflector,
-                $this,
-            ),
-        );
+        if ($this->compiledDefaultValue === null) {
+            $this->compiledDefaultValue = (new CompileNodeToValue())->__invoke(
+                $defaultValueNode,
+                new CompilerContext(
+                    $this->reflector,
+                    $this,
+                ),
+            );
+        }
+
+        return $this->compiledDefaultValue->value;
     }
 
     public function isDeprecated(): bool

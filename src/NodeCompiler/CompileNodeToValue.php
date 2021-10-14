@@ -15,9 +15,14 @@ use function assert;
 use function constant;
 use function defined;
 use function dirname;
+use function explode;
+use function in_array;
 use function realpath;
 use function sprintf;
 
+/**
+ * @internal
+ */
 class CompileNodeToValue
 {
     /**
@@ -25,23 +30,32 @@ class CompileNodeToValue
      *
      * @param Node\Stmt\Expression|Node\Expr $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      *
-     * @return scalar|array<scalar>|null
-     *
      * @throws Exception\UnableToCompileNode
      */
-    public function __invoke(Node $node, CompilerContext $context): string|int|float|bool|array|null
+    public function __invoke(Node $node, CompilerContext $context): CompiledValue
     {
         if ($node instanceof Node\Stmt\Expression) {
             return $this($node->expr, $context);
         }
 
-        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context) {
+        $constantName = null;
+
+        if (
+            $node instanceof Node\Expr\ConstFetch
+            && ! in_array($node->name->toLowerString(), ['true', 'false', 'null'], true)
+        ) {
+            $constantName = $this->resolveConstantName($node, $context);
+        } elseif ($node instanceof Node\Expr\ClassConstFetch) {
+            $constantName = $this->resolveClassConstantName($node, $context);
+        }
+
+        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context, $constantName): string|int|float|bool|array|null {
             if ($node instanceof Node\Expr\ConstFetch) {
-                return $this->compileConstFetch($node, $context);
+                return $this->getConstantValue($node, $constantName, $context);
             }
 
             if ($node instanceof Node\Expr\ClassConstFetch) {
-                return $this->compileClassConstFetch($node, $context);
+                return $this->getClassConstantValue($node, $constantName, $context);
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Dir) {
@@ -96,51 +110,50 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
         });
 
-        return $constExprEvaluator->evaluateDirectly($node);
+        $value = $constExprEvaluator->evaluateDirectly($node);
+
+        return new CompiledValue($value, $constantName);
     }
 
-    /**
-     * Compile constant expressions
-     *
-     * @return scalar|array<scalar>|null
-     *
-     * @throws Exception\UnableToCompileNode
-     */
-    private function compileConstFetch(Node\Expr\ConstFetch $constNode, CompilerContext $context): string|int|float|bool|array|null
+    private function resolveConstantName(Node\Expr\ConstFetch $constNode, CompilerContext $context): string
     {
-        switch ($constNode->name->toLowerString()) {
-            case 'null':
-                return null;
+        $constantName = $constNode->name->toString();
 
-            case 'false':
-                return false;
+        if ($context->getNamespace() !== null && $constNode->name->isUnqualified()) {
+            $namespacedConstantName = sprintf('%s\\%s', $context->getNamespace(), $constantName);
 
-            case 'true':
-                return true;
+            if ($this->constantExists($namespacedConstantName, $context)) {
+                return $namespacedConstantName;
+            }
+        }
 
-            default:
-                $constantName = $constNode->name->toString();
+        if ($this->constantExists($constantName, $context)) {
+            return $constantName;
+        }
 
-                if ($context->getNamespace() !== null && $constNode->name->isUnqualified()) {
-                    $namespacedConstantName = sprintf('%s\\%s', $context->getNamespace(), $constantName);
+        throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode, $constantName);
+    }
 
-                    try {
-                        return $this->getConstantValue($namespacedConstantName, $context);
-                    } catch (IdentifierNotFound) {
-                        // Try constant name without namespace
-                    }
-                }
+    private function constantExists(string $constantName, CompilerContext $context): bool
+    {
+        if (defined($constantName)) {
+            return true;
+        }
 
-                try {
-                    return $this->getConstantValue($constantName, $context);
-                } catch (IdentifierNotFound) {
-                    throw Exception\UnableToCompileNode::becauseOfNotFoundConstantReference($context, $constNode, $constantName);
-                }
+        try {
+            $context->getReflector()->reflectConstant($constantName);
+
+            return true;
+        } catch (IdentifierNotFound) {
+            return false;
         }
     }
 
-    private function getConstantValue(string $constantName, CompilerContext $context): mixed
+    private function getConstantValue(Node\Expr\ConstFetch $node, ?string $constantName, CompilerContext $context): mixed
     {
+        // It's not resolved when constant value is expression
+        $constantName ??= $this->resolveConstantName($node, $context);
+
         if (defined($constantName)) {
             return constant($constantName);
         }
@@ -148,45 +161,33 @@ class CompileNodeToValue
         return $context->getReflector()->reflectConstant($constantName)->getValue();
     }
 
-    /**
-     * Compile class constants
-     *
-     * @return scalar|array<scalar>|null
-     *
-     * @throws IdentifierNotFound
-     * @throws Exception\UnableToCompileNode If a referenced constant could not be located on the expected referenced class.
-     */
-    private function compileClassConstFetch(Node\Expr\ClassConstFetch $node, CompilerContext $context): string|int|float|bool|array|null
+    private function resolveClassConstantName(Node\Expr\ClassConstFetch $node, CompilerContext $context): string
     {
         assert($node->name instanceof Node\Identifier);
-        $nodeName = $node->name->name;
+        $constantName = $node->name->name;
         assert($node->class instanceof Node\Name);
         $className = $node->class->toString();
 
-        if ($nodeName === 'class') {
-            return $this->resolveClassNameForClassNameConstant($className, $context);
+        return sprintf('%s::%s', $this->resolveClassName($className, $context), $constantName);
+    }
+
+    private function getClassConstantValue(Node\Expr\ClassConstFetch $node, ?string $classConstantName, CompilerContext $context): mixed
+    {
+        // It's not resolved when constant value is expression
+        $classConstantName ??= $this->resolveClassConstantName($node, $context);
+
+        [$className, $constantName] = explode('::', $classConstantName);
+
+        if ($constantName === 'class') {
+            return $className;
         }
 
-        $classInfo = null;
+        $classReflection = $context->getReflector()->reflectClass($className);
 
-        if ($className === 'self' || $className === 'static') {
-            $classContext = $context->getClass();
-            assert($classContext !== null);
-            $classInfo = $classContext->hasConstant($nodeName) ? $classContext : null;
-        } elseif ($className === 'parent') {
-            $classContext = $context->getClass();
-            assert($classContext !== null);
-            $classInfo = $classContext->getParentClass();
-        }
-
-        if ($classInfo === null) {
-            $classInfo = $context->getReflector()->reflectClass($className);
-        }
-
-        $reflectionConstant = $classInfo->getReflectionConstant($nodeName);
+        $reflectionConstant = $classReflection->getReflectionConstant($constantName);
 
         if (! $reflectionConstant instanceof ReflectionClassConstant) {
-            throw Exception\UnableToCompileNode::becauseOfNotFoundClassConstantReference($context, $classInfo, $node);
+            throw Exception\UnableToCompileNode::becauseOfNotFoundClassConstantReference($context, $classReflection, $node);
         }
 
         return $reflectionConstant->getValue();
@@ -216,22 +217,22 @@ class CompileNodeToValue
         return $context->getClass()?->getName() ?? '';
     }
 
-    private function resolveClassNameForClassNameConstant(string $className, CompilerContext $context): string
+    private function resolveClassName(string $className, CompilerContext $context): string
     {
+        if ($className !== 'self' && $className !== 'static' && $className !== 'parent') {
+            return $className;
+        }
+
         $classContext = $context->getClass();
         assert($classContext !== null);
 
-        if ($className === 'self' || $className === 'static') {
+        if ($className !== 'parent') {
             return $classContext->getName();
         }
 
-        if ($className === 'parent') {
-            $parentClass = $classContext->getParentClass();
-            assert($parentClass instanceof ReflectionClass);
+        $parentClass = $classContext->getParentClass();
+        assert($parentClass instanceof ReflectionClass);
 
-            return $parentClass->getName();
-        }
-
-        return $className;
+        return $parentClass->getName();
     }
 }
