@@ -14,9 +14,10 @@ class InternalLocatedSourceTest extends TestCase
 {
     public function testInternalsLocatedSource(): void
     {
-        $locatedSource = new InternalLocatedSource('foo', 'fooExt');
+        $locatedSource = new InternalLocatedSource('foo', 'name', 'fooExt');
 
         self::assertSame('foo', $locatedSource->getSource());
+        self::assertSame('name', $locatedSource->getName());
         self::assertNull($locatedSource->getFileName());
         self::assertTrue($locatedSource->isInternal());
         self::assertFalse($locatedSource->isEvaled());

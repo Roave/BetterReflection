@@ -17,33 +17,37 @@ class LocatedSourceTest extends TestCase
     {
         $source        = '<?php echo "Hello world";';
         $file          = FileHelper::normalizeWindowsPath(__DIR__ . '/../../Fixture/NoNamespace.php');
-        $locatedSource = new LocatedSource($source, $file);
+        $locatedSource = new LocatedSource($source, 'name', $file);
 
         self::assertSame($source, $locatedSource->getSource());
+        self::assertSame('name', $locatedSource->getName());
         self::assertSame($file, $locatedSource->getFileName());
         self::assertFalse($locatedSource->isEvaled());
         self::assertFalse($locatedSource->isInternal());
         self::assertNull($locatedSource->getExtensionName());
+        self::assertNull($locatedSource->getAliasName());
     }
 
     public function testValuesWithNullFilename(): void
     {
         $source        = '<?php echo "Hello world";';
         $file          = null;
-        $locatedSource = new LocatedSource($source, $file);
+        $locatedSource = new LocatedSource($source, 'name', $file);
 
         self::assertSame($source, $locatedSource->getSource());
+        self::assertSame('name', $locatedSource->getName());
         self::assertNull($locatedSource->getFileName());
         self::assertFalse($locatedSource->isEvaled());
         self::assertFalse($locatedSource->isInternal());
         self::assertNull($locatedSource->getExtensionName());
+        self::assertNull($locatedSource->getAliasName());
     }
 
     public function testEmptyStringSourceAllowed(): void
     {
         $source        = '';
         $file          = null;
-        $locatedSource = new LocatedSource($source, $file);
+        $locatedSource = new LocatedSource($source, 'name', $file);
         self::assertSame('', $locatedSource->getSource());
     }
 }

@@ -44,6 +44,7 @@ class Locator
                 $identifier->getType(),
             ),
             $identifier,
+            $locatedSource->getName(),
         );
     }
 
@@ -78,9 +79,9 @@ class Locator
      *
      * @throws IdentifierNotFound
      */
-    private function findInArray(array $reflections, Identifier $identifier): Reflection
+    private function findInArray(array $reflections, Identifier $identifier, string $name): Reflection
     {
-        $identifierName = strtolower($identifier->getName());
+        $identifierName = strtolower($name);
 
         foreach ($reflections as $reflection) {
             if (strtolower($reflection->getName()) === $identifierName) {

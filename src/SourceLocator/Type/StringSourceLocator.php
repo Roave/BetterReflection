@@ -47,6 +47,7 @@ class StringSourceLocator extends AbstractSourceLocator
     {
         return new LocatedSource(
             $this->source,
+            $identifier->getName(),
             null,
         );
     }

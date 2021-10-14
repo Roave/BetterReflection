@@ -17,7 +17,7 @@ class ParseToAstFailureTest extends TestCase
 {
     public function testFromLocatedSourceWithoutFilename(): void
     {
-        $locatedSource = new LocatedSource('<?php abc', null);
+        $locatedSource = new LocatedSource('<?php abc', 'Whatever');
 
         $previous = new Exception();
 
@@ -30,7 +30,7 @@ class ParseToAstFailureTest extends TestCase
 
     public function testFromLocatedSourceWithFilename(): void
     {
-        $locatedSource = new LocatedSource('<?php abc', null);
+        $locatedSource = new LocatedSource('<?php abc', 'Whatever');
 
         $filenameProperty = new ReflectionProperty($locatedSource, 'filename');
         $filenameProperty->setAccessible(true);

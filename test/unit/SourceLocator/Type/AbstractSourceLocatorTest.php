@@ -23,7 +23,7 @@ class AbstractSourceLocatorTest extends TestCase
     {
         $mockReflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php class Foo{}', null);
+        $locatedSource = new LocatedSource('<?php class Foo{}', 'Foo');
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -77,7 +77,7 @@ class AbstractSourceLocatorTest extends TestCase
     {
         $mockReflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php class Foo{}', null);
+        $locatedSource = new LocatedSource('<?php class Foo{}', 'Foo');
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -105,7 +105,7 @@ class AbstractSourceLocatorTest extends TestCase
     {
         $mockReflector = $this->createMock(Reflector::class);
 
-        $locatedSource = new LocatedSource('<?php class Foo{}', null);
+        $locatedSource = new LocatedSource('<?php class Foo{}', 'Foo');
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 

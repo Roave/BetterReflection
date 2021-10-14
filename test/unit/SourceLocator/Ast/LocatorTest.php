@@ -48,7 +48,7 @@ class LocatorTest extends TestCase
 
         $classInfo = $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'Foo\Bar'),
             $this->getIdentifier('Foo\Bar', IdentifierType::IDENTIFIER_CLASS),
         );
 
@@ -64,7 +64,7 @@ class LocatorTest extends TestCase
 
         $classInfo = $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'Foo\Bar'),
             $this->getIdentifier('Foo\BAR', IdentifierType::IDENTIFIER_CLASS),
         );
 
@@ -79,7 +79,7 @@ class LocatorTest extends TestCase
 
         $classInfo = $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'Foo'),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS),
         );
 
@@ -94,7 +94,7 @@ class LocatorTest extends TestCase
 
         $functionInfo = $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'foo'),
             $this->getIdentifier('foo', IdentifierType::IDENTIFIER_FUNCTION),
         );
 
@@ -109,7 +109,7 @@ class LocatorTest extends TestCase
 
         $constantInfo = $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'FOO'),
             $this->getIdentifier('FOO', IdentifierType::IDENTIFIER_CONSTANT),
         );
 
@@ -124,7 +124,7 @@ class LocatorTest extends TestCase
 
         $constantInfo = $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'FOO'),
             $this->getIdentifier('FOO', IdentifierType::IDENTIFIER_CONSTANT),
         );
 
@@ -138,7 +138,7 @@ class LocatorTest extends TestCase
         $this->expectException(IdentifierNotFound::class);
         $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'Foo'),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS),
         );
     }
@@ -153,7 +153,7 @@ class LocatorTest extends TestCase
         $this->expectException(IdentifierNotFound::class);
         $this->locator->findReflection(
             new DefaultReflector(new StringSourceLocator($php, $this->locator)),
-            new LocatedSource($php, null),
+            new LocatedSource($php, 'Foo'),
             $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS),
         );
     }
@@ -166,7 +166,7 @@ class LocatorTest extends TestCase
         $sourceLocator  = new StringSourceLocator($phpCode, $this->locator);
         $reflector      = new DefaultReflector($sourceLocator);
 
-        $locatedSource = new LocatedSource($phpCode, null);
+        $locatedSource = new LocatedSource($phpCode, 'Whatever');
 
         $this->expectException(ParseToAstFailure::class);
         $this->locator->findReflectionsOfType($reflector, $locatedSource, $identifierType);

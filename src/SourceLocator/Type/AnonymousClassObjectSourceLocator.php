@@ -23,7 +23,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeL
 use Roave\BetterReflection\SourceLocator\Exception\NoAnonymousClassOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 use Roave\BetterReflection\SourceLocator\FileChecker;
-use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_filter;
@@ -138,7 +138,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         $reflectionClass = (new NodeToReflection())->__invoke(
             $reflector,
             $nodeVisitor->getAnonymousClassNode(),
-            new LocatedSource($fileContents, $fileName),
+            new AnonymousLocatedSource($fileContents, $fileName),
             null,
         );
         assert($reflectionClass instanceof ReflectionClass);

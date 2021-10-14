@@ -39,7 +39,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return $this->createLocatedSourceFromStubData($this->stubber->generateClassStub($identifier->getName()));
+        return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateClassStub($identifier->getName()));
     }
 
     private function getFunctionSource(Identifier $identifier): ?InternalLocatedSource
@@ -48,7 +48,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return $this->createLocatedSourceFromStubData($this->stubber->generateFunctionStub($identifier->getName()));
+        return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateFunctionStub($identifier->getName()));
     }
 
     private function getConstantSource(Identifier $identifier): ?InternalLocatedSource
@@ -57,10 +57,10 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return $this->createLocatedSourceFromStubData($this->stubber->generateConstantStub($identifier->getName()));
+        return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateConstantStub($identifier->getName()));
     }
 
-    private function createLocatedSourceFromStubData(?StubData $stubData): ?InternalLocatedSource
+    private function createLocatedSourceFromStubData(Identifier $identifier, ?StubData $stubData): ?InternalLocatedSource
     {
         if ($stubData === null) {
             return null;
@@ -73,6 +73,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
 
         return new InternalLocatedSource(
             $stubData->getStub(),
+            $identifier->getName(),
             $stubData->getExtensionName(),
         );
     }

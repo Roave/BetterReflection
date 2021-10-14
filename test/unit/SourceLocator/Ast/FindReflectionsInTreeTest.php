@@ -84,7 +84,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->will($this->returnValue($mockReflection));
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php class Foo {}', null);
+        $locatedSource = new LocatedSource('<?php class Foo {}', 'Foo');
 
         self::assertSame(
             [$mockReflection],
@@ -108,7 +108,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->will($this->returnValue($mockReflection));
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', null);
+        $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', 'Foo\Bar');
 
         self::assertSame(
             [$mockReflection],
@@ -132,7 +132,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->will($this->returnValue($mockReflection));
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php function foo() {}', null);
+        $locatedSource = new LocatedSource('<?php function foo() {}', 'foo');
 
         self::assertSame(
             [$mockReflection],
@@ -156,7 +156,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->will($this->returnValue($mockReflection));
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php const FOO = 1;', null);
+        $locatedSource = new LocatedSource('<?php const FOO = 1;', 'FOO');
 
         self::assertSame(
             [$mockReflection],
@@ -215,7 +215,7 @@ namespace Foo;
 
 define("FOO", 1);
 PHP;
-        $locatedSource = new LocatedSource($source, null);
+        $locatedSource = new LocatedSource($source, 'FOO');
 
         self::assertSame(
             [$mockReflection],

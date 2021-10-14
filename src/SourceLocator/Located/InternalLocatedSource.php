@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Located;
 
+/**
+ * @internal
+ */
 class InternalLocatedSource extends LocatedSource
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct(string $source, private string $extensionName)
+    public function __construct(string $source, string $name, private string $extensionName)
     {
-        parent::__construct($source, null);
+        parent::__construct($source, $name);
     }
 
     public function isInternal(): bool

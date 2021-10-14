@@ -36,6 +36,7 @@ final class PsrAutoloaderLocator implements SourceLocator
                     $reflector,
                     new LocatedSource(
                         file_get_contents($file),
+                        $identifier->getName(),
                         $file,
                     ),
                     $identifier,

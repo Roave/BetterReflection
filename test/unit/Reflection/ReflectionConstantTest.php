@@ -195,7 +195,7 @@ class ReflectionConstantTest extends TestCase
     public function testGetLocatedSource(): void
     {
         $node          = new Node\Stmt\Const_([new Node\Const_('FOO', BuilderHelpers::normalizeValue(1))]);
-        $locatedSource = new LocatedSource('<?php const FOO = 1', null);
+        $locatedSource = new LocatedSource('<?php const FOO = 1', 'FOO');
         $reflector     = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
         $reflection    = ReflectionConstant::createFromNode($reflector, $node, $locatedSource, null, 0);
 
