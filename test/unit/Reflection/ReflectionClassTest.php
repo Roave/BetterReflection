@@ -311,6 +311,7 @@ class ReflectionClassTest extends TestCase
             'MY_CONST_3' => 345,
             'MY_CONST_4' => 456,
             'MY_CONST_5' => 567,
+            'MY_CONST_6' => 678,
         ], $classInfo->getConstants());
     }
 
@@ -330,7 +331,7 @@ class ReflectionClassTest extends TestCase
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
         $classInfo = $reflector->reflectClass(ExampleClass::class);
-        self::assertCount(5, $classInfo->getReflectionConstants());
+        self::assertCount(6, $classInfo->getReflectionConstants());
     }
 
     public function testGetReflectionConstant(): void
@@ -342,6 +343,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame(345, $classInfo->getReflectionConstant('MY_CONST_3')->getValue());
         self::assertSame(456, $classInfo->getReflectionConstant('MY_CONST_4')->getValue());
         self::assertSame(567, $classInfo->getReflectionConstant('MY_CONST_5')->getValue());
+        self::assertSame(678, $classInfo->getReflectionConstant('MY_CONST_6')->getValue());
         self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 

@@ -32,6 +32,7 @@ class ReflectionClassConstantStringCastTest extends TestCase
             ['PROTECTED_CONSTANT', "Constant [ protected integer PROTECTED_CONSTANT ] { 0 }\n"],
             ['PRIVATE_CONSTANT', "Constant [ private string PRIVATE_CONSTANT ] { string }\n"],
             ['NO_VISIBILITY_CONSTANT', "Constant [ public array NO_VISIBILITY_CONSTANT ] { Array }\n"],
+            ['FINAL_CONSTANT', "Constant [ final public string FINAL_CONSTANT ] { final }\n"],
         ];
     }
 

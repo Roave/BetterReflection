@@ -52,7 +52,7 @@ class ReflectionClassConstantTest extends TestCase
             ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
             ['getDocComment', null, '', []],
             ['getAttributes', NotImplemented::class, null, []],
-            ['isFinal', NotImplemented::class, null, []],
+            ['isFinal', null, true, []],
             ['isEnumCase', NotImplemented::class, null, []],
         ];
     }

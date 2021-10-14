@@ -8,4 +8,5 @@ class StringCastConstants
     protected const PROTECTED_CONSTANT = 0;
     private const PRIVATE_CONSTANT = 'string';
     const NO_VISIBILITY_CONSTANT = [];
+    final public const FINAL_CONSTANT = 'final';
 }
