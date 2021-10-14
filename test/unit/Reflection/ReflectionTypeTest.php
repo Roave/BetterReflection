@@ -50,6 +50,7 @@ class ReflectionTypeTest extends TestCase
         yield ['object'];
         yield ['iterable'];
         yield ['mixed'];
+        yield ['never'];
     }
 
     /**
@@ -92,6 +93,7 @@ class ReflectionTypeTest extends TestCase
         self::assertSame('object', (string) ReflectionType::createFromTypeAndReflector(new Identifier('object')));
         self::assertSame('iterable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('iterable')));
         self::assertSame('mixed', (string) ReflectionType::createFromTypeAndReflector(new Identifier('mixed')));
+        self::assertSame('never', (string) ReflectionType::createFromTypeAndReflector(new Identifier('never')));
 
         self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('Foo\Bar\Baz')));
         self::assertSame('\Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('\Foo\Bar\Baz')));
