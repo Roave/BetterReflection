@@ -100,6 +100,17 @@ class ReflectionPropertyTest extends TestCase
         self::assertTrue($staticProp->isStatic());
     }
 
+    public function testIsReadOnly(): void
+    {
+        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
+
+        $notReadOnlyProperty = $classInfo->getProperty('publicProperty');
+        self::assertFalse($notReadOnlyProperty->isReadOnly());
+
+        $readOnlyProperty = $classInfo->getProperty('readOnlyProperty');
+        self::assertTrue($readOnlyProperty->isReadOnly());
+    }
+
     /**
      * @return array
      */

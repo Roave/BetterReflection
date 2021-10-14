@@ -39,6 +39,8 @@ abstract class StringCastClass extends StringCastClassParent implements StringCa
     public int|bool $unionTypeProperty = false;
     public ?int $nullableTypeProperty = null;
 
+    public readonly int $readOnlyProperty;
+
     public function __construct()
     {
     }

@@ -66,7 +66,7 @@ class ReflectionPropertyTest extends TestCase
             ['getDefaultValue', null, null, []],
             ['isPromoted', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
-            ['isReadOnly', NotImplemented::class, null, []],
+            ['isReadOnly', null, true, []],
         ];
     }
 

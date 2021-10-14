@@ -12,4 +12,6 @@ class StringCastProperties
     public int $namedTypeProperty = 0;
     public int|bool $unionTypeProperty = false;
     public ?int $nullableTypeProperty = null;
+
+    public readonly int $readOnlyProperty;
 }

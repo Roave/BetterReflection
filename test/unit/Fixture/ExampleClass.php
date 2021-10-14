@@ -38,6 +38,8 @@ namespace Roave\BetterReflectionTest\Fixture {
          */
         public $publicProperty = __DIR__;
 
+        public readonly int $readOnlyProperty;
+
         public static $publicStaticProperty;
 
         public function __construct(private ?int $promotedProperty = 123, $noPromotedProperty = null)
