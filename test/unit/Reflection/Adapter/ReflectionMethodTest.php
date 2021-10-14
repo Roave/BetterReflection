@@ -21,7 +21,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
-use TypeError;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -90,6 +90,9 @@ class ReflectionMethodTest extends TestCase
             ['isGenerator', null, true, []],
             ['isVariadic', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
+            ['hasTentativeReturnType', NotImplemented::class, null, []],
+            ['getTentativeReturnType', NotImplemented::class, null, []],
+            ['getClosureUsedVariables', NotImplemented::class, null, []],
 
             // ReflectionMethod
             ['isPublic', null, true, []],
@@ -203,20 +206,22 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('DeclaringClass', $reflectionMethodAdapter->getDeclaringClass()->getName());
     }
 
-    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
             ->method('getExtensionName')
-            ->willReturn(null);
+            ->willReturn('');
 
         $betterReflectionMethod = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        self::assertFalse($betterReflectionMethod->getExtensionName());
+        self::assertSame('', $betterReflectionMethod->getExtensionName());
     }
 
     public function testGetClosureReturnsNullWhenNoObject(): void
     {
+        self::expectException(ValueError::class);
+
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
             ->method('getClosure')
@@ -224,19 +229,7 @@ class ReflectionMethodTest extends TestCase
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        self::assertNull($reflectionMethodAdapter->getClosure());
-    }
-
-    public function testGetClosureReturnsNullWhenNotAnObject(): void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('getClosure')
-            ->willThrowException(new TypeError());
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-
-        self::assertNull($reflectionMethodAdapter->getClosure('string'));
+        $reflectionMethodAdapter->getClosure();
     }
 
     public function testGetClosureThrowsExceptionWhenObjectNotInstanceOfClass(): void

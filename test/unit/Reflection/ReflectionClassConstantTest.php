@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node\Stmt\ClassConst;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
@@ -74,10 +74,10 @@ class ReflectionClassConstantTest extends TestCase
     public function getModifiersProvider(): array
     {
         return [
-            ['MY_CONST_1', ReflectionProperty::IS_PUBLIC],
-            ['MY_CONST_3', ReflectionProperty::IS_PUBLIC],
-            ['MY_CONST_4', ReflectionProperty::IS_PROTECTED],
-            ['MY_CONST_5', ReflectionProperty::IS_PRIVATE],
+            ['MY_CONST_1', CoreReflectionClassConstant::IS_PUBLIC],
+            ['MY_CONST_3', CoreReflectionClassConstant::IS_PUBLIC],
+            ['MY_CONST_4', CoreReflectionClassConstant::IS_PROTECTED],
+            ['MY_CONST_5', CoreReflectionClassConstant::IS_PRIVATE],
         ];
     }
 

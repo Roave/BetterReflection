@@ -19,7 +19,6 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
-use TypeError;
 
 use function array_combine;
 use function array_map;
@@ -107,6 +106,7 @@ class ReflectionClassTest extends TestCase
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
             ['getAttributes', NotImplemented::class, null, []],
+            ['isEnum', NotImplemented::class, null, []],
         ];
     }
 
@@ -638,16 +638,16 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter->setStaticPropertyValue('foo', null);
     }
 
-    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
             ->method('getExtensionName')
-            ->willReturn(null);
+            ->willReturn('');
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::assertFalse($reflectionClassAdapter->getExtensionName());
+        self::assertSame('', $reflectionClassAdapter->getExtensionName());
     }
 
     public function testGetConstructorReturnsNullWhenNoConstructorExists(): void
@@ -660,19 +660,6 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertNull($reflectionClassAdapter->getConstructor());
-    }
-
-    public function testIsInstanceReturnsNullWithNonObjectParameter(): void
-    {
-        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
-        $betterReflectionClass
-            ->method('isInstance')
-            ->with('string')
-            ->willThrowException(new TypeError());
-
-        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
-
-        self::assertNull($reflectionClassAdapter->isInstance('string'));
     }
 
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void

@@ -467,6 +467,11 @@ PHP;
         self::assertSame('value', $propertyReflection->getValue());
     }
 
+    /**
+     * Accessing static trait property is deprecated in PHP 8.1, it should only be accessed on a class using the trait
+     *
+     * @requires PHP < 8.1
+     */
     public function testSetAndGetValueOfStaticPropertyOnTrait(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/TraitStaticPropertyGetSet.php';

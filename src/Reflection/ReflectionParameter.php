@@ -321,6 +321,7 @@ class ReflectionParameter
     public function getType(): ReflectionNamedType|ReflectionUnionType|null
     {
         $type = $this->node->type;
+        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType || $type === null);
 
         if ($type === null) {
             return null;

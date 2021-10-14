@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node\Identifier;
+use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\UnionType;
+use PHPStan\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 
 abstract class ReflectionType
 {
@@ -15,7 +17,7 @@ abstract class ReflectionType
     {
     }
 
-    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType
+    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType|IntersectionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType
     {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
@@ -25,6 +27,10 @@ abstract class ReflectionType
 
         if ($type instanceof Identifier || $type instanceof Name) {
             return new ReflectionNamedType($type, $allowsNull);
+        }
+
+        if ($type instanceof IntersectionType) {
+            throw new NotImplemented('Not implemented');
         }
 
         return new ReflectionUnionType($type, $allowsNull);

@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use Closure;
+use ReflectionAttribute as CoreReflectionAttribute;
+use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
+use ReflectionExtension as CoreReflectionExtension;
 use ReflectionFunction as CoreReflectionFunction;
+use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Util\FileHelper;
@@ -13,154 +18,111 @@ use Throwable;
 
 use function func_get_args;
 
-class ReflectionFunction extends CoreReflectionFunction
+final class ReflectionFunction extends CoreReflectionFunction
 {
     public function __construct(private BetterReflectionFunction $betterReflectionFunction)
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->betterReflectionFunction->__toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function inNamespace()
+    public function inNamespace(): bool
     {
         return $this->betterReflectionFunction->inNamespace();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isClosure()
+    public function isClosure(): bool
     {
         return $this->betterReflectionFunction->isClosure();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isDeprecated()
+    public function isDeprecated(): bool
     {
         return $this->betterReflectionFunction->isDeprecated();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isInternal()
+    public function isInternal(): bool
     {
         return $this->betterReflectionFunction->isInternal();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isUserDefined()
+    public function isUserDefined(): bool
     {
         return $this->betterReflectionFunction->isUserDefined();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getClosureThis()
+    public function getClosureThis(): ?object
     {
         throw new NotImplemented('Not implemented');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getClosureScopeClass()
+    public function getClosureScopeClass(): ?CoreReflectionClass
     {
         throw new NotImplemented('Not implemented');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDocComment()
+    public function getDocComment(): string|false
     {
         return $this->betterReflectionFunction->getDocComment() ?: false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getEndLine()
+    public function getStartLine(): int|false
+    {
+        return $this->betterReflectionFunction->getStartLine();
+    }
+
+    public function getEndLine(): int|false
     {
         return $this->betterReflectionFunction->getEndLine();
     }
 
     /**
-     * {@inheritDoc}
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
-    public function getExtension()
+    public function getExtension(): ?CoreReflectionExtension
     {
         throw new NotImplemented('Not implemented');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getExtensionName()
+    public function getExtensionName(): string
     {
-        return $this->betterReflectionFunction->getExtensionName() ?? false;
+        return $this->betterReflectionFunction->getExtensionName() ?? '';
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getFileName()
+    public function getFileName(): string|false
     {
         $fileName = $this->betterReflectionFunction->getFileName();
 
         return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->betterReflectionFunction->getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getNamespaceName()
+    public function getNamespaceName(): string
     {
         return $this->betterReflectionFunction->getNamespaceName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getNumberOfParameters()
+    public function getNumberOfParameters(): int
     {
         return $this->betterReflectionFunction->getNumberOfParameters();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getNumberOfRequiredParameters()
+    public function getNumberOfRequiredParameters(): int
     {
         return $this->betterReflectionFunction->getNumberOfRequiredParameters();
     }
 
     /**
-     * {@inheritDoc}
+     * @return list<ReflectionParameter>
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         $parameters = $this->betterReflectionFunction->getParameters();
 
@@ -177,28 +139,14 @@ class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->hasReturnType();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getReturnType()
+    public function getReturnType(): ?CoreReflectionType
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionFunction->getReturnType());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getShortName()
+    public function getShortName(): string
     {
         return $this->betterReflectionFunction->getShortName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getStartLine()
-    {
-        return $this->betterReflectionFunction->getStartLine();
     }
 
     /**
@@ -209,42 +157,27 @@ class ReflectionFunction extends CoreReflectionFunction
         throw new NotImplemented('Not implemented');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function returnsReference()
+    public function returnsReference(): bool
     {
         return $this->betterReflectionFunction->returnsReference();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isGenerator()
+    public function isGenerator(): bool
     {
         return $this->betterReflectionFunction->isGenerator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isVariadic()
+    public function isVariadic(): bool
     {
         return $this->betterReflectionFunction->isVariadic();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return $this->betterReflectionFunction->isDisabled();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function invoke(mixed ...$args)
+    public function invoke(mixed ...$args): mixed
     {
         try {
             return $this->betterReflectionFunction->invoke(...func_get_args());
@@ -256,7 +189,7 @@ class ReflectionFunction extends CoreReflectionFunction
     /**
      * @param list<mixed> $args
      */
-    public function invokeArgs(array $args)
+    public function invokeArgs(array $args): mixed
     {
         try {
             return $this->betterReflectionFunction->invokeArgs($args);
@@ -265,22 +198,38 @@ class ReflectionFunction extends CoreReflectionFunction
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getClosure()
+    public function getClosure(): Closure
     {
-        try {
-            return $this->betterReflectionFunction->getClosure();
-        } catch (Throwable) {
-            return null;
-        }
+        return $this->betterReflectionFunction->getClosure();
     }
 
     /**
-     * {@inheritDoc}
+     * @return list<CoreReflectionAttribute>
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    public function hasTentativeReturnType(): bool
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    public function getTentativeReturnType(): ?CoreReflectionType
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getClosureUsedVariables(): array
+    {
+        throw new Exception\NotImplemented('Not implemented');
+    }
+
+    public function isStatic(): bool
     {
         throw new Exception\NotImplemented('Not implemented');
     }
