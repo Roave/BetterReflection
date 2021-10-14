@@ -130,8 +130,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
 
     /**
      * @throws FunctionDoesNotExist
-     *
-     * @psalm-assert callable-string $functionName
      */
     private function assertFunctionExist(string $functionName): void
     {
