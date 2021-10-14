@@ -203,7 +203,6 @@ class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
      * @return array<string, scalar>
      */
     public function getStaticVariables(): array
