@@ -33,6 +33,7 @@ use Roave\BetterReflection\Util\GetLastDocComment;
 use Throwable;
 use Webmozart\Assert\Assert;
 
+use function assert;
 use function class_exists;
 use function func_num_args;
 use function is_object;
@@ -440,6 +441,7 @@ class ReflectionProperty
     public function getType(): ReflectionNamedType|ReflectionUnionType|null
     {
         $type = $this->node->type;
+        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType || $type === null);
 
         if ($type === null) {
             return null;

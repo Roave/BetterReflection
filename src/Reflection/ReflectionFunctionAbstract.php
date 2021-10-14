@@ -350,6 +350,7 @@ abstract class ReflectionFunctionAbstract
     public function getReturnType(): ReflectionNamedType|ReflectionUnionType|null
     {
         $returnType = $this->node->getReturnType();
+        assert($returnType instanceof Node\Identifier || $returnType instanceof Node\Name || $returnType instanceof Node\NullableType || $returnType instanceof Node\UnionType || $returnType instanceof Node\IntersectionType || $returnType === null);
 
         if ($returnType === null) {
             return null;
