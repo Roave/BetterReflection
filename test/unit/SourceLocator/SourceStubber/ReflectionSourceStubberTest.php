@@ -308,13 +308,13 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($original->isAbstract(), $stubbed->isAbstract());
         self::assertSame($original->isDeprecated(), $stubbed->isDeprecated());
 
-        if (method_exists($original, 'hasTentativeReturnType') && $original->hasTentativeReturnType()) {
-            self::assertSame($original->hasTentativeReturnType(), $stubbed->hasTentativeReturnType());
-            self::assertSame((string) $original->getTentativeReturnType(), (string) $stubbed->getTentativeReturnType());
-        } else {
-            self::assertSame($original->hasReturnType(), $stubbed->hasReturnType());
-            self::assertSame((string) $original->getReturnType(), (string) $stubbed->getReturnType());
+        if (method_exists($original, 'hasTentativeReturnType')) {
+            self::assertSame($original->hasTentativeReturnType(), $stubbed->hasTentativeReturnType(), $original->getName());
+            self::assertSame((string) $original->getTentativeReturnType(), (string) $stubbed->getTentativeReturnType(), $original->getName());
         }
+
+        self::assertSame($original->hasReturnType(), $stubbed->hasReturnType(), $original->getName());
+        self::assertSame((string) $original->getReturnType(), (string) $stubbed->getReturnType(), $original->getName());
     }
 
     private function assertSameParameterAttributes(

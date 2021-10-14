@@ -45,4 +45,32 @@ class AnnotationHelperTest extends TestCase
     {
         self::assertSame($isDeprecated, AnnotationHelper::isDeprecated($docComment));
     }
+
+    public function tentativeReturnTypeDocCommentProvider(): array
+    {
+        return [
+            ['', false],
+            [
+                '/**
+                 * @return string
+                 */',
+                false,
+            ],
+            ['/** @betterReflectionTentativeReturnType */', true],
+            [
+                '/**
+                 * @betterReflectionTentativeReturnType
+                 */',
+                true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider tentativeReturnTypeDocCommentProvider
+     */
+    public function testhasTentativeReturnType(string $docComment, bool $isDeprecated): void
+    {
+        self::assertSame($isDeprecated, AnnotationHelper::hasTentativeReturnType($docComment));
+    }
 }

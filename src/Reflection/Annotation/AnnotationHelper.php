@@ -11,6 +11,8 @@ use phpDocumentor\Reflection\DocBlockFactory;
  */
 final class AnnotationHelper
 {
+    public const TENTATIVE_RETURN_TYPE_ANNOTATION = 'betterReflectionTentativeReturnType';
+
     private static ?DocBlockFactory $docBlockFactory = null;
 
     /**
@@ -22,10 +24,27 @@ final class AnnotationHelper
             return false;
         }
 
-        /** @psalm-suppress ImpureStaticProperty, ImpureMethodCall */
+        /** @psalm-suppress ImpureMethodCall */
+        return self::getDocBlockFactory()->create($docComment)->hasTag('deprecated');
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function hasTentativeReturnType(string $docComment): bool
+    {
+        if ($docComment === '') {
+            return false;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        return self::getDocBlockFactory()->create($docComment)->hasTag(self::TENTATIVE_RETURN_TYPE_ANNOTATION);
+    }
+
+    private static function getDocBlockFactory(): DocBlockFactory
+    {
         self::$docBlockFactory ??= DocBlockFactory::createInstance();
 
-        /** @psalm-suppress ImpureStaticProperty, ImpureMethodCall */
-        return self::$docBlockFactory->create($docComment)->hasTag('deprecated');
+        return self::$docBlockFactory;
     }
 }

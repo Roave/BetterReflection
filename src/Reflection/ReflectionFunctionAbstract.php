@@ -349,14 +349,11 @@ abstract class ReflectionFunctionAbstract
      */
     public function getReturnType(): ReflectionNamedType|ReflectionUnionType|null
     {
-        $returnType = $this->node->getReturnType();
-        assert($returnType instanceof Node\Identifier || $returnType instanceof Node\Name || $returnType instanceof Node\NullableType || $returnType instanceof Node\UnionType || $returnType instanceof Node\IntersectionType || $returnType === null);
-
-        if ($returnType === null) {
+        if ($this->hasTentativeReturnType()) {
             return null;
         }
 
-        return ReflectionType::createFromTypeAndReflector($returnType);
+        return $this->createReturnType();
     }
 
     /**
@@ -364,6 +361,10 @@ abstract class ReflectionFunctionAbstract
      */
     public function hasReturnType(): bool
     {
+        if ($this->hasTentativeReturnType()) {
+            return false;
+        }
+
         return $this->node->getReturnType() !== null;
     }
 
@@ -373,16 +374,28 @@ abstract class ReflectionFunctionAbstract
             return false;
         }
 
-        return $this->hasReturnType();
+        return AnnotationHelper::hasTentativeReturnType($this->getDocComment());
     }
 
     public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|null
     {
-        if ($this->isUserDefined()) {
+        if (! $this->hasTentativeReturnType()) {
             return null;
         }
 
-        return $this->getReturnType();
+        return $this->createReturnType();
+    }
+
+    private function createReturnType(): ReflectionNamedType|ReflectionUnionType|null
+    {
+        $returnType = $this->node->getReturnType();
+        assert($returnType instanceof Node\Identifier || $returnType instanceof Node\Name || $returnType instanceof Node\NullableType || $returnType instanceof Node\UnionType || $returnType instanceof Node\IntersectionType || $returnType === null);
+
+        if ($returnType === null) {
+            return null;
+        }
+
+        return ReflectionType::createFromTypeAndReflector($returnType);
     }
 
     /**

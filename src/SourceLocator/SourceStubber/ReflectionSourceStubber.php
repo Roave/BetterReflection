@@ -36,6 +36,7 @@ use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use ReflectionUnionType as CoreReflectionUnionType;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 
 use function array_diff;
 use function array_key_exists;
@@ -44,9 +45,12 @@ use function class_exists;
 use function explode;
 use function function_exists;
 use function get_defined_constants;
+use function implode;
 use function in_array;
 use function interface_exists;
 use function method_exists;
+use function preg_replace;
+use function sprintf;
 use function trait_exists;
 
 /**
@@ -193,18 +197,30 @@ final class ReflectionSourceStubber implements SourceStubber
         Class_|Interface_|Trait_|Method|Property|Function_ $node,
         CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection,
     ): void {
+        $docComment  = $reflection->getDocComment() ?: '';
+        $annotations = [];
+
         if (
             ($reflection instanceof CoreReflectionMethod || $reflection instanceof CoreReflectionFunction)
             && $reflection->isInternal()
-            && $reflection->isDeprecated()
         ) {
-            $docComment = '/** @deprecated */';
-        } else {
-            $docComment = $reflection->getDocComment();
+            if ($reflection->isDeprecated()) {
+                $annotations[] = '@deprecated';
+            }
+
+            if (method_exists($reflection, 'hasTentativeReturnType') && $reflection->hasTentativeReturnType()) {
+                $annotations[] = '@' . AnnotationHelper::TENTATIVE_RETURN_TYPE_ANNOTATION;
+            }
         }
 
-        if ($docComment === false) {
+        if ($docComment === '' && $annotations === []) {
             return;
+        }
+
+        if ($docComment === '') {
+            $docComment = sprintf("/**\n* %s\n*/", implode("\n *", $annotations));
+        } elseif ($annotations !== []) {
+            $docComment = preg_replace('~\s+\*/$~', sprintf("\n* %s\n*/", implode("\n *", $annotations)), $docComment);
         }
 
         $node->setDocComment(new Doc($docComment));
