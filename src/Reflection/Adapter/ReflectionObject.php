@@ -465,6 +465,6 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function isEnum(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionObject->isEnum();
     }
 }

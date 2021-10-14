@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection;
 use InvalidArgumentException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
@@ -449,6 +450,11 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->isIterateable();
     }
 
+    public function isEnum(): bool
+    {
+        return $this->reflectionClass->isEnum();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -467,7 +473,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
     }
 
-    public function getAst(): ClassNode|InterfaceNode|TraitNode
+    public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
     {
         return $this->reflectionClass->getAst();
     }

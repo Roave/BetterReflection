@@ -22,7 +22,7 @@ interface AstConversionStrategy
      */
     public function __invoke(
         Reflector $reflector,
-        Node\Stmt\Class_|Node\Stmt\Interface_|Node\Stmt\Trait_|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction|Node\Stmt\Const_|Node\Expr\FuncCall $node,
+        Node\Stmt\Class_|Node\Stmt\Interface_|Node\Stmt\Trait_|Node\Stmt\Enum_|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction|Node\Stmt\Const_|Node\Expr\FuncCall $node,
         LocatedSource $locatedSource,
         ?Node\Stmt\Namespace_ $namespace,
         ?int $positionInNode = null,
