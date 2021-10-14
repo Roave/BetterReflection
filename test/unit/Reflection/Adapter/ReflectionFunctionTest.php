@@ -91,7 +91,7 @@ class ReflectionFunctionTest extends TestCase
             ['invoke', null, null, []],
             ['invokeArgs', null, null, [[]]],
             ['getClosure', null, $closure, []],
-            ['isStatic', NotImplemented::class, null, []],
+            ['isStatic', null, true, []],
         ];
     }
 
