@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\StringCast;
+namespace Roave\BetterReflectionTest\Reflection\Annotation;
 
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper
+ * @covers \Roave\BetterReflection\Reflection\Annotation\AnnotationHelper
  */
-class DeprecatedHelperTest extends TestCase
+class AnnotationHelperTest extends TestCase
 {
-    public function docCommentProvider(): array
+    public function deprecatedDocCommentProvider(): array
     {
         return [
             ['', false],
@@ -39,10 +39,10 @@ class DeprecatedHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider docCommentProvider
+     * @dataProvider deprecatedDocCommentProvider
      */
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
-        self::assertSame($isDeprecated, DeprecatedHelper::isDeprecated($docComment));
+        self::assertSame($isDeprecated, AnnotationHelper::isDeprecated($docComment));
     }
 }

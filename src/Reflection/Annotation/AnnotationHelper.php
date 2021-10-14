@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection\Deprecated;
+namespace Roave\BetterReflection\Reflection\Annotation;
 
 use phpDocumentor\Reflection\DocBlockFactory;
 
 /**
  * @internal
  */
-final class DeprecatedHelper
+final class AnnotationHelper
 {
     private static ?DocBlockFactory $docBlockFactory = null;
 

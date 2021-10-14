@@ -21,7 +21,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -215,7 +215,7 @@ abstract class ReflectionFunctionAbstract
 
     public function isDeprecated(): bool
     {
-        return DeprecatedHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
     public function isInternal(): bool
