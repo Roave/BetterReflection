@@ -42,7 +42,7 @@ final class MakeLocatorForComposerJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
-        /** @var array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}|null $composer */
+        /** @psalm-var array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}|null $composer */
         $composer = json_decode((string) file_get_contents($composerJsonPath), true);
 
         if (! is_array($composer)) {

@@ -36,7 +36,6 @@ use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 use function array_filter;
 use function assert;
 use function count;
-use function implode;
 use function is_array;
 use function is_string;
 use function strtolower;
@@ -107,8 +106,6 @@ abstract class ReflectionFunctionAbstract
     /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
      * return "A\B").
-     *
-     * @psalm-suppress PossiblyNullPropertyFetch
      */
     public function getNamespaceName(): string
     {
@@ -116,7 +113,7 @@ abstract class ReflectionFunctionAbstract
             return '';
         }
 
-        return implode('\\', $this->declaringNamespace->name->parts);
+        return $this->declaringNamespace?->name?->toString() ?? '';
     }
 
     /**

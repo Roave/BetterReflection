@@ -468,9 +468,9 @@ class ReflectionProperty
     }
 
     /**
-     * @throws ClassDoesNotExist
+     * @param class-string $className
      *
-     * @psalm-assert class-string $className
+     * @throws ClassDoesNotExist
      */
     private function assertClassExist(string $className): void
     {

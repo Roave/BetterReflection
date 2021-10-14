@@ -62,7 +62,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 
-        /** @var array{packages: list<array>}|list<array>|null $installedJson */
+        /** @psalm-var array{packages: list<array>}|list<array>|null $installedJson */
         $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
         if (! is_array($composer)) {
@@ -73,7 +73,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @var list<array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}>|null $installed*/
+        /** @psalm-var list<array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}>|null $installed*/
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
