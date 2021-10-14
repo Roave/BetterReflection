@@ -18,7 +18,7 @@ use Throwable;
 
 use function func_get_args;
 
-class ReflectionFunction extends CoreReflectionFunction
+final class ReflectionFunction extends CoreReflectionFunction
 {
     public function __construct(private BetterReflectionFunction $betterReflectionFunction)
     {

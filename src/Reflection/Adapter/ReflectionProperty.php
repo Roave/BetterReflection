@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProp
 use Throwable;
 use TypeError;
 
-class ReflectionProperty extends CoreReflectionProperty
+final class ReflectionProperty extends CoreReflectionProperty
 {
     private bool $accessible = false;
 

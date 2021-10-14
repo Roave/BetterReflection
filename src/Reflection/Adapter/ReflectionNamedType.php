@@ -7,7 +7,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionNamedType as CoreReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
-class ReflectionNamedType extends CoreReflectionNamedType
+final class ReflectionNamedType extends CoreReflectionNamedType
 {
     public function __construct(private BetterReflectionNamedType $betterReflectionType)
     {

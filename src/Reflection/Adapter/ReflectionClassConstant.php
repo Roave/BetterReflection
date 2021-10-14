@@ -8,7 +8,7 @@ use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 
-class ReflectionClassConstant extends CoreReflectionClassConstant
+final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
     public function __construct(private BetterReflectionClassConstant $betterClassConstant)
     {

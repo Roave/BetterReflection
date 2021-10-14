@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 
 use function assert;
 
-class ReflectionParameter extends CoreReflectionParameter
+final class ReflectionParameter extends CoreReflectionParameter
 {
     public function __construct(private BetterReflectionParameter $betterReflectionParameter)
     {

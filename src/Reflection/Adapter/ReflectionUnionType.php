@@ -10,7 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUni
 
 use function array_map;
 
-class ReflectionUnionType extends CoreReflectionUnionType
+final class ReflectionUnionType extends CoreReflectionUnionType
 {
     public function __construct(private BetterReflectionUnionType $betterReflectionType)
     {

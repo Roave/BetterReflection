@@ -24,7 +24,7 @@ use function func_num_args;
 use function sprintf;
 use function strtolower;
 
-class ReflectionObject extends CoreReflectionObject
+final class ReflectionObject extends CoreReflectionObject
 {
     public function __construct(private BetterReflectionObject $betterReflectionObject)
     {

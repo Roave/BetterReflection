@@ -21,7 +21,7 @@ use ValueError;
 
 use function func_get_args;
 
-class ReflectionMethod extends CoreReflectionMethod
+final class ReflectionMethod extends CoreReflectionMethod
 {
     private bool $accessible = false;
 
