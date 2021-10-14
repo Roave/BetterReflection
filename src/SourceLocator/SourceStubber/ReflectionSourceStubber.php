@@ -46,6 +46,7 @@ use function function_exists;
 use function get_defined_constants;
 use function in_array;
 use function interface_exists;
+use function method_exists;
 use function trait_exists;
 
 /**
@@ -116,6 +117,10 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->addParameters($functionNode, $functionReflection);
 
         $returnType = $functionReflection->getReturnType();
+        if ($returnType === null && method_exists($functionReflection, 'getTentativeReturnType')) {
+            $returnType = $functionReflection->getTentativeReturnType();
+        }
+
         assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType === null);
 
         if ($returnType !== null) {
@@ -379,6 +384,10 @@ final class ReflectionSourceStubber implements SourceStubber
             $this->addParameters($methodNode, $methodReflection);
 
             $returnType = $methodReflection->getReturnType();
+            if ($returnType === null && method_exists($methodReflection, 'getTentativeReturnType')) {
+                $returnType = $methodReflection->getTentativeReturnType();
+            }
+
             assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType === null);
 
             if ($returnType !== null) {

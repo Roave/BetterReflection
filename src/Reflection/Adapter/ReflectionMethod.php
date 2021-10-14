@@ -299,12 +299,12 @@ final class ReflectionMethod extends CoreReflectionMethod
 
     public function hasTentativeReturnType(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionMethod->hasTentativeReturnType();
     }
 
     public function getTentativeReturnType(): ?CoreReflectionType
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return ReflectionType::fromTypeOrNull($this->betterReflectionMethod->getTentativeReturnType());
     }
 
     /**

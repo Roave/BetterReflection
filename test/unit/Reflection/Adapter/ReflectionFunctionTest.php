@@ -82,8 +82,8 @@ class ReflectionFunctionTest extends TestCase
             ['isGenerator', null, true, []],
             ['isVariadic', null, true, []],
             ['getAttributes', NotImplemented::class, null, []],
-            ['hasTentativeReturnType', NotImplemented::class, null, []],
-            ['getTentativeReturnType', NotImplemented::class, null, []],
+            ['hasTentativeReturnType', null, false, []],
+            ['getTentativeReturnType', null, null, []],
             ['getClosureUsedVariables', NotImplemented::class, null, []],
 
             // ReflectionFunction

@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -24,7 +25,9 @@ use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -499,6 +502,49 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertNull($functionInfo->getReturnType());
         self::assertStringNotContainsString(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testHasTentativeReturnType(): void
+    {
+        $classInfo  = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, new ReflectionSourceStubber())))->reflectClass(CoreReflectionClass::class);
+        $methodInfo = $classInfo->getMethod('getName');
+
+        self::assertTrue($methodInfo->hasTentativeReturnType());
+    }
+
+    public function testHasNotTentativeReturnType(): void
+    {
+        $functionInfo = (new DefaultReflector(
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
+        ))->reflectFunction('returnsString');
+
+        self::assertFalse($functionInfo->hasTentativeReturnType());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testGetTentativeReturnType(): void
+    {
+        $classInfo  = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, new ReflectionSourceStubber())))->reflectClass(CoreReflectionClass::class);
+        $methodInfo = $classInfo->getMethod('getName');
+
+        $returnType = $methodInfo->getTentativeReturnType();
+
+        self::assertNotNull($returnType);
+        self::assertSame('string', $returnType->__toString());
+    }
+
+    public function testNoTentativeReturnType(): void
+    {
+        $functionInfo = (new DefaultReflector(
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
+        ))->reflectFunction('returnsString');
+
+        self::assertNull($functionInfo->getTentativeReturnType());
     }
 
     public function testCannotClone(): void
