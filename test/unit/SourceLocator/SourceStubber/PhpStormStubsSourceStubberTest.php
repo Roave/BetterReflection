@@ -760,6 +760,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['str_starts_with', 70400, false],
             ['mysql_query', 50400, true],
             ['mysql_query', 70000, false],
+            // Not core functions
+            ['newrelic_add_custom_parameter', 40000, true],
         ];
     }
 
@@ -786,13 +788,16 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['PHP_OS_FAMILY', 70100, false],
             ['INPUT_SESSION', 70400, true],
             ['INPUT_SESSION', 80000, false],
+            // Not core constants
+            ['RADIUS_DISCONNECT_ACK', null, true],
+            ['RADIUS_DISCONNECT_ACK', 10000, true],
         ];
     }
 
     /**
      * @dataProvider dataConstantInPhpVersion
      */
-    public function testConstantInPhpVersion(string $constantName, int $phpVersion, bool $isSupported): void
+    public function testConstantInPhpVersion(string $constantName, ?int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
 

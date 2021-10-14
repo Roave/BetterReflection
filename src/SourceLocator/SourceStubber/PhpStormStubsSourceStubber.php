@@ -50,6 +50,84 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         __DIR__ . '/../../../../../jetbrains/phpstorm-stubs',
         __DIR__ . '/../../../vendor/jetbrains/phpstorm-stubs',
     ];
+    private const CORE_EXTENSIONS    =    [
+        'apache',
+        'bcmath',
+        'bz2',
+        'calendar',
+        'Core',
+        'ctype',
+        'curl',
+        'date',
+        'dba',
+        'dom',
+        'enchant',
+        'exif',
+        'FFI',
+        'fileinfo',
+        'filter',
+        'fpm',
+        'ftp',
+        'gd',
+        'gettext',
+        'gmp',
+        'hash',
+        'iconv',
+        'imap',
+        'interbase',
+        'intl',
+        'json',
+        'ldap',
+        'libxml',
+        'mbstring',
+        'mcrypt',
+        'mssql',
+        'mysql',
+        'mysqli',
+        'oci8',
+        'odbc',
+        'openssl',
+        'pcntl',
+        'pcre',
+        'PDO',
+        'pdo_ibm',
+        'pdo_mysql',
+        'pdo_pgsql',
+        'pdo_sqlite',
+        'pgsql',
+        'Phar',
+        'posix',
+        'pspell',
+        'readline',
+        'recode',
+        'Reflection',
+        'regex',
+        'session',
+        'shmop',
+        'SimpleXML',
+        'snmp',
+        'soap',
+        'sockets',
+        'sodium',
+        'SPL',
+        'sqlite3',
+        'standard',
+        'sybase',
+        'sysvmsg',
+        'sysvsem',
+        'sysvshm',
+        'tidy',
+        'tokenizer',
+        'wddx',
+        'xml',
+        'xmlreader',
+        'xmlrpc',
+        'xmlwriter',
+        'xsl',
+        'Zend OPcache',
+        'zip',
+        'zlib',
+    ];
 
     private BuilderFactory $builderFactory;
 
@@ -138,7 +216,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        $stub = $this->createStub($this->classNodes[$lowercaseClassName]);
+        $extension = $this->getExtensionFromFilePath($filePath);
+        $stub      = $this->createStub($this->classNodes[$lowercaseClassName], $extension);
 
         if ($className === Traversable::class) {
             // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
@@ -147,7 +226,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             $stub = str_replace('PS_UNRESERVE_PREFIX_throw', 'throw', $stub);
         }
 
-        return new StubData($stub, $this->getExtensionFromFilePath($filePath));
+        return new StubData($stub, $extension);
     }
 
     public function generateFunctionStub(string $functionName): ?StubData
@@ -174,7 +253,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName]), $this->getExtensionFromFilePath($filePath));
+        $extension = $this->getExtensionFromFilePath($filePath);
+
+        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName], $extension), $extension);
     }
 
     public function generateConstantStub(string $constantName): ?StubData
@@ -208,7 +289,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
         }
 
-        return new StubData($this->createStub($constantNode), $this->getExtensionFromFilePath($filePath));
+        $extension = $this->getExtensionFromFilePath($filePath);
+
+        return new StubData($this->createStub($constantNode, $extension), $extension);
     }
 
     private function parseFile(string $filePath): void
@@ -216,7 +299,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $absoluteFilePath = $this->getAbsoluteFilePath($filePath);
         FileChecker::assertReadableFile($absoluteFilePath);
 
-        $ast = $this->phpParser->parse(file_get_contents($absoluteFilePath));
+        $ast             = $this->phpParser->parse(file_get_contents($absoluteFilePath));
+        $isCoreExtension = $this->isCoreExtension($this->getExtensionFromFilePath($filePath));
 
         /** @psalm-suppress UndefinedMethod */
         $this->cachingVisitor->clearNodes();
@@ -230,11 +314,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             assert(is_string($className));
             assert($classNode instanceof Node\Stmt\ClassLike);
 
-            if (! $this->isSupportedInPhpVersion($classNode)) {
+            if (! $this->isSupportedInPhpVersion($classNode, $isCoreExtension)) {
                 continue;
             }
 
-            $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts);
+            $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts, $isCoreExtension);
 
             $this->classNodes[strtolower($className)] = $classNode;
         }
@@ -246,7 +330,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             assert(is_string($functionName));
             assert($functionNode instanceof Node\Stmt\Function_);
 
-            if (! $this->isSupportedInPhpVersion($functionNode)) {
+            if (! $this->isSupportedInPhpVersion($functionNode, $isCoreExtension)) {
                 continue;
             }
 
@@ -260,7 +344,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             assert(is_string($constantName));
             assert($constantNode instanceof Node\Stmt\Const_ || $constantNode instanceof Node\Expr\FuncCall);
 
-            if (! $this->isSupportedInPhpVersion($constantNode)) {
+            if (! $this->isSupportedInPhpVersion($constantNode, $isCoreExtension)) {
                 continue;
             }
 
@@ -271,7 +355,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * @param Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node
      */
-    private function createStub(Node $node): string
+    private function createStub(Node $node, string $extension): string
     {
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
@@ -438,11 +522,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      *
      * @return list<Node\Stmt>
      */
-    private function modifyStmtsByPhpVersion(array $stmts): array
+    private function modifyStmtsByPhpVersion(array $stmts, bool $isCoreExtension): array
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
-            if (! $this->isSupportedInPhpVersion($stmt)) {
+            if (! $this->isSupportedInPhpVersion($stmt, $isCoreExtension)) {
                 continue;
             }
 
@@ -481,6 +565,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $node->setDocComment(new Doc($docCommentText));
     }
 
+    private function isCoreExtension(string $extension): bool
+    {
+        return in_array($extension, self::CORE_EXTENSIONS, true);
+    }
+
     private function isDeprecatedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_ $node): bool
     {
         foreach ($node->attrGroups as $attributesGroupNode) {
@@ -512,9 +601,14 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return false;
     }
 
-    private function isSupportedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node): bool
+    private function isSupportedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node, bool $isCoreExtension): bool
     {
         if ($this->phpVersion === null) {
+            return true;
+        }
+
+        // "@since" and "@removed" annotations in some cases do not contain a PHP version, but an extension version - e.g. "@since 1.3.0"
+        if (! $isCoreExtension) {
             return true;
         }
 
