@@ -8,6 +8,7 @@ use LogicException;
 use PhpParser\Node;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Util\FileHelper;
 
 use function assert;
 use function sprintf;
@@ -70,9 +71,21 @@ class UnableToCompileNode extends LogicException
         return $exception;
     }
 
+    public static function becauseOfInitializer(
+        CompilerContext $context,
+        Node\Expr\New_ $newNode,
+    ): self {
+        return new self(sprintf(
+            'Unable to compile initializer in %s in file %s (line %d)',
+            self::compilerContextToContextDescription($context),
+            self::getFileName($context),
+            $newNode->getLine(),
+        ));
+    }
+
     private static function getFileName(CompilerContext $fetchContext): string
     {
-        return $fetchContext->getFileName() ?? '""';
+        return $fetchContext->getFileName() !== null ? FileHelper::normalizeWindowsPath($fetchContext->getFileName()) : '""';
     }
 
     private static function compilerContextToContextDescription(CompilerContext $fetchContext): string
