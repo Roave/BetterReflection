@@ -35,6 +35,8 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           # No deprecated errors
           ini-values: memory_limit=-1, error_reporting=24575
+        env:
+          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
