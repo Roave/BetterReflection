@@ -10,7 +10,7 @@ use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
-use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
@@ -200,7 +200,7 @@ class ReflectionConstant implements Reflection
 
     public function isDeprecated(): bool
     {
-        return DeprecatedHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
     /**

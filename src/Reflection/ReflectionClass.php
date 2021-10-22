@@ -20,7 +20,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflection\Deprecated\DeprecatedHelper;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -919,7 +919,7 @@ class ReflectionClass implements Reflection
 
     public function isDeprecated(): bool
     {
-        return DeprecatedHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
     /**
