@@ -318,7 +318,7 @@ class ReflectionParameter
      *
      * (note: this has nothing to do with DocBlocks).
      */
-    public function getType(): ReflectionNamedType|ReflectionUnionType|null
+    public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         $type = $this->node->type;
         assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType || $type === null);
@@ -377,9 +377,13 @@ class ReflectionParameter
     /**
      * For isArray() and isCallable().
      */
-    private function isType(ReflectionNamedType|ReflectionUnionType|null $typeReflection, string $type): bool
+    private function isType(ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $typeReflection, string $type): bool
     {
         if ($typeReflection === null) {
+            return false;
+        }
+
+        if ($typeReflection instanceof ReflectionIntersectionType) {
             return false;
         }
 
@@ -473,6 +477,10 @@ class ReflectionParameter
         $type = $this->getType();
 
         if ($type === null) {
+            return null;
+        }
+
+        if ($type instanceof ReflectionIntersectionType) {
             return null;
         }
 

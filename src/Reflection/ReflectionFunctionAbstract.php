@@ -347,7 +347,7 @@ abstract class ReflectionFunctionAbstract
     /**
      * Get the return type declaration
      */
-    public function getReturnType(): ReflectionNamedType|ReflectionUnionType|null
+    public function getReturnType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         if ($this->hasTentativeReturnType()) {
             return null;
@@ -377,7 +377,7 @@ abstract class ReflectionFunctionAbstract
         return AnnotationHelper::hasTentativeReturnType($this->getDocComment());
     }
 
-    public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|null
+    public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         if (! $this->hasTentativeReturnType()) {
             return null;

@@ -9,6 +9,7 @@
     usePhpDocPropertiesWithoutMagicCall="true"
     allowPhpStormGenerics="true"
     findUnusedPsalmSuppress="true"
+    autoloader="psalm.bootstrap.php"
 >
     <projectFiles>
         <directory name="src" />
@@ -56,7 +57,7 @@
                 <referencedFunction name="PhpParser\BuilderHelpers::normalizeValue"/>
             </errorLevel>
         </InvalidScalarArgument>
-        
+
         <RedundantConditionGivenDocblockType>
             <!-- Assertion used to check that expected object is indeed an object -->
             <errorLevel type="suppress">

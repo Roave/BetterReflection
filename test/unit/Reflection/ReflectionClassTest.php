@@ -177,7 +177,7 @@ class ReflectionClassTest extends TestCase
             [CoreReflectionMethod::IS_STATIC, 1],
             [CoreReflectionMethod::IS_ABSTRACT, 1],
             [CoreReflectionMethod::IS_FINAL, 1],
-            [CoreReflectionMethod::IS_PUBLIC, 18],
+            [CoreReflectionMethod::IS_PUBLIC, 19],
             [CoreReflectionMethod::IS_PROTECTED, 1],
             [CoreReflectionMethod::IS_PRIVATE, 1],
             [
@@ -187,7 +187,7 @@ class ReflectionClassTest extends TestCase
                 CoreReflectionMethod::IS_PUBLIC |
                 CoreReflectionMethod::IS_PROTECTED |
                 CoreReflectionMethod::IS_PRIVATE,
-                20,
+                21,
             ],
         ];
     }

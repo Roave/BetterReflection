@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use ReflectionUnionType as CoreReflectionUnionType;
+use ReflectionIntersectionType as CoreReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
@@ -12,9 +12,9 @@ use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUni
 use function array_filter;
 use function array_map;
 
-final class ReflectionUnionType extends CoreReflectionUnionType
+class ReflectionIntersectionType extends CoreReflectionIntersectionType
 {
-    public function __construct(private BetterReflectionUnionType $betterReflectionType)
+    public function __construct(private BetterReflectionIntersectionType $betterReflectionType)
     {
     }
 

@@ -9,7 +9,6 @@ use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\UnionType;
-use PHPStan\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 
 abstract class ReflectionType
 {
@@ -17,7 +16,7 @@ abstract class ReflectionType
     {
     }
 
-    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType|IntersectionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType
+    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType|IntersectionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType
     {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
@@ -30,7 +29,7 @@ abstract class ReflectionType
         }
 
         if ($type instanceof IntersectionType) {
-            throw new NotImplemented('Not implemented');
+            return new ReflectionIntersectionType($type, $allowsNull);
         }
 
         return new ReflectionUnionType($type, $allowsNull);

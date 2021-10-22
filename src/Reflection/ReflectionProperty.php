@@ -443,7 +443,7 @@ class ReflectionProperty
      *
      * (note: this has nothing to do with DocBlocks).
      */
-    public function getType(): ReflectionNamedType|ReflectionUnionType|null
+    public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         $type = $this->node->type;
         assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType || $type === null);
