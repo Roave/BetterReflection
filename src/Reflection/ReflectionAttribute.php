@@ -8,6 +8,7 @@ use Attribute;
 use PhpParser\Node;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
 class ReflectionAttribute
@@ -63,5 +64,10 @@ class ReflectionAttribute
     public function isRepeated(): bool
     {
         return $this->isRepeated;
+    }
+
+    public function __toString(): string
+    {
+        return ReflectionAttributeStringCast::toString($this);
     }
 }

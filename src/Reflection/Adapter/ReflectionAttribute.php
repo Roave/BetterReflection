@@ -43,6 +43,6 @@ final class ReflectionAttribute extends CoreReflectionAttribute
 
     public function __toString(): string
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterReflectionAttribute->__toString();
     }
 }

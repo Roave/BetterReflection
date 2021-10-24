@@ -41,7 +41,7 @@ class ReflectionAttributeTest extends TestCase
     public function methodExpectationProvider(): array
     {
         return [
-            ['__toString', NotImplemented::class, null, []],
+            ['__toString', null, '', []],
             ['getName', null, '', []],
             ['getTarget', null, 1, []],
             ['isRepeated', null, false, []],
