@@ -19,6 +19,7 @@ use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
+use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -350,6 +351,32 @@ class ReflectionProperty
     public function getPositionInAst(): int
     {
         return $this->positionInNode;
+    }
+
+    /**
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributes(): array
+    {
+        return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
+    }
+
+    /**
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributesByName(string $name): array
+    {
+        return ReflectionAttributeHelper::filterAttributesByName($this->getAttributes(), $name);
+    }
+
+    /**
+     * @param class-string $className
+     *
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributesByInstance(string $className): array
+    {
+        return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
     }
 
     /**

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionParameter as CoreReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 
+use function array_map;
 use function assert;
 
 final class ReflectionParameter extends CoreReflectionParameter
@@ -139,10 +140,20 @@ final class ReflectionParameter extends CoreReflectionParameter
     }
 
     /**
-     * @return list<CoreReflectionAttribute>
+     * @param class-string|null $name
+     *
+     * @return list<ReflectionAttribute>
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
+            $attributes = $this->betterReflectionParameter->getAttributesByInstance($name);
+        } elseif ($name !== null) {
+            $attributes = $this->betterReflectionParameter->getAttributesByName($name);
+        } else {
+            $attributes = $this->betterReflectionParameter->getAttributes();
+        }
+
+        return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 }

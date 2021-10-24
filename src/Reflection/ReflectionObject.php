@@ -483,6 +483,32 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getDeclaringNamespaceAst();
     }
 
+    /**
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributes(): array
+    {
+        return $this->reflectionClass->getAttributes();
+    }
+
+    /**
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributesByName(string $name): array
+    {
+        return $this->reflectionClass->getAttributesByName($name);
+    }
+
+    /**
+     * @param class-string $className
+     *
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributesByInstance(string $className): array
+    {
+        return $this->reflectionClass->getAttributesByInstance($className);
+    }
+
     public function setFinal(bool $isFinal): void
     {
         $this->reflectionClass->setFinal($isFinal);

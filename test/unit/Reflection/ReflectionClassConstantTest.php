@@ -9,20 +9,33 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\Attr;
+use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 use function sprintf;
 
 class ReflectionClassConstantTest extends TestCase
 {
+    private Locator $astLocator;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
+    }
+
     private function getComposerLocator(): ComposerSourceLocator
     {
         return new ComposerSourceLocator(
             require __DIR__ . '/../../../vendor/autoload.php',
-            BetterReflectionSingleton::instance()->astLocator(),
+            $this->astLocator,
         );
     }
 
@@ -114,7 +127,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
-        $reflector       = new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $classReflection = $reflector->reflectClass('\T');
         $constReflection = $classReflection->getReflectionConstant('TEST');
         self::assertEquals($startLine, $constReflection->getStartLine());
@@ -145,7 +158,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
-        $reflector          = new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $classReflection    = $reflector->reflectClass('T');
         $constantReflection = $classReflection->getReflectionConstant('TEST');
 
@@ -175,7 +188,7 @@ class Foo
 }
 PHP;
 
-        $reflector          = new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $classReflection    = $reflector->reflectClass('Foo');
         $constantReflection = $classReflection->getReflectionConstant($constantName);
 
@@ -224,5 +237,45 @@ PHP;
         $constantReflection = $classReflection->getReflectionConstant('FOO');
 
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
+    }
+
+    public function testGetAttributesWithoutAttributes(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ExampleClass::class);
+        $constantReflection = $classReflection->getReflectionConstant('MY_CONST_1');
+        $attributes         = $constantReflection->getAttributes();
+
+        self::assertCount(0, $attributes);
+    }
+
+    public function testGetAttributesWithAttributes(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
+        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $attributes         = $constantReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+    }
+
+    public function testGetAttributesByName(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
+        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $attributes         = $constantReflection->getAttributesByName(Attr::class);
+
+        self::assertCount(1, $attributes);
+    }
+
+    public function testGetAttributesByInstance(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
+        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $attributes         = $constantReflection->getAttributesByInstance(Attr::class);
+
+        self::assertCount(2, $attributes);
     }
 }

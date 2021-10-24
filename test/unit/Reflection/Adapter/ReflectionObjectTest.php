@@ -10,8 +10,10 @@ use ReflectionException as CoreReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionObject as ReflectionObjectAdapter;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -105,7 +107,7 @@ class ReflectionObjectTest extends TestCase
             ['getNamespaceName', null, '', []],
             ['getShortName', null, '', []],
             ['isAnonymous', null, true, []],
-            ['getAttributes', NotImplemented::class, null, []],
+            ['getAttributes', null, [], []],
             ['isEnum', null, true, []],
         ];
     }
@@ -569,5 +571,169 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         self::assertContainsOnlyInstancesOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstants());
+    }
+
+    public function testGetAttributes(): void
+    {
+        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1
+            ->method('getName')
+            ->willReturn('SomeAttribute');
+        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2
+            ->method('getName')
+            ->willReturn('AnotherAttribute');
+
+        $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getAttributes')
+            ->willReturn($betterReflectionAttributes);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+        $attributes              = $reflectionObjectAdapter->getAttributes();
+
+        self::assertCount(2, $attributes);
+        self::assertSame('SomeAttribute', $attributes[0]->getName());
+        self::assertSame('AnotherAttribute', $attributes[1]->getName());
+    }
+
+    public function testGetAttributesWithName(): void
+    {
+        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1
+            ->method('getName')
+            ->willReturn('SomeAttribute');
+        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2
+            ->method('getName')
+            ->willReturn('AnotherAttribute');
+
+        $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
+
+        $betterReflectionClass = $this->getMockBuilder(BetterReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAttributes'])
+            ->getMock();
+
+        $betterReflectionClass
+            ->method('getAttributes')
+            ->willReturn($betterReflectionAttributes);
+
+        $betterReflectionObjectReflection = new CoreReflectionClass(BetterReflectionObject::class);
+        $betterReflectionObject           = $betterReflectionObjectReflection->newInstanceWithoutConstructor();
+
+        $betterReflectionObjectClassPropertyReflection = $betterReflectionObjectReflection->getProperty('reflectionClass');
+        $betterReflectionObjectClassPropertyReflection->setAccessible(true);
+        $betterReflectionObjectClassPropertyReflection->setValue($betterReflectionObject, $betterReflectionClass);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $attributes = $reflectionObjectAdapter->getAttributes('SomeAttribute');
+
+        self::assertCount(1, $attributes);
+        self::assertSame('SomeAttribute', $attributes[0]->getName());
+    }
+
+    public function testGetAttributesWithInstance(): void
+    {
+        $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass1
+            ->method('getName')
+            ->willReturn('ClassName');
+        $betterReflectionAttributeClass1
+            ->method('isSubclassOf')
+            ->willReturnMap([
+                ['ParentClassName', true],
+                ['InterfaceName', false],
+            ]);
+        $betterReflectionAttributeClass1
+            ->method('implementsInterface')
+            ->willReturnMap([
+                ['ParentClassName', false],
+                ['InterfaceName', false],
+            ]);
+
+        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1
+            ->method('getClass')
+            ->willReturn($betterReflectionAttributeClass1);
+
+        $betterReflectionAttributeClass2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass2
+            ->method('getName')
+            ->willReturn('Whatever');
+        $betterReflectionAttributeClass2
+            ->method('isSubclassOf')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', false],
+                ['InterfaceName', false],
+            ]);
+        $betterReflectionAttributeClass2
+            ->method('implementsInterface')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', false],
+                ['InterfaceName', true],
+            ]);
+
+        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2
+            ->method('getClass')
+            ->willReturn($betterReflectionAttributeClass2);
+
+        $betterReflectionAttributeClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass3
+            ->method('getName')
+            ->willReturn('Whatever');
+        $betterReflectionAttributeClass3
+            ->method('isSubclassOf')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', true],
+                ['InterfaceName', false],
+            ]);
+        $betterReflectionAttributeClass3
+            ->method('implementsInterface')
+            ->willReturnMap([
+                ['ClassName', false],
+                ['ParentClassName', false],
+                ['InterfaceName', true],
+            ]);
+
+        $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute3
+            ->method('getClass')
+            ->willReturn($betterReflectionAttributeClass3);
+
+        $betterReflectionAttributes = [
+            $betterReflectionAttribute1,
+            $betterReflectionAttribute2,
+            $betterReflectionAttribute3,
+        ];
+
+        $betterReflectionClass = $this->getMockBuilder(BetterReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAttributes'])
+            ->getMock();
+
+        $betterReflectionClass
+            ->method('getAttributes')
+            ->willReturn($betterReflectionAttributes);
+
+        $betterReflectionObjectReflection = new CoreReflectionClass(BetterReflectionObject::class);
+        $betterReflectionObject           = $betterReflectionObjectReflection->newInstanceWithoutConstructor();
+
+        $betterReflectionObjectClassPropertyReflection = $betterReflectionObjectReflection->getProperty('reflectionClass');
+        $betterReflectionObjectClassPropertyReflection->setAccessible(true);
+        $betterReflectionObjectClassPropertyReflection->setValue($betterReflectionObject, $betterReflectionClass);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(1, $reflectionObjectAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionObjectAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionObjectAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
 }

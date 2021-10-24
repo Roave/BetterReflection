@@ -43,11 +43,13 @@ use Roave\BetterReflectionTest\ClassWithInterfacesExtendingInterfaces;
 use Roave\BetterReflectionTest\ClassWithInterfacesOther;
 use Roave\BetterReflectionTest\Fixture;
 use Roave\BetterReflectionTest\Fixture\AbstractClass;
+use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassExtendingNonAbstractClass;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassUsesAndRenamesMethodFromTrait;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract;
 use Roave\BetterReflectionTest\Fixture\ClassUsingTraitWithAbstractMethod;
+use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
 use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -2151,5 +2153,41 @@ PHP;
 
         $isNotEnum = $reflector->reflectClass('IsNotEnum');
         self::assertFalse($isNotEnum->isEnum());
+    }
+
+    public function testGetAttributesWithoutAttributes(): void
+    {
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(ExampleClass::class);
+        $attributes      = $classReflection->getAttributes();
+
+        self::assertCount(0, $attributes);
+    }
+
+    public function testGetAttributesWithAttributes(): void
+    {
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(ClassWithAttributes::class);
+        $attributes      = $classReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+    }
+
+    public function testGetAttributesByName(): void
+    {
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(ClassWithAttributes::class);
+        $attributes      = $classReflection->getAttributesByName(Attr::class);
+
+        self::assertCount(1, $attributes);
+    }
+
+    public function testGetAttributesByInstance(): void
+    {
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass(ClassWithAttributes::class);
+        $attributes      = $classReflection->getAttributesByInstance(Attr::class);
+
+        self::assertCount(2, $attributes);
     }
 }

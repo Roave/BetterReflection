@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
-use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
 use ReflectionObject as CoreReflectionObject;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -454,13 +454,23 @@ final class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * @return list<CoreReflectionAttribute>
+     * @param class-string|null $name
      *
-     * @psalm-suppress LessSpecificImplementedReturnType
+     * @return list<ReflectionAttribute>
+     *
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
-        throw new Exception\NotImplemented('Not implemented');
+        if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
+            $attributes = $this->betterReflectionObject->getAttributesByInstance($name);
+        } elseif ($name !== null) {
+            $attributes = $this->betterReflectionObject->getAttributesByName($name);
+        } else {
+            $attributes = $this->betterReflectionObject->getAttributes();
+        }
+
+        return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
     public function isEnum(): bool

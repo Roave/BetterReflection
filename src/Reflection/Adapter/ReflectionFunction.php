@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use Closure;
-use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 
+use function array_map;
 use function func_get_args;
 
 final class ReflectionFunction extends CoreReflectionFunction
@@ -204,9 +205,9 @@ final class ReflectionFunction extends CoreReflectionFunction
     }
 
     /**
-     * @return list<CoreReflectionAttribute>
+     * @return mixed[]
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getClosureUsedVariables(): array
     {
         throw new Exception\NotImplemented('Not implemented');
     }
@@ -221,16 +222,26 @@ final class ReflectionFunction extends CoreReflectionFunction
         return ReflectionType::fromTypeOrNull($this->betterReflectionFunction->getTentativeReturnType());
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function getClosureUsedVariables(): array
-    {
-        throw new Exception\NotImplemented('Not implemented');
-    }
-
     public function isStatic(): bool
     {
         return $this->betterReflectionFunction->isStatic();
+    }
+
+    /**
+     * @param class-string|null $name
+     *
+     * @return list<ReflectionAttribute>
+     */
+    public function getAttributes(?string $name = null, int $flags = 0): array
+    {
+        if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
+            $attributes = $this->betterReflectionFunction->getAttributesByInstance($name);
+        } elseif ($name !== null) {
+            $attributes = $this->betterReflectionFunction->getAttributesByName($name);
+        } else {
+            $attributes = $this->betterReflectionFunction->getAttributes();
+        }
+
+        return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 }
