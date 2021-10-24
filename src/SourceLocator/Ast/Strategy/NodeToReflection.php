@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -27,6 +28,15 @@ class NodeToReflection implements AstConversionStrategy
         ?Node\Stmt\Namespace_ $namespace,
         ?int $positionInNode = null,
     ): ReflectionClass|ReflectionConstant|ReflectionFunction {
+        if ($node instanceof Node\Stmt\Enum_) {
+            return ReflectionEnum::createFromNode(
+                $reflector,
+                $node,
+                $locatedSource,
+                $namespace,
+            );
+        }
+
         if ($node instanceof Node\Stmt\ClassLike) {
             return ReflectionClass::createFromNode(
                 $reflector,

@@ -244,6 +244,10 @@ class ReflectionObjectTest extends TestCase
         $mockReflectionClassNodeReflection->setAccessible(true);
         $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $node);
 
+        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('declaringNamespace');
+        $mockReflectionClassNodeReflection->setAccessible(true);
+        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, null);
+
         // Create the ReflectionObject from a dummy class
         $reflectionObject = ReflectionObject::createFromInstance(new stdClass());
 

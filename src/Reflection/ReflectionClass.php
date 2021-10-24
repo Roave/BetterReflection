@@ -63,14 +63,6 @@ class ReflectionClass implements Reflection
     public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
     private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
 
-    private Reflector $reflector;
-
-    private ?NamespaceNode $declaringNamespace = null;
-
-    private LocatedSource $locatedSource;
-
-    private ClassNode|InterfaceNode|TraitNode|EnumNode $node;
-
     /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
     private ?array $cachedReflectionConstants = null;
 
@@ -94,8 +86,12 @@ class ReflectionClass implements Reflection
 
     private ?ReflectionClass $cachedParentClass = null;
 
-    private function __construct()
-    {
+    protected function __construct(
+        private Reflector $reflector,
+        private ClassNode|InterfaceNode|TraitNode|EnumNode $node,
+        private LocatedSource $locatedSource,
+        private ?NamespaceNode $declaringNamespace = null,
+    ) {
     }
 
     public function __toString(): string
@@ -142,14 +138,7 @@ class ReflectionClass implements Reflection
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
     ): self {
-        $class = new self();
-
-        $class->reflector          = $reflector;
-        $class->locatedSource      = $locatedSource;
-        $class->node               = $node;
-        $class->declaringNamespace = $namespace;
-
-        return $class;
+        return new self($reflector, $node, $locatedSource, $namespace);
     }
 
     /**

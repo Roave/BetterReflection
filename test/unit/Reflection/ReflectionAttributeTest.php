@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Attribute;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -17,6 +18,7 @@ use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributesWithArguments;
 use Roave\BetterReflectionTest\Fixture\ClassWithRepeatedAttributes;
+use Roave\BetterReflectionTest\Fixture\EnumWithAttributes;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionAttribute
@@ -129,6 +131,19 @@ class ReflectionAttributeTest extends TestCase
         $classReflection    = $this->reflector->reflectClass(ClassWithAttributes::class);
         $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
         $attributes         = $constantReflection->getAttributes();
+
+        self::assertNotEmpty($attributes);
+        self::assertSame(Attribute::TARGET_CLASS_CONSTANT, $attributes[0]->getTarget());
+    }
+
+    public function testGetTargetWithEnumCase(): void
+    {
+        $enumReflection = $this->reflector->reflectClass(EnumWithAttributes::class);
+
+        self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
+
+        $caseReflection = $enumReflection->getCase('CASE_WITH_ATTRIBUTES');
+        $attributes     = $caseReflection->getAttributes();
 
         self::assertNotEmpty($attributes);
         self::assertSame(Attribute::TARGET_CLASS_CONSTANT, $attributes[0]->getTarget());

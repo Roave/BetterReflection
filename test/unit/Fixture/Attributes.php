@@ -59,3 +59,12 @@ class ClassWithRepeatedAttributes
 class ClassWithAttributesWithArguments
 {
 }
+
+#[Attr]
+#[AnotherAttr]
+enum EnumWithAttributes
+{
+    #[Attr]
+    #[AnotherAttr]
+    case CASE_WITH_ATTRIBUTES;
+}

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
-use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
+use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
@@ -32,10 +33,7 @@ class NodeToReflectionTest extends TestCase
     {
         parent::setUp();
 
-        $this->phpParser = new Parser\Multiple([
-            new Parser\Php7(new Lexer()),
-            new Parser\Php5(new Lexer()),
-        ]);
+        $this->phpParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
 
         $this->nodeTraverser = new NodeTraverser();
         $this->nodeTraverser->addVisitor(new NameResolver());
@@ -101,6 +99,23 @@ class NodeToReflectionTest extends TestCase
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('Foo', $reflection->getName());
         self::assertTrue($reflection->isInterface());
+    }
+
+    public function testReturnsReflectionForEnumNode(): void
+    {
+        $reflector = $this->createMock(Reflector::class);
+
+        $locatedSource = new LocatedSource('<?php enum Foo {}', 'Foo');
+
+        $reflection = (new NodeToReflection())->__invoke(
+            $reflector,
+            $this->getFirstAstNodeInString($locatedSource->getSource()),
+            $locatedSource,
+            null,
+        );
+
+        self::assertInstanceOf(ReflectionEnum::class, $reflection);
+        self::assertSame('Foo', $reflection->getName());
     }
 
     public function testReturnsReflectionForFunctionNode(): void
