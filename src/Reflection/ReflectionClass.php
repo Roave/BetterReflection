@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use BackedEnum;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -38,6 +39,7 @@ use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 use Stringable;
 use Traversable;
+use UnitEnum;
 
 use function array_combine;
 use function array_filter;
@@ -1002,6 +1004,22 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * @return array<class-string, self>
+     */
+    private function getEnumInterfaces(): array
+    {
+        assert($this->node instanceof EnumNode);
+
+        $interfaces = [UnitEnum::class => $this->reflectClassForNamedNode(new Node\Name(UnitEnum::class))];
+
+        if ($this->node->scalarType !== null) {
+            $interfaces[BackedEnum::class] = $this->reflectClassForNamedNode(new Node\Name(BackedEnum::class));
+        }
+
+        return $interfaces;
+    }
+
+    /**
      * Given an AST Node\Name, create a new ReflectionClass for the element.
      */
     private function reflectClassForNamedNode(Node\Name $node): self
@@ -1195,6 +1213,10 @@ class ReflectionClass implements Reflection
             return [];
         }
 
+        if ($this->node instanceof EnumNode) {
+            return $this->getEnumInterfaces();
+        }
+
         $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
 
         /** @var array<class-string, self> $interfaces */
@@ -1335,6 +1357,10 @@ class ReflectionClass implements Reflection
     private function getCurrentClassImplementedInterfacesIndexedByName(): array
     {
         $node = $this->node;
+
+        if ($node instanceof EnumNode) {
+            return $this->getEnumInterfaces();
+        }
 
         if ($node instanceof ClassNode) {
             $interfaces = array_merge(

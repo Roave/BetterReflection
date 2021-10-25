@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use BackedEnum;
 use Bar;
 use Baz;
 use E;
@@ -62,11 +63,13 @@ use Roave\BetterReflectionTest\Fixture\MethodsOrder;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StaticProperties;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
 use Stringable;
 use TypeError;
+use UnitEnum;
 
 use function array_keys;
 use function array_map;
@@ -1200,6 +1203,33 @@ PHP;
                 ->getInterfaceNames(),
             'Interfaces are retrieved in the correct numeric order (indexed by number)',
         );
+    }
+
+    public function testGetInterfacesForPureEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(PureEnum::class);
+
+        self::assertSame([UnitEnum::class], $classInfo->getInterfaceNames());
+        self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
+    }
+
+    public function testGetInterfaceNamesForBackedEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(StringEnum::class);
+
+        self::assertSame([UnitEnum::class, BackedEnum::class], $classInfo->getInterfaceNames());
+        self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
+        self::assertArrayHasKey(BackedEnum::class, $classInfo->getImmediateInterfaces());
     }
 
     public function testGetInterfaces(): void
