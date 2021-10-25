@@ -34,6 +34,7 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
@@ -250,6 +251,7 @@ class ReflectionClass implements Reflection
         $createMethod = fn (?string $aliasMethodName): ReflectionMethod => ReflectionMethod::createFromNode(
             $this->reflector,
             $methodAst,
+            $this->locatedSource,
             $method->getDeclaringClass()->getDeclaringNamespaceAst(),
             $method->getDeclaringClass(),
             $this,
@@ -437,12 +439,15 @@ class ReflectionClass implements Reflection
             fn (ClassMethod $methodNode): ReflectionMethod => ReflectionMethod::createFromNode(
                 $this->reflector,
                 $methodNode,
+                $this->locatedSource,
                 $this->declaringNamespace,
                 $this,
                 $this,
             ),
             $this->node->getMethods(),
         );
+
+        $methods = $this->addEnumMethods($methods);
 
         $methodsByName = [];
 
@@ -455,6 +460,55 @@ class ReflectionClass implements Reflection
         }
 
         return $methodsByName;
+    }
+
+    /**
+     * @param list<ReflectionMethod> $methods
+     *
+     * @return list<ReflectionMethod>
+     */
+    private function addEnumMethods(array $methods): array
+    {
+        if (! $this->node instanceof EnumNode) {
+            return $methods;
+        }
+
+        $internalLocatedSource = new InternalLocatedSource('', $this->getName(), 'Core');
+        $createMethod          = fn (string $name, array $params, string $returnType): ReflectionMethod => ReflectionMethod::createFromNode(
+            $this->reflector,
+            new ClassMethod(
+                new Node\Identifier($name),
+                [
+                    'flags' => ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_STATIC,
+                    'params' => $params,
+                    'returnType' => $returnType,
+                ],
+            ),
+            $internalLocatedSource,
+            $this->declaringNamespace,
+            $this,
+            $this,
+        );
+
+        $methods[] = $createMethod('cases', [], 'array');
+
+        if ($this->node->scalarType === null) {
+            return $methods;
+        }
+
+        $methods[] = $createMethod(
+            'from',
+            [new Node\Param(new Node\Expr\Variable('value'), null, 'string|int')],
+            'static',
+        );
+
+        $methods[] = $createMethod(
+            'tryFrom',
+            [new Node\Param(new Node\Expr\Variable('value'), null, 'string|int')],
+            '?static',
+        );
+
+        return $methods;
     }
 
     /**

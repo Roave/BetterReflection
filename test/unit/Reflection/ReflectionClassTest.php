@@ -178,6 +178,34 @@ class ReflectionClassTest extends TestCase
         self::assertGreaterThanOrEqual(1, $classInfo->getMethods());
     }
 
+    public function testGetMethodsForPureEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(PureEnum::class);
+        $methods   = $classInfo->getImmediateMethods();
+
+        self::assertArrayHasKey('cases', $methods);
+    }
+
+    public function testGetMethodsForBackedEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(StringEnum::class);
+        $methods   = $classInfo->getImmediateMethods();
+
+        self::assertArrayHasKey('cases', $methods);
+        self::assertArrayHasKey('from', $methods);
+        self::assertArrayHasKey('tryFrom', $methods);
+    }
+
     public function getMethodsWithFilterDataProvider(): array
     {
         return [

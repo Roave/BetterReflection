@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Webmozart\Assert\Assert;
 
 use function class_exists;
@@ -41,12 +42,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public static function createFromNode(
         Reflector $reflector,
         MethodNode $node,
+        LocatedSource $locatedSource,
         ?Namespace_ $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         ?string $aliasName = null,
     ): self {
-        $method                    = new self($reflector, $node, $declaringClass->getLocatedSource(), $namespace);
+        $method                    = new self($reflector, $node, $locatedSource, $namespace);
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
         $method->methodNode        = $node;
@@ -251,11 +253,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     public function getImplementingClass(): ReflectionClass
     {
         return $this->implementingClass;
-    }
-
-    public function isInternal(): bool
-    {
-        return $this->declaringClass->getLocatedSource()->isInternal();
     }
 
     /**
