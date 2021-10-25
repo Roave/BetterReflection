@@ -64,6 +64,7 @@ use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
+use Stringable;
 use TypeError;
 
 use function array_keys;
@@ -2059,16 +2060,20 @@ PHP;
         ]));
 
         $classImplementingStringable = $reflector->reflectClass('ClassHasStringable');
-        self::assertContains('Stringable', $classImplementingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $classImplementingStringable->getInterfaceNames());
+        self::assertArrayHasKey(Stringable::class, $classImplementingStringable->getImmediateInterfaces());
 
         $classNotImplementingStringable = $reflector->reflectClass('ClassHasStringableAutomatically');
-        self::assertContains('Stringable', $classNotImplementingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceNames());
+        self::assertArrayHasKey(Stringable::class, $classNotImplementingStringable->getImmediateInterfaces());
 
         $interfaceExtendingStringable = $reflector->reflectClass('InterfaceHasStringable');
-        self::assertContains('Stringable', $interfaceExtendingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $interfaceExtendingStringable->getInterfaceNames());
+        self::assertArrayHasKey(Stringable::class, $interfaceExtendingStringable->getImmediateInterfaces());
 
         $interfaceNotExtendingStringable = $reflector->reflectClass('InterfaceHasStringableAutomatically');
-        self::assertContains('Stringable', $interfaceNotExtendingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $interfaceNotExtendingStringable->getInterfaceNames());
+        self::assertArrayHasKey(Stringable::class, $interfaceNotExtendingStringable->getImmediateInterfaces());
     }
 
     public function testHasAllInterfacesWithStringable(): void
