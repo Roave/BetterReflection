@@ -11,6 +11,7 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionEnumCaseStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
@@ -150,5 +151,10 @@ class ReflectionEnumCase
     public function getAttributesByInstance(string $className): array
     {
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
+    }
+
+    public function __toString(): string
+    {
+        return ReflectionEnumCaseStringCast::toString($this);
     }
 }

@@ -6,6 +6,8 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum;
+use Roave\BetterReflection\Reflection\ReflectionEnumCase;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
@@ -42,6 +44,7 @@ final class ReflectionClassStringCast
         $type = self::typeToString($classReflection);
 
         $constants         = $classReflection->getReflectionConstants();
+        $enumCases         = $classReflection instanceof ReflectionEnum ? $classReflection->getCases() : [];
         $staticProperties  = self::getStaticProperties($classReflection);
         $staticMethods     = self::getStaticMethods($classReflection);
         $defaultProperties = self::getDefaultProperties($classReflection);
@@ -59,8 +62,8 @@ final class ReflectionClassStringCast
             self::extendsToString($classReflection),
             self::implementsToString($classReflection),
             self::fileAndLinesToString($classReflection),
-            count($constants),
-            self::constantsToString($constants),
+            count($constants) + count($enumCases),
+            self::constantsToString($constants, $enumCases),
             count($staticProperties),
             self::propertiesToString($staticProperties),
             count($staticMethods),
@@ -129,14 +132,18 @@ final class ReflectionClassStringCast
 
     /**
      * @param array<ReflectionClassConstant> $constants
+     * @param array<ReflectionEnumCase>      $enumCases
      */
-    private static function constantsToString(array $constants): string
+    private static function constantsToString(array $constants, array $enumCases): string
     {
-        if (! $constants) {
+        if ($constants === [] && $enumCases === []) {
             return '';
         }
 
-        return self::itemsToString(array_map(static fn (ReflectionClassConstant $constantReflection): string => trim(ReflectionClassConstantStringCast::toString($constantReflection)), $constants));
+        $items = array_map(static fn (ReflectionEnumCase $enumCaseReflection): string => trim(ReflectionEnumCaseStringCast::toString($enumCaseReflection)), $enumCases)
+            + array_map(static fn (ReflectionClassConstant $constantReflection): string => trim(ReflectionClassConstantStringCast::toString($constantReflection)), $constants);
+
+        return self::itemsToString($items);
     }
 
     /**
