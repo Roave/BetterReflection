@@ -1204,7 +1204,8 @@ class ReflectionClass implements Reflection
 
         $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
 
-        return array_combine(
+        /** @var array<class-string, self> $interfaces */
+        $interfaces = array_combine(
             array_map(
                 static fn (Node\Name $interfaceName): string => $interfaceName->toString(),
                 $nodes,
@@ -1214,6 +1215,8 @@ class ReflectionClass implements Reflection
                 $nodes,
             ),
         );
+
+        return $this->addStringableInterface($interfaces);
     }
 
     /**
