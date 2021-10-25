@@ -292,6 +292,6 @@ class ReflectionObjectTest extends TestCase
         $classInfo = ReflectionObject::createFromInstance(new stdClass());
 
         $this->expectException(Uncloneable::class);
-        $unused = clone $classInfo;
+        clone $classInfo;
     }
 }

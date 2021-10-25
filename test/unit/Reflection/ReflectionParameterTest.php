@@ -681,7 +681,7 @@ class ReflectionParameterTest extends TestCase
         $paramInfo  = $methodInfo->getParameter('parameter1');
 
         $this->expectException(Uncloneable::class);
-        $unused = clone $paramInfo;
+        clone $paramInfo;
     }
 
     public function testGetClassFromSelfTypeHintedProperty(): void

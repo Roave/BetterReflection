@@ -308,7 +308,7 @@ class ReflectionPropertyTest extends TestCase
         $publicProp = $classInfo->getProperty('publicProperty');
 
         $this->expectException(Uncloneable::class);
-        $unused = clone $publicProp;
+        clone $publicProp;
     }
 
     public function testSetVisibility(): void
@@ -537,10 +537,10 @@ class Foo
 }
 PHP;
 
-        $this->expectException(ClassDoesNotExist::class);
-
         $classReflection    = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $propertyReflection = $classReflection->getProperty('boo');
+
+        $this->expectException(ClassDoesNotExist::class);
 
         $propertyReflection->setValue(null);
     }
@@ -555,10 +555,10 @@ class Foo
 }
 PHP;
 
-        $this->expectException(ClassDoesNotExist::class);
-
         $classReflection    = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $propertyReflection = $classReflection->getProperty('boo');
+
+        $this->expectException(ClassDoesNotExist::class);
 
         $propertyReflection->getValue();
     }
@@ -596,50 +596,50 @@ PHP;
 
     public function testSetValueOfObjectPropertyThrowsExceptionWhenNoObject(): void
     {
-        $this->expectException(NoObjectProvided::class);
-
         $classReflection    = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflectClass(PropertyGetSet::class);
         $propertyReflection = $classReflection->getProperty('baz');
+
+        $this->expectException(NoObjectProvided::class);
 
         $propertyReflection->setValue(null);
     }
 
     public function testGetValueOfObjectPropertyThrowsExceptionWhenNoObject(): void
     {
-        $this->expectException(NoObjectProvided::class);
-
         $classReflection    = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflectClass(PropertyGetSet::class);
         $propertyReflection = $classReflection->getProperty('baz');
+
+        $this->expectException(NoObjectProvided::class);
 
         $propertyReflection->getValue();
     }
 
     public function testSetValueOfObjectPropertyThrowsExceptionWhenNotAnObject(): void
     {
-        $this->expectException(NotAnObject::class);
-
         $classReflection    = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflectClass(PropertyGetSet::class);
         $propertyReflection = $classReflection->getProperty('baz');
+
+        $this->expectException(NotAnObject::class);
 
         $propertyReflection->setValue('string');
     }
 
     public function testSetValueOfObjectPropertyThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
-        $this->expectException(ObjectNotInstanceOfClass::class);
-
         $classReflection    = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflectClass(PropertyGetSet::class);
         $propertyReflection = $classReflection->getProperty('baz');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
 
         $propertyReflection->setValue(new stdClass());
     }
 
     public function testGetValueOfObjectPropertyThrowsExceptionObjectNotInstanceOfClass(): void
     {
-        $this->expectException(ObjectNotInstanceOfClass::class);
-
         $classReflection    = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyGetSet.php', $this->astLocator)))->reflectClass(PropertyGetSet::class);
         $propertyReflection = $classReflection->getProperty('baz');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
 
         $propertyReflection->getValue(new stdClass());
     }
@@ -791,9 +791,10 @@ PHP;
 
     public function testIsInitializedThrowsTypeError(): void
     {
+        $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
+
         self::expectException(ObjectNotInstanceOfClass::class);
 
-        $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
         $classReflection->getProperty('withoutType')->isInitialized(new stdClass());
     }
 

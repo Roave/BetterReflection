@@ -1603,7 +1603,7 @@ PHP;
         $classInfo = $reflector->reflectClass(ExampleClass::class);
 
         $this->expectException(Uncloneable::class);
-        $unused = clone $classInfo;
+        clone $classInfo;
     }
 
     public function testGetStaticProperties(): void

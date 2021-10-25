@@ -393,10 +393,10 @@ class Foo
 }
 PHP;
 
-        $this->expectException(ClassDoesNotExist::class);
-
         $classReflection  = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $methodReflection = $classReflection->getMethod('boo');
+
+        $this->expectException(ClassDoesNotExist::class);
 
         $methodReflection->getClosure();
     }
@@ -417,20 +417,20 @@ PHP;
 
     public function testGetClosureOfObjectMethodThrowsExceptionWhenNoObject(): void
     {
-        $this->expectException(NoObjectProvided::class);
-
         $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
+
+        $this->expectException(NoObjectProvided::class);
 
         $methodReflection->getClosure(null);
     }
 
     public function testGetClosureOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
-        $this->expectException(ObjectNotInstanceOfClass::class);
-
         $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
 
         $methodReflection->getClosure(new stdClass());
     }
@@ -463,10 +463,10 @@ class Foo
 }
 PHP;
 
-        $this->expectException(ClassDoesNotExist::class);
-
         $classReflection  = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $methodReflection = $classReflection->getMethod('boo');
+
+        $this->expectException(ClassDoesNotExist::class);
 
         $methodReflection->invoke();
     }
@@ -483,10 +483,10 @@ class Foo
 }
 PHP;
 
-        $this->expectException(ClassDoesNotExist::class);
-
         $classReflection  = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
         $methodReflection = $classReflection->getMethod('boo');
+
+        $this->expectException(ClassDoesNotExist::class);
 
         $methodReflection->invokeArgs();
     }
@@ -549,40 +549,40 @@ PHP;
 
     public function testInvokeOfObjectMethodThrowsExceptionWhenNoObject(): void
     {
-        $this->expectException(NoObjectProvided::class);
-
         $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
+
+        $this->expectException(NoObjectProvided::class);
 
         $methodReflection->invoke(null);
     }
 
     public function testInvokeArgsOfObjectMethodThrowsExceptionWhenNoObject(): void
     {
-        $this->expectException(NoObjectProvided::class);
-
         $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
+
+        $this->expectException(NoObjectProvided::class);
 
         $methodReflection->invokeArgs(null);
     }
 
     public function testInvokeOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
-        $this->expectException(ObjectNotInstanceOfClass::class);
-
         $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
 
         $methodReflection->invoke(new stdClass());
     }
 
     public function testInvokeArgsOfObjectMethodThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
-        $this->expectException(ObjectNotInstanceOfClass::class);
-
         $classReflection  = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithNonStaticMethod.php', $this->astLocator)))->reflectClass(ClassWithNonStaticMethod::class);
         $methodReflection = $classReflection->getMethod('sum');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
 
         $methodReflection->invokeArgs(new stdClass());
     }

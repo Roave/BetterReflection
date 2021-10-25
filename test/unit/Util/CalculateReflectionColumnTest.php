@@ -65,8 +65,6 @@ class CalculateReflectionColumnTest extends TestCase
 
     public function testGetStartColumnThrowsExceptionIfInvalidPosition(): void
     {
-        $this->expectException(InvalidNodePosition::class);
-
         $node = $this->createMock(Node::class);
         $node
             ->method('hasAttribute')
@@ -76,18 +74,20 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getStartFilePos')
             ->willReturn(10000);
 
+        $this->expectException(InvalidNodePosition::class);
+
         CalculateReflectionColumn::getStartColumn('', $node);
     }
 
     public function testGetStartColumnThrowsExceptionIfNoPosition(): void
     {
-        $this->expectException(NoNodePosition::class);
-
         $node = $this->createMock(Node::class);
         $node
             ->method('hasAttribute')
             ->with('startFilePos')
             ->willReturn(false);
+
+        $this->expectException(NoNodePosition::class);
 
         CalculateReflectionColumn::getStartColumn('', $node);
     }
@@ -142,8 +142,6 @@ class CalculateReflectionColumnTest extends TestCase
 
     public function testGetEndColumnThrowsExceptionIfInvalidPosition(): void
     {
-        $this->expectException(InvalidNodePosition::class);
-
         $node = $this->createMock(Node::class);
         $node
             ->method('hasAttribute')
@@ -153,18 +151,20 @@ class CalculateReflectionColumnTest extends TestCase
             ->method('getEndFilePos')
             ->willReturn(10000);
 
+        $this->expectException(InvalidNodePosition::class);
+
         CalculateReflectionColumn::getEndColumn('', $node);
     }
 
     public function testGetEndColumnThrowsExceptionIfNoPosition(): void
     {
-        $this->expectException(NoNodePosition::class);
-
         $node = $this->createMock(Node::class);
         $node
             ->method('hasAttribute')
             ->with('endFilePos')
             ->willReturn(false);
+
+        $this->expectException(NoNodePosition::class);
 
         CalculateReflectionColumn::getEndColumn('', $node);
     }

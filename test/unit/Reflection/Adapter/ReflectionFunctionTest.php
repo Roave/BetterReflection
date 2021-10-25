@@ -174,14 +174,14 @@ class ReflectionFunctionTest extends TestCase
 
     public function testGetClosureReturnsNullWhenError(): void
     {
-        self::expectException(Throwable::class);
-
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
             ->method('getClosure')
             ->willThrowException(new Exception());
 
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::expectException(Throwable::class);
 
         $betterReflectionFunction->getClosure();
     }
