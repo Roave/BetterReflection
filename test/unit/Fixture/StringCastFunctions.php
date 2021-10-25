@@ -9,3 +9,7 @@ function functionWithoutParameters()
 function functionWithParameters($a, $b)
 {
 }
+
+function functionWithReturnType(): int
+{
+}

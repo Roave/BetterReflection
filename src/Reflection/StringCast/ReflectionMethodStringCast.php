@@ -20,10 +20,16 @@ final class ReflectionMethodStringCast
 {
     public static function toString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection = null): string
     {
-        $parametersFormat = $methodReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
+        $parametersFormat = $methodReflection->getNumberOfParameters() > 0 || $methodReflection->hasReturnType()
+            ? "\n\n  - Parameters [%d] {%s\n  }"
+            : '';
+
+        $returnTypeFormat = $methodReflection->hasReturnType()
+            ? "\n  - Return [ %s ]"
+            : '';
 
         return sprintf(
-            'Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s' . $parametersFormat . "\n}",
+            'Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s' . $parametersFormat . $returnTypeFormat . "\n}",
             self::sourceToString($methodReflection),
             $methodReflection->isConstructor() ? ', ctor' : '',
             $methodReflection->isDestructor() ? ', dtor' : '',
@@ -38,6 +44,7 @@ final class ReflectionMethodStringCast
             self::fileAndLinesToString($methodReflection),
             count($methodReflection->getParameters()),
             self::parametersToString($methodReflection),
+            self::returnTypeToString($methodReflection),
         );
     }
 
@@ -112,5 +119,10 @@ final class ReflectionMethodStringCast
     private static function parametersToString(ReflectionMethod $methodReflection): string
     {
         return array_reduce($methodReflection->getParameters(), static fn (string $string, ReflectionParameter $parameterReflection): string => $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection), '');
+    }
+
+    private static function returnTypeToString(ReflectionMethod $methodReflection): string
+    {
+        return $methodReflection->getReturnType()?->__toString() ?? '';
     }
 }

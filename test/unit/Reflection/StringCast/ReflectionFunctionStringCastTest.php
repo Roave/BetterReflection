@@ -31,6 +31,7 @@ class ReflectionFunctionStringCastTest extends TestCase
         return [
             ['Roave\BetterReflectionTest\Fixture\functionWithoutParameters', "Function [ <user> function Roave\BetterReflectionTest\Fixture\\functionWithoutParameters ] {\n  @@ %s/Fixture/StringCastFunctions.php 5 - 7\n}"],
             ['Roave\BetterReflectionTest\Fixture\functionWithParameters', "Function [ <user> function Roave\BetterReflectionTest\Fixture\\functionWithParameters ] {\n  @@ %s/Fixture/StringCastFunctions.php 9 - 11\n\n  - Parameters [2] {\n    Parameter #0 [ <required> \$a ]\n    Parameter #1 [ <required> \$b ]\n  }\n}"],
+            ['Roave\BetterReflectionTest\Fixture\functionWithReturnType', "Function [ <user> function Roave\BetterReflectionTest\Fixture\\functionWithReturnType ] {\n  @@ %s/Fixture/StringCastFunctions.php 13 - 15\n\n  - Parameters [0] {\n  }\n  - Return [ int ]\n}"],
         ];
     }
 

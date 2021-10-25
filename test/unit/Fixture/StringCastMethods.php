@@ -61,4 +61,8 @@ abstract class StringCastMethods extends StringCastMethodsParent implements Stri
     public function methodWithParameters($a, $b)
     {
     }
+
+    public function methodWithReturnType(): string
+    {
+    }
 }

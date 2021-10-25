@@ -18,15 +18,22 @@ final class ReflectionFunctionStringCast
 {
     public static function toString(ReflectionFunction $functionReflection): string
     {
-        $parametersFormat = $functionReflection->getNumberOfParameters() > 0 ? "\n\n  - Parameters [%d] {%s\n  }" : '';
+        $parametersFormat = $functionReflection->getNumberOfParameters() > 0 || $functionReflection->hasReturnType()
+            ? "\n\n  - Parameters [%d] {%s\n  }"
+            : '';
+
+        $returnTypeFormat = $functionReflection->hasReturnType()
+            ? "\n  - Return [ %s ]"
+            : '';
 
         return sprintf(
-            'Function [ <%s> function %s ] {%s' . $parametersFormat . "\n}",
+            'Function [ <%s> function %s ] {%s' . $parametersFormat . $returnTypeFormat . "\n}",
             self::sourceToString($functionReflection),
             $functionReflection->getName(),
             self::fileAndLinesToString($functionReflection),
             count($functionReflection->getParameters()),
             self::parametersToString($functionReflection),
+            self::returnTypeToString($functionReflection),
         );
     }
 
@@ -51,5 +58,10 @@ final class ReflectionFunctionStringCast
     private static function parametersToString(ReflectionFunction $functionReflection): string
     {
         return array_reduce($functionReflection->getParameters(), static fn (string $string, ReflectionParameter $parameterReflection): string => $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection), '');
+    }
+
+    private static function returnTypeToString(ReflectionFunction $methodReflection): string
+    {
+        return $methodReflection->getReturnType()?->__toString() ?? '';
     }
 }
