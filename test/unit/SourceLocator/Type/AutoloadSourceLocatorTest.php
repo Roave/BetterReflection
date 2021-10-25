@@ -274,17 +274,17 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testInternalClassDoesNotLoad(): void
     {
-        $this->expectException(IdentifierNotFound::class);
-
         $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
+
+        $this->expectException(IdentifierNotFound::class);
         $reflector->reflectClass(ReflectionClass::class);
     }
 
     public function testInternalConstantDoesNotLoad(): void
     {
-        $this->expectException(IdentifierNotFound::class);
-
         $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
+
+        $this->expectException(IdentifierNotFound::class);
         $reflector->reflectConstant('E_ALL');
     }
 

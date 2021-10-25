@@ -82,11 +82,11 @@ class ClosureSourceLocatorTest extends TestCase
 
     public function testEvaledClosureThrowsInvalidFileLocation(): void
     {
-        $this->expectException(EvaledClosureCannotBeLocated::class);
-
         eval('$closure = function () {};');
 
         $locator = new ClosureSourceLocator($closure, $this->parser);
+
+        $this->expectException(EvaledClosureCannotBeLocated::class);
 
         $locator->locateIdentifier(
             $this->reflector,
@@ -122,8 +122,6 @@ class ClosureSourceLocatorTest extends TestCase
 
     public function testExceptionIfClosureNotFoundOnExpectedLine(): void
     {
-        self::expectException(NoClosureOnLine::class);
-
         $closure = static function (): void {
         };
 
@@ -142,6 +140,8 @@ class ClosureSourceLocatorTest extends TestCase
         $coreReflectionPropertyInSourceLocatatorReflection = $sourceLocatorReflection->getProperty('coreFunctionReflection');
         $coreReflectionPropertyInSourceLocatatorReflection->setAccessible(true);
         $coreReflectionPropertyInSourceLocatatorReflection->setValue($sourceLocator, $coreReflectionPropertyMock);
+
+        self::expectException(NoClosureOnLine::class);
 
         $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
     }

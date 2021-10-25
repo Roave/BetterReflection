@@ -153,7 +153,7 @@ class ReflectionParameter
     /**
      * @throws LogicException
      */
-    private function getCompiledDefaultValueNode(): CompiledValue
+    private function getCompiledDefaultValue(): CompiledValue
     {
         if (! $this->isDefaultValueAvailable()) {
             throw new LogicException('This parameter does not have a default value available');
@@ -249,7 +249,7 @@ class ReflectionParameter
      */
     public function getDefaultValue(): string|int|float|bool|array|null
     {
-        return $this->getCompiledDefaultValueNode()->value;
+        return $this->getCompiledDefaultValue()->value;
     }
 
     /**
@@ -444,7 +444,7 @@ class ReflectionParameter
      */
     public function isDefaultValueConstant(): bool
     {
-        return $this->getCompiledDefaultValueNode()->constantName !== null;
+        return $this->getCompiledDefaultValue()->constantName !== null;
     }
 
     /**
@@ -456,7 +456,7 @@ class ReflectionParameter
             throw new LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
-        return $this->getCompiledDefaultValueNode()->constantName;
+        return $this->getCompiledDefaultValue()->constantName;
     }
 
     /**

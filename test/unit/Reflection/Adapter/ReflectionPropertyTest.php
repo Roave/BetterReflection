@@ -293,8 +293,6 @@ class ReflectionPropertyTest extends TestCase
 
     public function testIsInitializedThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
-        self::expectException(CoreReflectionException::class);
-
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
             ->method('isPublic')
@@ -304,6 +302,8 @@ class ReflectionPropertyTest extends TestCase
             ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        self::expectException(CoreReflectionException::class);
 
         $reflectionPropertyAdapter->isInitialized(new stdClass());
     }

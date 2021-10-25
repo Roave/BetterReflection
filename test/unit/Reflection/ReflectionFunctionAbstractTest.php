@@ -554,7 +554,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $functionInfo = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectFunction('foo');
 
         $this->expectException(Uncloneable::class);
-        $unused = clone $functionInfo;
+        clone $functionInfo;
     }
 
     public function testGetBodyAst(): void

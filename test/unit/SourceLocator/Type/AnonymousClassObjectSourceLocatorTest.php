@@ -145,8 +145,6 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     public function testExceptionIfAnonymousClassNotFoundOnExpectedLine(): void
     {
-        self::expectException(NoAnonymousClassOnLine::class);
-
         $anonymousClass = new class {
         };
 
@@ -168,6 +166,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $coreReflectionPropertyInSourceLocatatorReflection = $sourceLocatorReflection->getProperty('coreClassReflection');
         $coreReflectionPropertyInSourceLocatatorReflection->setAccessible(true);
         $coreReflectionPropertyInSourceLocatatorReflection->setValue($sourceLocator, $coreReflectionPropertyMock);
+
+        self::expectException(NoAnonymousClassOnLine::class);
 
         $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
     }
@@ -213,9 +213,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     public function testExceptionIfEvaledAnonymousClass(): void
     {
-        $this->expectException(EvaledAnonymousClassCannotBeLocated::class);
-
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
+
+        $this->expectException(EvaledAnonymousClassCannotBeLocated::class);
 
         (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
             $this->reflector,
