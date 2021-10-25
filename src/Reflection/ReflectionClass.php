@@ -925,6 +925,10 @@ class ReflectionClass implements Reflection
      */
     public function isFinal(): bool
     {
+        if ($this->node instanceof EnumNode) {
+            return true;
+        }
+
         return $this->node instanceof ClassNode && $this->node->isFinal();
     }
 

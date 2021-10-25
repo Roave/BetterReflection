@@ -59,6 +59,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use Roave\BetterReflectionTest\Fixture\MethodsOrder;
+use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StaticProperties;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
@@ -858,6 +859,17 @@ PHP;
 
         $classInfo = $reflector->reflectClass(ExampleClass::class);
         self::assertFalse($classInfo->isFinal());
+    }
+
+    public function testIsFinalForEnum(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/Enums.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflectClass(PureEnum::class);
+        self::assertTrue($classInfo->isFinal());
     }
 
     public function modifierProvider(): array
