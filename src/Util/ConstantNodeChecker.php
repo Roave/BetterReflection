@@ -32,7 +32,11 @@ final class ConstantNodeChecker
             throw InvalidConstantNode::create($node);
         }
 
-        if (! ($node->args[0]->value instanceof Node\Scalar\String_)) {
+        if (! ($node->args[0] instanceof Node\Arg) || ! ($node->args[0]->value instanceof Node\Scalar\String_)) {
+            throw InvalidConstantNode::create($node);
+        }
+
+        if (! ($node->args[1] instanceof Node\Arg)) {
             throw InvalidConstantNode::create($node);
         }
 

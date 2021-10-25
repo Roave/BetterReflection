@@ -41,6 +41,24 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
+    public function testInvalidWithVariadicPlaceholderAsName(): void
+    {
+        self::expectException(InvalidConstantNode::class);
+
+        $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\VariadicPlaceholder()]);
+
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+    }
+
+    public function testInvalidWithVariadicPlaceholderAsValue(): void
+    {
+        self::expectException(InvalidConstantNode::class);
+
+        $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\VariadicPlaceholder()]);
+
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+    }
+
     public function testNameAsNotString(): void
     {
         self::expectException(InvalidConstantNode::class);

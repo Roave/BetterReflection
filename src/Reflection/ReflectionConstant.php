@@ -214,10 +214,14 @@ class ReflectionConstant implements Reflection
             return $this->compiledValue->value;
         }
 
-        /** @psalm-suppress PossiblyNullArrayOffset */
-        $valueNode = $this->node instanceof Node\Expr\FuncCall
-            ? $this->node->args[1]->value
-            : $this->node->consts[$this->positionInNode]->value;
+        if ($this->node instanceof Node\Expr\FuncCall) {
+            $argumentValueNode = $this->node->args[1];
+            assert($argumentValueNode instanceof Node\Arg);
+            $valueNode = $argumentValueNode->value;
+        } else {
+            /** @psalm-suppress PossiblyNullArrayOffset */
+            $valueNode = $this->node->consts[$this->positionInNode]->value;
+        }
 
         $this->compiledValue = (new CompileNodeToValue())->__invoke(
             $valueNode,
@@ -286,7 +290,9 @@ class ReflectionConstant implements Reflection
 
     private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node): string
     {
-        $nameNode = $node->args[0]->value;
+        $argumentNameNode = $node->args[0];
+        assert($argumentNameNode instanceof Node\Arg);
+        $nameNode = $argumentNameNode->value;
         assert($nameNode instanceof Node\Scalar\String_);
 
         return $nameNode->value;

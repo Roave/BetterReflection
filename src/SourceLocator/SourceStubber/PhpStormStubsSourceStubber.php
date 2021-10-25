@@ -426,7 +426,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         return null;
                     }
 
-                    $nameNode = $node->args[0]->value;
+                    $argumentNameNode = $node->args[0];
+                    assert($argumentNameNode instanceof Node\Arg);
+                    $nameNode = $argumentNameNode->value;
                     assert($nameNode instanceof Node\Scalar\String_);
                     $constantName = $nameNode->value;
 
@@ -441,6 +443,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                     if (
                         count($node->args) === 3
+                        && $node->args[2] instanceof Node\Arg
                         && $node->args[2]->value instanceof Node\Expr\ConstFetch
                         && $node->args[2]->value->name->toLowerString() === 'true'
                     ) {
@@ -499,7 +502,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 $normalizedConstantValue = BuilderHelpers::normalizeValue($constantValue);
 
                 if ($node instanceof Node\Expr\FuncCall) {
-                    $node->args[1]->value = $normalizedConstantValue;
+                    $argumentValueNode = $node->args[1];
+                    assert($argumentValueNode instanceof Node\Arg);
+                    $argumentValueNode->value = $normalizedConstantValue;
                 } else {
                     $node->value = $normalizedConstantValue;
                 }

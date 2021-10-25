@@ -311,7 +311,9 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                         return null;
                     }
 
-                    $nameNode = $node->args[0]->value;
+                    $argumentNameNode = $node->args[0];
+                    assert($argumentNameNode instanceof Node\Arg);
+                    $nameNode = $argumentNameNode->value;
                     assert($nameNode instanceof Node\Scalar\String_);
 
                     if ($nameNode->value === $this->constantName) {
