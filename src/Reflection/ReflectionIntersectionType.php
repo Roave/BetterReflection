@@ -19,7 +19,7 @@ class ReflectionIntersectionType extends ReflectionType
     {
         parent::__construct($allowsNull);
         $this->types = array_filter(
-            array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromTypeAndReflector($type), $type->types),
+            array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($type), $type->types),
             static fn (ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type): bool => $type instanceof ReflectionNamedType,
         );
     }

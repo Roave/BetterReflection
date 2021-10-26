@@ -16,7 +16,10 @@ abstract class ReflectionType
     {
     }
 
-    public static function createFromTypeAndReflector(Identifier|Name|NullableType|UnionType|IntersectionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType
+    /**
+     * @internal
+     */
+    public static function createFromNode(Identifier|Name|NullableType|UnionType|IntersectionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType
     {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
