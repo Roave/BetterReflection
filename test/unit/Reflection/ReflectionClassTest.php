@@ -426,6 +426,33 @@ class ReflectionClassTest extends TestCase
         self::assertCount(6, $properties);
     }
 
+    public function testGetPropertiesForPureEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo  = $reflector->reflectClass(PureEnum::class);
+        $properties = $classInfo->getImmediateProperties();
+
+        self::assertArrayHasKey('name', $properties);
+    }
+
+    public function testGetPropertiesForBackedEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo  = $reflector->reflectClass(StringEnum::class);
+        $properties = $classInfo->getImmediateProperties();
+
+        self::assertArrayHasKey('name', $properties);
+        self::assertArrayHasKey('value', $properties);
+    }
+
     public function testGetPropertiesDeclaredWithOneKeyword(): void
     {
         $php = <<<'PHP'

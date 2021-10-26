@@ -760,6 +760,8 @@ class ReflectionClass implements Reflection
                 }
             }
 
+            $properties = $this->addEnumProperties($properties);
+
             $this->cachedImmediateProperties = $properties;
         }
 
@@ -771,6 +773,45 @@ class ReflectionClass implements Reflection
             $this->cachedImmediateProperties,
             static fn (ReflectionProperty $property): bool => (bool) ($filter & $property->getModifiers()),
         );
+    }
+
+    /**
+     * @param array<string, ReflectionProperty> $properties
+     *
+     * @return array<string, ReflectionProperty>
+     */
+    private function addEnumProperties(array $properties): array
+    {
+        if (! $this->node instanceof EnumNode) {
+            return $properties;
+        }
+
+        $createProperty = function (string $name): ReflectionProperty {
+            $propertyNode = new Node\Stmt\Property(
+                ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_READONLY,
+                [new Node\Stmt\PropertyProperty($name)],
+                [],
+                'string',
+            );
+
+            return ReflectionProperty::createFromNode(
+                $this->reflector,
+                $propertyNode,
+                0,
+                $this->declaringNamespace,
+                $this,
+                $this,
+                false,
+            );
+        };
+
+        $properties['name'] = $createProperty('name');
+
+        if ($this->node->scalarType !== null) {
+            $properties['value'] = $createProperty('value');
+        }
+
+        return $properties;
     }
 
     /**
