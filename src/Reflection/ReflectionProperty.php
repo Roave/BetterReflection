@@ -479,7 +479,7 @@ class ReflectionProperty
             return null;
         }
 
-        return ReflectionType::createFromTypeAndReflector($type);
+        return ReflectionType::createFromNode($type);
     }
 
     /**

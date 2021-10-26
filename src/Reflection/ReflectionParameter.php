@@ -330,7 +330,7 @@ class ReflectionParameter
 
         $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
 
-        return ReflectionType::createFromTypeAndReflector($type, $allowsNull);
+        return ReflectionType::createFromNode($type, $allowsNull);
     }
 
     /**

@@ -27,18 +27,18 @@ class ReflectionTypeTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    public function testCreateFromType(): void
+    public function testCreateFromNode(): void
     {
-        $typeInfo = ReflectionType::createFromTypeAndReflector(new Identifier('string'));
+        $typeInfo = ReflectionType::createFromNode(new Identifier('string'));
         self::assertInstanceOf(ReflectionType::class, $typeInfo);
     }
 
     public function testAllowsNull(): void
     {
-        $noNullType = ReflectionType::createFromTypeAndReflector(new Identifier('string'));
+        $noNullType = ReflectionType::createFromNode(new Identifier('string'));
         self::assertFalse($noNullType->allowsNull());
 
-        $allowsNullType = ReflectionType::createFromTypeAndReflector(new NullableType(new Identifier('string')));
+        $allowsNullType = ReflectionType::createFromNode(new NullableType(new Identifier('string')));
         self::assertTrue($allowsNullType->allowsNull());
     }
 
@@ -58,7 +58,7 @@ class ReflectionTypeTest extends TestCase
      */
     public function testIsBuiltin(string $type): void
     {
-        $reflectionType = ReflectionType::createFromTypeAndReflector(new Identifier($type));
+        $reflectionType = ReflectionType::createFromNode(new Identifier($type));
 
         self::assertInstanceOf(ReflectionNamedType::class, $reflectionType);
         self::assertTrue($reflectionType->isBuiltin());
@@ -75,7 +75,7 @@ class ReflectionTypeTest extends TestCase
      */
     public function testIsNotBuiltin(string $type): void
     {
-        $reflectionType = ReflectionType::createFromTypeAndReflector(new Identifier($type));
+        $reflectionType = ReflectionType::createFromNode(new Identifier($type));
 
         self::assertInstanceOf(ReflectionNamedType::class, $reflectionType);
         self::assertFalse($reflectionType->isBuiltin());
@@ -83,19 +83,19 @@ class ReflectionTypeTest extends TestCase
 
     public function testImplicitCastToString(): void
     {
-        self::assertSame('int', (string) ReflectionType::createFromTypeAndReflector(new Identifier('int')));
-        self::assertSame('string', (string) ReflectionType::createFromTypeAndReflector(new Identifier('string')));
-        self::assertSame('array', (string) ReflectionType::createFromTypeAndReflector(new Identifier('array')));
-        self::assertSame('callable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('callable')));
-        self::assertSame('bool', (string) ReflectionType::createFromTypeAndReflector(new Identifier('bool')));
-        self::assertSame('float', (string) ReflectionType::createFromTypeAndReflector(new Identifier('float')));
-        self::assertSame('void', (string) ReflectionType::createFromTypeAndReflector(new Identifier('void')));
-        self::assertSame('object', (string) ReflectionType::createFromTypeAndReflector(new Identifier('object')));
-        self::assertSame('iterable', (string) ReflectionType::createFromTypeAndReflector(new Identifier('iterable')));
-        self::assertSame('mixed', (string) ReflectionType::createFromTypeAndReflector(new Identifier('mixed')));
-        self::assertSame('never', (string) ReflectionType::createFromTypeAndReflector(new Identifier('never')));
+        self::assertSame('int', (string) ReflectionType::createFromNode(new Identifier('int')));
+        self::assertSame('string', (string) ReflectionType::createFromNode(new Identifier('string')));
+        self::assertSame('array', (string) ReflectionType::createFromNode(new Identifier('array')));
+        self::assertSame('callable', (string) ReflectionType::createFromNode(new Identifier('callable')));
+        self::assertSame('bool', (string) ReflectionType::createFromNode(new Identifier('bool')));
+        self::assertSame('float', (string) ReflectionType::createFromNode(new Identifier('float')));
+        self::assertSame('void', (string) ReflectionType::createFromNode(new Identifier('void')));
+        self::assertSame('object', (string) ReflectionType::createFromNode(new Identifier('object')));
+        self::assertSame('iterable', (string) ReflectionType::createFromNode(new Identifier('iterable')));
+        self::assertSame('mixed', (string) ReflectionType::createFromNode(new Identifier('mixed')));
+        self::assertSame('never', (string) ReflectionType::createFromNode(new Identifier('never')));
 
-        self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('Foo\Bar\Baz')));
-        self::assertSame('\Foo\Bar\Baz', (string) ReflectionType::createFromTypeAndReflector(new Identifier('\Foo\Bar\Baz')));
+        self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromNode(new Identifier('Foo\Bar\Baz')));
+        self::assertSame('\Foo\Bar\Baz', (string) ReflectionType::createFromNode(new Identifier('\Foo\Bar\Baz')));
     }
 }

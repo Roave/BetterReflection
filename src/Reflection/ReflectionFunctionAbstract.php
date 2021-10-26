@@ -396,7 +396,7 @@ abstract class ReflectionFunctionAbstract
             return null;
         }
 
-        return ReflectionType::createFromTypeAndReflector($returnType);
+        return ReflectionType::createFromNode($returnType);
     }
 
     /**
