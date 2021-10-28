@@ -7,12 +7,13 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
 
 use function array_map;
 
 final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-    public function __construct(private BetterReflectionClassConstant $betterClassConstant)
+    public function __construct(private BetterReflectionClassConstant|BetterReflectionEnumCase $betterClassConstantOrEnumCase)
     {
     }
 
@@ -22,7 +23,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getName(): string
     {
-        return $this->betterClassConstant->getName();
+        return $this->betterClassConstantOrEnumCase->getName();
     }
 
     /**
@@ -32,7 +33,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getValue(): string|int|float|bool|array|null
     {
-        return $this->betterClassConstant->getValue();
+        return $this->betterClassConstantOrEnumCase->getValue();
     }
 
     /**
@@ -40,7 +41,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function isPublic(): bool
     {
-        return $this->betterClassConstant->isPublic();
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return true;
+        }
+
+        return $this->betterClassConstantOrEnumCase->isPublic();
     }
 
     /**
@@ -48,7 +53,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function isPrivate(): bool
     {
-        return $this->betterClassConstant->isPrivate();
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return false;
+        }
+
+        return $this->betterClassConstantOrEnumCase->isPrivate();
     }
 
     /**
@@ -56,7 +65,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function isProtected(): bool
     {
-        return $this->betterClassConstant->isProtected();
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return false;
+        }
+
+        return $this->betterClassConstantOrEnumCase->isProtected();
     }
 
     /**
@@ -64,7 +77,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getModifiers(): int
     {
-        return $this->betterClassConstant->getModifiers();
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return CoreReflectionClassConstant::IS_PUBLIC;
+        }
+
+        return $this->betterClassConstantOrEnumCase->getModifiers();
     }
 
     /**
@@ -72,7 +89,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getDeclaringClass(): ReflectionClass
     {
-        return new ReflectionClass($this->betterClassConstant->getDeclaringClass());
+        return new ReflectionClass($this->betterClassConstantOrEnumCase->getDeclaringClass());
     }
 
     /**
@@ -80,7 +97,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getDocComment(): string|false
     {
-        return $this->betterClassConstant->getDocComment() ?: false;
+        return $this->betterClassConstantOrEnumCase->getDocComment() ?: false;
     }
 
     /**
@@ -90,7 +107,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function __toString(): string
     {
-        return $this->betterClassConstant->__toString();
+        return $this->betterClassConstantOrEnumCase->__toString();
     }
 
     /**
@@ -101,11 +118,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
         if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
-            $attributes = $this->betterClassConstant->getAttributesByInstance($name);
+            $attributes = $this->betterClassConstantOrEnumCase->getAttributesByInstance($name);
         } elseif ($name !== null) {
-            $attributes = $this->betterClassConstant->getAttributesByName($name);
+            $attributes = $this->betterClassConstantOrEnumCase->getAttributesByName($name);
         } else {
-            $attributes = $this->betterClassConstant->getAttributes();
+            $attributes = $this->betterClassConstantOrEnumCase->getAttributes();
         }
 
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
@@ -113,11 +130,15 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
 
     public function isFinal(): bool
     {
-        return $this->betterClassConstant->isFinal();
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return true;
+        }
+
+        return $this->betterClassConstantOrEnumCase->isFinal();
     }
 
     public function isEnumCase(): bool
     {
-        throw new Exception\NotImplemented('Not implemented');
+        return $this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase;
     }
 }

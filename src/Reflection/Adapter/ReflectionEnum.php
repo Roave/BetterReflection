@@ -23,6 +23,7 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
+use function constant;
 use function sprintf;
 use function strtolower;
 
@@ -156,30 +157,46 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasConstant(string $name): bool
     {
-        return $this->betterReflectionEnum->hasConstant($name);
+        return $this->betterReflectionEnum->hasCase($name) || $this->betterReflectionEnum->hasConstant($name);
     }
 
     /**
-     * @return array<string, scalar|array<scalar>|null>
+     * @return array<string, mixed|null>
      */
     public function getConstants(?int $filter = null): array
     {
-        return array_map(static fn (BetterReflectionClassConstant $betterConstant) => $betterConstant->getValue(), $this->filterBetterReflectionClassConstants($filter));
+        return array_map(
+            fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed => $this->getConstantValue($betterConstantOrEnumCase),
+            $this->filterBetterReflectionClassConstants($filter),
+        );
     }
 
     public function getConstant(string $name): mixed
     {
+        if ($this->betterReflectionEnum->hasCase($name)) {
+            return $this->getConstantValue($this->betterReflectionEnum->getCase($name));
+        }
+
         return $this->betterReflectionEnum->getConstant($name);
+    }
+
+    private function getConstantValue(BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed
+    {
+        if ($betterConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return constant(sprintf('%s::%s', $betterConstantOrEnumCase->getDeclaringClass()->getName(), $betterConstantOrEnumCase->getName()));
+        }
+
+        return $betterConstantOrEnumCase->getValue();
     }
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        $betterReflectionConstant = $this->betterReflectionEnum->getReflectionConstant($name);
-        if ($betterReflectionConstant === null) {
+        $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getReflectionConstant($name);
+        if ($betterReflectionConstantOrEnumCase === null) {
             return false;
         }
 
-        return new ReflectionClassConstant($betterReflectionConstant);
+        return new ReflectionClassConstant($betterReflectionConstantOrEnumCase);
     }
 
     /**
@@ -187,11 +204,14 @@ final class ReflectionEnum extends CoreReflectionEnum
      */
     public function getReflectionConstants(?int $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant), $this->filterBetterReflectionClassConstants($filter)));
+        return array_values(array_map(
+            static fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnum): ReflectionClassConstant => new ReflectionClassConstant($betterConstantOrEnum),
+            $this->filterBetterReflectionClassConstants($filter),
+        ));
     }
 
     /**
-     * @return array<string, BetterReflectionClassConstant>
+     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
      */
     private function filterBetterReflectionClassConstants(?int $filter): array
     {
@@ -202,6 +222,13 @@ final class ReflectionEnum extends CoreReflectionEnum
                 $this->betterReflectionEnum->getReflectionConstants(),
                 static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
             );
+        }
+
+        if (
+            $filter === null
+            || $filter & ReflectionClassConstant::IS_PUBLIC
+        ) {
+            $reflectionConstants += $this->betterReflectionEnum->getCases();
         }
 
         return $reflectionConstants;

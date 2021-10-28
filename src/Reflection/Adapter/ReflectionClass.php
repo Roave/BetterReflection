@@ -12,6 +12,8 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum as BetterReflectionEnum;
+use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
@@ -20,13 +22,14 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
+use function constant;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
 
 final class ReflectionClass extends CoreReflectionClass
 {
-    public function __construct(private BetterReflectionClass $betterReflectionClass)
+    public function __construct(private BetterReflectionClass|BetterReflectionEnum $betterReflectionClass)
     {
         unset($this->name);
     }
@@ -154,24 +157,48 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasConstant(string $name): bool
     {
+        if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
+            return true;
+        }
+
         return $this->betterReflectionClass->hasConstant($name);
     }
 
     /**
-     * @return array<string, scalar|array<scalar>|null>
+     * @return array<string, mixed|null>
      */
     public function getConstants(?int $filter = null): array
     {
-        return array_map(static fn (BetterReflectionClassConstant $betterConstant) => $betterConstant->getValue(), $this->filterBetterReflectionClassConstants($filter));
+        return array_map(
+            fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed => $this->getConstantValue($betterConstantOrEnumCase),
+            $this->filterBetterReflectionClassConstants($filter),
+        );
     }
 
     public function getConstant(string $name): mixed
     {
+        if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
+            return $this->getConstantValue($this->betterReflectionClass->getCase($name));
+        }
+
         return $this->betterReflectionClass->getConstant($name);
+    }
+
+    private function getConstantValue(BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed
+    {
+        if ($betterConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return constant(sprintf('%s::%s', $betterConstantOrEnumCase->getDeclaringClass()->getName(), $betterConstantOrEnumCase->getName()));
+        }
+
+        return $betterConstantOrEnumCase->getValue();
     }
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
+        if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
+            return new ReflectionClassConstant($this->betterReflectionClass->getCase($name));
+        }
+
         $betterReflectionConstant = $this->betterReflectionClass->getReflectionConstant($name);
         if ($betterReflectionConstant === null) {
             return false;
@@ -185,11 +212,14 @@ final class ReflectionClass extends CoreReflectionClass
      */
     public function getReflectionConstants(?int $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant), $this->filterBetterReflectionClassConstants($filter)));
+        return array_values(array_map(
+            static fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnum): ReflectionClassConstant => new ReflectionClassConstant($betterConstantOrEnum),
+            $this->filterBetterReflectionClassConstants($filter),
+        ));
     }
 
     /**
-     * @return array<string, BetterReflectionClassConstant>
+     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
      */
     private function filterBetterReflectionClassConstants(?int $filter): array
     {
@@ -200,6 +230,16 @@ final class ReflectionClass extends CoreReflectionClass
                 $this->betterReflectionClass->getReflectionConstants(),
                 static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
             );
+        }
+
+        if (
+            $this->betterReflectionClass instanceof BetterReflectionEnum
+            && (
+                $filter === null
+                || $filter & ReflectionClassConstant::IS_PUBLIC
+            )
+        ) {
+            $reflectionConstants += $this->betterReflectionClass->getCases();
         }
 
         return $reflectionConstants;

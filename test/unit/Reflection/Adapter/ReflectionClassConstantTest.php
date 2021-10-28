@@ -7,12 +7,12 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
-use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
 
 use function array_combine;
 use function array_map;
@@ -55,7 +55,6 @@ class ReflectionClassConstantTest extends TestCase
             ['getDocComment', null, '', []],
             ['getAttributes', null, [], []],
             ['isFinal', null, true, []],
-            ['isEnumCase', NotImplemented::class, null, []],
         ];
     }
 
@@ -81,6 +80,27 @@ class ReflectionClassConstantTest extends TestCase
 
         $adapter = new ReflectionClassConstantAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
+    }
+
+    public function dataAdapterMethodsForEnumCase(): array
+    {
+        return [
+            ['isPublic', true],
+            ['isProtected', false],
+            ['isPrivate', false],
+            ['getModifiers', 1],
+            ['isFinal', true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataAdapterMethodsForEnumCase
+     */
+    public function testAdapterMethodsForEnumCase(string $methodName, mixed $expectedValue): void
+    {
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+
+        self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
@@ -242,5 +262,23 @@ class ReflectionClassConstantTest extends TestCase
         self::assertCount(1, $reflectionClassConstantAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function dataIsEnumCase(): array
+    {
+        return [
+            [$this->createMock(BetterReflectionClassConstant::class), false],
+            [$this->createMock(BetterReflectionEnumCase::class), true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataIsEnumCase
+     */
+    public function testIsEnumCase(BetterReflectionClassConstant|BetterReflectionEnumCase $classConstantOrEnum, bool $isEnumCase): void
+    {
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($classConstantOrEnum);
+
+        self::assertSame($isEnumCase, $reflectionClassConstantAdapter->isEnumCase());
     }
 }
