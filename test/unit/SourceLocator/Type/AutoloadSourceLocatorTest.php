@@ -21,6 +21,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\AutoloadableAlias;
 use Roave\BetterReflectionTest\Fixture\AutoloadableByAlias;
 use Roave\BetterReflectionTest\Fixture\AutoloadableClassInPhar;
+use Roave\BetterReflectionTest\Fixture\AutoloadableEnum;
 use Roave\BetterReflectionTest\Fixture\AutoloadableInterface;
 use Roave\BetterReflectionTest\Fixture\AutoloadableTrait;
 use Roave\BetterReflectionTest\Fixture\BrokenAutoloaderException;
@@ -29,6 +30,7 @@ use Roave\BetterReflectionTest\Fixture\ClassNotInPhar;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 use function class_exists;
+use function enum_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function interface_exists;
@@ -159,6 +161,44 @@ class AutoloadSourceLocatorTest extends TestCase
             (new AutoloadSourceLocator($this->astLocator))
                 ->locateIdentifier($this->getMockReflector(), new Identifier(
                     AutoloadableTrait::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @requires PHP >= 8.1
+     */
+    public function testCanLocateAutoloadableEnum(): void
+    {
+        self::assertFalse(enum_exists(AutoloadableEnum::class, false));
+
+        self::assertInstanceOf(
+            LocatedSource::class,
+            (new AutoloadSourceLocator($this->astLocator))
+                ->locateIdentifier($this->getMockReflector(), new Identifier(
+                    AutoloadableEnum::class,
+                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+                ))->getLocatedSource(),
+        );
+
+        self::assertFalse(enum_exists(AutoloadableEnum::class, false));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @requires PHP >= 8.1
+     */
+    public function testCanLocateAutoloadedEnum(): void
+    {
+        self::assertTrue(enum_exists(AutoloadableEnum::class));
+
+        self::assertInstanceOf(
+            LocatedSource::class,
+            (new AutoloadSourceLocator($this->astLocator))
+                ->locateIdentifier($this->getMockReflector(), new Identifier(
+                    AutoloadableEnum::class,
                     new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
                 ))->getLocatedSource(),
         );

@@ -6,6 +6,7 @@ parameters:
         - src
 
     bootstrapFiles:
+        - stubs/enum_exists.php
         - stubs/UnitEnum.php
         - stubs/BackedEnum.php
         - stubs/ReflectionIntersectionType.php
