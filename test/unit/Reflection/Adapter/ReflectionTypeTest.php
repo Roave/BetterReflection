@@ -7,9 +7,13 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionIntersectionType as ReflectionIntersectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionUnionType as ReflectionUnionTypeAdapter;
+use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 
 use function array_combine;
 use function array_map;
@@ -75,8 +79,18 @@ class ReflectionTypeTest extends TestCase
         self::assertNull(ReflectionTypeAdapter::fromTypeOrNull(null));
     }
 
-    public function testFromTypeOrNullWithBetterReflectionType(): void
+    public function testFromTypeOrNullWithNamedType(): void
     {
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
+    }
+
+    public function testFromTypeOrNullWithUnionType(): void
+    {
+        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionUnionType::class)));
+    }
+
+    public function testFromTypeOrNullWithIntersectionType(): void
+    {
+        self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionIntersectionType::class)));
     }
 }
