@@ -279,6 +279,21 @@ class ReflectionMethodTest extends TestCase
         self::assertSame(123, $reflectionMethodAdapter->invokeArgs(null, [100, 23]));
     }
 
+    public function testInvokeReturnsNullWhenNoObject(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionMethod
+            ->method('invoke')
+            ->willThrowException(NoObjectProvided::create());
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertNull($reflectionMethodAdapter->invoke(null));
+    }
+
     public function testInvokeArgsReturnsNullWhenNoObject(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
@@ -350,6 +365,22 @@ class ReflectionMethodTest extends TestCase
 
         $this->expectException(CoreReflectionException::class);
         $reflectionMethodAdapter->invokeArgs();
+    }
+
+    public function testSetAccessibleAndInvoke(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('isPublic')
+            ->willReturn(false);
+        $betterReflectionMethod
+            ->method('invoke')
+            ->willReturn(123);
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+        $reflectionMethodAdapter->setAccessible(true);
+
+        self::assertSame(123, $reflectionMethodAdapter->invoke());
     }
 
     public function testGetAttributes(): void

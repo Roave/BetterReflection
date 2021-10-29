@@ -445,6 +445,62 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyIsNotStatic(): void
+    {
+        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionProperty
+            ->method('isStatic')
+            ->willReturn(false);
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getProperty')
+            ->with('foo')
+            ->willReturn($betterReflectionProperty);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionObjectAdapter->getStaticPropertyValue('foo');
+    }
+
+    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyIsNotStatic(): void
+    {
+        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('isPublic')
+            ->willReturn(true);
+        $betterReflectionProperty
+            ->method('isStatic')
+            ->willReturn(false);
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getProperty')
+            ->with('foo')
+            ->willReturn($betterReflectionProperty);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
+    }
+
+    public function testIsIterable(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('isIterateable')
+            ->willReturn(true);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertTrue($reflectionObjectAdapter->isIterable());
+    }
+
     public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
