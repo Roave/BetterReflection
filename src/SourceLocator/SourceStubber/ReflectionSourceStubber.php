@@ -167,7 +167,7 @@ final class ReflectionSourceStubber implements SourceStubber
      */
     private function findConstantData(string $constantName): ?array
     {
-        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $constants */
+        /** @var array<string, array<string, scalar|list<scalar>|resource|null>> $constants */
         $constants = get_defined_constants(true);
 
         foreach ($constants as $constantExtensionName => $extensionConstants) {

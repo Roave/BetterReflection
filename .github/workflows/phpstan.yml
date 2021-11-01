@@ -33,8 +33,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          # No deprecated errors
-          ini-values: memory_limit=-1, error_reporting=24575
+          ini-values: memory_limit=-1
         env:
           update: true
 

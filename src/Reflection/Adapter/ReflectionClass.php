@@ -240,10 +240,7 @@ final class ReflectionClass extends CoreReflectionClass
     {
         $traits = $this->betterReflectionClass->getTraits();
 
-        /**
-         * @psalm-var array<trait-string> $traitNames
-         * @phpstan-var array<class-string> $traitNames
-         */
+        /** @var array<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
@@ -254,7 +251,6 @@ final class ReflectionClass extends CoreReflectionClass
 
     /**
      * @return list<trait-string>
-     * @phpstan-return list<class-string>
      */
     public function getTraitNames(): array
     {

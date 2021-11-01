@@ -242,7 +242,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $constants */
+        /** @var array<string, array<string, scalar|list<scalar>|resource|null>> $constants */
         $constants = get_defined_constants(true);
 
         if (! array_key_exists($constantName, $constants['user'])) {

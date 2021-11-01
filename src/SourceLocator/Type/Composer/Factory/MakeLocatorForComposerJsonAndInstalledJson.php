@@ -62,7 +62,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 
-        /** @psalm-var array{packages: list<array>}|list<array>|null $installedJson */
+        /** @psalm-var array{packages: list<mixed[]>}|list<mixed[]>|null $installedJson */
         $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
         if (! is_array($composer)) {
@@ -126,7 +126,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return array<string, list<string>>
      */
@@ -136,7 +136,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return array<string, list<string>>
      */
@@ -146,7 +146,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return list<string>
      */
@@ -156,7 +156,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return list<string>
      */
