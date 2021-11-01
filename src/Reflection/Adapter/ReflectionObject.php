@@ -236,10 +236,7 @@ final class ReflectionObject extends CoreReflectionObject
     {
         $traits = $this->betterReflectionObject->getTraits();
 
-        /**
-         * @psalm-var list<trait-string> $traitNames
-         * @phpstan-var list<class-string> $traitNames
-         */
+        /** @var list<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
@@ -250,7 +247,6 @@ final class ReflectionObject extends CoreReflectionObject
 
     /**
      * @return list<trait-string>
-     * @phpstan-return list<class-string>
      */
     public function getTraitNames(): array
     {

@@ -54,16 +54,13 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
             return null;
         }
 
+        /** @psalm-var class-string|trait-string $name */
         $name = $identifier->getName();
 
         if (! (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false))) {
             return null; // not an available internal class
         }
 
-        /**
-         * @psalm-var class-string|trait-string $name
-         * @phpstan-var string $name
-         */
         $reflection = new ReflectionClass($name);
         $sourceFile = $reflection->getFileName();
 

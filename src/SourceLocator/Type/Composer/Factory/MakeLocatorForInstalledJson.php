@@ -62,7 +62,7 @@ final class MakeLocatorForInstalledJson
             throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 
-        /** @var array{packages: list<array>}|list<array>|null $installedJson */
+        /** @var array{packages: list<mixed[]>}|list<mixed[]>|null $installedJson */
         $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
 
         if (! is_array($installedJson)) {
@@ -122,7 +122,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return array<string, list<string>>
      */
@@ -132,7 +132,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return array<string, list<string>>
      */
@@ -142,7 +142,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return list<string>
      */
@@ -152,7 +152,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return list<string>
      */
@@ -162,7 +162,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array{name: string, autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package, string $vendorDir): string
     {
@@ -170,8 +170,8 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array<int|string, array<string>>                                                                                                                                        $paths   $paths
-     * @param array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}} $package
+     * @param array<int|string, array<string>>                                                                                                                                            $paths
+     * @param array{name: string, autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
      *
      * @return array<int|string, string|array<string>>
      */
