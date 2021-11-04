@@ -137,7 +137,7 @@ Here's an example of `MakeLocatorForComposerJsonAndInstalledJson` usage:
 <?php
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJsonAndInstalledJson;
@@ -145,7 +145,7 @@ use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForCom
 $astLocator = (new BetterReflection())->astLocator();
 $reflector  = new \Roave\BetterReflection\Reflector\DefaultReflector(new AggregateSourceLocator([
     (new MakeLocatorForComposerJsonAndInstalledJson)('path/to/the/project', $astLocator),
-    new PhpInternalSourceLocator($astLocator)
+    new PhpInternalSourceLocator($astLocator, new ReflectionSourceStubber())
 ]));
 
 $classes = $reflector->reflectAllClasses();
