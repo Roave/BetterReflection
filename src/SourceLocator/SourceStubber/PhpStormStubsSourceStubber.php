@@ -401,7 +401,17 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         }
                     }
 
-                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+                    // We need to traverse children to resolve attributes names for methods, properties etc.
+                    return null;
+                }
+
+                if (
+                    $node instanceof Node\Stmt\ClassMethod
+                    || $node instanceof Node\Stmt\Property
+                    || $node instanceof Node\Stmt\ClassConst
+                    || $node instanceof Node\Stmt\EnumCase
+                ) {
+                    return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
                 }
 
                 if ($node instanceof Node\Stmt\Function_) {
@@ -583,11 +593,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         foreach ($node->attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
-                // The name is sometimes FQN and sometimes not
-                if (
-                    $attributeNode->name->toString() !== 'JetBrains\PhpStorm\Deprecated'
-                    && $attributeNode->name->toString() !== 'Deprecated'
-                ) {
+                if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Deprecated') {
                     continue;
                 }
 
@@ -644,11 +650,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /** @psalm-suppress UndefinedPropertyFetch */
             foreach ($node->attrGroups as $attributesGroupNode) {
                 foreach ($attributesGroupNode->attrs as $attributeNode) {
-                    // The name is sometimes FQN and sometimes not
-                    if (
-                        $attributeNode->name->toString() !== 'JetBrains\PhpStorm\Internal\PhpStormStubsElementAvailable'
-                        && $attributeNode->name->toString() !== 'PhpStormStubsElementAvailable'
-                    ) {
+                    if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Internal\PhpStormStubsElementAvailable') {
                         continue;
                     }
 
