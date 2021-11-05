@@ -1,0 +1,27 @@
+Class [ <user> final class Roave\BetterReflectionTest\Fixture\StringCastPureEnum implements UnitEnum ] {
+  @@ %s/Fixture/StringCastPureEnum.php 5-10
+
+  - Constants [2] {
+    Constant [ public Roave\BetterReflectionTest\Fixture\StringCastPureEnum ENUM_CASE ] { Object }
+    Constant [ public string CONSTANT ] { constant }
+  }
+
+  - Static properties [0] {
+  }
+
+  - Static methods [1] {
+    Method [ <internal:Core, prototype UnitEnum> static public method cases ] {
+
+      - Parameters [0] {
+      }
+      - Return [ array ]
+    }
+  }
+
+  - Properties [1] {
+    Property [ <default> public readonly string $name ]
+  }
+
+  - Methods [0] {
+  }
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use BackedEnum;
 use Bar;
 use Baz;
 use E;
@@ -59,13 +60,16 @@ use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use Roave\BetterReflectionTest\Fixture\MethodsOrder;
+use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StaticProperties;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use stdClass;
 use Stringable;
 use TypeError;
+use UnitEnum;
 
 use function array_keys;
 use function array_map;
@@ -172,6 +176,34 @@ class ReflectionClassTest extends TestCase
         $reflector = new DefaultReflector($this->getComposerLocator());
         $classInfo = $reflector->reflectClass(ExampleClass::class);
         self::assertGreaterThanOrEqual(1, $classInfo->getMethods());
+    }
+
+    public function testGetMethodsForPureEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(PureEnum::class);
+        $methods   = $classInfo->getImmediateMethods();
+
+        self::assertArrayHasKey('cases', $methods);
+    }
+
+    public function testGetMethodsForBackedEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(StringEnum::class);
+        $methods   = $classInfo->getImmediateMethods();
+
+        self::assertArrayHasKey('cases', $methods);
+        self::assertArrayHasKey('from', $methods);
+        self::assertArrayHasKey('tryFrom', $methods);
     }
 
     public function getMethodsWithFilterDataProvider(): array
@@ -392,6 +424,33 @@ class ReflectionClassTest extends TestCase
 
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
         self::assertCount(6, $properties);
+    }
+
+    public function testGetPropertiesForPureEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo  = $reflector->reflectClass(PureEnum::class);
+        $properties = $classInfo->getImmediateProperties();
+
+        self::assertArrayHasKey('name', $properties);
+    }
+
+    public function testGetPropertiesForBackedEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo  = $reflector->reflectClass(StringEnum::class);
+        $properties = $classInfo->getImmediateProperties();
+
+        self::assertArrayHasKey('name', $properties);
+        self::assertArrayHasKey('value', $properties);
     }
 
     public function testGetPropertiesDeclaredWithOneKeyword(): void
@@ -860,6 +919,17 @@ PHP;
         self::assertFalse($classInfo->isFinal());
     }
 
+    public function testIsFinalForEnum(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/Enums.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflectClass(PureEnum::class);
+        self::assertTrue($classInfo->isFinal());
+    }
+
     public function modifierProvider(): array
     {
         return [
@@ -1188,6 +1258,33 @@ PHP;
                 ->getInterfaceNames(),
             'Interfaces are retrieved in the correct numeric order (indexed by number)',
         );
+    }
+
+    public function testGetInterfacesForPureEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(PureEnum::class);
+
+        self::assertSame([UnitEnum::class], $classInfo->getInterfaceNames());
+        self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
+    }
+
+    public function testGetInterfaceNamesForBackedEnum(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classInfo = $reflector->reflectClass(StringEnum::class);
+
+        self::assertSame([UnitEnum::class, BackedEnum::class], $classInfo->getInterfaceNames());
+        self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
+        self::assertArrayHasKey(BackedEnum::class, $classInfo->getImmediateInterfaces());
     }
 
     public function testGetInterfaces(): void

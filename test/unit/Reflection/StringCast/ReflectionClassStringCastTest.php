@@ -10,12 +10,15 @@ use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\StringCastBackedEnum;
 use Roave\BetterReflectionTest\Fixture\StringCastClass;
 use Roave\BetterReflectionTest\Fixture\StringCastClassObject;
+use Roave\BetterReflectionTest\Fixture\StringCastPureEnum;
 
 use function file_get_contents;
 
@@ -45,6 +48,34 @@ class ReflectionClassStringCastTest extends TestCase
 
         self::assertStringMatchesFormat(
             file_get_contents(__DIR__ . '/../../Fixture/StringCastClassExpected.txt'),
+            $classReflection->__toString(),
+        );
+    }
+
+    public function testPureEnumToString(): void
+    {
+        $reflector       = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastPureEnum.php', $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classReflection = $reflector->reflectClass(StringCastPureEnum::class);
+
+        self::assertStringMatchesFormat(
+            file_get_contents(__DIR__ . '/../../Fixture/StringCastPureEnumExpected.txt'),
+            $classReflection->__toString(),
+        );
+    }
+
+    public function testBackedEnumToString(): void
+    {
+        $reflector       = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastBackedEnum.php', $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classReflection = $reflector->reflectClass(StringCastBackedEnum::class);
+
+        self::assertStringMatchesFormat(
+            file_get_contents(__DIR__ . '/../../Fixture/StringCastBackedEnumExpected.txt'),
             $classReflection->__toString(),
         );
     }

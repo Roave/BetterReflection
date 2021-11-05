@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use BackedEnum;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -33,11 +34,13 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 use Stringable;
 use Traversable;
+use UnitEnum;
 
 use function array_combine;
 use function array_filter;
@@ -63,14 +66,6 @@ class ReflectionClass implements Reflection
     public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
     private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
 
-    private Reflector $reflector;
-
-    private ?NamespaceNode $declaringNamespace = null;
-
-    private LocatedSource $locatedSource;
-
-    private ClassNode|InterfaceNode|TraitNode|EnumNode $node;
-
     /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
     private ?array $cachedReflectionConstants = null;
 
@@ -94,8 +89,12 @@ class ReflectionClass implements Reflection
 
     private ?ReflectionClass $cachedParentClass = null;
 
-    private function __construct()
-    {
+    protected function __construct(
+        private Reflector $reflector,
+        private ClassNode|InterfaceNode|TraitNode|EnumNode $node,
+        private LocatedSource $locatedSource,
+        private ?NamespaceNode $declaringNamespace = null,
+    ) {
     }
 
     public function __toString(): string
@@ -142,14 +141,7 @@ class ReflectionClass implements Reflection
         LocatedSource $locatedSource,
         ?NamespaceNode $namespace = null,
     ): self {
-        $class = new self();
-
-        $class->reflector          = $reflector;
-        $class->locatedSource      = $locatedSource;
-        $class->node               = $node;
-        $class->declaringNamespace = $namespace;
-
-        return $class;
+        return new self($reflector, $node, $locatedSource, $namespace);
     }
 
     /**
@@ -259,6 +251,7 @@ class ReflectionClass implements Reflection
         $createMethod = fn (?string $aliasMethodName): ReflectionMethod => ReflectionMethod::createFromNode(
             $this->reflector,
             $methodAst,
+            $this->locatedSource,
             $method->getDeclaringClass()->getDeclaringNamespaceAst(),
             $method->getDeclaringClass(),
             $this,
@@ -446,12 +439,15 @@ class ReflectionClass implements Reflection
             fn (ClassMethod $methodNode): ReflectionMethod => ReflectionMethod::createFromNode(
                 $this->reflector,
                 $methodNode,
+                $this->locatedSource,
                 $this->declaringNamespace,
                 $this,
                 $this,
             ),
             $this->node->getMethods(),
         );
+
+        $methods = $this->addEnumMethods($methods);
 
         $methodsByName = [];
 
@@ -464,6 +460,55 @@ class ReflectionClass implements Reflection
         }
 
         return $methodsByName;
+    }
+
+    /**
+     * @param list<ReflectionMethod> $methods
+     *
+     * @return list<ReflectionMethod>
+     */
+    private function addEnumMethods(array $methods): array
+    {
+        if (! $this->node instanceof EnumNode) {
+            return $methods;
+        }
+
+        $internalLocatedSource = new InternalLocatedSource('', $this->getName(), 'Core');
+        $createMethod          = fn (string $name, array $params, string $returnType): ReflectionMethod => ReflectionMethod::createFromNode(
+            $this->reflector,
+            new ClassMethod(
+                new Node\Identifier($name),
+                [
+                    'flags' => ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_STATIC,
+                    'params' => $params,
+                    'returnType' => $returnType,
+                ],
+            ),
+            $internalLocatedSource,
+            $this->declaringNamespace,
+            $this,
+            $this,
+        );
+
+        $methods[] = $createMethod('cases', [], 'array');
+
+        if ($this->node->scalarType === null) {
+            return $methods;
+        }
+
+        $methods[] = $createMethod(
+            'from',
+            [new Node\Param(new Node\Expr\Variable('value'), null, 'string|int')],
+            'static',
+        );
+
+        $methods[] = $createMethod(
+            'tryFrom',
+            [new Node\Param(new Node\Expr\Variable('value'), null, 'string|int')],
+            '?static',
+        );
+
+        return $methods;
     }
 
     /**
@@ -715,6 +760,8 @@ class ReflectionClass implements Reflection
                 }
             }
 
+            $properties = $this->addEnumProperties($properties);
+
             $this->cachedImmediateProperties = $properties;
         }
 
@@ -726,6 +773,45 @@ class ReflectionClass implements Reflection
             $this->cachedImmediateProperties,
             static fn (ReflectionProperty $property): bool => (bool) ($filter & $property->getModifiers()),
         );
+    }
+
+    /**
+     * @param array<string, ReflectionProperty> $properties
+     *
+     * @return array<string, ReflectionProperty>
+     */
+    private function addEnumProperties(array $properties): array
+    {
+        if (! $this->node instanceof EnumNode) {
+            return $properties;
+        }
+
+        $createProperty = function (string $name): ReflectionProperty {
+            $propertyNode = new Node\Stmt\Property(
+                ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_READONLY,
+                [new Node\Stmt\PropertyProperty($name)],
+                [],
+                'string',
+            );
+
+            return ReflectionProperty::createFromNode(
+                $this->reflector,
+                $propertyNode,
+                0,
+                $this->declaringNamespace,
+                $this,
+                $this,
+                false,
+            );
+        };
+
+        $properties['name'] = $createProperty('name');
+
+        if ($this->node->scalarType !== null) {
+            $properties['value'] = $createProperty('value');
+        }
+
+        return $properties;
     }
 
     /**
@@ -936,6 +1022,10 @@ class ReflectionClass implements Reflection
      */
     public function isFinal(): bool
     {
+        if ($this->node instanceof EnumNode) {
+            return true;
+        }
+
         return $this->node instanceof ClassNode && $this->node->isFinal();
     }
 
@@ -1003,6 +1093,22 @@ class ReflectionClass implements Reflection
                 $interfaces[Stringable::class] = $this->reflectClassForNamedNode(new Node\Name(Stringable::class));
                 break;
             }
+        }
+
+        return $interfaces;
+    }
+
+    /**
+     * @return array<class-string, self>
+     */
+    private function getEnumInterfaces(): array
+    {
+        assert($this->node instanceof EnumNode);
+
+        $interfaces = [UnitEnum::class => $this->reflectClassForNamedNode(new Node\Name(UnitEnum::class))];
+
+        if ($this->node->scalarType !== null) {
+            $interfaces[BackedEnum::class] = $this->reflectClassForNamedNode(new Node\Name(BackedEnum::class));
         }
 
         return $interfaces;
@@ -1202,6 +1308,10 @@ class ReflectionClass implements Reflection
             return [];
         }
 
+        if ($this->node instanceof EnumNode) {
+            return $this->getEnumInterfaces();
+        }
+
         $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
 
         /** @var array<class-string, self> $interfaces */
@@ -1342,6 +1452,10 @@ class ReflectionClass implements Reflection
     private function getCurrentClassImplementedInterfacesIndexedByName(): array
     {
         $node = $this->node;
+
+        if ($node instanceof EnumNode) {
+            return $this->getEnumInterfaces();
+        }
 
         if ($node instanceof ClassNode) {
             $interfaces = array_merge(

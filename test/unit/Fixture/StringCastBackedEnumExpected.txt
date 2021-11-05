@@ -1,0 +1,42 @@
+Class [ <user> final class Roave\BetterReflectionTest\Fixture\StringCastBackedEnum implements UnitEnum, BackedEnum ] {
+  @@ %s/Fixture/StringCastBackedEnum.php 5-10
+
+  - Constants [2] {
+    Constant [ public string ENUM_CASE ] { string }
+    Constant [ public string CONSTANT ] { constant }
+  }
+
+  - Static properties [0] {
+  }
+
+  - Static methods [3] {
+    Method [ <internal:Core, prototype UnitEnum> static public method cases ] {
+
+      - Parameters [0] {
+      }
+      - Return [ array ]
+    }
+    Method [ <internal:Core, prototype BackedEnum> static public method from ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> string|int $value ]
+      }
+      - Return [ static ]
+    }
+    Method [ <internal:Core, prototype BackedEnum> static public method tryFrom ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> string|int $value ]
+      }
+      - Return [ ?static ]
+    }
+  }
+
+  - Properties [2] {
+    Property [ <default> public readonly string $name ]
+    Property [ <default> public readonly string $value ]
+  }
+
+  - Methods [0] {
+  }
+}

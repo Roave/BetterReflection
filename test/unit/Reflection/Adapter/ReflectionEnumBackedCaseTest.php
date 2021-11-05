@@ -6,12 +6,14 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
-use ReflectionClassConstant as CoreReflectionClassConstant;
+use ReflectionEnumBackedCase as CoreReflectionEnumBackedCase;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionEnum as ReflectionEnumAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionEnumBackedCase as ReflectionEnumBackedCaseAdapter;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum as BetterReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
 
 use function array_combine;
@@ -19,13 +21,13 @@ use function array_map;
 use function get_class_methods;
 
 /**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant
+ * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnumBackedCase
  */
-class ReflectionClassConstantTest extends TestCase
+class ReflectionEnumBackedCaseTest extends TestCase
 {
     public function coreReflectionMethodNamesProvider(): array
     {
-        $methods = get_class_methods(CoreReflectionClassConstant::class);
+        $methods = get_class_methods(CoreReflectionEnumBackedCase::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
@@ -35,26 +37,22 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testCoreReflectionMethods(string $methodName): void
     {
-        $reflectionClassConstantAdapterReflection = new CoreReflectionClass(ReflectionClassConstantAdapter::class);
+        $reflectionEnumBackedCaseAdapterReflection = new CoreReflectionClass(ReflectionEnumBackedCaseAdapter::class);
 
-        self::assertTrue($reflectionClassConstantAdapterReflection->hasMethod($methodName));
-        self::assertSame(ReflectionClassConstantAdapter::class, $reflectionClassConstantAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
+        self::assertTrue($reflectionEnumBackedCaseAdapterReflection->hasMethod($methodName));
+        self::assertSame(ReflectionEnumBackedCaseAdapter::class, $reflectionEnumBackedCaseAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
     public function methodExpectationProvider(): array
     {
         return [
+            // Inherited
             ['__toString', null, '', []],
             ['getName', null, '', []],
-            ['getValue', null, null, []],
-            ['isPublic', null, true, []],
-            ['isPrivate', null, true, []],
-            ['isProtected', null, true, []],
-            ['getModifiers', null, 123, []],
+            ['getValue', NotImplemented::class, null, []],
             ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
             ['getDocComment', null, '', []],
             ['getAttributes', null, [], []],
-            ['isFinal', null, true, []],
         ];
     }
 
@@ -65,7 +63,7 @@ class ReflectionClassConstantTest extends TestCase
      */
     public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
+        $reflectionStub = $this->createMock(BetterReflectionEnumCase::class);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())
@@ -78,41 +76,40 @@ class ReflectionClassConstantTest extends TestCase
             $this->expectException($expectedException);
         }
 
-        $adapter = new ReflectionClassConstantAdapter($reflectionStub);
+        $adapter = new ReflectionEnumBackedCaseAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
     }
 
-    public function dataAdapterMethodsForEnumCase(): array
+    public function testIsPublic(): void
     {
-        return [
-            ['isPublic', true],
-            ['isProtected', false],
-            ['isPrivate', false],
-            ['getModifiers', 1],
-            ['isFinal', true],
-        ];
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+
+        self::assertTrue($reflectionEnumBackedCaseAdapter->isPublic());
     }
 
-    /**
-     * @dataProvider dataAdapterMethodsForEnumCase
-     */
-    public function testAdapterMethodsForEnumCase(string $methodName, mixed $expectedValue): void
+    public function testIsProtected(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
 
-        self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
+        self::assertFalse($reflectionEnumBackedCaseAdapter->isProtected());
     }
 
-    public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
+    public function testIsPrivate(): void
     {
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
-        $betterReflectionClassConstant
-            ->method('getDocComment')
-            ->willReturn('');
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
 
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+        self::assertFalse($reflectionEnumBackedCaseAdapter->isPrivate());
+    }
 
-        self::assertFalse($reflectionClassConstantAdapter->getDocComment());
+    public function testGetModifiers(): void
+    {
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+
+        self::assertSame(ReflectionEnumBackedCaseAdapter::IS_PUBLIC, $reflectionEnumBackedCaseAdapter->getModifiers());
     }
 
     public function testGetAttributes(): void
@@ -128,13 +125,13 @@ class ReflectionClassConstantTest extends TestCase
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
-        $betterReflectionClassConstant
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
             ->method('getAttributes')
             ->willReturn($betterReflectionAttributes);
 
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
-        $attributes                     = $reflectionClassConstantAdapter->getAttributes();
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+        $attributes                      = $reflectionEnumBackedCaseAdapter->getAttributes();
 
         self::assertCount(2, $attributes);
         self::assertSame('SomeAttribute', $attributes[0]->getName());
@@ -154,17 +151,17 @@ class ReflectionClassConstantTest extends TestCase
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
-        $betterReflectionClassConstant = $this->getMockBuilder(BetterReflectionClassConstant::class)
+        $betterReflectionEnumCase = $this->getMockBuilder(BetterReflectionEnumCase::class)
             ->disableOriginalConstructor()
             ->setMethods(['getAttributes'])
             ->getMock();
 
-        $betterReflectionClassConstant
+        $betterReflectionEnumCase
             ->method('getAttributes')
             ->willReturn($betterReflectionAttributes);
 
-        $reflectionClassAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
-        $attributes             = $reflectionClassAdapter->getAttributes('SomeAttribute');
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+        $attributes                      = $reflectionEnumBackedCaseAdapter->getAttributes('SomeAttribute');
 
         self::assertCount(1, $attributes);
         self::assertSame('SomeAttribute', $attributes[0]->getName());
@@ -248,37 +245,61 @@ class ReflectionClassConstantTest extends TestCase
             $betterReflectionAttribute3,
         ];
 
-        $betterReflectionClassConstant = $this->getMockBuilder(BetterReflectionClassConstant::class)
+        $betterReflectionEnumCase = $this->getMockBuilder(BetterReflectionEnumCase::class)
             ->disableOriginalConstructor()
             ->setMethods(['getAttributes'])
             ->getMock();
 
-        $betterReflectionClassConstant
+        $betterReflectionEnumCase
             ->method('getAttributes')
             ->willReturn($betterReflectionAttributes);
 
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
 
-        self::assertCount(1, $reflectionClassConstantAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(1, $reflectionEnumBackedCaseAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionEnumBackedCaseAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionEnumBackedCaseAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
 
-    public function dataIsEnumCase(): array
+    public function testIsFinal(): void
     {
-        return [
-            [$this->createMock(BetterReflectionClassConstant::class), false],
-            [$this->createMock(BetterReflectionEnumCase::class), true],
-        ];
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+
+        self::assertTrue($reflectionEnumBackedCaseAdapter->isFinal());
     }
 
-    /**
-     * @dataProvider dataIsEnumCase
-     */
-    public function testIsEnumCase(BetterReflectionClassConstant|BetterReflectionEnumCase $classConstantOrEnum, bool $isEnumCase): void
+    public function testIsEnumCase(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($classConstantOrEnum);
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
 
-        self::assertSame($isEnumCase, $reflectionClassConstantAdapter->isEnumCase());
+        self::assertTrue($reflectionEnumBackedCaseAdapter->isEnumCase());
+    }
+
+    public function testGetEnum(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getDeclaringEnum')
+            ->willReturn($betterReflectionEnum);
+
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+
+        self::assertInstanceOf(ReflectionEnumAdapter::class, $reflectionEnumBackedCaseAdapter->getEnum());
+    }
+
+    public function testGetBackingType(): void
+    {
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getValue')
+            ->willReturn(123);
+
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+
+        self::assertSame(123, $reflectionEnumBackedCaseAdapter->getBackingValue());
     }
 }

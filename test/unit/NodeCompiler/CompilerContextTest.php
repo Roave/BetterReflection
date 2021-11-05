@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -101,6 +102,35 @@ PHP;
         self::assertNull($context->getFileName());
         self::assertSame('Foo', $context->getNamespace());
         self::assertSame($class, $context->getClass());
+        self::assertNull($context->getFunction());
+    }
+
+    public function testCreatingContextFromEnumCase(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+
+namespace Foo;
+
+enum Boo
+{
+    case BAZ;
+}
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $enum      = $reflector->reflectClass('Foo\Boo');
+
+        self::assertInstanceOf(ReflectionEnum::class, $enum);
+
+        $enumCase = $enum->getCase('BAZ');
+
+        $context = new CompilerContext($reflector, $enumCase);
+
+        self::assertSame($reflector, $context->getReflector());
+        self::assertNull($context->getFileName());
+        self::assertSame('Foo', $context->getNamespace());
+        self::assertSame($enum, $context->getClass());
         self::assertNull($context->getFunction());
     }
 

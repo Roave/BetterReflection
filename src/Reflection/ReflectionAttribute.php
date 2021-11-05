@@ -16,7 +16,7 @@ class ReflectionAttribute
     public function __construct(
         private Reflector $reflector,
         private Node\Attribute $node,
-        private ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionProperty|ReflectionParameter $owner,
+        private ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner,
         private bool $isRepeated,
     ) {
     }
@@ -57,6 +57,7 @@ class ReflectionAttribute
             $this->owner instanceof ReflectionMethod => Attribute::TARGET_METHOD,
             $this->owner instanceof ReflectionProperty => Attribute::TARGET_PROPERTY,
             $this->owner instanceof ReflectionClassConstant => Attribute::TARGET_CLASS_CONSTANT,
+            $this->owner instanceof ReflectionEnumCase => Attribute::TARGET_CLASS_CONSTANT,
             $this->owner instanceof ReflectionParameter => Attribute::TARGET_PARAMETER,
         };
     }

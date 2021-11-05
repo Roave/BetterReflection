@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\NodeCompiler;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnumCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -21,7 +22,7 @@ class CompilerContext
 {
     public function __construct(
         private Reflector $reflector,
-        private ReflectionClass|ReflectionProperty|ReflectionClassConstant|ReflectionMethod|ReflectionFunction|ReflectionParameter|ReflectionConstant $contextReflection,
+        private ReflectionClass|ReflectionProperty|ReflectionClassConstant|ReflectionEnumCase|ReflectionMethod|ReflectionFunction|ReflectionParameter|ReflectionConstant $contextReflection,
     ) {
     }
 
@@ -63,6 +64,10 @@ class CompilerContext
         }
 
         if ($this->contextReflection instanceof ReflectionClassConstant) {
+            return $this->contextReflection->getDeclaringClass();
+        }
+
+        if ($this->contextReflection instanceof ReflectionEnumCase) {
             return $this->contextReflection->getDeclaringClass();
         }
 
