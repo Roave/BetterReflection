@@ -95,7 +95,7 @@ class ReflectionEnum extends ReflectionClass
             throw new LogicException('This enum does not have a backing type available');
         }
 
-        $backingType = ReflectionNamedType::createFromNode($this->node->scalarType);
+        $backingType = ReflectionNamedType::createFromNode($this->reflector, $this, $this->node->scalarType);
         assert($backingType instanceof ReflectionNamedType);
 
         return $backingType;

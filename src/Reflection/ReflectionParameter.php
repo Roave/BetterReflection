@@ -330,7 +330,7 @@ class ReflectionParameter
 
         $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
 
-        return ReflectionType::createFromNode($type, $allowsNull);
+        return ReflectionType::createFromNode($this->reflector, $this, $type, $allowsNull);
     }
 
     /**
@@ -464,17 +464,6 @@ class ReflectionParameter
      */
     public function getClass(): ?ReflectionClass
     {
-        $className = $this->getClassName();
-
-        if ($className === null) {
-            return null;
-        }
-
-        return $this->reflector->reflectClass($className);
-    }
-
-    private function getClassName(): ?string
-    {
         $type = $this->getType();
 
         if ($type === null) {
@@ -487,43 +476,25 @@ class ReflectionParameter
 
         if ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $innerType) {
-                $innerTypeClassName = $this->getClassNameFromNamedType($innerType);
-                if ($innerTypeClassName !== null) {
-                    return $innerTypeClassName;
+                $innerTypeClass = $this->getClassFromNamedType($innerType);
+                if ($innerTypeClass !== null) {
+                    return $innerTypeClass;
                 }
             }
 
             return null;
         }
 
-        return $this->getClassNameFromNamedType($type);
+        return $this->getClassFromNamedType($type);
     }
 
-    private function getClassNameFromNamedType(ReflectionNamedType $namedType): ?string
+    private function getClassFromNamedType(ReflectionNamedType $namedType): ?ReflectionClass
     {
-        $typeHint = $namedType->getName();
-
-        if ($typeHint === 'self') {
-            $declaringClass = $this->getDeclaringClass();
-            assert($declaringClass instanceof ReflectionClass);
-
-            return $declaringClass->getName();
-        }
-
-        if ($typeHint === 'parent') {
-            $declaringClass = $this->getDeclaringClass();
-            assert($declaringClass instanceof ReflectionClass);
-            $parentClass = $declaringClass->getParentClass();
-            assert($parentClass instanceof ReflectionClass);
-
-            return $parentClass->getName();
-        }
-
-        if ($namedType->isBuiltin()) {
+        try {
+            return $namedType->getClass();
+        } catch (LogicException) {
             return null;
         }
-
-        return $typeHint;
     }
 
     /**

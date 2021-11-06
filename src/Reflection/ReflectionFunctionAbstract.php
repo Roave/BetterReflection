@@ -396,7 +396,9 @@ abstract class ReflectionFunctionAbstract
             return null;
         }
 
-        return ReflectionType::createFromNode($returnType);
+        assert($this instanceof ReflectionMethod || $this instanceof ReflectionFunction);
+
+        return ReflectionType::createFromNode($this->reflector, $this, $returnType);
     }
 
     /**

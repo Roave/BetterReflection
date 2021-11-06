@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node\IntersectionType;
+use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_filter;
 use function array_map;
@@ -15,11 +16,16 @@ class ReflectionIntersectionType extends ReflectionType
     /** @var list<ReflectionNamedType> */
     private array $types;
 
-    public function __construct(IntersectionType $type, bool $allowsNull)
-    {
-        parent::__construct($allowsNull);
+    public function __construct(
+        Reflector $reflector,
+        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        IntersectionType $type,
+        bool $allowsNull,
+    ) {
+        parent::__construct($reflector, $owner, $allowsNull);
+
         $this->types = array_filter(
-            array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($type), $type->types),
+            array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($reflector, $owner, $type), $type->types),
             static fn (ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type): bool => $type instanceof ReflectionNamedType,
         );
     }

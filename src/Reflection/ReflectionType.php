@@ -9,18 +9,26 @@ use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\UnionType;
+use Roave\BetterReflection\Reflector\Reflector;
 
 abstract class ReflectionType
 {
-    protected function __construct(private bool $allowsNull)
-    {
+    protected function __construct(
+        protected Reflector $reflector,
+        protected ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        private bool $allowsNull,
+    ) {
     }
 
     /**
      * @internal
      */
-    public static function createFromNode(Identifier|Name|NullableType|UnionType|IntersectionType $type, bool $forceAllowsNull = false): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType
-    {
+    public static function createFromNode(
+        Reflector $reflector,
+        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        Identifier|Name|NullableType|UnionType|IntersectionType $type,
+        bool $forceAllowsNull = false,
+    ): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType {
         $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
             $type       = $type->type;
@@ -28,14 +36,14 @@ abstract class ReflectionType
         }
 
         if ($type instanceof Identifier || $type instanceof Name) {
-            return new ReflectionNamedType($type, $allowsNull);
+            return new ReflectionNamedType($reflector, $owner, $type, $allowsNull);
         }
 
         if ($type instanceof IntersectionType) {
-            return new ReflectionIntersectionType($type, $allowsNull);
+            return new ReflectionIntersectionType($reflector, $owner, $type, $allowsNull);
         }
 
-        return new ReflectionUnionType($type, $allowsNull);
+        return new ReflectionUnionType($reflector, $owner, $type, $allowsNull);
     }
 
     /**
