@@ -73,7 +73,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $this->phpParser                = $betterReflection->phpParser();
         $this->astLocator               = $betterReflection->astLocator();
-        $this->sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser);
+        $this->sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 80100);
         $this->phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
         $this->reflector                = new DefaultReflector($this->phpInternalSourceLocator);
     }
@@ -339,7 +339,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
         if (
             in_array($functionName, [
                 'strtr',
-                'array_intersect',
                 'array_intersect_key',
                 'array_intersect_ukey',
                 'array_intersect_assoc',
@@ -347,7 +346,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 'array_uintersect_assoc',
                 'array_intersect_uassoc',
                 'array_uintersect_uassoc',
-                'array_diff',
                 'array_diff_key',
                 'array_diff_ukey',
                 'array_diff_assoc',
@@ -811,6 +809,30 @@ class PhpStormStubsSourceStubberTest extends TestCase
         } else {
             self::assertNull($stub, $functionName);
         }
+    }
+
+    public function testFunctionWithDifferentParameterInPhpVersion74(): void
+    {
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 70400);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
+        $reflector                = new DefaultReflector($phpInternalSourceLocator);
+
+        $function  = $reflector->reflectFunction('bcscale');
+        $parameter = $function->getParameter('scale');
+
+        self::assertFalse($parameter->allowsNull());
+    }
+
+    public function testFunctionWithDifferentParameterInPhpVersion80(): void
+    {
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 80000);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
+        $reflector                = new DefaultReflector($phpInternalSourceLocator);
+
+        $function  = $reflector->reflectFunction('bcscale');
+        $parameter = $function->getParameter('scale');
+
+        self::assertTrue($parameter->allowsNull());
     }
 
     public function dataConstantInPhpVersion(): array

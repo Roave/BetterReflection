@@ -35,6 +35,7 @@ use function is_dir;
 use function is_string;
 use function preg_match;
 use function preg_replace;
+use function property_exists;
 use function sprintf;
 use function str_replace;
 use function strtolower;
@@ -326,15 +327,18 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         /**
          * @psalm-suppress UndefinedMethod
          */
-        foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNode) {
+        foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNodes) {
             assert(is_string($functionName));
-            assert($functionNode instanceof Node\Stmt\Function_);
 
-            if (! $this->isSupportedInPhpVersion($functionNode, $isCoreExtension)) {
-                continue;
+            foreach ($functionNodes as $functionNode) {
+                assert($functionNode instanceof Node\Stmt\Function_);
+
+                if (! $this->isSupportedInPhpVersion($functionNode, $isCoreExtension)) {
+                    continue;
+                }
+
+                $this->functionNodes[strtolower($functionName)] = $functionNode;
             }
-
-            $this->functionNodes[strtolower($functionName)] = $functionNode;
         }
 
         /**
@@ -378,7 +382,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             /** @var array<string, Node\Stmt\ClassLike> */
             private array $classNodes = [];
 
-            /** @var array<string, Node\Stmt\Function_> */
+            /** @var array<string, list<Node\Stmt\Function_>> */
             private array $functionNodes = [];
 
             /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
@@ -397,12 +401,22 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         }
                     }
 
-                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+                    // We need to traverse children to resolve attributes names for methods, properties etc.
+                    return null;
+                }
+
+                if (
+                    $node instanceof Node\Stmt\ClassMethod
+                    || $node instanceof Node\Stmt\Property
+                    || $node instanceof Node\Stmt\ClassConst
+                    || $node instanceof Node\Stmt\EnumCase
+                ) {
+                    return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
                 }
 
                 if ($node instanceof Node\Stmt\Function_) {
-                    $nodeName                       = $node->namespacedName->toString();
-                    $this->functionNodes[$nodeName] = $node;
+                    $nodeName                         = $node->namespacedName->toString();
+                    $this->functionNodes[$nodeName][] = $node;
 
                     return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                 }
@@ -465,7 +479,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
 
             /**
-             * @return array<string, Node\Stmt\Function_>
+             * @return array<string, list<Node\Stmt\Function_>>
              */
             public function getFunctionNodes(): array
             {
@@ -579,11 +593,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         foreach ($node->attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
-                // The name is sometimes FQN and sometimes not
-                if (
-                    $attributeNode->name->toString() !== 'JetBrains\PhpStorm\Deprecated'
-                    && $attributeNode->name->toString() !== 'Deprecated'
-                ) {
+                if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Deprecated') {
                     continue;
                 }
 
@@ -618,23 +628,52 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
 
         $docComment = $node->getDocComment();
-        if ($docComment === null) {
-            return true;
-        }
+        if ($docComment !== null) {
+            if (preg_match('~@since\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $sinceMatches) === 1) {
+                $sincePhpVersion = $this->parsePhpVersion($sinceMatches[1]);
 
-        if (preg_match('~@since\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $sinceMatches) === 1) {
-            $sincePhpVersion = $this->parsePhpVersion($sinceMatches[1]);
+                if ($sincePhpVersion > $this->phpVersion) {
+                    return false;
+                }
+            }
 
-            if ($sincePhpVersion > $this->phpVersion) {
-                return false;
+            if (preg_match('~@removed\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $removedMatches) === 1) {
+                $removedPhpVersion = $this->parsePhpVersion($removedMatches[1]);
+
+                if ($removedPhpVersion <= $this->phpVersion) {
+                    return false;
+                }
             }
         }
 
-        if (preg_match('~@removed\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $removedMatches) === 1) {
-            $removedPhpVersion = $this->parsePhpVersion($removedMatches[1]);
+        if (property_exists($node, 'attrGroups')) {
+            /** @psalm-suppress UndefinedPropertyFetch */
+            foreach ($node->attrGroups as $attributesGroupNode) {
+                foreach ($attributesGroupNode->attrs as $attributeNode) {
+                    if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Internal\PhpStormStubsElementAvailable') {
+                        continue;
+                    }
 
-            if ($removedPhpVersion <= $this->phpVersion) {
-                return false;
+                    foreach ($attributeNode->args as $attributeArg) {
+                        if ($attributeArg->name === null || $attributeArg->name->toString() === 'from') {
+                            assert($attributeArg->value instanceof Node\Scalar\String_);
+
+                            if ($this->parsePhpVersion($attributeArg->value->value) > $this->phpVersion) {
+                                return false;
+                            }
+                        }
+
+                        if ($attributeArg->name?->toString() !== 'to') {
+                            continue;
+                        }
+
+                        assert($attributeArg->value instanceof Node\Scalar\String_);
+
+                        if ($this->parsePhpVersion($attributeArg->value->value) < $this->phpVersion) {
+                            return false;
+                        }
+                    }
+                }
             }
         }
 
