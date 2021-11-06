@@ -30,6 +30,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
     private ReflectionClass $implementingClass;
 
+    private ReflectionClass $currentClass;
+
     private MethodNode $methodNode;
 
     private ?string $aliasName;
@@ -46,11 +48,13 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         ?Namespace_ $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
+        ReflectionClass $currentClass,
         ?string $aliasName = null,
     ): self {
         $method                    = new self($reflector, $node, $locatedSource, $namespace);
         $method->declaringClass    = $declaringClass;
         $method->implementingClass = $implementingClass;
+        $method->currentClass      = $currentClass;
         $method->methodNode        = $node;
         $method->aliasName         = $aliasName;
 
@@ -250,9 +254,20 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return $this->declaringClass;
     }
 
+    /**
+     * Get the class that implemented the method based on trait use.
+     */
     public function getImplementingClass(): ReflectionClass
     {
         return $this->implementingClass;
+    }
+
+    /**
+     * Get the current reflected class.
+     */
+    public function getCurrentClass(): ReflectionClass
+    {
+        return $this->currentClass;
     }
 
     /**

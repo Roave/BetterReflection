@@ -332,18 +332,18 @@ class ReflectionMethodTest extends TestCase
         self::assertStringMatchesFormat("Method [ <user> public method publicMethod ] {\n  @@ %s/test/unit/Fixture/Methods.php 15 - 17\n}", (string) $classInfo->getMethod('publicMethod'));
     }
 
-    public function testGetDeclaringAndImplementingClassWithMethodFromTrait(): void
+    public function testGetDeclaringAndImplementingAndCurrentClassWithMethodFromTrait(): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
-        $classReflection  = $reflector->reflectClass(ClassWithMethodsAndTraitMethods::class);
+        $classReflection  = $reflector->reflectClass(ExtendedClassWithMethodsAndTraitMethods::class);
         $methodReflection = $classReflection->getMethod('methodFromTrait');
 
         self::assertSame(TraitWithMethod::class, $methodReflection->getDeclaringClass()->getName());
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
-        self::assertNotSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+        self::assertSame(ExtendedClassWithMethodsAndTraitMethods::class, $methodReflection->getCurrentClass()->getName());
     }
 
-    public function testGetDeclaringAndImplementingClassWithMethodFromClass(): void
+    public function testGetDeclaringAndImplementingAndCurrentClassWithMethodFromClass(): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $reflector->reflectClass(ClassWithMethodsAndTraitMethods::class);
@@ -351,10 +351,12 @@ class ReflectionMethodTest extends TestCase
 
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getCurrentClass()->getName());
         self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+        self::assertSame($methodReflection->getImplementingClass(), $methodReflection->getCurrentClass());
     }
 
-    public function testGetDeclaringAndImplementingClassWithMethodFromParentClass(): void
+    public function testGetDeclaringAndImplementingAndCurrentClassWithPrivateMethodFromParentClass(): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassWithMethodsAndTraitMethods.php', $this->astLocator));
         $classReflection  = $reflector->reflectClass(ExtendedClassWithMethodsAndTraitMethods::class)->getParentClass();
@@ -362,7 +364,9 @@ class ReflectionMethodTest extends TestCase
 
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getDeclaringClass()->getName());
         self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getImplementingClass()->getName());
+        self::assertSame(ClassWithMethodsAndTraitMethods::class, $methodReflection->getCurrentClass()->getName());
         self::assertSame($methodReflection->getDeclaringClass(), $methodReflection->getImplementingClass());
+        self::assertSame($methodReflection->getImplementingClass(), $methodReflection->getCurrentClass());
     }
 
     public function testGetExtensionName(): void

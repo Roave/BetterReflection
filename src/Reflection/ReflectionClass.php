@@ -255,6 +255,7 @@ class ReflectionClass implements Reflection
             $method->getDeclaringClass()->getDeclaringNamespaceAst(),
             $method->getDeclaringClass(),
             $this,
+            $this,
             $aliasMethodName,
         );
 
@@ -282,7 +283,25 @@ class ReflectionClass implements Reflection
         return array_merge(
             [],
             ...array_map(
-                static fn (ReflectionClass $ancestor): array => $ancestor->getMethods(),
+                function (ReflectionClass $ancestor): array {
+                    return array_map(
+                        function (ReflectionMethod $method): ReflectionMethod {
+                            $methodAst = $method->getAst();
+                            assert($methodAst instanceof ClassMethod);
+
+                            return ReflectionMethod::createFromNode(
+                                $this->reflector,
+                                $methodAst,
+                                $this->locatedSource,
+                                $method->getDeclaringClass()->getDeclaringNamespaceAst(),
+                                $method->getDeclaringClass(),
+                                $method->getImplementingClass(),
+                                $this,
+                            );
+                        },
+                        $ancestor->getMethods(),
+                    );
+                },
                 array_filter([$this->getParentClass()]),
             ),
         );
@@ -443,6 +462,7 @@ class ReflectionClass implements Reflection
                 $this->declaringNamespace,
                 $this,
                 $this,
+                $this,
             ),
             $this->node->getMethods(),
         );
@@ -486,6 +506,7 @@ class ReflectionClass implements Reflection
             ),
             $internalLocatedSource,
             $this->declaringNamespace,
+            $this,
             $this,
             $this,
         );
