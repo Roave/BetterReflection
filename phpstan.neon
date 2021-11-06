@@ -5,19 +5,6 @@ parameters:
     paths:
         - src
 
-    bootstrapFiles:
-        - stubs/enum_exists.php
-        - stubs/UnitEnum.php
-        - stubs/BackedEnum.php
-        - stubs/ReflectionEnum.php
-        - stubs/ReflectionEnumUnitCase.php
-        - stubs/ReflectionEnumBackedCase.php
-        - stubs/ReflectionIntersectionType.php
-
-    # Needs new PHPStan version with newer stubs
-    excludePaths:
-        - src/Reflection/Adapter/ReflectionAttribute.php
-
     ignoreErrors:
         -
             message: '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
@@ -35,8 +22,3 @@ parameters:
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
             path: %currentWorkingDirectory%/src/SourceLocator/Type/AutoloadSourceLocator.php
-        # https://github.com/nikic/PHP-Parser/pull/808
-        -
-            message: "#^Property PhpParser\\\\Node\\\\Expr\\\\ArrowFunction\\:\\:\\$expr \\(PhpParser\\\\Node\\\\Expr\\) does not accept null\\.$#"
-            count: 1
-            path: %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php
