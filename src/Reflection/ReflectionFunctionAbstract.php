@@ -551,14 +551,11 @@ abstract class ReflectionFunctionAbstract
         $stmts     = $validator(...$nodes);
 
         if ($this->node instanceof Node\Expr\ArrowFunction) {
-            if ($nodes === []) {
-                /** @psalm-suppress PossiblyNullPropertyAssignmentValue https://github.com/nikic/PHP-Parser/pull/808 */
-                $this->node->expr = null;
-            } elseif (isset($nodes[0]->expr)) {
-                $this->node->expr = $nodes[0]->expr;
-            } else {
+            if (! isset($nodes[0]->expr)) {
                 throw InvalidArrowFunctionBodyNode::create($nodes[0]);
             }
+
+            $this->node->expr = $nodes[0]->expr;
 
             return;
         }

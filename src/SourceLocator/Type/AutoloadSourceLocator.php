@@ -29,7 +29,6 @@ use function array_reverse;
 use function assert;
 use function class_exists;
 use function defined;
-use function enum_exists;
 use function file_get_contents;
 use function function_exists;
 use function get_defined_constants;
@@ -159,7 +158,9 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             class_exists($className, false)
             || interface_exists($className, false)
             || trait_exists($className, false)
-            || (function_exists('enum_exists') && enum_exists($className, false))
+            /** phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName */
+            || (function_exists('enum_exists') && \enum_exists($className, false))
+            /** phpcs:enable */
         ) {
             /** @psalm-suppress ArgumentTypeCoercion */
             $classReflection = new ReflectionClass($className);
