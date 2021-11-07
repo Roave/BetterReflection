@@ -20,8 +20,14 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
 use function function_exists;
 
-class ReflectionFunction extends ReflectionFunctionAbstract implements Reflection
+class ReflectionFunction implements Reflection
 {
+    use ReflectionFunctionAbstract;
+
+    public const CLOSURE_NAME = '{closure}';
+
+    private Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $functionNode;
+
     /**
      * @throws IdentifierNotFound
      */
@@ -53,11 +59,27 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflectio
      */
     public static function createFromNode(
         Reflector $reflector,
-        Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
+        Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null,
     ): self {
-        return new self($reflector, $node, $locatedSource, $namespaceNode);
+        $function               = new self($reflector, $node, $locatedSource, $namespaceNode);
+        $function->functionNode = $node;
+
+        return $function;
+    }
+
+    /**
+     * Get the "short" name of the function (e.g. for A\B\foo, this will return
+     * "foo").
+     */
+    public function getShortName(): string
+    {
+        if ($this->functionNode instanceof Node\Expr\Closure || $this->functionNode instanceof Node\Expr\ArrowFunction) {
+            return self::CLOSURE_NAME;
+        }
+
+        return $this->functionNode->name->name;
     }
 
     /**

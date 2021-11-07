@@ -37,7 +37,7 @@ class ReflectionParameter
 
     private ?Namespace_ $declaringNamespace;
 
-    private ReflectionFunctionAbstract $function;
+    private ReflectionMethod|ReflectionFunction $function;
 
     private int $parameterIndex;
 
@@ -137,7 +137,7 @@ class ReflectionParameter
         Reflector $reflector,
         ParamNode $node,
         ?Namespace_ $declaringNamespace,
-        ReflectionFunctionAbstract $function,
+        ReflectionMethod|ReflectionFunction $function,
         int $parameterIndex,
     ): self {
         $param                     = new self();
@@ -182,7 +182,7 @@ class ReflectionParameter
     /**
      * Get the function (or method) that declared this parameter.
      */
-    public function getDeclaringFunction(): ReflectionFunctionAbstract
+    public function getDeclaringFunction(): ReflectionMethod|ReflectionFunction
     {
         return $this->function;
     }

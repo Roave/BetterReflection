@@ -40,13 +40,11 @@ use function is_array;
 use function is_string;
 use function strtolower;
 
-abstract class ReflectionFunctionAbstract
+trait ReflectionFunctionAbstract
 {
-    public const CLOSURE_NAME = '{closure}';
-
     private static ?Parser $parser;
 
-    protected function __construct(
+    private function __construct(
         private Reflector $reflector,
         private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
@@ -91,28 +89,11 @@ abstract class ReflectionFunctionAbstract
     }
 
     /**
-     * Get the "short" name of the function (e.g. for A\B\foo, this will return
-     * "foo").
-     */
-    public function getShortName(): string
-    {
-        if ($this->node instanceof Node\Expr\Closure || $this->node instanceof Node\Expr\ArrowFunction) {
-            return self::CLOSURE_NAME;
-        }
-
-        return $this->node->name->name;
-    }
-
-    /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
      * return "A\B").
      */
     public function getNamespaceName(): string
     {
-        if (! $this->inNamespace()) {
-            return '';
-        }
-
         return $this->declaringNamespace?->name?->toString() ?? '';
     }
 
@@ -395,8 +376,6 @@ abstract class ReflectionFunctionAbstract
             return null;
         }
 
-        assert($this instanceof ReflectionMethod || $this instanceof ReflectionFunction);
-
         return ReflectionType::createFromNode($this->reflector, $this, $returnType);
     }
 
@@ -512,12 +491,11 @@ abstract class ReflectionFunctionAbstract
     {
         $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
             $this->reflector,
-            new Identifier(self::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
+            new Identifier(ReflectionFunction::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
         );
-        assert($closureReflection instanceof self);
-        assert($closureReflection->node instanceof Node\Expr\Closure || $closureReflection->node instanceof Node\Expr\ArrowFunction);
+        assert($closureReflection instanceof ReflectionFunction);
 
-        $this->setBodyFromAst($closureReflection->node->getStmts());
+        $this->setBodyFromAst($closureReflection->getAst()->getStmts());
     }
 
     /**
