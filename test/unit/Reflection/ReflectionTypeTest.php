@@ -7,9 +7,9 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Generator;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\NullableType;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
@@ -18,27 +18,29 @@ use Roave\BetterReflection\Reflector\Reflector;
  */
 class ReflectionTypeTest extends TestCase
 {
-    private Reflector|MockObject $reflector;
+    private Reflector $reflector;
+    private ReflectionParameter $owner;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->reflector = $this->createMock(Reflector::class);
+        $this->owner     = $this->createMock(ReflectionParameter::class);
     }
 
     public function testCreateFromNode(): void
     {
-        $typeInfo = ReflectionType::createFromNode(new Identifier('string'));
+        $typeInfo = $this->createType('string');
         self::assertInstanceOf(ReflectionType::class, $typeInfo);
     }
 
     public function testAllowsNull(): void
     {
-        $noNullType = ReflectionType::createFromNode(new Identifier('string'));
+        $noNullType = $this->createType('string');
         self::assertFalse($noNullType->allowsNull());
 
-        $allowsNullType = ReflectionType::createFromNode(new NullableType(new Identifier('string')));
+        $allowsNullType = ReflectionType::createFromNode($this->reflector, $this->owner, new NullableType(new Identifier('string')));
         self::assertTrue($allowsNullType->allowsNull());
     }
 
@@ -58,7 +60,7 @@ class ReflectionTypeTest extends TestCase
      */
     public function testIsBuiltin(string $type): void
     {
-        $reflectionType = ReflectionType::createFromNode(new Identifier($type));
+        $reflectionType = $this->createType($type);
 
         self::assertInstanceOf(ReflectionNamedType::class, $reflectionType);
         self::assertTrue($reflectionType->isBuiltin());
@@ -75,7 +77,7 @@ class ReflectionTypeTest extends TestCase
      */
     public function testIsNotBuiltin(string $type): void
     {
-        $reflectionType = ReflectionType::createFromNode(new Identifier($type));
+        $reflectionType = $this->createType($type);
 
         self::assertInstanceOf(ReflectionNamedType::class, $reflectionType);
         self::assertFalse($reflectionType->isBuiltin());
@@ -83,19 +85,24 @@ class ReflectionTypeTest extends TestCase
 
     public function testImplicitCastToString(): void
     {
-        self::assertSame('int', (string) ReflectionType::createFromNode(new Identifier('int')));
-        self::assertSame('string', (string) ReflectionType::createFromNode(new Identifier('string')));
-        self::assertSame('array', (string) ReflectionType::createFromNode(new Identifier('array')));
-        self::assertSame('callable', (string) ReflectionType::createFromNode(new Identifier('callable')));
-        self::assertSame('bool', (string) ReflectionType::createFromNode(new Identifier('bool')));
-        self::assertSame('float', (string) ReflectionType::createFromNode(new Identifier('float')));
-        self::assertSame('void', (string) ReflectionType::createFromNode(new Identifier('void')));
-        self::assertSame('object', (string) ReflectionType::createFromNode(new Identifier('object')));
-        self::assertSame('iterable', (string) ReflectionType::createFromNode(new Identifier('iterable')));
-        self::assertSame('mixed', (string) ReflectionType::createFromNode(new Identifier('mixed')));
-        self::assertSame('never', (string) ReflectionType::createFromNode(new Identifier('never')));
+        self::assertSame('int', (string) $this->createType('int'));
+        self::assertSame('string', (string) $this->createType('string'));
+        self::assertSame('array', (string) $this->createType('array'));
+        self::assertSame('callable', (string) $this->createType('callable'));
+        self::assertSame('bool', (string) $this->createType('bool'));
+        self::assertSame('float', (string) $this->createType('float'));
+        self::assertSame('void', (string) $this->createType('void'));
+        self::assertSame('object', (string) $this->createType('object'));
+        self::assertSame('iterable', (string) $this->createType('iterable'));
+        self::assertSame('mixed', (string) $this->createType('mixed'));
+        self::assertSame('never', (string) $this->createType('never'));
 
-        self::assertSame('Foo\Bar\Baz', (string) ReflectionType::createFromNode(new Identifier('Foo\Bar\Baz')));
-        self::assertSame('\Foo\Bar\Baz', (string) ReflectionType::createFromNode(new Identifier('\Foo\Bar\Baz')));
+        self::assertSame('Foo\Bar\Baz', (string) $this->createType('Foo\Bar\Baz'));
+        self::assertSame('\Foo\Bar\Baz', (string) $this->createType('\Foo\Bar\Baz'));
+    }
+
+    private function createType(string $type): ReflectionType
+    {
+        return ReflectionType::createFromNode($this->reflector, $this->owner, new Identifier($type));
     }
 }

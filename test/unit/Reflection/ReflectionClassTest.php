@@ -1024,11 +1024,13 @@ PHP;
                 'foo',
                 'AbstractClassImplementingMethodFromTrait',
                 'AbstractClassImplementingMethodFromTrait',
+                'ClassUsingTraitWithAbstractMethod',
             ],
             [
                 ClassUsingTraitWithAbstractMethod::class,
                 'bar',
                 'TraitWithAbstractMethod',
+                'ClassUsingTraitWithAbstractMethod',
                 'ClassUsingTraitWithAbstractMethod',
             ],
             [
@@ -1036,17 +1038,20 @@ PHP;
                 'boo',
                 'TraitWithBoo',
                 'ClassExtendingNonAbstractClass',
+                'ClassExtendingNonAbstractClass',
             ],
             [
                 ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract::class,
                 'bar',
                 'ImplementationTrait',
                 'ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract',
+                'ClassUsesTwoTraitsWithSameMethodNameOneIsAbstract',
             ],
             [
                 ClassUsesAndRenamesMethodFromTrait::class,
                 'abstractMethod',
                 'TraitWithNonAbstractMethod',
+                'ClassUsesAndRenamesMethodFromTrait',
                 'ClassUsesAndRenamesMethodFromTrait',
             ],
         ];
@@ -1060,6 +1065,7 @@ PHP;
         string $methodName,
         string $declaringClassShortName,
         string $implementingClassShortName,
+        string $currentClassShortName,
     ): void {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/TraitWithAbstractMethod.php',
@@ -1074,6 +1080,7 @@ PHP;
 
         self::assertSame($declaringClassShortName, $fooMethodInfo->getDeclaringClass()->getShortName());
         self::assertSame($implementingClassShortName, $fooMethodInfo->getImplementingClass()->getShortName());
+        self::assertSame($currentClassShortName, $fooMethodInfo->getCurrentClass()->getShortName());
     }
 
     public function testGetTraitsReturnsEmptyArrayWhenNoTraitsUsed(): void

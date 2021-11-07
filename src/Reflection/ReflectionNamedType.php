@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use LogicException;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
+use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_key_exists;
+use function assert;
+use function sprintf;
 use function strtolower;
 
 class ReflectionNamedType extends ReflectionType
@@ -32,9 +36,13 @@ class ReflectionNamedType extends ReflectionType
 
     private string $name;
 
-    public function __construct(Identifier|Name $type, bool $allowsNull)
-    {
-        parent::__construct($allowsNull);
+    public function __construct(
+        Reflector $reflector,
+        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        Identifier|Name $type,
+        bool $allowsNull,
+    ) {
+        parent::__construct($reflector, $owner, $allowsNull);
 
         $this->name = $type->toString();
     }
@@ -52,6 +60,48 @@ class ReflectionNamedType extends ReflectionType
     public function isBuiltin(): bool
     {
         return array_key_exists(strtolower($this->name), self::BUILT_IN_TYPES);
+    }
+
+    public function getClass(): ReflectionClass
+    {
+        if (! $this->isBuiltin()) {
+            return $this->reflector->reflectClass($this->name);
+        }
+
+        if (
+            $this->owner instanceof ReflectionEnum
+            || $this->owner instanceof ReflectionFunction
+            || ($this->owner instanceof ReflectionParameter && $this->owner->getDeclaringFunction() instanceof ReflectionFunction)
+        ) {
+            throw new LogicException(sprintf('The type %s cannot be resolved to class', $this->name));
+        }
+
+        if (strtolower($this->name) === 'self') {
+            return $this->owner->getDeclaringClass();
+        }
+
+        if (strtolower($this->name) === 'parent') {
+            $class = $this->owner->getDeclaringClass();
+            assert($class instanceof ReflectionClass);
+            $parentClass = $class->getParentClass();
+            assert($parentClass instanceof ReflectionClass);
+
+            return $parentClass;
+        }
+
+        if (
+            ! $this->owner instanceof ReflectionProperty
+            && strtolower($this->name) === 'static'
+        ) {
+            $method = $this->owner instanceof ReflectionMethod
+                ? $this->owner
+                : $this->owner->getDeclaringFunction();
+            assert($method instanceof ReflectionMethod);
+
+            return $method->getCurrentClass();
+        }
+
+        throw new LogicException(sprintf('The type %s cannot be resolved to class', $this->name));
     }
 
     public function __toString(): string
