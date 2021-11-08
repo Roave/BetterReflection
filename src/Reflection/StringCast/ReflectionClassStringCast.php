@@ -67,13 +67,13 @@ final class ReflectionClassStringCast
             count($staticProperties),
             self::propertiesToString($staticProperties),
             count($staticMethods),
-            self::methodsToString($classReflection, $staticMethods),
+            self::methodsToString($staticMethods),
             count($defaultProperties),
             self::propertiesToString($defaultProperties),
             $isObject ? count($dynamicProperties) : '',
             $isObject ? self::propertiesToString($dynamicProperties) : '',
             count($methods),
-            self::methodsToString($classReflection, $methods, 2),
+            self::methodsToString($methods, 2),
         );
     }
 
@@ -161,13 +161,13 @@ final class ReflectionClassStringCast
     /**
      * @param array<ReflectionMethod> $methods
      */
-    private static function methodsToString(ReflectionClass $classReflection, array $methods, int $emptyLinesAmongItems = 1): string
+    private static function methodsToString(array $methods, int $emptyLinesAmongItems = 1): string
     {
         if (! $methods) {
             return '';
         }
 
-        return self::itemsToString(array_map(static fn (ReflectionMethod $method): string => ReflectionMethodStringCast::toString($method, $classReflection), $methods), $emptyLinesAmongItems);
+        return self::itemsToString(array_map(static fn (ReflectionMethod $method): string => ReflectionMethodStringCast::toString($method), $methods), $emptyLinesAmongItems);
     }
 
     /**
