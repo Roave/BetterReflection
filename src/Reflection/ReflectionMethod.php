@@ -17,8 +17,8 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Webmozart\Assert\Assert;
 
+use function assert;
 use function class_exists;
 use function sprintf;
 use function strtolower;
@@ -330,7 +330,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         /** @psalm-suppress InvalidStringClass */
         $closure = Closure::bind(fn (string $implementingClassName, string $methodName, array $methodArgs) => $implementingClassName::{$methodName}(...$methodArgs), null, $implementingClassName);
 
-        Assert::notFalse($closure);
+        assert($closure instanceof Closure);
 
         return $closure->__invoke($implementingClassName, $this->getName(), $args);
     }
@@ -342,7 +342,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     {
         $closure = Closure::bind(fn ($object, string $methodName, array $methodArgs) => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
 
-        Assert::notFalse($closure);
+        assert($closure instanceof Closure);
 
         return $closure->__invoke($object, $this->getName(), $args);
     }
