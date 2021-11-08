@@ -466,6 +466,9 @@ PHP;
         self::assertSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testSetAndGetValueOfStaticProperty(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
