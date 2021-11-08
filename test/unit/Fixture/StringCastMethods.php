@@ -12,6 +12,10 @@ abstract class StringCastMethodsParent
     public function overwrittenMethod()
     {
     }
+
+    public function inheritedMethod()
+    {
+    }
 }
 
 abstract class StringCastMethods extends StringCastMethodsParent implements StringCastMethodsInterface

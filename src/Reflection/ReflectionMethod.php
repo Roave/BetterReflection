@@ -174,7 +174,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
 
     public function __toString(): string
     {
-        return ReflectionMethodStringCast::toString($this);
+        return ReflectionMethodStringCast::toString($this, $this->getCurrentClass());
     }
 
     public function inNamespace(): bool

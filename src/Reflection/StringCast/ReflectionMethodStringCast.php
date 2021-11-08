@@ -18,7 +18,7 @@ use function sprintf;
  */
 final class ReflectionMethodStringCast
 {
-    public static function toString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection = null): string
+    public static function toString(ReflectionMethod $methodReflection, ReflectionClass $rootClassReflection): string
     {
         $parametersFormat = $methodReflection->getNumberOfParameters() > 0 || $methodReflection->hasReturnType()
             ? "\n\n  - Parameters [%d] {%s\n  }"
@@ -72,12 +72,8 @@ final class ReflectionMethodStringCast
         return sprintf(', overwrites %s', $parentClass->getName());
     }
 
-    private static function inheritsToString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection): string
+    private static function inheritsToString(ReflectionMethod $methodReflection, ReflectionClass $rootClassReflection): string
     {
-        if (! $rootClassReflection) {
-            return '';
-        }
-
         if ($methodReflection->getDeclaringClass()->getName() === $rootClassReflection->getName()) {
             return '';
         }
