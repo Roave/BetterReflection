@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use Foo;
+use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param;
@@ -137,6 +138,12 @@ class ReflectionParameterTest extends TestCase
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('a', $parameterInfo->getName());
+    }
+
+    public function testCreateFromSpecWithInvalidSpecThrowsException(): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        ReflectionParameter::createFromSpec([], 'index');
     }
 
     /**
