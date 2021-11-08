@@ -40,7 +40,7 @@ abstract class ReflectionType
         }
 
         if ($type instanceof IntersectionType) {
-            return new ReflectionIntersectionType($reflector, $owner, $type, $allowsNull);
+            return new ReflectionIntersectionType($reflector, $owner, $type);
         }
 
         return new ReflectionUnionType($reflector, $owner, $type, $allowsNull);
