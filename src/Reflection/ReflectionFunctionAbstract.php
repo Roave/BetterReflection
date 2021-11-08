@@ -75,6 +75,10 @@ trait ReflectionFunctionAbstract
         }
     }
 
+    abstract public function __toString(): string;
+
+    abstract public function getShortName(): string;
+
     /**
      * Get the "full" name of the function (e.g. for A\B\foo, this will return
      * "A\B\foo").
