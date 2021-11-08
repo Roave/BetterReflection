@@ -4,7 +4,7 @@ namespace Roave\BetterReflectionTest\Fixture;
 
 class StaticPropertyGetSet
 {
-    public static $baz;
+    public static $baz = 'bazbaz';
     protected static $bat;
     private static $qux;
 }

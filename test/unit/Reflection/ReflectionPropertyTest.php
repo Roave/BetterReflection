@@ -513,6 +513,9 @@ PHP;
         self::assertSame('value', $propertyReflection->getValue());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testSetValueOfStaticPropertyWithValueAsSecondParameter(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
