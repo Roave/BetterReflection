@@ -31,6 +31,7 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use Roave\BetterReflectionTest\Fixture\Attr;
 use stdClass;
 use TypeError;
 
@@ -155,6 +156,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertFalse($function->isInternal());
         self::assertTrue($function->isUserDefined());
+        self::assertNull($function->getExtensionName());
     }
 
     public function variadicProvider(): array
@@ -513,6 +515,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $methodInfo = $classInfo->getMethod('getName');
 
         self::assertTrue($methodInfo->hasTentativeReturnType());
+        self::assertFalse($methodInfo->hasReturnType());
     }
 
     public function testHasNotTentativeReturnType(): void
@@ -522,6 +525,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ))->reflectFunction('returnsString');
 
         self::assertFalse($functionInfo->hasTentativeReturnType());
+        self::assertTrue($functionInfo->hasReturnType());
     }
 
     /**
@@ -536,6 +540,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertNotNull($returnType);
         self::assertSame('string', $returnType->__toString());
+        self::assertNull($methodInfo->getReturnType());
     }
 
     public function testNoTentativeReturnType(): void
@@ -545,6 +550,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ))->reflectFunction('returnsString');
 
         self::assertNull($functionInfo->getTentativeReturnType());
+        self::assertNotNull($functionInfo->getReturnType());
     }
 
     public function testCannotClone(): void
@@ -829,5 +835,32 @@ PHP;
                   */',
             ],
         ];
+    }
+
+    public function testGetAttributesWithAttributes(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\functionWithAttributes');
+        $attributes         = $functionReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+    }
+
+    public function testGetAttributesByName(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\functionWithAttributes');
+        $attributes         = $functionReflection->getAttributesByName(Attr::class);
+
+        self::assertCount(1, $attributes);
+    }
+
+    public function testGetAttributesByInstance(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\functionWithAttributes');
+        $attributes         = $functionReflection->getAttributesByInstance(Attr::class);
+
+        self::assertCount(2, $attributes);
     }
 }
