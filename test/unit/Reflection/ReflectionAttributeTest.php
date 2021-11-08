@@ -188,4 +188,12 @@ class ReflectionAttributeTest extends TestCase
         self::assertNotEmpty($attributes);
         self::assertSame(Attribute::TARGET_FUNCTION, $attributes[0]->getTarget());
     }
+
+    public function testToString(): void
+    {
+        $classReflection     = $this->reflector->reflectClass(ClassWithAttributes::class);
+        $attributeReflection = $classReflection->getAttributes()[0];
+
+        self::assertSame("Attribute [ Roave\BetterReflectionTest\Fixture\Attr ]\n", (string) $attributeReflection);
+    }
 }
