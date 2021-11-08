@@ -60,7 +60,7 @@ final class ReflectionMethodStringCast
     {
         $parentClass = $methodReflection->getDeclaringClass()->getParentClass();
 
-        if (! $parentClass) {
+        if ($parentClass === null) {
             return '';
         }
 

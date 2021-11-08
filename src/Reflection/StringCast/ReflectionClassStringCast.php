@@ -103,7 +103,7 @@ final class ReflectionClassStringCast
     {
         $parentClass = $classReflection->getParentClass();
 
-        if (! $parentClass) {
+        if ($parentClass === null) {
             return '';
         }
 
@@ -114,7 +114,7 @@ final class ReflectionClassStringCast
     {
         $interfaceNames = $classReflection->getInterfaceNames();
 
-        if (! $interfaceNames) {
+        if ($interfaceNames === []) {
             return '';
         }
 
@@ -151,7 +151,7 @@ final class ReflectionClassStringCast
      */
     private static function propertiesToString(array $properties): string
     {
-        if (! $properties) {
+        if ($properties === []) {
             return '';
         }
 
@@ -163,7 +163,7 @@ final class ReflectionClassStringCast
      */
     private static function methodsToString(array $methods, int $emptyLinesAmongItems = 1): string
     {
-        if (! $methods) {
+        if ($methods === []) {
             return '';
         }
 
