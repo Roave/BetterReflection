@@ -27,6 +27,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -571,6 +572,16 @@ PHP;
         $detectedFilename = $classInfo->getFileName();
 
         self::assertSame('ExampleClass.php', basename($detectedFilename));
+    }
+
+    public function testGetLocatedSource(): void
+    {
+        $node          = new Class_('SomeClass');
+        $locatedSource = new LocatedSource('<?php class SomeClass {}', 'SomeClass');
+        $reflector     = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
+        $reflection    = ReflectionClass::createFromNode($reflector, $node, $locatedSource);
+
+        self::assertSame($locatedSource, $reflection->getLocatedSource());
     }
 
     public function testStaticCreation(): void
@@ -1690,6 +1701,7 @@ PHP;
         ));
 
         $traitReflection = $reflector->reflectClass('TraitFixtureTraitA');
+        self::assertSame([], $traitReflection->getImmediateInterfaces());
         self::assertSame([], $traitReflection->getInterfaces());
     }
 
@@ -1730,6 +1742,17 @@ PHP;
         self::assertSame($expectedStaticProperties, $classInfo->getStaticProperties());
     }
 
+    public function testGetStaticPropertyValue(): void
+    {
+        $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixtureFile;
+
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator($staticPropertyGetSetFixtureFile, $this->astLocator)))
+            ->reflectClass(StaticPropertyGetSet::class);
+
+        self::assertSame('bazbaz', $classInfo->getStaticPropertyValue('baz'));
+    }
+
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
     {
         $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
@@ -1740,6 +1763,24 @@ PHP;
 
         $this->expectException(PropertyDoesNotExist::class);
         $classInfo->getStaticPropertyValue('foo');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSetStaticPropertyValue(): void
+    {
+        $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
+        require_once $staticPropertyGetSetFixtureFile;
+
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator($staticPropertyGetSetFixtureFile, $this->astLocator)))
+            ->reflectClass(StaticPropertyGetSet::class);
+
+        self::assertNull($classInfo->getStaticPropertyValue('qux'));
+
+        $classInfo->setStaticPropertyValue('qux', 'quxqux');
+
+        self::assertSame('quxqux', $classInfo->getStaticPropertyValue('qux'));
     }
 
     public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
@@ -1808,10 +1849,10 @@ PHP;
         $reflection = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
 
         self::assertTrue($reflection->hasMethod('bar'));
-
-        $reflection->removeMethod('bar');
+        self::assertTrue($reflection->removeMethod('bar'));
 
         self::assertFalse($reflection->hasMethod('bar'));
+        self::assertFalse($reflection->removeMethod('bar'));
     }
 
     public function testAddMethod(): void
@@ -1841,10 +1882,9 @@ PHP;
         $reflection = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
 
         self::assertTrue($reflection->hasProperty('bar'));
-
-        $reflection->removeProperty('bar');
-
+        self::assertTrue($reflection->removeProperty('bar'));
         self::assertFalse($reflection->hasProperty('bar'));
+        self::assertFalse($reflection->removeProperty('bar'));
     }
 
     public function testAddProperty(): void

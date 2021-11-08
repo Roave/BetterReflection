@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
-use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 
@@ -18,7 +17,7 @@ use function sprintf;
  */
 final class ReflectionMethodStringCast
 {
-    public static function toString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection = null): string
+    public static function toString(ReflectionMethod $methodReflection): string
     {
         $parametersFormat = $methodReflection->getNumberOfParameters() > 0 || $methodReflection->hasReturnType()
             ? "\n\n  - Parameters [%d] {%s\n  }"
@@ -34,7 +33,7 @@ final class ReflectionMethodStringCast
             $methodReflection->isConstructor() ? ', ctor' : '',
             $methodReflection->isDestructor() ? ', dtor' : '',
             self::overwritesToString($methodReflection),
-            self::inheritsToString($methodReflection, $rootClassReflection),
+            self::inheritsToString($methodReflection),
             self::prototypeToString($methodReflection),
             $methodReflection->isFinal() ? ' final' : '',
             $methodReflection->isStatic() ? ' static' : '',
@@ -61,7 +60,7 @@ final class ReflectionMethodStringCast
     {
         $parentClass = $methodReflection->getDeclaringClass()->getParentClass();
 
-        if (! $parentClass) {
+        if ($parentClass === null) {
             return '';
         }
 
@@ -72,13 +71,9 @@ final class ReflectionMethodStringCast
         return sprintf(', overwrites %s', $parentClass->getName());
     }
 
-    private static function inheritsToString(ReflectionMethod $methodReflection, ?ReflectionClass $rootClassReflection): string
+    private static function inheritsToString(ReflectionMethod $methodReflection): string
     {
-        if (! $rootClassReflection) {
-            return '';
-        }
-
-        if ($methodReflection->getDeclaringClass()->getName() === $rootClassReflection->getName()) {
+        if ($methodReflection->getDeclaringClass() === $methodReflection->getCurrentClass()) {
             return '';
         }
 

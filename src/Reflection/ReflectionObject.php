@@ -85,15 +85,11 @@ class ReflectionObject extends ReflectionClass
                 continue;
             }
 
-            $reflectionProperty = $this->reflectionClass->getProperty($property->getName());
-
             $runtimeProperty = ReflectionProperty::createFromNode(
                 $this->reflector,
                 $this->createPropertyNodeFromReflection($property, $this->object),
                 0,
-                $reflectionProperty
-                    ? $reflectionProperty->getDeclaringClass()->getDeclaringNamespaceAst()
-                    : null,
+                $this->reflectionClass->getDeclaringNamespaceAst(),
                 $this,
                 $this,
                 false,

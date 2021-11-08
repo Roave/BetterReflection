@@ -90,15 +90,10 @@ class ReflectionNamedType extends ReflectionType
         }
 
         if (
-            ! $this->owner instanceof ReflectionProperty
+            $this->owner instanceof ReflectionMethod
             && strtolower($this->name) === 'static'
         ) {
-            $method = $this->owner instanceof ReflectionMethod
-                ? $this->owner
-                : $this->owner->getDeclaringFunction();
-            assert($method instanceof ReflectionMethod);
-
-            return $method->getCurrentClass();
+            return $this->owner->getCurrentClass();
         }
 
         throw new LogicException(sprintf('The type %s cannot be resolved to class', $this->name));

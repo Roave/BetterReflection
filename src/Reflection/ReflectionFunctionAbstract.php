@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Closure;
-use LogicException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -581,11 +580,10 @@ abstract class ReflectionFunctionAbstract
         $lowerName = strtolower($parameterName);
 
         foreach ($this->node->params as $key => $paramNode) {
-            if ($paramNode->var instanceof Node\Expr\Error) {
-                throw new LogicException('PhpParser left an "Error" node in the parameters AST, this should NOT happen');
-            }
+            $varNode = $paramNode->var;
+            assert($varNode instanceof Node\Expr\Variable);
 
-            if (! is_string($paramNode->var->name) || strtolower($paramNode->var->name) !== $lowerName) {
+            if (! is_string($varNode->name) || strtolower($varNode->name) !== $lowerName) {
                 continue;
             }
 

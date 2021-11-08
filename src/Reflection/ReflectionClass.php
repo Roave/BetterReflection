@@ -1671,8 +1671,8 @@ class ReflectionClass implements Reflection
     public function removeMethod(string $methodName): bool
     {
         $lowerName = strtolower($methodName);
-        foreach ($this->node->stmts as $key => $stmt) {
-            if ($stmt instanceof ClassMethod && $lowerName === $stmt->name->toLowerString()) {
+        foreach ($this->node->getMethods() as $key => $stmt) {
+            if ($lowerName === $stmt->name->toLowerString()) {
                 unset($this->node->stmts[$key]);
                 $this->cachedMethods = null;
 
@@ -1731,11 +1731,7 @@ class ReflectionClass implements Reflection
     {
         $lowerName = strtolower($propertyName);
 
-        foreach ($this->node->stmts as $key => $stmt) {
-            if (! ($stmt instanceof PropertyNode)) {
-                continue;
-            }
-
+        foreach ($this->node->getProperties() as $key => $stmt) {
             $propertyNames = array_map(static fn (Node\Stmt\PropertyProperty $propertyProperty): string => $propertyProperty->name->toLowerString(), $stmt->props);
 
             if (in_array($lowerName, $propertyNames, true)) {

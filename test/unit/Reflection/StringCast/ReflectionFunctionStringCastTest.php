@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\StringCast;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
@@ -44,5 +45,13 @@ class ReflectionFunctionStringCastTest extends TestCase
         $functionReflection = $reflector->reflectFunction($functionName);
 
         self::assertStringMatchesFormat($expectedString, (string) $functionReflection);
+    }
+
+    public function testToStringForInternal(): void
+    {
+        $reflector          = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, (BetterReflectionSingleton::instance()->sourceStubber())));
+        $functionReflection = $reflector->reflectFunction('phpversion');
+
+        self::assertStringMatchesFormat("Function [ <internal:standard> function phpversion ] {\n\n  - Parameters [1] {\n    Parameter #0 [ <required> ?string \$extension ]\n  }\n  - Return [ string|false ]\n}", (string) $functionReflection);
     }
 }
