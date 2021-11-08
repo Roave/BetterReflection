@@ -66,6 +66,19 @@ class ReflectionConstantTest extends TestCase
         self::assertSame('FOO', $reflection->getShortName());
     }
 
+    public function testNameMethodsWithNamespaceByDefine(): void
+    {
+        $php = '<?php define("A\B\FOO", 1);';
+
+        $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $reflection = $reflector->reflectConstant('A\B\FOO');
+
+        self::assertTrue($reflection->inNamespace());
+        self::assertSame('A\B\FOO', $reflection->getName());
+        self::assertSame('A\B', $reflection->getNamespaceName());
+        self::assertSame('FOO', $reflection->getShortName());
+    }
+
     public function testNameMethodsInNamespace(): void
     {
         $php = '<?php namespace A\B { const FOO = 1; }';
@@ -121,6 +134,8 @@ class ReflectionConstantTest extends TestCase
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $reflection = $reflector->reflectConstant('FOO');
 
+        self::assertSame(1, $reflection->getValue());
+        // Because of code coverage - should use optimization
         self::assertSame(1, $reflection->getValue());
     }
 
