@@ -248,4 +248,13 @@ class ReflectionEnumCaseTest extends TestCase
 
         self::assertCount(2, $attributes);
     }
+
+    public function testToString(): void
+    {
+        $enumReflection = $this->reflector->reflectClass(PureEnum::class);
+
+        self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
+
+        self::assertSame("Constant [ public Roave\BetterReflectionTest\Fixture\PureEnum ONE ] { Object }\n", (string) $enumReflection->getCase('ONE'));
+    }
 }
