@@ -42,6 +42,7 @@ use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethodToUse;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
+use TraitFixtureC;
 use TraitWithMethod;
 
 use function basename;
@@ -208,6 +209,18 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('someMethod', $methodInfo->getName());
         self::assertSame('', $methodInfo->getNamespaceName());
         self::assertSame('someMethod', $methodInfo->getShortName());
+    }
+
+    public function testMethodNameWithTraitAlias(): void
+    {
+        $reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/TraitFixture.php', $this->astLocator));
+        $classInfo  = $reflector->reflectClass(TraitFixtureC::class);
+        $methodInfo = $classInfo->getMethod('b_renamed');
+
+        self::assertFalse($methodInfo->inNamespace());
+        self::assertSame('b_renamed', $methodInfo->getName());
+        self::assertSame('', $methodInfo->getNamespaceName());
+        self::assertSame('b_renamed', $methodInfo->getShortName());
     }
 
     public function testGetDocBlockReturnTypes(): void
