@@ -194,6 +194,11 @@ class ReflectionMethod
         return '';
     }
 
+    public function isClosure(): bool
+    {
+        return false;
+    }
+
     /**
      * Is the method abstract.
      */
