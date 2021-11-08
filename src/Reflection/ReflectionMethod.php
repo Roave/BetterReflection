@@ -86,6 +86,11 @@ class ReflectionMethod
         return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
     }
 
+    public function getAst(): MethodNode
+    {
+        return $this->methodNode;
+    }
+
     public function getShortName(): string
     {
         if ($this->aliasName !== null) {

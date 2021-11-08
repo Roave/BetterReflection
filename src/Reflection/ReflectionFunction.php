@@ -69,6 +69,11 @@ class ReflectionFunction implements Reflection
         return $function;
     }
 
+    public function getAst(): Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction
+    {
+        return $this->functionNode;
+    }
+
     /**
      * Get the "short" name of the function (e.g. for A\B\foo, this will return
      * "foo").

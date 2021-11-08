@@ -239,7 +239,6 @@ class ReflectionClass implements Reflection
         $traitModifiers   = $this->getTraitModifiers();
 
         $methodAst = $method->getAst();
-        assert($methodAst instanceof ClassMethod);
 
         $methodHash = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
 
@@ -284,20 +283,15 @@ class ReflectionClass implements Reflection
             ...array_map(
                 function (ReflectionClass $ancestor): array {
                     return array_map(
-                        function (ReflectionMethod $method): ReflectionMethod {
-                            $methodAst = $method->getAst();
-                            assert($methodAst instanceof ClassMethod);
-
-                            return ReflectionMethod::createFromNode(
-                                $this->reflector,
-                                $methodAst,
-                                $this->locatedSource,
-                                $method->getDeclaringClass()->getDeclaringNamespaceAst(),
-                                $method->getDeclaringClass(),
-                                $method->getImplementingClass(),
-                                $this,
-                            );
-                        },
+                        fn (ReflectionMethod $method): ReflectionMethod => ReflectionMethod::createFromNode(
+                            $this->reflector,
+                            $method->getAst(),
+                            $this->locatedSource,
+                            $method->getDeclaringClass()->getDeclaringNamespaceAst(),
+                            $method->getDeclaringClass(),
+                            $method->getImplementingClass(),
+                            $this,
+                        ),
                         $ancestor->getMethods(),
                     );
                 },

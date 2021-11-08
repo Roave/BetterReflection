@@ -177,7 +177,7 @@ trait ReflectionFunctionAbstract
 
     public function setDocCommentFromString(string $string): void
     {
-        $this->getAst()->setDocComment(new Doc($string));
+        $this->node->setDocComment(new Doc($string));
     }
 
     public function getFileName(): ?string
@@ -446,10 +446,7 @@ trait ReflectionFunctionAbstract
     /**
      * Fetch the AST for this method or function.
      */
-    public function getAst(): Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction
-    {
-        return $this->node;
-    }
+    abstract public function getAst(): Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction;
 
     /**
      * @return list<ReflectionAttribute>
