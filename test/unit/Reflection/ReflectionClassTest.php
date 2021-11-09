@@ -1557,7 +1557,9 @@ PHP;
         self::assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\C::class));
         self::assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\D::class));
         self::assertTrue($subExampleClass->implementsInterface(E::class));
+        self::assertTrue($subExampleClass->implementsInterface('\E'));
         self::assertFalse($subExampleClass->implementsInterface(Iterator::class));
+        self::assertFalse($subExampleClass->implementsInterface('\Iterator'));
     }
 
     public function testIsInstantiable(): void
