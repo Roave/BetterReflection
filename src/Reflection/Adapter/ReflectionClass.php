@@ -251,14 +251,10 @@ final class ReflectionClass extends CoreReflectionClass
      */
     public function getInterfaces(): array
     {
-        $interfaces = $this->betterReflectionClass->getInterfaces();
-
-        $wrappedInterfaces = [];
-        foreach ($interfaces as $key => $interface) {
-            $wrappedInterfaces[$key] = new self($interface);
-        }
-
-        return $wrappedInterfaces;
+        return array_map(
+            static fn (BetterReflectionClass $interface): self => new self($interface),
+            $this->betterReflectionClass->getInterfaces(),
+        );
     }
 
     /**
