@@ -8,6 +8,10 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionFunction as ReflectionFunctionAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -19,6 +23,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use function array_combine;
 use function array_map;
 use function get_class_methods;
+use function is_array;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter
@@ -53,31 +58,33 @@ class ReflectionParameterTest extends TestCase
 
         $mockType = $this->createMock(BetterReflectionNamedType::class);
 
+        $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
+
         return [
-            ['__toString', null, '', []],
-            ['getName', null, '', []],
-            ['isPassedByReference', null, true, []],
-            ['canBePassedByValue', null, true, []],
-            ['getDeclaringFunction', null, $mockFunction, []],
-            ['getDeclaringFunction', null, $mockMethod, []],
-            ['getDeclaringClass', null, null, []],
-            ['getDeclaringClass', null, $mockClassLike, []],
-            ['getClass', null, null, []],
-            ['getClass', null, $mockClassLike, []],
-            ['isArray', null, true, []],
-            ['isCallable', null, true, []],
-            ['allowsNull', null, true, []],
-            ['getPosition', null, 123, []],
-            ['isOptional', null, true, []],
-            ['isVariadic', null, true, []],
-            ['isDefaultValueAvailable', null, true, []],
-            ['getDefaultValue', null, true, []],
-            ['isDefaultValueConstant', null, true, []],
-            ['getDefaultValueConstantName', null, 'foo', []],
-            ['hasType', null, true, []],
-            ['getType', null, $mockType, []],
-            ['isPromoted', null, true, []],
-            ['getAttributes', null, [], []],
+            ['__toString', [], 'string', null, 'string', null],
+            ['getName', [], 'name', null, 'name', null],
+            ['isPassedByReference', [], true, null, true, null],
+            ['canBePassedByValue', [], true, null, true, null],
+            ['getDeclaringFunction', [], $mockFunction, null, null, ReflectionFunctionAdapter::class],
+            ['getDeclaringFunction', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
+            ['getDeclaringClass', [], null, null, null, null],
+            ['getDeclaringClass', [], $mockClassLike, null, null, ReflectionClassAdapter::class],
+            ['getClass', [], null, null, null, null],
+            ['getClass', [], $mockClassLike, null, null, ReflectionClassAdapter::class],
+            ['isArray', [], true, null, true, null],
+            ['isCallable', [], true, null, true, null],
+            ['allowsNull', [], true, null, true, null],
+            ['getPosition', [], 123, null, 123, null],
+            ['isOptional', [], true, null, true, null],
+            ['isVariadic', [], true, null, true, null],
+            ['isDefaultValueAvailable', [], true, null, true, null],
+            ['getDefaultValue', [], true, null, true, null],
+            ['isDefaultValueConstant', [], true, null, true, null],
+            ['getDefaultValueConstantName', [], 'foo', null, 'foo', null],
+            ['hasType', [], true, null, true, null],
+            ['getType', [], $mockType, null, null, ReflectionNamedTypeAdapter::class],
+            ['isPromoted', [], true, null, true, null],
+            ['getAttributes', [], [$mockAttribute], null, null, ReflectionAttributeAdapter::class],
         ];
     }
 
@@ -86,23 +93,45 @@ class ReflectionParameterTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
-    {
+    public function testAdapterMethods(
+        string $methodName,
+        array $args,
+        mixed $returnValue,
+        ?string $expectedException,
+        mixed $expectedReturnValue,
+        ?string $expectedReturnValueInstance,
+    ): void {
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
-                ->will($this->returnValue($returnValue));
+                ->willReturn($returnValue);
         }
+
+        $adapter = new ReflectionParameterAdapter($reflectionStub);
 
         if ($expectedException !== null) {
             $this->expectException($expectedException);
         }
 
-        $adapter = new ReflectionParameterAdapter($reflectionStub);
-        $adapter->{$methodName}(...$args);
+        $actualReturnValue = $adapter->{$methodName}(...$args);
+
+        if ($expectedReturnValue !== null) {
+            self::assertSame($expectedReturnValue, $actualReturnValue);
+        }
+
+        if ($expectedReturnValueInstance === null) {
+            return;
+        }
+
+        if (is_array($actualReturnValue)) {
+            self::assertNotEmpty($actualReturnValue);
+            self::assertContainsOnlyInstancesOf($expectedReturnValueInstance, $actualReturnValue);
+        } else {
+            self::assertInstanceOf($expectedReturnValueInstance, $actualReturnValue);
+        }
     }
 
     public function testGetAttributes(): void
