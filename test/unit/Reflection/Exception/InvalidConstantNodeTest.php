@@ -15,9 +15,9 @@ class InvalidConstantNodeTest extends TestCase
 {
     public function testCreate(): void
     {
-        $exception = InvalidConstantNode::create(new Node\Name('Whatever'));
+        $exception = InvalidConstantNode::create(new Node\UnionType([new Node\Name('Whatever\Something\Anything'), new Node\Name('\Very\Long\Name\That\Will\Be\Truncated')]));
 
         self::assertInstanceOf(InvalidConstantNode::class, $exception);
-        self::assertSame('Invalid constant node (first 50 characters: Whatever)', $exception->getMessage());
+        self::assertSame('Invalid constant node (first 50 characters: Whatever\Something\Anything|\Very\Long\Name\That\W)', $exception->getMessage());
     }
 }
