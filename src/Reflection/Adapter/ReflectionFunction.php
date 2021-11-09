@@ -183,7 +183,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         try {
             return $this->betterReflectionFunction->invoke(...func_get_args());
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 
@@ -195,7 +195,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         try {
             return $this->betterReflectionFunction->invokeArgs($args);
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 

@@ -47,7 +47,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 
@@ -65,7 +65,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         } catch (NoObjectProvided | NotAnObject) {
             return;
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 
@@ -148,7 +148,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         try {
             return $this->betterReflectionProperty->isInitialized($object);
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 
