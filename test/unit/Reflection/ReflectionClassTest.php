@@ -189,6 +189,7 @@ class ReflectionClassTest extends TestCase
         $classInfo = $reflector->reflectClass(PureEnum::class);
         $methods   = $classInfo->getImmediateMethods();
 
+        self::assertCount(1, $methods);
         self::assertArrayHasKey('cases', $methods);
 
         $method = $methods['cases'];
@@ -207,6 +208,8 @@ class ReflectionClassTest extends TestCase
 
         $classInfo = $reflector->reflectClass(StringEnum::class);
         $methods   = $classInfo->getImmediateMethods();
+
+        self::assertCount(3, $methods);
 
         foreach (['cases' => 0, 'from' => 1, 'tryFrom' => 1] as $methodName => $numberOfParameters) {
             self::assertArrayHasKey($methodName, $methods, $methodName);
