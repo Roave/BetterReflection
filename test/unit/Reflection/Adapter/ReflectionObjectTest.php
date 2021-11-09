@@ -235,6 +235,7 @@ class ReflectionObjectTest extends TestCase
 
         self::assertTrue($reflectionObjectAdapter->hasMethod('fooBoo'));
         self::assertTrue($reflectionObjectAdapter->hasMethod('fooboo'));
+        self::assertTrue($reflectionObjectAdapter->hasMethod('fOObOO'));
     }
 
     public function testGetMethodIsCaseInsensitive(): void
@@ -257,6 +258,7 @@ class ReflectionObjectTest extends TestCase
 
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fooBoo')->getName());
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fooboo')->getName());
+        self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fOObOO')->getName());
     }
 
     public function testIsSubclassOfWithObject(): void
