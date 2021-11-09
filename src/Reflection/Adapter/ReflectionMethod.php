@@ -226,9 +226,9 @@ final class ReflectionMethod extends CoreReflectionMethod
         try {
             return $this->betterReflectionMethod->getClosure($object);
         } catch (NoObjectProvided $e) {
-            throw new ValueError($e->getMessage(), 0, $e);
+            throw new ValueError($e->getMessage(), previous: $e);
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 
@@ -248,7 +248,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 
@@ -266,7 +266,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {
-            throw new CoreReflectionException($e->getMessage(), 0, $e);
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
         }
     }
 

@@ -21,6 +21,6 @@ class InvalidArrowFunctionBodyNodeTest extends TestCase
         ]));
 
         self::assertInstanceOf(InvalidArrowFunctionBodyNode::class, $exception);
-        self::assertStringStartsWith('Invalid arrow function body node', $exception->getMessage());
+        self::assertSame("Invalid arrow function body node (first 50 characters: echo 'Hello world!';)", $exception->getMessage());
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type\AutoloadSourceLocator;
 
 use Exception;
+use LogicException;
 use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
@@ -14,6 +15,7 @@ use UnexpectedValueException;
 use function class_exists;
 use function file_get_contents;
 use function is_file;
+use function sprintf;
 use function uniqid;
 
 /**
@@ -200,5 +202,14 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
+    }
+
+    public function testUrlStatThrowsExceptionWhenCalledDirectly(): void
+    {
+        $fileReadTrapStreamWrapper = new FileReadTrapStreamWrapper();
+
+        self::expectException(LogicException::class);
+        self::expectExceptionMessage(sprintf('%s not registered: cannot operate. Do not call this method directly.', FileReadTrapStreamWrapper::class));
+        $fileReadTrapStreamWrapper->url_stat('some-file.php', 0);
     }
 }

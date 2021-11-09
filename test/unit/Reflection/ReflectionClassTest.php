@@ -190,6 +190,12 @@ class ReflectionClassTest extends TestCase
         $methods   = $classInfo->getImmediateMethods();
 
         self::assertArrayHasKey('cases', $methods);
+
+        $method = $methods['cases'];
+
+        self::assertTrue($method->isPublic());
+        self::assertTrue($method->isStatic());
+        self::assertSame(0, $method->getNumberOfParameters());
     }
 
     public function testGetMethodsForBackedEnum(): void
@@ -202,9 +208,15 @@ class ReflectionClassTest extends TestCase
         $classInfo = $reflector->reflectClass(StringEnum::class);
         $methods   = $classInfo->getImmediateMethods();
 
-        self::assertArrayHasKey('cases', $methods);
-        self::assertArrayHasKey('from', $methods);
-        self::assertArrayHasKey('tryFrom', $methods);
+        foreach (['cases' => 0, 'from' => 1, 'tryFrom' => 1] as $methodName => $numberOfParameters) {
+            self::assertArrayHasKey($methodName, $methods, $methodName);
+
+            $method = $methods[$methodName];
+
+            self::assertTrue($method->isPublic(), $methodName);
+            self::assertTrue($method->isStatic(), $methodName);
+            self::assertSame($numberOfParameters, $method->getNumberOfParameters(), $methodName);
+        }
     }
 
     public function getMethodsWithFilterDataProvider(): array
@@ -2158,15 +2170,33 @@ PHP;
             }
         PHP;
 
-        $reflection      = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
-        $protectedMethod = $reflection->getMethod('protectedMethod');
-        self::assertTrue($protectedMethod->isPublic());
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('Foo');
+        $traitReflection = $classReflection->getTraits()[0];
 
-        $privateMethod = $reflection->getMethod('privateMethod');
-        self::assertTrue($privateMethod->isProtected());
+        $protectedMethodFromClass = $classReflection->getMethod('protectedMethod');
+        self::assertTrue($protectedMethodFromClass->isPublic());
+        self::assertFalse($protectedMethodFromClass->isProtected());
 
-        $privateMethod = $reflection->getMethod('privateMethodRenamed');
-        self::assertTrue($privateMethod->isProtected());
+        $protectedMethodFromTrait = $traitReflection->getMethod('protectedMethod');
+        self::assertFalse($protectedMethodFromTrait->isPublic());
+        self::assertTrue($protectedMethodFromTrait->isProtected());
+
+        self::assertNotSame($protectedMethodFromClass->getAst(), $protectedMethodFromTrait->getAst());
+
+        $privateMethodFromClass = $classReflection->getMethod('privateMethod');
+        self::assertTrue($privateMethodFromClass->isProtected());
+        self::assertFalse($privateMethodFromClass->isPrivate());
+
+        $privateMethodFromTrait = $traitReflection->getMethod('privateMethod');
+        self::assertFalse($privateMethodFromTrait->isProtected());
+        self::assertTrue($privateMethodFromTrait->isPrivate());
+
+        self::assertNotSame($privateMethodFromClass->getAst(), $privateMethodFromTrait->getAst());
+
+        $privateMethodRenamed = $classReflection->getMethod('privateMethodRenamed');
+        self::assertTrue($privateMethodRenamed->isProtected());
+        self::assertFalse($privateMethodRenamed->isPrivate());
     }
 
     public function testHasStringableInterface(): void

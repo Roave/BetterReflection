@@ -269,10 +269,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     {
         $traits = $this->betterReflectionEnum->getTraits();
 
-        /**
-         * @psalm-var array<trait-string> $traitNames
-         * @phpstan-var array<class-string> $traitNames
-         */
+        /** @var array<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
@@ -419,9 +416,9 @@ final class ReflectionEnum extends CoreReflectionEnum
         throw new Exception\NotImplemented('Not implemented');
     }
 
-    public function getExtensionName(): string
+    public function getExtensionName(): string|false
     {
-        return $this->betterReflectionEnum->getExtensionName() ?? '';
+        return $this->betterReflectionEnum->getExtensionName() ?? false;
     }
 
     public function inNamespace(): bool

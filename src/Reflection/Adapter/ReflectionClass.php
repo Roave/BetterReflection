@@ -468,9 +468,9 @@ final class ReflectionClass extends CoreReflectionClass
         throw new Exception\NotImplemented('Not implemented');
     }
 
-    public function getExtensionName(): string
+    public function getExtensionName(): string|false
     {
-        return $this->betterReflectionClass->getExtensionName() ?? '';
+        return $this->betterReflectionClass->getExtensionName() ?? false;
     }
 
     public function inNamespace(): bool

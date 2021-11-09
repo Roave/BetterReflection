@@ -23,6 +23,7 @@ class ReflectionAttributeHelperTest extends TestCase
             new Node\AttributeGroup([
                 new Node\Attribute(new Node\Name('SomeAttr')),
                 new Node\Attribute(new Node\Name('AnotherAttr')),
+                new Node\Attribute(new Node\Name('AnotherAttr')),
             ]),
         ];
 
@@ -36,7 +37,11 @@ class ReflectionAttributeHelperTest extends TestCase
             $reflection,
         );
 
-        self::assertCount(2, $attributes);
+        self::assertCount(3, $attributes);
+
+        self::assertFalse($attributes[0]->isRepeated());
+        self::assertTrue($attributes[1]->isRepeated());
+        self::assertTrue($attributes[2]->isRepeated());
     }
 
     public function testFilterAttributesByName(): void

@@ -244,7 +244,6 @@ class ReflectionClass implements Reflection
         $methodHash = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
 
         if (array_key_exists($methodHash, $traitModifiers)) {
-            $methodAst        = clone $methodAst;
             $methodAst->flags = ($methodAst->flags & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $traitModifiers[$methodHash];
         }
 
@@ -543,7 +542,7 @@ class ReflectionClass implements Reflection
         $methods             = $this->getMethodsIndexedByName();
 
         if (! isset($methods[$lowercaseMethodName])) {
-            throw new OutOfBoundsException('Could not find method: ' . $methodName);
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
         }
 
         return $methods[$lowercaseMethodName];
