@@ -240,14 +240,10 @@ final class ReflectionEnum extends CoreReflectionEnum
      */
     public function getInterfaces(): array
     {
-        $interfaces = $this->betterReflectionEnum->getInterfaces();
-
-        $wrappedInterfaces = [];
-        foreach ($interfaces as $key => $interface) {
-            $wrappedInterfaces[$key] = new ReflectionClass($interface);
-        }
-
-        return $wrappedInterfaces;
+        return array_map(
+            static fn (BetterReflectionClass $interface): ReflectionClass => new ReflectionClass($interface),
+            $this->betterReflectionEnum->getInterfaces(),
+        );
     }
 
     /**
