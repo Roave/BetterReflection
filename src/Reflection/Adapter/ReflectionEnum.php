@@ -269,10 +269,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     {
         $traits = $this->betterReflectionEnum->getTraits();
 
-        /**
-         * @psalm-var array<trait-string> $traitNames
-         * @phpstan-var array<class-string> $traitNames
-         */
+        /** @var array<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
