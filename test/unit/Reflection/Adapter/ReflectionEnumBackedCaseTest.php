@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAtt
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionEnum as BetterReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -259,6 +260,15 @@ class ReflectionEnumBackedCaseTest extends TestCase
         self::assertCount(1, $reflectionEnumBackedCaseAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionEnumBackedCaseAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionEnumBackedCaseAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+
+        self::expectException(ValueError::class);
+        $reflectionEnumBackedCaseAdapter->getAttributes(null, 123);
     }
 
     public function testIsFinal(): void

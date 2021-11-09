@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnum
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+use ValueError;
 
 use function array_combine;
 use function array_filter;
@@ -497,6 +498,10 @@ final class ReflectionClass extends CoreReflectionClass
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
+        if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
+            throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');
+        }
+
         if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
             $attributes = $this->betterReflectionClass->getAttributesByInstance($name);
         } elseif ($name !== null) {

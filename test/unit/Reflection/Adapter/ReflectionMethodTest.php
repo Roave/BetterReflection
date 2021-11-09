@@ -545,4 +545,13 @@ class ReflectionMethodTest extends TestCase
         self::assertCount(2, $reflectionMethodAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionMethodAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionMethod  = $this->createMock(BetterReflectionMethod::class);
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::expectException(ValueError::class);
+        $reflectionMethodAdapter->getAttributes(null, 123);
+    }
 }

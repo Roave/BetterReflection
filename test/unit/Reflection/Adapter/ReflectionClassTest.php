@@ -26,6 +26,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProp
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\Fixture\AutoloadableEnum;
 use stdClass;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -932,6 +933,15 @@ class ReflectionClassTest extends TestCase
         self::assertCount(1, $reflectionClassAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionClassAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionClassAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::expectException(ValueError::class);
+        $reflectionClassAdapter->getAttributes(null, 123);
     }
 
     public function testHasConstantWithEnumCase(): void

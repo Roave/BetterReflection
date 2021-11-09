@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunc
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -281,5 +282,14 @@ class ReflectionParameterTest extends TestCase
         self::assertCount(1, $reflectionParameterAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionParameterAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionParameterAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionParameter  = $this->createMock(BetterReflectionParameter::class);
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+
+        self::expectException(ValueError::class);
+        $reflectionParameterAdapter->getAttributes(null, 123);
     }
 }

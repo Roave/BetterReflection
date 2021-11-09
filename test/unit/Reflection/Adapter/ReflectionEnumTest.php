@@ -30,6 +30,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflectionTest\Fixture\AutoloadableEnum;
 use stdClass;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -530,6 +531,15 @@ class ReflectionEnumTest extends TestCase
         self::assertCount(1, $reflectionEnumAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionEnumAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionEnumAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::expectException(ValueError::class);
+        $reflectionEnumAdapter->getAttributes(null, 123);
     }
 
     public function testGetCaseWhenCaseDoesNotExist(): void

@@ -22,6 +22,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -387,5 +388,14 @@ class ReflectionFunctionTest extends TestCase
         self::assertCount(1, $reflectionFunctionAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionFunctionAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionFunctionAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionFunction  = $this->createMock(BetterReflectionFunction::class);
+        $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::expectException(ValueError::class);
+        $reflectionFunctionAdapter->getAttributes(null, 123);
     }
 }

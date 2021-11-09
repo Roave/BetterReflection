@@ -24,6 +24,7 @@ use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -821,5 +822,14 @@ class ReflectionObjectTest extends TestCase
         self::assertCount(1, $reflectionObjectAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionObjectAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionObjectAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::expectException(ValueError::class);
+        $reflectionObjectAdapter->getAttributes(null, 123);
     }
 }
