@@ -419,9 +419,9 @@ final class ReflectionEnum extends CoreReflectionEnum
         throw new Exception\NotImplemented('Not implemented');
     }
 
-    public function getExtensionName(): string
+    public function getExtensionName(): string|false
     {
-        return $this->betterReflectionEnum->getExtensionName() ?? '';
+        return $this->betterReflectionEnum->getExtensionName() ?? false;
     }
 
     public function inNamespace(): bool

@@ -117,7 +117,7 @@ class ReflectionEnumTest extends TestCase
             ['isIterateable', [], true, null, true, null],
             ['implementsInterface', ['\Traversable'], true, null, true, null],
             ['getExtension', [], null, NotImplemented::class, null, null],
-            ['getExtensionName', [], null, null, '', null],
+            ['getExtensionName', [], null, null, false, null],
             ['inNamespace', [], true, null, true, null],
             ['getNamespaceName', [], '', null, '', null],
             ['getShortName', [], 'shortName', null, 'shortName', null],
