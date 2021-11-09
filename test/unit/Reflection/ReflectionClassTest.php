@@ -544,7 +544,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getProperties();
-        self::assertCount(5, $properties);
+        self::assertCount(6, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
         self::assertSame('a', $classInfo->getProperty('a')->getName(), 'Failed asserting that property a from trait Bar was returned');
@@ -559,8 +559,11 @@ PHP;
         self::assertSame('d', $classInfo->getProperty('d')->getName(), 'Failed asserting that protected property d from parent class Baz was returned');
         self::assertSame(Baz::class, $classInfo->getProperty('d')->getDeclaringClass()->getName());
 
-        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from SUT was returned');
+        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from Qux was returned');
         self::assertSame(Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
+
+        self::assertSame('g', $classInfo->getProperty('g')->getName(), 'Failed asserting that property g from Qux was returned');
+        self::assertSame(Qux::class, $classInfo->getProperty('g')->getDeclaringClass()->getName());
     }
 
     public function testGetImmediateProperties(): void
@@ -571,11 +574,18 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getImmediateProperties();
-        self::assertCount(1, $properties);
+        self::assertCount(2, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
-        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from SUT was returned');
-        self::assertSame(Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
+        $fProperty = $classInfo->getProperty('f');
+
+        self::assertSame(Qux::class, $fProperty->getDeclaringClass()->getName());
+        self::assertFalse($fProperty->isPromoted());
+
+        $gProperty = $classInfo->getProperty('g');
+
+        self::assertSame(Qux::class, $gProperty->getDeclaringClass()->getName());
+        self::assertTrue($gProperty->isPromoted());
     }
 
     public function testGetProperty(): void
