@@ -114,14 +114,10 @@ final class ReflectionObject extends CoreReflectionObject
      */
     public function getMethods(?int $filter = null): array
     {
-        $methods = $this->betterReflectionObject->getMethods();
-
-        $wrappedMethods = [];
-        foreach ($methods as $key => $method) {
-            $wrappedMethods[$key] = new ReflectionMethod($method);
-        }
-
-        return $wrappedMethods;
+        return array_map(
+            static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
+            $this->betterReflectionObject->getMethods($filter),
+        );
     }
 
     public function hasProperty(string $name): bool
@@ -207,14 +203,10 @@ final class ReflectionObject extends CoreReflectionObject
      */
     public function getInterfaces(): array
     {
-        $interfaces = $this->betterReflectionObject->getInterfaces();
-
-        $wrappedInterfaces = [];
-        foreach ($interfaces as $key => $interface) {
-            $wrappedInterfaces[$key] = new ReflectionClass($interface);
-        }
-
-        return $wrappedInterfaces;
+        return array_map(
+            static fn (BetterReflectionClass $interface): ReflectionClass => new ReflectionClass($interface),
+            $this->betterReflectionObject->getInterfaces(),
+        );
     }
 
     /**
