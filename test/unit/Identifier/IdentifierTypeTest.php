@@ -49,27 +49,39 @@ class IdentifierTypeTest extends TestCase
     {
         $reflectionClass = $this->createMock(ReflectionClass::class);
 
-        $type = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+        $classType    = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
+        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
 
-        self::assertTrue($type->isMatchingReflector($reflectionClass));
+        self::assertTrue($classType->isMatchingReflector($reflectionClass));
+        self::assertFalse($functionType->isMatchingReflector($reflectionClass));
+        self::assertFalse($constantType->isMatchingReflector($reflectionClass));
     }
 
     public function testIsMatchingReflectorFunction(): void
     {
         $reflectionFunction = $this->createMock(ReflectionFunction::class);
 
-        $type = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
+        $classType    = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
+        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
 
-        self::assertTrue($type->isMatchingReflector($reflectionFunction));
+        self::assertFalse($classType->isMatchingReflector($reflectionFunction));
+        self::assertTrue($functionType->isMatchingReflector($reflectionFunction));
+        self::assertFalse($constantType->isMatchingReflector($reflectionFunction));
     }
 
     public function testIsMatchingReflectorConstant(): void
     {
         $reflectionConstant = $this->createMock(ReflectionConstant::class);
 
-        $type = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
+        $classType    = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
+        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
+        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
 
-        self::assertTrue($type->isMatchingReflector($reflectionConstant));
+        self::assertFalse($classType->isMatchingReflector($reflectionConstant));
+        self::assertFalse($functionType->isMatchingReflector($reflectionConstant));
+        self::assertTrue($constantType->isMatchingReflector($reflectionConstant));
     }
 
     public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid(): void
