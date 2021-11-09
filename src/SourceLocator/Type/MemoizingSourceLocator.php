@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_key_exists;
 use function spl_object_hash;
+use function sprintf;
 
 final class MemoizingSourceLocator implements SourceLocator
 {
@@ -53,18 +54,20 @@ final class MemoizingSourceLocator implements SourceLocator
 
     private function reflectorCacheKey(Reflector $reflector): string
     {
-        return 'type:' . $reflector::class
-            . '#oid:' . spl_object_hash($reflector);
+        return sprintf('type:%s#oid:%s', $reflector::class, spl_object_hash($reflector));
     }
 
     private function identifierToCacheKey(Identifier $identifier): string
     {
-        return $this->identifierTypeToCacheKey($identifier->getType())
-            . '#name:' . $identifier->getName();
+        return sprintf(
+            '%s#name:%s',
+            $this->identifierTypeToCacheKey($identifier->getType()),
+            $identifier->getName(),
+        );
     }
 
     private function identifierTypeToCacheKey(IdentifierType $identifierType): string
     {
-        return 'type:' . $identifierType->getName();
+        return sprintf('type:%s', $identifierType->getName());
     }
 }

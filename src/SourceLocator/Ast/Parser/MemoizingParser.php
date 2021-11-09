@@ -10,6 +10,7 @@ use PhpParser\Parser;
 use function array_key_exists;
 use function hash;
 use function serialize;
+use function sprintf;
 use function strlen;
 use function unserialize;
 
@@ -34,7 +35,7 @@ final class MemoizingParser implements Parser
         //       cache entries. The string length is added to further reduce likeliness (although
         //       already imperceptible) of key collisions.
         //       In the "real world", this code will work just fine.
-        $hash = hash('sha256', $code) . ':' . strlen($code);
+        $hash = sprintf('%s:%d', hash('sha256', $code), strlen($code));
 
         if (array_key_exists($hash, $this->sourceHashToAst)) {
             return unserialize($this->sourceHashToAst[$hash]);
