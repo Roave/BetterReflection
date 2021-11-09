@@ -54,6 +54,7 @@ use Roave\BetterReflectionTest\Fixture\ClassUsingTraitWithAbstractMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
 use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
+use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleInterface;
@@ -782,14 +783,14 @@ PHP;
 
     public function testGetDefaultProperties(): void
     {
-        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/DefaultProperties.php',
-            $this->astLocator,
-        )))->reflectClass('Foo');
+        $object                     = new DefaultProperties();
+        $object->notDefaultProperty = null;
+
+        $classInfo = ReflectionClass::createFromInstance($object);
 
         self::assertSame([
-            'fromTrait' => 'const',
-            'hasDefault' => 123,
+            'fromTrait' => 'anything',
+            'hasDefault' => 'const',
             'hasNullAsDefault' => null,
             'noDefault' => null,
             'hasDefaultWithType' => 123,
