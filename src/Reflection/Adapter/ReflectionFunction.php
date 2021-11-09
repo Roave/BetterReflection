@@ -13,6 +13,7 @@ use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use ValueError;
@@ -126,14 +127,10 @@ final class ReflectionFunction extends CoreReflectionFunction
      */
     public function getParameters(): array
     {
-        $parameters = $this->betterReflectionFunction->getParameters();
-
-        $wrappedParameters = [];
-        foreach ($parameters as $key => $parameter) {
-            $wrappedParameters[$key] = new ReflectionParameter($parameter);
-        }
-
-        return $wrappedParameters;
+        return array_map(
+            static fn (BetterReflectionParameter $parameter): ReflectionParameter => new ReflectionParameter($parameter),
+            $this->betterReflectionFunction->getParameters(),
+        );
     }
 
     public function hasReturnType(): bool
