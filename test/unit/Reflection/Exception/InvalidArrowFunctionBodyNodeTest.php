@@ -17,10 +17,10 @@ class InvalidArrowFunctionBodyNodeTest extends TestCase
     public function testCreate(): void
     {
         $exception = InvalidArrowFunctionBodyNode::create(new Echo_([
-            new String_('Hello world!'),
+            new String_('Hello world with very long string so it is truncated!'),
         ]));
 
         self::assertInstanceOf(InvalidArrowFunctionBodyNode::class, $exception);
-        self::assertSame("Invalid arrow function body node (first 50 characters: echo 'Hello world!';)", $exception->getMessage());
+        self::assertSame("Invalid arrow function body node (first 50 characters: echo 'Hello world with very long string so it is t)", $exception->getMessage());
     }
 }
