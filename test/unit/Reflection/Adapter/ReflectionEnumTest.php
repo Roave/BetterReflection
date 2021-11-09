@@ -178,6 +178,42 @@ class ReflectionEnumTest extends TestCase
         }
     }
 
+    public function testIsSubclassOfIsCaseInsensitive(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionClass
+            ->method('getParentClassNames')
+            ->willReturn(['Foo']);
+        $betterReflectionClass
+            ->method('isSubclassOf')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionClass);
+
+        self::assertTrue($reflectionClassAdapter->isSubclassOf('Foo'));
+        self::assertTrue($reflectionClassAdapter->isSubclassOf('foo'));
+        self::assertTrue($reflectionClassAdapter->isSubclassOf('FoO'));
+    }
+
+    public function testImplementsInterfaceIsCaseInsensitive(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionClass
+            ->method('getInterfaceNames')
+            ->willReturn(['Foo']);
+        $betterReflectionClass
+            ->method('implementsInterface')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionClass);
+
+        self::assertTrue($reflectionClassAdapter->implementsInterface('Foo'));
+        self::assertTrue($reflectionClassAdapter->implementsInterface('foo'));
+        self::assertTrue($reflectionClassAdapter->implementsInterface('FoO'));
+    }
+
     public function testPropertyName(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
