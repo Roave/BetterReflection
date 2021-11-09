@@ -1054,8 +1054,7 @@ class ReflectionClass implements Reflection
      */
     public function getModifiers(): int
     {
-        $val  = 0;
-        $val += $this->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
+        $val  = $this->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $val += $this->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
 
         return $val;

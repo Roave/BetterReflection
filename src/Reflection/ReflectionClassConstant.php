@@ -117,8 +117,7 @@ class ReflectionClassConstant
      */
     public function getModifiers(): int
     {
-        $val  = 0;
-        $val += $this->isPublic() ? CoreReflectionClassConstant::IS_PUBLIC : 0;
+        $val  = $this->isPublic() ? CoreReflectionClassConstant::IS_PUBLIC : 0;
         $val += $this->isProtected() ? CoreReflectionClassConstant::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? CoreReflectionClassConstant::IS_PRIVATE : 0;
         $val += $this->isFinal() ? self::IS_FINAL : 0;
