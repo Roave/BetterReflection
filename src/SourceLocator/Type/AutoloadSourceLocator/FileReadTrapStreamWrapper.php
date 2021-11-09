@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 
 use LogicException;
 
+use function sprintf;
 use function stat;
 use function stream_wrapper_register;
 use function stream_wrapper_restore;
@@ -117,7 +118,7 @@ final class FileReadTrapStreamWrapper
     public function url_stat($path, $flags): array|bool
     {
         if (self::$registeredStreamWrapperProtocols === null) {
-            throw new LogicException(self::class . ' not registered: cannot operate. Do not call this method directly.');
+            throw new LogicException(sprintf('%s not registered: cannot operate. Do not call this method directly.', self::class));
         }
 
         foreach (self::$registeredStreamWrapperProtocols as $protocol) {
