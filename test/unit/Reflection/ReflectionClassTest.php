@@ -190,6 +190,12 @@ class ReflectionClassTest extends TestCase
         $methods   = $classInfo->getImmediateMethods();
 
         self::assertArrayHasKey('cases', $methods);
+
+        $method = $methods['cases'];
+
+        self::assertTrue($method->isPublic());
+        self::assertTrue($method->isStatic());
+        self::assertSame(0, $method->getNumberOfParameters());
     }
 
     public function testGetMethodsForBackedEnum(): void
@@ -202,9 +208,15 @@ class ReflectionClassTest extends TestCase
         $classInfo = $reflector->reflectClass(StringEnum::class);
         $methods   = $classInfo->getImmediateMethods();
 
-        self::assertArrayHasKey('cases', $methods);
-        self::assertArrayHasKey('from', $methods);
-        self::assertArrayHasKey('tryFrom', $methods);
+        foreach (['cases' => 0, 'from' => 1, 'tryFrom' => 1] as $methodName => $numberOfParameters) {
+            self::assertArrayHasKey($methodName, $methods, $methodName);
+
+            $method = $methods[$methodName];
+
+            self::assertTrue($method->isPublic(), $methodName);
+            self::assertTrue($method->isStatic(), $methodName);
+            self::assertSame($numberOfParameters, $method->getNumberOfParameters(), $methodName);
+        }
     }
 
     public function getMethodsWithFilterDataProvider(): array
