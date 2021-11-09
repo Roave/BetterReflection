@@ -277,7 +277,7 @@ final class ReflectionClass extends CoreReflectionClass
     {
         $traits = $this->betterReflectionClass->getTraits();
 
-        /** @var array<trait-string> $traitNames */
+        /** @var list<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
