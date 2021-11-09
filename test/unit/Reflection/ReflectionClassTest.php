@@ -2170,15 +2170,33 @@ PHP;
             }
         PHP;
 
-        $reflection      = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
-        $protectedMethod = $reflection->getMethod('protectedMethod');
-        self::assertTrue($protectedMethod->isPublic());
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('Foo');
+        $traitReflection = $classReflection->getTraits()[0];
 
-        $privateMethod = $reflection->getMethod('privateMethod');
-        self::assertTrue($privateMethod->isProtected());
+        $protectedMethodFromClass = $classReflection->getMethod('protectedMethod');
+        self::assertTrue($protectedMethodFromClass->isPublic());
+        self::assertFalse($protectedMethodFromClass->isProtected());
 
-        $privateMethod = $reflection->getMethod('privateMethodRenamed');
-        self::assertTrue($privateMethod->isProtected());
+        $protectedMethodFromTrait = $traitReflection->getMethod('protectedMethod');
+        self::assertFalse($protectedMethodFromTrait->isPublic());
+        self::assertTrue($protectedMethodFromTrait->isProtected());
+
+        self::assertNotSame($protectedMethodFromClass->getAst(), $protectedMethodFromTrait->getAst());
+
+        $privateMethodFromClass = $classReflection->getMethod('privateMethod');
+        self::assertTrue($privateMethodFromClass->isProtected());
+        self::assertFalse($privateMethodFromClass->isPrivate());
+
+        $privateMethodFromTrait = $traitReflection->getMethod('privateMethod');
+        self::assertFalse($privateMethodFromTrait->isProtected());
+        self::assertTrue($privateMethodFromTrait->isPrivate());
+
+        self::assertNotSame($privateMethodFromClass->getAst(), $privateMethodFromTrait->getAst());
+
+        $privateMethodRenamed = $classReflection->getMethod('privateMethodRenamed');
+        self::assertTrue($privateMethodRenamed->isProtected());
+        self::assertFalse($privateMethodRenamed->isPrivate());
     }
 
     public function testHasStringableInterface(): void

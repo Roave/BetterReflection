@@ -244,7 +244,6 @@ class ReflectionClass implements Reflection
         $methodHash = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
 
         if (array_key_exists($methodHash, $traitModifiers)) {
-            $methodAst        = clone $methodAst;
             $methodAst->flags = ($methodAst->flags & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $traitModifiers[$methodHash];
         }
 
