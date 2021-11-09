@@ -10,6 +10,7 @@ use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -23,6 +24,7 @@ use stdClass;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
+use function is_array;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty
@@ -51,23 +53,25 @@ class ReflectionPropertyTest extends TestCase
     {
         $mockType = $this->createMock(BetterReflectionNamedType::class);
 
+        $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
+
         return [
-            ['__toString', null, '', []],
-            ['getName', null, '', []],
-            ['isPublic', null, true, []],
-            ['isPrivate', null, true, []],
-            ['isProtected', null, true, []],
-            ['isStatic', null, true, []],
-            ['isDefault', null, true, []],
-            ['getModifiers', null, 123, []],
-            ['getDocComment', null, '', []],
-            ['hasType', null, true, []],
-            ['getType', null, $mockType, []],
-            ['hasDefaultValue', null, true, []],
-            ['getDefaultValue', null, null, []],
-            ['isPromoted', null, true, []],
-            ['getAttributes', null, [], []],
-            ['isReadOnly', null, true, []],
+            ['__toString', [], 'string', null, 'string', null],
+            ['getName', [], 'name', null, 'name', null],
+            ['isPublic', [], true, null, true, null],
+            ['isPrivate', [], true, null, true, null],
+            ['isProtected', [], true, null, true, null],
+            ['isStatic', [], true, null, true, null],
+            ['isDefault', [], true, null, true, null],
+            ['getModifiers', [], 123, null, 123, null],
+            ['getDocComment', [], '', null, false, null],
+            ['hasType', [], true, null, true, null],
+            ['getType', [], $mockType, null, null, ReflectionNamedTypeAdapter::class],
+            ['hasDefaultValue', [], true, null, true, null],
+            ['getDefaultValue', [], null, null, null, null],
+            ['isPromoted', [], true, null, true, null],
+            ['getAttributes', [], [$mockAttribute], null, null, ReflectionAttributeAdapter::class],
+            ['isReadOnly', [], true, null, true, null],
         ];
     }
 
@@ -76,23 +80,45 @@ class ReflectionPropertyTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
-    {
+    public function testAdapterMethods(
+        string $methodName,
+        array $args,
+        mixed $returnValue,
+        ?string $expectedException,
+        mixed $expectedReturnValue,
+        ?string $expectedReturnValueInstance,
+    ): void {
         $reflectionStub = $this->createMock(BetterReflectionProperty::class);
 
         if ($expectedException === null) {
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
-                ->will($this->returnValue($returnValue));
+                ->willReturn($returnValue);
         }
+
+        $adapter = new ReflectionPropertyAdapter($reflectionStub);
 
         if ($expectedException !== null) {
             $this->expectException($expectedException);
         }
 
-        $adapter = new ReflectionPropertyAdapter($reflectionStub);
-        $adapter->{$methodName}(...$args);
+        $actualReturnValue = $adapter->{$methodName}(...$args);
+
+        if ($expectedReturnValue !== null) {
+            self::assertSame($expectedReturnValue, $actualReturnValue);
+        }
+
+        if ($expectedReturnValueInstance === null) {
+            return;
+        }
+
+        if (is_array($actualReturnValue)) {
+            self::assertNotEmpty($actualReturnValue);
+            self::assertContainsOnlyInstancesOf($expectedReturnValueInstance, $actualReturnValue);
+        } else {
+            self::assertInstanceOf($expectedReturnValueInstance, $actualReturnValue);
+        }
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
