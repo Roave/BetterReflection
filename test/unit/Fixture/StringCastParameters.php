@@ -54,7 +54,7 @@ abstract class StringCastParameters extends StringCastParametersParent
     }
 
     public function parametersWithDefaultValue(
-        $string = 'string',
+        $string = 'not long string',
         $int = 0,
         $float = 0.0,
         $bool = true,

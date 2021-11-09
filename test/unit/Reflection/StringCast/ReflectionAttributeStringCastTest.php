@@ -31,7 +31,7 @@ class ReflectionAttributeStringCastTest extends TestCase
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\NoArguments', "Attribute [ Roave\BetterReflectionTest\Fixture\NoArguments ]\n"],
-            ['Roave\BetterReflectionTest\Fixture\WithArguments', "Attribute [ Roave\BetterReflectionTest\Fixture\WithArguments ] {\n  - Arguments [4] {\n    Argument #0 [ 'arg1' ]\n    Argument #1 [ 'very long strin...' ]\n    Argument #2 [ arg3 = Array ]\n    Argument #3 [ arg4 = true ]\n  }\n}\n"],
+            ['Roave\BetterReflectionTest\Fixture\WithArguments', "Attribute [ Roave\BetterReflectionTest\Fixture\WithArguments ] {\n  - Arguments [4] {\n    Argument #0 [ 'not long string' ]\n    Argument #1 [ 'very long strin...' ]\n    Argument #2 [ arg3 = Array ]\n    Argument #3 [ arg4 = true ]\n  }\n}\n"],
         ];
     }
 

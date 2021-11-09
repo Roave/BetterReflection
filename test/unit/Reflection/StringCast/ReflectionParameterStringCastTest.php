@@ -61,7 +61,7 @@ class ReflectionParameterStringCastTest extends TestCase
             ['parametersWithNullableBuiltInTypesWithDefaultValue', 'iterable', 'Parameter #8 [ <optional> ?iterable $iterable = Array ]'],
             ['parametersWithNullableBuiltInTypesWithDefaultValue', 'object', 'Parameter #9 [ <optional> ?object $object = NULL ]'],
 
-            ['parametersWithDefaultValue', 'string', 'Parameter #0 [ <optional> $string = \'string\' ]'],
+            ['parametersWithDefaultValue', 'string', 'Parameter #0 [ <optional> $string = \'not long string\' ]'],
             ['parametersWithDefaultValue', 'int', 'Parameter #1 [ <optional> $int = 0 ]'],
             ['parametersWithDefaultValue', 'float', 'Parameter #2 [ <optional> $float = 0.0 ]'],
             ['parametersWithDefaultValue', 'bool', 'Parameter #3 [ <optional> $bool = true ]'],
