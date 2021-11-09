@@ -629,7 +629,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $docComment = $node->getDocComment();
         if ($docComment !== null) {
-            if (preg_match('~@since\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $sinceMatches) === 1) {
+            if (preg_match('~@since\s+(\d+\.\d+(?:\.\d+)?)\s+~', $docComment->getText(), $sinceMatches) === 1) {
                 $sincePhpVersion = $this->parsePhpVersion($sinceMatches[1]);
 
                 if ($sincePhpVersion > $this->phpVersion) {
@@ -637,7 +637,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 }
             }
 
-            if (preg_match('~@removed\s+(\d+\.\d+(?:\.\d+)?)~', $docComment->getText(), $removedMatches) === 1) {
+            if (preg_match('~@removed\s+(\d+\.\d+(?:\.\d+)?)\s+~', $docComment->getText(), $removedMatches) === 1) {
                 $removedPhpVersion = $this->parsePhpVersion($removedMatches[1]);
 
                 if ($removedPhpVersion <= $this->phpVersion) {

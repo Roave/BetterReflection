@@ -681,6 +681,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataClassInPhpVersion(): array
     {
         return [
+            [CoreReflectionNamedType::class, null, true],
             [CoreReflectionNamedType::class, 70000, false],
             [CoreReflectionNamedType::class, 70100, true],
             [CoreReflectionNamedType::class, 70200, true],
@@ -694,7 +695,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataClassInPhpVersion
      */
-    public function testClassInPhpVersion(string $className, int $phpVersion, bool $isSupported): void
+    public function testClassInPhpVersion(string $className, ?int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
 
@@ -710,6 +711,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataClassConstantInPhpVersion(): array
     {
         return [
+            [DateTimeInterface::class, 'ATOM', null, true],
             [DateTimeInterface::class, 'ATOM', 70200, true],
             [DateTimeInterface::class, 'ATOM', 70100, false],
             [DateTime::class, 'ATOM', 70100, true],
@@ -720,7 +722,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataClassConstantInPhpVersion
      */
-    public function testClassConstantInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isSupported): void
+    public function testClassConstantInPhpVersion(string $className, string $constantName, ?int $phpVersion, bool $isSupported): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
@@ -734,6 +736,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataMethodInPhpVersion(): array
     {
         return [
+            [CoreReflectionProperty::class, 'hasType', null, true],
             [CoreReflectionProperty::class, 'hasType', 70400, true],
             [CoreReflectionProperty::class, 'hasType', 70300, false],
             [CoreReflectionProperty::class, 'getType', 70400, true],
@@ -746,7 +749,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataMethodInPhpVersion
      */
-    public function testMethodInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isSupported): void
+    public function testMethodInPhpVersion(string $className, string $methodName, ?int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $sourceLocator = new AggregateSourceLocator([
@@ -762,6 +765,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataPropertyInPhpVersion(): array
     {
         return [
+            [DateInterval::class, 'f', null, true],
             [DateInterval::class, 'f', 70100, true],
             [DateInterval::class, 'f', 70000, false],
         ];
@@ -770,7 +774,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataPropertyInPhpVersion
      */
-    public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported): void
+    public function testPropertyInPhpVersion(string $className, string $propertyName, ?int $phpVersion, bool $isSupported): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
@@ -782,6 +786,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataFunctionInPhpVersion(): array
     {
         return [
+            ['password_algos', null, true],
             ['password_algos', 70400, true],
             ['password_algos', 70300, false],
             ['array_key_first', 70300, true],
@@ -798,7 +803,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataFunctionInPhpVersion
      */
-    public function testFunctionInPhpVersion(string $functionName, int $phpVersion, bool $isSupported): void
+    public function testFunctionInPhpVersion(string $functionName, ?int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
 
@@ -838,6 +843,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataConstantInPhpVersion(): array
     {
         return [
+            ['PHP_OS_FAMILY', null, true],
             ['PHP_OS_FAMILY', 70200, true],
             ['PHP_OS_FAMILY', 70100, false],
             ['INPUT_SESSION', 70400, true],
