@@ -18,6 +18,6 @@ class InvalidConstantNodeTest extends TestCase
         $exception = InvalidConstantNode::create(new Node\Name('Whatever'));
 
         self::assertInstanceOf(InvalidConstantNode::class, $exception);
-        self::assertStringStartsWith('Invalid constant node', $exception->getMessage());
+        self::assertSame('Invalid constant node (first 50 characters: Whatever)', $exception->getMessage());
     }
 }
