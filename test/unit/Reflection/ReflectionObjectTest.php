@@ -169,6 +169,18 @@ class ReflectionObjectTest extends TestCase
         self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_PRIVATE));
     }
 
+    public function testRuntimePropertyCannotBePromoted(): void
+    {
+        $foo      = new stdClass();
+        $foo->bar = 'huzzah';
+
+        $classInfo    = ReflectionObject::createFromInstance($foo);
+        $propertyInfo = $classInfo->getProperty('bar');
+
+        self::assertInstanceOf(ReflectionProperty::class, $propertyInfo);
+        self::assertFalse($propertyInfo->isPromoted());
+    }
+
     /**
      * This data provider gets all the public methods from ReflectionClass, but
      * filters out a few methods we want to test manually

@@ -211,7 +211,7 @@ final class ReflectionSourceStubber implements SourceStubber
             }
 
             if (method_exists($reflection, 'hasTentativeReturnType') && $reflection->hasTentativeReturnType()) {
-                $annotations[] = '@' . AnnotationHelper::TENTATIVE_RETURN_TYPE_ANNOTATION;
+                $annotations[] = sprintf('@%s', AnnotationHelper::TENTATIVE_RETURN_TYPE_ANNOTATION);
             }
         }
 

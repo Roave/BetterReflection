@@ -25,6 +25,8 @@ use function sprintf;
  */
 class CompileNodeToValue
 {
+    private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
+
     /**
      * Compile an expression from a node into a value.
      *
@@ -42,7 +44,7 @@ class CompileNodeToValue
 
         if (
             $node instanceof Node\Expr\ConstFetch
-            && ! in_array($node->name->toLowerString(), ['true', 'false', 'null'], true)
+            && ! in_array($node->name->toLowerString(), self::TRUE_FALSE_NULL, true)
         ) {
             $constantName = $this->resolveConstantName($node, $context);
         } elseif ($node instanceof Node\Expr\ClassConstFetch) {

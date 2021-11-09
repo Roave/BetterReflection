@@ -543,7 +543,7 @@ class ReflectionClass implements Reflection
         $methods             = $this->getMethodsIndexedByName();
 
         if (! isset($methods[$lowercaseMethodName])) {
-            throw new OutOfBoundsException('Could not find method: ' . $methodName);
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
         }
 
         return $methods[$lowercaseMethodName];
