@@ -610,6 +610,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not accessible');
         $reflectionClassAdapter->getStaticPropertyValue('foo');
     }
 
@@ -629,6 +630,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not accessible');
         $reflectionClassAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -643,6 +645,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" does not exist');
         $reflectionClassAdapter->getStaticPropertyValue('foo');
     }
 
@@ -670,6 +673,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" does not exist');
         $reflectionClassAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -692,6 +696,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not static');
         $reflectionClassAdapter->getStaticPropertyValue('foo');
     }
 
@@ -714,6 +719,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not static');
         $reflectionClassAdapter->setStaticPropertyValue('foo', null);
     }
 
