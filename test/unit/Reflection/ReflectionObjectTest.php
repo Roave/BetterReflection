@@ -179,6 +179,7 @@ class ReflectionObjectTest extends TestCase
 
         self::assertInstanceOf(ReflectionProperty::class, $propertyInfo);
         self::assertFalse($propertyInfo->isPromoted());
+        self::assertSame(0, $propertyInfo->getPositionInAst());
     }
 
     /**
