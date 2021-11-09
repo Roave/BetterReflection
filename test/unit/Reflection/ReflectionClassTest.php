@@ -450,6 +450,12 @@ class ReflectionClassTest extends TestCase
         $properties = $classInfo->getImmediateProperties();
 
         self::assertArrayHasKey('name', $properties);
+
+        $property = $properties['name'];
+
+        self::assertTrue($property->isPublic());
+        self::assertTrue($property->isReadOnly());
+        self::assertSame(0, $property->getPositionInAst());
     }
 
     public function testGetPropertiesForBackedEnum(): void
@@ -462,8 +468,15 @@ class ReflectionClassTest extends TestCase
         $classInfo  = $reflector->reflectClass(StringEnum::class);
         $properties = $classInfo->getImmediateProperties();
 
-        self::assertArrayHasKey('name', $properties);
-        self::assertArrayHasKey('value', $properties);
+        foreach (['name', 'value'] as $propertyName) {
+            self::assertArrayHasKey($propertyName, $properties, $propertyName);
+
+            $property = $properties[$propertyName];
+
+            self::assertTrue($property->isPublic(), $propertyName);
+            self::assertTrue($property->isReadOnly(), $propertyName);
+            self::assertSame(0, $property->getPositionInAst(), $propertyName);
+        }
     }
 
     public function testGetPropertiesDeclaredWithOneKeyword(): void
