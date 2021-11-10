@@ -10,7 +10,8 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Expr\Error;
 use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Namespace_;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
 use function explode;
@@ -35,7 +36,7 @@ class FindParameterType
      *
      * @return list<Type>
      */
-    public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace, ParamNode $node): array
+    public function __invoke(ReflectionMethod|ReflectionFunction $function, ?Namespace_ $namespace, ParamNode $node): array
     {
         $docComment = $function->getDocComment();
 

@@ -54,7 +54,7 @@ ReflectionParameter::createFromSpec([new \SplDoublyLinkedList, 'add'], 'index');
 ReflectionParameter::createFromSpec('my_function', 'param1');
 // Creating a ReflectionParameter from a closure is not supported yet :(
 
-ReflectionProperty::createFromName(\ReflectionFunctionAbstract::class, 'name');
+ReflectionProperty::createFromName(\ReflectionFunction::class, 'name');
 ReflectionProperty::createFromInstance(new \ReflectionClass(\stdClass::class), 'name');
 ```
 

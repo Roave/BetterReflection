@@ -13,7 +13,6 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use ValueError;
 
 use function array_map;
-use function assert;
 
 final class ReflectionParameter extends CoreReflectionParameter
 {
@@ -44,7 +43,6 @@ final class ReflectionParameter extends CoreReflectionParameter
     public function getDeclaringFunction(): CoreReflectionFunctionAbstract
     {
         $function = $this->betterReflectionParameter->getDeclaringFunction();
-        assert($function instanceof BetterReflectionMethod || $function instanceof \Roave\BetterReflection\Reflection\ReflectionFunction);
 
         if ($function instanceof BetterReflectionMethod) {
             return new ReflectionMethod($function);

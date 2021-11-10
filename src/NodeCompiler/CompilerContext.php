@@ -9,7 +9,6 @@ use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
@@ -74,7 +73,7 @@ class CompilerContext
         return $this->contextReflection->getImplementingClass();
     }
 
-    public function getFunction(): ?ReflectionFunctionAbstract
+    public function getFunction(): ReflectionMethod|ReflectionFunction|null
     {
         if ($this->contextReflection instanceof ReflectionMethod) {
             return $this->contextReflection;

@@ -8,7 +8,8 @@ use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node\Stmt\Namespace_;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\TypesFinder\PhpDocumentor\NamespaceNodeToReflectionTypeContext;
 
 use function explode;
@@ -33,7 +34,7 @@ class FindReturnType
      *
      * @return list<Type>
      */
-    public function __invoke(ReflectionFunctionAbstract $function, ?Namespace_ $namespace): array
+    public function __invoke(ReflectionMethod|ReflectionFunction $function, ?Namespace_ $namespace): array
     {
         $docComment = $function->getDocComment();
 

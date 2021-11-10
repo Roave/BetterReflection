@@ -13,7 +13,6 @@ use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\TypesFinder\FindReturnType;
 
@@ -117,7 +116,7 @@ class FindReturnTypeTest extends TestCase
     ): void {
         $docBlock = sprintf("/**\n * @return %s\n */", $returnType);
 
-        $function = $this->createMock(ReflectionFunctionAbstract::class);
+        $function = $this->createMock(ReflectionFunction::class);
 
         $function
             ->expects($this->once())

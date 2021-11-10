@@ -19,7 +19,6 @@ use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -66,6 +65,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $functionInfo = $reflector->reflectFunction('Foo\bar');
 
         self::assertSame('Foo\bar', $functionInfo->getName());
+        self::assertTrue($functionInfo->inNamespace());
         self::assertSame('Foo', $functionInfo->getNamespaceName());
         self::assertSame('bar', $functionInfo->getShortName());
     }
@@ -78,6 +78,20 @@ class ReflectionFunctionAbstractTest extends TestCase
         $functionInfo = $reflector->reflectFunction('foo');
 
         self::assertSame('foo', $functionInfo->getName());
+        self::assertFalse($functionInfo->inNamespace());
+        self::assertSame('', $functionInfo->getNamespaceName());
+        self::assertSame('foo', $functionInfo->getShortName());
+    }
+
+    public function testNameMethodsInRootNamespace(): void
+    {
+        $php = '<?php namespace { function foo() {} }';
+
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
+
+        self::assertSame('foo', $functionInfo->getName());
+        self::assertFalse($functionInfo->inNamespace());
         self::assertSame('', $functionInfo->getNamespaceName());
         self::assertSame('foo', $functionInfo->getShortName());
     }
@@ -92,9 +106,9 @@ class ReflectionFunctionAbstractTest extends TestCase
             ),
         ))->reflectFunction('foo');
 
-        self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getName());
+        self::assertSame('Roave\BetterReflectionTest\Reflection\\' . ReflectionFunction::CLOSURE_NAME, $functionInfo->getName());
         self::assertSame('Roave\BetterReflectionTest\Reflection', $functionInfo->getNamespaceName());
-        self::assertSame(ReflectionFunctionAbstract::CLOSURE_NAME, $functionInfo->getShortName());
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $functionInfo->getShortName());
     }
 
     public function testIsClosureWithRegularFunction(): void
@@ -115,7 +129,7 @@ class ReflectionFunctionAbstractTest extends TestCase
                 },
                 $this->parser,
             ),
-        ))->reflectFunction(ReflectionFunctionAbstract::CLOSURE_NAME);
+        ))->reflectFunction(ReflectionFunction::CLOSURE_NAME);
 
         self::assertTrue($function->isClosure());
     }

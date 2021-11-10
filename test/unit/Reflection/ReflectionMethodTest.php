@@ -85,6 +85,14 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('add', $method->getName());
     }
 
+    public function testIsClosure(): void
+    {
+        $classInfo = $this->reflector->reflectClass(Methods::class);
+        $method    = $classInfo->getMethod('__construct');
+
+        self::assertFalse($method->isClosure());
+    }
+
     /**
      * @return array
      */

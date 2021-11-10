@@ -24,8 +24,10 @@ use function sprintf;
 use function strtolower;
 use function trait_exists;
 
-class ReflectionMethod extends ReflectionFunctionAbstract
+class ReflectionMethod
 {
+    use ReflectionFunctionAbstract;
+
     private ReflectionClass $declaringClass;
 
     private ReflectionClass $implementingClass;
@@ -84,13 +86,18 @@ class ReflectionMethod extends ReflectionFunctionAbstract
         return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
     }
 
+    public function getAst(): MethodNode
+    {
+        return $this->methodNode;
+    }
+
     public function getShortName(): string
     {
         if ($this->aliasName !== null) {
             return $this->aliasName;
         }
 
-        return parent::getShortName();
+        return $this->methodNode->name->name;
     }
 
     public function getAliasName(): ?string
@@ -177,6 +184,16 @@ class ReflectionMethod extends ReflectionFunctionAbstract
     }
 
     public function inNamespace(): bool
+    {
+        return false;
+    }
+
+    public function getNamespaceName(): string
+    {
+        return '';
+    }
+
+    public function isClosure(): bool
     {
         return false;
     }

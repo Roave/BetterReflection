@@ -9,7 +9,7 @@ use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 
 /**
  * @covers \Roave\BetterReflection\Identifier\Identifier
@@ -62,8 +62,8 @@ class IdentifierTest extends TestCase
 
     public function testGetNameForClosure(): void
     {
-        $identifier = new Identifier(ReflectionFunctionAbstract::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
-        self::assertSame(ReflectionFunctionAbstract::CLOSURE_NAME, $identifier->getName());
+        $identifier = new Identifier(ReflectionFunction::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $identifier->getName());
     }
 
     public function testGetNameForAnonymousClass(): void

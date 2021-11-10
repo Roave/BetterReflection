@@ -15,7 +15,6 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_ as UseStatement;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
-use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\TypesFinder\FindParameterType;
@@ -111,7 +110,7 @@ class FindParameterTypeTest extends TestCase
         $node     = new ParamNode(new Variable($nodeName));
         $docBlock = sprintf("/**\n * %s\n */", $docBlock);
 
-        $method = $this->createMock(ReflectionFunctionAbstract::class);
+        $method = $this->createMock(ReflectionFunction::class);
 
         $method
             ->expects($this->once())
@@ -131,7 +130,7 @@ class FindParameterTypeTest extends TestCase
     {
         $node = new ParamNode(new Variable('foo'));
 
-        $function = $this->createMock(ReflectionFunctionAbstract::class);
+        $function = $this->createMock(ReflectionFunction::class);
 
         $function
             ->expects(self::once())
@@ -157,7 +156,7 @@ class FindParameterTypeTest extends TestCase
 
         $parameterNode = new ParamNode(new Variable('foo'));
 
-        $function = $this->createMock(ReflectionFunctionAbstract::class);
+        $function = $this->createMock(ReflectionFunction::class);
 
         $function
             ->expects(self::once())
