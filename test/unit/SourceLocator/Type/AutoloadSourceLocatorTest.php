@@ -385,6 +385,10 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories(): void
     {
+        // Force autoload for these asserts because it's not possible to autoload them in the autoload callback
+        self::assertFalse(false);
+        self::assertTrue(true);
+
         // A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace
         $autoload = static function (string $className): bool {
             if ($className !== AutoloadableClassWithTwoDirectories::class) {
