@@ -33,7 +33,7 @@ final class FileReadTrapStreamWrapper
     ];
 
     /** @var list<string>|null */
-    private static ?array $registeredStreamWrapperProtocols;
+    private static ?array $registeredStreamWrapperProtocols = null;
 
     /**
      * Read this property to determine the last file on which reads were attempted
