@@ -8,6 +8,7 @@ use ReflectionEnumUnitCase as CoreReflectionEnumUnitCase;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
 use UnitEnum;
+use ValueError;
 
 use function array_map;
 
@@ -73,6 +74,10 @@ final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
+        if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
+            throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');
+        }
+
         if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
             $attributes = $this->betterReflectionEnumCase->getAttributesByInstance($name);
         } elseif ($name !== null) {

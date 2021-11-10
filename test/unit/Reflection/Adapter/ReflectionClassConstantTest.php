@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAtt
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -262,6 +263,15 @@ class ReflectionClassConstantTest extends TestCase
         self::assertCount(1, $reflectionClassConstantAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+
+        self::expectException(ValueError::class);
+        $reflectionClassConstantAdapter->getAttributes(null, 123);
     }
 
     public function dataIsEnumCase(): array

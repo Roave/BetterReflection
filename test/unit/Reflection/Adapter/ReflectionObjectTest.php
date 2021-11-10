@@ -24,6 +24,7 @@ use Roave\BetterReflection\Reflection\ReflectionObject as BetterReflectionObject
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
 use stdClass;
+use ValueError;
 
 use function array_combine;
 use function array_map;
@@ -234,6 +235,7 @@ class ReflectionObjectTest extends TestCase
 
         self::assertTrue($reflectionObjectAdapter->hasMethod('fooBoo'));
         self::assertTrue($reflectionObjectAdapter->hasMethod('fooboo'));
+        self::assertTrue($reflectionObjectAdapter->hasMethod('fOObOO'));
     }
 
     public function testGetMethodIsCaseInsensitive(): void
@@ -256,6 +258,7 @@ class ReflectionObjectTest extends TestCase
 
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fooBoo')->getName());
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fooboo')->getName());
+        self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fOObOO')->getName());
     }
 
     public function testIsSubclassOfWithObject(): void
@@ -415,6 +418,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not accessible');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -434,6 +438,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not accessible');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -447,6 +452,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" does not exist');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -472,6 +478,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" does not exist');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -494,6 +501,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not static');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -516,6 +524,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property "foo" is not static');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -821,5 +830,14 @@ class ReflectionObjectTest extends TestCase
         self::assertCount(1, $reflectionObjectAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionObjectAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
         self::assertCount(2, $reflectionObjectAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+    }
+
+    public function testGetAttributesThrowsExceptionForInvalidFlags(): void
+    {
+        $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::expectException(ValueError::class);
+        $reflectionObjectAdapter->getAttributes(null, 123);
     }
 }

@@ -6,8 +6,10 @@ namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
 use CompileError;
 use DateInterval;
+use DatePeriod;
 use DateTime;
 use DateTimeInterface;
+use PDO;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -31,6 +33,7 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Stringable;
+use ZipArchive;
 
 use function array_filter;
 use function array_key_exists;
@@ -689,6 +692,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [CompileError::class, 70000, false],
             [Stringable::class, 80000, true],
             [Stringable::class, 70400, false],
+            [Stringable::class, 70399, false],
         ];
     }
 
@@ -716,6 +720,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [DateTimeInterface::class, 'ATOM', 70100, false],
             [DateTime::class, 'ATOM', 70100, true],
             [DateTime::class, 'ATOM', 70200, false],
+            [PDO::class, 'FETCH_DEFAULT', 80007, true],
+            [PDO::class, 'FETCH_DEFAULT', 80006, false],
+            [ZipArchive::class, 'LIBZIP_VERSION', 70403, true],
+            [ZipArchive::class, 'LIBZIP_VERSION', 70402, false],
         ];
     }
 
@@ -743,6 +751,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [CoreReflectionProperty::class, 'getType', 70300, false],
             [CoreReflectionClass::class, 'export', 70400, true],
             [CoreReflectionClass::class, 'export', 80000, false],
+            [DatePeriod::class, 'getRecurrences', 70217, true],
+            [DatePeriod::class, 'getRecurrences', 70216, false],
         ];
     }
 
@@ -768,6 +778,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [DateInterval::class, 'f', null, true],
             [DateInterval::class, 'f', 70100, true],
             [DateInterval::class, 'f', 70000, false],
+            [DateInterval::class, 'f', 70099, false],
         ];
     }
 
@@ -795,6 +806,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['str_starts_with', 70400, false],
             ['mysql_query', 50400, true],
             ['mysql_query', 70000, false],
+            ['hash_hkdf', 70102, true],
+            ['hash_hkdf', 70101, false],
             // Not core functions
             ['newrelic_add_custom_parameter', 40000, true],
         ];
@@ -848,6 +861,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['PHP_OS_FAMILY', 70100, false],
             ['INPUT_SESSION', 70400, true],
             ['INPUT_SESSION', 80000, false],
+            ['CURL_VERSION_ALTSVC', 70306, true],
+            ['CURL_VERSION_ALTSVC', 70305, false],
             // Not core constants
             ['RADIUS_DISCONNECT_ACK', null, true],
             ['RADIUS_DISCONNECT_ACK', 10000, true],

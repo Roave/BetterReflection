@@ -11,8 +11,10 @@ class StaticPropertiesParent
 class StaticProperties extends StaticPropertiesParent
 {
     public static $baz = 'baz';
+
+    private $notStaticPropertyBetweenStatic;
+
     protected static $bat = 123;
     private static $qux;
 
-    private $notStaticProperty;
 }

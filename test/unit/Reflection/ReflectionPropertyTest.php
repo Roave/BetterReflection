@@ -32,6 +32,7 @@ use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTraitStaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
+use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
@@ -280,13 +281,13 @@ class ReflectionPropertyTest extends TestCase
     public function propertyDefaultValueProvider(): array
     {
         return [
-            ['hasDefault', true, 123],
+            ['hasDefault', true, 'const'],
             ['hasNullAsDefault', true, null],
             ['noDefault', true, null],
             ['hasDefaultWithType', true, 123],
             ['hasNullAsDefaultWithType', true, null],
             ['noDefaultWithType', false, null],
-            ['fromTrait', true, 'const'],
+            ['fromTrait', true, 'anything'],
         ];
     }
 
@@ -295,7 +296,7 @@ class ReflectionPropertyTest extends TestCase
      */
     public function testPropertyDefaultValue(string $propertyName, bool $hasDefaultValue, mixed $defaultValue): void
     {
-        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator)))->reflectClass('Foo');
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator)))->reflectClass(DefaultProperties::class);
         $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($hasDefaultValue, $property->hasDefaultValue());

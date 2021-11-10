@@ -54,6 +54,7 @@ use Roave\BetterReflectionTest\Fixture\ClassUsingTraitWithAbstractMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
 use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
+use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleInterface;
@@ -189,6 +190,7 @@ class ReflectionClassTest extends TestCase
         $classInfo = $reflector->reflectClass(PureEnum::class);
         $methods   = $classInfo->getImmediateMethods();
 
+        self::assertCount(1, $methods);
         self::assertArrayHasKey('cases', $methods);
 
         $method = $methods['cases'];
@@ -207,6 +209,8 @@ class ReflectionClassTest extends TestCase
 
         $classInfo = $reflector->reflectClass(StringEnum::class);
         $methods   = $classInfo->getImmediateMethods();
+
+        self::assertCount(3, $methods);
 
         foreach (['cases' => 0, 'from' => 1, 'tryFrom' => 1] as $methodName => $numberOfParameters) {
             self::assertArrayHasKey($methodName, $methods, $methodName);
@@ -450,6 +454,12 @@ class ReflectionClassTest extends TestCase
         $properties = $classInfo->getImmediateProperties();
 
         self::assertArrayHasKey('name', $properties);
+
+        $property = $properties['name'];
+
+        self::assertTrue($property->isPublic());
+        self::assertTrue($property->isReadOnly());
+        self::assertSame(0, $property->getPositionInAst());
     }
 
     public function testGetPropertiesForBackedEnum(): void
@@ -462,8 +472,15 @@ class ReflectionClassTest extends TestCase
         $classInfo  = $reflector->reflectClass(StringEnum::class);
         $properties = $classInfo->getImmediateProperties();
 
-        self::assertArrayHasKey('name', $properties);
-        self::assertArrayHasKey('value', $properties);
+        foreach (['name', 'value'] as $propertyName) {
+            self::assertArrayHasKey($propertyName, $properties, $propertyName);
+
+            $property = $properties[$propertyName];
+
+            self::assertTrue($property->isPublic(), $propertyName);
+            self::assertTrue($property->isReadOnly(), $propertyName);
+            self::assertSame(0, $property->getPositionInAst(), $propertyName);
+        }
     }
 
     public function testGetPropertiesDeclaredWithOneKeyword(): void
@@ -528,7 +545,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getProperties();
-        self::assertCount(5, $properties);
+        self::assertCount(6, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
         self::assertSame('a', $classInfo->getProperty('a')->getName(), 'Failed asserting that property a from trait Bar was returned');
@@ -543,8 +560,11 @@ PHP;
         self::assertSame('d', $classInfo->getProperty('d')->getName(), 'Failed asserting that protected property d from parent class Baz was returned');
         self::assertSame(Baz::class, $classInfo->getProperty('d')->getDeclaringClass()->getName());
 
-        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from SUT was returned');
+        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from Qux was returned');
         self::assertSame(Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
+
+        self::assertSame('g', $classInfo->getProperty('g')->getName(), 'Failed asserting that property g from Qux was returned');
+        self::assertSame(Qux::class, $classInfo->getProperty('g')->getDeclaringClass()->getName());
     }
 
     public function testGetImmediateProperties(): void
@@ -555,11 +575,18 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getImmediateProperties();
-        self::assertCount(1, $properties);
+        self::assertCount(2, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
-        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from SUT was returned');
-        self::assertSame(Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
+        $fProperty = $classInfo->getProperty('f');
+
+        self::assertSame(Qux::class, $fProperty->getDeclaringClass()->getName());
+        self::assertFalse($fProperty->isPromoted());
+
+        $gProperty = $classInfo->getProperty('g');
+
+        self::assertSame(Qux::class, $gProperty->getDeclaringClass()->getName());
+        self::assertTrue($gProperty->isPromoted());
     }
 
     public function testGetProperty(): void
@@ -756,14 +783,14 @@ PHP;
 
     public function testGetDefaultProperties(): void
     {
-        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/DefaultProperties.php',
-            $this->astLocator,
-        )))->reflectClass('Foo');
+        $object                     = new DefaultProperties();
+        $object->notDefaultProperty = null;
+
+        $classInfo = ReflectionClass::createFromInstance($object);
 
         self::assertSame([
-            'fromTrait' => 'const',
-            'hasDefault' => 123,
+            'fromTrait' => 'anything',
+            'hasDefault' => 'const',
             'hasNullAsDefault' => null,
             'noDefault' => null,
             'hasDefaultWithType' => 123,
@@ -1530,7 +1557,9 @@ PHP;
         self::assertTrue($subExampleClass->implementsInterface(ClassWithInterfaces\C::class));
         self::assertTrue($subExampleClass->implementsInterface(ClassWithInterfacesOther\D::class));
         self::assertTrue($subExampleClass->implementsInterface(E::class));
+        self::assertTrue($subExampleClass->implementsInterface('\E'));
         self::assertFalse($subExampleClass->implementsInterface(Iterator::class));
+        self::assertFalse($subExampleClass->implementsInterface('\Iterator'));
     }
 
     public function testIsInstantiable(): void

@@ -1,17 +1,19 @@
 <?php
 
-trait FooTrait
+namespace Roave\BetterReflectionTest\Fixture;
+
+trait DefaultPropertiesTrait
 {
-    public $fromTrait = self::SOME_CONST;
+    public $fromTrait = 'anything';
 }
 
-class Foo
+class DefaultProperties
 {
-    use FooTrait;
+    use DefaultPropertiesTrait;
 
     const SOME_CONST = 'const';
 
-    public $hasDefault = 123;
+    public $hasDefault = self::SOME_CONST;
     public $hasNullAsDefault = null;
     public $noDefault;
 

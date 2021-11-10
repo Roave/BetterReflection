@@ -8,6 +8,7 @@ use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
+use ValueError;
 
 use function array_map;
 
@@ -117,6 +118,10 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
+        if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
+            throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');
+        }
+
         if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
             $attributes = $this->betterClassConstantOrEnumCase->getAttributesByInstance($name);
         } elseif ($name !== null) {

@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnum
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+use ValueError;
 
 use function array_combine;
 use function array_filter;
@@ -239,14 +240,10 @@ final class ReflectionEnum extends CoreReflectionEnum
      */
     public function getInterfaces(): array
     {
-        $interfaces = $this->betterReflectionEnum->getInterfaces();
-
-        $wrappedInterfaces = [];
-        foreach ($interfaces as $key => $interface) {
-            $wrappedInterfaces[$key] = new ReflectionClass($interface);
-        }
-
-        return $wrappedInterfaces;
+        return array_map(
+            static fn (BetterReflectionClass $interface): ReflectionClass => new ReflectionClass($interface),
+            $this->betterReflectionEnum->getInterfaces(),
+        );
     }
 
     /**
@@ -269,7 +266,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     {
         $traits = $this->betterReflectionEnum->getTraits();
 
-        /** @var array<trait-string> $traitNames */
+        /** @var list<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
         return array_combine(
@@ -445,6 +442,10 @@ final class ReflectionEnum extends CoreReflectionEnum
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
+        if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
+            throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');
+        }
+
         if ($name !== null && $flags & ReflectionAttribute::IS_INSTANCEOF) {
             $attributes = $this->betterReflectionEnum->getAttributesByInstance($name);
         } elseif ($name !== null) {

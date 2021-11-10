@@ -161,8 +161,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract
      */
     public function getModifiers(): int
     {
-        $val  = 0;
-        $val += $this->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
+        $val  = $this->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
         $val += $this->isPublic() ? CoreReflectionMethod::IS_PUBLIC : 0;
         $val += $this->isProtected() ? CoreReflectionMethod::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
