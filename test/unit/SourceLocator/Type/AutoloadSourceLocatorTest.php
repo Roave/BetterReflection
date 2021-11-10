@@ -385,7 +385,21 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testCanAutoloadPsr4ClassesInPotentiallyMultipleDirectories(): void
     {
-        spl_autoload_register([$this, 'autoload']);
+        // A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace
+        $autoload = static function (string $className): bool {
+            if ($className !== AutoloadableClassWithTwoDirectories::class) {
+                return false;
+            }
+
+            self::assertFalse(is_file(__DIR__ . '/AutoloadableClassWithTwoDirectories.php'));
+            self::assertTrue(is_file(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
+
+            include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
+
+            return true;
+        };
+
+        spl_autoload_register($autoload);
 
         self::assertNotNull(
             (new AutoloadSourceLocator($this->astLocator))
@@ -395,26 +409,9 @@ class AutoloadSourceLocatorTest extends TestCase
                 ),
         );
 
-        spl_autoload_unregister([$this, 'autoload']);
+        spl_autoload_unregister($autoload);
 
         self::assertFalse(class_exists(AutoloadableClassWithTwoDirectories::class, false));
-    }
-
-    /**
-     * A test autoloader that simulates Composer PSR-4 autoloader with 2 possible directories for the same namespace.
-     */
-    public function autoload(string $className): bool
-    {
-        if ($className !== AutoloadableClassWithTwoDirectories::class) {
-            return false;
-        }
-
-        self::assertFalse(is_file(__DIR__ . '/AutoloadableClassWithTwoDirectories.php'));
-        self::assertTrue(is_file(__DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php'));
-
-        include __DIR__ . '/../../Fixture/AutoloadableClassWithTwoDirectories.php';
-
-        return true;
     }
 
     /**
