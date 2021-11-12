@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
+<files psalm-version="4.12.0@e42bc4a23f67acba28a23bb09c348e2ff38a1d87">
   <file src="src/Reflection/ReflectionParameter.php">
     <UndefinedPropertyFetch occurrences="1">
       <code>$this-&gt;node-&gt;var-&gt;name</code>
@@ -38,17 +38,9 @@
   <file src="src/SourceLocator/Type/Composer/Factory/MakeLocatorForComposerJsonAndInstalledJson.php">
     <InvalidScalarArgument occurrences="2"/>
   </file>
-  <file src="src/SourceLocator/Type/Composer/Factory/MakeLocatorForInstalledJson.php">
-    <InvalidScalarArgument occurrences="2"/>
-  </file>
   <file src="src/SourceLocator/Type/DirectoriesSourceLocator.php">
     <DocblockTypeContradiction occurrences="1">
       <code>is_string($directory)</code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="src/SourceLocator/Type/FileIteratorSourceLocator.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>$fileInfo instanceof SplFileInfo</code>
     </DocblockTypeContradiction>
   </file>
 </files>

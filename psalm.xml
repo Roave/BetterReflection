@@ -7,7 +7,6 @@
     useDocblockTypes="true"
     totallyTyped="false"
     usePhpDocPropertiesWithoutMagicCall="true"
-    allowPhpStormGenerics="true"
     findUnusedPsalmSuppress="true"
     autoloader="psalm.bootstrap.php"
 >
