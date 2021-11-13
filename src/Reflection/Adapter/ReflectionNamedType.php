@@ -7,6 +7,9 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionNamedType as CoreReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
+/**
+ * @psalm-suppress MissingImmutableAnnotation
+ */
 final class ReflectionNamedType extends CoreReflectionNamedType
 {
     public function __construct(private BetterReflectionNamedType $betterReflectionType)

@@ -14,6 +14,9 @@ use ValueError;
 
 use function array_map;
 
+/**
+ * @psalm-suppress MissingImmutableAnnotation
+ */
 final class ReflectionParameter extends CoreReflectionParameter
 {
     public function __construct(private BetterReflectionParameter $betterReflectionParameter)

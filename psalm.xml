@@ -15,8 +15,6 @@
     </projectFiles>
 
     <issueHandlers>
-        <MissingImmutableAnnotation errorLevel="suppress" />
-
         <NullableReturnStatement errorLevel="suppress" />
         <InvalidNullableReturnType errorLevel="suppress" />
 
