@@ -262,7 +262,6 @@ class ReflectionPropertyTest extends TestCase
                 $this->reflector,
                 new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
                 0,
-                null,
                 $classInfo,
                 $classInfo,
                 false,

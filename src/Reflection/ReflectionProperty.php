@@ -11,7 +11,6 @@ use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
@@ -42,26 +41,17 @@ use function trait_exists;
 
 class ReflectionProperty
 {
-    private ReflectionClass $declaringClass;
-
-    private ReflectionClass $implementingClass;
-
-    private PropertyNode $node;
-
-    private int $positionInNode;
-
-    private ?Namespace_ $declaringNamespace;
-
-    private bool $isPromoted;
-
-    private bool $declaredAtCompileTime = true;
-
-    private Reflector $reflector;
-
     private ?CompiledValue $compiledDefaultValue = null;
 
-    private function __construct()
-    {
+    private function __construct(
+        private Reflector $reflector,
+        private PropertyNode $node,
+        private int $positionInNode,
+        private ReflectionClass $declaringClass,
+        private ReflectionClass $implementingClass,
+        private bool $isPromoted,
+        private bool $declaredAtCompileTime = true,
+    ) {
     }
 
     /**
@@ -97,23 +87,20 @@ class ReflectionProperty
         Reflector $reflector,
         PropertyNode $node,
         int $positionInNode,
-        ?Namespace_ $declaringNamespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         bool $isPromoted,
         bool $declaredAtCompileTime = true,
     ): self {
-        $prop                        = new self();
-        $prop->reflector             = $reflector;
-        $prop->node                  = $node;
-        $prop->positionInNode        = $positionInNode;
-        $prop->declaringNamespace    = $declaringNamespace;
-        $prop->declaringClass        = $declaringClass;
-        $prop->implementingClass     = $implementingClass;
-        $prop->isPromoted            = $isPromoted;
-        $prop->declaredAtCompileTime = $declaredAtCompileTime;
-
-        return $prop;
+        return new self(
+            $reflector,
+            $node,
+            $positionInNode,
+            $declaringClass,
+            $implementingClass,
+            $isPromoted,
+            $declaredAtCompileTime,
+        );
     }
 
     /**
@@ -261,7 +248,7 @@ class ReflectionProperty
      */
     public function getDocBlockTypes(): array
     {
-        return (new FindPropertyType())->__invoke($this, $this->declaringNamespace);
+        return (new FindPropertyType())->__invoke($this, $this->declaringClass->getDeclaringNamespaceAst());
     }
 
     public function getDeclaringClass(): ReflectionClass
