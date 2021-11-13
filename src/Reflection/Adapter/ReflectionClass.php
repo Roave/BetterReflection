@@ -28,6 +28,9 @@ use function func_num_args;
 use function sprintf;
 use function strtolower;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class ReflectionClass extends CoreReflectionClass
 {
     public function __construct(private BetterReflectionClass|BetterReflectionEnum $betterReflectionClass)

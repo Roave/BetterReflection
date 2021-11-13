@@ -29,20 +29,15 @@ use function substr_count;
 
 class ReflectionConstant implements Reflection
 {
-    private Reflector $reflector;
-
-    private Node\Stmt\Const_|Node\Expr\FuncCall $node;
-
-    private LocatedSource $locatedSource;
-
-    private ?NamespaceNode $declaringNamespace;
-
-    private ?int $positionInNode;
-
     private ?CompiledValue $compiledValue = null;
 
-    private function __construct()
-    {
+    private function __construct(
+        private Reflector $reflector,
+        private Node\Stmt\Const_|Node\Expr\FuncCall $node,
+        private LocatedSource $locatedSource,
+        private ?NamespaceNode $declaringNamespace = null,
+        private ?int $positionInNode = null,
+    ) {
     }
 
     /**
@@ -81,14 +76,13 @@ class ReflectionConstant implements Reflection
         ?NamespaceNode $namespace,
         int $positionInNode,
     ): self {
-        $constant                     = new self();
-        $constant->reflector          = $reflector;
-        $constant->node               = $node;
-        $constant->locatedSource      = $locatedSource;
-        $constant->declaringNamespace = $namespace;
-        $constant->positionInNode     = $positionInNode;
-
-        return $constant;
+        return new self(
+            $reflector,
+            $node,
+            $locatedSource,
+            $namespace,
+            $positionInNode,
+        );
     }
 
     /**
@@ -101,12 +95,11 @@ class ReflectionConstant implements Reflection
     ): self {
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
 
-        $constant                = new self();
-        $constant->reflector     = $reflector;
-        $constant->node          = $node;
-        $constant->locatedSource = $locatedSource;
-
-        return $constant;
+        return new self(
+            $reflector,
+            $node,
+            $locatedSource,
+        );
     }
 
     /**

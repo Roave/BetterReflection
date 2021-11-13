@@ -28,6 +28,9 @@ use function constant;
 use function sprintf;
 use function strtolower;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class ReflectionEnum extends CoreReflectionEnum
 {
     public function __construct(private BetterReflectionEnum $betterReflectionEnum)

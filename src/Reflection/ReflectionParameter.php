@@ -33,22 +33,18 @@ use function strtolower;
 
 class ReflectionParameter
 {
-    private ParamNode $node;
-
-    private ?Namespace_ $declaringNamespace;
-
-    private ReflectionMethod|ReflectionFunction $function;
-
-    private int $parameterIndex;
-
     private bool $isOptional;
 
     private ?CompiledValue $compiledDefaultValue = null;
 
-    private Reflector $reflector;
-
-    private function __construct()
-    {
+    private function __construct(
+        private Reflector $reflector,
+        private ParamNode $node,
+        private ?Namespace_ $declaringNamespace,
+        private ReflectionMethod|ReflectionFunction $function,
+        private int $parameterIndex,
+    ) {
+        $this->isOptional = $this->detectIsOptional();
     }
 
     /**
@@ -142,15 +138,13 @@ class ReflectionParameter
         ReflectionMethod|ReflectionFunction $function,
         int $parameterIndex,
     ): self {
-        $param                     = new self();
-        $param->reflector          = $reflector;
-        $param->node               = $node;
-        $param->declaringNamespace = $declaringNamespace;
-        $param->function           = $function;
-        $param->parameterIndex     = $parameterIndex;
-        $param->isOptional         = $param->detectIsOptional();
-
-        return $param;
+        return new self(
+            $reflector,
+            $node,
+            $declaringNamespace,
+            $function,
+            $parameterIndex,
+        );
     }
 
     /**

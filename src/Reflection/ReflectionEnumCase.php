@@ -22,16 +22,13 @@ use function is_string;
 
 class ReflectionEnumCase
 {
-    private Reflector $reflector;
-
-    private EnumCase $node;
-
-    private ReflectionEnum $enum;
-
     private ?CompiledValue $compiledValue = null;
 
-    private function __construct()
-    {
+    private function __construct(
+        private Reflector $reflector,
+        private EnumCase $node,
+        private ReflectionEnum $enum,
+    ) {
     }
 
     /**
@@ -42,12 +39,7 @@ class ReflectionEnumCase
         EnumCase $node,
         ReflectionEnum $enum,
     ): self {
-        $reflection            = new self();
-        $reflection->reflector = $reflector;
-        $reflection->node      = $node;
-        $reflection->enum      = $enum;
-
-        return $reflection;
+        return new self($reflector, $node, $enum);
     }
 
     public function getName(): string

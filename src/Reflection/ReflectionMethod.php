@@ -6,8 +6,10 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use OutOfBoundsException;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -28,20 +30,25 @@ class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
 
-    private ReflectionClass $declaringClass;
-
-    private ReflectionClass $implementingClass;
-
-    private ReflectionClass $currentClass;
-
     private MethodNode $methodNode;
 
-    private ?string $aliasName;
+    private function __construct(
+        private Reflector $reflector,
+        private MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
+        private LocatedSource $locatedSource,
+        private ?NamespaceNode $declaringNamespace,
+        private ReflectionClass $declaringClass,
+        private ReflectionClass $implementingClass,
+        private ReflectionClass $currentClass,
+        private ?string $aliasName,
+    ) {
+        assert($node instanceof MethodNode);
+
+        $this->methodNode = $node;
+    }
 
     /**
      * @internal
-     *
-     * @param MethodNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -53,14 +60,16 @@ class ReflectionMethod
         ReflectionClass $currentClass,
         ?string $aliasName = null,
     ): self {
-        $method                    = new self($reflector, $node, $locatedSource, $namespace);
-        $method->declaringClass    = $declaringClass;
-        $method->implementingClass = $implementingClass;
-        $method->currentClass      = $currentClass;
-        $method->methodNode        = $node;
-        $method->aliasName         = $aliasName;
-
-        return $method;
+        return new self(
+            $reflector,
+            $node,
+            $locatedSource,
+            $namespace,
+            $declaringClass,
+            $implementingClass,
+            $currentClass,
+            $aliasName,
+        );
     }
 
     /**
@@ -298,12 +307,12 @@ class ReflectionMethod
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            return fn (...$args) => $this->callStaticMethod($args);
+            return fn (mixed ...$args): mixed => $this->callStaticMethod($args);
         }
 
         $instance = $this->assertObject($object);
 
-        return fn (...$args) => $this->callObjectMethod($instance, $args);
+        return fn (mixed ...$args): mixed => $this->callObjectMethod($instance, $args);
     }
 
     /**
@@ -344,7 +353,7 @@ class ReflectionMethod
         $implementingClassName = $this->getImplementingClass()->getName();
 
         /** @psalm-suppress InvalidStringClass */
-        $closure = Closure::bind(fn (string $implementingClassName, string $methodName, array $methodArgs) => $implementingClassName::{$methodName}(...$methodArgs), null, $implementingClassName);
+        $closure = Closure::bind(fn (string $implementingClassName, string $methodName, array $methodArgs): mixed => $implementingClassName::{$methodName}(...$methodArgs), null, $implementingClassName);
 
         assert($closure instanceof Closure);
 
@@ -356,7 +365,7 @@ class ReflectionMethod
      */
     private function callObjectMethod(object $object, array $args): mixed
     {
-        $closure = Closure::bind(fn ($object, string $methodName, array $methodArgs) => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
+        $closure = Closure::bind(fn (object $object, string $methodName, array $methodArgs): mixed => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
 
         assert($closure instanceof Closure);
 

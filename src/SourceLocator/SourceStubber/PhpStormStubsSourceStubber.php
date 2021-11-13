@@ -187,8 +187,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return;
         }
 
-        self::$classMap        = array_change_key_case(PhpStormStubsMap::CLASSES);
-        self::$functionMap     = array_change_key_case(PhpStormStubsMap::FUNCTIONS);
+        /** @psalm-suppress PropertyTypeCoercion */
+        self::$classMap = array_change_key_case(PhpStormStubsMap::CLASSES);
+        /** @psalm-suppress PropertyTypeCoercion */
+        self::$functionMap = array_change_key_case(PhpStormStubsMap::FUNCTIONS);
+        /** @psalm-suppress PropertyTypeCoercion */
         self::$constantMap     = array_change_key_case(PhpStormStubsMap::CONSTANTS);
         self::$mapsInitialized = true;
     }
