@@ -22,25 +22,18 @@ class ReflectionClassConstant
 
     private ?CompiledValue $compiledValue = null;
 
-    private Reflector $reflector;
-
-    /** @var ReflectionClass Constant owner */
-    private ReflectionClass $owner;
-
-    private ClassConst $node;
-
-    private int $positionInNode;
-
-    private function __construct()
-    {
+    private function __construct(
+        private Reflector $reflector,
+        private ClassConst $node,
+        private ReflectionClass $owner,
+        private int $positionInNode,
+    ) {
     }
 
     /**
      * Create a reflection of a class's constant by Const Node
      *
      * @internal
-     *
-     * @param ClassConst $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -48,13 +41,12 @@ class ReflectionClassConstant
         int $positionInNode,
         ReflectionClass $owner,
     ): self {
-        $ref                 = new self();
-        $ref->node           = $node;
-        $ref->positionInNode = $positionInNode;
-        $ref->owner          = $owner;
-        $ref->reflector      = $reflector;
-
-        return $ref;
+        return new self(
+            $reflector,
+            $node,
+            $owner,
+            $positionInNode,
+        );
     }
 
     /**
