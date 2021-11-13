@@ -17,8 +17,6 @@
     <issueHandlers>
         <MissingImmutableAnnotation errorLevel="suppress" />
 
-        <MissingClosureReturnType errorLevel="suppress" />
-
         <PropertyNotSetInConstructor errorLevel="suppress" />
         <MissingClosureParamType errorLevel="suppress" />
 

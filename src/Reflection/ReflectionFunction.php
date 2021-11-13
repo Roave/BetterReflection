@@ -123,7 +123,7 @@ class ReflectionFunction implements Reflection
 
         $this->assertFunctionExist($functionName);
 
-        return static fn (...$args) => $functionName(...$args);
+        return static fn (...$args): mixed => $functionName(...$args);
     }
 
     /**
