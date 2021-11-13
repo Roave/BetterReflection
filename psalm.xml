@@ -15,41 +15,21 @@
     </projectFiles>
 
     <issueHandlers>
-		<MissingImmutableAnnotation errorLevel="suppress" />
+        <MissingImmutableAnnotation errorLevel="suppress" />
 
         <MissingClosureReturnType errorLevel="suppress" />
-        <MissingReturnType errorLevel="suppress" />
 
         <PropertyNotSetInConstructor errorLevel="suppress" />
-        <MissingParamType errorLevel="suppress" />
         <MissingClosureParamType errorLevel="suppress" />
 
         <NullableReturnStatement errorLevel="suppress" />
         <InvalidNullableReturnType errorLevel="suppress" />
 
-        <FalsableReturnStatement errorLevel="suppress" />
-        <InvalidFalsableReturnType errorLevel="suppress" />
-
         <MoreSpecificReturnType errorLevel="suppress" />
         <LessSpecificReturnStatement errorLevel="suppress" />
 
-        <PossiblyFalseArgument errorLevel="suppress" />
         <PossiblyNullArgument errorLevel="suppress" />
 
         <PropertyTypeCoercion errorLevel="suppress" />
-
-        <InvalidScalarArgument>
-            <!-- Not actually an issue, we send scalar where the called method wait for bool|float|int|string. See vimeo/psalm/issues/2622 -->
-            <errorLevel type="suppress">
-                <referencedFunction name="PhpParser\BuilderHelpers::normalizeValue"/>
-            </errorLevel>
-        </InvalidScalarArgument>
-
-        <RedundantConditionGivenDocblockType>
-            <!-- Assertion used to check that expected object is indeed an object -->
-            <errorLevel type="suppress">
-                <file name="src/Reflection/ReflectionProperty.php"/>
-            </errorLevel>
-        </RedundantConditionGivenDocblockType>
     </issueHandlers>
 </psalm>
