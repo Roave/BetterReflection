@@ -298,12 +298,12 @@ class ReflectionMethod
         if ($this->isStatic()) {
             $this->assertClassExist($declaringClassName);
 
-            return fn (...$args): mixed => $this->callStaticMethod($args);
+            return fn (mixed ...$args): mixed => $this->callStaticMethod($args);
         }
 
         $instance = $this->assertObject($object);
 
-        return fn (...$args): mixed => $this->callObjectMethod($instance, $args);
+        return fn (mixed ...$args): mixed => $this->callObjectMethod($instance, $args);
     }
 
     /**
@@ -356,7 +356,7 @@ class ReflectionMethod
      */
     private function callObjectMethod(object $object, array $args): mixed
     {
-        $closure = Closure::bind(fn ($object, string $methodName, array $methodArgs): mixed => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
+        $closure = Closure::bind(fn (object $object, string $methodName, array $methodArgs): mixed => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
 
         assert($closure instanceof Closure);
 
