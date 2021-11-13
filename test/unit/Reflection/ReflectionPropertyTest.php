@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use ClassWithPropertiesAndTraitProperties;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use InvalidArgumentException;
+use OutOfBoundsException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
@@ -70,12 +71,24 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('node', $property->getName());
     }
 
+    public function testCreateFromNameThrowsExceptionWhenPropertyDoesNotExist(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        ReflectionProperty::createFromName(ReflectionProperty::class, 'notExist');
+    }
+
     public function testCreateFromInstance(): void
     {
         $property = ReflectionProperty::createFromInstance(new ClassForHinting(), 'someProperty');
 
         self::assertInstanceOf(ReflectionProperty::class, $property);
         self::assertSame('someProperty', $property->getName());
+    }
+
+    public function testCreateFromInstanceThrowsExceptionWhenPropertyDoesNotExist(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        ReflectionProperty::createFromInstance(new ClassForHinting(), 'notExist');
     }
 
     public function testVisibilityMethods(): void

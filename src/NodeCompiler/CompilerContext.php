@@ -45,7 +45,7 @@ class CompilerContext
             return $this->contextReflection->getNamespaceName();
         }
 
-        return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName();
+        return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName() ?? '';
     }
 
     public function getClass(): ?ReflectionClass

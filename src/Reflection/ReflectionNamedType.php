@@ -77,7 +77,10 @@ class ReflectionNamedType extends ReflectionType
         }
 
         if (strtolower($this->name) === 'self') {
-            return $this->owner->getDeclaringClass();
+            $class = $this->owner->getDeclaringClass();
+            assert($class instanceof ReflectionClass);
+
+            return $class;
         }
 
         if (strtolower($this->name) === 'parent') {

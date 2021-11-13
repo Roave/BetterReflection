@@ -15,9 +15,6 @@
     </projectFiles>
 
     <issueHandlers>
-        <NullableReturnStatement errorLevel="suppress" />
-        <InvalidNullableReturnType errorLevel="suppress" />
-
         <MoreSpecificReturnType errorLevel="suppress" />
         <LessSpecificReturnStatement errorLevel="suppress" />
     </issueHandlers>
