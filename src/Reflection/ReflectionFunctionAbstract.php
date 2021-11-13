@@ -11,7 +11,6 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
 use PhpParser\Node\Param as ParamNode;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
@@ -24,7 +23,6 @@ use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -43,14 +41,6 @@ use function strtolower;
 trait ReflectionFunctionAbstract
 {
     private static ?Parser $parser;
-
-    private function __construct(
-        private Reflector $reflector,
-        private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
-        private LocatedSource $locatedSource,
-        private ?NamespaceNode $declaringNamespace = null,
-    ) {
-    }
 
     abstract public function __toString(): string;
 

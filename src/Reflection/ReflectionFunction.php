@@ -18,6 +18,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 
+use function assert;
 use function function_exists;
 
 class ReflectionFunction implements Reflection
@@ -27,6 +28,17 @@ class ReflectionFunction implements Reflection
     public const CLOSURE_NAME = '{closure}';
 
     private Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $functionNode;
+
+    private function __construct(
+        private Reflector $reflector,
+        private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
+        private LocatedSource $locatedSource,
+        private ?NamespaceNode $declaringNamespace = null,
+    ) {
+        assert($node instanceof Node\Stmt\Function_ || $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction);
+
+        $this->functionNode = $node;
+    }
 
     /**
      * @throws IdentifierNotFound
@@ -63,10 +75,7 @@ class ReflectionFunction implements Reflection
         LocatedSource $locatedSource,
         ?NamespaceNode $namespaceNode = null,
     ): self {
-        $function               = new self($reflector, $node, $locatedSource, $namespaceNode);
-        $function->functionNode = $node;
-
-        return $function;
+        return new self($reflector, $node, $locatedSource, $namespaceNode);
     }
 
     public function getAst(): Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction
