@@ -7,11 +7,6 @@ parameters:
 
     ignoreErrors:
         -
-            message: '#Access to an undefined property PhpParser\\Node\\Param::\$isOptional#'
-            paths:
-                - %currentWorkingDirectory%/src/Reflection/ReflectionFunctionAbstract.php
-                - %currentWorkingDirectory%/src/Reflection/ReflectionParameter.php
-        -
             message: "#^Parameter \\#1 \\$callback of function spl_autoload_register expects \\(callable\\(string\\)\\: void\\)\\|null, \\$this\\(Roave\\\\BetterReflection\\\\Util\\\\Autoload\\\\ClassLoader\\) given\\.$#"
             count: 1
             path: %currentWorkingDirectory%/src/Util/Autoload/ClassLoader.php
