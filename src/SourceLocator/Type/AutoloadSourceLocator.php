@@ -294,7 +294,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
     {
         return new class () extends NodeVisitorAbstract
         {
-            private ?string $constantName;
+            private ?string $constantName = null;
 
             private Node\Stmt\Const_|Node\Expr\FuncCall|null $node = null;
 

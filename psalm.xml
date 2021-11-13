@@ -17,8 +17,6 @@
     <issueHandlers>
         <MissingImmutableAnnotation errorLevel="suppress" />
 
-        <PropertyNotSetInConstructor errorLevel="suppress" />
-
         <NullableReturnStatement errorLevel="suppress" />
         <InvalidNullableReturnType errorLevel="suppress" />
 
