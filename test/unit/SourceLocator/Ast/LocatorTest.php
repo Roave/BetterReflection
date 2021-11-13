@@ -171,4 +171,18 @@ class LocatorTest extends TestCase
         $this->expectException(ParseToAstFailure::class);
         $this->locator->findReflectionsOfType($reflector, $locatedSource, $identifierType);
     }
+
+    public function testFindReflectionCannotFindIdentificatorWhenLocatorDoesNotContainName(): void
+    {
+        $phpCode = '<?php function () {};';
+
+        $identifier    = $this->getIdentifier('Foo', IdentifierType::IDENTIFIER_CLASS);
+        $sourceLocator = new StringSourceLocator($phpCode, $this->locator);
+        $reflector     = new DefaultReflector($sourceLocator);
+
+        $locatedSource = new LocatedSource($phpCode, null);
+
+        $this->expectException(IdentifierNotFound::class);
+        $this->locator->findReflection($reflector, $locatedSource, $identifier);
+    }
 }

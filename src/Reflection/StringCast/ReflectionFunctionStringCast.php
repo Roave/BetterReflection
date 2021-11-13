@@ -8,7 +8,9 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 
 use function array_reduce;
+use function assert;
 use function count;
+use function is_string;
 use function sprintf;
 
 /**
@@ -43,7 +45,10 @@ final class ReflectionFunctionStringCast
             return 'user';
         }
 
-        return sprintf('internal:%s', $functionReflection->getExtensionName());
+        $extensionName = $functionReflection->getExtensionName();
+        assert(is_string($extensionName));
+
+        return sprintf('internal:%s', $extensionName);
     }
 
     private static function fileAndLinesToString(ReflectionFunction $functionReflection): string
@@ -52,7 +57,12 @@ final class ReflectionFunctionStringCast
             return '';
         }
 
-        return sprintf("\n  @@ %s %d - %d", $functionReflection->getFileName(), $functionReflection->getStartLine(), $functionReflection->getEndLine());
+        $fileName = $functionReflection->getFileName();
+        if ($fileName === null) {
+            return '';
+        }
+
+        return sprintf("\n  @@ %s %d - %d", $fileName, $functionReflection->getStartLine(), $functionReflection->getEndLine());
     }
 
     private static function parametersToString(ReflectionFunction $functionReflection): string

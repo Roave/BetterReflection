@@ -10,6 +10,7 @@ use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\MagicConst\File;
 use PhpParser\Node\Scalar\String_;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
@@ -114,6 +115,23 @@ final class UnableToCompileNodeTest extends TestCase
                 new Yield_(new String_('')),
                 $context,
             )->getMessage(),
+        );
+    }
+
+    /** @dataProvider supportedContextTypes */
+    public function testBecauseOfMissingFileName(CompilerContext $context, string $contextName): void
+    {
+        $exception = UnableToCompileNode::becauseOfMissingFileName(
+            $context,
+            new File(),
+        );
+
+        self::assertSame(
+            sprintf(
+                'No file name for %s (line -1)',
+                $contextName,
+            ),
+            $exception->getMessage(),
         );
     }
 

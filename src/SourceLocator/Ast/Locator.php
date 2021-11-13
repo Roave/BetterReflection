@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast;
 
+use PhpParser\Node;
 use PhpParser\Parser;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -61,9 +62,12 @@ class Locator
         IdentifierType $identifierType,
     ): array {
         try {
+            /** @var list<Node\Stmt> $ast */
+            $ast = $this->parser->parse($locatedSource->getSource());
+
             return $this->findReflectionsInTree->__invoke(
                 $reflector,
-                $this->parser->parse($locatedSource->getSource()),
+                $ast,
                 $identifierType,
                 $locatedSource,
             );
@@ -79,8 +83,12 @@ class Locator
      *
      * @throws IdentifierNotFound
      */
-    private function findInArray(array $reflections, Identifier $identifier, string $name): Reflection
+    private function findInArray(array $reflections, Identifier $identifier, ?string $name): Reflection
     {
+        if ($name === null) {
+            throw IdentifierNotFound::fromIdentifier($identifier);
+        }
+
         $identifierName = strtolower($name);
 
         foreach ($reflections as $reflection) {

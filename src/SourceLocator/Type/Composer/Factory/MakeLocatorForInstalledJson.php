@@ -69,7 +69,7 @@ final class MakeLocatorForInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @psalm-var list<array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}>|null $installed */
+        /** @psalm-var list<array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}> $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(

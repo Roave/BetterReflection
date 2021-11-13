@@ -25,6 +25,7 @@ use function assert;
 use function count;
 use function explode;
 use function implode;
+use function is_int;
 use function substr_count;
 
 class ReflectionConstant implements Reflection
@@ -64,9 +65,13 @@ class ReflectionConstant implements Reflection
         ?NamespaceNode $namespace = null,
         ?int $positionInNode = null,
     ): self {
-        return $node instanceof Node\Stmt\Const_
-            ? self::createFromConstKeyword($reflector, $node, $locatedSource, $namespace, $positionInNode)
-            : self::createFromDefineFunctionCall($reflector, $node, $locatedSource);
+        if ($node instanceof Node\Stmt\Const_) {
+            assert(is_int($positionInNode));
+
+            return self::createFromConstKeyword($reflector, $node, $locatedSource, $namespace, $positionInNode);
+        }
+
+        return self::createFromDefineFunctionCall($reflector, $node, $locatedSource);
     }
 
     private static function createFromConstKeyword(
@@ -139,8 +144,6 @@ class ReflectionConstant implements Reflection
     /**
      * Get the "namespace" name of the constant (e.g. for A\B\FOO, this will
      * return "A\B").
-     *
-     * @psalm-suppress PossiblyNullPropertyFetch
      */
     public function getNamespaceName(): string
     {
@@ -158,6 +161,9 @@ class ReflectionConstant implements Reflection
     /**
      * Decide if this constant is part of a namespace. Returns false if the constant
      * is in the global namespace or does not have a specified namespace.
+     *
+     * @psalm-assert-if-true NamespaceNode $this->declaringNamespace
+     * @psalm-assert-if-true Node\Name $this->declaringNamespace->name
      */
     public function inNamespace(): bool
     {

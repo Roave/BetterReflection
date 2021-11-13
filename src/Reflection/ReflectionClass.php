@@ -202,8 +202,6 @@ class ReflectionClass implements Reflection
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
      * return "A\B").
-     *
-     * @psalm-suppress PossiblyNullPropertyFetch
      */
     public function getNamespaceName(): string
     {
@@ -217,6 +215,9 @@ class ReflectionClass implements Reflection
     /**
      * Decide if this class is part of a namespace. Returns false if the class
      * is in the global namespace or does not have a specified namespace.
+     *
+     * @psalm-assert-if-true NamespaceNode $this->declaringNamespace
+     * @psalm-assert-if-true Node\Name $this->declaringNamespace->name
      */
     public function inNamespace(): bool
     {

@@ -9,6 +9,7 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
@@ -53,5 +54,15 @@ class ReflectionFunctionStringCastTest extends TestCase
         $functionReflection = $reflector->reflectFunction('phpversion');
 
         self::assertStringMatchesFormat("Function [ <internal:standard> function phpversion ] {\n\n  - Parameters [1] {\n    Parameter #0 [ <required> ?string \$extension ]\n  }\n  - Return [ string|false ]\n}", (string) $functionReflection);
+    }
+
+    public function testToStringWithNoFileName(): void
+    {
+        $php = '<?php function functionToStringCast() {}';
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionReflection = $reflector->reflectFunction('functionToStringCast');
+
+        self::assertStringStartsWith('Function [ <user> function functionToStringCast ]', (string) $functionReflection);
     }
 }

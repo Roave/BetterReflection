@@ -708,6 +708,30 @@ PHP;
         self::assertSame($expectedValue, $parameter->getDefaultValue());
     }
 
+    public function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
+    {
+        return [
+            ['file'],
+            ['dir'],
+        ];
+    }
+
+    /**
+     * @dataProvider fileAndDirectoryMagicConstantsWithoutFileNameProvider
+     */
+    public function testFileAndDirectoryMagicConstantsWithoutFileName(string $parameterName): void
+    {
+        $php = '<?php function functionWithMagicConstants($file = __FILE__, $dir = __DIR__) {}';
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function  = $reflector->reflectFunction('functionWithMagicConstants');
+        $parameter = $function->getParameter($parameterName);
+
+        self::expectException(UnableToCompileNode::class);
+        self::expectExceptionMessage('No file name for function functionWithMagicConstants() (line 1)');
+        $parameter->getDefaultValue();
+    }
+
     public function testThrowExceptionWhenValueContainsInitializer(): void
     {
         $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/NewInInitializers.php'));

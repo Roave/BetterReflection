@@ -14,8 +14,10 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 
 use function array_filter;
 use function array_map;
+use function assert;
 use function count;
 use function implode;
+use function is_string;
 use function preg_replace;
 use function sprintf;
 use function str_repeat;
@@ -96,7 +98,10 @@ final class ReflectionClassStringCast
             return 'user';
         }
 
-        return sprintf('internal:%s', $classReflection->getExtensionName());
+        $extensionName = $classReflection->getExtensionName();
+        assert(is_string($extensionName));
+
+        return sprintf('internal:%s', $extensionName);
     }
 
     private static function extendsToString(ReflectionClass $classReflection): string
@@ -127,7 +132,12 @@ final class ReflectionClassStringCast
             return '';
         }
 
-        return sprintf("  @@ %s %d-%d\n", $classReflection->getFileName(), $classReflection->getStartLine(), $classReflection->getEndLine());
+        $fileName = $classReflection->getFileName();
+        if ($fileName === null) {
+            return '';
+        }
+
+        return sprintf("  @@ %s %d-%d\n", $fileName, $classReflection->getStartLine(), $classReflection->getEndLine());
     }
 
     /**

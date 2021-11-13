@@ -230,6 +230,7 @@ class ReflectionParameter
      * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
      *
      * @example someMethod($foo = 'foo', $bar)
+     * @psalm-assert-if-true Node\Expr $this->node->default
      */
     public function isDefaultValueAvailable(): bool
     {

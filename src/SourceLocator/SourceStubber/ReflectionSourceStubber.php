@@ -423,7 +423,10 @@ final class ReflectionSourceStubber implements SourceStubber
             return false;
         }
 
-        if (array_key_exists($methodReflection->getName(), $classReflection->getTraitAliases())) {
+        /** @var array<string, string> $traitAliases */
+        $traitAliases = $classReflection->getTraitAliases();
+
+        if (array_key_exists($methodReflection->getName(), $traitAliases)) {
             return false;
         }
 

@@ -303,6 +303,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $absoluteFilePath = $this->getAbsoluteFilePath($filePath);
         FileChecker::assertReadableFile($absoluteFilePath);
 
+        /** @var list<Node\Stmt> $ast */
         $ast             = $this->phpParser->parse(file_get_contents($absoluteFilePath));
         $isCoreExtension = $this->isCoreExtension($this->getExtensionFromFilePath($filePath));
 

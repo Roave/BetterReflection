@@ -39,7 +39,7 @@ class CompilerContext
         return $this->getClass()?->getFileName() ?? $this->getFunction()?->getFileName();
     }
 
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         if ($this->contextReflection instanceof ReflectionConstant) {
             return $this->contextReflection->getNamespaceName();
