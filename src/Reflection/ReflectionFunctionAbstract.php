@@ -50,29 +50,6 @@ trait ReflectionFunctionAbstract
         private LocatedSource $locatedSource,
         private ?NamespaceNode $declaringNamespace = null,
     ) {
-        $this->setNodeOptionalFlag();
-    }
-
-    /**
-     * We must determine if params are optional or not ahead of time, but we
-     * must do it in reverse...
-     */
-    private function setNodeOptionalFlag(): void
-    {
-        $overallOptionalFlag = true;
-        $lastParamIndex      = count($this->node->params) - 1;
-        for ($i = $lastParamIndex; $i >= 0; $i--) {
-            $param = $this->node->params[$i];
-
-            // When we find the first parameter that does not have a default or is not variadic,
-            // flip the flag as all params for this are no longer optional
-            // EVEN if they have a default value
-            if ($param->default === null && ! $param->variadic) {
-                $overallOptionalFlag = false;
-            }
-
-            $param->isOptional = $overallOptionalFlag;
-        }
     }
 
     abstract public function __toString(): string;

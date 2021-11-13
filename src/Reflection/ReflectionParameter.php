@@ -41,6 +41,8 @@ class ReflectionParameter
 
     private int $parameterIndex;
 
+    private bool $isOptional;
+
     private ?CompiledValue $compiledDefaultValue = null;
 
     private Reflector $reflector;
@@ -146,6 +148,7 @@ class ReflectionParameter
         $param->declaringNamespace = $declaringNamespace;
         $param->function           = $function;
         $param->parameterIndex     = $parameterIndex;
+        $param->isOptional         = $param->detectIsOptional();
 
         return $param;
     }
@@ -222,7 +225,7 @@ class ReflectionParameter
      */
     public function isOptional(): bool
     {
-        return ((bool) $this->node->isOptional) || $this->isVariadic();
+        return $this->isOptional;
     }
 
     /**
@@ -495,6 +498,31 @@ class ReflectionParameter
         } catch (LogicException) {
             return null;
         }
+    }
+
+    private function detectIsOptional(): bool
+    {
+        if ($this->node->variadic) {
+            return true;
+        }
+
+        if ($this->node->default === null) {
+            return false;
+        }
+
+        foreach ($this->function->getAst()->getParams() as $otherParameterIndex => $otherParameterNode) {
+            if ($otherParameterIndex <= $this->parameterIndex) {
+                continue;
+            }
+
+            // When we find next parameter that does not have a default or is not variadic,
+            // it means current parameter cannot be optional EVEN if it has a default value
+            if ($otherParameterNode->default === null && ! $otherParameterNode->variadic) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
