@@ -24,7 +24,5 @@
         <LessSpecificReturnStatement errorLevel="suppress" />
 
         <PossiblyNullArgument errorLevel="suppress" />
-
-        <PropertyTypeCoercion errorLevel="suppress" />
     </issueHandlers>
 </psalm>
