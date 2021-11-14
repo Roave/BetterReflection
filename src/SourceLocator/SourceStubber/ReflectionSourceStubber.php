@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 use LogicException;
 use PhpParser\Builder\Class_;
+use PhpParser\Builder\ClassConst;
 use PhpParser\Builder\Function_;
 use PhpParser\Builder\FunctionLike;
 use PhpParser\Builder\Interface_;
@@ -14,22 +15,18 @@ use PhpParser\Builder\Param;
 use PhpParser\Builder\Property;
 use PhpParser\Builder\Trait_;
 use PhpParser\BuilderFactory;
-use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
-use PhpParser\Node\Const_;
 use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\NullableType;
-use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\TraitUseAdaptation;
 use PhpParser\Node\UnionType;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
-use ReflectionClassConstant;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionIntersectionType as CoreReflectionIntersectionType;
@@ -50,6 +47,7 @@ use function get_defined_constants;
 use function implode;
 use function in_array;
 use function interface_exists;
+use function is_array;
 use function method_exists;
 use function preg_replace;
 use function sprintf;
@@ -269,7 +267,10 @@ final class ReflectionSourceStubber implements SourceStubber
     {
         $alreadyUsedTraitNames = [];
 
-        foreach ($classReflection->getTraitAliases() as $methodNameAlias => $methodInfo) {
+        $traitAliases = $classReflection->getTraitAliases();
+        assert(is_array($traitAliases));
+
+        foreach ($traitAliases as $methodNameAlias => $methodInfo) {
             [$traitName, $methodName] = explode('::', $methodInfo);
             $traitUseNode             = new TraitUse(
                 [new FullyQualified($traitName)],
@@ -363,30 +364,27 @@ final class ReflectionSourceStubber implements SourceStubber
                 continue;
             }
 
-            $classConstantNode = new ClassConst(
-                [new Const_($constantReflection->getName(), BuilderHelpers::normalizeValue($constantReflection->getValue()))],
-                $this->constantVisibilityFlags($constantReflection),
-            );
+            $classConstantNode = $this->builderFactory->classConst($constantReflection->getName(), $constantReflection->getValue());
 
             if ($constantReflection->getDocComment() !== false) {
                 $classConstantNode->setDocComment(new Doc($constantReflection->getDocComment()));
             }
 
+            $this->addClassConstantModifiers($classConstantNode, $constantReflection);
+
             $classNode->addStmt($classConstantNode);
         }
     }
 
-    private function constantVisibilityFlags(ReflectionClassConstant $constant): int
+    private function addClassConstantModifiers(ClassConst $classConstantNode, CoreReflectionClassConstant $classConstantReflection): void
     {
-        if ($constant->isPrivate()) {
-            return ClassNode::MODIFIER_PRIVATE;
+        if ($classConstantReflection->isPrivate()) {
+            $classConstantNode->makePrivate();
+        } elseif ($classConstantReflection->isProtected()) {
+            $classConstantNode->makeProtected();
+        } else {
+            $classConstantNode->makePublic();
         }
-
-        if ($constant->isProtected()) {
-            return ClassNode::MODIFIER_PROTECTED;
-        }
-
-        return ClassNode::MODIFIER_PUBLIC;
     }
 
     private function addMethods(Class_|Interface_|Trait_ $classNode, CoreReflectionClass $classReflection): void

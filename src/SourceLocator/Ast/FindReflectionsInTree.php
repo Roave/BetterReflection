@@ -98,6 +98,7 @@ final class FindReflectionsInTree
 
                     if ($node instanceof Node\Expr\FuncCall) {
                         try {
+                            /** @psalm-suppress InternalClass */
                             ConstantNodeChecker::assertValidDefineFunctionCall($node);
                         } catch (InvalidConstantNode) {
                             return null;
