@@ -221,7 +221,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
 
         $extension = $this->getExtensionFromFilePath($filePath);
-        $stub      = $this->createStub($this->classNodes[$lowercaseClassName], $extension);
+        $stub      = $this->createStub($this->classNodes[$lowercaseClassName]);
 
         if ($className === Traversable::class) {
             // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
@@ -259,7 +259,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $extension = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName], $extension), $extension);
+        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName]), $extension);
     }
 
     public function generateConstantStub(string $constantName): ?StubData
@@ -295,7 +295,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $extension = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($constantNode, $extension), $extension);
+        return new StubData($this->createStub($constantNode), $extension);
     }
 
     private function parseFile(string $filePath): void
@@ -363,7 +363,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * @param Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node
      */
-    private function createStub(Node $node, string $extension): string
+    private function createStub(Node $node): string
     {
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
