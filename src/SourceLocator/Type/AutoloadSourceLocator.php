@@ -272,6 +272,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                 continue;
             }
 
+            /** @var list<Node\Stmt> $ast */
             $ast = $this->phpParser->parse(file_get_contents($includedFileName));
 
             $this->nodeTraverser->traverse($ast);

@@ -402,9 +402,11 @@ trait ReflectionFunctionAbstract
 
         if ($this->node instanceof Node\Expr\ArrowFunction) {
             /** @var non-empty-list<Node\Stmt\Return_> $ast */
-            $ast = $this->getBodyAst();
+            $ast  = $this->getBodyAst();
+            $expr = $ast[0]->expr;
+            assert($expr instanceof Node\Expr);
 
-            return $printer->prettyPrintExpr($ast[0]->expr);
+            return $printer->prettyPrintExpr($expr);
         }
 
         return $printer->prettyPrint($this->getBodyAst());
@@ -475,6 +477,7 @@ trait ReflectionFunctionAbstract
      */
     public function setBodyFromString(string $newBody): void
     {
+        /** @var list<Node\Stmt> $stmts */
         $stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
 
         $this->setBodyFromAst($stmts);
@@ -552,7 +555,13 @@ trait ReflectionFunctionAbstract
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);
 
-        $traverser->traverse($this->node->getStmts());
+        $stmts = $this->node->getStmts();
+
+        if ($stmts === null) {
+            return [];
+        }
+
+        $traverser->traverse($stmts);
 
         return $visitor->getReturnNodes();
     }

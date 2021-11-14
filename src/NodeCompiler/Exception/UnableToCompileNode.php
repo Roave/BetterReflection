@@ -71,6 +71,17 @@ class UnableToCompileNode extends LogicException
         return $exception;
     }
 
+    public static function becauseOfMissingFileName(
+        CompilerContext $context,
+        Node\Scalar\MagicConst\Dir|Node\Scalar\MagicConst\File $node,
+    ): self {
+        return new self(sprintf(
+            'No file name for %s (line %d)',
+            self::compilerContextToContextDescription($context),
+            $node->getLine(),
+        ));
+    }
+
     public static function becauseOfInitializer(
         CompilerContext $context,
         Node\Expr\New_ $newNode,
@@ -85,7 +96,9 @@ class UnableToCompileNode extends LogicException
 
     private static function getFileName(CompilerContext $fetchContext): string
     {
-        return $fetchContext->getFileName() !== null ? FileHelper::normalizeWindowsPath($fetchContext->getFileName()) : '""';
+        $fileName = $fetchContext->getFileName();
+
+        return $fileName !== null ? FileHelper::normalizeWindowsPath($fileName) : '""';
     }
 
     private static function compilerContextToContextDescription(CompilerContext $fetchContext): string

@@ -16,8 +16,11 @@ class ParseToAstFailure extends RuntimeException
     public static function fromLocatedSource(LocatedSource $locatedSource, Throwable $previous): self
     {
         $additionalInformation = '';
-        if ($locatedSource->getFileName() !== null) {
-            $additionalInformation = sprintf(' (in %s)', $locatedSource->getFileName());
+
+        $fileName = $locatedSource->getFileName();
+
+        if ($fileName !== null) {
+            $additionalInformation = sprintf(' (in %s)', $fileName);
         }
 
         if ($additionalInformation === '') {

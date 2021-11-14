@@ -6,8 +6,10 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 
+use function assert;
 use function gettype;
 use function is_array;
+use function is_string;
 use function sprintf;
 
 /**
@@ -37,7 +39,10 @@ final class ReflectionConstantStringCast
             return 'user';
         }
 
-        return sprintf('internal:%s', $constantReflection->getExtensionName());
+        $extensionName = $constantReflection->getExtensionName();
+        assert(is_string($extensionName));
+
+        return sprintf('internal:%s', $extensionName);
     }
 
     private static function fileAndLinesToString(ReflectionConstant $constantReflection): string
@@ -46,6 +51,11 @@ final class ReflectionConstantStringCast
             return '';
         }
 
-        return sprintf("\n  @@ %s %d - %d\n", $constantReflection->getFileName(), $constantReflection->getStartLine(), $constantReflection->getEndLine());
+        $fileName = $constantReflection->getFileName();
+        if ($fileName === null) {
+            return '';
+        }
+
+        return sprintf("\n  @@ %s %d - %d\n", $fileName, $constantReflection->getStartLine(), $constantReflection->getEndLine());
     }
 }

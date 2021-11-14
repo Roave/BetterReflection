@@ -65,11 +65,11 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Dir) {
-                return $this->compileDirConstant($context);
+                return $this->compileDirConstant($context, $node);
             }
 
             if ($node instanceof Node\Scalar\MagicConst\File) {
-                return $this->compileFileConstant($context);
+                return $this->compileFileConstant($context, $node);
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Class_) {
@@ -81,7 +81,7 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Namespace_) {
-                return $context->getNamespace() ?? '';
+                return $context->getNamespace();
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Method) {
@@ -124,9 +124,10 @@ class CompileNodeToValue
     private function resolveConstantName(Node\Expr\ConstFetch $constNode, CompilerContext $context): string
     {
         $constantName = $constNode->name->toString();
+        $namespace    = $context->getNamespace();
 
-        if ($context->getNamespace() !== null && $constNode->name->isUnqualified()) {
-            $namespacedConstantName = sprintf('%s\\%s', $context->getNamespace(), $constantName);
+        if ($namespace !== '' && $constNode->name->isUnqualified()) {
+            $namespacedConstantName = sprintf('%s\\%s', $namespace, $constantName);
 
             if ($this->constantExists($namespacedConstantName, $context)) {
                 return $namespacedConstantName;
@@ -202,17 +203,29 @@ class CompileNodeToValue
     /**
      * Compile a __DIR__ node
      */
-    private function compileDirConstant(CompilerContext $context): string
+    private function compileDirConstant(CompilerContext $context, Node\Scalar\MagicConst\Dir $node): string
     {
-        return dirname($this->compileFileConstant($context));
+        $fileName = $context->getFileName();
+
+        if ($fileName === null) {
+            throw Exception\UnableToCompileNode::becauseOfMissingFileName($context, $node);
+        }
+
+        return dirname(FileHelper::normalizeWindowsPath(realpath($fileName)));
     }
 
     /**
      * Compile a __FILE__ node
      */
-    private function compileFileConstant(CompilerContext $context): string
+    private function compileFileConstant(CompilerContext $context, Node\Scalar\MagicConst\File $node): string
     {
-        return FileHelper::normalizeWindowsPath(realpath($context->getFileName()));
+        $fileName = $context->getFileName();
+
+        if ($fileName === null) {
+            throw Exception\UnableToCompileNode::becauseOfMissingFileName($context, $node);
+        }
+
+        return FileHelper::normalizeWindowsPath(realpath($fileName));
     }
 
     /**

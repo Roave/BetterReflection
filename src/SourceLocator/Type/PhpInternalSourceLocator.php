@@ -66,7 +66,9 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        if ($stubData->getExtensionName() === null) {
+        $extensionName = $stubData->getExtensionName();
+
+        if ($extensionName === null) {
             // Not internal
             return null;
         }
@@ -74,7 +76,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return new InternalLocatedSource(
             $stubData->getStub(),
             $identifier->getName(),
-            $stubData->getExtensionName(),
+            $extensionName,
         );
     }
 }

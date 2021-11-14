@@ -181,8 +181,11 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getConstant(string $name): mixed
     {
-        if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
-            return $this->getConstantValue($this->betterReflectionClass->getCase($name));
+        if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
+            $enumCase = $this->betterReflectionClass->getCase($name);
+            if ($enumCase !== null) {
+                return $this->getConstantValue($enumCase);
+            }
         }
 
         return $this->betterReflectionClass->getConstant($name);
@@ -199,8 +202,11 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
-            return new ReflectionClassConstant($this->betterReflectionClass->getCase($name));
+        if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
+            $enumCase = $this->betterReflectionClass->getCase($name);
+            if ($enumCase !== null) {
+                return new ReflectionClassConstant($enumCase);
+            }
         }
 
         $betterReflectionConstant = $this->betterReflectionClass->getReflectionConstant($name);

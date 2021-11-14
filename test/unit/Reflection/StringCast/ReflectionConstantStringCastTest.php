@@ -11,6 +11,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 /**
@@ -57,5 +58,15 @@ class ReflectionConstantStringCastTest extends TestCase
         $constantReflection = $reflector->reflectConstant($constantName);
 
         self::assertStringMatchesFormat($expectedString, (string) $constantReflection);
+    }
+
+    public function testToStringWithNoFileName(): void
+    {
+        $php = '<?php const CONSTANT_TO_STRING_CAST = "string";';
+
+        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $constantReflection = $reflector->reflectConstant('CONSTANT_TO_STRING_CAST');
+
+        self::assertSame('Constant [ <user> string CONSTANT_TO_STRING_CAST ] { string }', (string) $constantReflection);
     }
 }

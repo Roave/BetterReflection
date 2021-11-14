@@ -177,8 +177,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getConstant(string $name): mixed
     {
-        if ($this->betterReflectionEnum->hasCase($name)) {
-            return $this->getConstantValue($this->betterReflectionEnum->getCase($name));
+        $enumCase = $this->betterReflectionEnum->getCase($name);
+        if ($enumCase !== null) {
+            return $this->getConstantValue($enumCase);
         }
 
         return $this->betterReflectionEnum->getConstant($name);
