@@ -949,6 +949,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [CoreReflectionClass::class, 'export', null, true],
             [CoreReflectionClass::class, 'export', 70400, true],
             [CoreReflectionClass::class, 'export', 70300, false],
+            [CoreReflectionClass::class, 'export', 70399, false],
         ];
     }
 
@@ -1003,6 +1004,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['create_function', null, true],
             ['create_function', 70200, true],
             ['create_function', 70100, false],
+            ['create_function', 70199, false],
         ];
     }
 
