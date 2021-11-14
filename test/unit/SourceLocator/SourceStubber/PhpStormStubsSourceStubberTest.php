@@ -9,6 +9,7 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 use DateTimeInterface;
+use Generator;
 use PDO;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +28,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
+use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -34,6 +36,7 @@ use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use SplFileObject;
 use Stringable;
+use Traversable;
 use ZipArchive;
 
 use function array_filter;
@@ -522,19 +525,58 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($constantName, $constantReflection->getName());
     }
 
-    public function testNoStubForUnknownClass(): void
+    public function testNameResolverForClassInNamespace(): void
+    {
+        $classReflection     = $this->reflector->reflectClass('http\Client');
+        $methodReflection    = $classReflection->getMethod('enqueue');
+        $parameterReflection = $methodReflection->getParameter('request');
+
+        self::assertSame('http\Client\Request', $parameterReflection->getType()->getName());
+    }
+
+    public function testStubForClassThatExists(): void
+    {
+        self::assertInstanceOf(StubData::class, $this->sourceStubber->generateClassStub('ReflectionClass'));
+    }
+
+    public function testNoStubForClassThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateClassStub('SomeClass'));
     }
 
-    public function testNoStubForUnknownFunction(): void
+    public function testStubForFunctionThatExists(): void
+    {
+        self::assertInstanceOf(StubData::class, $this->sourceStubber->generateFunctionStub('phpversion'));
+    }
+
+    public function testNoStubForFunctionThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateFunctionStub('someFunction'));
     }
 
-    public function testNoStubForUnknownConstant(): void
+    public function testStubForConstantThatExists(): void
+    {
+        self::assertInstanceOf(StubData::class, $this->sourceStubber->generateConstantStub('PHP_VERSION_ID'));
+    }
+
+    public function testNoStubForConstantThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
+    }
+
+    public function testStubForConstantDeclaredByDefine(): void
+    {
+        $stub = $this->sourceStubber->generateConstantStub('PHP_VERSION_ID');
+
+        self::assertInstanceOf(StubData::class, $stub);
+        self::assertStringEndsWith(";\n", $stub->getStub());
+    }
+
+    public function testStubForConstantDeclaredByConst(): void
+    {
+        $stub = $this->sourceStubber->generateConstantStub('ast\AST_ARG_LIST');
+
+        self::assertInstanceOf(StubData::class, $stub);
     }
 
     public function dataCaseInsensitiveClass(): array
@@ -613,7 +655,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($expectedConstantName, $reflector->getName());
     }
 
-    public function dataCaseSensitiveConstant(): array
+    public function dataCaseSensitiveConstantSearchedByWrongCase(): array
     {
         return [
             ['date_atom'],
@@ -623,13 +665,30 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /**
-     * @dataProvider dataCaseSensitiveConstant
+     * @dataProvider dataCaseSensitiveConstantSearchedByWrongCase
      */
-    public function testCaseSensitiveConstant(string $constantName): void
+    public function testCaseSensitiveConstantSearchedByWrongCase(string $constantName): void
     {
         self::expectException(IdentifierNotFound::class);
 
         $this->reflector->reflectConstant($constantName);
+    }
+
+    public function dataCaseSensitiveConstantSearchedByRightCase(): array
+    {
+        return [
+            ['DATE_ATOM'],
+            ['PHP_VERSION_ID'],
+            ['FILEINFO_NONE'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataCaseSensitiveConstantSearchedByRightCase
+     */
+    public function testCaseSensitiveConstantSearchedByRightCase(string $constantName): void
+    {
+        self::assertInstanceOf(ReflectionConstant::class, $this->reflector->reflectConstant($constantName));
     }
 
     /**
@@ -1019,5 +1078,20 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $functionReflection = $reflector->reflectFunction($functionName);
 
         self::assertSame($isDeprecated, $functionReflection->isDeprecated());
+    }
+
+    public function testModifiedStubForTraversableClass(): void
+    {
+        $classReflection = $this->reflector->reflectClass(Traversable::class);
+
+        self::assertInstanceOf(ReflectionClass::class, $classReflection);
+    }
+
+    public function testModifiedStubForGeneratorClass(): void
+    {
+        $classReflection = $this->reflector->reflectClass(Generator::class);
+
+        self::assertInstanceOf(ReflectionClass::class, $classReflection);
+        self::assertTrue($classReflection->hasMethod('throw'));
     }
 }
