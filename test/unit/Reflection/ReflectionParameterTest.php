@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Foo;
 use InvalidArgumentException;
 use LogicException;
+use OutOfBoundsException;
 use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
@@ -70,12 +71,24 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('index', $parameterInfo->getName());
     }
 
+    public function testCreateFromClassNameAndMethodThrowsExceptionWhenParameterDoesNotExist(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        ReflectionParameter::createFromClassNameAndMethod(SplDoublyLinkedList::class, 'add', 'notExist');
+    }
+
     public function testCreateFromClassInstanceAndMethod(): void
     {
         $parameterInfo = ReflectionParameter::createFromClassInstanceAndMethod(new SplDoublyLinkedList(), 'add', 'index');
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('index', $parameterInfo->getName());
+    }
+
+    public function testCreateFromClassInstanceAndMethodThrowsExceptionWhenParameterDoesNotExist(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        ReflectionParameter::createFromClassInstanceAndMethod(new SplDoublyLinkedList(), 'add', 'notExist');
     }
 
     public function testCreateFromCallable(): void
@@ -105,6 +118,14 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($parameterInfo->allowsNull());
     }
 
+    public function testCreateFromClosureThrowsExceptionWhenParameterDoesNotExist(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        self::expectExceptionMessage('Could not find parameter: notExist');
+        ReflectionParameter::createFromClosure(static function ($a): void {
+        }, 'notExist');
+    }
+
     public function testCreateFromSpecWithArray(): void
     {
         $parameterInfo = ReflectionParameter::createFromSpec([SplDoublyLinkedList::class, 'add'], 'index');
@@ -129,6 +150,14 @@ class ReflectionParameterTest extends TestCase
 
         self::assertInstanceOf(ReflectionParameter::class, $parameterInfo);
         self::assertSame('param1', $parameterInfo->getName());
+    }
+
+    public function testCreateFromSpecWithFunctionNameThrowsExceptionWhenParameterDoesNotExist(): void
+    {
+        require_once __DIR__ . '/../Fixture/ClassForHinting.php';
+
+        self::expectException(InvalidArgumentException::class);
+        ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'notExists');
     }
 
     public function testCreateFromSpecWithClosure(): void

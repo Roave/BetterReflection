@@ -29,6 +29,7 @@ use function count;
 use function is_array;
 use function is_object;
 use function is_string;
+use function sprintf;
 use function strtolower;
 
 class ReflectionParameter
@@ -57,9 +58,15 @@ class ReflectionParameter
         string $methodName,
         string $parameterName,
     ): self {
-        return ReflectionClass::createFromName($className)
+        $parameter = ReflectionClass::createFromName($className)
             ->getMethod($methodName)
             ->getParameter($parameterName);
+
+        if ($parameter === null) {
+            throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
+        }
+
+        return $parameter;
     }
 
     /**
@@ -72,18 +79,32 @@ class ReflectionParameter
         string $methodName,
         string $parameterName,
     ): self {
-        return ReflectionClass::createFromInstance($instance)
+        $parameter = ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
             ->getParameter($parameterName);
+
+        if ($parameter === null) {
+            throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
+        }
+
+        return $parameter;
     }
 
     /**
      * Create a reflection of a parameter using a closure
+     *
+     * @throws OutOfBoundsException
      */
     public static function createFromClosure(Closure $closure, string $parameterName): ReflectionParameter
     {
-        return ReflectionFunction::createFromClosure($closure)
+        $parameter = ReflectionFunction::createFromClosure($closure)
             ->getParameter($parameterName);
+
+        if ($parameter === null) {
+            throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
+        }
+
+        return $parameter;
     }
 
     /**
@@ -101,20 +122,29 @@ class ReflectionParameter
      */
     public static function createFromSpec(array|string|Closure $spec, string $parameterName): self
     {
-        if (is_array($spec) && count($spec) === 2 && is_string($spec[1])) {
-            if (is_object($spec[0])) {
-                return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
+        try {
+            if (is_array($spec) && count($spec) === 2 && is_string($spec[1])) {
+                if (is_object($spec[0])) {
+                    return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
+                }
+
+                return self::createFromClassNameAndMethod($spec[0], $spec[1], $parameterName);
             }
 
-            return self::createFromClassNameAndMethod($spec[0], $spec[1], $parameterName);
-        }
+            if (is_string($spec)) {
+                $parameter = ReflectionFunction::createFromName($spec)->getParameter($parameterName);
+                if ($parameter === null) {
+                    throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
+                }
 
-        if (is_string($spec)) {
-            return ReflectionFunction::createFromName($spec)->getParameter($parameterName);
-        }
+                return $parameter;
+            }
 
-        if ($spec instanceof Closure) {
-            return self::createFromClosure($spec, $parameterName);
+            if ($spec instanceof Closure) {
+                return self::createFromClosure($spec, $parameterName);
+            }
+        } catch (OutOfBoundsException $e) {
+            throw new InvalidArgumentException('Could not create reflection from the spec given', previous: $e);
         }
 
         throw new InvalidArgumentException('Could not create reflection from the spec given');
@@ -450,11 +480,13 @@ class ReflectionParameter
      */
     public function getDefaultValueConstantName(): string
     {
-        if (! $this->isDefaultValueConstant()) {
+        $compiledDefaultValue = $this->getCompiledDefaultValue();
+
+        if ($compiledDefaultValue->constantName === null) {
             throw new LogicException('This parameter is not a constant default value, so cannot have a constant name');
         }
 
-        return $this->getCompiledDefaultValue()->constantName;
+        return $compiledDefaultValue->constantName;
     }
 
     /**

@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection;
 use Closure;
 use Error;
 use InvalidArgumentException;
+use OutOfBoundsException;
 use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
@@ -36,6 +37,7 @@ use function assert;
 use function class_exists;
 use function func_num_args;
 use function is_object;
+use function sprintf;
 use function strpos;
 use function trait_exists;
 
@@ -56,10 +58,18 @@ class ReflectionProperty
 
     /**
      * Create a reflection of a class's property by its name
+     *
+     * @throws OutOfBoundsException
      */
     public static function createFromName(string $className, string $propertyName): self
     {
-        return ReflectionClass::createFromName($className)->getProperty($propertyName);
+        $property = ReflectionClass::createFromName($className)->getProperty($propertyName);
+
+        if ($property === null) {
+            throw new OutOfBoundsException(sprintf('Could not find property: %s', $propertyName));
+        }
+
+        return $property;
     }
 
     /**
@@ -67,10 +77,17 @@ class ReflectionProperty
      *
      * @throws ReflectionException
      * @throws IdentifierNotFound
+     * @throws OutOfBoundsException
      */
     public static function createFromInstance(object $instance, string $propertyName): self
     {
-        return ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
+        $property = ReflectionClass::createFromInstance($instance)->getProperty($propertyName);
+
+        if ($property === null) {
+            throw new OutOfBoundsException(sprintf('Could not find property: %s', $propertyName));
+        }
+
+        return $property;
     }
 
     public function __toString(): string

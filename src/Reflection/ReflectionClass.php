@@ -54,6 +54,7 @@ use function assert;
 use function end;
 use function implode;
 use function in_array;
+use function is_array;
 use function is_string;
 use function ltrim;
 use function sha1;
@@ -1170,7 +1171,8 @@ class ReflectionClass implements Reflection
     {
         $this->parseTraitUsages();
 
-        /** @return array<string, string> */
+        assert(is_array($this->cachedTraitAliases));
+
         return $this->cachedTraitAliases;
     }
 
@@ -1197,7 +1199,8 @@ class ReflectionClass implements Reflection
     {
         $this->parseTraitUsages();
 
-        /** @return array<string, string> */
+        assert(is_array($this->cachedTraitPrecedences));
+
         return $this->cachedTraitPrecedences;
     }
 
@@ -1224,7 +1227,8 @@ class ReflectionClass implements Reflection
     {
         $this->parseTraitUsages();
 
-        /** @return array<string, int> */
+        assert(is_array($this->cachedTraitModifiers));
+
         return $this->cachedTraitModifiers;
     }
 
