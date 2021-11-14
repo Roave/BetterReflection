@@ -116,7 +116,7 @@ final class DefaultReflector implements Reflector
      */
     public function reflectAllConstants(): iterable
     {
-        /** @var array<int,ReflectionConstant> $allConstants */
+        /** @var list<ReflectionConstant> $allConstants */
         $allConstants = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),

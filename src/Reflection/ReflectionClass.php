@@ -189,15 +189,16 @@ class ReflectionClass implements Reflection
      * Get the "full" name of the class (e.g. for A\B\Foo, this will return
      * "A\B\Foo").
      *
-     * @return class-string
+     * @return class-string|trait-string
      */
     public function getName(): string
     {
-        if (! $this->inNamespace()) {
-            return $this->getShortName();
-        }
+        /** @psalm-var class-string|trait-string $name */
+        $name = ! $this->inNamespace()
+            ? $this->getShortName()
+            : $this->node->namespacedName->toString();
 
-        return $this->node->namespacedName->toString();
+        return $name;
     }
 
     /**
@@ -1095,13 +1096,16 @@ class ReflectionClass implements Reflection
      */
     private function addStringableInterface(array $interfaces): array
     {
-        if (array_key_exists(Stringable::class, $interfaces)) {
+        /** @psalm-var class-string $stringableClassName */
+        $stringableClassName = Stringable::class;
+
+        if (array_key_exists($stringableClassName, $interfaces)) {
             return $interfaces;
         }
 
         foreach ($this->node->getMethods() as $methodNode) {
             if ($methodNode->name->toLowerString() === '__tostring') {
-                $interfaces[Stringable::class] = $this->reflectClassForNamedNode(new Node\Name(Stringable::class));
+                $interfaces[$stringableClassName] = $this->reflectClassForNamedNode(new Node\Name(Stringable::class));
                 break;
             }
         }
@@ -1116,6 +1120,7 @@ class ReflectionClass implements Reflection
     {
         assert($this->node instanceof EnumNode);
 
+        /** @var array<class-string, self> $interfaces */
         $interfaces = [UnitEnum::class => $this->reflectClassForNamedNode(new Node\Name(UnitEnum::class))];
 
         if ($this->node->scalarType !== null) {
@@ -1138,12 +1143,17 @@ class ReflectionClass implements Reflection
      * defined. If this class does not have any defined traits, this will
      * return an empty array.
      *
-     * @return list<string>
+     * @return list<trait-string>
      */
     public function getTraitNames(): array
     {
         return array_map(
-            static fn (ReflectionClass $trait): string => $trait->getName(),
+            static function (ReflectionClass $trait): string {
+                /** @psalm-var trait-string $traitName */
+                $traitName = $trait->getName();
+
+                return $traitName;
+            },
             $this->getTraits(),
         );
     }
@@ -1348,7 +1358,7 @@ class ReflectionClass implements Reflection
      *
      * @link https://php.net/manual/en/reflectionclass.getinterfacenames.php
      *
-     * @return list<string> A numerical array with interface names as the values.
+     * @return list<class-string> A numerical array with interface names as the values.
      */
     public function getInterfaceNames(): array
     {
