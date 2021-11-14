@@ -787,6 +787,22 @@ PHP;
 
     public function testGetDefaultProperties(): void
     {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator));
+        $classInfo = $reflector->reflectClass(DefaultProperties::class);
+
+        self::assertSame([
+            'fromTrait' => 'anything',
+            'hasDefault' => 'const',
+            'hasNullAsDefault' => null,
+            'noDefault' => null,
+            'hasDefaultWithType' => 123,
+            'hasNullAsDefaultWithType' => null,
+            'noDefaultWithType' => null,
+        ], $classInfo->getDefaultProperties());
+    }
+
+    public function testGetDefaultPropertiesShouldIgnoreRuntimeProperty(): void
+    {
         $object                     = new DefaultProperties();
         $object->notDefaultProperty = null;
 
