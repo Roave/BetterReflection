@@ -24,6 +24,7 @@ use Roave\BetterReflectionTest\Fixture\ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\ClassForSourceStubberWithDefaultStaticProperty;
 use Roave\BetterReflectionTest\Fixture\EmptyTrait;
 use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
+use Roave\BetterReflectionTest\Fixture\PHP81ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\PHP8ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\TraitForSourceStubber;
 use stdClass;
@@ -125,6 +126,20 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertNotNull($stubData);
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/PHP8ClassForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testClassStubWithPHP81Syntax(): void
+    {
+        require __DIR__ . '/../../Fixture/PHP81ClassForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(PHP81ClassForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/PHP81ClassForSourceStubberExpected.php', $stubData->getStub());
         self::assertNull($stubData->getExtensionName());
     }
 

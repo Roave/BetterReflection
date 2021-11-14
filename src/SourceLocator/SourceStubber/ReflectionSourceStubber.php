@@ -378,6 +378,10 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function addClassConstantModifiers(ClassConst $classConstantNode, CoreReflectionClassConstant $classConstantReflection): void
     {
+        if (method_exists($classConstantReflection, 'isFinal') && $classConstantReflection->isFinal()) {
+            $classConstantNode->makeFinal();
+        }
+
         if ($classConstantReflection->isPrivate()) {
             $classConstantNode->makePrivate();
         } elseif ($classConstantReflection->isProtected()) {
