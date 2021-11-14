@@ -637,22 +637,31 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return true;
         }
 
+        [$fromVersion, $toVersion] = $this->getSupportedPhpVersions($node);
+
+        if ($fromVersion !== null && $fromVersion > $this->phpVersion) {
+            return false;
+        }
+
+        return $toVersion === null || $toVersion >= $this->phpVersion;
+    }
+
+    /**
+     * @return array{0: int|null, 1: int|null}
+     */
+    private function getSupportedPhpVersions(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node): array
+    {
+        $fromVersion = null;
+        $toVersion   = null;
+
         $docComment = $node->getDocComment();
         if ($docComment !== null) {
             if (preg_match('~@since\s+(?P<version>\d+\.\d+(?:\.\d+)?)\s+~', $docComment->getText(), $sinceMatches) === 1) {
-                $sincePhpVersion = $this->parsePhpVersion($sinceMatches['version']);
-
-                if ($sincePhpVersion > $this->phpVersion) {
-                    return false;
-                }
+                $fromVersion = $this->parsePhpVersion($sinceMatches['version']);
             }
 
             if (preg_match('~@removed\s+(?P<version>\d+\.\d+(?:\.\d+)?)\s+~', $docComment->getText(), $removedMatches) === 1) {
-                $removedPhpVersion = $this->parsePhpVersion($removedMatches['version']);
-
-                if ($removedPhpVersion <= $this->phpVersion) {
-                    return false;
-                }
+                $toVersion = $this->parsePhpVersion($removedMatches['version']) - 1;
             }
         }
 
@@ -668,9 +677,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         if ($attributeArg->name === null || $attributeArg->name->toString() === 'from') {
                             assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                            if ($this->parsePhpVersion($attributeArg->value->value) > $this->phpVersion) {
-                                return false;
-                            }
+                            $fromVersion = $this->parsePhpVersion($attributeArg->value->value);
                         }
 
                         if ($attributeArg->name?->toString() !== 'to') {
@@ -679,15 +686,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                         assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                        if ($this->parsePhpVersion($attributeArg->value->value) < $this->phpVersion) {
-                            return false;
-                        }
+                        $toVersion = $this->parsePhpVersion($attributeArg->value->value);
                     }
                 }
             }
         }
 
-        return true;
+        return [$fromVersion, $toVersion];
     }
 
     private function parsePhpVersion(string $version): int

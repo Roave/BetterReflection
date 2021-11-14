@@ -32,6 +32,7 @@ use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
+use SplFileObject;
 use Stringable;
 use ZipArchive;
 
@@ -693,6 +694,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [Stringable::class, 80000, true],
             [Stringable::class, 70400, false],
             [Stringable::class, 70399, false],
+            ['DOMNameList', 79999, true],
+            ['DOMNameList', 80000, false],
         ];
     }
 
@@ -719,6 +722,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [DateTimeInterface::class, 'ATOM', 70200, true],
             [DateTimeInterface::class, 'ATOM', 70100, false],
             [DateTime::class, 'ATOM', 70100, true],
+            [DateTime::class, 'ATOM', 70199, true],
             [DateTime::class, 'ATOM', 70200, false],
             [PDO::class, 'FETCH_DEFAULT', 80007, true],
             [PDO::class, 'FETCH_DEFAULT', 80006, false],
@@ -753,6 +757,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [CoreReflectionClass::class, 'export', 80000, false],
             [DatePeriod::class, 'getRecurrences', 70217, true],
             [DatePeriod::class, 'getRecurrences', 70216, false],
+            [SplFileObject::class, 'fgetss', 79999, true],
+            [SplFileObject::class, 'fgetss', 80000, false],
         ];
     }
 
@@ -808,6 +814,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['mysql_query', 70000, false],
             ['hash_hkdf', 70102, true],
             ['hash_hkdf', 70101, false],
+            ['read_exif_data', 79999, true],
+            ['read_exif_data', 80000, false],
             // Not core functions
             ['newrelic_add_custom_parameter', 40000, true],
         ];
@@ -860,6 +868,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['PHP_OS_FAMILY', 70200, true],
             ['PHP_OS_FAMILY', 70100, false],
             ['INPUT_SESSION', 70400, true],
+            ['INPUT_SESSION', 79999, true],
             ['INPUT_SESSION', 80000, false],
             ['CURL_VERSION_ALTSVC', 70306, true],
             ['CURL_VERSION_ALTSVC', 70305, false],
