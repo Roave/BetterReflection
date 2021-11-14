@@ -459,6 +459,8 @@ class ReflectionClassTest extends TestCase
 
         self::assertTrue($property->isPublic());
         self::assertTrue($property->isReadOnly());
+        self::assertFalse($property->isPromoted());
+        self::assertTrue($property->isDefault());
         self::assertSame(0, $property->getPositionInAst());
     }
 
@@ -479,6 +481,8 @@ class ReflectionClassTest extends TestCase
 
             self::assertTrue($property->isPublic(), $propertyName);
             self::assertTrue($property->isReadOnly(), $propertyName);
+            self::assertFalse($property->isPromoted());
+            self::assertTrue($property->isDefault());
             self::assertSame(0, $property->getPositionInAst(), $propertyName);
         }
     }
