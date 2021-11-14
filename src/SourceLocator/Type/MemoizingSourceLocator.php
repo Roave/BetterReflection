@@ -42,7 +42,7 @@ final class MemoizingSourceLocator implements SourceLocator
      */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
-        $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierTypeToCacheKey($identifierType);
+        $cacheKey = sprintf('%s_%s', $this->reflectorCacheKey($reflector), $this->identifierTypeToCacheKey($identifierType));
 
         if (array_key_exists($cacheKey, $this->cacheByIdentifierTypeKeyAndOid)) {
             return $this->cacheByIdentifierTypeKeyAndOid[$cacheKey];

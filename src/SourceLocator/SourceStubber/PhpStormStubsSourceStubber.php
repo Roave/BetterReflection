@@ -376,13 +376,19 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             $node = $namespaceBuilder->getNode();
         }
 
-        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
+        return sprintf(
+            "<?php\n\n%s%s\n",
+            $this->prettyPrinter->prettyPrint([$node]),
+            $node instanceof Node\Expr\FuncCall ? ';' : '',
+        );
     }
 
     private function createCachingVisitor(): NodeVisitorAbstract
     {
         return new class () extends NodeVisitorAbstract
         {
+            private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
+
             /** @var array<string, Node\Stmt\ClassLike> */
             private array $classNodes = [];
 
@@ -450,7 +456,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     assert($nameNode instanceof Node\Scalar\String_);
                     $constantName = $nameNode->value;
 
-                    if (in_array($constantName, ['true', 'false', 'null'], true)) {
+                    if (in_array($constantName, self::TRUE_FALSE_NULL, true)) {
                         $constantName    = strtoupper($constantName);
                         $nameNode->value = $constantName;
                     }
