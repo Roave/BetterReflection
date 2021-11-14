@@ -555,17 +555,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
+            assert($stmt instanceof Node\Stmt\ClassConst || $stmt instanceof Node\Stmt\Property || $stmt instanceof Node\Stmt\ClassMethod);
+
             if (! $this->isSupportedInPhpVersion($stmt, $isCoreExtension)) {
                 continue;
             }
 
-            if (
-                $stmt instanceof Node\Stmt\ClassConst
-                || $stmt instanceof Node\Stmt\Property
-                || $stmt instanceof Node\Stmt\ClassMethod
-            ) {
-                $this->addDeprecatedDocComment($stmt);
-            }
+            $this->addDeprecatedDocComment($stmt);
 
             $newStmts[] = $stmt;
         }
@@ -626,8 +622,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return false;
     }
 
-    private function isSupportedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node, bool $isCoreExtension): bool
-    {
+    private function isSupportedInPhpVersion(
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
+        bool $isCoreExtension,
+    ): bool {
         if ($this->phpVersion === null) {
             return true;
         }
@@ -649,8 +647,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * @return array{0: int|null, 1: int|null}
      */
-    private function getSupportedPhpVersions(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node): array
-    {
+    private function getSupportedPhpVersions(
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
+    ): array {
         $fromVersion = null;
         $toVersion   = null;
 
