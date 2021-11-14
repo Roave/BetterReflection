@@ -459,6 +459,8 @@ class ReflectionClassTest extends TestCase
 
         self::assertTrue($property->isPublic());
         self::assertTrue($property->isReadOnly());
+        self::assertFalse($property->isPromoted());
+        self::assertTrue($property->isDefault());
         self::assertSame(0, $property->getPositionInAst());
     }
 
@@ -479,6 +481,8 @@ class ReflectionClassTest extends TestCase
 
             self::assertTrue($property->isPublic(), $propertyName);
             self::assertTrue($property->isReadOnly(), $propertyName);
+            self::assertFalse($property->isPromoted());
+            self::assertTrue($property->isDefault());
             self::assertSame(0, $property->getPositionInAst(), $propertyName);
         }
     }
@@ -782,6 +786,22 @@ PHP;
     }
 
     public function testGetDefaultProperties(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator));
+        $classInfo = $reflector->reflectClass(DefaultProperties::class);
+
+        self::assertSame([
+            'fromTrait' => 'anything',
+            'hasDefault' => 'const',
+            'hasNullAsDefault' => null,
+            'noDefault' => null,
+            'hasDefaultWithType' => 123,
+            'hasNullAsDefaultWithType' => null,
+            'noDefaultWithType' => null,
+        ], $classInfo->getDefaultProperties());
+    }
+
+    public function testGetDefaultPropertiesShouldIgnoreRuntimeProperty(): void
     {
         $object                     = new DefaultProperties();
         $object->notDefaultProperty = null;

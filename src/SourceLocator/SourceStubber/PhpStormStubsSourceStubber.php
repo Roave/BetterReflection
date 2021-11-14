@@ -221,7 +221,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
 
         $extension = $this->getExtensionFromFilePath($filePath);
-        $stub      = $this->createStub($this->classNodes[$lowercaseClassName], $extension);
+        $stub      = $this->createStub($this->classNodes[$lowercaseClassName]);
 
         if ($className === Traversable::class) {
             // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
@@ -259,7 +259,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $extension = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName], $extension), $extension);
+        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName]), $extension);
     }
 
     public function generateConstantStub(string $constantName): ?StubData
@@ -295,7 +295,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $extension = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($constantNode, $extension), $extension);
+        return new StubData($this->createStub($constantNode), $extension);
     }
 
     private function parseFile(string $filePath): void
@@ -363,7 +363,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * @param Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node
      */
-    private function createStub(Node $node, string $extension): string
+    private function createStub(Node $node): string
     {
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
@@ -376,13 +376,19 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             $node = $namespaceBuilder->getNode();
         }
 
-        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
+        return sprintf(
+            "<?php\n\n%s%s\n",
+            $this->prettyPrinter->prettyPrint([$node]),
+            $node instanceof Node\Expr\FuncCall ? ';' : '',
+        );
     }
 
     private function createCachingVisitor(): NodeVisitorAbstract
     {
         return new class () extends NodeVisitorAbstract
         {
+            private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
+
             /** @var array<string, Node\Stmt\ClassLike> */
             private array $classNodes = [];
 
@@ -450,7 +456,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     assert($nameNode instanceof Node\Scalar\String_);
                     $constantName = $nameNode->value;
 
-                    if (in_array($constantName, ['true', 'false', 'null'], true)) {
+                    if (in_array($constantName, self::TRUE_FALSE_NULL, true)) {
                         $constantName    = strtoupper($constantName);
                         $nameNode->value = $constantName;
                     }
@@ -549,17 +555,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
+            assert($stmt instanceof Node\Stmt\ClassConst || $stmt instanceof Node\Stmt\Property || $stmt instanceof Node\Stmt\ClassMethod);
+
             if (! $this->isSupportedInPhpVersion($stmt, $isCoreExtension)) {
                 continue;
             }
 
-            if (
-                $stmt instanceof Node\Stmt\ClassConst
-                || $stmt instanceof Node\Stmt\Property
-                || $stmt instanceof Node\Stmt\ClassMethod
-            ) {
-                $this->addDeprecatedDocComment($stmt);
-            }
+            $this->addDeprecatedDocComment($stmt);
 
             $newStmts[] = $stmt;
         }
@@ -620,8 +622,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return false;
     }
 
-    private function isSupportedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt $node, bool $isCoreExtension): bool
-    {
+    private function isSupportedInPhpVersion(
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
+        bool $isCoreExtension,
+    ): bool {
         if ($this->phpVersion === null) {
             return true;
         }
@@ -631,22 +635,32 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return true;
         }
 
+        [$fromVersion, $toVersion] = $this->getSupportedPhpVersions($node);
+
+        if ($fromVersion !== null && $fromVersion > $this->phpVersion) {
+            return false;
+        }
+
+        return $toVersion === null || $toVersion >= $this->phpVersion;
+    }
+
+    /**
+     * @return array{0: int|null, 1: int|null}
+     */
+    private function getSupportedPhpVersions(
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
+    ): array {
+        $fromVersion = null;
+        $toVersion   = null;
+
         $docComment = $node->getDocComment();
         if ($docComment !== null) {
             if (preg_match('~@since\s+(?P<version>\d+\.\d+(?:\.\d+)?)\s+~', $docComment->getText(), $sinceMatches) === 1) {
-                $sincePhpVersion = $this->parsePhpVersion($sinceMatches['version']);
-
-                if ($sincePhpVersion > $this->phpVersion) {
-                    return false;
-                }
+                $fromVersion = $this->parsePhpVersion($sinceMatches['version']);
             }
 
             if (preg_match('~@removed\s+(?P<version>\d+\.\d+(?:\.\d+)?)\s+~', $docComment->getText(), $removedMatches) === 1) {
-                $removedPhpVersion = $this->parsePhpVersion($removedMatches['version']);
-
-                if ($removedPhpVersion <= $this->phpVersion) {
-                    return false;
-                }
+                $toVersion = $this->parsePhpVersion($removedMatches['version']) - 1;
             }
         }
 
@@ -662,9 +676,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         if ($attributeArg->name === null || $attributeArg->name->toString() === 'from') {
                             assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                            if ($this->parsePhpVersion($attributeArg->value->value) > $this->phpVersion) {
-                                return false;
-                            }
+                            $fromVersion = $this->parsePhpVersion($attributeArg->value->value);
                         }
 
                         if ($attributeArg->name?->toString() !== 'to') {
@@ -673,15 +685,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                         assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                        if ($this->parsePhpVersion($attributeArg->value->value) < $this->phpVersion) {
-                            return false;
-                        }
+                        $toVersion = $this->parsePhpVersion($attributeArg->value->value);
                     }
                 }
             }
         }
 
-        return true;
+        return [$fromVersion, $toVersion];
     }
 
     private function parsePhpVersion(string $version): int

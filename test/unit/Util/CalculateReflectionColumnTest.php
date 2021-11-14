@@ -72,11 +72,11 @@ class CalculateReflectionColumnTest extends TestCase
             ->willReturn(true);
         $node
             ->method('getStartFilePos')
-            ->willReturn(10000);
+            ->willReturn(5);
 
         $this->expectException(InvalidNodePosition::class);
 
-        CalculateReflectionColumn::getStartColumn('', $node);
+        CalculateReflectionColumn::getStartColumn('test', $node);
     }
 
     public function testGetStartColumnThrowsExceptionIfNoPosition(): void
