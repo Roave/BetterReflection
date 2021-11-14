@@ -405,9 +405,10 @@ final class ReflectionEnum extends CoreReflectionEnum
 
         $interfaceNames = array_combine(array_map(static fn (string $interfaceName): string => strtolower($interfaceName), $realInterfaceNames), $realInterfaceNames);
 
-        $interfaceName = $interface instanceof CoreReflectionClass ? $interface->getName() : $interface;
+        $interfaceName          = $interface instanceof CoreReflectionClass ? $interface->getName() : $interface;
+        $lowercasedIntefaceName = strtolower($interfaceName);
 
-        $realInterfaceName = $interfaceNames[strtolower($interfaceName)] ?? $interfaceName;
+        $realInterfaceName = $interfaceNames[$lowercasedIntefaceName] ?? $interfaceName;
 
         return $this->betterReflectionEnum->implementsInterface($realInterfaceName);
     }

@@ -13,9 +13,4 @@
     <projectFiles>
         <directory name="src" />
     </projectFiles>
-
-    <issueHandlers>
-        <MoreSpecificReturnType errorLevel="suppress" />
-        <LessSpecificReturnStatement errorLevel="suppress" />
-    </issueHandlers>
 </psalm>
