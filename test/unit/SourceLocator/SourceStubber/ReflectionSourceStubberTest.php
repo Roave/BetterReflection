@@ -92,7 +92,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testCanStubTraits(): void
     {
-        require __DIR__ . '/../../Fixture/EmptyTrait.php';
+        require_once __DIR__ . '/../../Fixture/EmptyTrait.php';
 
         $stubData = $this->stubber->generateClassStub(EmptyTrait::class);
 
@@ -106,7 +106,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testClassStub(): void
     {
-        require __DIR__ . '/../../Fixture/ClassForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/ClassForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(ClassForSourceStubber::class);
 
@@ -120,7 +120,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testPureEnumStub(): void
     {
-        require __DIR__ . '/../../Fixture/EnumPureForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/EnumPureForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(EnumPureForSourceStubber::class);
 
@@ -134,7 +134,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testBackedEnumStub(): void
     {
-        require __DIR__ . '/../../Fixture/EnumBackedForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/EnumBackedForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(EnumBackedForSourceStubber::class);
 
@@ -150,7 +150,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testClassStubWithPHP8Syntax(): void
     {
-        require __DIR__ . '/../../Fixture/PHP8ClassForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/PHP8ClassForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(PHP8ClassForSourceStubber::class);
 
@@ -164,7 +164,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testClassStubWithPHP81Syntax(): void
     {
-        require __DIR__ . '/../../Fixture/PHP81ClassForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/PHP81ClassForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(PHP81ClassForSourceStubber::class);
 
@@ -175,7 +175,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testClassWithoutNamespaceStub(): void
     {
-        require __DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/ClassWithoutNamespaceForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(ClassWithoutNamespaceForSourceStubber::class);
 
@@ -189,7 +189,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP80(): void
     {
-        require __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
+        require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
 
         ClassForSourceStubberWithDefaultStaticProperty::$publicStaticProperty = new stdClass();
 
@@ -204,7 +204,7 @@ class ReflectionSourceStubberTest extends TestCase
      */
     public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP81(): void
     {
-        require __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
+        require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
 
         ClassForSourceStubberWithDefaultStaticProperty::$publicStaticProperty = new stdClass();
 
@@ -216,7 +216,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testInterfaceStub(): void
     {
-        require __DIR__ . '/../../Fixture/InterfaceForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/InterfaceForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(InterfaceForSourceStubber::class);
 
@@ -227,7 +227,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testTraitStub(): void
     {
-        require __DIR__ . '/../../Fixture/TraitForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/TraitForSourceStubber.php';
 
         $stubData = $this->stubber->generateClassStub(TraitForSourceStubber::class);
 
@@ -238,7 +238,7 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testFunctionWithoutNamespaceStub(): void
     {
-        require __DIR__ . '/../../Fixture/FunctionInNamespaceForSourceStubber.php';
+        require_once __DIR__ . '/../../Fixture/FunctionInNamespaceForSourceStubber.php';
 
         $stubData = $this->stubber->generateFunctionStub('Roave\BetterReflectionTest\Fixture\functionForSourceStubber');
 
