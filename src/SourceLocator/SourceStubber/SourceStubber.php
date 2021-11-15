@@ -11,6 +11,8 @@ interface SourceStubber
 {
     /**
      * Generates stub for given class. Returns null when it cannot generate the stub.
+     *
+     * @param class-string|trait-string $className
      */
     public function generateClassStub(string $className): ?StubData;
 

@@ -72,13 +72,15 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
     }
 
+    /**
+     * @param class-string|trait-string $className
+     */
     public function generateClassStub(string $className): ?StubData
     {
         if (! (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false))) {
             return null;
         }
 
-        /** @psalm-var class-string|trait-string $className */
         $classReflection = new CoreReflectionClass($className);
         $classNode       = $this->createClass($classReflection);
 

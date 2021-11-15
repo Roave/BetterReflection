@@ -39,7 +39,10 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             return null;
         }
 
-        return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateClassStub($identifier->getName()));
+        /** @psalm-var class-string|trait-string $className */
+        $className = $identifier->getName();
+
+        return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateClassStub($className));
     }
 
     private function getFunctionSource(Identifier $identifier): ?InternalLocatedSource
