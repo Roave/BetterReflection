@@ -36,6 +36,7 @@ class DirectoriesSourceLocator implements SourceLocator
     {
         $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_map(
             static function ($directory) use ($astLocator): FileIteratorSourceLocator {
+                /** @psalm-suppress DocblockTypeContradiction */
                 if (! is_string($directory)) {
                     throw InvalidDirectory::fromNonStringValue($directory);
                 }

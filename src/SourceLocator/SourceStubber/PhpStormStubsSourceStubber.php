@@ -7,7 +7,6 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 use Generator;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
 use PhpParser\BuilderFactory;
-use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -385,7 +384,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     private function createCachingVisitor(): NodeVisitorAbstract
     {
-        return new class () extends NodeVisitorAbstract
+        return new class ($this->builderFactory) extends NodeVisitorAbstract
         {
             private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
 
@@ -397,6 +396,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
             /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
             private array $constantNodes = [];
+
+            public function __construct(private BuilderFactory $builderFactory)
+            {
+            }
 
             public function enterNode(Node $node): ?int
             {
@@ -445,6 +448,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                 if ($node instanceof Node\Expr\FuncCall) {
                     try {
+                        /** @psalm-suppress InternalClass */
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
                     } catch (InvalidConstantNode) {
                         return null;
@@ -523,7 +527,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 // @ because access to deprecated constant throws deprecated warning
                 /** @var scalar|list<scalar>|null $constantValue */
                 $constantValue           = @constant($constantName);
-                $normalizedConstantValue = BuilderHelpers::normalizeValue($constantValue);
+                $normalizedConstantValue = $this->builderFactory->val($constantValue);
 
                 if ($node instanceof Node\Expr\FuncCall) {
                     $argumentValueNode = $node->args[1];

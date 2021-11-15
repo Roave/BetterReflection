@@ -201,6 +201,7 @@ class ReflectionParameter
      */
     public function getName(): string
     {
+        assert($this->node->var instanceof Node\Expr\Variable);
         assert(is_string($this->node->var->name));
 
         return $this->node->var->name;

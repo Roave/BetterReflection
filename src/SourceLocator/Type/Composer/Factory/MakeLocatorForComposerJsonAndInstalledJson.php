@@ -187,9 +187,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array<int|string, list<string>> $paths
+     * @param array<string, list<string>> $paths
      *
-     * @return array<int|string, array<string>>
+     * @return array<string, list<string>>
      */
     private function prefixWithInstallationPath(array $paths, string $trimmedInstallationPath): array
     {
