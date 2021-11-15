@@ -7,10 +7,10 @@ namespace Roave\BetterReflectionTest\Fixture;
  */
 enum EnumPureForSourceStubber implements \Roave\BetterReflectionTest\Fixture\ImplementedInterfaceForEnumSourceStubber, \UnitEnum
 {
+    use \Roave\BetterReflectionTest\Fixture\UsedTraitForEnumSourceStubber;
     use \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForEnumSourceStubber {
         \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForEnumSourceStubber::methodFromTraitToAlias as aliasMethodFromTrait;
     }
-    use \Roave\BetterReflectionTest\Fixture\UsedTraitForEnumSourceStubber;
     case ENUM_CASE;
     /**
      * Constant comment

@@ -21,8 +21,6 @@ use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\NullableType;
-use PhpParser\Node\Stmt\TraitUse;
-use PhpParser\Node\Stmt\TraitUseAdaptation;
 use PhpParser\Node\UnionType;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
@@ -313,31 +311,31 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function addTraitUse(Class_|Trait_|Node\Stmt\Enum_ $classNode, CoreReflectionClass $classReflection): void
     {
-        $alreadyUsedTraitNames = [];
-
         $traitAliases = $classReflection->getTraitAliases();
         assert(is_array($traitAliases));
 
+        $traitUseAdaptations = [];
+
         foreach ($traitAliases as $methodNameAlias => $methodInfo) {
             [$traitName, $methodName] = explode('::', $methodInfo);
-            $traitUseNode             = new TraitUse(
-                [new FullyQualified($traitName)],
-                [new TraitUseAdaptation\Alias(new FullyQualified($traitName), $methodName, null, $methodNameAlias)],
-            );
 
-            if ($classNode instanceof Node\Stmt\Enum_) {
-                $classNode->stmts[] = $traitUseNode;
-            } else {
-                $classNode->addStmt($traitUseNode);
-            }
+            $traitUseAdaptation = $this->builderFactory->traitUseAdaptation(new FullyQualified($traitName), $methodName);
+            $traitUseAdaptation->as($methodNameAlias);
 
-            $alreadyUsedTraitNames[] = $traitName;
+            $traitUseAdaptations[$traitName] = $traitUseAdaptation;
         }
 
-        foreach (array_diff($classReflection->getTraitNames(), $alreadyUsedTraitNames) as $traitName) {
-            $traitUse = new TraitUse([new FullyQualified($traitName)]);
+        foreach ($classReflection->getTraitNames() as $traitName) {
+            $traitUse = $this->builderFactory->useTrait(new FullyQualified($traitName));
+
+            if (array_key_exists($traitName, $traitUseAdaptations)) {
+                $traitUse->with($traitUseAdaptations[$traitName]);
+            }
+
             if ($classNode instanceof Node\Stmt\Enum_) {
-                $classNode->stmts[] = $traitUse;
+                $traitUseNode = $traitUse->getNode();
+                assert($traitUseNode instanceof Node\Stmt\TraitUse);
+                $classNode->stmts[] = $traitUseNode;
             } else {
                 $classNode->addStmt($traitUse);
             }

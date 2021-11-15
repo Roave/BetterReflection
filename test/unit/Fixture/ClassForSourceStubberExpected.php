@@ -7,10 +7,10 @@ namespace Roave\BetterReflectionTest\Fixture;
  */
 abstract class ClassForSourceStubber extends \Roave\BetterReflectionTest\Fixture\ParentClassForSourceStubber implements \Roave\BetterReflectionTest\Fixture\ImplementedInterfaceForSourceStubber, \Serializable
 {
+    use \Roave\BetterReflectionTest\Fixture\UsedTraitForSourceStubber;
     use \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForSourceStubber {
         \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForSourceStubber::methodFromTraitToAlias as aliasMethodFromTrait;
     }
-    use \Roave\BetterReflectionTest\Fixture\UsedTraitForSourceStubber;
     /**
      * Constant comment
      */
