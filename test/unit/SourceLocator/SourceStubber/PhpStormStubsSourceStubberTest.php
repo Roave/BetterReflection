@@ -57,6 +57,7 @@ use const PHP_VERSION_ID;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber
+ * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor
  */
 class PhpStormStubsSourceStubberTest extends TestCase
 {
