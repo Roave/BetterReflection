@@ -19,7 +19,7 @@ jobs:
         dependencies:
           - "locked"
         php-version:
-          - "8.0"
+          - "8.1"
         operating-system:
           - "ubuntu-latest"
 
@@ -30,7 +30,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          coverage: "pcov"
+          coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1, zend.assertions=1
         env:
@@ -60,7 +60,7 @@ jobs:
       - name: "Generate code coverage"
         run: "vendor/bin/phpunit --coverage-xml=coverage/coverage-xml --log-junit=coverage/junit.xml"
 
-      - name: "Install PHP without pcov"
+      - name: "Install PHP without xdebug"
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
