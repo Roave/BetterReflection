@@ -338,6 +338,10 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function addPropertyModifiers(Property $propertyNode, CoreReflectionProperty $propertyReflection): void
     {
+        if (method_exists($propertyReflection, 'isReadOnly') && $propertyReflection->isReadOnly()) {
+            $propertyNode->makeReadonly();
+        }
+
         if ($propertyReflection->isStatic()) {
             $propertyNode->makeStatic();
         }
