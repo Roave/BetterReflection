@@ -18,6 +18,9 @@ class AggregateSourceStubber implements SourceStubber
         $this->sourceStubbers = array_values(array_merge([$sourceStubber], $otherSourceStubbers));
     }
 
+    /**
+     * @param class-string|trait-string $className
+     */
     public function generateClassStub(string $className): ?StubData
     {
         foreach ($this->sourceStubbers as $sourceStubber) {

@@ -188,6 +188,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         self::$mapsInitialized = true;
     }
 
+    /**
+     * @param class-string|trait-string $className
+     */
     public function generateClassStub(string $className): ?StubData
     {
         $lowercaseClassName = strtolower($className);
