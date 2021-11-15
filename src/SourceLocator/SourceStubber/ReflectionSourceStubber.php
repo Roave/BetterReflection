@@ -348,17 +348,11 @@ final class ReflectionSourceStubber implements SourceStubber
 
         if ($propertyReflection->isPublic()) {
             $propertyNode->makePublic();
-        }
-
-        if ($propertyReflection->isProtected()) {
+        } elseif ($propertyReflection->isProtected()) {
             $propertyNode->makeProtected();
+        } else {
+            $propertyNode->makePrivate();
         }
-
-        if (! $propertyReflection->isPrivate()) {
-            return;
-        }
-
-        $propertyNode->makePrivate();
     }
 
     private function addConstants(Class_|Interface_|Trait_ $classNode, CoreReflectionClass $classReflection): void
