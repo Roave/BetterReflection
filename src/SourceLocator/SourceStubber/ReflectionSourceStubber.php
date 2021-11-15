@@ -289,8 +289,6 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function addProperties(Class_|Trait_ $classNode, CoreReflectionClass $classReflection): void
     {
-        $defaultProperties = $classReflection->getDefaultProperties();
-
         foreach ($classReflection->getProperties() as $propertyReflection) {
             if (! $this->isPropertyDeclaredInClass($propertyReflection, $classReflection)) {
                 continue;
@@ -301,11 +299,11 @@ final class ReflectionSourceStubber implements SourceStubber
             $this->addPropertyModifiers($propertyNode, $propertyReflection);
             $this->addDocComment($propertyNode, $propertyReflection);
 
-            if (array_key_exists($propertyReflection->getName(), $defaultProperties)) {
+            if ($propertyReflection->hasDefaultValue()) {
                 try {
-                    $propertyNode->setDefault($defaultProperties[$propertyReflection->getName()]);
+                    $propertyNode->setDefault($propertyReflection->getDefaultValue());
                 } catch (LogicException) {
-                    // Unsupported value
+                    // Nothing
                 }
             }
 
