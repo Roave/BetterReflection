@@ -206,6 +206,17 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
+    public function testFunctionWithoutNamespaceStub(): void
+    {
+        require __DIR__ . '/../../Fixture/FunctionInNamespaceForSourceStubber.php';
+
+        $stubData = $this->stubber->generateFunctionStub('Roave\BetterReflectionTest\Fixture\functionForSourceStubber');
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/FunctionInNamespaceForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
+    }
+
     /**
      * @return list<list<string>>
      */
