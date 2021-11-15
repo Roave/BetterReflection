@@ -23,6 +23,8 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\ClassForSourceStubberWithDefaultStaticProperty;
 use Roave\BetterReflectionTest\Fixture\EmptyTrait;
+use Roave\BetterReflectionTest\Fixture\EnumBackedForSourceStubber;
+use Roave\BetterReflectionTest\Fixture\EnumPureForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\InterfaceForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\PHP81ClassForSourceStubber;
 use Roave\BetterReflectionTest\Fixture\PHP8ClassForSourceStubber;
@@ -110,6 +112,34 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertNotNull($stubData);
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testPureEnumStub(): void
+    {
+        require __DIR__ . '/../../Fixture/EnumPureForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(EnumPureForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/EnumPureForSourceStubberExpected.php', $stubData->getStub());
+        self::assertNull($stubData->getExtensionName());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testBackedEnumStub(): void
+    {
+        require __DIR__ . '/../../Fixture/EnumBackedForSourceStubber.php';
+
+        $stubData = $this->stubber->generateClassStub(EnumBackedForSourceStubber::class);
+
+        self::assertNotNull($stubData);
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/EnumBackedForSourceStubberExpected.php', $stubData->getStub());
         self::assertNull($stubData->getExtensionName());
     }
 

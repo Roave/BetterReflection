@@ -27,6 +27,7 @@ use PhpParser\Node\UnionType;
 use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
+use ReflectionEnum as CoreReflectionEnum;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionIntersectionType as CoreReflectionIntersectionType;
@@ -77,37 +78,58 @@ final class ReflectionSourceStubber implements SourceStubber
      */
     public function generateClassStub(string $className): ?StubData
     {
-        if (! (class_exists($className, false) || interface_exists($className, false) || trait_exists($className, false))) {
+        /** phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName */
+        $isEnum = function_exists('enum_exists') && \enum_exists($className, false);
+        /** phpcs:enable */
+
+        if (
+            ! (
+            class_exists($className, false)
+            || interface_exists($className, false)
+            || trait_exists($className, false)
+            || $isEnum
+            )
+        ) {
             return null;
         }
 
-        $classReflection = new CoreReflectionClass($className);
+        $classReflection = $isEnum ? new CoreReflectionEnum($className) : new CoreReflectionClass($className);
         $classNode       = $this->createClass($classReflection);
 
         if ($classNode instanceof Class_) {
             $this->addClassModifiers($classNode, $classReflection);
         }
 
-        if ($classNode instanceof Class_ || $classNode instanceof Interface_) {
+        if ($classNode instanceof Class_ || $classNode instanceof Interface_ || $classNode instanceof Node\Stmt\Enum_) {
             $this->addExtendsAndImplements($classNode, $classReflection);
         }
 
         if ($classNode instanceof Class_ || $classNode instanceof Trait_) {
             $this->addProperties($classNode, $classReflection);
+        }
+
+        if ($classNode instanceof Class_ || $classNode instanceof Trait_ || $classNode instanceof Node\Stmt\Enum_) {
             $this->addTraitUse($classNode, $classReflection);
         }
 
         $this->addDocComment($classNode, $classReflection);
-        $this->addConstants($classNode, $classReflection);
+
+        if ($classNode instanceof Node\Stmt\Enum_ && $classReflection instanceof CoreReflectionEnum) {
+            $this->addEnumBackingType($classNode, $classReflection);
+            $this->addEnumCases($classNode, $classReflection);
+        }
+
+        $this->addClassConstants($classNode, $classReflection);
         $this->addMethods($classNode, $classReflection);
+
+        $node = $classNode instanceof Node\Stmt\Enum_ ? $classNode : $classNode->getNode();
+        $stub = $classReflection->inNamespace()
+            ? $this->generateStubInNamespace($node, $classReflection->getNamespaceName())
+            : $this->generateStub($node);
 
         $extensionName = $classReflection->getExtensionName() ?: null;
 
-        if (! $classReflection->inNamespace()) {
-            return $this->createStubData($this->generateStub($classNode->getNode()), $extensionName);
-        }
-
-        return $this->createStubData($this->generateStubInNamespace($classNode->getNode(), $classReflection->getNamespaceName()), $extensionName);
+        return $this->createStubData($stub, $extensionName);
     }
 
     public function generateFunctionStub(string $functionName): ?StubData
@@ -182,8 +204,13 @@ final class ReflectionSourceStubber implements SourceStubber
         return null;
     }
 
-    private function createClass(CoreReflectionClass $classReflection): Class_|Interface_|Trait_
+    private function createClass(CoreReflectionClass $classReflection): Class_|Interface_|Trait_|Node\Stmt\Enum_
     {
+        if ($classReflection instanceof CoreReflectionEnum) {
+            // https://github.com/nikic/PHP-Parser/pull/816
+            return new Node\Stmt\Enum_($classReflection->getShortName());
+        }
+
         if ($classReflection->isTrait()) {
             return $this->builderFactory->trait($classReflection->getShortName());
         }
@@ -196,7 +223,7 @@ final class ReflectionSourceStubber implements SourceStubber
     }
 
     private function addDocComment(
-        Class_|Interface_|Trait_|Method|Property|Function_ $node,
+        Class_|Interface_|Trait_|Node\Stmt\Enum_|Method|Property|Function_ $node,
         CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection,
     ): void {
         $docComment  = $reflection->getDocComment() ?: '';
@@ -228,6 +255,18 @@ final class ReflectionSourceStubber implements SourceStubber
         $node->setDocComment(new Doc($docComment));
     }
 
+    private function addEnumBackingType(Node\Stmt\Enum_ $enumNode, CoreReflectionEnum $enumReflection): void
+    {
+        if (! $enumReflection->isBacked()) {
+            return;
+        }
+
+        $backingType = $enumReflection->getBackingType();
+        assert($backingType instanceof CoreReflectionNamedType);
+
+        $enumNode->scalarType = new Node\Identifier($backingType->getName());
+    }
+
     private function addClassModifiers(Class_ $classNode, CoreReflectionClass $classReflection): void
     {
         if (! $classReflection->isInterface() && $classReflection->isAbstract()) {
@@ -242,14 +281,17 @@ final class ReflectionSourceStubber implements SourceStubber
         $classNode->makeFinal();
     }
 
-    private function addExtendsAndImplements(Class_|Interface_ $classNode, CoreReflectionClass $classReflection): void
+    private function addExtendsAndImplements(Class_|Interface_|Node\Stmt\Enum_ $classNode, CoreReflectionClass $classReflection): void
     {
-        $parentClass = $classReflection->getParentClass();
-        $interfaces  = $classReflection->getInterfaceNames();
+        $interfaces = $classReflection->getInterfaceNames();
 
-        if ($parentClass) {
-            $classNode->extend(new FullyQualified($parentClass->getName()));
-            $interfaces = array_diff($interfaces, $parentClass->getInterfaceNames());
+        if ($classNode instanceof Class_ || $classNode instanceof Interface_) {
+            $parentClass = $classReflection->getParentClass();
+
+            if ($parentClass !== false) {
+                $classNode->extend(new FullyQualified($parentClass->getName()));
+                $interfaces = array_diff($interfaces, $parentClass->getInterfaceNames());
+            }
         }
 
         foreach ($classReflection->getInterfaces() as $interface) {
@@ -257,15 +299,19 @@ final class ReflectionSourceStubber implements SourceStubber
         }
 
         foreach ($interfaces as $interfaceName) {
+            $interfaceNode = new FullyQualified($interfaceName);
+
             if ($classNode instanceof Interface_) {
-                $classNode->extend(new FullyQualified($interfaceName));
+                $classNode->extend($interfaceNode);
+            } elseif ($classNode instanceof Node\Stmt\Enum_) {
+                $classNode->implements[] = $interfaceNode;
             } else {
-                $classNode->implement(new FullyQualified($interfaceName));
+                $classNode->implement($interfaceNode);
             }
         }
     }
 
-    private function addTraitUse(Class_|Trait_ $classNode, CoreReflectionClass $classReflection): void
+    private function addTraitUse(Class_|Trait_|Node\Stmt\Enum_ $classNode, CoreReflectionClass $classReflection): void
     {
         $alreadyUsedTraitNames = [];
 
@@ -279,13 +325,22 @@ final class ReflectionSourceStubber implements SourceStubber
                 [new TraitUseAdaptation\Alias(new FullyQualified($traitName), $methodName, null, $methodNameAlias)],
             );
 
-            $classNode->addStmt($traitUseNode);
+            if ($classNode instanceof Node\Stmt\Enum_) {
+                $classNode->stmts[] = $traitUseNode;
+            } else {
+                $classNode->addStmt($traitUseNode);
+            }
 
             $alreadyUsedTraitNames[] = $traitName;
         }
 
         foreach (array_diff($classReflection->getTraitNames(), $alreadyUsedTraitNames) as $traitName) {
-            $classNode->addStmt(new TraitUse([new FullyQualified($traitName)]));
+            $traitUse = new TraitUse([new FullyQualified($traitName)]);
+            if ($classNode instanceof Node\Stmt\Enum_) {
+                $classNode->stmts[] = $traitUse;
+            } else {
+                $classNode->addStmt($traitUse);
+            }
         }
     }
 
@@ -355,9 +410,25 @@ final class ReflectionSourceStubber implements SourceStubber
         }
     }
 
-    private function addConstants(Class_|Interface_|Trait_ $classNode, CoreReflectionClass $classReflection): void
+    private function addEnumCases(Node\Stmt\Enum_ $enumNode, CoreReflectionEnum $enumReflection): void
+    {
+        foreach ($enumReflection->getCases() as $enumCaseReflection) {
+            $value = $enumReflection->isBacked() ? $this->builderFactory->val($enumCaseReflection->getBackingValue()) : null;
+
+            $enumNode->stmts[] = new Node\Stmt\EnumCase(
+                $enumCaseReflection->getName(),
+                $value,
+            );
+        }
+    }
+
+    private function addClassConstants(Class_|Interface_|Trait_|Node\Stmt\Enum_ $classNode, CoreReflectionClass $classReflection): void
     {
         foreach ($classReflection->getReflectionConstants() as $constantReflection) {
+            if (method_exists($constantReflection, 'isEnumCase') && $constantReflection->isEnumCase()) {
+                continue;
+            }
+
             if ($constantReflection->getDeclaringClass()->getName() !== $classReflection->getName()) {
                 continue;
             }
@@ -370,7 +441,11 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $this->addClassConstantModifiers($classConstantNode, $constantReflection);
 
-            $classNode->addStmt($classConstantNode);
+            if ($classNode instanceof Node\Stmt\Enum_) {
+                $classNode->stmts[] = $classConstantNode->getNode();
+            } else {
+                $classNode->addStmt($classConstantNode);
+            }
         }
     }
 
@@ -389,7 +464,7 @@ final class ReflectionSourceStubber implements SourceStubber
         }
     }
 
-    private function addMethods(Class_|Interface_|Trait_ $classNode, CoreReflectionClass $classReflection): void
+    private function addMethods(Class_|Interface_|Trait_|Node\Stmt\Enum_ $classNode, CoreReflectionClass $classReflection): void
     {
         foreach ($classReflection->getMethods() as $methodReflection) {
             if (! $this->isMethodDeclaredInClass($methodReflection, $classReflection)) {
@@ -413,7 +488,11 @@ final class ReflectionSourceStubber implements SourceStubber
                 $methodNode->setReturnType($this->formatType($returnType));
             }
 
-            $classNode->addStmt($methodNode);
+            if ($classNode instanceof Node\Stmt\Enum_) {
+                $classNode->stmts[] = $methodNode->getNode();
+            } else {
+                $classNode->addStmt($methodNode);
+            }
         }
     }
 
