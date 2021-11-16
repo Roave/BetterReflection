@@ -557,7 +557,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testStubForConstantThatExists(): void
     {
-        self::assertInstanceOf(StubData::class, $this->sourceStubber->generateConstantStub('PHP_VERSION_ID'));
+        $stubData = $this->sourceStubber->generateConstantStub('PHP_VERSION_ID');
+
+        self::assertInstanceOf(StubData::class, $stubData);
+        self::assertStringMatchesFormat(
+            "%Adefine('PHP_VERSION_ID',%w%d);",
+            $stubData->getStub(),
+        );
+        self::assertSame('Core', $stubData->getExtensionName());
     }
 
     public function testNoStubForConstantThatDoesNotExist(): void

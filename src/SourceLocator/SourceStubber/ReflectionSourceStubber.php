@@ -648,7 +648,11 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function generateStub(Node $node): string
     {
-        return "<?php\n\n" . $this->prettyPrinter->prettyPrint([$node]) . ($node instanceof Node\Expr\FuncCall ? ';' : '') . "\n";
+        return sprintf(
+            "<?php\n\n%s%s\n",
+            $this->prettyPrinter->prettyPrint([$node]),
+            ($node instanceof Node\Expr\FuncCall ? ';' : ''),
+        );
     }
 
     private function createStubData(string $stub, ?string $extensionName): StubData
