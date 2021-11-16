@@ -6,11 +6,7 @@ namespace Roave\BetterReflectionTest\Identifier;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use ReflectionObject;
 use Roave\BetterReflection\Identifier\IdentifierType;
-use Roave\BetterReflection\Reflection\ReflectionClass;
-use Roave\BetterReflection\Reflection\ReflectionConstant;
-use Roave\BetterReflection\Reflection\ReflectionFunction;
 
 /**
  * @covers \Roave\BetterReflection\Identifier\IdentifierType
@@ -43,61 +39,6 @@ class IdentifierTypeTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('foo is not a valid identifier type');
         new IdentifierType('foo');
-    }
-
-    public function testIsMatchingReflectorClass(): void
-    {
-        $reflectionClass = $this->createMock(ReflectionClass::class);
-
-        $classType    = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
-        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
-
-        self::assertTrue($classType->isMatchingReflector($reflectionClass));
-        self::assertFalse($functionType->isMatchingReflector($reflectionClass));
-        self::assertFalse($constantType->isMatchingReflector($reflectionClass));
-    }
-
-    public function testIsMatchingReflectorFunction(): void
-    {
-        $reflectionFunction = $this->createMock(ReflectionFunction::class);
-
-        $classType    = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
-        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
-
-        self::assertFalse($classType->isMatchingReflector($reflectionFunction));
-        self::assertTrue($functionType->isMatchingReflector($reflectionFunction));
-        self::assertFalse($constantType->isMatchingReflector($reflectionFunction));
-    }
-
-    public function testIsMatchingReflectorConstant(): void
-    {
-        $reflectionConstant = $this->createMock(ReflectionConstant::class);
-
-        $classType    = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-        $functionType = new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION);
-        $constantType = new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT);
-
-        self::assertFalse($classType->isMatchingReflector($reflectionConstant));
-        self::assertFalse($functionType->isMatchingReflector($reflectionConstant));
-        self::assertTrue($constantType->isMatchingReflector($reflectionConstant));
-    }
-
-    public function testIsMatchingReflectorReturnsFalseWhenTypeIsInvalid(): void
-    {
-        $classType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
-
-        // We must use reflection to hack the value, because we cannot create
-        // an IdentifierType with an invalid type
-        $reflection = new ReflectionObject($classType);
-        $prop       = $reflection->getProperty('name');
-        $prop->setAccessible(true);
-        $prop->setValue($classType, 'nonsense');
-
-        $reflectionClass = $this->createMock(ReflectionClass::class);
-
-        self::assertFalse($classType->isMatchingReflector($reflectionClass));
     }
 
     public function testIsTypesForClass(): void

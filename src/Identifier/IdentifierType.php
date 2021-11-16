@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Identifier;
 
 use InvalidArgumentException;
-use Roave\BetterReflection\Reflection\Reflection;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -57,25 +56,5 @@ class IdentifierType
     public function isConstant(): bool
     {
         return $this->name === self::IDENTIFIER_CONSTANT;
-    }
-
-    /**
-     * Check to see if a reflector is of a valid type specified by this identifier.
-     */
-    public function isMatchingReflector(Reflection $reflector): bool
-    {
-        if ($this->name === self::IDENTIFIER_CLASS) {
-            return $reflector instanceof ReflectionClass;
-        }
-
-        if ($this->name === self::IDENTIFIER_FUNCTION) {
-            return $reflector instanceof ReflectionFunction;
-        }
-
-        if ($this->name === self::IDENTIFIER_CONSTANT) {
-            return $reflector instanceof ReflectionConstant;
-        }
-
-        return false;
     }
 }
