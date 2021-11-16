@@ -158,11 +158,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             class_exists($className, false)
             || interface_exists($className, false)
             || trait_exists($className, false)
-            /** phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName */
-            || (function_exists('enum_exists') && \enum_exists($className, false))
-            /** phpcs:enable */
         ) {
-            /** @psalm-suppress ArgumentTypeCoercion */
             $classReflection = new ReflectionClass($className);
 
             $filename = $classReflection->getFileName();

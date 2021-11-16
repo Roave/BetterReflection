@@ -510,7 +510,7 @@ class ReflectionSourceStubberTest extends TestCase
 
         self::assertNotNull($stubData);
         self::assertStringMatchesFormat(
-            "%Adefine('E_ALL',%A",
+            "%Adefine('E_ALL',%w%d);",
             $stubData->getStub(),
         );
         self::assertSame('Core', $stubData->getExtensionName());

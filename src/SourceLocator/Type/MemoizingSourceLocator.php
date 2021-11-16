@@ -27,7 +27,7 @@ final class MemoizingSourceLocator implements SourceLocator
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
     {
-        $cacheKey = $this->reflectorCacheKey($reflector) . '_' . $this->identifierToCacheKey($identifier);
+        $cacheKey = sprintf('%s_%s', $this->reflectorCacheKey($reflector), $this->identifierToCacheKey($identifier));
 
         if (array_key_exists($cacheKey, $this->cacheByIdentifierKeyAndOid)) {
             return $this->cacheByIdentifierKeyAndOid[$cacheKey];
