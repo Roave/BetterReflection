@@ -118,11 +118,7 @@ final class FindReflectionsInTree
                             }
                         }
 
-                        $reflection = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
-
-                        if ($this->identifierType->isMatchingReflector($reflection)) {
-                            $this->reflections[] = $reflection;
-                        }
+                        $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
 
                         return null;
                     }
