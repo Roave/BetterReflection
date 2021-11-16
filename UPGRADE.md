@@ -6,6 +6,7 @@ or backwards compatibility (BC) breakages occur.
 ## 5.0.0
 
 ### BC Breaks
+* Method `\Roave\BetterReflection\Identifier\IdentifierType::isMatchingReflector()` has been removed.
 * All adapters are `final`
 * `ClassReflector`, `FunctionReflector` and `ConstantReflector` have been removed. Use `DefaultReflector` to reflect all types.
 * Removed support for PHP4 style constructors
