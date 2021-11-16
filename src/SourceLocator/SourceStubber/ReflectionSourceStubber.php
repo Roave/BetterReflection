@@ -76,20 +76,19 @@ final class ReflectionSourceStubber implements SourceStubber
      */
     public function generateClassStub(string $className): ?StubData
     {
-        /** phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName */
-        $isEnum = function_exists('enum_exists') && \enum_exists($className, false);
-        /** phpcs:enable */
-
         if (
             ! (
             class_exists($className, false)
             || interface_exists($className, false)
             || trait_exists($className, false)
-            || $isEnum
             )
         ) {
             return null;
         }
+
+        /** phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName */
+        $isEnum = function_exists('enum_exists') && \enum_exists($className, false);
+        /** phpcs:enable */
 
         $classReflection = $isEnum ? new CoreReflectionEnum($className) : new CoreReflectionClass($className);
         $classNode       = $this->createClass($classReflection);
