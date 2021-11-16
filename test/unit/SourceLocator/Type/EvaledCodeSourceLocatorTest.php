@@ -18,6 +18,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
+use function sprintf;
 use function uniqid;
 
 /**
@@ -97,6 +98,26 @@ class EvaledCodeSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
         self::assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testCanReflectEvaledEnum(): void
+    {
+        $enumName = uniqid('foo', false);
+
+        eval(sprintf('enum %s {case ENUM_CASE;}', $enumName));
+
+        $locator = new EvaledCodeSourceLocator($this->astLocator, $this->sourceStubber);
+
+        $reflection = $locator->locateIdentifier(
+            $this->getMockReflector(),
+            new Identifier($enumName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+        );
+
+        self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
+        self::assertStringMatchesFormat('%Aenum%A' . $enumName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
     public function testCanReflectEvaledLocatedSourceClass(): void
