@@ -4,11 +4,9 @@
 name: Auto-merge Dependabot PRs
 
 on:
-  workflow_run:
+  check_suite:
     types:
       - completed
-    workflows:
-      - "Continuous Integration"
 
 jobs:
   merge-me:
