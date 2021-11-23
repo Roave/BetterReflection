@@ -14,6 +14,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor;
@@ -332,7 +333,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         continue;
                     }
 
-                    $this->modifyStmtTypeByPhpVersion($functionNode);
+                    $this->modifyFunctionReturnTypeByPhpVersion($functionNode);
                     $this->modifyFunctionParametersByPhpVersion($functionNode);
                 }
 
@@ -402,7 +403,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
 
             if ($stmt instanceof Node\Stmt\ClassMethod) {
-                $this->modifyStmtTypeByPhpVersion($stmt);
+                $this->modifyFunctionReturnTypeByPhpVersion($stmt);
                 $this->modifyFunctionParametersByPhpVersion($stmt);
             }
 
@@ -414,7 +415,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $newStmts;
     }
 
-    private function modifyStmtTypeByPhpVersion(Node\Stmt\Function_|Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): void
+    private function modifyStmtTypeByPhpVersion(Node\Stmt\Property|Node\Param $stmt): void
     {
         $type = $this->getStmtType($stmt);
 
@@ -422,11 +423,33 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return;
         }
 
-        if ($stmt instanceof Node\Stmt\Function_ || $stmt instanceof Node\Stmt\ClassMethod) {
-            $stmt->returnType = $type;
-        } else {
-            $stmt->type = $type;
+        $stmt->type = $type;
+    }
+
+    private function modifyFunctionReturnTypeByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
+    {
+        $isTentativeReturnType = $this->getNodeAttribute($function, 'JetBrains\PhpStorm\Internal\TentativeType') !== null;
+
+        if ($isTentativeReturnType) {
+            // Tentative types are the most correct in stubs
+            // If the type is tentative in stubs, we should remove the type for PHP < 8.1
+
+            if ($this->phpVersion >= 80100) {
+                $this->addAnnotationToDocComment($function, AnnotationHelper::TENTATIVE_RETURN_TYPE_ANNOTATION);
+            } else {
+                $function->returnType = null;
+            }
+
+            return;
         }
+
+        $type = $this->getStmtType($function);
+
+        if ($type === null) {
+            return;
+        }
+
+        $function->returnType = $type;
     }
 
     private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
@@ -489,12 +512,19 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return;
         }
 
+        $this->addAnnotationToDocComment($node, 'deprecated');
+    }
+
+    private function addAnnotationToDocComment(
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node,
+        string $annotationName,
+    ): void {
         $docComment = $node->getDocComment();
 
         if ($docComment === null) {
-            $docCommentText = '/** @deprecated */';
+            $docCommentText = sprintf('/** @%s */', $annotationName);
         } else {
-            $docCommentText = preg_replace('~(\r?\n\s*)\*/~', '\1* @deprecated\1*/', $docComment->getText());
+            $docCommentText = preg_replace('~(\r?\n\s*)\*/~', sprintf('\1* @%s\1*/', $annotationName), $docComment->getText());
         }
 
         $node->setDocComment(new Doc($docCommentText));
