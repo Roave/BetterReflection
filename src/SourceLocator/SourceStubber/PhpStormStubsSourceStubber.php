@@ -507,7 +507,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
                         assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                        $toVersion = $this->parsePhpVersion($attributeArg->value->value);
+                        $toVersion = $this->parsePhpVersion($attributeArg->value->value, 99);
                     }
                 }
             }
@@ -516,11 +516,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return [$fromVersion, $toVersion];
     }
 
-    private function parsePhpVersion(string $version): int
+    private function parsePhpVersion(string $version, int $defaultPatch = 0): int
     {
         $parts = array_map('intval', explode('.', $version));
 
-        return $parts[0] * 10000 + $parts[1] * 100 + ($parts[2] ?? 0);
+        return $parts[0] * 10000 + $parts[1] * 100 + ($parts[2] ?? $defaultPatch);
     }
 
     private function getStubsDirectory(): string
