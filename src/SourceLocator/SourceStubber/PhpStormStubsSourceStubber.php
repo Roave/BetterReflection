@@ -397,6 +397,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 continue;
             }
 
+            if ($stmt instanceof Node\Stmt\Property) {
+                $this->modifyStmtTypeByPhpVersion($stmt);
+            }
+
             if ($stmt instanceof Node\Stmt\ClassMethod) {
                 $this->modifyFunctionParametersByPhpVersion($stmt);
             }
@@ -409,6 +413,48 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $newStmts;
     }
 
+    private function modifyStmtTypeByPhpVersion(Node\Stmt\Property|Node\Param $stmt): void
+    {
+        foreach ($stmt->attrGroups as $attributesGroupNode) {
+            foreach ($attributesGroupNode->attrs as $attributeNode) {
+                if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Internal\LanguageLevelTypeAware') {
+                    continue;
+                }
+
+                assert($attributeNode->args[0]->value instanceof Node\Expr\Array_);
+
+                /** @var list<Node\Expr\ArrayItem> $types */
+                $types = $attributeNode->args[0]->value->items;
+
+                usort($types, static fn (Node\Expr\ArrayItem $a, Node\Expr\ArrayItem $b): int => $b->key <=> $a->key);
+
+                foreach ($types as $type) {
+                    assert($type->key instanceof Node\Scalar\String_);
+                    assert($type->value instanceof Node\Scalar\String_);
+
+                    if (
+                        $this->parsePhpVersion($type->key->value) > $this->phpVersion
+                        // There are some invalid types in stubs, eg. `string[]|string|null`
+                        || str_contains($type->value->value, '[')
+                    ) {
+                        continue;
+                    }
+
+                    $stmt->type = $this->normalizeType($type->value->value);
+                    return;
+                }
+
+                assert($attributeNode->args[1]->value instanceof Node\Scalar\String_);
+
+                if ($attributeNode->args[1]->value->value !== '') {
+                    $stmt->type = $this->normalizeType($attributeNode->args[1]->value->value);
+                }
+
+                return;
+            }
+        }
+    }
+
     private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
     {
         $parameters = [];
@@ -418,44 +464,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 continue;
             }
 
+            $this->modifyStmtTypeByPhpVersion($parameterNode);
+
             $parameters[] = $parameterNode;
-
-            foreach ($parameterNode->attrGroups as $attributesGroupNode) {
-                foreach ($attributesGroupNode->attrs as $attributeNode) {
-                    if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Internal\LanguageLevelTypeAware') {
-                        continue;
-                    }
-
-                    assert($attributeNode->args[0]->value instanceof Node\Expr\Array_);
-
-                    /** @var list<Node\Expr\ArrayItem> $types */
-                    $types = $attributeNode->args[0]->value->items;
-
-                    usort($types, static fn (Node\Expr\ArrayItem $a, Node\Expr\ArrayItem $b): int => $b->key <=> $a->key);
-
-                    foreach ($types as $type) {
-                        assert($type->key instanceof Node\Scalar\String_);
-                        assert($type->value instanceof Node\Scalar\String_);
-
-                        if (
-                            $this->parsePhpVersion($type->key->value) <= $this->phpVersion
-                            // There are some invalid types in stubs, eg. `string[]|string|null`
-                            && ! str_contains($type->value->value, '[')
-                        ) {
-                            $parameterNode->type = $this->normalizeType($type->value->value);
-                            continue 4;
-                        }
-                    }
-
-                    assert($attributeNode->args[1]->value instanceof Node\Scalar\String_);
-
-                    if ($attributeNode->args[1]->value->value !== '') {
-                        $parameterNode->type = $this->normalizeType($attributeNode->args[1]->value->value);
-                    }
-
-                    break 2;
-                }
-            }
         }
 
         $function->params = $parameters;

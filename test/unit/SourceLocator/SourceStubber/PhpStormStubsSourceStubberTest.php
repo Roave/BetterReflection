@@ -9,8 +9,10 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 use DateTimeInterface;
+use DOMNode;
 use Generator;
 use PDO;
+use PDOException;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -23,6 +25,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -843,19 +846,35 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [DateInterval::class, 'f', 70000, false],
             [DateInterval::class, 'f', 70099, false],
             [DateInterval::class, 'f', 70100, true],
+            [PDOException::class, 'errorInfo', 80099, true],
+            [PDOException::class, 'errorInfo', 80100, true, 'array|null'],
+            [DOMNode::class, 'nodeType', 80099, true],
+            [DOMNode::class, 'nodeType', 80100, true, 'int'],
+            [DOMNode::class, 'parentNode', 80099, true],
+            [DOMNode::class, 'parentNode', 80100, true, 'DOMNode|null'],
         ];
     }
 
     /**
      * @dataProvider dataPropertyInPhpVersion
      */
-    public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported): void
+    public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported, ?string $type = null): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
         $reflector                = new DefaultReflector($phpInternalSourceLocator);
 
-        self::assertSame($isSupported, $reflector->reflectClass($className)->hasProperty($propertyName));
+        $class    = $reflector->reflectClass($className);
+        $property = $class->getProperty($propertyName);
+
+        $fullPropertyName = sprintf('%s::$%s', $className, $propertyName);
+
+        if ($isSupported) {
+            self::assertInstanceOf(ReflectionProperty::class, $property, $fullPropertyName);
+            self::assertSame($type, $property->getType()?->__toString(), $fullPropertyName);
+        } else {
+            self::assertNull($property, $fullPropertyName);
+        }
     }
 
     public function dataFunctionInPhpVersion(): array
