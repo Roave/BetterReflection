@@ -402,6 +402,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
 
             if ($stmt instanceof Node\Stmt\ClassMethod) {
+                $this->modifyStmtTypeByPhpVersion($stmt);
                 $this->modifyFunctionParametersByPhpVersion($stmt);
             }
 
@@ -413,7 +414,39 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $newStmts;
     }
 
-    private function modifyStmtTypeByPhpVersion(Node\Stmt\Property|Node\Param $stmt): void
+    private function modifyStmtTypeByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): void
+    {
+        $type = $this->getStmtType($stmt);
+
+        if ($type === null) {
+            return;
+        }
+
+        if ($stmt instanceof Node\Stmt\ClassMethod) {
+            $stmt->returnType = $type;
+        } else {
+            $stmt->type = $type;
+        }
+    }
+
+    private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
+    {
+        $parameters = [];
+
+        foreach ($function->getParams() as $parameterNode) {
+            if (! $this->isSupportedInPhpVersion($parameterNode)) {
+                continue;
+            }
+
+            $this->modifyStmtTypeByPhpVersion($parameterNode);
+
+            $parameters[] = $parameterNode;
+        }
+
+        $function->params = $parameters;
+    }
+
+    private function getStmtType(Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): Node\Name|Node\Identifier|Node\ComplexType|null
     {
         foreach ($stmt->attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
@@ -440,36 +473,18 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         continue;
                     }
 
-                    $stmt->type = $this->normalizeType($type->value->value);
-                    return;
+                    return $this->normalizeType($type->value->value);
                 }
 
                 assert($attributeNode->args[1]->value instanceof Node\Scalar\String_);
 
-                if ($attributeNode->args[1]->value->value !== '') {
-                    $stmt->type = $this->normalizeType($attributeNode->args[1]->value->value);
-                }
-
-                return;
+                return $attributeNode->args[1]->value->value !== ''
+                    ? $this->normalizeType($attributeNode->args[1]->value->value)
+                    : null;
             }
         }
-    }
 
-    private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
-    {
-        $parameters = [];
-
-        foreach ($function->getParams() as $parameterNode) {
-            if (! $this->isSupportedInPhpVersion($parameterNode)) {
-                continue;
-            }
-
-            $this->modifyStmtTypeByPhpVersion($parameterNode);
-
-            $parameters[] = $parameterNode;
-        }
-
-        $function->params = $parameters;
+        return null;
     }
 
     private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node): void

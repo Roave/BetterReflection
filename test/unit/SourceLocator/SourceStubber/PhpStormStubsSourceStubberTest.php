@@ -768,14 +768,18 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataMethodInPhpVersion(): array
     {
         return [
-            [CoreReflectionProperty::class, 'hasType', 70400, true],
+            [CoreReflectionProperty::class, 'hasType', 70400, true, 'bool'],
             [CoreReflectionProperty::class, 'hasType', 70300, false],
-            [CoreReflectionProperty::class, 'getType', 70400, true],
+            [CoreReflectionProperty::class, 'getType', 70400, true, 'ReflectionNamedType|null'],
+            [CoreReflectionProperty::class, 'getType', 80000, true, 'ReflectionNamedType|ReflectionUnionType|null'],
+            [CoreReflectionProperty::class, 'getType', 80100, true, 'ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null'],
             [CoreReflectionProperty::class, 'getType', 70300, false],
             [CoreReflectionClass::class, 'export', 70400, true],
             [CoreReflectionClass::class, 'export', 80000, false],
-            [DatePeriod::class, 'getRecurrences', 70217, true],
+            [DatePeriod::class, 'getRecurrences', 70217, true, '?int'],
             [DatePeriod::class, 'getRecurrences', 70216, false],
+            [DateTimeInterface::class, 'getOffset', 79999, true, 'int|false'],
+            [DateTimeInterface::class, 'getOffset', 80000, true, 'int'],
             [SplFileObject::class, 'fgetss', 79999, true],
             [SplFileObject::class, 'fgetss', 80000, false],
         ];
@@ -784,7 +788,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataMethodInPhpVersion
      */
-    public function testMethodInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isSupported): void
+    public function testMethodInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isSupported, ?string $returnType = null): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $sourceLocator = new AggregateSourceLocator([
@@ -794,7 +798,19 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ]);
         $reflector     = new DefaultReflector($sourceLocator);
 
-        self::assertSame($isSupported, $reflector->reflectClass($className)->hasMethod($methodName));
+        $class = $reflector->reflectClass($className);
+
+        $fullMethodName = sprintf('%s#%s', $className, $methodName);
+
+        if ($isSupported) {
+            self::assertTrue($class->hasMethod($methodName), $fullMethodName);
+
+            $method = $class->getMethod($methodName);
+
+            self::assertSame($returnType, $method->getReturnType()?->__toString());
+        } else {
+            self::assertFalse($class->hasMethod($methodName), $fullMethodName);
+        }
     }
 
     public function dataMethodParameterInPhpVersion(): array
