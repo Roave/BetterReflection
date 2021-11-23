@@ -752,7 +752,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataClassInPhpVersion(): array
     {
         return [
-            [CoreReflectionNamedType::class, null, true],
             [CoreReflectionNamedType::class, 70000, false],
             [CoreReflectionNamedType::class, 70100, true],
             [CoreReflectionNamedType::class, 70200, true],
@@ -769,7 +768,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataClassInPhpVersion
      */
-    public function testClassInPhpVersion(string $className, ?int $phpVersion, bool $isSupported): void
+    public function testClassInPhpVersion(string $className, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
 
@@ -785,7 +784,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataClassConstantInPhpVersion(): array
     {
         return [
-            [DateTimeInterface::class, 'ATOM', null, true],
             [DateTimeInterface::class, 'ATOM', 70200, true],
             [DateTimeInterface::class, 'ATOM', 70100, false],
             [DateTime::class, 'ATOM', 70100, true],
@@ -801,7 +799,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataClassConstantInPhpVersion
      */
-    public function testClassConstantInPhpVersion(string $className, string $constantName, ?int $phpVersion, bool $isSupported): void
+    public function testClassConstantInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
@@ -815,7 +813,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataMethodInPhpVersion(): array
     {
         return [
-            [CoreReflectionProperty::class, 'hasType', null, true],
             [CoreReflectionProperty::class, 'hasType', 70400, true],
             [CoreReflectionProperty::class, 'hasType', 70300, false],
             [CoreReflectionProperty::class, 'getType', 70400, true],
@@ -832,7 +829,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataMethodInPhpVersion
      */
-    public function testMethodInPhpVersion(string $className, string $methodName, ?int $phpVersion, bool $isSupported): void
+    public function testMethodInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $sourceLocator = new AggregateSourceLocator([
@@ -848,17 +845,16 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataPropertyInPhpVersion(): array
     {
         return [
-            [DateInterval::class, 'f', null, true],
-            [DateInterval::class, 'f', 70100, true],
             [DateInterval::class, 'f', 70000, false],
             [DateInterval::class, 'f', 70099, false],
+            [DateInterval::class, 'f', 70100, true],
         ];
     }
 
     /**
      * @dataProvider dataPropertyInPhpVersion
      */
-    public function testPropertyInPhpVersion(string $className, string $propertyName, ?int $phpVersion, bool $isSupported): void
+    public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
@@ -870,7 +866,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataFunctionInPhpVersion(): array
     {
         return [
-            ['password_algos', null, true],
             ['password_algos', 70400, true],
             ['password_algos', 70300, false],
             ['array_key_first', 70300, true],
@@ -891,7 +886,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataFunctionInPhpVersion
      */
-    public function testFunctionInPhpVersion(string $functionName, ?int $phpVersion, bool $isSupported): void
+    public function testFunctionInPhpVersion(string $functionName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
 
@@ -931,7 +926,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataConstantInPhpVersion(): array
     {
         return [
-            ['PHP_OS_FAMILY', null, true],
             ['PHP_OS_FAMILY', 70200, true],
             ['PHP_OS_FAMILY', 70100, false],
             ['INPUT_SESSION', 70400, true],
@@ -940,15 +934,15 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['CURL_VERSION_ALTSVC', 70306, true],
             ['CURL_VERSION_ALTSVC', 70305, false],
             // Not core constants
-            ['RADIUS_DISCONNECT_ACK', null, true],
             ['RADIUS_DISCONNECT_ACK', 10000, true],
+            ['RADIUS_DISCONNECT_ACK', 80000, true],
         ];
     }
 
     /**
      * @dataProvider dataConstantInPhpVersion
      */
-    public function testConstantInPhpVersion(string $constantName, ?int $phpVersion, bool $isSupported): void
+    public function testConstantInPhpVersion(string $constantName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
 
@@ -964,17 +958,17 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataClassIsDeprecatedInPhpVersion(): array
     {
         return [
-            ['Mongo', null, true],
+            ['Mongo', 70000, true],
             ['Mongo', 80000, true],
-            [DateTimeInterface::class, null, false],
             [DateTimeInterface::class, 70400, false],
+            [DateTimeInterface::class, 80000, false],
         ];
     }
 
     /**
      * @dataProvider dataClassIsDeprecatedInPhpVersion
      */
-    public function testClassIsDeprecatedInPhpVersion(string $className, ?int $phpVersion, bool $isDeprecated): void
+    public function testClassIsDeprecatedInPhpVersion(string $className, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
@@ -987,9 +981,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataClassConstantIsDeprecatedInPhpVersion(): array
     {
         return [
-            ['PDO', 'PARAM_BOOL', null, false],
+            ['PDO', 'PARAM_BOOL', 70000, false],
             ['PDO', 'PARAM_BOOL', 80000, false],
-            ['PDO', 'PGSQL_ASSOC', null, true],
+            ['PDO', 'PGSQL_ASSOC', 70000, true],
             ['PDO', 'PGSQL_ASSOC', 80000, true],
         ];
     }
@@ -997,7 +991,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataClassConstantIsDeprecatedInPhpVersion
      */
-    public function testClassConstantIsDeprecatedInPhpVersion(string $className, string $constantName, ?int $phpVersion, bool $isDeprecated): void
+    public function testClassConstantIsDeprecatedInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
@@ -1011,19 +1005,17 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataMethodIsDeprecatedInPhpVersion(): array
     {
         return [
-            [CoreReflectionClass::class, 'getName', null, false],
             [CoreReflectionClass::class, 'getName', 70400, false],
-            [CoreReflectionClass::class, 'export', null, true],
-            [CoreReflectionClass::class, 'export', 70400, true],
             [CoreReflectionClass::class, 'export', 70300, false],
             [CoreReflectionClass::class, 'export', 70399, false],
+            [CoreReflectionClass::class, 'export', 70400, true],
         ];
     }
 
     /**
      * @dataProvider dataMethodIsDeprecatedInPhpVersion
      */
-    public function testMethodIsDeprecatedInPhpVersion(string $className, string $methodName, ?int $phpVersion, bool $isDeprecated): void
+    public function testMethodIsDeprecatedInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $sourceLocator = new AggregateSourceLocator([
@@ -1042,9 +1034,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataPropertyIsDeprecatedInPhpVersion(): array
     {
         return [
-            ['DateInterval', 'y', null, false],
+            ['DateInterval', 'y', 70000, false],
             ['DateInterval', 'y', 80000, false],
-            ['DOMDocument', 'actualEncoding', null, true],
+            ['DOMDocument', 'actualEncoding', 70000, true],
             ['DOMDocument', 'actualEncoding', 80000, true],
         ];
     }
@@ -1052,7 +1044,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @dataProvider dataPropertyIsDeprecatedInPhpVersion
      */
-    public function testPropertyIsDeprecatedInPhpVersion(string $className, string $propertyName, ?int $phpVersion, bool $isDeprecated): void
+    public function testPropertyIsDeprecatedInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
@@ -1066,19 +1058,18 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataFunctionIsDeprecatedInPhpVersion(): array
     {
         return [
-            ['strpos', null, false],
+            ['strpos', 70000, false],
             ['strpos', 80000, false],
-            ['create_function', null, true],
-            ['create_function', 70200, true],
             ['create_function', 70100, false],
             ['create_function', 70199, false],
+            ['create_function', 70200, true],
         ];
     }
 
     /**
      * @dataProvider dataFunctionIsDeprecatedInPhpVersion
      */
-    public function testFunctionIsDeprecatedInPhpVersion(string $functionName, ?int $phpVersion, bool $isDeprecated): void
+    public function testFunctionIsDeprecatedInPhpVersion(string $functionName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
