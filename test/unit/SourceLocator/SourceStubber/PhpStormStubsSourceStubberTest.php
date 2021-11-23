@@ -906,7 +906,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testFunctionWithDifferentParameterInPhpVersion74(): void
     {
-        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 70400);
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 70499);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
         $reflector                = new DefaultReflector($phpInternalSourceLocator);
 
