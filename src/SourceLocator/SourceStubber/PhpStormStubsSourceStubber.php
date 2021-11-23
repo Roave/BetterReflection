@@ -333,6 +333,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                         continue;
                     }
 
+                    $this->modifyStmtTypeByPhpVersion($functionNode);
                     $this->modifyFunctionParametersByPhpVersion($functionNode);
                 }
 
@@ -414,7 +415,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $newStmts;
     }
 
-    private function modifyStmtTypeByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): void
+    private function modifyStmtTypeByPhpVersion(Node\Stmt\Function_|Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): void
     {
         $type = $this->getStmtType($stmt);
 
@@ -422,7 +423,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return;
         }
 
-        if ($stmt instanceof Node\Stmt\ClassMethod) {
+        if ($stmt instanceof Node\Stmt\Function_ || $stmt instanceof Node\Stmt\ClassMethod) {
             $stmt->returnType = $type;
         } else {
             $stmt->type = $type;
@@ -446,7 +447,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $function->params = $parameters;
     }
 
-    private function getStmtType(Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): Node\Name|Node\Identifier|Node\ComplexType|null
+    private function getStmtType(Node\Stmt\Function_|Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $stmt): Node\Name|Node\Identifier|Node\ComplexType|null
     {
         foreach ($stmt->attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
@@ -465,11 +466,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     assert($type->key instanceof Node\Scalar\String_);
                     assert($type->value instanceof Node\Scalar\String_);
 
-                    if (
-                        $this->parsePhpVersion($type->key->value) > $this->phpVersion
-                        // There are some invalid types in stubs, eg. `string[]|string|null`
-                        || str_contains($type->value->value, '[')
-                    ) {
+                    if ($this->parsePhpVersion($type->key->value) > $this->phpVersion) {
                         continue;
                     }
 
@@ -605,8 +602,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $parts[0] * 10000 + $parts[1] * 100 + ($parts[2] ?? $defaultPatch);
     }
 
-    private function normalizeType(string $type): Node\Name|Node\Identifier|Node\ComplexType
+    private function normalizeType(string $type): Node\Name|Node\Identifier|Node\ComplexType|null
     {
+        // There are some invalid types in stubs, eg. `string[]|string|null`
+        if (str_contains($type, '[')) {
+            return null;
+        }
+
         /** @psalm-suppress InternalClass, InternalMethod */
         return BuilderHelpers::normalizeType($type);
     }

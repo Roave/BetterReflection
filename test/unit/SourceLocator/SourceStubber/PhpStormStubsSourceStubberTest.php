@@ -23,6 +23,7 @@ use ReflectionParameter as CoreReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
@@ -896,36 +897,46 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataFunctionInPhpVersion(): array
     {
         return [
-            ['password_algos', 70400, true],
             ['password_algos', 70300, false],
-            ['array_key_first', 70300, true],
+            ['password_algos', 70400, true, 'array'],
             ['array_key_first', 70200, false],
-            ['str_starts_with', 80000, true],
+            ['array_key_first', 70300, true, 'string|int|null'],
             ['str_starts_with', 70400, false],
+            ['str_starts_with', 80000, true, 'bool'],
             ['mysql_query', 50400, true],
             ['mysql_query', 70000, false],
-            ['hash_hkdf', 70102, true],
             ['hash_hkdf', 70101, false],
+            ['hash_hkdf', 70102, true, 'string|false'],
+            ['hash_hkdf', 80000, true, 'string'],
             ['read_exif_data', 79999, true],
             ['read_exif_data', 80000, false],
+            ['spl_autoload_functions', 79999, true, 'array|false'],
+            ['spl_autoload_functions', 80000, true, 'array'],
+            ['dom_import_simplexml', 70000, true, 'DOMElement|null'],
+            ['dom_import_simplexml', 80000, true, 'DOMElement'],
             // Not core functions
-            ['newrelic_add_custom_parameter', 40000, true],
+            ['newrelic_add_custom_parameter', 40000, true, 'bool'],
         ];
     }
 
     /**
      * @dataProvider dataFunctionInPhpVersion
      */
-    public function testFunctionInPhpVersion(string $functionName, int $phpVersion, bool $isSupported): void
+    public function testFunctionInPhpVersion(string $functionName, int $phpVersion, bool $isSupported, ?string $returnType = null): void
     {
-        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
-
-        $stub = $sourceStubber->generateFunctionStub($functionName);
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
+        $reflector                = new DefaultReflector($phpInternalSourceLocator);
 
         if ($isSupported) {
-            self::assertNotNull($stub, $functionName);
+            $function = $reflector->reflectFunction($functionName);
+
+            self::assertInstanceOf(ReflectionFunction::class, $function, $functionName);
+            self::assertSame($returnType, $function->getReturnType()?->__toString());
         } else {
-            self::assertNull($stub, $functionName);
+            self::expectException(IdentifierNotFound::class);
+            self::expectExceptionMessage(sprintf('Function "%s" could not be found in the located source', $functionName));
+            $reflector->reflectFunction($functionName);
         }
     }
 
