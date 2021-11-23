@@ -108,17 +108,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // Missing in JetBrains/phpstorm-stubs
-                    if (
-                        in_array($className, [
-                            'Fiber',
-                            'FiberError',
-                            'ReturnTypeWillChange',
-                        ], true)
-                    ) {
-                        return false;
-                    }
-
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
@@ -207,7 +196,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($original->returnsReference(), $stubbed->returnsReference(), $methodName);
         self::assertSame($original->isStatic(), $stubbed->isStatic(), $methodName);
 
-        // Modified in PHP 8.1
+        // Needs fix in JetBrains/phpstorm-stubs
         if (! (PHP_VERSION_ID >= 80100 && in_array($methodName, ['Error#__clone', 'Exception#__clone'], true))) {
             self::assertSame($original->isFinal(), $stubbed->isFinal(), $methodName);
         }
@@ -215,13 +204,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
         // Needs fixes in JetBrains/phpstorm-stubs
         if (
             in_array($methodName, [
-                'BackedEnum#from',
-                'BackedEnum#tryFrom',
                 'Closure#__invoke',
                 'Directory#read',
                 'Directory#rewind',
                 'Directory#close',
-                'SplFileObject#fputcsv',
                 'SplFileObject#fputcsv',
                 'SplTempFileObject#fputcsv',
                 'WeakReference#create',
@@ -254,24 +240,21 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertSame($original->getName(), $stubbed->getName(), $parameterName);
 
-        // Needs fixes in JetBrains/phpstorm-stubs
-        if ($parameterName !== 'SplFixedArray#fromArray.array') {
-            // @ because isArray() is deprecated
-            self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
-        }
-
         if (
-            ! in_array($parameterName, [
-                'ArrayObject#uasort.callback',
-                'ArrayObject#uksort.callback',
-                'ArrayIterator#uasort.callback',
-                'ArrayIterator#uksort.callback',
-                'RecursiveCallbackFilterIterator#__construct.callback',
+            in_array($parameterName, [
+                'ErrorException#__construct.filename',
+                'ErrorException#__construct.line',
             ], true)
         ) {
-            // @ because isCallable() is deprecated
-            self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
+            // These parameters have default values __FILE__ and __LINE__ and we cannot resolve them for stubs
+            return;
         }
+
+        // @ because isArray() is deprecated
+        self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
+
+        // @ because isCallable() is deprecated
+        self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         // Bugs in PHP
@@ -292,18 +275,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         if ($class) {
             $stubbedClass = $stubbed->getClass();
 
-            // Needs fixes in JetBrains/phpstorm-stubs
-            if (
-                ! in_array($parameterName, [
-                    'ErrorException#__construct.previous',
-                    'SplObjectStorage#addAll.storage',
-                    'SplObjectStorage#removeAll.storage',
-                    'SplObjectStorage#removeAllExcept.storage',
-                ], true)
-            ) {
-                self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-                self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-            }
+            self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
+            self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
         } else {
             self::assertNull($stubbed->getClass(), $parameterName);
         }
@@ -343,36 +316,23 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $originalReflection = new CoreReflectionFunction($functionName);
 
-        // Needs fixes in JetBrains/phpstorm-stubs
+        // There are more versions in PHP
         if (
             in_array($functionName, [
-                'strtr',
-                'array_intersect_key',
-                'array_intersect_ukey',
-                'array_intersect_assoc',
-                'array_uintersect',
-                'array_uintersect_assoc',
-                'array_intersect_uassoc',
-                'array_uintersect_uassoc',
-                'array_diff_key',
-                'array_diff_ukey',
-                'array_diff_assoc',
-                'array_udiff',
-                'array_udiff_assoc',
-                'array_diff_uassoc',
-                'array_udiff_uassoc',
-                'array_multisort',
                 'fputcsv',
-                'extract',
                 'setcookie',
                 'setrawcookie',
                 'stream_context_set_option',
+                'strtr',
             ], true)
         ) {
             return;
         }
 
         $stubbedReflectionParameters = $stubbedReflection->getParameters();
+
+        self::assertSame($originalReflection->getNumberOfParameters(), $stubbedReflection->getNumberOfParameters());
+
         foreach ($originalReflection->getParameters() as $parameterNo => $originalReflectionParameter) {
             $parameterName = sprintf('%s.%s', $functionName, $originalReflectionParameter->getName());
 
@@ -382,7 +342,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
             // self::assertSame($originalReflectionParameter->isOptional(), $stubbedReflectionParameter->isOptional(), $parameterName);
 
             self::assertSame($originalReflectionParameter->isPassedByReference(), $stubbedReflectionParameter->isPassedByReference(), $parameterName);
-            self::assertSame($originalReflectionParameter->canBePassedByValue(), $stubbedReflectionParameter->canBePassedByValue(), $parameterName);
+            if ($originalReflectionParameter->canBePassedByValue() && ! $originalReflectionParameter->isPassedByReference()) {
+                // It's not possible to specify in stubs that parameter can be passed by value and passed by reference as well
+                self::assertSame($originalReflectionParameter->canBePassedByValue(), $stubbedReflectionParameter->canBePassedByValue(), $parameterName);
+            }
 
             // @ because isCallable() is deprecated
             self::assertSame(@$originalReflectionParameter->isCallable(), $stubbedReflectionParameter->isCallable(), $parameterName);
@@ -392,12 +355,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
             // @ because getClass() is deprecated
             $class = @$originalReflectionParameter->getClass();
             if ($class) {
-                // Needs fixes in JetBrains/phpstorm-stubs
-                if ($parameterName !== 'assert.description') {
-                    $stubbedClass = $stubbedReflectionParameter->getClass();
-                    self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-                    self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-                }
+                $stubbedClass = $stubbedReflectionParameter->getClass();
+                self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
+                self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
             } else {
                 self::assertNull($class, $parameterName);
             }
@@ -423,13 +383,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             foreach ($extensionConstants as $constantName => $constantValue) {
                 // Not supported because of resource as value
                 if (in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)) {
-                    continue;
-                }
-
-                // Missing in JetBrains/phpstorm-stubs
-                if (
-                    in_array($constantName, ['IMAGETYPE_AVIF'], true)
-                ) {
                     continue;
                 }
 
@@ -491,7 +444,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
     public function dataFunctionInNamespace(): array
     {
         return [
-            ['Couchbase\\basicDecoderV1'],
             ['MongoDB\\BSON\\fromJSON'],
             ['Sodium\\add'],
         ];
@@ -842,6 +794,49 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isSupported, $reflector->reflectClass($className)->hasMethod($methodName));
     }
 
+    public function dataMethodParameterInPhpVersion(): array
+    {
+        return [
+            ['mysqli_stmt', 'execute', 'params', 80099, false],
+            ['mysqli_stmt', 'execute', 'params', 80100, true, '?array', true],
+            ['PDOStatement', 'fetchAll', 'fetch_argument', 50299, false],
+            ['PDOStatement', 'fetchAll', 'fetch_argument', 50300, true, null, true],
+            ['PDOStatement', 'fetchAll', 'fetch_argument', 70499, true, null, true],
+            ['PDOStatement', 'fetchAll', 'fetch_argument', 70500, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataMethodParameterInPhpVersion
+     */
+    public function testMethodParameterInPhpVersion(
+        string $className,
+        string $methodName,
+        string $parameterName,
+        ?int $phpVersion,
+        bool $isSupported,
+        ?string $type = null,
+        ?bool $allowsNull = null,
+    ): void {
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
+        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
+        $reflector                = new DefaultReflector($phpInternalSourceLocator);
+
+        $class     = $reflector->reflectClass($className);
+        $method    = $class->getMethod($methodName);
+        $parameter = $method->getParameter($parameterName);
+
+        $fullParameterName = sprintf('%s#%s.$%s', $className, $methodName, $parameterName);
+
+        if ($isSupported) {
+            self::assertInstanceOf(ReflectionParameter::class, $parameter, $fullParameterName);
+            self::assertSame($type, $parameter->getType()?->__toString(), $fullParameterName);
+            self::assertSame($allowsNull, $parameter->allowsNull(), $fullParameterName);
+        } else {
+            self::assertNull($parameter, $fullParameterName);
+        }
+    }
+
     public function dataPropertyInPhpVersion(): array
     {
         return [
@@ -899,28 +894,51 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    public function testFunctionWithDifferentParameterInPhpVersion74(): void
+    public function dataFunctionParameterInPhpVersion(): array
     {
-        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 70499);
-        $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
-        $reflector                = new DefaultReflector($phpInternalSourceLocator);
-
-        $function  = $reflector->reflectFunction('bcscale');
-        $parameter = $function->getParameter('scale');
-
-        self::assertFalse($parameter->allowsNull());
+        return [
+            ['bcscale', 'scale', 70200, true, 'int', false],
+            ['bcscale', 'scale', 70299, true, 'int', false],
+            ['bcscale', 'scale', 70300, true, '?int', true],
+            ['bcscale', 'scale', 80000, true, 'int|null', true],
+            ['easter_date', 'mode', 79999, false],
+            ['easter_date', 'mode', 80000, true, 'int', false],
+            ['curl_version', 'age', 50200, false],
+            ['curl_version', 'age', 50299, false],
+            ['curl_version', 'age', 50300, true, null, true],
+            ['curl_version', 'age', 70400, true, null, true],
+            ['curl_version', 'age', 70499, true, null, true],
+            ['curl_version', 'age', 70500, false],
+        ];
     }
 
-    public function testFunctionWithDifferentParameterInPhpVersion80(): void
-    {
-        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 80000);
+    /**
+     * @dataProvider dataFunctionParameterInPhpVersion
+     */
+    public function testFunctionParameterInPhpVersion(
+        string $functionName,
+        string $parameterName,
+        ?int $phpVersion,
+        bool $isSupported,
+        ?string $type = null,
+        ?bool $allowsNull = null,
+    ): void {
+        $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $sourceStubber);
         $reflector                = new DefaultReflector($phpInternalSourceLocator);
 
-        $function  = $reflector->reflectFunction('bcscale');
-        $parameter = $function->getParameter('scale');
+        $function  = $reflector->reflectFunction($functionName);
+        $parameter = $function->getParameter($parameterName);
 
-        self::assertTrue($parameter->allowsNull());
+        $fullParameterName = sprintf('%s::$%s', $functionName, $parameterName);
+
+        if ($isSupported) {
+            self::assertInstanceOf(ReflectionParameter::class, $parameter, $fullParameterName);
+            self::assertSame($type, $parameter->getType()?->__toString(), $fullParameterName);
+            self::assertSame($allowsNull, $parameter->allowsNull(), $fullParameterName);
+        } else {
+            self::assertNull($parameter, $fullParameterName);
+        }
     }
 
     public function dataConstantInPhpVersion(): array
