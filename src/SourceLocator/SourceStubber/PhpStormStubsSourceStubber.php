@@ -304,7 +304,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         FileChecker::assertReadableFile($absoluteFilePath);
 
         /** @var list<Node\Stmt> $ast */
-        $ast             = $this->phpParser->parse(file_get_contents($absoluteFilePath));
+        $ast = $this->phpParser->parse(file_get_contents($absoluteFilePath));
+
+        // "@since" and "@removed" annotations in some cases do not contain a PHP version, but an extension version - e.g. "@since 1.3.0"
+        // So we check PHP version only for stubs of core extensions
         $isCoreExtension = $this->isCoreExtension($this->getExtensionFromFilePath($filePath));
 
         $this->cachingVisitor->clearNodes();
@@ -312,29 +315,33 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $this->nodeTraverser->traverse($ast);
 
         foreach ($this->cachingVisitor->getClassNodes() as $className => $classNode) {
-            if (! $this->isSupportedInPhpVersion($classNode, $isCoreExtension)) {
-                continue;
-            }
+            if ($isCoreExtension) {
+                if (! $this->isSupportedInPhpVersion($classNode)) {
+                    continue;
+                }
 
-            $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts, $isCoreExtension);
+                $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts);
+            }
 
             $this->classNodes[strtolower($className)] = $classNode;
         }
 
         foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNodes) {
             foreach ($functionNodes as $functionNode) {
-                if (! $this->isSupportedInPhpVersion($functionNode, $isCoreExtension)) {
-                    continue;
-                }
+                if ($isCoreExtension) {
+                    if (! $this->isSupportedInPhpVersion($functionNode)) {
+                        continue;
+                    }
 
-                $this->modifyFunctionParametersByPhpVersion($functionNode, $isCoreExtension);
+                    $this->modifyFunctionParametersByPhpVersion($functionNode);
+                }
 
                 $this->functionNodes[strtolower($functionName)] = $functionNode;
             }
         }
 
         foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
-            if (! $this->isSupportedInPhpVersion($constantNode, $isCoreExtension)) {
+            if ($isCoreExtension && ! $this->isSupportedInPhpVersion($constantNode)) {
                 continue;
             }
 
@@ -380,18 +387,18 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      *
      * @return list<Node\Stmt>
      */
-    private function modifyStmtsByPhpVersion(array $stmts, bool $isCoreExtension): array
+    private function modifyStmtsByPhpVersion(array $stmts): array
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
             assert($stmt instanceof Node\Stmt\ClassConst || $stmt instanceof Node\Stmt\Property || $stmt instanceof Node\Stmt\ClassMethod);
 
-            if (! $this->isSupportedInPhpVersion($stmt, $isCoreExtension)) {
+            if (! $this->isSupportedInPhpVersion($stmt)) {
                 continue;
             }
 
             if ($stmt instanceof Node\Stmt\ClassMethod) {
-                $this->modifyFunctionParametersByPhpVersion($stmt, $isCoreExtension);
+                $this->modifyFunctionParametersByPhpVersion($stmt);
             }
 
             $this->addDeprecatedDocComment($stmt);
@@ -402,12 +409,12 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $newStmts;
     }
 
-    private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function, bool $isCoreExtension): void
+    private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
     {
         $parameters = [];
 
         foreach ($function->getParams() as $parameterNode) {
-            if (! $this->isSupportedInPhpVersion($parameterNode, $isCoreExtension)) {
+            if (! $this->isSupportedInPhpVersion($parameterNode)) {
                 continue;
             }
 
@@ -505,13 +512,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     private function isSupportedInPhpVersion(
         Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
-        bool $isCoreExtension,
     ): bool {
-        // "@since" and "@removed" annotations in some cases do not contain a PHP version, but an extension version - e.g. "@since 1.3.0"
-        if (! $isCoreExtension) {
-            return true;
-        }
-
         [$fromVersion, $toVersion] = $this->getSupportedPhpVersions($node);
 
         if ($fromVersion !== null && $fromVersion > $this->phpVersion) {
