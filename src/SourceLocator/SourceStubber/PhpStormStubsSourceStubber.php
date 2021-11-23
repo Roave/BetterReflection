@@ -33,6 +33,8 @@ use function sprintf;
 use function str_replace;
 use function strtolower;
 
+use const PHP_VERSION_ID;
+
 /**
  * @internal
  */
@@ -164,7 +166,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @var array<lowercase-string, string> */
     private static array $constantMap;
 
-    public function __construct(private Parser $phpParser, private ?int $phpVersion = null)
+    public function __construct(private Parser $phpParser, private int $phpVersion = PHP_VERSION_ID)
     {
         $this->builderFactory = new BuilderFactory();
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
@@ -425,10 +427,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     continue;
                 }
 
-                if ($this->phpVersion === null) {
-                    return true;
-                }
-
                 foreach ($attributeNode->args as $attributeArg) {
                     if ($attributeArg->name?->toString() === 'since') {
                         assert($attributeArg->value instanceof Node\Scalar\String_);
@@ -448,10 +446,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
         bool $isCoreExtension,
     ): bool {
-        if ($this->phpVersion === null) {
-            return true;
-        }
-
         // "@since" and "@removed" annotations in some cases do not contain a PHP version, but an extension version - e.g. "@since 1.3.0"
         if (! $isCoreExtension) {
             return true;

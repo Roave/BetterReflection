@@ -52,6 +52,9 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testPureEnumToString(): void
     {
         $reflector       = new DefaultReflector(new AggregateSourceLocator([
@@ -66,6 +69,9 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testBackedEnumToString(): void
     {
         $reflector       = new DefaultReflector(new AggregateSourceLocator([
