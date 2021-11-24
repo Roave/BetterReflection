@@ -43,7 +43,7 @@
         "doctrine/coding-standard": "^9.0.0",
         "phpstan/phpstan": "^1.2.0",
         "phpunit/phpunit": "^9.5.9",
-        "vimeo/psalm": "^4.13.0",
+        "vimeo/psalm": "^4.13.1",
         "roave/infection-static-analysis-plugin": "^1.10.0"
     },
     "autoload": {
