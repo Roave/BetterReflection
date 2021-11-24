@@ -60,6 +60,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMet
 use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
+use Roave\BetterReflectionTest\Fixture\IntEnum;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use Roave\BetterReflectionTest\Fixture\MethodsOrder;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
@@ -464,26 +465,48 @@ class ReflectionClassTest extends TestCase
         self::assertSame(0, $property->getPositionInAst());
     }
 
-    public function testGetPropertiesForBackedEnum(): void
+    public function dataGetPropertiesForBackedEnum(): array
+    {
+        return [
+            [
+                StringEnum::class,
+                ['name' => 'string', 'value' => 'string'],
+            ],
+            [
+                IntEnum::class,
+                ['name' => 'string', 'value' => 'int'],
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, string> $propertiesData
+     *
+     * @dataProvider dataGetPropertiesForBackedEnum
+     */
+    public function testGetPropertiesForBackedEnum(string $className, array $propertiesData): void
     {
         $reflector = new DefaultReflector(new AggregateSourceLocator([
             new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
             BetterReflectionSingleton::instance()->sourceLocator(),
         ]));
 
-        $classInfo  = $reflector->reflectClass(StringEnum::class);
+        $classInfo  = $reflector->reflectClass($className);
         $properties = $classInfo->getImmediateProperties();
 
-        foreach (['name', 'value'] as $propertyName) {
-            self::assertArrayHasKey($propertyName, $properties, $propertyName);
+        foreach ($propertiesData as $propertyName => $propertyType) {
+            $fullPropertyName = sprintf('%s::$%s', $className, $propertyName);
+
+            self::assertArrayHasKey($propertyName, $properties, $fullPropertyName);
 
             $property = $properties[$propertyName];
 
-            self::assertTrue($property->isPublic(), $propertyName);
-            self::assertTrue($property->isReadOnly(), $propertyName);
-            self::assertFalse($property->isPromoted());
-            self::assertTrue($property->isDefault());
-            self::assertSame(0, $property->getPositionInAst(), $propertyName);
+            self::assertTrue($property->isPublic(), $fullPropertyName);
+            self::assertTrue($property->isReadOnly(), $fullPropertyName);
+            self::assertFalse($property->isPromoted(), $fullPropertyName);
+            self::assertTrue($property->isDefault(), $fullPropertyName);
+            self::assertSame(0, $property->getPositionInAst(), $fullPropertyName);
+            self::assertSame($propertyType, $property->getType()->__toString(), $fullPropertyName);
         }
     }
 

@@ -801,12 +801,12 @@ class ReflectionClass implements Reflection
             return $properties;
         }
 
-        $createProperty = function (string $name): ReflectionProperty {
+        $createProperty = function (string $name, string|Node\Identifier $type): ReflectionProperty {
             $propertyNode = new Node\Stmt\Property(
                 ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_READONLY,
                 [new Node\Stmt\PropertyProperty($name)],
                 [],
-                'string',
+                $type,
             );
 
             return ReflectionProperty::createFromNode(
@@ -819,10 +819,10 @@ class ReflectionClass implements Reflection
             );
         };
 
-        $properties['name'] = $createProperty('name');
+        $properties['name'] = $createProperty('name', 'string');
 
         if ($this->node->scalarType !== null) {
-            $properties['value'] = $createProperty('value');
+            $properties['value'] = $createProperty('value', $this->node->scalarType);
         }
 
         return $properties;
