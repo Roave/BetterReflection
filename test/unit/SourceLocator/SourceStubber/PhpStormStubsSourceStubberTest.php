@@ -86,7 +86,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $this->phpParser                = $betterReflection->phpParser();
         $this->astLocator               = $betterReflection->astLocator();
-        $this->sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, 80100);
+        $this->sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, PHP_VERSION_ID);
         $this->phpInternalSourceLocator = new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber);
         $this->reflector                = new DefaultReflector($this->phpInternalSourceLocator);
     }
@@ -213,8 +213,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 'Directory#read',
                 'Directory#rewind',
                 'Directory#close',
-                'SplFileObject#fputcsv',
-                'SplTempFileObject#fputcsv',
                 'WeakReference#create',
             ], true)
         ) {
@@ -324,7 +322,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
         // There are more versions in PHP
         if (
             in_array($functionName, [
-                'fputcsv',
                 'setcookie',
                 'setrawcookie',
                 'stream_context_set_option',
