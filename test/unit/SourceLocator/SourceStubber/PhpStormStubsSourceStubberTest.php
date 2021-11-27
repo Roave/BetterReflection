@@ -319,18 +319,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $originalReflection = new CoreReflectionFunction($functionName);
 
-        // There are more versions in PHP
-        if (
-            in_array($functionName, [
-                'setcookie',
-                'setrawcookie',
-                'stream_context_set_option',
-                'strtr',
-            ], true)
-        ) {
-            return;
-        }
-
         $stubbedReflectionParameters = $stubbedReflection->getParameters();
 
         self::assertSame($originalReflection->getNumberOfParameters(), $stubbedReflection->getNumberOfParameters());

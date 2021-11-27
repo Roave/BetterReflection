@@ -337,7 +337,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     $this->modifyFunctionParametersByPhpVersion($functionNode);
                 }
 
-                $this->functionNodes[strtolower($functionName)] = $functionNode;
+                $lowercaseFunctionName = strtolower($functionName);
+
+                if (array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
+                    continue;
+                }
+
+                $this->functionNodes[$lowercaseFunctionName] = $functionNode;
             }
         }
 
