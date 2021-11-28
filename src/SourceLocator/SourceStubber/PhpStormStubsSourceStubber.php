@@ -515,6 +515,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
 
         if (! $this->isDeprecatedInPhpVersion($node)) {
+            $this->removeAnnotationFromDocComment($node, 'deprecated');
+
             return;
         }
 
@@ -533,6 +535,19 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             $docCommentText = preg_replace('~(\r?\n\s*)\*/~', sprintf('\1* @%s\1*/', $annotationName), $docComment->getText());
         }
 
+        $node->setDocComment(new Doc($docCommentText));
+    }
+
+    private function removeAnnotationFromDocComment(
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node,
+        string $annotationName,
+    ): void {
+        $docComment = $node->getDocComment();
+        if ($docComment === null) {
+            return;
+        }
+
+        $docCommentText = preg_replace('~@' . $annotationName . '.*$~m', '', $docComment->getText());
         $node->setDocComment(new Doc($docCommentText));
     }
 

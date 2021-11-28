@@ -1125,6 +1125,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['create_function', 70100, false],
             ['create_function', 70199, false],
             ['create_function', 70200, true],
+            ['date_sunrise', 80000, false],
+            ['date_sunrise', 80099, false],
+            ['date_sunrise', 80100, true],
         ];
     }
 
