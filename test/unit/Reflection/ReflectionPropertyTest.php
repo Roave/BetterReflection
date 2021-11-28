@@ -872,31 +872,48 @@ PHP;
         self::assertCount(0, $attributes);
     }
 
-    public function testGetAttributesWithAttributes(): void
+    public function dataGetAttributes(): array
+    {
+        return [
+            ['propertyWithAttributes'],
+            ['promotedPropertyWithAttributes'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataGetAttributes
+     */
+    public function testGetAttributesWithAttributes(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
-        $propertyReflection = $classReflection->getProperty('propertyWithAttributes');
+        $propertyReflection = $classReflection->getProperty($propertyName);
         $attributes         = $propertyReflection->getAttributes();
 
         self::assertCount(2, $attributes);
     }
 
-    public function testGetAttributesByName(): void
+    /**
+     * @dataProvider dataGetAttributes
+     */
+    public function testGetAttributesByName(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
-        $propertyReflection = $classReflection->getProperty('propertyWithAttributes');
+        $propertyReflection = $classReflection->getProperty($propertyName);
         $attributes         = $propertyReflection->getAttributesByName(Attr::class);
 
         self::assertCount(1, $attributes);
     }
 
-    public function testGetAttributesByInstance(): void
+    /**
+     * @dataProvider dataGetAttributes
+     */
+    public function testGetAttributesByInstance(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
-        $propertyReflection = $classReflection->getProperty('propertyWithAttributes');
+        $propertyReflection = $classReflection->getProperty($propertyName);
         $attributes         = $propertyReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);

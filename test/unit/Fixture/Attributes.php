@@ -39,6 +39,14 @@ class ClassWithAttributes
     {
 
     }
+
+    public function __construct(
+        #[Attr]
+        #[AnotherAttr]
+        private $promotedPropertyWithAttributes
+    )
+    {
+    }
 }
 
 #[Attr]
