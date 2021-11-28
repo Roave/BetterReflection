@@ -7,12 +7,14 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 use Generator;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
 use PhpParser\BuilderFactory;
+use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
+use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor;
@@ -28,10 +30,11 @@ use function in_array;
 use function is_dir;
 use function preg_match;
 use function preg_replace;
-use function property_exists;
 use function sprintf;
+use function str_contains;
 use function str_replace;
 use function strtolower;
+use function usort;
 
 use const PHP_VERSION_ID;
 
@@ -301,7 +304,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         FileChecker::assertReadableFile($absoluteFilePath);
 
         /** @var list<Node\Stmt> $ast */
-        $ast             = $this->phpParser->parse(file_get_contents($absoluteFilePath));
+        $ast = $this->phpParser->parse(file_get_contents($absoluteFilePath));
+
+        // "@since" and "@removed" annotations in some cases do not contain a PHP version, but an extension version - e.g. "@since 1.3.0"
+        // So we check PHP version only for stubs of core extensions
         $isCoreExtension = $this->isCoreExtension($this->getExtensionFromFilePath($filePath));
 
         $this->cachingVisitor->clearNodes();
@@ -309,27 +315,40 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $this->nodeTraverser->traverse($ast);
 
         foreach ($this->cachingVisitor->getClassNodes() as $className => $classNode) {
-            if (! $this->isSupportedInPhpVersion($classNode, $isCoreExtension)) {
-                continue;
-            }
+            if ($isCoreExtension) {
+                if (! $this->isSupportedInPhpVersion($classNode)) {
+                    continue;
+                }
 
-            $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts, $isCoreExtension);
+                $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts);
+            }
 
             $this->classNodes[strtolower($className)] = $classNode;
         }
 
         foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNodes) {
             foreach ($functionNodes as $functionNode) {
-                if (! $this->isSupportedInPhpVersion($functionNode, $isCoreExtension)) {
+                if ($isCoreExtension) {
+                    if (! $this->isSupportedInPhpVersion($functionNode)) {
+                        continue;
+                    }
+
+                    $this->modifyFunctionReturnTypeByPhpVersion($functionNode);
+                    $this->modifyFunctionParametersByPhpVersion($functionNode);
+                }
+
+                $lowercaseFunctionName = strtolower($functionName);
+
+                if (array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
                     continue;
                 }
 
-                $this->functionNodes[strtolower($functionName)] = $functionNode;
+                $this->functionNodes[$lowercaseFunctionName] = $functionNode;
             }
         }
 
         foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
-            if (! $this->isSupportedInPhpVersion($constantNode, $isCoreExtension)) {
+            if ($isCoreExtension && ! $this->isSupportedInPhpVersion($constantNode)) {
                 continue;
             }
 
@@ -375,14 +394,23 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      *
      * @return list<Node\Stmt>
      */
-    private function modifyStmtsByPhpVersion(array $stmts, bool $isCoreExtension): array
+    private function modifyStmtsByPhpVersion(array $stmts): array
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
             assert($stmt instanceof Node\Stmt\ClassConst || $stmt instanceof Node\Stmt\Property || $stmt instanceof Node\Stmt\ClassMethod);
 
-            if (! $this->isSupportedInPhpVersion($stmt, $isCoreExtension)) {
+            if (! $this->isSupportedInPhpVersion($stmt)) {
                 continue;
+            }
+
+            if ($stmt instanceof Node\Stmt\Property) {
+                $this->modifyStmtTypeByPhpVersion($stmt);
+            }
+
+            if ($stmt instanceof Node\Stmt\ClassMethod) {
+                $this->modifyFunctionReturnTypeByPhpVersion($stmt);
+                $this->modifyFunctionParametersByPhpVersion($stmt);
             }
 
             $this->addDeprecatedDocComment($stmt);
@@ -393,6 +421,93 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $newStmts;
     }
 
+    private function modifyStmtTypeByPhpVersion(Node\Stmt\Property|Node\Param $stmt): void
+    {
+        $type = $this->getStmtType($stmt);
+
+        if ($type === null) {
+            return;
+        }
+
+        $stmt->type = $type;
+    }
+
+    private function modifyFunctionReturnTypeByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
+    {
+        $isTentativeReturnType = $this->getNodeAttribute($function, 'JetBrains\PhpStorm\Internal\TentativeType') !== null;
+
+        if ($isTentativeReturnType) {
+            // Tentative types are the most correct in stubs
+            // If the type is tentative in stubs, we should remove the type for PHP < 8.1
+
+            if ($this->phpVersion >= 80100) {
+                $this->addAnnotationToDocComment($function, AnnotationHelper::TENTATIVE_RETURN_TYPE_ANNOTATION);
+            } else {
+                $function->returnType = null;
+            }
+
+            return;
+        }
+
+        $type = $this->getStmtType($function);
+
+        if ($type === null) {
+            return;
+        }
+
+        $function->returnType = $type;
+    }
+
+    private function modifyFunctionParametersByPhpVersion(Node\Stmt\ClassMethod|Node\Stmt\Function_ $function): void
+    {
+        $parameters = [];
+
+        foreach ($function->getParams() as $parameterNode) {
+            if (! $this->isSupportedInPhpVersion($parameterNode)) {
+                continue;
+            }
+
+            $this->modifyStmtTypeByPhpVersion($parameterNode);
+
+            $parameters[] = $parameterNode;
+        }
+
+        $function->params = $parameters;
+    }
+
+    private function getStmtType(Node\Stmt\Function_|Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $node): Node\Name|Node\Identifier|Node\ComplexType|null
+    {
+        $languageLevelTypeAwareAttribute = $this->getNodeAttribute($node, 'JetBrains\PhpStorm\Internal\LanguageLevelTypeAware');
+
+        if ($languageLevelTypeAwareAttribute === null) {
+            return null;
+        }
+
+        assert($languageLevelTypeAwareAttribute->args[0]->value instanceof Node\Expr\Array_);
+
+        /** @var list<Node\Expr\ArrayItem> $types */
+        $types = $languageLevelTypeAwareAttribute->args[0]->value->items;
+
+        usort($types, static fn (Node\Expr\ArrayItem $a, Node\Expr\ArrayItem $b): int => $b->key <=> $a->key);
+
+        foreach ($types as $type) {
+            assert($type->key instanceof Node\Scalar\String_);
+            assert($type->value instanceof Node\Scalar\String_);
+
+            if ($this->parsePhpVersion($type->key->value) > $this->phpVersion) {
+                continue;
+            }
+
+            return $this->normalizeType($type->value->value);
+        }
+
+        assert($languageLevelTypeAwareAttribute->args[1]->value instanceof Node\Scalar\String_);
+
+        return $languageLevelTypeAwareAttribute->args[1]->value->value !== ''
+            ? $this->normalizeType($languageLevelTypeAwareAttribute->args[1]->value->value)
+            : null;
+    }
+
     private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node): void
     {
         if ($node instanceof Node\Stmt\Const_) {
@@ -400,17 +515,39 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
 
         if (! $this->isDeprecatedInPhpVersion($node)) {
+            $this->removeAnnotationFromDocComment($node, 'deprecated');
+
             return;
         }
 
+        $this->addAnnotationToDocComment($node, 'deprecated');
+    }
+
+    private function addAnnotationToDocComment(
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node,
+        string $annotationName,
+    ): void {
         $docComment = $node->getDocComment();
 
         if ($docComment === null) {
-            $docCommentText = '/** @deprecated */';
+            $docCommentText = sprintf('/** @%s */', $annotationName);
         } else {
-            $docCommentText = preg_replace('~(\r?\n\s*)\*/~', '\1* @deprecated\1*/', $docComment->getText());
+            $docCommentText = preg_replace('~(\r?\n\s*)\*/~', sprintf('\1* @%s\1*/', $annotationName), $docComment->getText());
         }
 
+        $node->setDocComment(new Doc($docCommentText));
+    }
+
+    private function removeAnnotationFromDocComment(
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node,
+        string $annotationName,
+    ): void {
+        $docComment = $node->getDocComment();
+        if ($docComment === null) {
+            return;
+        }
+
+        $docCommentText = preg_replace('~@' . $annotationName . '.*$~m', '', $docComment->getText());
         $node->setDocComment(new Doc($docCommentText));
     }
 
@@ -421,36 +558,25 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     private function isDeprecatedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_ $node): bool
     {
-        foreach ($node->attrGroups as $attributesGroupNode) {
-            foreach ($attributesGroupNode->attrs as $attributeNode) {
-                if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Deprecated') {
-                    continue;
-                }
+        $deprecatedAttribute = $this->getNodeAttribute($node, 'JetBrains\PhpStorm\Deprecated');
+        if ($deprecatedAttribute === null) {
+            return false;
+        }
 
-                foreach ($attributeNode->args as $attributeArg) {
-                    if ($attributeArg->name?->toString() === 'since') {
-                        assert($attributeArg->value instanceof Node\Scalar\String_);
+        foreach ($deprecatedAttribute->args as $attributeArg) {
+            if ($attributeArg->name?->toString() === 'since') {
+                assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                        return $this->parsePhpVersion($attributeArg->value->value) <= $this->phpVersion;
-                    }
-                }
-
-                return true;
+                return $this->parsePhpVersion($attributeArg->value->value) <= $this->phpVersion;
             }
         }
 
-        return false;
+        return true;
     }
 
     private function isSupportedInPhpVersion(
-        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
-        bool $isCoreExtension,
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
     ): bool {
-        // "@since" and "@removed" annotations in some cases do not contain a PHP version, but an extension version - e.g. "@since 1.3.0"
-        if (! $isCoreExtension) {
-            return true;
-        }
-
         [$fromVersion, $toVersion] = $this->getSupportedPhpVersions($node);
 
         if ($fromVersion !== null && $fromVersion > $this->phpVersion) {
@@ -464,7 +590,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      * @return array{0: int|null, 1: int|null}
      */
     private function getSupportedPhpVersions(
-        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod $node,
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
     ): array {
         $fromVersion = null;
         $toVersion   = null;
@@ -480,34 +606,45 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
         }
 
-        if (property_exists($node, 'attrGroups')) {
-            /** @psalm-suppress UndefinedPropertyFetch */
-            foreach ($node->attrGroups as $attributesGroupNode) {
-                foreach ($attributesGroupNode->attrs as $attributeNode) {
-                    if ($attributeNode->name->toString() !== 'JetBrains\PhpStorm\Internal\PhpStormStubsElementAvailable') {
-                        continue;
-                    }
+        $elementsAvailable = $this->getNodeAttribute($node, 'JetBrains\PhpStorm\Internal\PhpStormStubsElementAvailable');
+        if ($elementsAvailable !== null) {
+            foreach ($elementsAvailable->args as $attributeArg) {
+                if ($attributeArg->name === null || $attributeArg->name->toString() === 'from') {
+                    assert($attributeArg->value instanceof Node\Scalar\String_);
 
-                    foreach ($attributeNode->args as $attributeArg) {
-                        if ($attributeArg->name === null || $attributeArg->name->toString() === 'from') {
-                            assert($attributeArg->value instanceof Node\Scalar\String_);
-
-                            $fromVersion = $this->parsePhpVersion($attributeArg->value->value);
-                        }
-
-                        if ($attributeArg->name?->toString() !== 'to') {
-                            continue;
-                        }
-
-                        assert($attributeArg->value instanceof Node\Scalar\String_);
-
-                        $toVersion = $this->parsePhpVersion($attributeArg->value->value, 99);
-                    }
+                    $fromVersion = $this->parsePhpVersion($attributeArg->value->value);
                 }
+
+                if ($attributeArg->name?->toString() !== 'to') {
+                    continue;
+                }
+
+                assert($attributeArg->value instanceof Node\Scalar\String_);
+
+                $toVersion = $this->parsePhpVersion($attributeArg->value->value, 99);
             }
         }
 
         return [$fromVersion, $toVersion];
+    }
+
+    private function getNodeAttribute(
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
+        string $attributeName,
+    ): ?Node\Attribute {
+        if ($node instanceof Node\Expr\FuncCall || $node instanceof Node\Stmt\Const_) {
+            return null;
+        }
+
+        foreach ($node->attrGroups as $attributesGroupNode) {
+            foreach ($attributesGroupNode->attrs as $attributeNode) {
+                if ($attributeNode->name->toString() === $attributeName) {
+                    return $attributeNode;
+                }
+            }
+        }
+
+        return null;
     }
 
     private function parsePhpVersion(string $version, int $defaultPatch = 0): int
@@ -515,6 +652,17 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         $parts = array_map('intval', explode('.', $version));
 
         return $parts[0] * 10000 + $parts[1] * 100 + ($parts[2] ?? $defaultPatch);
+    }
+
+    private function normalizeType(string $type): Node\Name|Node\Identifier|Node\ComplexType|null
+    {
+        // There are some invalid types in stubs, eg. `string[]|string|null`
+        if (str_contains($type, '[')) {
+            return null;
+        }
+
+        /** @psalm-suppress InternalClass, InternalMethod */
+        return BuilderHelpers::normalizeType($type);
     }
 
     private function getStubsDirectory(): string

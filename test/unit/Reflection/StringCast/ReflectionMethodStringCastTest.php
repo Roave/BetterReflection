@@ -70,6 +70,6 @@ class ReflectionMethodStringCastTest extends TestCase
         $classReflection = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(Exception::class);
         // phpcs:enable
 
-        self::assertSame("Method [ <internal:Core, prototype Throwable> final public method getMessage ] {\n}", (string) $classReflection->getMethod('getMessage'));
+        self::assertSame("Method [ <internal:Core, prototype Throwable> final public method getMessage ] {\n\n  - Parameters [0] {\n  }\n  - Return [ string ]\n}", (string) $classReflection->getMethod('getMessage'));
     }
 }
