@@ -23,7 +23,10 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflection\ReflectionUnionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -199,6 +202,11 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($method->isPublic());
         self::assertTrue($method->isStatic());
         self::assertSame(0, $method->getNumberOfParameters());
+
+        $returnType = $method->getReturnType();
+
+        self::assertInstanceOf(ReflectionNamedType::class, $returnType);
+        self::assertSame('array', $returnType->__toString());
     }
 
     public function testGetMethodsForBackedEnum(): void
@@ -212,16 +220,69 @@ class ReflectionClassTest extends TestCase
         $methods   = $classInfo->getImmediateMethods();
 
         self::assertCount(3, $methods);
+    }
 
-        foreach (['cases' => 0, 'from' => 1, 'tryFrom' => 1] as $methodName => $numberOfParameters) {
-            self::assertArrayHasKey($methodName, $methods, $methodName);
+    public function dataMethodsOfBackedEnum(): array
+    {
+        return [
+            [
+                'cases',
+                [],
+                ReflectionNamedType::class,
+                'array',
+            ],
+            [
+                'from',
+                ['value' => [ReflectionUnionType::class, 'string|int']],
+                ReflectionNamedType::class,
+                'static',
+            ],
+            [
+                'tryFrom',
+                ['value' => [ReflectionUnionType::class, 'string|int']],
+                ReflectionNamedType::class,
+                '?static',
+            ],
+        ];
+    }
 
-            $method = $methods[$methodName];
+    /**
+     * @param list<array{0: class-string, 1: string}> $parameters
+     *
+     * @dataProvider dataMethodsOfBackedEnum
+     */
+    public function testMethodsOfBackedEnum(string $methodName, array $parameters, string $returnTypeClass, string $returnType): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
 
-            self::assertTrue($method->isPublic(), $methodName);
-            self::assertTrue($method->isStatic(), $methodName);
-            self::assertSame($numberOfParameters, $method->getNumberOfParameters(), $methodName);
+        $classInfo = $reflector->reflectClass(StringEnum::class);
+
+        self::assertTrue($classInfo->hasMethod($methodName));
+
+        $method = $classInfo->getMethod($methodName);
+
+        self::assertTrue($method->isPublic(), $methodName);
+        self::assertTrue($method->isStatic(), $methodName);
+        self::assertSame(count($parameters), $method->getNumberOfParameters(), $methodName);
+
+        foreach ($parameters as $parameterName => $parameterData) {
+            $parameter = $method->getParameter($parameterName);
+
+            self::assertInstanceOf(ReflectionParameter::class, $parameter);
+
+            $parameterType = $parameter->getType();
+
+            self::assertInstanceOf($parameterData[0], $parameterType);
+            self::assertSame($parameterData[1], $parameterType->__toString());
         }
+
+        $methodReturnType = $method->getReturnType();
+
+        self::assertInstanceOf($returnTypeClass, $methodReturnType);
+        self::assertSame($returnType, $methodReturnType->__toString());
     }
 
     public function getMethodsWithFilterDataProvider(): array
