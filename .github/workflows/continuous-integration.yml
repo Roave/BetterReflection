@@ -37,8 +37,6 @@ jobs:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -89,8 +87,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -141,8 +137,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -245,8 +239,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -296,8 +288,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -348,8 +338,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -402,8 +390,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-        env:
-          update: true
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
