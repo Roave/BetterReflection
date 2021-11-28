@@ -255,7 +255,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertTrue($promotedProperty->hasType());
         self::assertSame('?int', $promotedProperty->getType()->__toString());
         self::assertTrue($promotedProperty->hasDefaultValue());
-        self:self::assertSame(123, $promotedProperty->getDefaultValue());
+        self::assertSame(123, $promotedProperty->getDefaultValue());
     }
 
     public function testIsDefault(): void
