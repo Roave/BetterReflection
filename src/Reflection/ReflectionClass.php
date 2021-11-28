@@ -765,7 +765,7 @@ class ReflectionClass implements Reflection
 
                     $propertyNode                     = new Node\Stmt\Property(
                         $parameterNode->flags,
-                        [new Node\Stmt\PropertyProperty($parameterNameNode->name, $parameterNode->default)],
+                        [new Node\Stmt\PropertyProperty($parameterNameNode->name)],
                         $parameterNode->getAttributes(),
                         $parameterNode->type,
                         $parameterNode->attrGroups,

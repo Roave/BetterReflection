@@ -254,8 +254,8 @@ class ReflectionPropertyTest extends TestCase
         self::assertTrue($promotedProperty->isPrivate());
         self::assertTrue($promotedProperty->hasType());
         self::assertSame('?int', $promotedProperty->getType()->__toString());
-        self::assertTrue($promotedProperty->hasDefaultValue());
-        self::assertSame(123, $promotedProperty->getDefaultValue());
+        self::assertFalse($promotedProperty->hasDefaultValue());
+        self::assertNull($promotedProperty->getDefaultValue());
         self::assertSame(46, $promotedProperty->getStartLine());
         self::assertSame(46, $promotedProperty->getEndLine());
         self::assertSame(60, $promotedProperty->getStartColumn());
