@@ -490,7 +490,7 @@ class ReflectionClass implements Reflection
         }
 
         $internalLocatedSource = new InternalLocatedSource('', $this->getName(), 'Core');
-        $createMethod          = fn (string $name, array $params, string $returnType): ReflectionMethod => ReflectionMethod::createFromNode(
+        $createMethod          = fn (string $name, array $params, Node\Identifier|Node\NullableType $returnType): ReflectionMethod => ReflectionMethod::createFromNode(
             $this->reflector,
             new ClassMethod(
                 new Node\Identifier($name),
@@ -507,22 +507,28 @@ class ReflectionClass implements Reflection
             $this,
         );
 
-        $methods[] = $createMethod('cases', [], 'array');
+        $methods[] = $createMethod('cases', [], new Node\Identifier('array'));
 
         if ($this->node->scalarType === null) {
             return $methods;
         }
 
+        $valueParameter = new Node\Param(
+            new Node\Expr\Variable('value'),
+            null,
+            new Node\UnionType([new Node\Identifier('string'), new Node\Identifier('int')]),
+        );
+
         $methods[] = $createMethod(
             'from',
-            [new Node\Param(new Node\Expr\Variable('value'), null, 'string|int')],
-            'static',
+            [$valueParameter],
+            new Node\Identifier('static'),
         );
 
         $methods[] = $createMethod(
             'tryFrom',
-            [new Node\Param(new Node\Expr\Variable('value'), null, 'string|int')],
-            '?static',
+            [$valueParameter],
+            new Node\NullableType(new Node\Identifier('static')),
         );
 
         return $methods;
