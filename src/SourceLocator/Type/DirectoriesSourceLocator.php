@@ -17,7 +17,6 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use function array_map;
 use function array_values;
 use function is_dir;
-use function is_string;
 
 /**
  * This source locator recursively loads all php files in an entire directory or multiple directories.
@@ -35,12 +34,7 @@ class DirectoriesSourceLocator implements SourceLocator
     public function __construct(array $directories, Locator $astLocator)
     {
         $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_map(
-            static function (mixed $directory) use ($astLocator): FileIteratorSourceLocator {
-                /** @psalm-suppress DocblockTypeContradiction */
-                if (! is_string($directory)) {
-                    throw InvalidDirectory::fromNonStringValue($directory);
-                }
-
+            static function (string $directory) use ($astLocator): FileIteratorSourceLocator {
                 if (! is_dir($directory)) {
                     throw InvalidDirectory::fromNonDirectory($directory);
                 }

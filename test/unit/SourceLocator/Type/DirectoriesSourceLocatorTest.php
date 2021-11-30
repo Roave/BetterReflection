@@ -14,7 +14,6 @@ use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssets;
 use Roave\BetterReflectionTest\Assets\DirectoryScannerAssetsFoo;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
-use stdClass;
 
 use function array_map;
 use function sort;
@@ -95,18 +94,8 @@ class DirectoriesSourceLocatorTest extends TestCase
         return [
             [[__DIR__ . '/' . uniqid('nonExisting', true)]],
             [[__FILE__]],
-            [[1]],
-            [[1.23]],
-            [[true]],
-            [[new stdClass()]],
-            [[null]],
             [[$validDir, __DIR__ . '/' . uniqid('nonExisting', true)]],
             [[$validDir, __FILE__]],
-            [[$validDir, 1]],
-            [[$validDir, 1.23]],
-            [[$validDir, true]],
-            [[$validDir, new stdClass()]],
-            [[$validDir, null]],
         ];
     }
 }

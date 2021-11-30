@@ -18,17 +18,6 @@ use function uniqid;
 class InvalidDirectoryTest extends TestCase
 {
     /**
-     * @dataProvider nonStringValuesProvider
-     */
-    public function testFromNonStringValue(string $expectedMessage, mixed $value): void
-    {
-        $exception = InvalidDirectory::fromNonStringValue($value);
-
-        self::assertInstanceOf(InvalidDirectory::class, $exception);
-        self::assertSame($expectedMessage, $exception->getMessage());
-    }
-
-    /**
      * @return list<array{0: string, 1: mixed}>
      */
     public function nonStringValuesProvider(): array
