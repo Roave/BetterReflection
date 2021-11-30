@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use PhpParser\Node;
 use PhpParser\Node\UnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
@@ -25,7 +26,7 @@ class ReflectionUnionType extends ReflectionType
         parent::__construct($reflector, $owner, $allowsNull);
 
         $this->types = array_filter(
-            array_map(static fn ($type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($reflector, $owner, $type), $type->types),
+            array_map(static fn (Node\Identifier|Node\Name $type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($reflector, $owner, $type), $type->types),
             static fn (ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type): bool => $type instanceof ReflectionNamedType,
         );
     }
