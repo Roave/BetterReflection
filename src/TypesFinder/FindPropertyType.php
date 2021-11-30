@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\TypesFinder;
 
+use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
@@ -51,7 +52,7 @@ class FindPropertyType
 
         return array_merge(
             [],
-            ...array_map(function ($varTag) use ($context) {
+            ...array_map(function (Tag $varTag) use ($context) {
                 if ($varTag instanceof Var_) {
                     return $this->resolveTypes->__invoke(explode('|', (string) $varTag->getType()), $context);
                 }

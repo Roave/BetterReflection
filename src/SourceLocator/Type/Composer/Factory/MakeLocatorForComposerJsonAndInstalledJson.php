@@ -132,7 +132,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
      */
     private function packageToPsr4AutoloadNamespaces(array $package): array
     {
-        return array_map(static fn ($namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-4'] ?? []);
+        return array_map(static fn (string|array $namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-4'] ?? []);
     }
 
     /**
@@ -142,7 +142,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
      */
     private function packageToPsr0AutoloadNamespaces(array $package): array
     {
-        return array_map(static fn ($namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-0'] ?? []);
+        return array_map(static fn (string|array $namespacePaths): array => (array) $namespacePaths, $package['autoload']['psr-0'] ?? []);
     }
 
     /**
