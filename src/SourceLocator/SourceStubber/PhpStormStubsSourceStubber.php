@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
+use CompileError;
+use DatePeriod;
+use Error;
 use Generator;
+use Iterator;
+use IteratorAggregate;
 use JetBrains\PHPStormStub\PhpStormStubsMap;
+use JsonSerializable;
+use ParseError;
+use PDOStatement;
 use PhpParser\BuilderFactory;
 use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
@@ -14,10 +22,13 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
+use RecursiveIterator;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor;
+use SimpleXMLElement;
+use SplFixedArray;
 use Traversable;
 
 use function array_change_key_case;
@@ -205,6 +216,43 @@ final class PhpStormStubsSourceStubber implements SourceStubber
      */
     public function generateClassStub(string $className): ?StubData
     {
+        $classNodeData = $this->getClassNodeData($className);
+
+        if ($classNodeData === null) {
+            return null;
+        }
+
+        $classNode = $classNodeData[0];
+
+        if ($classNode instanceof Node\Stmt\Class_) {
+            if ($classNode->extends !== null) {
+                $modifiedExtends    = $this->replaceExtendsOrImplementsByPhpVersion($className, [$classNode->extends]);
+                $classNode->extends = $modifiedExtends !== [] ? $modifiedExtends[0] : null;
+            }
+
+            $classNode->implements = $this->replaceExtendsOrImplementsByPhpVersion($className, $classNode->implements);
+        } elseif ($classNode instanceof Node\Stmt\Interface_) {
+            $classNode->extends = $this->replaceExtendsOrImplementsByPhpVersion($className, $classNode->extends);
+        }
+
+        $extension = $this->getExtensionFromFilePath(self::$classMap[strtolower($className)]);
+        $stub      = $this->createStub($classNode, $classNodeData[1]);
+
+        if ($className === Traversable::class) {
+            // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
+            $stub = str_replace(' extends \iterable', '', $stub);
+        } elseif ($className === Generator::class) {
+            $stub = str_replace('PS_UNRESERVE_PREFIX_throw', 'throw', $stub);
+        }
+
+        return new StubData($stub, $extension);
+    }
+
+    /**
+     * @return array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}|null
+     */
+    private function getClassNodeData(string $className): ?array
+    {
         $lowercaseClassName = strtolower($className);
 
         if (! array_key_exists($lowercaseClassName, self::$classMap)) {
@@ -223,22 +271,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             }
         }
 
-        if ($this->classNodes[$lowercaseClassName] === null) {
-            return null;
-        }
-
-        $classNodeData = $this->classNodes[$lowercaseClassName];
-        $extension     = $this->getExtensionFromFilePath($filePath);
-        $stub          = $this->createStub($classNodeData[0], $classNodeData[1]);
-
-        if ($className === Traversable::class) {
-            // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
-            $stub = str_replace(' extends \iterable', '', $stub);
-        } elseif ($className === Generator::class) {
-            $stub = str_replace('PS_UNRESERVE_PREFIX_throw', 'throw', $stub);
-        }
-
-        return new StubData($stub, $extension);
+        return $this->classNodes[$lowercaseClassName];
     }
 
     public function generateFunctionStub(string $functionName): ?StubData
@@ -410,6 +443,57 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     private function getAbsoluteFilePath(string $filePath): string
     {
         return sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
+    }
+
+    /**
+     * Some stubs extend/implement classes from newer PHP versions. We need to filter those names in regard to set PHP version so that those stubs remain valid.
+     *
+     * @param list<Node\Name> $nameNodes
+     *
+     * @return list<Node\Name>
+     */
+    private function replaceExtendsOrImplementsByPhpVersion(string $className, array $nameNodes): array
+    {
+        $modifiedNames = [];
+        foreach ($nameNodes as $nameNode) {
+            $name = $nameNode->toString();
+
+            if ($className === ParseError::class) {
+                if ($name === CompileError::class && $this->phpVersion < 70300) {
+                    $modifiedNames[] = new Node\Name\FullyQualified(Error::class);
+                    continue;
+                }
+            } elseif ($className === SplFixedArray::class) {
+                if ($name === JsonSerializable::class && $this->phpVersion < 80100) {
+                    continue;
+                }
+
+                if ($name === IteratorAggregate::class && $this->phpVersion < 80000) {
+                    continue;
+                }
+
+                if ($name === Iterator::class && $this->phpVersion >= 80000) {
+                    continue;
+                }
+            } elseif ($className === SimpleXMLElement::class) {
+                if ($name === RecursiveIterator::class && $this->phpVersion < 80000) {
+                    continue;
+                }
+            } elseif ($className === DatePeriod::class || $className === PDOStatement::class) {
+                if ($name === IteratorAggregate::class && $this->phpVersion < 80000) {
+                    $modifiedNames[] = new Node\Name\FullyQualified(Traversable::class);
+                    continue;
+                }
+            }
+
+            if ($this->getClassNodeData($name) === null) {
+                continue;
+            }
+
+            $modifiedNames[] = $nameNode;
+        }
+
+        return $modifiedNames;
     }
 
     /**
