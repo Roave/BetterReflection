@@ -223,7 +223,7 @@ class ReflectionConstantTest extends TestCase
             /**
              * @var int
              */
-            /** This constant comment should be used. */ 
+            /** This constant comment should be used. */
             const FOO = 1;';
 
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -238,7 +238,7 @@ class ReflectionConstantTest extends TestCase
             /**
              * @var int
              */
-            /** This constant comment should be used. */ 
+            /** This constant comment should be used. */
             define("FOO", 1);';
 
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -321,13 +321,13 @@ class ReflectionConstantTest extends TestCase
     {
         return [
             [
-                '/** 
+                '/**
                   * @deprecated since 8.0
                   */',
                 true,
             ],
             [
-                '/** 
+                '/**
                   * @deprecated
                   */',
                 true,

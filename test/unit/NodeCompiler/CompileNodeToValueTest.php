@@ -509,11 +509,11 @@ PHP;
     {
         $phpCode = <<<'PHP'
         <?php
-        
+
         class Baz {
             const PARENT_CONSTANT = 'parentConstant';
         }
-        
+
         class Foo extends Baz {
             const SELF_CONSTANT = 'selfConstant';
             const STATIC_CONSTANT = 'staticConstant';
@@ -522,7 +522,7 @@ PHP;
             public $selfClass = self::class;
             public $staticClass = static::class;
             public $parentClass = parent::class;
-            
+
             public $selfConstant = self::SELF_CONSTANT;
             public $staticConstant = self::STATIC_CONSTANT;
             public $parentConstant = parent::PARENT_CONSTANT;
