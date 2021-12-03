@@ -582,7 +582,7 @@ class Foo
     protected $c = 'c',
               $d = 'd';
     private $e = bool,
-            $f = false;                
+            $f = false;
 }
 PHP;
 
@@ -2200,20 +2200,20 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-            
+
             trait MyTrait
             {
                 protected function myMethod() : void{
-                
+
                 }
             }
-            
+
             class HelloWorld
             {
                 use MyTrait {
                     MyMethod as myRenamedMethod;
                 }
-                
+
                 public function sayHello(int $date): void
                 {
                     $this->myRenamedMethod();
@@ -2229,19 +2229,19 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-            
+
             trait HelloWorldTraitTest
             {
             }
-            
+
             trait HelloWorldTrait
             {
                public function sayHello(): void
                {
-            
+
                }
             }
-            
+
             class HelloWorld
             {
                use HelloWorldTraitTest;
@@ -2259,19 +2259,19 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-            
+
             trait HelloWorldTraitTest
             {
             }
-            
+
             trait HelloWorldTrait
             {
                public function sayHello(): void
                {
-            
+
                }
             }
-            
+
             class HelloWorld
             {
                use HelloWorldTraitTest, HelloWorldTrait {
@@ -2288,12 +2288,12 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-        
+
             trait BarTrait {
                 private function privateMethod() {}
                 protected function protectedMethod() {}
             }
-            
+
             class Foo
             {
                 use BarTrait {
@@ -2336,7 +2336,7 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-        
+
             class ClassHasStringable implements Stringable
             {
                 public function __toString(): string
@@ -2387,7 +2387,7 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-        
+
             abstract class HasStringable implements Iterator
             {
                 public function __toString(): string
@@ -2410,13 +2410,13 @@ PHP;
     {
         return [
             [
-                '/** 
+                '/**
                   * @deprecated since 8.0
                   */',
                 true,
             ],
             [
-                '/** 
+                '/**
                   * @deprecated
                   */',
                 true,
@@ -2447,7 +2447,7 @@ PHP;
     {
         $php = <<<'PHP'
             <?php
-        
+
             enum IsEnum
             {
                 case Bar;

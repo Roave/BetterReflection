@@ -437,7 +437,7 @@ class Foo
     private $a = 0,
             $b = 1;
     protected $c = 3,
-              $d = 4;         
+              $d = 4;
 }
 PHP;
 
@@ -826,13 +826,13 @@ PHP;
     {
         return [
             [
-                '/** 
+                '/**
                   * @deprecated since 8.0
                   */',
                 true,
             ],
             [
-                '/** 
+                '/**
                   * @deprecated
                   */',
                 true,

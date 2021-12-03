@@ -257,7 +257,7 @@ class ReflectionNamedTypeTest extends TestCase
             abstract class ParentClass {
                 public function method(): %s;
             }
-            
+
             class ClassWithExtend extends ParentClass {}
         ', $type);
 
@@ -277,7 +277,7 @@ class ReflectionNamedTypeTest extends TestCase
         $php = '<?php
             abstract class Foo {
             }
-            
+
             class Boo extends Foo {
                 public function method(): parent {}
             }

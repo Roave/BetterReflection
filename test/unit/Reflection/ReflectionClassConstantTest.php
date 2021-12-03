@@ -203,13 +203,13 @@ PHP;
     {
         return [
             [
-                '/** 
+                '/**
                   * @deprecated since 8.0
                   */',
                 true,
             ],
             [
-                '/** 
+                '/**
                   * @deprecated
                   */',
                 true,

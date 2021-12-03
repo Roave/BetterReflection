@@ -139,7 +139,7 @@ class ReflectionFunctionAbstractTest extends TestCase
      */
     public function testIsDeprecated(string $comment): void
     {
-        $php = sprintf('<?php 
+        $php = sprintf('<?php
         %s
         function foo() {}', $comment);
 
@@ -154,7 +154,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         return [
             [''],
             [
-                '/** 
+                '/**
                   * @deprecatedPolicy
                   */',
             ],
@@ -307,7 +307,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         /**
          * Unused function comment
          */
-        /** This function comment should be used. */ 
+        /** This function comment should be used. */
         function foo() {}
         ';
 
@@ -319,7 +319,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
     public function testSetDocCommentFromString(): void
     {
-        $php = '<?php 
+        $php = '<?php
           function foo() {}
         ';
 
@@ -839,12 +839,12 @@ PHP;
     {
         return [
             [
-                '/** 
+                '/**
                   * @deprecated since 7.1
                   */',
             ],
             [
-                '/** 
+                '/**
                   * @deprecated
                   */',
             ],
