@@ -5,7 +5,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
@@ -21,7 +21,7 @@ $sourceLocator = new AggregateSourceLocator([
     new AutoloadSourceLocator((new BetterReflection())->astLocator())
 ]);
 
-$reflector = new \Roave\BetterReflection\Reflector\DefaultReflector($sourceLocator);
+$reflector = new DefaultReflector($sourceLocator);
 
 $classReflections = $reflector->reflectAllClasses();
 
