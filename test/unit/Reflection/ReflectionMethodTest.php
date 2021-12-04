@@ -8,7 +8,6 @@ use A\Foo;
 use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
-use phpDocumentor\Reflection\Types\Integer;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionClass;
@@ -229,28 +228,6 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('b_renamed', $methodInfo->getName());
         self::assertSame('', $methodInfo->getNamespaceName());
         self::assertSame('b_renamed', $methodInfo->getShortName());
-    }
-
-    public function testGetDocBlockReturnTypes(): void
-    {
-        $php = '<?php
-        class Foo {
-            /**
-             * @return int
-             */
-            public function someMethod() {}
-        }
-        ';
-
-        $methodInfo = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))
-            ->reflectClass('Foo')
-            ->getMethod('someMethod');
-
-        $types = $methodInfo->getDocBlockReturnTypes();
-
-        self::assertIsArray($types);
-        self::assertCount(1, $types);
-        self::assertInstanceOf(Integer::class, $types[0]);
     }
 
     public function testGetObjectReturnTypes(): void

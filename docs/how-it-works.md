@@ -37,7 +37,7 @@ classes:
  - `ReflectionProperty::createFromName(string $className, string $propertyName)`
  - `ReflectionProperty::createFromInstance(object $instance, string $propertyName)`
 
-Using these is documented in a bit more detail within the [Usage documentation](usage.md#initialisers). These methods 
+Using these is documented in a bit more detail within the [Usage documentation](usage.md#initialisers). These methods
 use a default set of pre-configured Source Locators:
 
  * `PhpInternalSourceLocator`
@@ -46,26 +46,24 @@ use a default set of pre-configured Source Locators:
 
 #### 1.3 Manually instantiating  `*Reflector` objects
 
-The second entry point is the `Reflector` objects, to which you must provide specific 
+The second entry point is the `Reflector` objects, to which you must provide specific
 instructions on how Better Reflection is to find code, in the form of the Source Locators.
 
 ## 2. Source Locators
 
-Source Locators are  instructions on finding source code for Better Reflection to examine to create the reflections. A 
+Source Locators are  instructions on finding source code for Better Reflection to examine to create the reflections. A
 detailed list of each source locator and how they work can be found in the
-[Usage documentation - Source Locators section](usage.md#sourcelocators). 
+[Usage documentation - Source Locators section](usage.md#sourcelocators).
 
 ## 3. PhpParser
 
-Using Nikita Popov's [PHP-Parser library](https://github.com/nikic/PHP-Parser), the source code located by the Source 
+Using Nikita Popov's [PHP-Parser library](https://github.com/nikic/PHP-Parser), the source code located by the Source
 Locators is loaded into an [AST format](https://en.wikipedia.org/wiki/Abstract_syntax_tree), forming the core foundation
- on which the reflection is based. Using the AST, we are able to examine the structure of the code, finding out things 
- like what methods and properties are on a class, and what parameters belong to a method or function for example. We are
- also able to analyse types defined in DocBlocks using [phpDocumentor/TypeResolver](https://github.com/phpDocumentor/TypeResolver)
- to add context with things like namespaces.
+ on which the reflection is based. Using the AST, we are able to examine the structure of the code, finding out things
+ like what methods and properties are on a class, and what parameters belong to a method or function for example.
 
 ## 4. Reflection
 
-Internally to the `Reflection*` classes in Better Reflection, we cleverly hold the AST as the main property. All 
-reflection, analysis and modification is done directly to this AST. Therefore it is possible to unparse or export the 
+Internally to the `Reflection*` classes in Better Reflection, we cleverly hold the AST as the main property. All
+reflection, analysis and modification is done directly to this AST. Therefore it is possible to unparse or export the
 AST back into code - and thus execute monkey patched code.

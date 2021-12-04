@@ -17,6 +17,4 @@ $reflection = $reflector->reflectClass('MyClass');
 
 echo $reflection->getName() . "\n"; // MyClass
 echo ($reflection->getProperty('foo')->isPrivate() === true ? 'private' : 'not private') . "\n"; // private
-echo $reflection->getProperty('foo')->getDocBlockTypeStrings()[0] . "\n"; // string
-echo $reflection->getMethod('getFoo')->getDocBlockReturnTypes()[0]->__toString() . "\n"; // string
 

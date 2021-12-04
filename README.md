@@ -13,7 +13,6 @@ Better Reflection is a reflection API that aims to improve and provide more feat
 
 * You can reflect on classes that are not already loaded, without loading them
 * Ability to reflect on classes directly from a string of PHP code
-* Better Reflection analyses the DocBlocks (using [phpdocumentor/type-resolver](https://github.com/phpDocumentor/TypeResolver))
 * Reflecting directly on closures
 * Ability to extract AST from methods and functions
 * Ability to return AST representation of a class or function

@@ -2,11 +2,11 @@
 
 ## Reflecting on classes not yet loaded
 
-In most cases, creating reflections using a built-in `SourceLocator` or the `ReflectionClass::createFromName()` 
+In most cases, creating reflections using a built-in `SourceLocator` or the `ReflectionClass::createFromName()`
 technique doesn't attempt to load code. This means if a class has not already been declared, you can safely assume that
 Better Reflection won't load the class.
 
-Note that if the class is *already* loaded, then this Better Reflection does not then *unload* that class - this is not 
+Note that if the class is *already* loaded, then this Better Reflection does not then *unload* that class - this is not
 currently possible in PHP.
 
 ## Reflecting on things within a string
@@ -23,26 +23,20 @@ See [AST extraction documentation](https://github.com/Roave/BetterReflection/tre
 
 ## PHP 7 Parameter Type Declarations and Return Type Declarations
 
-These act in the same way as the core reflection API, except they return a 
+These act in the same way as the core reflection API, except they return a
 `\Roave\BetterReflection\Reflection\ReflectionType` instance (which does not extend `\ReflectionType`).
 
 ```php
 $reflectionType = $parameterInfo->getType();
 ```
 
-However, Better Reflection also gives the ability to change, and remove type declarations. Removing these types might 
-be useful if you want to make code written for PHP 7 work in PHP 5 for example, or setting new types to do the 
+However, Better Reflection also gives the ability to change, and remove type declarations. Removing these types might
+be useful if you want to make code written for PHP 7 work in PHP 5 for example, or setting new types to do the
 opposite. For example, you might want to set the PHP 7 return type declaration to that defined in the PHP DocBlock.
 
 ```php
 // Change a function to ensure it returns an integer
 $functionInfo->setReturnType('int');
-
-// If there is only one type defined in the DocBlock, set it as the return type
-$returnTypes = $functionInfo->getDocBlockReturnTypes();
-if (count($returnTypes) === 1) {
-    $functionInfo->setReturnType((string) $returnTypes[0]);
-}
 
 // Remove the return type declaration
 $functionInfo->removeReturnType();

@@ -8,7 +8,6 @@ use Closure;
 use Error;
 use InvalidArgumentException;
 use OutOfBoundsException;
-use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\Class_;
@@ -28,7 +27,6 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\TypesFinder\FindPropertyType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 use Throwable;
@@ -237,35 +235,6 @@ class ReflectionProperty
     public function isReadOnly(): bool
     {
         return $this->node->isReadonly();
-    }
-
-    /**
-     * Get the DocBlock type hints as an array of strings.
-     *
-     * @return list<string>
-     */
-    public function getDocBlockTypeStrings(): array
-    {
-        $stringTypes = [];
-
-        foreach ($this->getDocBlockTypes() as $type) {
-            $stringTypes[] = (string) $type;
-        }
-
-        return $stringTypes;
-    }
-
-    /**
-     * Get the types defined in the DocBlocks. This returns an array because
-     * the parameter may have multiple (compound) types specified (for example
-     * when you type hint pipe-separated "string|null", in which case this
-     * would return an array of Type objects, one for string, one for null.
-     *
-     * @return list<Type>
-     */
-    public function getDocBlockTypes(): array
-    {
-        return (new FindPropertyType())->__invoke($this, $this->declaringClass->getDeclaringNamespaceAst());
     }
 
     public function getDeclaringClass(): ReflectionClass

@@ -8,7 +8,6 @@ use Foo;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
-use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Param;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
@@ -219,37 +218,6 @@ class ReflectionParameterTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This parameter does not have a default value available');
         $paramInfo->getDefaultValue();
-    }
-
-    public function testGetDocBlockTypeStrings(): void
-    {
-        $classInfo = $this->reflector->reflectClass(Methods::class);
-
-        $method = $classInfo->getMethod('methodWithParameters');
-
-        $param1 = $method->getParameter('parameter1');
-        self::assertSame(['string'], $param1->getDocBlockTypeStrings());
-
-        $param2 = $method->getParameter('parameter2');
-        self::assertSame(['int', 'float'], $param2->getDocBlockTypeStrings());
-    }
-
-    public function testGetDocBlockTypes(): void
-    {
-        $classInfo = $this->reflector->reflectClass(Methods::class);
-
-        $method = $classInfo->getMethod('methodWithParameters');
-
-        $param1      = $method->getParameter('parameter1');
-        $param1Types = $param1->getDocBlockTypes();
-        self::assertCount(1, $param1Types);
-        self::assertInstanceOf(Types\String_::class, $param1Types[0]);
-
-        $param2      = $method->getParameter('parameter2');
-        $param2Types = $param2->getDocBlockTypes();
-        self::assertCount(2, $param2Types);
-        self::assertInstanceOf(Types\Integer::class, $param2Types[0]);
-        self::assertInstanceOf(Types\Float_::class, $param2Types[1]);
     }
 
     public function testToString(): void
