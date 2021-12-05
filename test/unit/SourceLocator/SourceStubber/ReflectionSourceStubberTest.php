@@ -367,7 +367,11 @@ class ReflectionSourceStubberTest extends TestCase
 
         if (method_exists($original, 'hasTentativeReturnType')) {
             self::assertSame($original->hasTentativeReturnType(), $stubbed->hasTentativeReturnType(), $original->getName());
-            self::assertSame((string) $original->getTentativeReturnType(), (string) $stubbed->getTentativeReturnType(), $original->getName());
+            self::assertSame(
+                (string) $original->getTentativeReturnType(),
+                (string) ReflectionType::fromTypeOrNull($stubbed->getTentativeReturnType()),
+                $original->getName(),
+            );
         }
 
         self::assertSame($original->hasReturnType(), $stubbed->hasReturnType(), $original->getName());
