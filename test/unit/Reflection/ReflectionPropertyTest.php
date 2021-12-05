@@ -8,7 +8,6 @@ use ClassWithPropertiesAndTraitProperties;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use InvalidArgumentException;
 use OutOfBoundsException;
-use phpDocumentor\Reflection\Types;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
@@ -43,7 +42,6 @@ use Roave\BetterReflectionTest\Fixture\TraitStaticPropertyGetSet;
 use stdClass;
 use TraitWithProperty;
 
-use function count;
 use function sprintf;
 
 /**
@@ -125,62 +123,6 @@ class ReflectionPropertyTest extends TestCase
 
         $readOnlyProperty = $classInfo->getProperty('readOnlyProperty');
         self::assertTrue($readOnlyProperty->isReadOnly());
-    }
-
-    /**
-     * @return array
-     */
-    public function stringTypesDataProvider(): array
-    {
-        return [
-            ['privateProperty', ['int', 'float', '\stdClass']],
-            ['protectedProperty', ['bool', 'bool[]', 'bool[][]']],
-            ['publicProperty', ['string']],
-        ];
-    }
-
-    /**
-     * @param list<string> $expectedTypes
-     *
-     * @dataProvider stringTypesDataProvider
-     */
-    public function testGetDocBlockTypeStrings(string $propertyName, array $expectedTypes): void
-    {
-        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
-
-        $property = $classInfo->getProperty($propertyName);
-
-        self::assertSame($expectedTypes, $property->getDocBlockTypeStrings());
-    }
-
-    /**
-     * @return array
-     */
-    public function typesDataProvider(): array
-    {
-        return [
-            ['privateProperty', [Types\Integer::class, Types\Float_::class, Types\Object_::class]],
-            ['protectedProperty', [Types\Boolean::class, Types\Array_::class, Types\Array_::class]],
-            ['publicProperty', [Types\String_::class]],
-        ];
-    }
-
-    /**
-     * @param list<string> $expectedTypes
-     *
-     * @dataProvider typesDataProvider
-     */
-    public function testGetDocBlockTypes(string $propertyName, array $expectedTypes): void
-    {
-        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
-
-        $foundTypes = $classInfo->getProperty($propertyName)->getDocBlockTypes();
-
-        self::assertCount(count($expectedTypes), $foundTypes);
-
-        foreach ($expectedTypes as $i => $expectedType) {
-            self::assertInstanceOf($expectedType, $foundTypes[$i]);
-        }
     }
 
     public function testGetDocComment(): void

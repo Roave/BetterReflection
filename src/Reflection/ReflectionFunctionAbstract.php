@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use Closure;
-use phpDocumentor\Reflection\Type;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
@@ -26,7 +25,6 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
-use Roave\BetterReflection\TypesFinder\FindReturnType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
@@ -113,7 +111,6 @@ trait ReflectionFunctionAbstract
             $parameters[] = ReflectionParameter::createFromNode(
                 $this->reflector,
                 $paramNode,
-                $this->declaringNamespace,
                 $this,
                 $paramIndex,
             );
@@ -281,19 +278,6 @@ trait ReflectionFunctionAbstract
     public function returnsReference(): bool
     {
         return $this->node->byRef;
-    }
-
-    /**
-     * Get the return types defined in the DocBlocks. This returns an array because
-     * the parameter may have multiple (compound) types specified (for example
-     * when you type hint pipe-separated "string|null", in which case this
-     * would return an array of Type objects, one for string, one for null.
-     *
-     * @return list<Type>
-     */
-    public function getDocBlockReturnTypes(): array
-    {
-        return (new FindReturnType())->__invoke($this, $this->declaringNamespace);
     }
 
     /**

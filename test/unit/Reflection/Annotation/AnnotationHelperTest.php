@@ -29,6 +29,7 @@ class AnnotationHelperTest extends TestCase
                 false,
             ],
             ['/** @deprecated */', true],
+            ['/**@deprecated*/', true],
             [
                 '/**
                  * @deprecated since 8.0.0
@@ -57,6 +58,7 @@ class AnnotationHelperTest extends TestCase
                 false,
             ],
             ['/** @betterReflectionTentativeReturnType */', true],
+            ['/**@betterReflectionTentativeReturnType*/', true],
             [
                 '/**
                  * @betterReflectionTentativeReturnType

@@ -9,10 +9,8 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
-use phpDocumentor\Reflection\Type;
 use PhpParser\Node;
 use PhpParser\Node\Param as ParamNode;
-use PhpParser\Node\Stmt\Namespace_;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
@@ -21,7 +19,6 @@ use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
-use Roave\BetterReflection\TypesFinder\FindParameterType;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 
 use function assert;
@@ -41,7 +38,6 @@ class ReflectionParameter
     private function __construct(
         private Reflector $reflector,
         private ParamNode $node,
-        private ?Namespace_ $declaringNamespace,
         private ReflectionMethod|ReflectionFunction $function,
         private int $parameterIndex,
     ) {
@@ -158,20 +154,17 @@ class ReflectionParameter
     /**
      * @internal
      *
-     * @param ParamNode       $node               Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param Namespace_|null $declaringNamespace namespace of the declaring function/method
+     * @param ParamNode $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
      */
     public static function createFromNode(
         Reflector $reflector,
         ParamNode $node,
-        ?Namespace_ $declaringNamespace,
         ReflectionMethod|ReflectionFunction $function,
         int $parameterIndex,
     ): self {
         return new self(
             $reflector,
             $node,
-            $declaringNamespace,
             $function,
             $parameterIndex,
         );
@@ -301,37 +294,6 @@ class ReflectionParameter
         }
 
         return $type->allowsNull();
-    }
-
-    /**
-     * Get the DocBlock type hints as an array of strings.
-     *
-     * @return list<string>
-     */
-    public function getDocBlockTypeStrings(): array
-    {
-        $stringTypes = [];
-
-        foreach ($this->getDocBlockTypes() as $type) {
-            $stringTypes[] = (string) $type;
-        }
-
-        return $stringTypes;
-    }
-
-    /**
-     * Get the types defined in the DocBlocks. This returns an array because
-     * the parameter may have multiple (compound) types specified (for example
-     * when you type hint pipe-separated "string|null", in which case this
-     * would return an array of Type objects, one for string, one for null.
-     *
-     * @see getTypeHint()
-     *
-     * @return list<Type>
-     */
-    public function getDocBlockTypes(): array
-    {
-        return (new FindParameterType())->__invoke($this->function, $this->declaringNamespace, $this->node);
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Annotation;
 
-use phpDocumentor\Reflection\DocBlockFactory;
+use function preg_match;
 
 /**
  * @internal
@@ -12,8 +12,6 @@ use phpDocumentor\Reflection\DocBlockFactory;
 final class AnnotationHelper
 {
     public const TENTATIVE_RETURN_TYPE_ANNOTATION = 'betterReflectionTentativeReturnType';
-
-    private static ?DocBlockFactory $docBlockFactory = null;
 
     /**
      * @psalm-pure
@@ -24,8 +22,7 @@ final class AnnotationHelper
             return false;
         }
 
-        /** @psalm-suppress ImpureMethodCall */
-        return self::getDocBlockFactory()->create($docComment)->hasTag('deprecated');
+        return preg_match('~\*\s*@deprecated(?=\s|\*)~', $docComment) === 1;
     }
 
     /**
@@ -37,14 +34,6 @@ final class AnnotationHelper
             return false;
         }
 
-        /** @psalm-suppress ImpureMethodCall */
-        return self::getDocBlockFactory()->create($docComment)->hasTag(self::TENTATIVE_RETURN_TYPE_ANNOTATION);
-    }
-
-    private static function getDocBlockFactory(): DocBlockFactory
-    {
-        self::$docBlockFactory ??= DocBlockFactory::createInstance();
-
-        return self::$docBlockFactory;
+        return preg_match('~\*\s*@' . self::TENTATIVE_RETURN_TYPE_ANNOTATION . '(?=\s|\*)~', $docComment) === 1;
     }
 }

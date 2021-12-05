@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
@@ -400,24 +399,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         $functionInfo  = ReflectionFunction::createFromNode($reflector, $node, $locatedSource);
 
         self::assertSame($locatedSource, $functionInfo->getLocatedSource());
-    }
-
-    public function testGetDocBlockReturnTypes(): void
-    {
-        $php = '<?php
-            /**
-             * @return bool
-             */
-            function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $types = $function->getDocBlockReturnTypes();
-
-        self::assertIsArray($types);
-        self::assertCount(1, $types);
-        self::assertInstanceOf(Boolean::class, $types[0]);
     }
 
     public function returnTypeFunctionProvider(): array
