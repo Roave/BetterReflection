@@ -15,6 +15,9 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 /**
  * @covers \Roave\BetterReflection\Reflection\ReflectionType
+ * @covers \Roave\BetterReflection\Reflection\ReflectionNamedType
+ * @covers \Roave\BetterReflection\Reflection\ReflectionIntersectionType
+ * @covers \Roave\BetterReflection\Reflection\ReflectionUnionType
  */
 class ReflectionTypeTest extends TestCase
 {
@@ -34,21 +37,31 @@ class ReflectionTypeTest extends TestCase
         return [
             [new Node\Name('A'), false, ReflectionNamedType::class, false],
             [new Node\Identifier('string'), false, ReflectionNamedType::class, false],
-            [new Node\Identifier('string'), true, ReflectionNamedType::class, true],
-            [new Node\NullableType(new Node\Identifier('string')), false, ReflectionNamedType::class, true],
-            [new Node\IntersectionType([new Node\Name('A'), new Node\Name('B')]), false, ReflectionIntersectionType::class, false],
-            [new Node\UnionType([new Node\Name('A'), new Node\Name('B')]), false, ReflectionUnionType::class, false],
-            'Union types composed of just `null` and a type are simplified into a ReflectionNamedType' => [
-                new Node\UnionType([new Node\Name('A'), new Node\Name('null')]),
-                false,
-                ReflectionNamedType::class,
+            'Forcing a type to be nullable turns it into a `T|null` ReflectionUnionType' => [
+                new Node\Identifier('string'),
+                true,
+                ReflectionUnionType::class,
                 true,
             ],
-            'Union types composed of `null` and more than one type are kept as ReflectionUnionType' => [
+            'Nullable types are converted into `T|null` ReflectionUnionType instances' => [
+                new Node\NullableType(new Node\Identifier('string')),
+                false,
+                ReflectionUnionType::class,
+                true,
+            ],
+            [new Node\IntersectionType([new Node\Name('A'), new Node\Name('B')]), false, ReflectionIntersectionType::class, false],
+            [new Node\UnionType([new Node\Name('A'), new Node\Name('B')]), false, ReflectionUnionType::class, false],
+            'Union types composed of just `null` and a type are kept as `T|null` ReflectionUnionType' => [
+                new Node\UnionType([new Node\Name('A'), new Node\Name('null')]),
+                false,
+                ReflectionUnionType::class,
+                true,
+            ],
+            'Union types composed of `null` and more than one type are kept as `T|U|null` ReflectionUnionType' => [
                 new Node\UnionType([new Node\Name('A'), new Node\Name('B'), new Node\Name('null')]),
                 false,
                 ReflectionUnionType::class,
-                false,
+                true,
             ],
         ];
     }

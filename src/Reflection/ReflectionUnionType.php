@@ -21,9 +21,8 @@ class ReflectionUnionType extends ReflectionType
         Reflector $reflector,
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         UnionType $type,
-        bool $allowsNull,
     ) {
-        parent::__construct($reflector, $owner, $allowsNull);
+        parent::__construct($reflector, $owner);
 
         $this->types = array_filter(
             array_map(static fn (Node\Identifier|Node\Name $type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($reflector, $owner, $type), $type->types),
@@ -37,6 +36,17 @@ class ReflectionUnionType extends ReflectionType
     public function getTypes(): array
     {
         return $this->types;
+    }
+
+    public function allowsNull(): bool
+    {
+        foreach ($this->types as $type) {
+            if ($type->getName() === 'null') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function __toString(): string

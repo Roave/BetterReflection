@@ -22,7 +22,7 @@ class ReflectionIntersectionType extends ReflectionType
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         IntersectionType $type,
     ) {
-        parent::__construct($reflector, $owner, false);
+        parent::__construct($reflector, $owner);
 
         $this->types = array_filter(
             array_map(static fn (Node\Identifier|Node\Name $type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($reflector, $owner, $type), $type->types),
@@ -36,6 +36,11 @@ class ReflectionIntersectionType extends ReflectionType
     public function getTypes(): array
     {
         return $this->types;
+    }
+
+    public function allowsNull(): bool
+    {
+        return false;
     }
 
     public function __toString(): string

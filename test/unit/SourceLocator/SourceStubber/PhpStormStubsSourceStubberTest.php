@@ -761,12 +761,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [CoreReflectionProperty::class, 'getType', 70300, false],
             [CoreReflectionProperty::class, 'getType', 70400, true],
             [CoreReflectionProperty::class, 'getType', 80000, true],
-            [CoreReflectionProperty::class, 'getType', 80100, true, null, '?ReflectionType'],
+            [CoreReflectionProperty::class, 'getType', 80100, true, null, 'ReflectionType|null'],
             [CoreReflectionClass::class, 'export', 70400, true],
             [CoreReflectionClass::class, 'export', 80000, false],
             [DatePeriod::class, 'getRecurrences', 70216, false],
             [DatePeriod::class, 'getRecurrences', 70217, true],
-            [DatePeriod::class, 'getRecurrences', 80100, true, null, '?int'],
+            [DatePeriod::class, 'getRecurrences', 80100, true, null, 'int|null'],
             [DateTimeInterface::class, 'getOffset', 79999, true],
             [DateTimeInterface::class, 'getOffset', 80000, true],
             [DateTimeInterface::class, 'getOffset', 80100, true, null, 'int'],
@@ -816,7 +816,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         return [
             ['mysqli_stmt', 'execute', 'params', 80099, false],
-            ['mysqli_stmt', 'execute', 'params', 80100, true, '?array', true],
+            ['mysqli_stmt', 'execute', 'params', 80100, true, 'array|null', true],
             ['PDOStatement', 'fetchAll', 'fetch_argument', 50299, false],
             ['PDOStatement', 'fetchAll', 'fetch_argument', 50300, true, null, true],
             ['PDOStatement', 'fetchAll', 'fetch_argument', 70499, true, null, true],
@@ -862,11 +862,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [DateInterval::class, 'f', 70099, false],
             [DateInterval::class, 'f', 70100, true],
             [PDOException::class, 'errorInfo', 80099, true],
-            [PDOException::class, 'errorInfo', 80100, true, '?array'],
+            [PDOException::class, 'errorInfo', 80100, true, 'array|null'],
             [DOMNode::class, 'nodeType', 80099, true],
             [DOMNode::class, 'nodeType', 80100, true, 'int'],
             [DOMNode::class, 'parentNode', 80099, true],
-            [DOMNode::class, 'parentNode', 80100, true, '?DOMNode'],
+            [DOMNode::class, 'parentNode', 80100, true, 'DOMNode|null'],
         ];
     }
 
@@ -910,7 +910,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['read_exif_data', 80000, false],
             ['spl_autoload_functions', 79999, true, 'array|false'],
             ['spl_autoload_functions', 80000, true, 'array'],
-            ['dom_import_simplexml', 70000, true, '?DOMElement'],
+            ['dom_import_simplexml', 70000, true, 'DOMElement|null'],
             ['dom_import_simplexml', 80000, true, 'DOMElement'],
             // Not core functions
             ['newrelic_add_custom_parameter', 40000, true, 'bool'],
@@ -943,8 +943,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         return [
             ['bcscale', 'scale', 70200, true, 'int', false],
             ['bcscale', 'scale', 70299, true, 'int', false],
-            ['bcscale', 'scale', 70300, true, '?int', true],
-            ['bcscale', 'scale', 80000, true, '?int', true],
+            ['bcscale', 'scale', 70300, true, 'int|null', true],
+            ['bcscale', 'scale', 80000, true, 'int|null', true],
             ['easter_date', 'mode', 79999, false],
             ['easter_date', 'mode', 80000, true, 'int', false],
             ['curl_version', 'age', 50200, false],

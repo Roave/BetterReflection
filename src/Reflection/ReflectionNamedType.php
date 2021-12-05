@@ -40,9 +40,8 @@ class ReflectionNamedType extends ReflectionType
         Reflector $reflector,
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         Identifier|Name $type,
-        bool $allowsNull,
     ) {
-        parent::__construct($reflector, $owner, $allowsNull);
+        parent::__construct($reflector, $owner);
 
         $this->name = $type->toString();
     }
@@ -102,13 +101,13 @@ class ReflectionNamedType extends ReflectionType
         throw new LogicException(sprintf('The type %s cannot be resolved to class', $this->name));
     }
 
+    public function allowsNull(): bool
+    {
+        return false;
+    }
+
     public function __toString(): string
     {
-        $name = '';
-        if ($this->allowsNull()) {
-            $name .= '?';
-        }
-
-        return $name . $this->getName();
+        return $this->getName();
     }
 }

@@ -72,6 +72,12 @@ final class ReflectionFunctionStringCast
 
     private static function returnTypeToString(ReflectionFunction $methodReflection): string
     {
-        return $methodReflection->getReturnType()?->__toString() ?? '';
+        $type = $methodReflection->getReturnType();
+
+        if ($type === null) {
+            return '';
+        }
+
+        return ReflectionTypeStringCast::toString($type);
     }
 }

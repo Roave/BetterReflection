@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
  */
 final class ReflectionNamedType extends CoreReflectionNamedType
 {
-    public function __construct(private BetterReflectionNamedType $betterReflectionType)
+    public function __construct(private BetterReflectionNamedType $betterReflectionType, private bool $allowsNull)
     {
     }
 
@@ -23,12 +23,13 @@ final class ReflectionNamedType extends CoreReflectionNamedType
 
     public function __toString(): string
     {
-        return $this->betterReflectionType->__toString();
+        return ($this->allowsNull ? '?' : '')
+            . $this->betterReflectionType->__toString();
     }
 
     public function allowsNull(): bool
     {
-        return $this->betterReflectionType->allowsNull();
+        return $this->allowsNull;
     }
 
     public function isBuiltin(): bool

@@ -37,11 +37,27 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame(ReflectionNamedTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
+    public function testWillRenderNullabilityMarkerWhenGiven(): void
+    {
+        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
+        $reflectionStub->method('__toString')
+            ->willReturn('foo');
+
+        self::assertSame('foo', (new ReflectionNamedTypeAdapter($reflectionStub, false))->__toString());
+        self::assertSame('?foo', (new ReflectionNamedTypeAdapter($reflectionStub, true))->__toString());
+    }
+
+    public function testWillReportThatItAcceptsOrRejectsNull(): void
+    {
+        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
+
+        self::assertFalse((new ReflectionNamedTypeAdapter($reflectionStub, false))->allowsNull());
+        self::assertTrue((new ReflectionNamedTypeAdapter($reflectionStub, true))->allowsNull());
+    }
+
     public function methodExpectationProvider(): array
     {
         return [
-            ['__toString', null, 'int', []],
-            ['allowsNull', null, true, []],
             ['isBuiltin', null, true, []],
             ['getName', null, 'int', []],
         ];
@@ -67,7 +83,7 @@ class ReflectionNamedTypeTest extends TestCase
             $this->expectException($expectedException);
         }
 
-        $adapter = new ReflectionNamedTypeAdapter($reflectionStub);
+        $adapter = new ReflectionNamedTypeAdapter($reflectionStub, false);
         $adapter->{$methodName}(...$args);
     }
 }

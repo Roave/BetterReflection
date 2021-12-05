@@ -42,38 +42,6 @@ class ReflectionTypeTest extends TestCase
         self::assertSame(ReflectionNamedTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    public function methodExpectationProvider(): array
-    {
-        return [
-            ['__toString', null, '', []],
-            ['allowsNull', null, true, []],
-        ];
-    }
-
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
-    {
-        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
-
-        if ($expectedException === null) {
-            $reflectionStub->expects($this->once())
-                ->method($methodName)
-                ->with(...$args)
-                ->will($this->returnValue($returnValue));
-        }
-
-        if ($expectedException !== null) {
-            $this->expectException($expectedException);
-        }
-
-        $adapter = ReflectionTypeAdapter::fromTypeOrNull($reflectionStub);
-        $adapter->{$methodName}(...$args);
-    }
-
     public function testFromTypeOrNullWithNull(): void
     {
         self::assertNull(ReflectionTypeAdapter::fromTypeOrNull(null));
@@ -82,6 +50,28 @@ class ReflectionTypeTest extends TestCase
     public function testFromTypeOrNullWithNamedType(): void
     {
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
+    }
+
+    public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): void
+    {
+        $unionType = $this->createMock(BetterReflectionUnionType::class);
+        $fooType   = $this->createMock(BetterReflectionNamedType::class);
+        $nullType  = $this->createMock(BetterReflectionNamedType::class);
+
+        $fooType->method('getName')
+            ->willReturn('foo');
+        $nullType->method('getName')
+            ->willReturn('null');
+        $unionType->method('getTypes')
+            ->willReturn([$fooType, $nullType]);
+        $unionType->method('allowsNull')
+            ->willReturn(true);
+
+        $type = ReflectionTypeAdapter::fromTypeOrNull($unionType);
+
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $type);
+        self::assertTrue($type->allowsNull());
+        self::assertSame('foo', $type->getName());
     }
 
     public function testFromTypeOrNullWithUnionType(): void

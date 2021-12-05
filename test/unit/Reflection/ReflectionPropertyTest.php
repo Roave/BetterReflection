@@ -195,7 +195,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertTrue($promotedProperty->isPromoted());
         self::assertTrue($promotedProperty->isPrivate());
         self::assertTrue($promotedProperty->hasType());
-        self::assertSame('?int', $promotedProperty->getType()->__toString());
+        self::assertSame('int|null', $promotedProperty->getType()->__toString());
         self::assertFalse($promotedProperty->hasDefaultValue());
         self::assertNull($promotedProperty->getDefaultValue());
         self::assertSame(46, $promotedProperty->getStartLine());
@@ -675,7 +675,7 @@ PHP;
             ['integerProperty', 'int'],
             ['classProperty', 'stdClass'],
             ['noTypeProperty', ''],
-            ['nullableStringProperty', '?string'],
+            ['nullableStringProperty', 'string|null'],
             ['arrayProperty', 'array'],
         ];
     }

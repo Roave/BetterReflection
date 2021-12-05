@@ -29,7 +29,7 @@ final class ReflectionPropertyStringCast
             self::visibilityToString($propertyReflection),
             $propertyReflection->isStatic() ? ' static' : '',
             $propertyReflection->isReadOnly() ? ' readonly' : '',
-            $type !== null ? sprintf(' %s', $type->__toString()) : '',
+            $type !== null ? sprintf(' %s', ReflectionTypeStringCast::toString($type)) : '',
             $propertyReflection->getName(),
         );
     }

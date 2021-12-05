@@ -34,11 +34,13 @@ final class ReflectionParameterStringCast
 
     private static function typeToString(ReflectionParameter $parameterReflection): string
     {
-        if (! $parameterReflection->hasType()) {
+        $type = $parameterReflection->getType();
+
+        if ($type === null) {
             return '';
         }
 
-        return (string) $parameterReflection->getType() . ' ';
+        return ReflectionTypeStringCast::toString($type) . ' ';
     }
 
     private static function valueToString(ReflectionParameter $parameterReflection): string
