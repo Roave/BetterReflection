@@ -862,11 +862,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
             [DateInterval::class, 'f', 70099, false],
             [DateInterval::class, 'f', 70100, true],
             [PDOException::class, 'errorInfo', 80099, true],
-            [PDOException::class, 'errorInfo', 80100, true, 'array|null'],
+            [PDOException::class, 'errorInfo', 80100, true, '?array'],
             [DOMNode::class, 'nodeType', 80099, true],
             [DOMNode::class, 'nodeType', 80100, true, 'int'],
             [DOMNode::class, 'parentNode', 80099, true],
-            [DOMNode::class, 'parentNode', 80100, true, 'DOMNode|null'],
+            [DOMNode::class, 'parentNode', 80100, true, '?DOMNode'],
         ];
     }
 
@@ -910,7 +910,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['read_exif_data', 80000, false],
             ['spl_autoload_functions', 79999, true, 'array|false'],
             ['spl_autoload_functions', 80000, true, 'array'],
-            ['dom_import_simplexml', 70000, true, 'DOMElement|null'],
+            ['dom_import_simplexml', 70000, true, '?DOMElement'],
             ['dom_import_simplexml', 80000, true, 'DOMElement'],
             // Not core functions
             ['newrelic_add_custom_parameter', 40000, true, 'bool'],
@@ -944,7 +944,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
             ['bcscale', 'scale', 70200, true, 'int', false],
             ['bcscale', 'scale', 70299, true, 'int', false],
             ['bcscale', 'scale', 70300, true, '?int', true],
-            ['bcscale', 'scale', 80000, true, 'int|null', true],
+            ['bcscale', 'scale', 80000, true, '?int', true],
             ['easter_date', 'mode', 79999, false],
             ['easter_date', 'mode', 80000, true, 'int', false],
             ['curl_version', 'age', 50200, false],
