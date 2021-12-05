@@ -15,7 +15,6 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 
 use function array_map;
-use function array_values;
 use function is_dir;
 
 /**
@@ -33,7 +32,7 @@ class DirectoriesSourceLocator implements SourceLocator
      */
     public function __construct(array $directories, Locator $astLocator)
     {
-        $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_map(
+        $this->aggregateSourceLocator = new AggregateSourceLocator(array_map(
             static function (string $directory) use ($astLocator): FileIteratorSourceLocator {
                 if (! is_dir($directory)) {
                     throw InvalidDirectory::fromNonDirectory($directory);
@@ -48,7 +47,7 @@ class DirectoriesSourceLocator implements SourceLocator
                 );
             },
             $directories,
-        )));
+        ));
     }
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
