@@ -49,9 +49,6 @@ class ReflectionNamedTypeTest extends TestCase
     {
         $noNullType = $this->createType('string');
         self::assertFalse($noNullType->allowsNull());
-
-        $allowsNullType = $this->createType('string', true);
-        self::assertTrue($allowsNullType->allowsNull());
     }
 
     public function isBuildinProvider(): Generator
@@ -96,7 +93,6 @@ class ReflectionNamedTypeTest extends TestCase
     public function testImplicitCastToString(): void
     {
         self::assertSame('int', (string) $this->createType('int'));
-        self::assertSame('?int', (string) $this->createType('int', true));
         self::assertSame('string', (string) $this->createType('string'));
         self::assertSame('array', (string) $this->createType('array'));
         self::assertSame('callable', (string) $this->createType('callable'));
@@ -110,12 +106,11 @@ class ReflectionNamedTypeTest extends TestCase
 
         self::assertSame('Foo\Bar\Baz', (string) $this->createType('Foo\Bar\Baz'));
         self::assertSame('\Foo\Bar\Baz', (string) $this->createType('\Foo\Bar\Baz'));
-        self::assertSame('?\Foo\Bar\Baz', (string) $this->createType('\Foo\Bar\Baz', true));
     }
 
-    private function createType(string $type, bool $allowsNull = false): ReflectionNamedType
+    private function createType(string $type): ReflectionNamedType
     {
-        return new ReflectionNamedType($this->reflector, $this->owner, new Identifier($type), $allowsNull);
+        return new ReflectionNamedType($this->reflector, $this->owner, new Identifier($type));
     }
 
     public function testGetClassFromPropertyType(): void

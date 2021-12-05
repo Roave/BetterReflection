@@ -11,6 +11,7 @@ use ReflectionException;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -366,11 +367,19 @@ class ReflectionSourceStubberTest extends TestCase
 
         if (method_exists($original, 'hasTentativeReturnType')) {
             self::assertSame($original->hasTentativeReturnType(), $stubbed->hasTentativeReturnType(), $original->getName());
-            self::assertSame((string) $original->getTentativeReturnType(), (string) $stubbed->getTentativeReturnType(), $original->getName());
+            self::assertSame(
+                (string) $original->getTentativeReturnType(),
+                (string) ReflectionType::fromTypeOrNull($stubbed->getTentativeReturnType()),
+                $original->getName(),
+            );
         }
 
         self::assertSame($original->hasReturnType(), $stubbed->hasReturnType(), $original->getName());
-        self::assertSame((string) $original->getReturnType(), (string) $stubbed->getReturnType(), $original->getName());
+        self::assertSame(
+            (string) $original->getReturnType(),
+            (string) ReflectionType::fromTypeOrNull($stubbed->getReturnType()),
+            $original->getName(),
+        );
     }
 
     private function assertSameParameterAttributes(
@@ -442,10 +451,16 @@ class ReflectionSourceStubberTest extends TestCase
 
         if (method_exists($originalReflection, 'hasTentativeReturnType') && $originalReflection->hasTentativeReturnType()) {
             self::assertSame($originalReflection->hasTentativeReturnType(), $stubbedReflection->hasTentativeReturnType());
-            self::assertSame((string) $originalReflection->getTentativeReturnType(), (string) $stubbedReflection->getTentativeReturnType());
+            self::assertSame(
+                (string) $originalReflection->getTentativeReturnType(),
+                (string) ReflectionType::fromTypeOrNull($stubbedReflection->getTentativeReturnType()),
+            );
         } else {
             self::assertSame($originalReflection->hasReturnType(), $stubbedReflection->hasReturnType());
-            self::assertSame((string) $originalReflection->getReturnType(), (string) $stubbedReflection->getReturnType());
+            self::assertSame(
+                (string) $originalReflection->getReturnType(),
+                (string) ReflectionType::fromTypeOrNull($stubbedReflection->getReturnType()),
+            );
         }
     }
 

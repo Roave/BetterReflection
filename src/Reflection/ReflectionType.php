@@ -16,7 +16,6 @@ abstract class ReflectionType
     protected function __construct(
         protected Reflector $reflector,
         protected ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
-        private bool $allowsNull,
     ) {
     }
 
@@ -27,32 +26,36 @@ abstract class ReflectionType
         Reflector $reflector,
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         Identifier|Name|NullableType|UnionType|IntersectionType $type,
-        bool $forceAllowsNull = false,
+        bool $allowsNull = false,
     ): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType {
-        $allowsNull = $forceAllowsNull;
         if ($type instanceof NullableType) {
             $type       = $type->type;
             $allowsNull = true;
         }
 
         if ($type instanceof Identifier || $type instanceof Name) {
-            return new ReflectionNamedType($reflector, $owner, $type, $allowsNull);
+            if ($allowsNull) {
+                return new ReflectionUnionType(
+                    $reflector,
+                    $owner,
+                    new UnionType([$type, new Identifier('null')]),
+                );
+            }
+
+            return new ReflectionNamedType($reflector, $owner, $type);
         }
 
         if ($type instanceof IntersectionType) {
             return new ReflectionIntersectionType($reflector, $owner, $type);
         }
 
-        return new ReflectionUnionType($reflector, $owner, $type, $allowsNull);
+        return new ReflectionUnionType($reflector, $owner, $type);
     }
 
     /**
-     * Does the parameter allow null?
+     * Does the type allow null?
      */
-    public function allowsNull(): bool
-    {
-        return $this->allowsNull;
-    }
+    abstract public function allowsNull(): bool;
 
     /**
      * Convert this string type to a string

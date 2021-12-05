@@ -648,8 +648,10 @@ class ReflectionEnumTest extends TestCase
             ->willReturn($betterReflectionNamedType);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+        $backingType           = $reflectionEnumAdapter->getBackingType();
 
-        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $reflectionEnumAdapter->getBackingType());
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $backingType);
+        self::assertFalse($backingType->allowsNull());
     }
 
     public function testHasConstantWithEnumCase(): void

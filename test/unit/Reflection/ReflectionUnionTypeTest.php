@@ -30,19 +30,20 @@ class ReflectionUnionTypeTest extends TestCase
     public function dataProvider(): array
     {
         return [
-            [new Node\UnionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]), '\A\Foo|Boo'],
-            [new Node\UnionType([new Node\Name('A'), new Node\Name('B'), new Node\Identifier('null')]), 'A|B|null'],
+            [new Node\UnionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]), '\A\Foo|Boo', false],
+            [new Node\UnionType([new Node\Name('A'), new Node\Name('B'), new Node\Identifier('null')]), 'A|B|null', true],
         ];
     }
 
     /**
      * @dataProvider dataProvider
      */
-    public function test(Node\UnionType $unionType, string $expectedString): void
+    public function test(Node\UnionType $unionType, string $expectedString, bool $expectedNullable): void
     {
-        $typeReflection = new ReflectionUnionType($this->reflector, $this->owner, $unionType, false);
+        $typeReflection = new ReflectionUnionType($this->reflector, $this->owner, $unionType);
 
         self::assertContainsOnlyInstancesOf(ReflectionNamedType::class, $typeReflection->getTypes());
         self::assertSame($expectedString, $typeReflection->__toString());
+        self::assertSame($expectedNullable, $typeReflection->allowsNull());
     }
 }

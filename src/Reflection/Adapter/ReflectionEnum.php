@@ -509,7 +509,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     public function getBackingType(): ?ReflectionNamedType
     {
         if ($this->betterReflectionEnum->isBacked()) {
-            return new ReflectionNamedType($this->betterReflectionEnum->getBackingType());
+            return new ReflectionNamedType($this->betterReflectionEnum->getBackingType(), false);
         }
 
         return null;

@@ -24,7 +24,6 @@ $functionInfo = $reflector->reflectFunction('myFunction');
 $returnType = $functionInfo->getReturnType();
 
 var_dump([
-    'builtIn' => $returnType->isBuiltin(),
     'type' => $returnType->__toString(),
 ]);
 
@@ -32,28 +31,21 @@ array_map(function (\Roave\BetterReflection\Reflection\ReflectionParameter $para
     $type = $param->getType();
 
     var_dump([
-        'builtIn' => $type->isBuiltin(),
         'type' => $type->__toString(),
     ]);
 }, $functionInfo->getParameters());
 
 ?>
 --EXPECTF--
-array(2) {
-  ["builtIn"]=>
-  bool(true)
+array(1) {
   ["type"]=>
   string(4) "bool"
 }
-array(2) {
-  ["builtIn"]=>
-  bool(true)
+array(1) {
   ["type"]=>
   string(3) "int"
 }
-array(2) {
-  ["builtIn"]=>
-  bool(true)
+array(1) {
   ["type"]=>
-  string(7) "?string"
+  string(11) "string|null"
 }

@@ -240,8 +240,8 @@ class ReflectionClassTest extends TestCase
             [
                 'tryFrom',
                 ['value' => [ReflectionUnionType::class, 'string|int']],
-                ReflectionNamedType::class,
-                '?static',
+                ReflectionUnionType::class,
+                'static|null',
             ],
         ];
     }

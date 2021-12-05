@@ -44,5 +44,6 @@ class ReflectionIntersectionTypeTest extends TestCase
 
         self::assertContainsOnlyInstancesOf(ReflectionNamedType::class, $typeReflection->getTypes());
         self::assertSame($expectedString, $typeReflection->__toString());
+        self::assertFalse($typeReflection->allowsNull());
     }
 }
