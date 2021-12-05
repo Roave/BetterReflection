@@ -2383,6 +2383,50 @@ PHP;
         self::assertArrayHasKey(Stringable::class, $interfaceNotExtendingStringable->getImmediateInterfaces());
     }
 
+    public function testNoStringableInterfaceWhenStringableNotFound(): void
+    {
+        $php = <<<'PHP'
+            <?php
+
+            class NoStringable
+            {
+                public function __toString(): string
+                {
+                }
+            }
+        PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+
+        $noStringable = $reflector->reflectClass('NoStringable');
+
+        self::assertNotContains(Stringable::class, $noStringable->getInterfaceNames());
+    }
+
+    public function testNoStringableInterfaceWhenStringableIsNotInternal(): void
+    {
+        $php = <<<'PHP'
+            <?php
+
+            class Stringable
+            {
+            }
+
+            class NoStringable
+            {
+                public function __toString(): string
+                {
+                }
+            }
+        PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+
+        $noStringable = $reflector->reflectClass('NoStringable');
+
+        self::assertNotContains(Stringable::class, $noStringable->getInterfaceNames());
+    }
+
     public function testHasAllInterfacesWithStringable(): void
     {
         $php = <<<'PHP'

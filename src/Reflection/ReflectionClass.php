@@ -1112,7 +1112,16 @@ class ReflectionClass implements Reflection
 
         foreach ($this->node->getMethods() as $methodNode) {
             if ($methodNode->name->toLowerString() === '__tostring') {
-                $interfaces[$stringableClassName] = $this->reflectClassForNamedNode(new Node\Name(Stringable::class));
+                try {
+                    $stringableInterfaceReflection = $this->reflectClassForNamedNode(new Node\Name($stringableClassName));
+
+                    if ($stringableInterfaceReflection->isInternal()) {
+                        $interfaces[$stringableClassName] = $stringableInterfaceReflection;
+                    }
+                } catch (IdentifierNotFound) {
+                    // Stringable interface does not exist on target PHP version
+                }
+
                 break;
             }
         }
