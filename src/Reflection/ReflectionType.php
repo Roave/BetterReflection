@@ -11,6 +11,10 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\UnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
+use function array_filter;
+use function array_values;
+use function count;
+
 abstract class ReflectionType
 {
     protected function __construct(
@@ -41,6 +45,15 @@ abstract class ReflectionType
 
         if ($type instanceof IntersectionType) {
             return new ReflectionIntersectionType($reflector, $owner, $type);
+        }
+
+        $nonNullTypes = array_values(array_filter(
+            $type->types,
+            static fn (Identifier|Name $type): bool => $type->toString() !== 'null',
+        ));
+
+        if (count($nonNullTypes) === 1) {
+            return self::createFromNode($reflector, $owner, $nonNullTypes[0], true);
         }
 
         return new ReflectionUnionType($reflector, $owner, $type, $allowsNull);

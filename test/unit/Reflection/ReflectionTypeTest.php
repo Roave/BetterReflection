@@ -38,6 +38,18 @@ class ReflectionTypeTest extends TestCase
             [new Node\NullableType(new Node\Identifier('string')), false, ReflectionNamedType::class, true],
             [new Node\IntersectionType([new Node\Name('A'), new Node\Name('B')]), false, ReflectionIntersectionType::class, false],
             [new Node\UnionType([new Node\Name('A'), new Node\Name('B')]), false, ReflectionUnionType::class, false],
+            'Union types composed of just `null` and a type are simplified into a ReflectionNamedType' => [
+                new Node\UnionType([new Node\Name('A'), new Node\Name('null')]),
+                false,
+                ReflectionNamedType::class,
+                true,
+            ],
+            'Union types composed of `null` and more than one type are kept as ReflectionUnionType' => [
+                new Node\UnionType([new Node\Name('A'), new Node\Name('B'), new Node\Name('null')]),
+                false,
+                ReflectionUnionType::class,
+                false,
+            ],
         ];
     }
 
