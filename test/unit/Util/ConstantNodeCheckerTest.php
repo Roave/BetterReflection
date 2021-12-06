@@ -103,6 +103,7 @@ class ConstantNodeCheckerTest extends TestCase
             [new Node\Expr\BinaryOp\BitwiseAnd(new Node\Scalar\LNumber(1), new Node\Scalar\LNumber(2))],
             [new Node\Expr\BinaryOp\BitwiseOr(new Node\Scalar\LNumber(1), new Node\Scalar\LNumber(2))],
             [new Node\Expr\AssignOp\Concat(new Node\Scalar\String_('foo'), new Node\Scalar\String_('boo'))],
+            [new Node\Expr\FuncCall(new Node\Name('constant'), [new Node\Arg(new Node\Scalar\String_('STDIN'))])],
         ];
     }
 

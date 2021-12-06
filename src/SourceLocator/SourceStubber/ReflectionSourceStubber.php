@@ -48,6 +48,7 @@ use function implode;
 use function in_array;
 use function interface_exists;
 use function is_array;
+use function is_resource;
 use function method_exists;
 use function preg_replace;
 use function sprintf;
@@ -164,11 +165,6 @@ final class ReflectionSourceStubber implements SourceStubber
 
     public function generateConstantStub(string $constantName): ?StubData
     {
-        // Not supported because of resource as value
-        if (in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)) {
-            return null;
-        }
-
         $constantData = $this->findConstantData($constantName);
 
         if ($constantData === null) {
@@ -176,6 +172,10 @@ final class ReflectionSourceStubber implements SourceStubber
         }
 
         [$constantValue, $extensionName] = $constantData;
+
+        if (is_resource($constantValue)) {
+            $constantValue = $this->builderFactory->funcCall('constant', [$constantName]);
+        }
 
         $constantNode = $this->builderFactory->funcCall('define', [$constantName, $constantValue]);
 

@@ -42,7 +42,7 @@ final class ConstantNodeChecker
 
         $valueNode = $node->args[1]->value;
 
-        if ($valueNode instanceof Node\Expr\FuncCall) {
+        if ($valueNode instanceof Node\Expr\FuncCall && ! ($valueNode->name instanceof Node\Name && $valueNode->name->toLowerString() === 'constant')) {
             throw InvalidConstantNode::create($node);
         }
 

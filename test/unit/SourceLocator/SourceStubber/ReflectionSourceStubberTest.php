@@ -16,7 +16,6 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
-use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -534,24 +533,5 @@ class ReflectionSourceStubberTest extends TestCase
     public function testUnknownConstant(): void
     {
         self::assertNull($this->stubber->generateConstantStub('SOME_CONSTANT'));
-    }
-
-    public function unsupportedConstants(): array
-    {
-        return [
-            ['STDIN'],
-            ['STDOUT'],
-            ['STDERR'],
-        ];
-    }
-
-    /**
-     * @dataProvider unsupportedConstants
-     */
-    public function testUnsupportedConstants(string $constantName): void
-    {
-        self::expectException(IdentifierNotFound::class);
-
-        $this->reflector->reflectConstant($constantName);
     }
 }
