@@ -48,7 +48,7 @@ class AggregateSourceLocator implements SourceLocator
     {
         return array_merge(
             [],
-            ...array_map(static fn (SourceLocator $sourceLocator) => $sourceLocator->locateIdentifiersByType($reflector, $identifierType), $this->sourceLocators),
+            ...array_map(static fn (SourceLocator $sourceLocator): array => $sourceLocator->locateIdentifiersByType($reflector, $identifierType), $this->sourceLocators),
         );
     }
 }

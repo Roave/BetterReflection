@@ -182,7 +182,7 @@ class MemoizingSourceLocatorTest extends TestCase
             ->method('locateIdentifier')
             ->with(
                 self::logicalOr(...$reflectors),
-                self::callback(static fn (Identifier $identifier) => in_array($identifier, $identifiers, true)),
+                self::callback(static fn (Identifier $identifier): bool => in_array($identifier, $identifiers, true)),
             )
             ->willReturnCallback(function (
                 Reflector $reflector,
