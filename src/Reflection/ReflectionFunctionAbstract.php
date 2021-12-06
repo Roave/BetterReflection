@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use Closure;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
-use PhpParser\Node\Param as ParamNode;
 use PhpParser\NodeTraverser;
-use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
-use Roave\BetterReflection\BetterReflection;
-use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
-use Roave\BetterReflection\Identifier\Identifier;
-use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
-use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
-use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
@@ -33,13 +23,9 @@ use function array_filter;
 use function assert;
 use function count;
 use function is_array;
-use function is_string;
-use function strtolower;
 
 trait ReflectionFunctionAbstract
 {
-    private static ?Parser $parser;
-
     abstract public function __toString(): string;
 
     abstract public function getShortName(): string;
@@ -335,22 +321,6 @@ trait ReflectionFunctionAbstract
     }
 
     /**
-     * Set the return type declaration.
-     */
-    public function setReturnType(string $newReturnType): void
-    {
-        $this->node->returnType = new Node\Name($newReturnType);
-    }
-
-    /**
-     * Remove the return type declaration completely.
-     */
-    public function removeReturnType(): void
-    {
-        $this->node->returnType = null;
-    }
-
-    /**
      * @throws Uncloneable
      */
     public function __clone()
@@ -432,99 +402,6 @@ trait ReflectionFunctionAbstract
     }
 
     /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @throws ParseToAstFailure
-     * @throws InvalidIdentifierName
-     *
-     * @example
-     * $reflectionFunction->setBodyFromClosure(function () { return true; });
-     */
-    public function setBodyFromClosure(Closure $newBody): void
-    {
-        $closureReflection = (new ClosureSourceLocator($newBody, $this->loadStaticParser()))->locateIdentifier(
-            $this->reflector,
-            new Identifier(ReflectionFunction::CLOSURE_NAME, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)),
-        );
-        assert($closureReflection instanceof ReflectionFunction);
-
-        $this->setBodyFromAst($closureReflection->getAst()->getStmts());
-    }
-
-    /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @example
-     * $reflectionFunction->setBodyFromString('return true;');
-     */
-    public function setBodyFromString(string $newBody): void
-    {
-        /** @var list<Node\Stmt> $stmts */
-        $stmts = $this->loadStaticParser()->parse('<?php ' . $newBody);
-
-        $this->setBodyFromAst($stmts);
-    }
-
-    /**
-     * Override the method or function's body of statements with an entirely new
-     * body of statements within the reflection.
-     *
-     * @param list<Node\Stmt> $nodes
-     *
-     * @example
-     * // $ast should be an array of Nodes
-     * $reflectionFunction->setBodyFromAst($ast);
-     */
-    public function setBodyFromAst(array $nodes): void
-    {
-        // This slightly confusing code simply type-checks the $nodes
-        // array by unpacking them and splatting them in the closure.
-        $validator = static fn (Node\Stmt ...$node): array => $node;
-        $stmts     = $validator(...$nodes);
-
-        if ($this->node instanceof Node\Expr\ArrowFunction) {
-            if (! isset($nodes[0]->expr)) {
-                throw InvalidArrowFunctionBodyNode::create($nodes[0]);
-            }
-
-            $this->node->expr = $nodes[0]->expr;
-
-            return;
-        }
-
-        $this->node->stmts = $stmts;
-    }
-
-    /**
-     * Add a new parameter to the method/function.
-     */
-    public function addParameter(string $parameterName): void
-    {
-        $this->node->params[] = new ParamNode(new Node\Expr\Variable($parameterName));
-    }
-
-    /**
-     * Remove a parameter from the method/function.
-     */
-    public function removeParameter(string $parameterName): void
-    {
-        $lowerName = strtolower($parameterName);
-
-        foreach ($this->node->params as $key => $paramNode) {
-            $varNode = $paramNode->var;
-            assert($varNode instanceof Node\Expr\Variable);
-
-            if (! is_string($varNode->name) || strtolower($varNode->name) !== $lowerName) {
-                continue;
-            }
-
-            unset($this->node->params[$key]);
-        }
-    }
-
-    /**
      * Fetch an array of all return statements found within this function.
      *
      * Note that return statements within smaller scopes contained (e.g. anonymous classes, closures) are not returned
@@ -548,10 +425,5 @@ trait ReflectionFunctionAbstract
         $traverser->traverse($stmts);
 
         return $visitor->getReturnNodes();
-    }
-
-    private function loadStaticParser(): Parser
-    {
-        return self::$parser ?? self::$parser = (new BetterReflection())->phpParser();
     }
 }

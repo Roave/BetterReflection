@@ -6,6 +6,7 @@ or backwards compatibility (BC) breakages occur.
 ## 5.0.0
 
 ### BC Breaks
+* Removed the ability to monkey patch the code.
 * Doc block parsing has been removed:
   * `\Roave\BetterReflection\Reflection\ReflectionMethod::getDocBlockReturnTypes()`
   * `\Roave\BetterReflection\Reflection\ReflectionFunction::getDocBlockReturnTypes()`

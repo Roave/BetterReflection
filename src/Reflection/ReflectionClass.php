@@ -14,12 +14,10 @@ use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
-use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
@@ -1659,109 +1657,5 @@ class ReflectionClass implements Reflection
     public function getAttributesByInstance(string $className): array
     {
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
-    }
-
-    /**
-     * Set whether this class is final or not
-     *
-     * @throws NotAClassReflection
-     */
-    public function setFinal(bool $isFinal): void
-    {
-        if (! $this->node instanceof ClassNode) {
-            throw NotAClassReflection::fromReflectionClass($this);
-        }
-
-        if ($isFinal === true) {
-            $this->node->flags |= ClassNode::MODIFIER_FINAL;
-
-            return;
-        }
-
-        $this->node->flags &= ~ClassNode::MODIFIER_FINAL;
-    }
-
-    /**
-     * Remove the named method from the class.
-     *
-     * Returns true if method was successfully removed.
-     * Returns false if method was not found, or could not be removed.
-     */
-    public function removeMethod(string $methodName): bool
-    {
-        $lowerName = strtolower($methodName);
-        foreach ($this->node->getMethods() as $key => $stmt) {
-            if ($lowerName === $stmt->name->toLowerString()) {
-                unset($this->node->stmts[$key]);
-                $this->cachedMethods = null;
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Add a new method to the class.
-     */
-    public function addMethod(string $methodName): void
-    {
-        $this->node->stmts[] = new ClassMethod($methodName);
-        $this->cachedMethods = null;
-    }
-
-    /**
-     * Add a new property to the class.
-     *
-     * Visibility defaults to \ReflectionProperty::IS_PUBLIC, or can be ::IS_PROTECTED or ::IS_PRIVATE.
-     */
-    public function addProperty(
-        string $propertyName,
-        int $visibility = CoreReflectionProperty::IS_PUBLIC,
-        bool $static = false,
-    ): void {
-        $type = 0;
-        switch ($visibility) {
-            case CoreReflectionProperty::IS_PRIVATE:
-                $type |= ClassNode::MODIFIER_PRIVATE;
-                break;
-            case CoreReflectionProperty::IS_PROTECTED:
-                $type |= ClassNode::MODIFIER_PROTECTED;
-                break;
-            default:
-                $type |= ClassNode::MODIFIER_PUBLIC;
-                break;
-        }
-
-        if ($static) {
-            $type |= ClassNode::MODIFIER_STATIC;
-        }
-
-        $this->node->stmts[]             = new PropertyNode($type, [new Node\Stmt\PropertyProperty($propertyName)]);
-        $this->cachedProperties          = null;
-        $this->cachedImmediateProperties = null;
-    }
-
-    /**
-     * Remove a property from the class.
-     */
-    public function removeProperty(string $propertyName): bool
-    {
-        $lowerName = strtolower($propertyName);
-
-        foreach ($this->node->getProperties() as $key => $stmt) {
-            $propertyNames = array_map(static fn (Node\Stmt\PropertyProperty $propertyProperty): string => $propertyProperty->name->toLowerString(), $stmt->props);
-
-            if (in_array($lowerName, $propertyNames, true)) {
-                $this->cachedProperties          = null;
-                $this->cachedImmediateProperties = null;
-                unset($this->node->stmts[$key]);
-
-                return true;
-            }
-        }
-
-        return false;
     }
 }

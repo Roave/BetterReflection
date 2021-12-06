@@ -29,22 +29,3 @@ These act in the same way as the core reflection API, except they return a
 ```php
 $reflectionType = $parameterInfo->getType();
 ```
-
-However, Better Reflection also gives the ability to change, and remove type declarations. Removing these types might
-be useful if you want to make code written for PHP 7 work in PHP 5 for example, or setting new types to do the
-opposite. For example, you might want to set the PHP 7 return type declaration to that defined in the PHP DocBlock.
-
-```php
-// Change a function to ensure it returns an integer
-$functionInfo->setReturnType('int');
-
-// Remove the return type declaration
-$functionInfo->removeReturnType();
-```
-
-You can do similar things with parameter types also:
-
-```php
-$parameterInfo->setType('int');
-$parameterInfo->removeType();
-```

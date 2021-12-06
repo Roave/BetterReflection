@@ -66,4 +66,4 @@ Locators is loaded into an [AST format](https://en.wikipedia.org/wiki/Abstract_s
 
 Internally to the `Reflection*` classes in Better Reflection, we cleverly hold the AST as the main property. All
 reflection, analysis and modification is done directly to this AST. Therefore it is possible to unparse or export the
-AST back into code - and thus execute monkey patched code.
+AST back into code.

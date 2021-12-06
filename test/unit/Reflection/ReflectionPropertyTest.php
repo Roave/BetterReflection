@@ -6,12 +6,10 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use ClassWithPropertiesAndTraitProperties;
 use ExtendedClassWithPropertiesAndTraitProperties;
-use InvalidArgumentException;
 use OutOfBoundsException;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionProperty as CoreReflectionProperty;
@@ -269,48 +267,6 @@ class ReflectionPropertyTest extends TestCase
 
         $this->expectException(Uncloneable::class);
         clone $publicProp;
-    }
-
-    public function testSetVisibility(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(ExampleClass::class);
-        $publicProp = $classInfo->getProperty('publicStaticProperty');
-
-        self::assertFalse($publicProp->isPrivate(), 'Should initially be public, was private');
-        self::assertFalse($publicProp->isProtected(), 'Should initially be public, was protected');
-        self::assertTrue($publicProp->isPublic(), 'Should initially be public, was not public');
-        self::assertTrue($publicProp->isStatic(), 'Should initially be static');
-
-        $publicProp->setVisibility(CoreReflectionProperty::IS_PRIVATE);
-
-        self::assertTrue($publicProp->isPrivate(), 'After setting private, isPrivate is not set');
-        self::assertFalse($publicProp->isProtected(), 'After setting private, protected is now set but should not be');
-        self::assertFalse($publicProp->isPublic(), 'After setting private, public is still set but should not be');
-        self::assertTrue($publicProp->isStatic(), 'Should still be static after setting private');
-
-        $publicProp->setVisibility(CoreReflectionProperty::IS_PROTECTED);
-
-        self::assertFalse($publicProp->isPrivate(), 'After setting protected, should no longer be private');
-        self::assertTrue($publicProp->isProtected(), 'After setting protected, expect isProtected to be set');
-        self::assertFalse($publicProp->isPublic(), 'After setting protected, public is set but should not be');
-        self::assertTrue($publicProp->isStatic(), 'Should still be static after setting protected');
-
-        $publicProp->setVisibility(CoreReflectionProperty::IS_PUBLIC);
-
-        self::assertFalse($publicProp->isPrivate(), 'After setting public, isPrivate should not be set');
-        self::assertFalse($publicProp->isProtected(), 'After setting public, isProtected should not be set');
-        self::assertTrue($publicProp->isPublic(), 'After setting public, isPublic should be set but was not');
-        self::assertTrue($publicProp->isStatic(), 'Should still be static after setting public');
-    }
-
-    public function testSetVisibilityThrowsExceptionWithInvalidArgument(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(ExampleClass::class);
-        $publicProp = $classInfo->getProperty('publicProperty');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
-        $publicProp->setVisibility(0);
     }
 
     /**
@@ -693,40 +649,6 @@ PHP;
         $type = $propertyReflection->getType();
 
         self::assertSame($expectedType, (string) $type);
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testSetType(): void
-    {
-        $classReflection    = $this->reflector->reflectClass(Php74PropertyTypeDeclarations::class);
-        $propertyReflection = $classReflection->getProperty('integerProperty');
-
-        $propertyReflection->setType('string');
-
-        self::assertSame('string', (string) $propertyReflection->getType());
-        self::assertStringStartsWith(
-            'public string $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testRemoveType(): void
-    {
-        $classReflection    = $this->reflector->reflectClass(Php74PropertyTypeDeclarations::class);
-        $propertyReflection = $classReflection->getProperty('integerProperty');
-
-        $propertyReflection->removeType();
-
-        self::assertNull($propertyReflection->getType());
-        self::assertStringStartsWith(
-            'public $integerProperty',
-            (new StandardPrettyPrinter())->prettyPrint([$propertyReflection->getAst()]),
-        );
     }
 
     public function isInitializedProvider(): array

@@ -7,15 +7,12 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
-use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
-use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -31,7 +28,6 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\Attr;
 use stdClass;
-use TypeError;
 
 use function current;
 use function next;
@@ -477,30 +473,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($reflectionType->allowsNull());
     }
 
-    public function testSetReturnType(): void
-    {
-        $functionInfo = (new DefaultReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-        ))->reflectFunction('returnsString');
-
-        $functionInfo->setReturnType('int');
-
-        self::assertSame('int', (string) $functionInfo->getReturnType());
-        self::assertStringStartsWith('function returnsString() : int', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
-    }
-
-    public function testRemoveReturnType(): void
-    {
-        $functionInfo = (new DefaultReflector(
-            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php7ReturnTypeDeclarations.php', $this->astLocator),
-        ))->reflectFunction('returnsString');
-
-        $functionInfo->removeReturnType();
-
-        self::assertNull($functionInfo->getReturnType());
-        self::assertStringNotContainsString(': string', (new StandardPrettyPrinter())->prettyPrint([$functionInfo->getAst()]));
-    }
-
     /**
      * @requires PHP >= 8.1
      */
@@ -606,136 +578,6 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertInstanceOf(Function_::class, $ast);
         self::assertSame('foo', $ast->name->name);
-    }
-
-    public function testSetBodyFromClosure(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $function->setBodyFromClosure(static function (): void {
-            echo 'Hello world!';
-        });
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromClosureWithArrowFunction(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $function->setBodyFromClosure(static fn (): string => 'Hello world!');
-
-        self::assertSame("return 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromString(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $function->setBodyFromString("echo 'Hello world!';");
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromStringForArrowFunction(): void
-    {
-        $arrowFunction = static fn () => 10;
-
-        $function = ReflectionFunction::createFromClosure($arrowFunction);
-
-        $function->setBodyFromString("'Hello world!';");
-
-        self::assertSame("'Hello world!'", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromAst(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $function->setBodyFromAst([
-            new Echo_([
-                new String_('Hello world!'),
-            ]),
-        ]);
-
-        self::assertSame("echo 'Hello world!';", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromAstForArrowFunction(): void
-    {
-        $arrowFunction = static fn () => 10;
-
-        $function = ReflectionFunction::createFromClosure($arrowFunction);
-
-        $function->setBodyFromAst([
-            new Return_(
-                new String_('Hello world!'),
-            ),
-        ]);
-
-        self::assertSame("'Hello world!'", $function->getBodyCode());
-    }
-
-    public function testSetBodyFromAstWithInvalidArgumentsThrowsException(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $this->expectException(TypeError::class);
-        $function->setBodyFromAst([1]);
-    }
-
-    public function testSetBodyFromAstForArrowFunctionWithInvalidArgumentsThrowsException(): void
-    {
-        $arrowFunction = static fn () => 10;
-
-        $function = ReflectionFunction::createFromClosure($arrowFunction);
-
-        $this->expectException(InvalidArrowFunctionBodyNode::class);
-
-        $function->setBodyFromAst([
-            new Echo_([
-                new String_('Hello world!'),
-            ]),
-        ]);
-    }
-
-    public function testAddParameter(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $function->addParameter('myNewParam');
-
-        self::assertStringStartsWith('function foo($myNewParam)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
-    }
-
-    public function testRemoveParameter(): void
-    {
-        $php = '<?php function foo($a, $b) {}';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $function->removeParameter('a');
-
-        self::assertStringStartsWith('function foo($b)', (new StandardPrettyPrinter())->prettyPrint([$function->getAst()]));
     }
 
     public function testGetReturnStatementAstReturnsStatements(): void

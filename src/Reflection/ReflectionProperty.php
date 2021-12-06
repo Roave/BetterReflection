@@ -6,11 +6,9 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use Error;
-use InvalidArgumentException;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\NullableType;
-use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
@@ -116,30 +114,6 @@ class ReflectionProperty
             $isPromoted,
             $declaredAtCompileTime,
         );
-    }
-
-    /**
-     * Set the default visibility of this property. Use the core \ReflectionProperty::IS_* values as parameters, e.g.:
-     *
-     * @throws InvalidArgumentException
-     */
-    public function setVisibility(int $newVisibility): void
-    {
-        $this->node->flags &= ~Class_::MODIFIER_PRIVATE & ~Class_::MODIFIER_PROTECTED & ~Class_::MODIFIER_PUBLIC;
-
-        switch ($newVisibility) {
-            case CoreReflectionProperty::IS_PRIVATE:
-                $this->node->flags |= Class_::MODIFIER_PRIVATE;
-                break;
-            case CoreReflectionProperty::IS_PROTECTED:
-                $this->node->flags |= Class_::MODIFIER_PROTECTED;
-                break;
-            case CoreReflectionProperty::IS_PUBLIC:
-                $this->node->flags |= Class_::MODIFIER_PUBLIC;
-                break;
-            default:
-                throw new InvalidArgumentException('Visibility should be \ReflectionProperty::IS_PRIVATE, ::IS_PROTECTED or ::IS_PUBLIC constants');
-        }
     }
 
     /**
@@ -462,22 +436,6 @@ class ReflectionProperty
     public function hasType(): bool
     {
         return $this->node->type !== null;
-    }
-
-    /**
-     * Set the property type declaration.
-     */
-    public function setType(string $newPropertyType): void
-    {
-        $this->node->type = new Node\Name($newPropertyType);
-    }
-
-    /**
-     * Remove the property type declaration completely.
-     */
-    public function removeType(): void
-    {
-        $this->node->type = null;
     }
 
     /**
