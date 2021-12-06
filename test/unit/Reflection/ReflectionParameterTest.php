@@ -9,7 +9,6 @@ use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node\Param;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -345,42 +344,6 @@ class ReflectionParameterTest extends TestCase
         $method    = $classInfo->getMethod('foo');
 
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testSetType(): void
-    {
-        $classInfo     = $this->reflector->reflectClass(PhpParameterTypeDeclarations::class);
-        $methodInfo    = $classInfo->getMethod('foo');
-        $parameterInfo = $methodInfo->getParameter('intParam');
-
-        $parameterInfo->setType('string');
-
-        self::assertSame('string', (string) $parameterInfo->getType());
-        self::assertStringStartsWith(
-            'public function foo(string $intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()]),
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testRemoveType(): void
-    {
-        $classInfo     = $this->reflector->reflectClass(PhpParameterTypeDeclarations::class);
-        $methodInfo    = $classInfo->getMethod('foo');
-        $parameterInfo = $methodInfo->getParameter('intParam');
-
-        $parameterInfo->removeType();
-
-        self::assertNull($parameterInfo->getType());
-        self::assertStringStartsWith(
-            'public function foo($intParam',
-            (new StandardPrettyPrinter())->prettyPrint([$methodInfo->getAst()]),
-        );
     }
 
     public function isCallableProvider(): array

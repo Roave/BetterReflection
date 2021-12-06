@@ -335,22 +335,6 @@ class ReflectionParameter
     }
 
     /**
-     * Set the parameter type declaration.
-     */
-    public function setType(string $newParameterType): void
-    {
-        $this->node->type = new Node\Name($newParameterType);
-    }
-
-    /**
-     * Remove the parameter type declaration completely.
-     */
-    public function removeType(): void
-    {
-        $this->node->type = null;
-    }
-
-    /**
      * Is this parameter an array?
      */
     public function isArray(): bool

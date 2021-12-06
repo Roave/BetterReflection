@@ -58,7 +58,6 @@ $classInfo = (new BetterReflection())
 * [The features](docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
 * [AST extraction](docs/ast-extraction.md)
-* [Reflection modification](docs/reflection-modification.md)
 
 ## Upgrading
 
