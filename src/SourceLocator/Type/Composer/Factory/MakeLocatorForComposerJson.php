@@ -132,6 +132,6 @@ final class MakeLocatorForComposerJson
      */
     private function prefixPaths(array $paths, string $prefix): array
     {
-        return array_map(static fn (string $path) => $prefix . $path, $paths);
+        return array_map(static fn (string $path): string => $prefix . $path, $paths);
     }
 }
