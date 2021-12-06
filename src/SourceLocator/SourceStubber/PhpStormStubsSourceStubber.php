@@ -141,21 +141,21 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * `null` means "class is not supported in the required PHP version"
      *
-     * @var array<string, Node\Stmt\ClassLike|null>
+     * @var array<string, array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}|null>
      */
     private array $classNodes = [];
 
     /**
      * `null` means "function is not supported in the required PHP version"
      *
-     * @var array<string, Node\Stmt\Function_|null>
+     * @var array<string, array{0: Node\Stmt\Function_, 1: Node\Stmt\Namespace_|null}|null>
      */
     private array $functionNodes = [];
 
     /**
      * `null` means "failed lookup" for constant that is not case insensitive or "constant is not supported in the required PHP version"
      *
-     * @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall|null>
+     * @var array<string, array{0: Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null}|null>
      */
     private array $constantNodes = [];
 
@@ -284,15 +284,15 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        $filePath     = self::$constantMap[$lowercaseConstantName];
-        $constantNode = $this->constantNodes[$constantName] ?? $this->constantNodes[$lowercaseConstantName] ?? null;
+        $filePath         = self::$constantMap[$lowercaseConstantName];
+        $constantNodeData = $this->constantNodes[$constantName] ?? $this->constantNodes[$lowercaseConstantName] ?? null;
 
-        if ($constantNode === null) {
+        if ($constantNodeData === null) {
             $this->parseFile($filePath);
 
-            $constantNode = $this->constantNodes[$constantName] ?? $this->constantNodes[$lowercaseConstantName] ?? null;
+            $constantNodeData = $this->constantNodes[$constantName] ?? $this->constantNodes[$lowercaseConstantName] ?? null;
 
-            if ($constantNode === null) {
+            if ($constantNodeData === null) {
                 // Still `null` - the constant is not case-insensitive. Save `null` so we don't parse the file again for the same $constantName
                 $this->constantNodes[$lowercaseConstantName] = null;
 
@@ -302,7 +302,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $extension = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($constantNode), $extension);
+        return new StubData($this->createStub($constantNodeData), $extension);
     }
 
     private function parseFile(string $filePath): void
@@ -321,7 +321,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $this->nodeTraverser->traverse($ast);
 
-        foreach ($this->cachingVisitor->getClassNodes() as $className => $classNode) {
+        foreach ($this->cachingVisitor->getClassNodes() as $className => $classNodeData) {
+            [$classNode] = $classNodeData;
+
             if ($isCoreExtension) {
                 if (! $this->isSupportedInPhpVersion($classNode)) {
                     continue;
@@ -330,11 +332,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 $classNode->stmts = $this->modifyStmtsByPhpVersion($classNode->stmts);
             }
 
-            $this->classNodes[strtolower($className)] = $classNode;
+            $this->classNodes[strtolower($className)] = $classNodeData;
         }
 
-        foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNodes) {
-            foreach ($functionNodes as $functionNode) {
+        foreach ($this->cachingVisitor->getFunctionNodes() as $functionName => $functionNodesData) {
+            foreach ($functionNodesData as $functionNodeData) {
+                [$functionNode] = $functionNodeData;
+
                 if ($isCoreExtension) {
                     if (! $this->isSupportedInPhpVersion($functionNode)) {
                         continue;
@@ -350,30 +354,45 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                     continue;
                 }
 
-                $this->functionNodes[$lowercaseFunctionName] = $functionNode;
+                $this->functionNodes[$lowercaseFunctionName] = $functionNodeData;
             }
         }
 
-        foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNode) {
+        foreach ($this->cachingVisitor->getConstantNodes() as $constantName => $constantNodeData) {
+            [$constantNode] = $constantNodeData;
+
             if ($isCoreExtension && ! $this->isSupportedInPhpVersion($constantNode)) {
                 continue;
             }
 
-            $this->constantNodes[$constantName] = $constantNode;
+            $this->constantNodes[$constantName] = $constantNodeData;
         }
     }
 
     /**
-     * @param Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node
+     * @param array{0: Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null} $nodeData
      */
-    private function createStub(Node $node): string
+    private function createStub(array $nodeData): string
     {
+        [$node, $namespaceNode] = $nodeData;
+
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
 
             $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
 
             $namespaceBuilder = $this->builderFactory->namespace($nodeWithNamespaceName->namespacedName->slice(0, -1));
+
+            if ($namespaceNode !== null) {
+                foreach ($namespaceNode->stmts as $stmt) {
+                    if (! ($stmt instanceof Node\Stmt\Use_) && ! ($stmt instanceof Node\Stmt\GroupUse)) {
+                        continue;
+                    }
+
+                    $namespaceBuilder->addStmt($stmt);
+                }
+            }
+
             $namespaceBuilder->addStmt($node);
 
             $node = $namespaceBuilder->getNode();

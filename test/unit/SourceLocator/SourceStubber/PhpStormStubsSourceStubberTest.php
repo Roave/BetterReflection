@@ -472,6 +472,18 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame('http\Client\Request', $parameterReflection->getType()->getName());
     }
 
+    public function testStubForClassInNamespaceWithUses(): void
+    {
+        $stubData = $this->sourceStubber->generateClassStub('FFI');
+
+        self::assertInstanceOf(StubData::class, $stubData);
+        self::assertStringMatchesFormat(
+            '%Ause FFI\CData;%Ause FFI\CType;%Ause FFI\ParserException;%A',
+            $stubData->getStub(),
+        );
+        self::assertSame('FFI', $stubData->getExtensionName());
+    }
+
     public function testStubForClassThatExists(): void
     {
         self::assertInstanceOf(StubData::class, $this->sourceStubber->generateClassStub('ReflectionClass'));
