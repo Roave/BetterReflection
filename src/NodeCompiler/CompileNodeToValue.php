@@ -51,7 +51,7 @@ class CompileNodeToValue
             $constantName = $this->resolveClassConstantName($node, $context);
         }
 
-        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context, $constantName): string|int|float|bool|array|null {
+        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context, $constantName): mixed {
             if ($node instanceof Node\Expr\ConstFetch) {
                 return $this->getConstantValue($node, $constantName, $context);
             }

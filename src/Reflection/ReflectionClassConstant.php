@@ -60,10 +60,8 @@ class ReflectionClassConstant
 
     /**
      * Returns constant value
-     *
-     * @return scalar|array<scalar>|null
      */
-    public function getValue(): string|int|float|bool|array|null
+    public function getValue(): mixed
     {
         if ($this->compiledValue === null) {
             $this->compiledValue = (new CompileNodeToValue())->__invoke(

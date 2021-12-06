@@ -201,6 +201,15 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame($expectedValue, $compiledValue->value);
     }
 
+    public function testResource(): void
+    {
+        $node = $this->parseCode('STDIN');
+
+        $compiledValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyContext());
+
+        self::assertIsResource($compiledValue->value);
+    }
+
     public function testExceptionThrownWhenInvalidNodeGiven(): void
     {
         $this->expectException(UnableToCompileNode::class);

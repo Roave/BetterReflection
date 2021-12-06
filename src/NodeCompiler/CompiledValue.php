@@ -9,10 +9,7 @@ namespace Roave\BetterReflection\NodeCompiler;
  */
 class CompiledValue
 {
-    /**
-     * @param scalar|array<scalar>|null $value
-     */
-    public function __construct(public string|int|float|bool|array|null $value, public ?string $constantName = null)
+    public function __construct(public mixed $value, public ?string $constantName = null)
     {
     }
 }
