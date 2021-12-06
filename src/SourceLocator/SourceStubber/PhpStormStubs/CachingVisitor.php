@@ -28,13 +28,15 @@ class CachingVisitor extends NodeVisitorAbstract
 {
     private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
 
-    /** @var array<string, Node\Stmt\ClassLike> */
+    private ?Node\Stmt\Namespace_ $currentNamespace = null;
+
+    /** @var array<string, array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}> */
     private array $classNodes = [];
 
-    /** @var array<string, list<Node\Stmt\Function_>> */
+    /** @var array<string, list<array{0: Node\Stmt\Function_, 1: Node\Stmt\Namespace_|null}>> */
     private array $functionNodes = [];
 
-    /** @var array<string, Node\Stmt\Const_|Node\Expr\FuncCall> */
+    /** @var array<string, array{0: Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null}> */
     private array $constantNodes = [];
 
     public function __construct(private BuilderFactory $builderFactory)
@@ -43,9 +45,15 @@ class CachingVisitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node): ?int
     {
+        if ($node instanceof Node\Stmt\Namespace_) {
+            $this->currentNamespace = $node;
+
+            return null;
+        }
+
         if ($node instanceof Node\Stmt\ClassLike) {
             $nodeName                    = $node->namespacedName->toString();
-            $this->classNodes[$nodeName] = $node;
+            $this->classNodes[$nodeName] = [$node, $this->currentNamespace];
 
             foreach ($node->getConstants() as $constantsNode) {
                 foreach ($constantsNode->consts as $constNode) {
@@ -69,7 +77,7 @@ class CachingVisitor extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\Function_) {
             $nodeName                         = $node->namespacedName->toString();
-            $this->functionNodes[$nodeName][] = $node;
+            $this->functionNodes[$nodeName][] = [$node, $this->currentNamespace];
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
@@ -80,7 +88,7 @@ class CachingVisitor extends NodeVisitorAbstract
 
                 $this->updateConstantValue($constNode, $constNodeName);
 
-                $this->constantNodes[$constNodeName] = $node;
+                $this->constantNodes[$constNodeName] = [$node, $this->currentNamespace];
             }
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -117,7 +125,7 @@ class CachingVisitor extends NodeVisitorAbstract
 
             $this->updateConstantValue($node, $constantName);
 
-            $this->constantNodes[$constantName] = $node;
+            $this->constantNodes[$constantName] = [$node, $this->currentNamespace];
 
             if (
                 array_key_exists(2, $node->args)
@@ -125,7 +133,7 @@ class CachingVisitor extends NodeVisitorAbstract
                 && $node->args[2]->value instanceof Node\Expr\ConstFetch
                 && $node->args[2]->value->name->toLowerString() === 'true'
             ) {
-                $this->constantNodes[strtolower($constantName)] = $node;
+                $this->constantNodes[strtolower($constantName)] = [$node, $this->currentNamespace];
             }
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
@@ -135,7 +143,19 @@ class CachingVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @return array<string, Node\Stmt\ClassLike>
+     * {@inheritDoc}
+     */
+    public function leaveNode(Node $node)
+    {
+        if ($node instanceof Node\Stmt\Namespace_) {
+            $this->currentNamespace = null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}>
      */
     public function getClassNodes(): array
     {
@@ -143,7 +163,7 @@ class CachingVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @return array<string, list<Node\Stmt\Function_>>
+     * @return array<string, list<array{0: Node\Stmt\Function_, 1: Node\Stmt\Namespace_|null}>>
      */
     public function getFunctionNodes(): array
     {
@@ -151,7 +171,7 @@ class CachingVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @return array<string, Node\Stmt\Const_|Node\Expr\FuncCall>
+     * @return array<string, array{0: Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null}>
      */
     public function getConstantNodes(): array
     {
