@@ -113,6 +113,17 @@ class CompileNodeToValue
                 return '';
             }
 
+            if (
+                $node instanceof Node\Expr\FuncCall
+                && $node->name instanceof Node\Name
+                && $node->name->toLowerString() === 'constant'
+                && $node->args[0] instanceof Node\Arg
+                && $node->args[0]->value instanceof Node\Scalar\String_
+                && defined($node->args[0]->value->value)
+            ) {
+                return constant($node->args[0]->value->value);
+            }
+
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
         });
 

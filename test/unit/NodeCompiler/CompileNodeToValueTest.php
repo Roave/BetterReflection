@@ -210,6 +210,15 @@ class CompileNodeToValueTest extends TestCase
         self::assertIsResource($compiledValue->value);
     }
 
+    public function testConstantFunctionCall(): void
+    {
+        $node = new Node\Expr\FuncCall(new Node\Name('constant'), [new Node\Arg(new Node\Scalar\String_('PHP_VERSION_ID'))]);
+
+        $compiledValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyContext());
+
+        self::assertSame(PHP_VERSION_ID, $compiledValue->value);
+    }
+
     public function testExceptionThrownWhenInvalidNodeGiven(): void
     {
         $this->expectException(UnableToCompileNode::class);

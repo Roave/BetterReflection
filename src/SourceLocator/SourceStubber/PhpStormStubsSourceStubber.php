@@ -23,6 +23,7 @@ use Traversable;
 use function array_change_key_case;
 use function array_key_exists;
 use function array_map;
+use function array_merge;
 use function assert;
 use function explode;
 use function file_get_contents;
@@ -189,7 +190,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         /** @psalm-suppress PropertyTypeCoercion */
         self::$functionMap = array_change_key_case(PhpStormStubsMap::FUNCTIONS);
         /** @psalm-suppress PropertyTypeCoercion */
-        self::$constantMap     = array_change_key_case(PhpStormStubsMap::CONSTANTS);
+        self::$constantMap = array_merge(array_change_key_case(PhpStormStubsMap::CONSTANTS), [
+            // Funny thing - The script used by Jetbrains to generate the map was originally developed in this repository - so the script throws away constants with resource value
+            'stdin' => 'Core/Core_d.php',
+            'stdout' => 'Core/Core_d.php',
+            'stderr' => 'Core/Core_d.php',
+        ]);
+
         self::$mapsInitialized = true;
     }
 

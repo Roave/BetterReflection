@@ -16,6 +16,7 @@ use function assert;
 use function constant;
 use function defined;
 use function in_array;
+use function is_resource;
 use function sprintf;
 use function strtolower;
 use function strtoupper;
@@ -86,17 +87,28 @@ class CachingVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\Expr\FuncCall) {
-            try {
-                ConstantNodeChecker::assertValidDefineFunctionCall($node);
-            } catch (InvalidConstantNode) {
-                return null;
-            }
-
             $argumentNameNode = $node->args[0];
             assert($argumentNameNode instanceof Node\Arg);
             $nameNode = $argumentNameNode->value;
             assert($nameNode instanceof Node\Scalar\String_);
             $constantName = $nameNode->value;
+
+            // The definition is stubs looks like `define('STDIN', fopen('php://stdin', 'r'))`
+            // We will modify it to `define('STDIN', constant('STDIN'));
+            // The later definition can pass validation in `ConstantNodeChecker` and has support in `CompileNodeToValue`
+            if (
+                in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)
+                && array_key_exists(1, $node->args)
+                && $node->args[1] instanceof Node\Arg
+            ) {
+                $node->args[1]->value = $this->builderFactory->funcCall('constant', [$constantName]);
+            }
+
+            try {
+                ConstantNodeChecker::assertValidDefineFunctionCall($node);
+            } catch (InvalidConstantNode) {
+                return null;
+            }
 
             if (in_array($constantName, self::TRUE_FALSE_NULL, true)) {
                 $constantName    = strtoupper($constantName);
@@ -163,9 +175,11 @@ class CachingVisitor extends NodeVisitorAbstract
         }
 
         // @ because access to deprecated constant throws deprecated warning
-        /** @var scalar|list<scalar>|null $constantValue */
+        /** @var scalar|resource|list<scalar>|null $constantValue */
         $constantValue           = @constant($constantName);
-        $normalizedConstantValue = $this->builderFactory->val($constantValue);
+        $normalizedConstantValue = is_resource($constantValue)
+            ? $this->builderFactory->funcCall('constant', [$constantName])
+            : $this->builderFactory->val($constantValue);
 
         if ($node instanceof Node\Expr\FuncCall) {
             $argumentValueNode = $node->args[1];
