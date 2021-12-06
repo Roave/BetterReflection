@@ -9,6 +9,9 @@ use Bar;
 use Baz;
 use E;
 use Iterator;
+use OutOfBoundsException;
+use Php4StyleCaseInsensitiveConstruct;
+use Php4StyleConstruct;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\TestCase;
 use Qux;
@@ -488,6 +491,44 @@ class ReflectionClassTest extends TestCase
     {
         $reflector   = new DefaultReflector($this->getComposerLocator());
         $classInfo   = $reflector->reflectClass(UpperCaseConstructDestruct::class);
+        $constructor = $classInfo->getConstructor();
+
+        self::assertInstanceOf(ReflectionMethod::class, $constructor);
+        self::assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetConstructorWhenPhp4Style(): void
+    {
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/Php4StyleConstruct.php',
+            $this->astLocator,
+        )))->reflectClass(Php4StyleConstruct::class);
+
+        $constructor = $classInfo->getConstructor();
+
+        self::assertInstanceOf(ReflectionMethod::class, $constructor);
+        self::assertTrue($constructor->isConstructor());
+    }
+
+    public function testGetConstructorWhenPhp4StyleInNamespace(): void
+    {
+        $this->expectException(OutOfBoundsException::class);
+
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php',
+            $this->astLocator,
+        )))->reflectClass(Fixture\Php4StyleConstructInNamespace::class);
+
+        $classInfo->getConstructor();
+    }
+
+    public function testGetConstructorWhenPhp4StyleCaseInsensitive(): void
+    {
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php',
+            $this->astLocator,
+        )))->reflectClass(Php4StyleCaseInsensitiveConstruct::class);
+
         $constructor = $classInfo->getConstructor();
 
         self::assertInstanceOf(ReflectionMethod::class, $constructor);

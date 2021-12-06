@@ -16,7 +16,6 @@ or backwards compatibility (BC) breakages occur.
 * Method `\Roave\BetterReflection\Identifier\IdentifierType::isMatchingReflector()` has been removed.
 * All adapters are `final`
 * `ClassReflector`, `FunctionReflector` and `ConstantReflector` have been removed. Use `DefaultReflector` to reflect all types.
-* Removed support for PHP4 style constructors
 * Adapters don't have `::export()` method anymore because these methods were removed from PHP. These methods have been removed:
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionClass::export()`
   * `\Roave\BetterReflection\Reflection\Adapter\ReflectionFunction::export()`
