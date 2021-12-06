@@ -569,22 +569,22 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as constant values.
      *
-     * @return array<string, scalar|array<scalar>|null>
+     * @return array<string, mixed>
      */
     public function getImmediateConstants(): array
     {
-        return array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $this->getImmediateReflectionConstants());
+        return array_map(static fn (ReflectionClassConstant $classConstant): mixed => $classConstant->getValue(), $this->getImmediateReflectionConstants());
     }
 
     /**
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as constant values.
      *
-     * @return array<string, scalar|array<scalar>|null>
+     * @return array<string, mixed>
      */
     public function getConstants(): array
     {
-        return array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $this->getReflectionConstants());
+        return array_map(static fn (ReflectionClassConstant $classConstant): mixed => $classConstant->getValue(), $this->getReflectionConstants());
     }
 
     /**

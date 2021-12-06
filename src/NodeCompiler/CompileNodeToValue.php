@@ -51,7 +51,7 @@ class CompileNodeToValue
             $constantName = $this->resolveClassConstantName($node, $context);
         }
 
-        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context, $constantName): string|int|float|bool|array|null {
+        $constExprEvaluator = new ConstExprEvaluator(function (Node\Expr $node) use ($context, $constantName): mixed {
             if ($node instanceof Node\Expr\ConstFetch) {
                 return $this->getConstantValue($node, $constantName, $context);
             }
@@ -111,6 +111,17 @@ class CompileNodeToValue
                 }
 
                 return '';
+            }
+
+            if (
+                $node instanceof Node\Expr\FuncCall
+                && $node->name instanceof Node\Name
+                && $node->name->toLowerString() === 'constant'
+                && $node->args[0] instanceof Node\Arg
+                && $node->args[0]->value instanceof Node\Scalar\String_
+                && defined($node->args[0]->value->value)
+            ) {
+                return constant($node->args[0]->value->value);
             }
 
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);

@@ -166,7 +166,7 @@ final class ReflectionObject extends CoreReflectionObject
         }
 
         return array_map(
-            static fn (BetterReflectionClassConstant $betterConstant) => $betterConstant->getValue(),
+            static fn (BetterReflectionClassConstant $betterConstant): mixed => $betterConstant->getValue(),
             $reflectionConstants,
         );
     }

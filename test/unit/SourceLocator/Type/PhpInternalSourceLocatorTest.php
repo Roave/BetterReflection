@@ -30,7 +30,6 @@ use function get_declared_interfaces;
 use function get_declared_traits;
 use function get_defined_constants;
 use function get_defined_functions;
-use function in_array;
 use function sprintf;
 
 use const ARRAY_FILTER_USE_KEY;
@@ -176,15 +175,12 @@ class PhpInternalSourceLocatorTest extends TestCase
 
         return array_map(
             static fn (string $symbol): array => [$symbol],
-            array_filter(
-                array_keys(
-                    array_merge(
-                        ...array_values(
-                            array_filter($allSymbols, static fn (string $extensionName): bool => $extensionName !== 'user', ARRAY_FILTER_USE_KEY),
-                        ),
+            array_keys(
+                array_merge(
+                    ...array_values(
+                        array_filter($allSymbols, static fn (string $extensionName): bool => $extensionName !== 'user', ARRAY_FILTER_USE_KEY),
                     ),
                 ),
-                static fn (string $constantName): bool => ! in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true),
             ),
         );
     }

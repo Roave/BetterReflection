@@ -371,11 +371,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
 
             foreach ($extensionConstants as $constantName => $constantValue) {
-                // Not supported because of resource as value
-                if (in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)) {
-                    continue;
-                }
-
                 $provider[] = [$constantName, $constantValue, $extensionName];
             }
         }
