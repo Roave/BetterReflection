@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAtt
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
+use Roave\BetterReflectionTest\Fixture\PureEnum;
 use ValueError;
 
 use function array_combine;
@@ -102,6 +103,31 @@ class ReflectionClassConstantTest extends TestCase
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
 
         self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testGetValueForEnumCase(): void
+    {
+        require_once __DIR__ . '/../../Fixture/Enums.php';
+
+        $reflectionClassAdapter = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter
+            ->method('getName')
+            ->willReturn(PureEnum::class);
+
+        $reflectionEnumCaseAdapter = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumCaseAdapter
+            ->method('getDeclaringClass')
+            ->willReturn($reflectionClassAdapter);
+        $reflectionEnumCaseAdapter
+            ->method('getName')
+            ->willReturn('ONE');
+
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($reflectionEnumCaseAdapter);
+
+        self::assertInstanceOf(PureEnum::class, $reflectionClassConstantAdapter->getValue());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment(): void

@@ -11,6 +11,8 @@ use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnum
 use ValueError;
 
 use function array_map;
+use function constant;
+use function sprintf;
 
 final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
@@ -29,11 +31,13 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
 
     /**
      * Returns constant value
-     *
-     * @return scalar|array<scalar>|null
      */
-    public function getValue(): string|int|float|bool|array|null
+    public function getValue(): mixed
     {
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return constant(sprintf('%s::%s', $this->betterClassConstantOrEnumCase->getDeclaringClass()->getName(), $this->betterClassConstantOrEnumCase->getName()));
+        }
+
         return $this->betterClassConstantOrEnumCase->getValue();
     }
 
