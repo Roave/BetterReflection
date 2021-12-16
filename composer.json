@@ -12,6 +12,10 @@
     "config": {
         "platform": {
             "php": "8.0.99"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "infection/extension-installer": false
         }
     },
     "authors": [
