@@ -700,4 +700,29 @@ PHP;
 
         self::assertCount(2, $attributes);
     }
+    
+    public function testCouldThrow(): void
+    {
+        $php = <<<'PHP'
+        <?php
+        function foo($a) {
+            if ($a === null) {
+                throw new Exception('Invalid a!');
+            }
+        }
+        PHP;
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function = $reflector->reflectFunction('foo');
+        self::assertTrue($function->couldThrow());
+
+        $php = <<<'PHP'
+        <?php
+        function foo(object $obj) {
+            echo $obj instanceof Throwable ? 'throw' : 'not throw';
+        }
+        PHP;
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $function = $reflector->reflectFunction('foo');
+        self::assertNotTrue($function->couldThrow());
+    }
 }
