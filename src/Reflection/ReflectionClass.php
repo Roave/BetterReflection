@@ -1128,14 +1128,15 @@ class ReflectionClass implements Reflection
     }
 
     /**
+     * @param array<class-string, self> $interfaces
+     *
      * @return array<class-string, self>
      */
-    private function getEnumInterfaces(): array
+    private function addEnumInterfaces(array $interfaces): array
     {
         assert($this->node instanceof EnumNode);
 
-        /** @var array<class-string, self> $interfaces */
-        $interfaces = [UnitEnum::class => $this->reflectClassForNamedNode(new Node\Name(UnitEnum::class))];
+        $interfaces[UnitEnum::class] = $this->reflectClassForNamedNode(new Node\Name(UnitEnum::class));
 
         if ($this->node->scalarType !== null) {
             $interfaces[BackedEnum::class] = $this->reflectClassForNamedNode(new Node\Name(BackedEnum::class));
@@ -1346,10 +1347,6 @@ class ReflectionClass implements Reflection
             return [];
         }
 
-        if ($this->node instanceof EnumNode) {
-            return $this->getEnumInterfaces();
-        }
-
         $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
 
         /** @var array<class-string, self> $interfaces */
@@ -1363,6 +1360,10 @@ class ReflectionClass implements Reflection
                 $nodes,
             ),
         );
+
+        if ($this->node instanceof EnumNode) {
+            $interfaces = $this->addEnumInterfaces($interfaces);
+        }
 
         return $this->addStringableInterface($interfaces);
     }
@@ -1489,30 +1490,30 @@ class ReflectionClass implements Reflection
      */
     private function getCurrentClassImplementedInterfacesIndexedByName(): array
     {
-        $node = $this->node;
-
-        if ($node instanceof EnumNode) {
-            return $this->getEnumInterfaces();
+        if ($this->node instanceof TraitNode) {
+            return [];
         }
 
-        if ($node instanceof ClassNode) {
-            $interfaces = array_merge(
-                [],
-                ...array_map(
-                    fn (Node\Name $interfaceName): array => $this
-                            ->reflectClassForNamedNode($interfaceName)
-                            ->getInterfacesHierarchy(),
-                    $node->implements,
-                ),
-            );
-
-            return $this->addStringableInterface($interfaces);
+        if ($this->node instanceof InterfaceNode) {
+            // assumption: first key is the current interface
+            return array_slice($this->getInterfacesHierarchy(), 1);
         }
 
-        // assumption: first key is the current interface
-        return $this->isInterface()
-            ? array_slice($this->getInterfacesHierarchy(), 1)
-            : [];
+        $interfaces = array_merge(
+            [],
+            ...array_map(
+                fn (Node\Name $interfaceName): array => $this
+                    ->reflectClassForNamedNode($interfaceName)
+                    ->getInterfacesHierarchy(),
+                $this->node->implements,
+            ),
+        );
+
+        if ($this->node instanceof EnumNode) {
+            $interfaces = $this->addEnumInterfaces($interfaces);
+        }
+
+        return $this->addStringableInterface($interfaces);
     }
 
     /**

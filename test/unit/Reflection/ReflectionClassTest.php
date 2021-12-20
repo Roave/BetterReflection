@@ -67,6 +67,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleInterface;
 use Roave\BetterReflectionTest\Fixture\ExampleTrait;
 use Roave\BetterReflectionTest\Fixture\FinalClass;
 use Roave\BetterReflectionTest\Fixture\IntEnum;
+use Roave\BetterReflectionTest\Fixture\InterfaceForEnum;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use Roave\BetterReflectionTest\Fixture\MethodsOrder;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
@@ -1471,7 +1472,7 @@ PHP;
 
         $classInfo = $reflector->reflectClass(PureEnum::class);
 
-        self::assertSame([UnitEnum::class], $classInfo->getInterfaceNames());
+        self::assertSame([InterfaceForEnum::class, UnitEnum::class], $classInfo->getInterfaceNames());
         self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
     }
 
@@ -1484,7 +1485,7 @@ PHP;
 
         $classInfo = $reflector->reflectClass(StringEnum::class);
 
-        self::assertSame([UnitEnum::class, BackedEnum::class], $classInfo->getInterfaceNames());
+        self::assertSame([InterfaceForEnum::class, UnitEnum::class, BackedEnum::class], $classInfo->getInterfaceNames());
         self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
         self::assertArrayHasKey(BackedEnum::class, $classInfo->getImmediateInterfaces());
     }
