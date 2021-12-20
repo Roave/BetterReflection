@@ -2,14 +2,14 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-enum PureEnum
+enum PureEnum implements InterfaceForEnum
 {
     case ONE;
     case TWO;
     case THREE;
 }
 
-enum IntEnum: int
+enum IntEnum: int implements InterfaceForEnum
 {
     case ONE = 1;
     case TWO = 2;
@@ -17,7 +17,7 @@ enum IntEnum: int
     case FOUR = 4;
 }
 
-enum StringEnum: string
+enum StringEnum: string implements InterfaceForEnum
 {
     case ONE
         = 'one';
@@ -50,4 +50,8 @@ enum IsDeprecated
      * @deprecatedIsNot
      */
     case IS_NOT_DEPRECATED;
+}
+
+interface InterfaceForEnum
+{
 }
