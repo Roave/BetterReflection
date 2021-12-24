@@ -39,26 +39,10 @@ jobs:
           ini-values: memory_limit=-1
           tools: composer:2.1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Tests"
         run: "vendor/bin/phpunit"
@@ -89,26 +73,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "PHPStan"
         run: "vendor/bin/phpstan analyse --memory-limit=-1"
@@ -139,26 +107,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "psalm"
         run: "vendor/bin/psalm --shepherd --stats"
@@ -189,26 +141,10 @@ jobs:
           ini-values: memory_limit=-1, zend.assertions=1
           tools: composer:2.1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Infection"
         run: "vendor/bin/roave-infection-static-analysis-plugin --threads=$(nproc)"
@@ -243,26 +179,10 @@ jobs:
           ini-values: memory_limit=-1
           tools: composer:2.1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Test Compatibility"
         run: "vendor/bin/phpunit test/compat"
@@ -292,26 +212,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Check Demo Scripts"
         run: "test/demo/check-demo.sh"
@@ -342,26 +246,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install PhpBench"
         run: "composer require --with-all-dependencies --dev --prefer-stable --no-interaction --no-progress phpbench/phpbench:^1.1.1"
@@ -394,26 +282,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
-      - name: "Install lowest dependencies"
-        if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress"
-
-      - name: "Install highest dependencies"
-        if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress"
-
-      - name: "Install locked dependencies"
-        if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress"
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Coding Standard"
         run: "vendor/bin/phpcs"
