@@ -6,13 +6,13 @@ namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Yield_ as YieldNode;
+use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
+use PhpParser\Node\Stmt\Throw_ as NodeThrow;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
-use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
-use PhpParser\Node\Expr\Yield_ as YieldNode;
-use PhpParser\Node\Stmt\Throw_ as NodeThrow;
-use PhpParser\PrettyPrinterAbstract;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use PhpParser\PrettyPrinterAbstract;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
@@ -190,14 +190,10 @@ trait ReflectionFunctionAbstract
         return false;
     }
 
-    /**
-     * Checks if the function/method could throw error/exception.
-     * 
-     * Note that method detect `throw` only in reflected function.
-     */
+    /** Checks if the function/method contains `throw` expressions. */
     public function couldThrow(): bool
     {
-        $visitor = new FindingVisitor(fn(Node $node): bool => $node instanceof NodeThrow);
+        $visitor   = new FindingVisitor(static fn (Node $node): bool => $node instanceof NodeThrow);
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);
         $traverser->traverse($this->getBodyAst());
