@@ -22,6 +22,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 use function assert;
 use function class_exists;
+use function in_array;
 use function sprintf;
 use function strtolower;
 use function trait_exists;
@@ -47,7 +48,7 @@ class ReflectionMethod
         '__invoke',
         '__set_state',
         '__clone',
-        '__debugInfo'
+        '__debugInfo',
     ];
 
     private MethodNode $methodNode;
