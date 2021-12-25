@@ -30,6 +30,26 @@ class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
 
+    protected const MAGIC_METHODS = [
+        '__construct',
+        '__destruct',
+        '__call',
+        '__callStatic',
+        '__get',
+        '__set',
+        '__isset',
+        '__unset',
+        '__sleep',
+        '__wakeup',
+        '__serialize',
+        '__unserialize',
+        '__toString',
+        '__invoke',
+        '__set_state',
+        '__clone',
+        '__debugInfo'
+    ];
+
     private MethodNode $methodNode;
 
     private function __construct(
@@ -278,6 +298,14 @@ class ReflectionMethod
     public function isDestructor(): bool
     {
         return strtolower($this->getName()) === '__destruct';
+    }
+
+    /**
+     * Is the method a magic.
+     */
+    public function isMagic(): bool
+    {
+        return in_array(strtolower($this->getName()), static::MAGIC_METHODS, true);
     }
 
     /**
