@@ -8,7 +8,9 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
+use PhpParser\Node\Stmt\Throw_ as NodeThrow;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\FindingVisitor;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
@@ -186,6 +188,17 @@ trait ReflectionFunctionAbstract
         }
 
         return false;
+    }
+
+    /** Checks if the function/method contains `throw` expressions. */
+    public function couldThrow(): bool
+    {
+        $visitor   = new FindingVisitor(static fn (Node $node): bool => $node instanceof NodeThrow);
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
+        $traverser->traverse($this->getBodyAst());
+
+        return $visitor->getFoundNodes() !== [];
     }
 
     /**
