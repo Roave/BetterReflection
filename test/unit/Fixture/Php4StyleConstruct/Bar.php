@@ -1,7 +1,5 @@
 <?php
 
-namespace Php4StyleConstruct;
-
 /**
  * Uses `Foo::bar()` as constructor.
  */
