@@ -1,7 +1,5 @@
 <?php
 
-namespace Php4StyleConstruct;
-
 /**
  * @see Bar
  */
