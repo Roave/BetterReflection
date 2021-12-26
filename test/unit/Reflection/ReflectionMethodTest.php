@@ -190,6 +190,19 @@ class ReflectionMethodTest extends TestCase
         $method = $classInfo->getMethod('PHP4STYLECASEINSENSITIVECONSTRUCT');
         self::assertTrue($method->isConstructor());
     }
+  
+    /**
+     * Bar::bar() not constructor!
+     * @todo fix ReflectionMethod::isConstructor()
+     */
+    public function testIsPhp4StyleConstructorOfExtendedClass(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct/Bar.php', $this->astLocator));
+        $classInfo = $reflector->reflectClass(Bar::class);
+
+        $method = $classInfo->getMethod('bar');
+        self::assertTrue($method->isConstructor());
+    }
 
     public function testGetParameters(): void
     {
