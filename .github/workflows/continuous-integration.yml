@@ -37,7 +37,6 @@ jobs:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-          tools: composer:2.1
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
@@ -139,7 +138,6 @@ jobs:
           coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1, zend.assertions=1
-          tools: composer:2.1
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
@@ -177,7 +175,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-          tools: composer:2.1
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
