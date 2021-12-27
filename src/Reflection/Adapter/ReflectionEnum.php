@@ -442,8 +442,6 @@ final class ReflectionEnum extends CoreReflectionEnum
      * @param class-string|null $name
      *
      * @return list<ReflectionAttribute>
-     *
-     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public function getAttributes(?string $name = null, int $flags = 0): array
     {
