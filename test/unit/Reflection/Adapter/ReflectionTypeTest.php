@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PhpParser\Node\Identifier;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionIntersectionType as ReflectionIntersectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionUnionType as ReflectionUnionTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
+use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
+use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_combine;
 use function array_map;
@@ -82,5 +87,15 @@ class ReflectionTypeTest extends TestCase
     public function testFromTypeOrNullWithIntersectionType(): void
     {
         self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionIntersectionType::class)));
+    }
+
+    public function testMixedAllowsNull(): void
+    {
+        $type = ReflectionType::fromTypeOrNull(new ReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $this->createMock(ReflectionParameter::class),
+            new Identifier('mixed'),
+        ));
+        self::assertTrue($type->allowsNull());
     }
 }

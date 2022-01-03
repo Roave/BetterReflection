@@ -103,7 +103,7 @@ class ReflectionNamedType extends ReflectionType
 
     public function allowsNull(): bool
     {
-        return false;
+        return strtolower($this->name) === 'mixed';
     }
 
     public function __toString(): string
