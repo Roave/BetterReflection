@@ -51,6 +51,12 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertFalse($noNullType->allowsNull());
     }
 
+    public function testMixedAllowsNull(): void
+    {
+        $noNullType = $this->createType('mixed');
+        self::assertTrue($noNullType->allowsNull());
+    }
+
     public function isBuildinProvider(): Generator
     {
         yield ['string'];

@@ -7,6 +7,8 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionNamedType as CoreReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
+use function strtolower;
+
 /**
  * @psalm-suppress MissingImmutableAnnotation
  */
@@ -23,7 +25,7 @@ final class ReflectionNamedType extends CoreReflectionNamedType
 
     public function __toString(): string
     {
-        return ($this->allowsNull ? '?' : '')
+        return ($this->allowsNull && strtolower($this->betterReflectionType->getName()) !== 'mixed' ? '?' : '')
             . $this->betterReflectionType->__toString();
     }
 

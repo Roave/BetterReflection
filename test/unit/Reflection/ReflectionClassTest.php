@@ -36,6 +36,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -2481,5 +2482,58 @@ PHP;
         $attributes      = $classReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testBugWithTraitMethodVisibilityOverride(): void
+    {
+        $php            = <<<'PHP'
+            <?php
+
+            interface Foo
+            {
+                public function doFoo(): void;
+            }
+
+            class Bar implements Foo
+            {
+                public function doFoo(): void
+                {
+                }
+            }
+
+            trait SpecificFoo
+            {
+                public function doFoo(): void
+                {
+                }
+            }
+
+            class Baz extends Bar
+            {
+                use SpecificFoo {
+                    doFoo as private doFooImpl;
+                }
+
+                public function doFoo(): void
+                {
+                }
+            }
+
+            class FooBar extends Bar
+            {
+                use SpecificFoo;
+            }
+        PHP;
+        $reflector      = new DefaultReflector(new MemoizingSourceLocator(new StringSourceLocator($php, $this->astLocator)));
+        $baz            = $reflector->reflectClass('Baz');
+        $bazDoFooMethod = $baz->getMethod('doFoo');
+        self::assertTrue($bazDoFooMethod->isPublic());
+
+        $bazDoFooImplMethod = $baz->getMethod('doFooImpl');
+        self::assertFalse($bazDoFooImplMethod->isPublic());
+
+        $fooBar            = $reflector->reflectClass('FooBar');
+        $fooBarDoFooMethod = $fooBar->getMethod('doFoo');
+        self::assertTrue($fooBarDoFooMethod->isPublic());
     }
 }

@@ -43,6 +43,6 @@ abstract class ReflectionType extends CoreReflectionType
             return new ReflectionIntersectionType($betterReflectionType);
         }
 
-        return new ReflectionNamedType($betterReflectionType, false);
+        return new ReflectionNamedType($betterReflectionType, $betterReflectionType->allowsNull());
     }
 }
