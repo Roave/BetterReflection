@@ -9,11 +9,6 @@
         "nikic/php-parser": "^4.13.2",
         "roave/signature": "^1.5"
     },
-    "config": {
-        "platform": {
-            "php": "8.0.99"
-        }
-    },
     "authors": [
         {
             "name":     "James Titcumb",
