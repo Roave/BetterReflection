@@ -293,6 +293,7 @@ class ReflectionClass implements Reflection
                             $method->getDeclaringClass(),
                             $method->getImplementingClass(),
                             $this,
+                            $method->getAliasName(),
                         ),
                         $ancestor->getMethods(),
                     );
