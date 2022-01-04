@@ -2269,6 +2269,42 @@ PHP;
         self::assertFalse($privateMethodRenamed->isPrivate());
     }
 
+    public function testChildClassHasRenamedTraitMethodFromParent(): void
+    {
+        $php = <<<'PHP'
+            <?php
+
+            trait SomeTrait
+            {
+                public function someNumber()
+                {
+                }
+            }
+
+            class ParentClass {
+                use SomeTrait {
+                    someNumber as myNumber;
+                }
+            }
+
+            class SubClass extends ParentClass
+            {
+            }
+        PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+
+        $parentClass = $reflector->reflectClass('ParentClass');
+
+        self::assertTrue($parentClass->hasMethod('someNumber'));
+        self::assertTrue($parentClass->hasMethod('myNumber'));
+
+        $subClass = $reflector->reflectClass('SubClass');
+
+        self::assertTrue($subClass->hasMethod('someNumber'));
+        self::assertTrue($subClass->hasMethod('myNumber'));
+    }
+
     public function testHasStringableInterface(): void
     {
         $php = <<<'PHP'
