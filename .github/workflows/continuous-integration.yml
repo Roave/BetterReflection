@@ -6,7 +6,7 @@ on:
   pull_request:
   push:
     branches:
-      - "5.0.x"
+      - "*.*.x"
 
 jobs:
   phpunit:
