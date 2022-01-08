@@ -66,6 +66,7 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['iterable'];
         yield ['mixed'];
         yield ['never'];
+        yield ['false'];
     }
 
     /**
