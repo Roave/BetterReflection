@@ -36,6 +36,12 @@ final class ReflectionNamedType extends CoreReflectionNamedType
 
     public function isBuiltin(): bool
     {
+        $type = strtolower($this->betterReflectionType->getName());
+
+        if ($type === 'self' || $type === 'parent' || $type === 'static') {
+            return false;
+        }
+
         return $this->betterReflectionType->isBuiltin();
     }
 }
