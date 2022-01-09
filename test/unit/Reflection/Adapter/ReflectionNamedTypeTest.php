@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType as CoreReflectionNamedType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
+use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
+use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_combine;
 use function array_map;
@@ -85,5 +88,31 @@ class ReflectionNamedTypeTest extends TestCase
 
         $adapter = new ReflectionNamedTypeAdapter($reflectionStub, false);
         $adapter->{$methodName}(...$args);
+    }
+
+    public function dataNotBuildin(): array
+    {
+        return [
+            ['self'],
+            ['sElF'],
+            ['static'],
+            ['sTaTiC'],
+            ['parent'],
+            ['PaReNt'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataNotBuildin
+     */
+    public function testIsNotBuiltin(string $type): void
+    {
+        $reflector = $this->createMock(Reflector::class);
+        $owner     = $this->createMock(BetterReflectionMethod::class);
+
+        $betterReflectionNamedType = new BetterReflectionNamedType($reflector, $owner, new Node\Name($type));
+        $reflectionTypeAdapter     = new ReflectionNamedTypeAdapter($betterReflectionNamedType, false);
+
+        self::assertFalse($reflectionTypeAdapter->isBuiltin());
     }
 }
