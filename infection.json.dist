@@ -7,8 +7,8 @@
     "bootstrap": "./infection.bootstrap.php",
     "logs": {
         "text": "php:\/\/stderr",
-        "badge": {
-            "branch": "/^\\d\\.\\d\\.x$/"
+        "stryker": {
+            "report": "/^\\d\\.\\d\\.x$/"
         }
     },
     "mutators": {
