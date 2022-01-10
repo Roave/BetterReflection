@@ -716,4 +716,40 @@ PHP;
             $methodReflection->getLocatedSource()->getSource(),
         );
     }
+
+    public function testLocatedSourceForTraitMethod(): void
+    {
+        $parentPhp = <<<'PHP'
+            <?php
+
+            trait Foo
+            {
+                public function method(): void
+                {
+                }
+            }
+        PHP;
+
+        $childPhp = <<<'PHP'
+            <?php
+
+            class Bar
+            {
+                use Foo;
+            }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($parentPhp, $this->astLocator),
+            new StringSourceLocator($childPhp, $this->astLocator),
+        ]));
+
+        $classReflection  = $reflector->reflectClass('Bar');
+        $methodReflection = $classReflection->getMethod('method');
+
+        self::assertStringMatchesFormat(
+            '%Atrait Foo%A{%A}%A',
+            $methodReflection->getLocatedSource()->getSource(),
+        );
+    }
 }
