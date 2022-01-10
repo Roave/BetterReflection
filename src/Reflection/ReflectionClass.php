@@ -288,7 +288,7 @@ class ReflectionClass implements Reflection
                         fn (ReflectionMethod $method): ReflectionMethod => ReflectionMethod::createFromNode(
                             $this->reflector,
                             $method->getAst(),
-                            $this->locatedSource,
+                            $method->getLocatedSource(),
                             $method->getDeclaringClass()->getDeclaringNamespaceAst(),
                             $method->getDeclaringClass(),
                             $method->getImplementingClass(),

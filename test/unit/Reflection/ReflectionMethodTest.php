@@ -25,6 +25,7 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -679,5 +680,40 @@ PHP;
         $attributes       = $methodReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testLocatedSourceForParentMethod(): void
+    {
+        $parentPhp = <<<'PHP'
+            <?php
+
+            class Foo
+            {
+                public function method(): void
+                {
+                }
+            }
+        PHP;
+
+        $childPhp = <<<'PHP'
+            <?php
+
+            class Bar extends Foo
+            {
+            }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($parentPhp, $this->astLocator),
+            new StringSourceLocator($childPhp, $this->astLocator),
+        ]));
+
+        $classReflection  = $reflector->reflectClass('Bar');
+        $methodReflection = $classReflection->getMethod('method');
+
+        self::assertStringMatchesFormat(
+            '%Aclass Foo%A{%A}%A',
+            $methodReflection->getLocatedSource()->getSource(),
+        );
     }
 }
