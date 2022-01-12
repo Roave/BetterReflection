@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58a3203d56c94c6eb8c574de4df87208",
+    "content-hash": "0135d4d0c0829586068b50eb7e144460",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1110,16 +1110,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.26.0",
+            "version": "0.26.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "e346a2ff4ebe277f3f4e8cc295c033dcab13e7f0"
+                "reference": "1e584ea134a1bd3065c1305e14fe3382b30eb2a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/e346a2ff4ebe277f3f4e8cc295c033dcab13e7f0",
-                "reference": "e346a2ff4ebe277f3f4e8cc295c033dcab13e7f0",
+                "url": "https://api.github.com/repos/infection/infection/zipball/1e584ea134a1bd3065c1305e14fe3382b30eb2a9",
+                "reference": "1e584ea134a1bd3065c1305e14fe3382b30eb2a9",
                 "shasum": ""
             },
             "require": {
@@ -1220,7 +1220,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.26.0"
+                "source": "https://github.com/infection/infection/tree/0.26.1"
             },
             "funding": [
                 {
@@ -1232,7 +1232,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2022-01-10T10:25:48+00:00"
+            "time": "2022-01-11T20:49:25+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -2515,20 +2515,20 @@
         },
         {
             "name": "roave/infection-static-analysis-plugin",
-            "version": "1.14.0",
+            "version": "1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "286dc18198869343d484ca1b8b82c4fc8f3238ce"
+                "reference": "d75c3bdf5d593343e9aed532eef61de0ef840951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/286dc18198869343d484ca1b8b82c4fc8f3238ce",
-                "reference": "286dc18198869343d484ca1b8b82c4fc8f3238ce",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/d75c3bdf5d593343e9aed532eef61de0ef840951",
+                "reference": "d75c3bdf5d593343e9aed532eef61de0ef840951",
                 "shasum": ""
             },
             "require": {
-                "infection/infection": "0.26.0",
+                "infection/infection": "0.26.1",
                 "ocramius/package-versions": "^1.9.0 || ^2.0.0",
                 "php": "~7.4.7|~8.0.0|~8.1.0",
                 "sanmai/later": "^0.1.2",
@@ -2560,9 +2560,9 @@
             "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
             "support": {
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.14.0"
+                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.15.0"
             },
-            "time": "2022-01-10T12:40:52+00:00"
+            "time": "2022-01-12T08:28:01+00:00"
         },
         {
             "name": "sanmai/later",
