@@ -227,8 +227,9 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        $extension = $this->getExtensionFromFilePath($filePath);
-        $stub      = $this->createStub($this->classNodes[$lowercaseClassName]);
+        $classNodeData = $this->classNodes[$lowercaseClassName];
+        $extension     = $this->getExtensionFromFilePath($filePath);
+        $stub          = $this->createStub($classNodeData[0], $classNodeData[1]);
 
         if ($className === Traversable::class) {
             // See https://github.com/JetBrains/phpstorm-stubs/commit/0778a26992c47d7dbee4d0b0bfb7fad4344371b1#diff-575bacb45377d474336c71cbf53c1729
@@ -264,9 +265,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return null;
         }
 
-        $extension = $this->getExtensionFromFilePath($filePath);
+        $functionNodeData = $this->functionNodes[$lowercaseFunctionName];
+        $extension        = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($this->functionNodes[$lowercaseFunctionName]), $extension);
+        return new StubData($this->createStub($functionNodeData[0], $functionNodeData[1]), $extension);
     }
 
     public function generateConstantStub(string $constantName): ?StubData
@@ -302,7 +304,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $extension = $this->getExtensionFromFilePath($filePath);
 
-        return new StubData($this->createStub($constantNodeData), $extension);
+        return new StubData($this->createStub($constantNodeData[0], $constantNodeData[1]), $extension);
     }
 
     private function parseFile(string $filePath): void
@@ -369,13 +371,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
     }
 
-    /**
-     * @param array{0: Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null} $nodeData
-     */
-    private function createStub(array $nodeData): string
+    private function createStub(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node, ?Node\Stmt\Namespace_ $namespaceNode): string
     {
-        [$node, $namespaceNode] = $nodeData;
-
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
 
