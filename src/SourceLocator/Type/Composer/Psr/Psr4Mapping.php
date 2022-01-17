@@ -68,7 +68,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
                     return [];
                 }
 
-                return array_map(static fn (string $path): string => rtrim($path, '/') . '/' . $subPath . '.php', $paths);
+                return array_map(static fn (string $path): string => $path . '/' . $subPath . '.php', $paths);
             }, $matchingPrefixes, array_keys($matchingPrefixes)),
         )));
     }
