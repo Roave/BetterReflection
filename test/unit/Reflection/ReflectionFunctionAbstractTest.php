@@ -129,6 +129,18 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($function->isClosure());
     }
 
+    public function testIsClosureWithArrowFunction(): void
+    {
+        $function = (new DefaultReflector(
+            new ClosureSourceLocator(
+                static fn (): bool => true,
+                $this->parser,
+            ),
+        ))->reflectFunction(ReflectionFunction::CLOSURE_NAME);
+
+        self::assertTrue($function->isClosure());
+    }
+
     /**
      * @dataProvider nonDeprecatedProvider
      */
@@ -561,6 +573,34 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertSame(
             "echo 'Hello world';",
+            $function->getBodyCode(),
+        );
+    }
+
+    public function testGetBodyCodeWithClosure(): void
+    {
+        $function = (new DefaultReflector(new ClosureSourceLocator(
+            static function (): void {
+                echo 'Hello world';
+            },
+            $this->parser,
+        )))->reflectFunction(ReflectionFunction::CLOSURE_NAME);
+
+        self::assertSame(
+            "echo 'Hello world';",
+            $function->getBodyCode(),
+        );
+    }
+
+    public function testGetBodyCodeWithArrowFunction(): void
+    {
+        $function = (new DefaultReflector(new ClosureSourceLocator(
+            static fn (): string => 'Hello world',
+            $this->parser,
+        )))->reflectFunction(ReflectionFunction::CLOSURE_NAME);
+
+        self::assertSame(
+            "'Hello world'",
             $function->getBodyCode(),
         );
     }
