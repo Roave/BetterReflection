@@ -1054,4 +1054,30 @@ class ReflectionClassTest extends TestCase
         self::assertCount(1, $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PRIVATE));
         self::assertCount(1, $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PROTECTED));
     }
+
+    public function testGetTraits(): void
+    {
+        $betterReflectionTrait1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionTrait1
+            ->method('getName')
+            ->willReturn('Trait1');
+        $betterReflectionTrait2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionTrait2
+            ->method('getName')
+            ->willReturn('Trait2');
+
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getTraits')
+            ->willReturn([$betterReflectionTrait1, $betterReflectionTrait2]);
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        $traits = $reflectionClassAdapter->getTraits();
+
+        self::assertContainsOnlyInstancesOf(ReflectionClassAdapter::class, $traits);
+        self::assertCount(2, $traits);
+        self::assertArrayHasKey('Trait1', $traits);
+        self::assertArrayHasKey('Trait2', $traits);
+    }
 }
