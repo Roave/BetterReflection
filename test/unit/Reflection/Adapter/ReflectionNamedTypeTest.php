@@ -50,6 +50,28 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame('?foo', (new ReflectionNamedTypeAdapter($reflectionStub, true))->__toString());
     }
 
+    public function dataNoNullabilityMarkerForMixed(): array
+    {
+        return [
+            ['mixed'],
+            ['MiXeD'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataNoNullabilityMarkerForMixed
+     */
+    public function testNoNullabilityMarkerForMixed(string $mixedType): void
+    {
+        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
+        $reflectionStub->method('getName')
+            ->willReturn($mixedType);
+        $reflectionStub->method('__toString')
+            ->willReturn($mixedType);
+
+        self::assertSame($mixedType, (new ReflectionNamedTypeAdapter($reflectionStub, true))->__toString());
+    }
+
     public function testWillReportThatItAcceptsOrRejectsNull(): void
     {
         $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
