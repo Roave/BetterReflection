@@ -804,11 +804,7 @@ class ReflectionClass implements Reflection
      */
     private function addEnumProperties(array $properties): array
     {
-        if (! $this->node instanceof EnumNode) {
-            return $properties;
-        }
-
-        $createProperty = function (string $name, string|Node\Identifier $type): ReflectionProperty {
+        $createProperty = function (string $name, string|Node\Identifier|Node\UnionType $type): ReflectionProperty {
             $propertyNode = new Node\Stmt\Property(
                 ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_READONLY,
                 [new Node\Stmt\PropertyProperty($name)],
@@ -825,6 +821,24 @@ class ReflectionClass implements Reflection
                 false,
             );
         };
+
+        if (! $this->node instanceof EnumNode) {
+            if ($this->node instanceof Node\Stmt\Interface_) {
+                $interfaceName = $this->getName();
+                if ($interfaceName === 'UnitEnum') {
+                    $properties['name'] = $createProperty('name', 'string');
+                }
+
+                if ($interfaceName === 'BackedEnum') {
+                    $properties['value'] = $createProperty('value', new Node\UnionType([
+                        new Node\Identifier('int'),
+                        new Node\Identifier('string'),
+                    ]));
+                }
+            }
+
+            return $properties;
+        }
 
         $properties['name'] = $createProperty('name', 'string');
 
@@ -863,7 +877,7 @@ class ReflectionClass implements Reflection
                                 static fn (ReflectionProperty $property): bool => ! $property->isPrivate(),
                             );
                         },
-                        array_filter([$this->getParentClass()]),
+                        array_merge(array_filter([$this->getParentClass()]), array_values($this->getInterfaces())),
                     ),
                     ...array_map(
                         function (ReflectionClass $trait) use ($filter) {
