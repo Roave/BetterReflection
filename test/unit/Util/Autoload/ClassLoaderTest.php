@@ -72,8 +72,6 @@ final class ClassLoaderTest extends TestCase
 
         $this->expectException(ClassAlreadyRegistered::class);
         $loader->addClass($reflection);
-
-        spl_autoload_unregister($loader);
     }
 
     public function testAddClassThrowsExceptionWhenClassAlreadyLoaded(): void
@@ -83,8 +81,6 @@ final class ClassLoaderTest extends TestCase
 
         $this->expectException(ClassAlreadyLoaded::class);
         $loader->addClass(ReflectionClass::createFromName(stdClass::class));
-
-        spl_autoload_unregister($loader);
     }
 
     /**
@@ -106,7 +102,5 @@ final class ClassLoaderTest extends TestCase
 
         $this->expectException(FailedToLoadClass::class);
         new AnotherTestClassForAutoloader();
-
-        spl_autoload_unregister($loader);
     }
 }
