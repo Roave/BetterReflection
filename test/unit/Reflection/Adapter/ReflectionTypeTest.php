@@ -10,13 +10,11 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionIntersectionType as ReflectionIntersectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionUnionType as ReflectionUnionTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
-use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
@@ -125,9 +123,9 @@ class ReflectionTypeTest extends TestCase
 
     public function testMixedAllowsNull(): void
     {
-        $type = ReflectionType::fromTypeOrNull(new ReflectionNamedType(
+        $type = ReflectionTypeAdapter::fromTypeOrNull(new BetterReflectionNamedType(
             $this->createMock(Reflector::class),
-            $this->createMock(ReflectionParameter::class),
+            $this->createMock(BetterReflectionParameter::class),
             new Identifier('mixed'),
         ));
         self::assertTrue($type->allowsNull());
