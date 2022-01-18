@@ -53,6 +53,14 @@ abstract class ReflectionType
     }
 
     /**
+     * @internal
+     */
+    public function getOwner(): ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty
+    {
+        return $this->owner;
+    }
+
+    /**
      * Does the type allow null?
      */
     abstract public function allowsNull(): bool;

@@ -43,6 +43,7 @@ class ReflectionNamedTypeTest extends TestCase
 
         self::assertInstanceOf(ReflectionNamedType::class, $typeInfo);
         self::assertSame('string', $typeInfo->getName());
+        self::assertSame($this->owner, $typeInfo->getOwner());
     }
 
     public function testAllowsNull(): void

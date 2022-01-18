@@ -45,5 +45,6 @@ class ReflectionUnionTypeTest extends TestCase
         self::assertContainsOnlyInstancesOf(ReflectionNamedType::class, $typeReflection->getTypes());
         self::assertSame($expectedString, $typeReflection->__toString());
         self::assertSame($expectedNullable, $typeReflection->allowsNull());
+        self::assertSame($this->owner, $typeReflection->getOwner());
     }
 }
