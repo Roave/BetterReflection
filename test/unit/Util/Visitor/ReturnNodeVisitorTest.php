@@ -27,7 +27,7 @@ class ReturnNodeVisitorTest extends TestCase
             'returnWithinClosureShouldNotBeReturned' => [
                 [
                     new Node\Expr\Closure([
-                        new Node\Stmt\Return_(),
+                        'stmts' => [new Node\Stmt\Return_()],
                     ]),
                     new Node\Stmt\Return_(),
                 ],
@@ -36,7 +36,11 @@ class ReturnNodeVisitorTest extends TestCase
             'returnWithinAnonymousClassShouldNotBeReturned' => [
                 [
                     new Node\Stmt\Class_('', [
-                        new Node\Stmt\Return_(),
+                        'stmts' => [
+                            new Node\Stmt\ClassMethod('method', [
+                                'stmts' => [new Node\Stmt\Return_()],
+                            ]),
+                        ],
                     ]),
                     new Node\Stmt\Return_(),
                 ],
