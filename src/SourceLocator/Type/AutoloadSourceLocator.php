@@ -22,25 +22,23 @@ use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\Located\AliasLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
+use Roave\BetterReflection\Util\ClassExistenceChecker;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 
 use function array_key_exists;
 use function array_reverse;
 use function assert;
-use function class_exists;
 use function defined;
 use function file_get_contents;
 use function function_exists;
 use function get_defined_constants;
 use function get_included_files;
-use function interface_exists;
 use function is_file;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
 use function spl_autoload_functions;
 use function strtolower;
-use function trait_exists;
 
 /**
  * Use PHP's built in autoloader to locate a class, without actually loading.
@@ -154,11 +152,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
      */
     private function locateClassByName(string $className): ?array
     {
-        if (
-            class_exists($className, false)
-            || interface_exists($className, false)
-            || trait_exists($className, false)
-        ) {
+        if (ClassExistenceChecker::exists($className)) {
             $classReflection = new ReflectionClass($className);
 
             $filename = $classReflection->getFileName();

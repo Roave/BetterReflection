@@ -12,11 +12,9 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
+use Roave\BetterReflection\Util\ClassExistenceChecker;
 
-use function class_exists;
-use function interface_exists;
 use function is_file;
-use function trait_exists;
 
 final class EvaledCodeSourceLocator extends AbstractSourceLocator
 {
@@ -57,7 +55,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         /** @psalm-var class-string|trait-string $name */
         $name = $identifier->getName();
 
-        if (! (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false))) {
+        if (! ClassExistenceChecker::exists($name)) {
             return null; // not an available internal class
         }
 

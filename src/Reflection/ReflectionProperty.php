@@ -26,15 +26,14 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
+use Roave\BetterReflection\Util\ClassExistenceChecker;
 use Roave\BetterReflection\Util\GetLastDocComment;
 
 use function assert;
-use function class_exists;
 use function func_num_args;
 use function is_object;
 use function sprintf;
 use function str_contains;
-use function trait_exists;
 
 class ReflectionProperty
 {
@@ -445,7 +444,7 @@ class ReflectionProperty
      */
     private function assertClassExist(string $className): void
     {
-        if (! class_exists($className, false) && ! trait_exists($className, false)) {
+        if (! ClassExistenceChecker::classExists($className) && ! ClassExistenceChecker::traitExists($className)) {
             throw new ClassDoesNotExist('Property cannot be retrieved as the class is not loaded');
         }
     }
