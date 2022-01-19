@@ -15,6 +15,8 @@ use function in_array;
  */
 final class ConstantNodeChecker
 {
+    private const DEFINE_ARGUMENTS_COUNTS = [2, 3];
+
     /**
      * @throws InvalidConstantNode
      */
@@ -28,7 +30,7 @@ final class ConstantNodeChecker
             throw InvalidConstantNode::create($node);
         }
 
-        if (! in_array(count($node->args), [2, 3], true)) {
+        if (! in_array(count($node->args), self::DEFINE_ARGUMENTS_COUNTS, true)) {
             throw InvalidConstantNode::create($node);
         }
 
