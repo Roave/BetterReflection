@@ -16,6 +16,9 @@ use function interface_exists;
 use function spl_autoload_register;
 use function trait_exists;
 
+/**
+ * @deprecated
+ */
 final class ClassLoader
 {
     /** @var array<class-string, ReflectionClass> */
