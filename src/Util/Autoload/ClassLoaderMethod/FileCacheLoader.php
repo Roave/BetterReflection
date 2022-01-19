@@ -20,6 +20,11 @@ use function is_file;
 use function sha1;
 use function str_replace;
 
+/**
+ * @deprecated
+ *
+ * @psalm-suppress DeprecatedClass, DeprecatedInterface
+ */
 final class FileCacheLoader implements LoaderMethodInterface
 {
     public function __construct(

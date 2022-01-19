@@ -18,6 +18,8 @@ use function trait_exists;
 
 /**
  * @deprecated
+ *
+ * @psalm-suppress DeprecatedClass
  */
 final class ClassLoader
 {
