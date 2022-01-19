@@ -219,6 +219,30 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame(PHP_VERSION_ID, $compiledValue->value);
     }
 
+    public function dataTrueFalseNullShouldNotHaveConstantName(): array
+    {
+        return [
+            ['true'],
+            ['TruE'],
+            ['false'],
+            ['fAlSe'],
+            ['null'],
+            ['NULL'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataTrueFalseNullShouldNotHaveConstantName
+     */
+    public function testTrueFalseNullShouldNotHaveConstantName(string $value): void
+    {
+        $node = $this->parseCode($value);
+
+        $compiledValue = (new CompileNodeToValue())->__invoke($node, $this->getDummyContext());
+
+        self::assertNull($compiledValue->constantName);
+    }
+
     public function testExceptionThrownWhenInvalidNodeGiven(): void
     {
         $this->expectException(UnableToCompileNode::class);
@@ -295,13 +319,65 @@ PHP;
 <?php
 namespace Bar;
 
-const SOME_CONSTANT = PHP_VERSION_ID;
+class Foo {
+    public function method($param = PHP_VERSION_ID) {}
+}
 PHP;
 
-        $reflector          = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
-        $constantReflection = $reflector->reflectConstant('Bar\SOME_CONSTANT');
+        $reflector  = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Bar\Foo');
+        $methodInfo = $classInfo->getMethod('method');
+        $paramInfo  = $methodInfo->getParameter('param');
 
-        self::assertSame(PHP_VERSION_ID, $constantReflection->getValue());
+        self::assertSame(PHP_VERSION_ID, $paramInfo->getDefaultValue());
+        self::assertTrue($paramInfo->isDefaultValueConstant());
+        self::assertSame('PHP_VERSION_ID', $paramInfo->getDefaultValueConstantName());
+    }
+
+    public function testUnqualifiedConstantResolution(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+namespace Bar;
+
+const SOME_CONSTANT = 'constant';
+
+class Foo {
+    public function method($param = SOME_CONSTANT) {}
+}
+PHP;
+
+        $reflector  = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Bar\Foo');
+        $methodInfo = $classInfo->getMethod('method');
+        $paramInfo  = $methodInfo->getParameter('param');
+
+        self::assertSame('constant', $paramInfo->getDefaultValue());
+        self::assertTrue($paramInfo->isDefaultValueConstant());
+        self::assertSame('Bar\SOME_CONSTANT', $paramInfo->getDefaultValueConstantName());
+    }
+
+    public function testFullyQualifiedConstantResolution(): void
+    {
+        $phpCode = <<<'PHP'
+<?php
+namespace Bar;
+
+const SOME_CONSTANT = 'constant';
+
+class Foo {
+    public function method($param = \Bar\SOME_CONSTANT) {}
+}
+PHP;
+
+        $reflector  = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Bar\Foo');
+        $methodInfo = $classInfo->getMethod('method');
+        $paramInfo  = $methodInfo->getParameter('param');
+
+        self::assertSame('constant', $paramInfo->getDefaultValue());
+        self::assertTrue($paramInfo->isDefaultValueConstant());
+        self::assertSame('Bar\SOME_CONSTANT', $paramInfo->getDefaultValueConstantName());
     }
 
     public function testClassConstantResolutionSelfForMethod(): void
