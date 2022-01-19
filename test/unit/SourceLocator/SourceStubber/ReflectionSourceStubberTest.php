@@ -13,6 +13,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -38,6 +39,7 @@ use function array_merge;
 use function get_declared_classes;
 use function get_declared_interfaces;
 use function get_declared_traits;
+use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
 use function method_exists;
@@ -48,6 +50,8 @@ use function sort;
  */
 class ReflectionSourceStubberTest extends TestCase
 {
+    private const EXTENSIONS = ['Core', 'standard', 'pcre', 'SPL'];
+
     private ReflectionSourceStubber $stubber;
 
     private PhpInternalSourceLocator $phpInternalSourceLocator;
@@ -270,7 +274,7 @@ class ReflectionSourceStubberTest extends TestCase
                     }
 
                     // Check only always enabled extensions
-                    return in_array($reflection->getExtensionName(), ['Core', 'standard', 'pcre', 'SPL'], true);
+                    return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
             ),
         );
@@ -528,6 +532,55 @@ class ReflectionSourceStubberTest extends TestCase
             $stubData->getStub(),
         );
         self::assertSame('Core', $stubData->getExtensionName());
+    }
+
+    /**
+     * @return list<list<mixed>>
+     */
+    public function internalConstantsProvider(): array
+    {
+        $provider = [];
+
+        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $constants */
+        $constants = get_defined_constants(true);
+
+        foreach ($constants as $extensionName => $extensionConstants) {
+            // Check only always enabled extensions
+            if (! in_array($extensionName, self::EXTENSIONS, true)) {
+                continue;
+            }
+
+            foreach ($extensionConstants as $constantName => $constantValue) {
+                $provider[] = [$constantName, $constantValue, $extensionName];
+            }
+        }
+
+        return $provider;
+    }
+
+    /**
+     * @dataProvider internalConstantsProvider
+     */
+    public function testInternalConstants(string $constantName, mixed $constantValue, string $extensionName): void
+    {
+        $constantReflection = $this->reflector->reflectConstant($constantName);
+
+        self::assertInstanceOf(ReflectionConstant::class, $constantReflection);
+        self::assertSame($constantName, $constantReflection->getName());
+        self::assertSame($constantName, $constantReflection->getShortName());
+
+        self::assertNotNull($constantReflection->getNamespaceName());
+        self::assertFalse($constantReflection->inNamespace());
+        self::assertTrue($constantReflection->isInternal());
+        self::assertFalse($constantReflection->isUserDefined());
+        self::assertSame($extensionName, $constantReflection->getExtensionName());
+
+        // NAN cannot be compared
+        if ($constantName === 'NAN') {
+            return;
+        }
+
+        self::assertSame($constantValue, $constantReflection->getValue());
     }
 
     public function testUnknownConstant(): void
