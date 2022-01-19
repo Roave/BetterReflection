@@ -76,14 +76,16 @@ class ReflectionNamedType extends ReflectionType
             throw new LogicException(sprintf('The type %s cannot be resolved to class', $this->name));
         }
 
-        if (strtolower($this->name) === 'self') {
+        $lowercaseName = strtolower($this->name);
+
+        if ($lowercaseName === 'self') {
             $class = $this->owner->getDeclaringClass();
             assert($class instanceof ReflectionClass);
 
             return $class;
         }
 
-        if (strtolower($this->name) === 'parent') {
+        if ($lowercaseName === 'parent') {
             $class = $this->owner->getDeclaringClass();
             assert($class instanceof ReflectionClass);
             $parentClass = $class->getParentClass();
@@ -94,7 +96,7 @@ class ReflectionNamedType extends ReflectionType
 
         if (
             $this->owner instanceof ReflectionMethod
-            && strtolower($this->name) === 'static'
+            && $lowercaseName === 'static'
         ) {
             return $this->owner->getCurrentClass();
         }
