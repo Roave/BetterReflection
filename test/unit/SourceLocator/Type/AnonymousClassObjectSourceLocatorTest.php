@@ -10,6 +10,7 @@ use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\NoAnonymousClassOnLine;
@@ -224,5 +225,24 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
             ),
         );
+    }
+
+    public function testNamesAreResolved(): void
+    {
+        $class = require __DIR__ . '/../../Fixture/AnonymousClassExtendingClassFromNamespace.php';
+
+        $sourceLocator = new AnonymousClassObjectSourceLocator($class, $this->parser);
+        $reflector     = new DefaultReflector(BetterReflectionSingleton::instance()->sourceLocator());
+
+        $reflection = $sourceLocator->locateIdentifier(
+            $reflector,
+            new Identifier(
+                $class::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
+        );
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('Roave\BetterReflectionTest\Fixture\AnonymousClassParent', $reflection->getParentClass()->getName());
     }
 }
