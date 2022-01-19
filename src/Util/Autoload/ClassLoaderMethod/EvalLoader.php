@@ -7,6 +7,11 @@ namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\ClassPrinterInterface;
 
+/**
+ * @deprecated
+ *
+ * @psalm-suppress DeprecatedClass, DeprecatedInterface
+ */
 final class EvalLoader implements LoaderMethodInterface
 {
     public function __construct(private ClassPrinterInterface $classPrinter)
