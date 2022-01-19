@@ -8,6 +8,10 @@ interface Boo {
     public const B = 'b';
 }
 
+interface Coo {
+    public const B = 'wrong-b';
+}
+
 class Baz implements Foo {
     public const C = 'c';
 
@@ -16,7 +20,7 @@ class Baz implements Foo {
     private const E = 'e';
 }
 
-abstract class Qux extends Baz implements Boo {
+abstract class Qux extends Baz implements Boo, Coo {
     public const F = 'f';
 
     private const E = 'ee';

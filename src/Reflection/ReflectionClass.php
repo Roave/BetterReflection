@@ -228,6 +228,8 @@ class ReflectionClass implements Reflection
      */
     private function createMethodsFromTrait(ReflectionMethod $method): array
     {
+        $this->parseTraitUsages();
+
         $traitAliases     = $this->getTraitAliases();
         $traitPrecedences = $this->getTraitPrecedences();
         $traitModifiers   = $this->getTraitModifiers();
@@ -375,19 +377,19 @@ class ReflectionClass implements Reflection
 
                 $existingMethod = $methods[$methodName];
 
-                // Non-abstract trait method can overwrite existing methods:
+                // Non-abstract trait method can overwrite existing method:
                 // - when existing method comes from parent class
                 // - when existing method comes from trait and is abstract
+
+                if ($method->isAbstract()) {
+                    continue;
+                }
+
                 if (
-                    ! (
-                    ! $method->isAbstract()
-                    && (
-                        $existingMethod->getDeclaringClass()->getName() !== $className
-                        || (
-                            $existingMethod->isAbstract()
-                            && $existingMethod->getDeclaringClass()->isTrait()
-                        )
-                    )
+                    $existingMethod->getDeclaringClass()->getName() === $className
+                    && ! (
+                        $existingMethod->isAbstract()
+                        && $existingMethod->getDeclaringClass()->isTrait()
                     )
                 ) {
                     continue;
@@ -1231,8 +1233,6 @@ class ReflectionClass implements Reflection
      */
     private function getTraitPrecedences(): array
     {
-        $this->parseTraitUsages();
-
         assert($this->cachedTraitsData !== null);
 
         return $this->cachedTraitsData['precedences'];
@@ -1259,8 +1259,6 @@ class ReflectionClass implements Reflection
      */
     private function getTraitModifiers(): array
     {
-        $this->parseTraitUsages();
-
         assert($this->cachedTraitsData !== null);
 
         return $this->cachedTraitsData['modifiers'];

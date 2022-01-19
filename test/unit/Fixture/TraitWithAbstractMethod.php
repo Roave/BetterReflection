@@ -85,3 +85,22 @@ class ClassUsesAndRenamesMethodFromTrait extends ClassExtendingClassWithAbstract
         nonAbstractMethod as abstractMethod;
     }
 }
+
+trait TraitWithNonAbstractFooMethod
+{
+    public function foo(): void
+    {
+    }
+
+    public function boo(): void
+    {
+    }
+}
+
+abstract class ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod
+{
+    use TraitWithAbstractMethod;
+    use TraitWithNonAbstractFooMethod;
+
+    abstract public function boo(): void;
+}

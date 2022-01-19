@@ -62,6 +62,7 @@ use Roave\BetterReflectionTest\Fixture\ClassUsingTraitWithAbstractMethod;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithCaseInsensitiveMethods;
 use Roave\BetterReflectionTest\Fixture\ClassWithMissingParent;
+use Roave\BetterReflectionTest\Fixture\ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod;
 use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\ExampleClassWhereConstructorIsNotFirstMethod;
@@ -566,6 +567,7 @@ class ReflectionClassTest extends TestCase
 
         $property = $properties['name'];
 
+        self::assertSame('name', $property->getName());
         self::assertTrue($property->isPublic());
         self::assertTrue($property->isReadOnly());
         self::assertFalse($property->isPromoted());
@@ -617,6 +619,7 @@ class ReflectionClassTest extends TestCase
 
             $property = $properties[$propertyName];
 
+            self::assertSame($propertyName, $property->getName(), $fullPropertyName);
             self::assertTrue($property->isPublic(), $fullPropertyName);
             self::assertTrue($property->isReadOnly(), $fullPropertyName);
             self::assertFalse($property->isPromoted(), $fullPropertyName);
@@ -690,24 +693,37 @@ PHP;
         $properties = $classInfo->getProperties();
         self::assertCount(6, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
+    }
 
-        self::assertSame('a', $classInfo->getProperty('a')->getName(), 'Failed asserting that property a from trait Bar was returned');
-        self::assertSame(Bar::class, $classInfo->getProperty('a')->getDeclaringClass()->getName());
+    public function dataInheritedProperties(): array
+    {
+        return [
+            ['a', Bar::class, Qux::class],
+            ['b', Bar::class, Qux::class],
+            ['c', Baz::class, Baz::class],
+            ['d', Baz::class, Baz::class],
+            ['f', Qux::class, Qux::class],
+            ['g', Qux::class, Qux::class],
+        ];
+    }
 
-        self::assertSame('b', $classInfo->getProperty('b')->getName(), 'Failed asserting that private property b from trait Bar was returned');
-        self::assertSame(Bar::class, $classInfo->getProperty('b')->getDeclaringClass()->getName());
+    /**
+     * @dataProvider dataInheritedProperties
+     */
+    public function testInheritedProperties(string $propertyName, string $expectedDeclaringClassName, string $expectedImplementingClassName): void
+    {
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/InheritedClassProperties.php',
+            $this->astLocator,
+        )))->reflectClass(Qux::class);
 
-        self::assertSame('c', $classInfo->getProperty('c')->getName(), 'Failed asserting that public property c from parent class Baz was returned');
-        self::assertSame(Baz::class, $classInfo->getProperty('c')->getDeclaringClass()->getName());
+        self::assertTrue($classInfo->hasProperty($propertyName), $propertyName);
 
-        self::assertSame('d', $classInfo->getProperty('d')->getName(), 'Failed asserting that protected property d from parent class Baz was returned');
-        self::assertSame(Baz::class, $classInfo->getProperty('d')->getDeclaringClass()->getName());
+        $property = $classInfo->getProperty($propertyName);
 
-        self::assertSame('f', $classInfo->getProperty('f')->getName(), 'Failed asserting that property f from Qux was returned');
-        self::assertSame(Qux::class, $classInfo->getProperty('f')->getDeclaringClass()->getName());
-
-        self::assertSame('g', $classInfo->getProperty('g')->getName(), 'Failed asserting that property g from Qux was returned');
-        self::assertSame(Qux::class, $classInfo->getProperty('g')->getDeclaringClass()->getName());
+        self::assertSame($propertyName, $property->getName(), $propertyName);
+        self::assertSame($expectedDeclaringClassName, $property->getDeclaringClass()->getName(), $propertyName);
+        self::assertSame($expectedImplementingClassName, $property->getImplementingClass()->getName(), $propertyName);
     }
 
     public function testGetImmediateProperties(): void
@@ -1262,6 +1278,20 @@ PHP;
                 'TraitWithNonAbstractMethod',
                 'ClassUsesAndRenamesMethodFromTrait',
                 'ClassUsesAndRenamesMethodFromTrait',
+            ],
+            [
+                ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod::class,
+                'foo',
+                'TraitWithNonAbstractFooMethod',
+                'ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod',
+                'ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod',
+            ],
+            [
+                ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod::class,
+                'boo',
+                'ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod',
+                'ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod',
+                'ClassWithNonAbstractTraitMethodThatOverwritePreviousAbstractTraitMethod',
             ],
         ];
     }
@@ -2331,6 +2361,8 @@ PHP;
 
             class ClassHasStringableAutomatically
             {
+                public function unrelatedMethodBeforeToString();
+
                 public function __toString(): string
                 {
                 }
@@ -2342,6 +2374,8 @@ PHP;
 
             interface InterfaceHasStringableAutomatically
             {
+                public function unrelatedMethodBeforeToString();
+
                 public function __toString();
             }
         PHP;
@@ -2368,6 +2402,30 @@ PHP;
         self::assertArrayHasKey(Stringable::class, $interfaceNotExtendingStringable->getImmediateInterfaces());
     }
 
+    public function testNoStringableInterface(): void
+    {
+        $php = <<<'PHP'
+            <?php
+
+            class NoStringable
+            {
+                public function notToString(): string
+                {
+                }
+            }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($php, $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $noStringable = $reflector->reflectClass('NoStringable');
+
+        self::assertNotContains(Stringable::class, $noStringable->getInterfaceNames());
+        self::assertNotContains(Stringable::class, $noStringable->getImmediateInterfaces());
+    }
+
     public function testNoStringableInterfaceWhenStringableNotFound(): void
     {
         $php = <<<'PHP'
@@ -2386,6 +2444,7 @@ PHP;
         $noStringable = $reflector->reflectClass('NoStringable');
 
         self::assertNotContains(Stringable::class, $noStringable->getInterfaceNames());
+        self::assertNotContains(Stringable::class, $noStringable->getImmediateInterfaces());
     }
 
     public function testNoStringableInterfaceWhenStringableIsNotInternal(): void

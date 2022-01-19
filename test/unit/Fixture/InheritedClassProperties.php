@@ -22,7 +22,11 @@ abstract class Qux extends Baz
 
     public $f;
 
-    public function __construct(private $g)
+    public function unrelatedMethodBeforeConstructor()
+    {
+    }
+
+    public function __construct($unrelatedParameterBeforePromotedParameter, private $g)
     {
     }
 }
