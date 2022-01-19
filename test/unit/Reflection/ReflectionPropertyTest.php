@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use ClassWithPropertiesAndTraitProperties;
+use Error;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use OutOfBoundsException;
 use PhpParser\Node\Stmt\Class_;
@@ -684,6 +685,17 @@ PHP;
         self::expectException(ObjectNotInstanceOfClass::class);
 
         $classReflection->getProperty('withoutType')->isInitialized(new stdClass());
+    }
+
+    public function testIsInitializedThrowsError(): void
+    {
+        $object = new InitializedProperties();
+        unset($object->toBeRemoved);
+
+        $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
+
+        self::expectException(Error::class);
+        $classReflection->getProperty('toBeRemoved')->isInitialized($object);
     }
 
     public function deprecatedDocCommentProvider(): array

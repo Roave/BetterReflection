@@ -2,6 +2,8 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
+use Error;
+
 class InitializedProperties
 {
     public $withoutType;
@@ -13,8 +15,15 @@ class InitializedProperties
 
     public int $withTypeInitialized;
 
+    public int $toBeRemoved;
+
     public function __construct()
     {
         $this->withTypeInitialized = 0;
+    }
+
+    public function __get($property)
+    {
+        throw new Error();
     }
 }

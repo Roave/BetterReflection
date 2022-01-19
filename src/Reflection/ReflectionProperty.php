@@ -27,14 +27,13 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
-use Throwable;
 
 use function assert;
 use function class_exists;
 use function func_num_args;
 use function is_object;
 use function sprintf;
-use function strpos;
+use function str_contains;
 use function trait_exists;
 
 class ReflectionProperty
@@ -48,7 +47,7 @@ class ReflectionProperty
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private bool $isPromoted,
-        private bool $declaredAtCompileTime = true,
+        private bool $declaredAtCompileTime,
     ) {
     }
 
@@ -133,8 +132,7 @@ class ReflectionProperty
      */
     public function getModifiers(): int
     {
-        $val  = 0;
-        $val += $this->isStatic() ? CoreReflectionProperty::IS_STATIC : 0;
+        $val  = $this->isStatic() ? CoreReflectionProperty::IS_STATIC : 0;
         $val += $this->isPublic() ? CoreReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? CoreReflectionProperty::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? CoreReflectionProperty::IS_PRIVATE : 0;
@@ -197,8 +195,10 @@ class ReflectionProperty
             $this->getValue($object);
 
             return true;
-        } catch (Throwable $e) {
-            if ($e instanceof Error && strpos($e->getMessage(), 'must not be accessed before initialization') !== false) {
+
+        // @phpstan-ignore-next-line
+        } catch (Error $e) {
+            if (str_contains($e->getMessage(), 'must not be accessed before initialization')) {
                 return false;
             }
 
