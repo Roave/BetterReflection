@@ -13,6 +13,8 @@ use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
 use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use Roave\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
+use Roave\BetterReflectionTest\Fixture\ClassLoaderShouldNotBeLoaded;
+use Roave\BetterReflectionTest\Fixture\JustAnotherTestClassForAutoloader;
 use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 use stdClass;
 
@@ -26,16 +28,28 @@ use function spl_autoload_unregister;
  */
 final class ClassLoaderTest extends TestCase
 {
+    private ?ClassLoader $loader = null;
+
+    protected function tearDown(): void
+    {
+        if ($this->loader === null) {
+            return;
+        }
+
+        spl_autoload_unregister($this->loader);
+        $this->loader = null;
+    }
+
     public function testAutoloadSelfRegisters(): void
     {
         $initialAutoloaderCount = count(spl_autoload_functions());
 
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader       = new ClassLoader($loaderMethod);
+        $this->loader = new ClassLoader($loaderMethod);
 
         self::assertCount($initialAutoloaderCount + 1, spl_autoload_functions());
 
-        spl_autoload_unregister($loader);
+        spl_autoload_unregister($this->loader);
 
         self::assertCount($initialAutoloaderCount, spl_autoload_functions());
     }
@@ -53,12 +67,51 @@ final class ClassLoaderTest extends TestCase
                 eval((new PhpParserPrinter())->__invoke($reflection));
             });
 
-        $loader = new ClassLoader($loaderMethod);
-        $loader->addClass($reflection);
+        $this->loader = new ClassLoader($loaderMethod);
+        $this->loader->addClass($reflection);
 
         new TestClassForAutoloader();
+    }
 
-        spl_autoload_unregister($loader);
+    public function testAutoloaderTriggersLoaderMethodOnlyOnce(): void
+    {
+        $reflection = ReflectionClass::createFromName(ClassLoaderShouldNotBeLoaded::class);
+
+        $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        $loaderMethod->expects(self::once())
+            ->method('__invoke');
+
+        $this->loader = new ClassLoader($loaderMethod);
+        $this->loader->addClass($reflection);
+
+        self::expectException(FailedToLoadClass::class);
+        $this->loader->__invoke(ClassLoaderShouldNotBeLoaded::class);
+    }
+
+    public function testInvokeReturnsFalseForUnknownClass(): void
+    {
+        $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        $this->loader = new ClassLoader($loaderMethod);
+
+        self::assertFalse($this->loader->__invoke(AnotherTestClassForAutoloader::class));
+    }
+
+    public function testInvokeReturnsTrueForLoadedClass(): void
+    {
+        $reflection = ReflectionClass::createFromName(JustAnotherTestClassForAutoloader::class);
+
+        $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        $loaderMethod->expects(self::once())
+            ->method('__invoke')
+            ->with($reflection)
+            ->willReturnCallback(static function () use ($reflection): void {
+                eval((new PhpParserPrinter())->__invoke($reflection));
+            });
+
+        $this->loader = new ClassLoader($loaderMethod);
+        $this->loader->addClass($reflection);
+
+        self::assertTrue($this->loader->__invoke(JustAnotherTestClassForAutoloader::class));
     }
 
     public function testAddClassThrowsExceptionWhenClassAlreadyRegisteredInAutoload(): void
@@ -66,27 +119,23 @@ final class ClassLoaderTest extends TestCase
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
 
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader       = new ClassLoader($loaderMethod);
+        $this->loader = new ClassLoader($loaderMethod);
 
-        $loader->addClass($reflection);
+        $this->loader->addClass($reflection);
 
         $this->expectException(ClassAlreadyRegistered::class);
-        $loader->addClass($reflection);
+        $this->loader->addClass($reflection);
     }
 
     public function testAddClassThrowsExceptionWhenClassAlreadyLoaded(): void
     {
         $loaderMethod = $this->createMock(LoaderMethodInterface::class);
-        $loader       = new ClassLoader($loaderMethod);
+        $this->loader = new ClassLoader($loaderMethod);
 
         $this->expectException(ClassAlreadyLoaded::class);
-        $loader->addClass(ReflectionClass::createFromName(stdClass::class));
+        $this->loader->addClass(ReflectionClass::createFromName(stdClass::class));
     }
 
-    /**
-     * @todo I'd like to figure out a better way of doing this; weird interactions with other tests here, but it works
-     * @runInSeparateProcess
-     */
     public function testAutoloadThrowsExceptionWhenClassIsNotLoadedCorrectlyAfterAttemptingToLoad(): void
     {
         $reflection = ReflectionClass::createFromName(AnotherTestClassForAutoloader::class);
@@ -97,8 +146,8 @@ final class ClassLoaderTest extends TestCase
             ->method('__invoke')
             ->with($reflection);
 
-        $loader = new ClassLoader($loaderMethod);
-        $loader->addClass($reflection);
+        $this->loader = new ClassLoader($loaderMethod);
+        $this->loader->addClass($reflection);
 
         $this->expectException(FailedToLoadClass::class);
         new AnotherTestClassForAutoloader();

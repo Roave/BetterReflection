@@ -52,7 +52,6 @@ use function assert;
 use function end;
 use function implode;
 use function in_array;
-use function is_array;
 use function is_string;
 use function ltrim;
 use function sha1;
@@ -77,14 +76,8 @@ class ReflectionClass implements Reflection
     /** @var array<lowercase-string, ReflectionMethod>|null */
     private ?array $cachedMethods = null;
 
-    /** @var array<string, string>|null */
-    private ?array $cachedTraitAliases = null;
-
-    /** @var array<string, int>|null */
-    private ?array $cachedTraitModifiers = null;
-
-    /** @var array<string, string>|null */
-    private ?array $cachedTraitPrecedences = null;
+    /** @var array{aliases: array<string, string>, modifiers: array<string, int>, precedences: array<string, string>}|null */
+    private ?array $cachedTraitsData = null;
 
     private ?ReflectionClass $cachedParentClass = null;
 
@@ -678,10 +671,10 @@ class ReflectionClass implements Reflection
             array_values($this->getImmediateReflectionConstants()),
             ...array_map(
                 static function (ReflectionClass $ancestor): array {
-                    return array_filter(
-                        array_values($ancestor->getReflectionConstants()),
+                    return array_values(array_filter(
+                        $ancestor->getReflectionConstants(),
                         static fn (ReflectionClassConstant $classConstant): bool => ! $classConstant->isPrivate(),
-                    );
+                    ));
                 },
                 array_filter([$this->getParentClass()]),
             ),
@@ -1212,9 +1205,9 @@ class ReflectionClass implements Reflection
     {
         $this->parseTraitUsages();
 
-        assert(is_array($this->cachedTraitAliases));
+        assert($this->cachedTraitsData !== null);
 
-        return $this->cachedTraitAliases;
+        return $this->cachedTraitsData['aliases'];
     }
 
     /**
@@ -1240,9 +1233,9 @@ class ReflectionClass implements Reflection
     {
         $this->parseTraitUsages();
 
-        assert(is_array($this->cachedTraitPrecedences));
+        assert($this->cachedTraitsData !== null);
 
-        return $this->cachedTraitPrecedences;
+        return $this->cachedTraitsData['precedences'];
     }
 
     /**
@@ -1268,23 +1261,25 @@ class ReflectionClass implements Reflection
     {
         $this->parseTraitUsages();
 
-        assert(is_array($this->cachedTraitModifiers));
+        assert($this->cachedTraitsData !== null);
 
-        return $this->cachedTraitModifiers;
+        return $this->cachedTraitsData['modifiers'];
     }
 
     private function parseTraitUsages(): void
     {
-        if ($this->cachedTraitAliases !== null && $this->cachedTraitModifiers !== null && $this->cachedTraitPrecedences !== null) {
+        if ($this->cachedTraitsData !== null) {
             return;
         }
 
         /** @var Node\Stmt\TraitUse[] $traitUsages */
         $traitUsages = array_filter($this->node->stmts, static fn (Node $node): bool => $node instanceof TraitUse);
 
-        $this->cachedTraitAliases     = [];
-        $this->cachedTraitModifiers   = [];
-        $this->cachedTraitPrecedences = [];
+        $this->cachedTraitsData = [
+            'aliases'     => [],
+            'modifiers'   => [],
+            'precedences' => [],
+        ];
 
         foreach ($traitUsages as $traitUsage) {
             $traitNames  = $traitUsage->traits;
@@ -1300,11 +1295,11 @@ class ReflectionClass implements Reflection
 
                 if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias) {
                     if ($adaptation->newModifier) {
-                        $this->cachedTraitModifiers[$methodHash] = $adaptation->newModifier;
+                        $this->cachedTraitsData['modifiers'][$methodHash] = $adaptation->newModifier;
                     }
 
                     if ($adaptation->newName) {
-                        $this->cachedTraitAliases[$adaptation->newName->name] = $methodHash;
+                        $this->cachedTraitsData['aliases'][$adaptation->newName->name] = $methodHash;
                         continue;
                     }
                 }
@@ -1317,7 +1312,7 @@ class ReflectionClass implements Reflection
                     $adaptationNameHash = $this->methodHash($insteadof->toString(), $adaptation->method->toString());
                     $originalNameHash   = $methodHash;
 
-                    $this->cachedTraitPrecedences[$adaptationNameHash] = $originalNameHash;
+                    $this->cachedTraitsData['precedences'][$adaptationNameHash] = $originalNameHash;
                 }
             }
         }

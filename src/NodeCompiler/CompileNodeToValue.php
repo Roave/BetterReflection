@@ -137,7 +137,7 @@ class CompileNodeToValue
         $constantName = $constNode->name->toString();
         $namespace    = $context->getNamespace();
 
-        if ($namespace !== '' && $constNode->name->isUnqualified()) {
+        if ($constNode->name->isUnqualified()) {
             $namespacedConstantName = sprintf('%s\\%s', $namespace, $constantName);
 
             if ($this->constantExists($namespacedConstantName, $context)) {

@@ -19,6 +19,8 @@ class Baz implements Foo {
 abstract class Qux extends Baz implements Boo {
     public const F = 'f';
 
+    private const E = 'ee';
+
     protected const D = 'dd';
 }
 
