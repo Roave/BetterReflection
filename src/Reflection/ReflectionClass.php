@@ -671,10 +671,10 @@ class ReflectionClass implements Reflection
             array_values($this->getImmediateReflectionConstants()),
             ...array_map(
                 static function (ReflectionClass $ancestor): array {
-                    return array_filter(
-                        array_values($ancestor->getReflectionConstants()),
+                    return array_values(array_filter(
+                        $ancestor->getReflectionConstants(),
                         static fn (ReflectionClassConstant $classConstant): bool => ! $classConstant->isPrivate(),
-                    );
+                    ));
                 },
                 array_filter([$this->getParentClass()]),
             ),
