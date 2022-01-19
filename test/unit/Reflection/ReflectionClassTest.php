@@ -956,24 +956,6 @@ PHP;
         ], $classInfo->getDefaultProperties());
     }
 
-    public function testGetDefaultPropertiesShouldIgnoreRuntimeProperty(): void
-    {
-        $object                     = new DefaultProperties();
-        $object->notDefaultProperty = null;
-
-        $classInfo = ReflectionClass::createFromInstance($object);
-
-        self::assertSame([
-            'fromTrait' => 'anything',
-            'hasDefault' => 'const',
-            'hasNullAsDefault' => null,
-            'noDefault' => null,
-            'hasDefaultWithType' => 123,
-            'hasNullAsDefaultWithType' => null,
-            'noDefaultWithType' => null,
-        ], $classInfo->getDefaultProperties());
-    }
-
     public function testIsAnonymousWithNotAnonymousClass(): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(

@@ -933,7 +933,7 @@ class ReflectionClass implements Reflection
     {
         return array_map(
             static fn (ReflectionProperty $property) => $property->getDefaultValue(),
-            array_filter($this->getProperties(), static fn (ReflectionProperty $property): bool => $property->isDefault()),
+            $this->getProperties(),
         );
     }
 

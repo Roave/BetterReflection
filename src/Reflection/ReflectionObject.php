@@ -23,6 +23,8 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 
+use function array_filter;
+use function array_map;
 use function array_merge;
 use function preg_match;
 
@@ -271,7 +273,10 @@ class ReflectionObject extends ReflectionClass
      */
     public function getDefaultProperties(): array
     {
-        return $this->reflectionClass->getDefaultProperties();
+        return array_map(
+            static fn (ReflectionProperty $property) => $property->getDefaultValue(),
+            array_filter($this->getProperties(), static fn (ReflectionProperty $property): bool => $property->isDefault()),
+        );
     }
 
     public function getFileName(): ?string
