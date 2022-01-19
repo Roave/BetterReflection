@@ -13,6 +13,8 @@ use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
 use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use Roave\BetterReflectionTest\Fixture\AnotherTestClassForAutoloader;
+use Roave\BetterReflectionTest\Fixture\ClassLoaderShouldNotBeLoaded;
+use Roave\BetterReflectionTest\Fixture\JustAnotherTestClassForAutoloader;
 use Roave\BetterReflectionTest\Fixture\TestClassForAutoloader;
 use stdClass;
 
@@ -57,6 +59,51 @@ final class ClassLoaderTest extends TestCase
         $loader->addClass($reflection);
 
         new TestClassForAutoloader();
+
+        spl_autoload_unregister($loader);
+    }
+
+    public function testAutoloaderTriggersLoaderMethodOnlyOnce(): void
+    {
+        $reflection = ReflectionClass::createFromName(ClassLoaderShouldNotBeLoaded::class);
+
+        $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        $loaderMethod->expects(self::once())
+            ->method('__invoke');
+
+        $loader = new ClassLoader($loaderMethod);
+        $loader->addClass($reflection);
+
+        self::expectException(FailedToLoadClass::class);
+        $loader->__invoke(ClassLoaderShouldNotBeLoaded::class);
+    }
+
+    public function testInvokeReturnsFalseForUnknownClass(): void
+    {
+        $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        $loader       = new ClassLoader($loaderMethod);
+
+        self::assertFalse($loader->__invoke(AnotherTestClassForAutoloader::class));
+
+        spl_autoload_unregister($loader);
+    }
+
+    public function testInvokeReturnsTrueForLoadedClass(): void
+    {
+        $reflection = ReflectionClass::createFromName(JustAnotherTestClassForAutoloader::class);
+
+        $loaderMethod = $this->createMock(LoaderMethodInterface::class);
+        $loaderMethod->expects(self::once())
+            ->method('__invoke')
+            ->with($reflection)
+            ->willReturnCallback(static function () use ($reflection): void {
+                eval((new PhpParserPrinter())->__invoke($reflection));
+            });
+
+        $loader = new ClassLoader($loaderMethod);
+        $loader->addClass($reflection);
+
+        self::assertTrue($loader->__invoke(JustAnotherTestClassForAutoloader::class));
 
         spl_autoload_unregister($loader);
     }
