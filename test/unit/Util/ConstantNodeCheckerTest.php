@@ -19,24 +19,42 @@ class ConstantNodeCheckerTest extends TestCase
         $node = new Node\Expr\FuncCall(new Node\Expr\Variable('foo'));
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage('Invalid constant node (first 50 characters: $foo())');
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
     public function testDifferentName(): void
     {
-        $node = new Node\Expr\FuncCall(new Node\Name('foo'));
+        $node = new Node\Expr\FuncCall(new Node\Name('foo'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg(new Node\Scalar\LNumber(1))]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage("Invalid constant node (first 50 characters: foo('FOO', 1))");
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    public function testInvalidArgumentsCount(): void
+    public function testLessArguments(): void
     {
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO'))]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage("Invalid constant node (first 50 characters: define('FOO'))");
+
+        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+    }
+
+    public function testMoreArguments(): void
+    {
+        $node = new Node\Expr\FuncCall(new Node\Name('define'), [
+            new Node\Arg(new Node\Scalar\String_('FOO1')),
+            new Node\Arg(new Node\Scalar\String_('FOO2')),
+            new Node\Arg(new Node\Scalar\String_('FOO3')),
+            new Node\Arg(new Node\Scalar\String_('FOO4')),
+        ]);
+
+        self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage("Invalid constant node (first 50 characters: define('FOO1', 'FOO2', 'FOO3', 'FOO4'))");
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
@@ -46,6 +64,7 @@ class ConstantNodeCheckerTest extends TestCase
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\VariadicPlaceholder()]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage('Invalid constant node (first 50 characters: define(...))');
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
@@ -55,6 +74,7 @@ class ConstantNodeCheckerTest extends TestCase
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\VariadicPlaceholder()]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage("Invalid constant node (first 50 characters: define('FOO', ...))");
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
@@ -64,6 +84,7 @@ class ConstantNodeCheckerTest extends TestCase
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Expr\Variable('FOO')), new Node\Arg(new Node\Scalar\String_('foo'))]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage('Invalid constant node (first 50 characters: define($FOO, \'foo\'))');
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
@@ -73,6 +94,7 @@ class ConstantNodeCheckerTest extends TestCase
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg(new Node\Expr\FuncCall(new Node\Name('fopen')))]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage("Invalid constant node (first 50 characters: define('FOO', fopen()))");
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
@@ -82,6 +104,7 @@ class ConstantNodeCheckerTest extends TestCase
         $node = new Node\Expr\FuncCall(new Node\Name('define'), [new Node\Arg(new Node\Scalar\String_('FOO')), new Node\Arg(new Node\Expr\Variable('foo'))]);
 
         self::expectException(InvalidConstantNode::class);
+        self::expectExceptionMessage('Invalid constant node (first 50 characters: define(\'FOO\', $foo))');
 
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }

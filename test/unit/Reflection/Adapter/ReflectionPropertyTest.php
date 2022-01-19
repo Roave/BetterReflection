@@ -236,6 +236,8 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         $reflectionPropertyAdapter->setAccessible(true);
+
+        self::assertTrue($reflectionPropertyAdapter->isAccessible());
         self::assertSame(123, $reflectionPropertyAdapter->getValue(new stdClass()));
     }
 
@@ -253,6 +255,9 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         $reflectionPropertyAdapter->setAccessible(true);
+
+        self::assertTrue($reflectionPropertyAdapter->isAccessible());
+
         $reflectionPropertyAdapter->setValue(null, 123);
     }
 
@@ -315,6 +320,8 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         $reflectionPropertyAdapter->setAccessible(true);
+
+        self::assertTrue($reflectionPropertyAdapter->isAccessible());
         self::assertTrue($reflectionPropertyAdapter->isInitialized(new stdClass()));
     }
 

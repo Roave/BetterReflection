@@ -10,6 +10,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
@@ -62,5 +63,11 @@ class SingleFileSourceLocatorTest extends TestCase
         );
 
         self::assertSame('ClassWithNoNamespace', $reflectionClass->getName());
+    }
+
+    public function testThrowsExceptionIfFileIsNotReadable(): void
+    {
+        $this->expectException(InvalidFileLocation::class);
+        new SingleFileSourceLocator('', $this->astLocator);
     }
 }

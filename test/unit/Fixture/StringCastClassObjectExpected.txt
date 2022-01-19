@@ -1,5 +1,5 @@
 Object of class [ <user> class Roave\BetterReflectionTest\Fixture\StringCastClassObject ] {
-  @@ %s/Fixture/StringCastClassObject.php 5-7
+  @@ %s/Fixture/StringCastClassObject.php 5-8
 
   - Constants [0] {
   }
@@ -10,7 +10,8 @@ Object of class [ <user> class Roave\BetterReflectionTest\Fixture\StringCastClas
   - Static methods [0] {
   }
 
-  - Properties [0] {
+  - Properties [1] {
+    Property [ <default> public $notDynamicProperty ]
   }
 
   - Dynamic properties [1] {

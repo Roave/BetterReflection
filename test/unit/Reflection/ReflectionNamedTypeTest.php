@@ -51,22 +51,41 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertFalse($noNullType->allowsNull());
     }
 
-    public function testMixedAllowsNull(): void
+    public function dataMixedAllowsNull(): array
     {
-        $noNullType = $this->createType('mixed');
+        return [
+            ['mixed'],
+            ['MIXED'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataMixedAllowsNull
+     */
+    public function testMixedAllowsNull(string $mixedType): void
+    {
+        $noNullType = $this->createType($mixedType);
         self::assertTrue($noNullType->allowsNull());
     }
 
     public function isBuildinProvider(): Generator
     {
         yield ['string'];
+        yield ['StRiNg'];
         yield ['int'];
+        yield ['INT'];
         yield ['array'];
+        yield ['aRRay'];
         yield ['object'];
+        yield ['obJEct'];
         yield ['iterable'];
+        yield ['iteRABle'];
         yield ['mixed'];
+        yield ['MIXED'];
         yield ['never'];
+        yield ['NEVER'];
         yield ['false'];
+        yield ['FALSE'];
     }
 
     /**
@@ -244,9 +263,13 @@ class ReflectionNamedTypeTest extends TestCase
     {
         return [
             ['ParentClass', 'self', 'ParentClass'],
+            ['ParentClass', 'SELF', 'ParentClass'],
             ['ParentClass', 'static', 'ParentClass'],
+            ['ParentClass', 'STATIC', 'ParentClass'],
             ['ClassWithExtend', 'self', 'ParentClass'],
+            ['ClassWithExtend', 'sElF', 'ParentClass'],
             ['ClassWithExtend', 'static', 'ClassWithExtend'],
+            ['ClassWithExtend', 'StAtIc', 'ClassWithExtend'],
         ];
     }
 
@@ -274,16 +297,27 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame($typeClassName, $class->getName());
     }
 
-    public function testGetClassWithParent(): void
+    public function dataGetClassWithParent(): array
     {
-        $php = '<?php
+        return [
+            ['parent'],
+            ['PARENT'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataGetClassWithParent
+     */
+    public function testGetClassWithParent(string $parentType): void
+    {
+        $php = sprintf('<?php
             abstract class Foo {
             }
 
             class Boo extends Foo {
-                public function method(): parent {}
+                public function method(): %s {}
             }
-        ';
+        ', $parentType);
 
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
 

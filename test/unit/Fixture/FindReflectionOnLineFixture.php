@@ -30,3 +30,14 @@ class SomeFooClassWithImplementedInterface implements \Roave\BetterReflectionTes
 define('FOO', 0);
 
 const BOO = 1;
+
+class SomeFooClassWithImplementedInternalInterface implements \IteratorAggregate
+{
+    public function getIterator(): Traversable
+    {
+    }
+}
+
+class SomeFooClassWithImplementedInterfaceFromSameFile implements SomeFooInterface
+{
+}

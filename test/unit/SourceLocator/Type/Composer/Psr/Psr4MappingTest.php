@@ -121,6 +121,15 @@ class Psr4MappingTest extends TestCase
                 new Identifier('Foo\\Bar', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
                 [__DIR__ . '/../Bar.php'],
             ],
+            'multiple mappings, multiple possible matches (but not all)' => [
+                [
+                    'Foo\\Bar' => [__DIR__ . '/../..'],
+                    'Boo'      => [__DIR__],
+                    'Foo'      => [__DIR__ . '/..'],
+                ],
+                new Identifier('Foo\\Bar\\Boo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
+                [__DIR__ . '/../../Boo.php', __DIR__ . '/../Bar/Boo.php'],
+            ],
         ];
     }
 

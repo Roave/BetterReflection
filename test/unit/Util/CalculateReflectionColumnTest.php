@@ -149,11 +149,11 @@ class CalculateReflectionColumnTest extends TestCase
             ->willReturn(true);
         $node
             ->method('getEndFilePos')
-            ->willReturn(10000);
+            ->willReturn(10);
 
         $this->expectException(InvalidNodePosition::class);
 
-        CalculateReflectionColumn::getEndColumn('', $node);
+        CalculateReflectionColumn::getEndColumn('1234567890', $node);
     }
 
     public function testGetEndColumnThrowsExceptionIfNoPosition(): void

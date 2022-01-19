@@ -49,7 +49,7 @@ final class CalculateReflectionColumn
     {
         $sourceLength = strlen($source);
 
-        if ($position > $sourceLength) {
+        if ($position >= $sourceLength) {
             throw InvalidNodePosition::fromPosition($position);
         }
 

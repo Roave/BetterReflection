@@ -29,7 +29,7 @@ final class ReflectionConstantStringCast
             gettype($value),
             $constantReflection->getName(),
             self::fileAndLinesToString($constantReflection),
-            is_array($value) ? 'Array' : (string) $value,
+            is_array($value) ? 'Array' : $value,
         );
     }
 

@@ -94,4 +94,20 @@ class FindReflectionOnLineTest extends TestCase
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('SomeFooClassWithImplementedInterface', $reflection->getName());
     }
+
+    public function testInvokeFindsClassWithImplementedInternalInterface(): void
+    {
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 34);
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('SomeFooClassWithImplementedInternalInterface', $reflection->getName());
+    }
+
+    public function testInvokeFindsClassWithImplementedInterfaceFromSameFile(): void
+    {
+        $reflection = ($this->finder)(__DIR__ . '/../Fixture/FindReflectionOnLineFixture.php', 41);
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame('SomeFooClassWithImplementedInterfaceFromSameFile', $reflection->getName());
+    }
 }

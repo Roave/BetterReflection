@@ -121,6 +121,29 @@ class PsrAutoloaderLocatorTest extends TestCase
         ));
     }
 
+    public function testWillNotLocateClassWhenFileDoesNotExist(): void
+    {
+        $astLocator = BetterReflectionSingleton::instance()
+            ->astLocator();
+
+        $locator = new PsrAutoloaderLocator(
+            Psr4Mapping::fromArrayMappings([
+                'Roave\\BetterReflectionTest\\Assets\\DirectoryScannerAssets\\' => [
+                    __DIR__ . '/../../../Assets/DirectoryScannerAssets',
+                ],
+            ]),
+            $astLocator,
+        );
+
+        self::assertNull($locator->locateIdentifier(
+            $this->reflector,
+            new Identifier(
+                'BlahBlah',
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ),
+        ));
+    }
+
     public function testWillLocateAllClassesInMappedPsr4Paths(): void
     {
         $astLocator = BetterReflectionSingleton::instance()

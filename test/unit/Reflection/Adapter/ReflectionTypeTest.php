@@ -10,13 +10,11 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionIntersectionType as ReflectionIntersectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
-use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType as ReflectionTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionUnionType as ReflectionUnionTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
-use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
-use Roave\BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
@@ -57,16 +55,27 @@ class ReflectionTypeTest extends TestCase
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
     }
 
-    public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): void
+    public function dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): array
+    {
+        return [
+            ['foo', 'null'],
+            ['null', 'foo'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType
+     */
+    public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(string $firstType, string $secondType): void
     {
         $unionType = $this->createMock(BetterReflectionUnionType::class);
         $fooType   = $this->createMock(BetterReflectionNamedType::class);
         $nullType  = $this->createMock(BetterReflectionNamedType::class);
 
         $fooType->method('getName')
-            ->willReturn('foo');
+            ->willReturn($firstType);
         $nullType->method('getName')
-            ->willReturn('null');
+            ->willReturn($secondType);
         $unionType->method('getTypes')
             ->willReturn([$fooType, $nullType]);
         $unionType->method('allowsNull')
@@ -77,6 +86,29 @@ class ReflectionTypeTest extends TestCase
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $type);
         self::assertTrue($type->allowsNull());
         self::assertSame('foo', $type->getName());
+    }
+
+    public function testWillNotMakeNullableNamedTypeOutOfNullableUnionWithMoreTypes(): void
+    {
+        $unionType = $this->createMock(BetterReflectionUnionType::class);
+        $fooType   = $this->createMock(BetterReflectionNamedType::class);
+        $booType   = $this->createMock(BetterReflectionNamedType::class);
+        $nullType  = $this->createMock(BetterReflectionNamedType::class);
+
+        $fooType->method('getName')
+            ->willReturn('foo');
+        $booType->method('getName')
+            ->willReturn('boo');
+        $nullType->method('getName')
+            ->willReturn('null');
+        $unionType->method('getTypes')
+            ->willReturn([$fooType, $booType, $nullType]);
+        $unionType->method('allowsNull')
+            ->willReturn(true);
+
+        $type = ReflectionTypeAdapter::fromTypeOrNull($unionType);
+
+        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, $type);
     }
 
     public function testFromTypeOrNullWithUnionType(): void
@@ -91,9 +123,9 @@ class ReflectionTypeTest extends TestCase
 
     public function testMixedAllowsNull(): void
     {
-        $type = ReflectionType::fromTypeOrNull(new ReflectionNamedType(
+        $type = ReflectionTypeAdapter::fromTypeOrNull(new BetterReflectionNamedType(
             $this->createMock(Reflector::class),
-            $this->createMock(ReflectionParameter::class),
+            $this->createMock(BetterReflectionParameter::class),
             new Identifier('mixed'),
         ));
         self::assertTrue($type->allowsNull());

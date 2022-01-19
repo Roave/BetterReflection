@@ -840,4 +840,30 @@ class ReflectionObjectTest extends TestCase
         self::expectException(ValueError::class);
         $reflectionObjectAdapter->getAttributes(null, 123);
     }
+
+    public function testGetTraits(): void
+    {
+        $betterReflectionTrait1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionTrait1
+            ->method('getName')
+            ->willReturn('Trait1');
+        $betterReflectionTrait2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionTrait2
+            ->method('getName')
+            ->willReturn('Trait2');
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getTraits')
+            ->willReturn([$betterReflectionTrait1, $betterReflectionTrait2]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $traits = $reflectionObjectAdapter->getTraits();
+
+        self::assertContainsOnlyInstancesOf(ReflectionClassAdapter::class, $traits);
+        self::assertCount(2, $traits);
+        self::assertArrayHasKey('Trait1', $traits);
+        self::assertArrayHasKey('Trait2', $traits);
+    }
 }
