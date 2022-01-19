@@ -7,8 +7,10 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
@@ -150,6 +152,16 @@ class ReflectionConstantTest extends TestCase
         $reflection = $reflector->reflectConstant('FOO');
 
         self::assertSame(E_ALL, $reflection->getValue());
+    }
+
+    public function testCreateFromNodeWithInvalidDefine(): void
+    {
+        self::expectException(InvalidConstantNode::class);
+        ReflectionConstant::createFromNode(
+            $this->createMock(Reflector::class),
+            new Node\Expr\FuncCall(new Node\Expr\Variable('foo')),
+            $this->createMock(LocatedSource::class),
+        );
     }
 
     public function testStaticCreationFromNameByConst(): void
