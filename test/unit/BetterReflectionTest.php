@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest;
 
+use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
@@ -53,5 +54,32 @@ final class BetterReflectionTest extends TestCase
         self::assertNotSame($betterReflection1->sourceLocator(), $betterReflection2->sourceLocator());
         self::assertNotSame($betterReflection1->phpParser(), $betterReflection2->phpParser());
         self::assertNotSame($betterReflection1->sourceStubber(), $betterReflection2->sourceStubber());
+    }
+
+    public function testPhpParserHasAllRequiredSettings(): void
+    {
+        $phpParser = (new BetterReflection())->phpParser();
+        $phpCode   = <<<'PHP'
+<?php
+
+/**
+ * Comment
+ */
+class Foo
+{
+}
+PHP;
+
+        $ast = $phpParser->parse($phpCode);
+
+        self::assertNotNull($ast);
+        self::assertArrayHasKey(0, $ast);
+        self::assertInstanceOf(Node\Stmt\Class_::class, $ast[0]);
+
+        self::assertTrue($ast[0]->hasAttribute('comments'));
+        self::assertTrue($ast[0]->hasAttribute('startLine'));
+        self::assertTrue($ast[0]->hasAttribute('endLine'));
+        self::assertTrue($ast[0]->hasAttribute('startFilePos'));
+        self::assertTrue($ast[0]->hasAttribute('endFilePos'));
     }
 }
