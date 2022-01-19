@@ -285,14 +285,6 @@ class ReflectionParameter
             return true;
         }
 
-        if ($type instanceof ReflectionUnionType) {
-            foreach ($type->getTypes() as $unionType) {
-                if (strtolower($unionType->getName()) === 'null') {
-                    return true;
-                }
-            }
-        }
-
         return $type->allowsNull();
     }
 
