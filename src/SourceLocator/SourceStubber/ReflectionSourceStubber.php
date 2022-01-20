@@ -36,23 +36,21 @@ use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use ReflectionUnionType as CoreReflectionUnionType;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
+use Roave\BetterReflection\Util\ClassExistenceChecker;
 
 use function array_diff;
 use function array_key_exists;
 use function assert;
-use function class_exists;
 use function explode;
 use function function_exists;
 use function get_defined_constants;
 use function implode;
 use function in_array;
-use function interface_exists;
 use function is_array;
 use function is_resource;
 use function method_exists;
 use function preg_replace;
 use function sprintf;
-use function trait_exists;
 
 /**
  * It generates a stub source from internal reflection for given class or function name.
@@ -78,13 +76,7 @@ final class ReflectionSourceStubber implements SourceStubber
      */
     public function generateClassStub(string $className): ?StubData
     {
-        if (
-            ! (
-            class_exists($className, false)
-            || interface_exists($className, false)
-            || trait_exists($className, false)
-            )
-        ) {
+        if (! ClassExistenceChecker::exists($className)) {
             return null;
         }
 

@@ -9,12 +9,10 @@ use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\LoaderMethodInterface
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyLoaded;
 use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
 use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
+use Roave\BetterReflection\Util\ClassExistenceChecker;
 
 use function array_key_exists;
-use function class_exists;
-use function interface_exists;
 use function spl_autoload_register;
-use function trait_exists;
 
 /**
  * @deprecated
@@ -41,7 +39,7 @@ final class ClassLoader
             throw Exception\ClassAlreadyRegistered::fromReflectionClass($reflectionClass);
         }
 
-        if (class_exists($reflectionClass->getName(), false)) {
+        if (ClassExistenceChecker::exists($reflectionClass->getName())) {
             throw Exception\ClassAlreadyLoaded::fromReflectionClass($reflectionClass);
         }
 
@@ -59,11 +57,7 @@ final class ClassLoader
 
         $this->loaderMethod->__invoke($this->reflections[$classToLoad]);
 
-        if (
-            ! (class_exists($classToLoad, false)
-            || interface_exists($classToLoad, false)
-            || trait_exists($classToLoad, false))
-        ) {
+        if (! ClassExistenceChecker::exists($classToLoad)) {
             throw Exception\FailedToLoadClass::fromClassName($classToLoad);
         }
 

@@ -12,6 +12,7 @@ use ReflectionFunction as CoreReflectionFunction;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
 use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
@@ -186,5 +187,24 @@ class ClosureSourceLocatorTest extends TestCase
                 new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
             ),
         );
+    }
+
+    public function testNamesAreResolved(): void
+    {
+        $closure = require __DIR__ . '/../../Fixture/ClosureWithParameterWithClassFromNamespace.php';
+
+        $sourceLocator = new ClosureSourceLocator($closure, $this->parser);
+        $reflector     = new DefaultReflector(BetterReflectionSingleton::instance()->sourceLocator());
+
+        $reflection = $sourceLocator->locateIdentifier(
+            $reflector,
+            new Identifier(
+                ReflectionFunction::CLOSURE_NAME,
+                new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
+            ),
+        );
+
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
+        self::assertSame('Roave\BetterReflectionTest\Fixture\ClassUsedAsClosureParameter', $reflection->getParameter('parameter')->getType()?->__toString());
     }
 }

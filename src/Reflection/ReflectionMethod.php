@@ -19,12 +19,11 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflection\Util\ClassExistenceChecker;
 
 use function assert;
-use function class_exists;
 use function sprintf;
 use function strtolower;
-use function trait_exists;
 
 class ReflectionMethod
 {
@@ -386,7 +385,7 @@ class ReflectionMethod
      */
     private function assertClassExist(string $className): void
     {
-        if (! class_exists($className, false) && ! trait_exists($className, false)) {
+        if (! ClassExistenceChecker::classExists($className) && ! ClassExistenceChecker::traitExists($className)) {
             throw new ClassDoesNotExist(sprintf('Method of class %s cannot be used as the class is not loaded', $className));
         }
     }

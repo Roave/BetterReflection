@@ -27,7 +27,6 @@ use Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_filter;
-use function array_values;
 use function assert;
 use function file_get_contents;
 use function strpos;
@@ -102,7 +101,10 @@ final class ClosureSourceLocator implements SourceLocator
                     return null;
                 }
 
-                if ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction) {
+                if (
+                    $node->getStartLine() === $this->startLine
+                    && ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction)
+                ) {
                     $this->closureNodes[] = ['node' => $node, 'namespace' => $this->currentNamespace];
                 }
 
@@ -131,17 +133,15 @@ final class ClosureSourceLocator implements SourceLocator
              */
             public function getClosureNodes(): array
             {
-                $closureNodesDataOnSameLine = array_values(array_filter($this->closureNodes, fn (array $nodes): bool => $nodes['node']->getLine() === $this->startLine));
-
-                if (! $closureNodesDataOnSameLine) {
+                if ($this->closureNodes === []) {
                     throw NoClosureOnLine::create($this->fileName, $this->startLine);
                 }
 
-                if (isset($closureNodesDataOnSameLine[1])) {
+                if (isset($this->closureNodes[1])) {
                     throw TwoClosuresOnSameLine::create($this->fileName, $this->startLine);
                 }
 
-                return $closureNodesDataOnSameLine[0];
+                return $this->closureNodes[0];
             }
         };
 

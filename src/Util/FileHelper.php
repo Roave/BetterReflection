@@ -25,6 +25,10 @@ class FileHelper
             [, $scheme, $path] = $matches;
         }
 
-        return ($scheme !== null ? $scheme . '://' : '') . str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $path);
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+        }
+
+        return ($scheme !== null ? $scheme . '://' : '') . $path;
     }
 }

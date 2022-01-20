@@ -27,7 +27,6 @@ use Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function array_filter;
-use function array_values;
 use function assert;
 use function file_get_contents;
 use function strpos;
@@ -101,7 +100,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
              */
             public function enterNode(Node $node)
             {
-                if (! ($node instanceof Node\Stmt\Class_) || $node->name !== null) {
+                if (! ($node instanceof Node\Stmt\Class_) || $node->name !== null || $node->getLine() !== $this->startLine) {
                     return null;
                 }
 
@@ -112,18 +111,15 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
 
             public function getAnonymousClassNode(): Class_
             {
-                /** @var list<Class_> $anonymousClassNodesOnSameLine */
-                $anonymousClassNodesOnSameLine = array_values(array_filter($this->anonymousClassNodes, fn (Class_ $node): bool => $node->getLine() === $this->startLine));
-
-                if (! $anonymousClassNodesOnSameLine) {
+                if ($this->anonymousClassNodes === []) {
                     throw NoAnonymousClassOnLine::create($this->fileName, $this->startLine);
                 }
 
-                if (isset($anonymousClassNodesOnSameLine[1])) {
+                if (isset($this->anonymousClassNodes[1])) {
                     throw TwoAnonymousClassesOnSameLine::create($this->fileName, $this->startLine);
                 }
 
-                return $anonymousClassNodesOnSameLine[0];
+                return $this->anonymousClassNodes[0];
             }
         };
 

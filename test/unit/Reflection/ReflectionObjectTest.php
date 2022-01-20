@@ -20,6 +20,7 @@ use Roave\BetterReflection\SourceLocator\Located\EvaledLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
+use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\FixtureInterfaceRequire;
 use stdClass;
 
@@ -182,6 +183,24 @@ class ReflectionObjectTest extends TestCase
         self::assertSame(0, $propertyInfo->getPositionInAst());
     }
 
+    public function testGetDefaultPropertiesShouldIgnoreRuntimeProperty(): void
+    {
+        $object                     = new DefaultProperties();
+        $object->notDefaultProperty = null;
+
+        $classInfo = ReflectionObject::createFromInstance($object);
+
+        self::assertSame([
+            'fromTrait' => 'anything',
+            'hasDefault' => 'const',
+            'hasNullAsDefault' => null,
+            'noDefault' => null,
+            'hasDefaultWithType' => 123,
+            'hasNullAsDefaultWithType' => null,
+            'noDefaultWithType' => null,
+        ], $classInfo->getDefaultProperties());
+    }
+
     /**
      * This data provider gets all the public methods from ReflectionClass, but
      * filters out a few methods we want to test manually
@@ -196,6 +215,7 @@ class ReflectionObjectTest extends TestCase
             'createFromName',
             'createFromNode',
             'createFromInstance',
+            'getDefaultProperties',
             '__toString',
             '__clone',
         ];
