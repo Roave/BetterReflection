@@ -31,12 +31,8 @@ class ClassExistenceChecker
         return interface_exists($name, false);
     }
 
-    /**
-     * @psalm-suppress InvalidNullableReturnType
-     */
     public static function traitExists(string $name): bool
     {
-        /** @psalm-suppress NullableReturnStatement */
         return trait_exists($name, false);
     }
 }
