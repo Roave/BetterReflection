@@ -31,7 +31,7 @@ use function realpath;
 use function rtrim;
 
 /**
- * @psalm-import-type AutoloadMapping from MakeLocatorForComposerJson
+ * @psalm-import-type ComposerAudoload from MakeLocatorForComposerJson
  */
 final class MakeLocatorForComposerJsonAndInstalledJson
 {
@@ -50,7 +50,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         }
 
         /**
-         * @psalm-var array{autoload: AutoloadMapping, config: array{vendor-dir?: string}}|null $composer
+         * @psalm-var array{autoload: ComposerAudoload, config: array{vendor-dir?: string}}|null $composer
          */
         $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
@@ -73,7 +73,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @psalm-var list<array{name: string, autoload: AutoloadMapping}> $installed */
+        /** @psalm-var list<array{name: string, autoload: ComposerAudoload}> $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
@@ -126,7 +126,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -136,7 +136,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -146,7 +146,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return list<string>
      */
@@ -156,7 +156,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return list<string>
      */

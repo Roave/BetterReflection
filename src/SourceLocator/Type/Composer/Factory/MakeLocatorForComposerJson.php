@@ -27,7 +27,7 @@ use function json_decode;
 use function realpath;
 
 /**
- * @psalm-type AutoloadMapping array{
+ * @psalm-type ComposerAudoload array{
  *  psr-0?: array<string, string|string[]>,
  *  psr-4?: array<string, string|string[]>,
  *  classmap?: list<string>,
@@ -51,7 +51,7 @@ final class MakeLocatorForComposerJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
-        /** @psalm-var array{autoload: AutoloadMapping}|null $composer */
+        /** @psalm-var array{autoload: ComposerAudoload}|null $composer */
         $composer = json_decode((string) file_get_contents($composerJsonPath), true);
 
         if (! is_array($composer)) {
@@ -85,7 +85,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -95,7 +95,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -105,7 +105,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return list<string>
      */
@@ -115,7 +115,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: AutoloadMapping} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return list<string>
      */
