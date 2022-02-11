@@ -27,7 +27,13 @@ use function json_decode;
 use function realpath;
 
 /**
- * @psalm-type AutoloadMapping array{psr-0?: array<string, string|string[]>, psr-4?: array<string, string|string[]>, classmap?: list<string>, files?: list<string>, exclude-from-classmap?: list<string>}
+ * @psalm-type AutoloadMapping array{
+ *  psr-0?: array<string, string|string[]>,
+ *  psr-4?: array<string, string|string[]>,
+ *  classmap?: list<string>,
+ *  files?: list<string>,
+ *  exclude-from-classmap?: list<string>
+ * }
  */
 final class MakeLocatorForComposerJson
 {
