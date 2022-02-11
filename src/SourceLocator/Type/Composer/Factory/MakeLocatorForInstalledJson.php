@@ -170,7 +170,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array<int|string, array<string>>               $paths
+     * @param array<int|string, array<string>>                $paths
      * @param array{name: string, autoload: ComposerAudoload} $package
      *
      * @return array<int|string, string|array<string>>
