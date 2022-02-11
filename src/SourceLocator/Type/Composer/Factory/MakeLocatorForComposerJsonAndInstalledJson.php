@@ -30,6 +30,9 @@ use function json_decode;
 use function realpath;
 use function rtrim;
 
+/**
+ * @psalm-import-type ComposerAudoload from MakeLocatorForComposerJson
+ */
 final class MakeLocatorForComposerJsonAndInstalledJson
 {
     public function __invoke(string $installationPath, Locator $astLocator): SourceLocator
@@ -47,10 +50,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         }
 
         /**
-         * @psalm-var array{
-         * autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>},
-         * config: array{vendor-dir?: string}
-         * }|null $composer
+         * @psalm-var array{autoload: ComposerAudoload, config: array{vendor-dir?: string}}|null $composer
          */
         $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
@@ -73,7 +73,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @psalm-var list<array{name: string, autoload: array{classmap: list<string>, files: list<string>, psr-4: array<string, list<string>|string>, psr-0: array<string, list<string>|string>}}> $installed */
+        /** @psalm-var list<array{name: string, autoload: ComposerAudoload}> $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
@@ -126,7 +126,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -136,7 +136,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -146,7 +146,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return list<string>
      */
@@ -156,7 +156,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: array{classmap?: list<string>, files?: list<string>, psr-4?: array<string, list<string>|string>, psr-0?: array<string, list<string>|string>}} $package
+     * @param array{autoload: ComposerAudoload} $package
      *
      * @return list<string>
      */
