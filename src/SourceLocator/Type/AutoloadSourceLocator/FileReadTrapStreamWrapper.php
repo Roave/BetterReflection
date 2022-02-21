@@ -60,6 +60,7 @@ final class FileReadTrapStreamWrapper
 
         try {
             foreach ($streamWrapperProtocols as $protocol) {
+                /** @psalm-suppress UnusedFunctionCall */
                 stream_wrapper_unregister($protocol);
                 stream_wrapper_register($protocol, self::class);
             }
@@ -67,6 +68,7 @@ final class FileReadTrapStreamWrapper
             $result = $executeMeWithinStreamWrapperOverride();
         } finally {
             foreach ($streamWrapperProtocols as $protocol) {
+                /** @psalm-suppress UnusedFunctionCall */
                 stream_wrapper_restore($protocol);
             }
 
@@ -122,6 +124,7 @@ final class FileReadTrapStreamWrapper
         }
 
         foreach (self::$registeredStreamWrapperProtocols as $protocol) {
+            /** @psalm-suppress UnusedFunctionCall */
             stream_wrapper_restore($protocol);
         }
 
@@ -132,6 +135,7 @@ final class FileReadTrapStreamWrapper
         }
 
         foreach (self::$registeredStreamWrapperProtocols as $protocol) {
+            /** @psalm-suppress UnusedFunctionCall */
             stream_wrapper_unregister($protocol);
             stream_wrapper_register($protocol, self::class);
         }

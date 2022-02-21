@@ -145,7 +145,7 @@ class ReflectionFunction implements Reflection
     }
 
     /**
-     * @param list<mixed> $args
+     * @param array<mixed> $args
      *
      * @throws NotImplemented
      * @throws FunctionDoesNotExist

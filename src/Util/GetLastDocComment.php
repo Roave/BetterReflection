@@ -16,7 +16,7 @@ final class GetLastDocComment
         $docComment = $node->getDocComment();
 
         return $docComment !== null
-            ? $docComment->getReformattedText()
+            ? (string) $docComment->getReformattedText()
             : '';
     }
 }

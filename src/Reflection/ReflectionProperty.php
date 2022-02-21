@@ -254,7 +254,10 @@ class ReflectionProperty
             );
         }
 
-        return $this->compiledDefaultValue->value;
+        /** @psalm-var scalar|array<scalar>|null $value */
+        $value = $this->compiledDefaultValue->value;
+
+        return $value;
     }
 
     public function isDeprecated(): bool
@@ -375,8 +378,9 @@ class ReflectionProperty
         if ($this->isStatic()) {
             $this->assertClassExist($implementingClassName);
 
-            $closure = Closure::bind(function (string $implementingClassName, string $propertyName, mixed $value): void {
-                $implementingClassName::${$propertyName} = $value;
+            $closure = Closure::bind(function (string $_implementingClassName, string $_propertyName, mixed $value): void {
+                /** @psalm-suppress MixedAssignment */
+                $_implementingClassName::${$_propertyName} = $value;
             }, null, $implementingClassName);
 
             assert($closure instanceof Closure);

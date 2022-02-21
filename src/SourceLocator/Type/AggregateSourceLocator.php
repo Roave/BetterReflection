@@ -24,8 +24,10 @@ class AggregateSourceLocator implements SourceLocator
     {
         // This slightly confusing code simply type-checks the $sourceLocators
         // array by unpacking them and splatting them in the closure.
-        $validator            = static fn (SourceLocator ...$sourceLocator): array => $sourceLocator;
-        $this->sourceLocators = $validator(...$sourceLocators);
+        $validator = static fn (SourceLocator ...$sourceLocator): array => $sourceLocator;
+        /** @var list<SourceLocator> $sourceLocators */
+        $sourceLocators       = $validator(...$sourceLocators);
+        $this->sourceLocators = $sourceLocators;
     }
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection

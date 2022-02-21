@@ -10,6 +10,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_filter;
 use function array_map;
+use function array_values;
 use function implode;
 
 class ReflectionIntersectionType extends ReflectionType
@@ -24,10 +25,10 @@ class ReflectionIntersectionType extends ReflectionType
     ) {
         parent::__construct($reflector, $owner);
 
-        $this->types = array_filter(
+        $this->types = array_values(array_filter(
             array_map(static fn (Node\Identifier|Node\Name $type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType => ReflectionType::createFromNode($reflector, $owner, $type), $type->types),
             static fn (ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type): bool => $type instanceof ReflectionNamedType,
-        );
+        ));
     }
 
     /**

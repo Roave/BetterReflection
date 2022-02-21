@@ -152,7 +152,7 @@ final class ReflectionObject extends CoreReflectionObject
     }
 
     /**
-     * @return array<string, scalar|array<scalar>|null>
+     * @return array<string, mixed>
      */
     public function getConstants(?int $filter = null): array
     {

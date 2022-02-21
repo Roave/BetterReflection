@@ -17,6 +17,7 @@ final class ReflectionClassConstantStringCast
 {
     public static function toString(ReflectionClassConstant $constantReflection): string
     {
+        /** @psalm-var scalar|array<scalar> $value */
         $value = $constantReflection->getValue();
 
         return sprintf(
@@ -25,7 +26,7 @@ final class ReflectionClassConstantStringCast
             self::visibilityToString($constantReflection),
             gettype($value),
             $constantReflection->getName(),
-            is_array($value) ? 'Array' : $value,
+            is_array($value) ? 'Array' : (string) $value,
         );
     }
 

@@ -45,6 +45,7 @@ final class ReflectionAttributeStringCast
         $string = '';
 
         $argumentNo = 0;
+        /** @psalm-suppress MixedAssignment */
         foreach ($arguments as $argumentName => $argumentValue) {
             $string .= sprintf(
                 "\n    Argument #%d [ %s%s ]",

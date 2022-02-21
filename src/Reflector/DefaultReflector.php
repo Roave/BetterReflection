@@ -46,7 +46,7 @@ final class DefaultReflector implements Reflector
      */
     public function reflectAllClasses(): iterable
     {
-        /** @var ReflectionClass[] $allClasses */
+        /** @var list<ReflectionClass> $allClasses */
         $allClasses = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -81,7 +81,7 @@ final class DefaultReflector implements Reflector
      */
     public function reflectAllFunctions(): iterable
     {
-        /** @var ReflectionFunction[] $allFunctions */
+        /** @var list<ReflectionFunction> $allFunctions */
         $allFunctions = $this->sourceLocator->locateIdentifiersByType(
             $this,
             new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION),
