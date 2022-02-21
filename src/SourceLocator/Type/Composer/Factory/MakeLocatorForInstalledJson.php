@@ -31,7 +31,7 @@ use function realpath;
 use function rtrim;
 
 /**
- * @psalm-import-type ComposerAudoload from MakeLocatorForComposerJson
+ * @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson
  */
 final class MakeLocatorForInstalledJson
 {
@@ -50,7 +50,7 @@ final class MakeLocatorForInstalledJson
         }
 
         /**
-         * @psalm-var array{autoload: ComposerAudoload, config: array{vendor-dir?: string}}|null $composer
+         * @psalm-var array{autoload: ComposerAutoload, config: array{vendor-dir?: string}}|null $composer
          */
         $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
@@ -122,7 +122,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -132,7 +132,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -142,7 +142,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return list<string>
      */
@@ -152,7 +152,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return list<string>
      */
@@ -162,7 +162,7 @@ final class MakeLocatorForInstalledJson
     }
 
     /**
-     * @param array{name: string, autoload: ComposerAudoload} $package
+     * @param array{name: string, autoload: ComposerAutoload} $package
      */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package, string $vendorDir): string
     {
@@ -171,7 +171,7 @@ final class MakeLocatorForInstalledJson
 
     /**
      * @param array<int|string, array<string>>                $paths
-     * @param array{name: string, autoload: ComposerAudoload} $package
+     * @param array{name: string, autoload: ComposerAutoload} $package
      *
      * @return array<int|string, string|array<string>>
      */
