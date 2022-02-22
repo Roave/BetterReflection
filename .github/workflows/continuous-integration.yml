@@ -286,3 +286,41 @@ jobs:
 
       - name: "Coding Standard"
         run: "vendor/bin/phpcs"
+
+  backward-compatibility:
+    name: "Check Backward Compatibility"
+    if: ${{github.event_name != 'pull_request'}}
+
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      matrix:
+        dependencies:
+          - "locked"
+        php-version:
+          - "8.1"
+        operating-system:
+          - "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Fetch target branch"
+        run: git fetch --depth=1 origin ${{ github.base_ref }}
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: memory_limit=-1
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools/roave-backward-compatibility-check"
+
+      - name: "BC Checks"
+        run: tools/roave-backward-compatibility-check/vendor/bin/roave-backward-compatibility-check --from=${{ github.base_ref }}

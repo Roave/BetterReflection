@@ -15,6 +15,19 @@
       "versioning-strategy": "increase"
     },
     {
+      "allow": [
+        {
+          "dependency-type": "all"
+        }
+      ],
+      "directory": "/tools/roave-backward-compatibility-check",
+      "package-ecosystem": "composer",
+      "schedule": {
+        "interval": "daily"
+      },
+      "versioning-strategy": "increase"
+    },
+    {
       "directory": "/",
       "package-ecosystem": "github-actions",
       "schedule": {
