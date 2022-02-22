@@ -127,6 +127,7 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
         });
 
+        /** @psalm-var mixed $value */
         $value = $constExprEvaluator->evaluateDirectly($node);
 
         return new CompiledValue($value, $constantName);

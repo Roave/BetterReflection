@@ -21,7 +21,6 @@ use TypeError;
 use ValueError;
 
 use function array_map;
-use function func_get_args;
 
 final class ReflectionMethod extends CoreReflectionMethod
 {
@@ -241,7 +240,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         }
 
         try {
-            return $this->betterReflectionMethod->invoke(...func_get_args());
+            return $this->betterReflectionMethod->invoke($object, ...$args);
         } catch (NoObjectProvided | TypeError) {
             return null;
         } catch (Throwable $e) {

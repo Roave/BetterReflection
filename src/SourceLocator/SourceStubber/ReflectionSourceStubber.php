@@ -27,6 +27,8 @@ use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionEnum as CoreReflectionEnum;
+use ReflectionEnumBackedCase as CoreReflectionEnumBackedCase;
+use ReflectionEnumUnitCase as CoreReflectionEnumUnitCase;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionIntersectionType as CoreReflectionIntersectionType;
@@ -34,6 +36,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
+use ReflectionType as CoreReflectionType;
 use ReflectionUnionType as CoreReflectionUnionType;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
@@ -137,6 +140,7 @@ final class ReflectionSourceStubber implements SourceStubber
 
         $returnType = $functionReflection->getReturnType();
         if ($returnType === null && method_exists($functionReflection, 'getTentativeReturnType')) {
+            /** @psalm-var CoreReflectionType $returnType */
             $returnType = $functionReflection->getTentativeReturnType();
         }
 
@@ -394,9 +398,10 @@ final class ReflectionSourceStubber implements SourceStubber
     private function addEnumCases(Enum_ $enumNode, CoreReflectionEnum $enumReflection): void
     {
         foreach ($enumReflection->getCases() as $enumCaseReflection) {
+            assert($enumCaseReflection instanceof CoreReflectionEnumUnitCase);
             $enumCaseNode = $this->builderFactory->enumCase($enumCaseReflection->getName());
 
-            if ($enumReflection->isBacked()) {
+            if ($enumCaseReflection instanceof CoreReflectionEnumBackedCase) {
                 $enumCaseNode->setValue($enumCaseReflection->getBackingValue());
             }
 
@@ -457,6 +462,7 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $returnType = $methodReflection->getReturnType();
             if ($returnType === null && method_exists($methodReflection, 'getTentativeReturnType')) {
+                /** @psalm-var CoreReflectionType $returnType */
                 $returnType = $methodReflection->getTentativeReturnType();
             }
 

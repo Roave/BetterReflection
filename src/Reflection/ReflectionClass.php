@@ -43,6 +43,7 @@ use UnitEnum;
 use function array_combine;
 use function array_filter;
 use function array_key_exists;
+use function array_keys;
 use function array_map;
 use function array_merge;
 use function array_reverse;
@@ -52,6 +53,7 @@ use function assert;
 use function end;
 use function implode;
 use function in_array;
+use function is_int;
 use function is_string;
 use function ltrim;
 use function sha1;
@@ -593,11 +595,14 @@ class ReflectionClass implements Reflection
     {
         $reflectionConstant = $this->getReflectionConstant($name);
 
-        if (! $reflectionConstant) {
+        if ($reflectionConstant === null) {
             return null;
         }
 
-        return $reflectionConstant->getValue();
+        /** @psalm-var scalar|array<scalar>|null $constantValue */
+        $constantValue = $reflectionConstant->getValue();
+
+        return $constantValue;
     }
 
     /**
@@ -636,7 +641,8 @@ class ReflectionClass implements Reflection
                 function (ConstNode $constNode): array {
                     $constants = [];
 
-                    foreach ($constNode->consts as $constantPositionInNode => $constantNode) {
+                    foreach (array_keys($constNode->consts) as $constantPositionInNode) {
+                        assert(is_int($constantPositionInNode));
                         $constants[] = ReflectionClassConstant::createFromNode($this->reflector, $constNode, $constantPositionInNode, $this);
                     }
 
@@ -668,7 +674,6 @@ class ReflectionClass implements Reflection
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
-        /** @var list<ReflectionClassConstant> $allReflectionConstants */
         $allReflectionConstants = array_merge(
             array_values($this->getImmediateReflectionConstants()),
             ...array_map(
@@ -730,7 +735,8 @@ class ReflectionClass implements Reflection
         if ($this->cachedImmediateProperties === null) {
             $properties = [];
             foreach ($this->node->getProperties() as $propertiesNode) {
-                foreach ($propertiesNode->props as $propertyPositionInNode => $propertyNode) {
+                foreach (array_keys($propertiesNode->props) as $propertyPositionInNode) {
+                    assert(is_int($propertyPositionInNode));
                     $property                         = ReflectionProperty::createFromNode(
                         $this->reflector,
                         $propertiesNode,
@@ -1093,7 +1099,7 @@ class ReflectionClass implements Reflection
      */
     public function getTraits(): array
     {
-        return array_map(
+        return array_values(array_map(
             fn (Node\Name $importedTrait): ReflectionClass => $this->reflectClassForNamedNode($importedTrait),
             array_merge(
                 [],
@@ -1102,7 +1108,7 @@ class ReflectionClass implements Reflection
                     array_filter($this->node->stmts, static fn (Node $node): bool => $node instanceof TraitUse),
                 ),
             ),
-        );
+        ));
     }
 
     /**
@@ -1270,7 +1276,6 @@ class ReflectionClass implements Reflection
             return;
         }
 
-        /** @var Node\Stmt\TraitUse[] $traitUsages */
         $traitUsages = array_filter($this->node->stmts, static fn (Node $node): bool => $node instanceof TraitUse);
 
         $this->cachedTraitsData = [
@@ -1624,6 +1629,7 @@ class ReflectionClass implements Reflection
                 continue;
             }
 
+            /** @psalm-suppress MixedAssignment */
             $staticProperties[$property->getName()] = $property->getValue();
         }
 

@@ -19,6 +19,7 @@ use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use function array_filter;
 use function array_map;
 use function array_merge;
+use function array_values;
 use function file_get_contents;
 use function is_array;
 use function is_dir;
@@ -27,9 +28,9 @@ use function json_decode;
 use function realpath;
 
 /**
- * @psalm-type ComposerAudoload array{
- *  psr-0?: array<string, string|string[]>,
- *  psr-4?: array<string, string|string[]>,
+ * @psalm-type ComposerAutoload array{
+ *  psr-0?: array<string, string|list<string>>,
+ *  psr-4?: array<string, string|list<string>>,
  *  classmap?: list<string>,
  *  files?: list<string>,
  *  exclude-from-classmap?: list<string>
@@ -51,7 +52,7 @@ final class MakeLocatorForComposerJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
-        /** @psalm-var array{autoload: ComposerAudoload}|null $composer */
+        /** @psalm-var array{autoload: ComposerAutoload}|null $composer */
         $composer = json_decode((string) file_get_contents($composerJsonPath), true);
 
         if (! is_array($composer)) {
@@ -61,7 +62,7 @@ final class MakeLocatorForComposerJson
         $pathPrefix          = $realInstallationPath . '/';
         $classMapPaths       = $this->prefixPaths($this->packageToClassMapPaths($composer), $pathPrefix);
         $classMapFiles       = array_filter($classMapPaths, 'is_file');
-        $classMapDirectories = array_filter($classMapPaths, 'is_dir');
+        $classMapDirectories = array_values(array_filter($classMapPaths, 'is_dir'));
         $filePaths           = $this->prefixPaths($this->packageToFilePaths($composer), $pathPrefix);
 
         return new AggregateSourceLocator(array_merge(
@@ -85,7 +86,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -95,7 +96,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return array<string, list<string>>
      */
@@ -105,7 +106,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return list<string>
      */
@@ -115,7 +116,7 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array{autoload: ComposerAudoload} $package
+     * @param array{autoload: ComposerAutoload} $package
      *
      * @return list<string>
      */
@@ -135,9 +136,9 @@ final class MakeLocatorForComposerJson
     }
 
     /**
-     * @param array<string> $paths
+     * @param list<string> $paths
      *
-     * @return array<string>
+     * @return list<string>
      */
     private function prefixPaths(array $paths, string $prefix): array
     {

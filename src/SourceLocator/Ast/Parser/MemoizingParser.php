@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Ast\Parser;
 
 use PhpParser\ErrorHandler;
+use PhpParser\Node;
 use PhpParser\Parser;
 
 use function array_key_exists;
@@ -38,7 +39,10 @@ final class MemoizingParser implements Parser
         $hash = sprintf('%s:%d', hash('sha256', $code), strlen($code));
 
         if (array_key_exists($hash, $this->sourceHashToAst)) {
-            return unserialize($this->sourceHashToAst[$hash]);
+            /** @var Node\Stmt[]|null $ast */
+            $ast = unserialize($this->sourceHashToAst[$hash]);
+
+            return $ast;
         }
 
         $ast                          = $this->wrappedParser->parse($code, $errorHandler);

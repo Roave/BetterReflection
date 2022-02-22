@@ -334,7 +334,7 @@ class ReflectionMethod
     }
 
     /**
-     * @param list<mixed> $args
+     * @param array<mixed> $args
      *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
@@ -354,14 +354,14 @@ class ReflectionMethod
     }
 
     /**
-     * @param list<mixed> $args
+     * @param array<mixed> $args
      */
     private function callStaticMethod(array $args): mixed
     {
         $implementingClassName = $this->getImplementingClass()->getName();
 
         /** @psalm-suppress InvalidStringClass */
-        $closure = Closure::bind(fn (string $implementingClassName, string $methodName, array $methodArgs): mixed => $implementingClassName::{$methodName}(...$methodArgs), null, $implementingClassName);
+        $closure = Closure::bind(fn (string $implementingClassName, string $_methodName, array $methodArgs): mixed => $implementingClassName::{$_methodName}(...$methodArgs), null, $implementingClassName);
 
         assert($closure instanceof Closure);
 
@@ -369,10 +369,11 @@ class ReflectionMethod
     }
 
     /**
-     * @param list<mixed> $args
+     * @param array<mixed> $args
      */
     private function callObjectMethod(object $object, array $args): mixed
     {
+        /** @psalm-suppress MixedMethodCall */
         $closure = Closure::bind(fn (object $object, string $methodName, array $methodArgs): mixed => $object->{$methodName}(...$methodArgs), $object, $this->getImplementingClass()->getName());
 
         assert($closure instanceof Closure);

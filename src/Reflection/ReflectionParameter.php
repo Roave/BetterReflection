@@ -271,7 +271,10 @@ class ReflectionParameter
      */
     public function getDefaultValue(): string|int|float|bool|array|null
     {
-        return $this->getCompiledDefaultValue()->value;
+        /** @psalm-var scalar|array<scalar>|null $value */
+        $value = $this->getCompiledDefaultValue()->value;
+
+        return $value;
     }
 
     /**

@@ -42,8 +42,8 @@ class ReflectionAttribute
         $context  = new CompilerContext($this->reflector, $this->owner);
 
         foreach ($this->node->args as $argNo => $arg) {
-            $argValue                                     = $compiler->__invoke($arg->value, $context)->value;
-            $arguments[$arg->name?->toString() ?? $argNo] = $argValue;
+            /** @psalm-suppress MixedAssignment */
+            $arguments[$arg->name?->toString() ?? $argNo] = $compiler->__invoke($arg->value, $context)->value;
         }
 
         return $arguments;

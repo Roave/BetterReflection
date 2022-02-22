@@ -11,10 +11,7 @@ use function sprintf;
 
 class NotAnObject extends InvalidArgumentException
 {
-    /**
-     * @param bool|int|float|string|mixed[]|resource|null $nonObject
-     */
-    public static function fromNonObject($nonObject): self
+    public static function fromNonObject(mixed $nonObject): self
     {
         return new self(sprintf('Provided "%s" is not an object', gettype($nonObject)));
     }

@@ -448,7 +448,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /**
      * Some stubs extend/implement classes from newer PHP versions. We need to filter those names in regard to set PHP version so that those stubs remain valid.
      *
-     * @param list<Node\Name> $nameNodes
+     * @param array<Node\Name> $nameNodes
      *
      * @return list<Node\Name>
      */
@@ -497,7 +497,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     /**
-     * @param list<Node\Stmt> $stmts
+     * @param array<Node\Stmt> $stmts
      *
      * @return list<Node\Stmt>
      */

@@ -215,6 +215,7 @@ trait ReflectionFunctionAbstract
             return true;
         }
 
+        /** @psalm-var string $nodeName */
         foreach ($node->getSubNodeNames() as $nodeName) {
             $nodeProperty = $node->$nodeName;
 
@@ -226,6 +227,7 @@ trait ReflectionFunctionAbstract
                 continue;
             }
 
+            /** @psalm-var mixed $nodePropertyArrayItem */
             foreach ($nodeProperty as $nodePropertyArrayItem) {
                 if ($nodePropertyArrayItem instanceof Node && $this->nodeIsOrContainsYield($nodePropertyArrayItem)) {
                     return true;
