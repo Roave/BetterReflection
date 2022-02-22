@@ -289,7 +289,7 @@ jobs:
 
   backward-compatibility:
     name: "Check Backward Compatibility"
-    if: ${{github.event_name != 'pull_request'}}
+    if: ${{github.event_name == 'pull_request'}}
 
     runs-on: ${{ matrix.operating-system }}
 
