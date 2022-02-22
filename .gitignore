@@ -1,4 +1,5 @@
 /.phpcs-cache
 /.phpunit.result.cache
 /phpcs.xml
+/tools/roave-backward-compatibility-check/vendor
 /vendor
