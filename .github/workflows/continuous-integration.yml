@@ -323,4 +323,4 @@ jobs:
           working-directory: "tools/roave-backward-compatibility-check"
 
       - name: "BC Checks"
-        run: tools/roave-backward-compatibility-check/vendor/bin/roave-backward-compatibility-check --from=${{ github.base_ref }}
+        run: tools/roave-backward-compatibility-check/vendor/bin/roave-backward-compatibility-check --from=origin/${{ github.base_ref }}
