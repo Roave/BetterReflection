@@ -33,7 +33,7 @@ Be sure to read more in the [feature documentation](docs/features.md).
 Require using composer:
 
 ```shell
-$ composer require roave/better-reflection
+composer require roave/better-reflection
 ```
 
 ## Usage
