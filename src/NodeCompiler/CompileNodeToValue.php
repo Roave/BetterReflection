@@ -224,7 +224,7 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::becauseOfMissingFileName($context, $node);
         }
 
-        return dirname(FileHelper::normalizeWindowsPath(realpath($fileName)));
+        return dirname(FileHelper::normalizeWindowsPath($fileName));
     }
 
     /**
@@ -238,7 +238,7 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::becauseOfMissingFileName($context, $node);
         }
 
-        return FileHelper::normalizeWindowsPath(realpath($fileName));
+        return FileHelper::normalizeWindowsPath($fileName);
     }
 
     /**
