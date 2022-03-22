@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
+use BadMethodCallException;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Name;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
-use Roave\BackwardCompatibility\SourceLocator\LocatedSourceWithStrippedSourcesDirectory;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -685,7 +685,7 @@ PHP;
 
     public function testCanRetrieveMagicConstantValueWhenUsingFakeSourceLocator(): void
     {
-        $astLocatorWithFakeFilePath = new class ($this->astLocator) extends Locator {
+        $astLocatorProducingLocatedSourcesWithFakeFilePath = new class ($this->astLocator) extends Locator {
             public function __construct(private Locator $next)
             {
             }
@@ -703,7 +703,6 @@ PHP;
                         {
                         }
 
-                        // @TODO test that all methods are covered (use reflection)
                         public function getSource(): string
                         {
                             return $this->next->getSource();
@@ -721,25 +720,25 @@ PHP;
 
                         public function isInternal(): bool
                         {
-                            return $this->next->isInternal();
+                            return false;
                         }
 
                         public function getExtensionName(): ?string
                         {
-                            return $this->next->getExtensionName();
+                            return null;
                         }
 
                         public function isEvaled(): bool
                         {
-                            return $this->next->isEvaled();
+                            return false;
                         }
 
                         public function getAliasName(): ?string
                         {
-                            return $this->next->getAliasName();
+                            return null;
                         }
                     },
-                    $identifier
+                    $identifier,
                 );
             }
 
@@ -749,7 +748,7 @@ PHP;
                 LocatedSource $locatedSource,
                 IdentifierType $identifierType,
             ): array {
-                throw new \BadMethodCallException('Not expected to be called');
+                throw new BadMethodCallException('Not expected to be called');
             }
         };
 
@@ -761,21 +760,23 @@ const CURRENT_DIR = __DIR__;
 const CURRENT_FILE = __FILE__;
 PHP
             ,
-            $astLocatorWithFakeFilePath
+            $astLocatorProducingLocatedSourcesWithFakeFilePath,
         )));
 
         self::assertSame(
             '/non/existing/path/to',
             $reflector
                 ->reflectConstant('CURRENT_DIR')
-                ->getValue()
+                ->getValue(),
+            '__DIR__ is correctly identified, even if the located source does not exist on disk',
         );
 
         self::assertSame(
             '/non/existing/path/to/sources.php',
             $reflector
                 ->reflectConstant('CURRENT_FILE')
-                ->getValue()
+                ->getValue(),
+            '__FILE__ is correctly identified, even if the located source does not exist on disk',
         );
     }
 

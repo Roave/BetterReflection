@@ -17,7 +17,6 @@ use function defined;
 use function dirname;
 use function explode;
 use function in_array;
-use function realpath;
 use function sprintf;
 
 /**
