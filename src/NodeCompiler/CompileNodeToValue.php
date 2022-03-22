@@ -17,7 +17,6 @@ use function defined;
 use function dirname;
 use function explode;
 use function in_array;
-use function realpath;
 use function sprintf;
 
 /**
@@ -224,7 +223,7 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::becauseOfMissingFileName($context, $node);
         }
 
-        return dirname(FileHelper::normalizeWindowsPath(realpath($fileName)));
+        return dirname(FileHelper::normalizeWindowsPath($fileName));
     }
 
     /**
@@ -238,7 +237,7 @@ class CompileNodeToValue
             throw Exception\UnableToCompileNode::becauseOfMissingFileName($context, $node);
         }
 
-        return FileHelper::normalizeWindowsPath(realpath($fileName));
+        return FileHelper::normalizeWindowsPath($fileName);
     }
 
     /**
