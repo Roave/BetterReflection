@@ -30,11 +30,12 @@ final class DefaultReflector implements Reflector
         $identifier = new Identifier($identifierName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
         $classInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
-        assert($classInfo instanceof ReflectionClass || $classInfo === null);
 
         if ($classInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
+
+        assert($classInfo instanceof ReflectionClass);
 
         return $classInfo;
     }
@@ -65,11 +66,12 @@ final class DefaultReflector implements Reflector
         $identifier = new Identifier($identifierName, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
 
         $functionInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
-        assert($functionInfo instanceof ReflectionFunction || $functionInfo === null);
 
         if ($functionInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
+
+        assert($functionInfo instanceof ReflectionFunction);
 
         return $functionInfo;
     }
@@ -100,11 +102,12 @@ final class DefaultReflector implements Reflector
         $identifier = new Identifier($identifierName, new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT));
 
         $constantInfo = $this->sourceLocator->locateIdentifier($this, $identifier);
-        assert($constantInfo instanceof ReflectionConstant || $constantInfo === null);
 
         if ($constantInfo === null) {
             throw Exception\IdentifierNotFound::fromIdentifier($identifier);
         }
+
+        assert($constantInfo instanceof ReflectionConstant);
 
         return $constantInfo;
     }
