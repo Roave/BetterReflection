@@ -27,7 +27,6 @@ use function is_array;
 use function is_object;
 use function is_string;
 use function sprintf;
-use function strtolower;
 
 class ReflectionParameter
 {
@@ -360,7 +359,7 @@ class ReflectionParameter
 
         $isOneOfAllowedTypes = static function (ReflectionNamedType $namedType, string ...$types): bool {
             foreach ($types as $type) {
-                if (strtolower($namedType->getName()) === $type) {
+                if ($namedType->getName() === $type) {
                     return true;
                 }
             }
