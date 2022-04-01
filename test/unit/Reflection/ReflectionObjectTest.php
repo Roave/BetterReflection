@@ -22,6 +22,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\FixtureInterfaceRequire;
+use Roave\BetterReflectionTest\Fixture\RuntimeProperties;
 use stdClass;
 
 use function array_map;
@@ -110,20 +111,31 @@ class ReflectionObjectTest extends TestCase
 
     public function testReflectionWorksWithDynamicallyDeclaredMembers(): void
     {
-        $foo      = new ClassForHinting();
+        $foo      = new RuntimeProperties();
         $foo->bar = 'huzzah';
+        $foo->baz = 'bazzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
-        $propInfo  = $classInfo->getProperty('bar');
+
+        self::assertCount(6, $classInfo->getProperties());
+        self::assertCount(6, $classInfo->getImmediateProperties());
+
+        self::assertTrue($classInfo->hasProperty('bar'));
+
+        $propInfo = $classInfo->getProperty('bar');
 
         self::assertInstanceOf(ReflectionProperty::class, $propInfo);
         self::assertSame('bar', $propInfo->getName());
         self::assertFalse($propInfo->isDefault());
+        self::assertTrue($propInfo->isPublic());
+        self::assertSame('huzzah', $propInfo->getDefaultValue());
+        self::assertSame(0, $propInfo->getPositionInAst());
+        self::assertFalse($propInfo->isPromoted());
     }
 
     public function testExceptionThrownWhenInvalidInstanceGiven(): void
     {
-        $foo      = new ClassForHinting();
+        $foo      = new RuntimeProperties();
         $foo->bar = 'huzzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
@@ -146,33 +158,35 @@ class ReflectionObjectTest extends TestCase
 
     public function testGetRuntimePropertiesWithFilter(): void
     {
-        $foo      = new stdClass();
+        $foo      = new RuntimeProperties();
         $foo->bar = 'huzzah';
+        $foo->baz = 'bazzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
-        self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_STATIC));
-        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_PUBLIC));
-        self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_PROTECTED));
-        self::assertEmpty($classInfo->getProperties(CoreReflectionProperty::IS_PRIVATE));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_STATIC));
+        self::assertCount(4, $classInfo->getProperties(CoreReflectionProperty::IS_PUBLIC));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_PROTECTED));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_PRIVATE));
     }
 
     public function testGetRuntimeImmediatePropertiesWithFilter(): void
     {
-        $foo      = new stdClass();
+        $foo      = new RuntimeProperties();
         $foo->bar = 'huzzah';
+        $foo->baz = 'bazzah';
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
-        self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_STATIC));
-        self::assertCount(1, $classInfo->getImmediateProperties(CoreReflectionProperty::IS_PUBLIC));
-        self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_PROTECTED));
-        self::assertEmpty($classInfo->getImmediateProperties(CoreReflectionProperty::IS_PRIVATE));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_STATIC));
+        self::assertCount(4, $classInfo->getProperties(CoreReflectionProperty::IS_PUBLIC));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_PROTECTED));
+        self::assertCount(1, $classInfo->getProperties(CoreReflectionProperty::IS_PRIVATE));
     }
 
     public function testRuntimePropertyCannotBePromoted(): void
     {
-        $foo      = new stdClass();
+        $foo      = new RuntimeProperties();
         $foo->bar = 'huzzah';
 
         $classInfo    = ReflectionObject::createFromInstance($foo);
