@@ -74,6 +74,10 @@ class ReflectionObject extends ReflectionClass
             throw new InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
+        if ($filter !== null && ! ($filter & CoreReflectionProperty::IS_PUBLIC)) {
+            return [];
+        }
+
         // Ensure we have already cached existing properties so we can add to them
         $this->reflectionClass->getProperties();
 
@@ -87,21 +91,15 @@ class ReflectionObject extends ReflectionClass
                 continue;
             }
 
-            $runtimeProperty = ReflectionProperty::createFromNode(
+            $runtimeProperties[$property->getName()] = ReflectionProperty::createFromNode(
                 $this->reflector,
-                $this->createPropertyNodeFromReflection($property, $this->object),
+                $this->createPropertyNodeFromRuntimePropertyReflection($property, $this->object),
                 0,
                 $this,
                 $this,
                 false,
                 false,
             );
-
-            if ($filter !== null && ! ($filter & $runtimeProperty->getModifiers())) {
-                continue;
-            }
-
-            $runtimeProperties[$runtimeProperty->getName()] = $runtimeProperty;
         }
 
         return $runtimeProperties;
@@ -113,14 +111,11 @@ class ReflectionObject extends ReflectionClass
      * Note that we don't copy across DocBlock, protected, private or static
      * because runtime properties can't have these attributes.
      */
-    private function createPropertyNodeFromReflection(CoreReflectionProperty $property, object $instance): PropertyNode
+    private function createPropertyNodeFromRuntimePropertyReflection(CoreReflectionProperty $property, object $instance): PropertyNode
     {
         $builder = new PropertyNodeBuilder($property->getName());
         $builder->setDefault($property->getValue($instance));
-
-        if ($property->isPublic()) {
-            $builder->makePublic();
-        }
+        $builder->makePublic();
 
         return $builder->getNode();
     }
