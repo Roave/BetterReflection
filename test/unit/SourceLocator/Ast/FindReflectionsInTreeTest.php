@@ -18,6 +18,8 @@ use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
+use function sprintf;
+
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
  */
@@ -73,7 +75,20 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForClassWithoutNamespace(): void
+    public function dataClassTypes(): array
+    {
+        return [
+            ['class'],
+            ['interface'],
+            ['trait'],
+            ['enum'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataClassTypes
+     */
+    public function testInvokeCallsReflectNodesForClassTypeWithoutNamespace(string $classType): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -84,7 +99,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->will($this->returnValue($mockReflection));
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php class Foo {}', 'Foo');
+        $locatedSource = new LocatedSource(sprintf('<?php %s Foo {}', $classType), 'Foo');
 
         self::assertSame(
             [$mockReflection],
@@ -97,7 +112,10 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForNamespacedClass(): void
+    /**
+     * @dataProvider dataClassTypes
+     */
+    public function testInvokeCallsReflectNodesForNamespacedClassType(string $classType): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -108,7 +126,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->will($this->returnValue($mockReflection));
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php namespace Foo { class Bar {} }', 'Foo\Bar');
+        $locatedSource = new LocatedSource(sprintf('<?php namespace Foo { %s Bar {} }', $classType), 'Foo\Bar');
 
         self::assertSame(
             [$mockReflection],
