@@ -66,12 +66,7 @@ class CachingVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if (
-            $node instanceof Node\Stmt\ClassMethod
-            || $node instanceof Node\Stmt\Property
-            || $node instanceof Node\Stmt\ClassConst
-            || $node instanceof Node\Stmt\EnumCase
-        ) {
+        if ($node instanceof Node\Stmt\ClassMethod) {
             return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
         }
 
