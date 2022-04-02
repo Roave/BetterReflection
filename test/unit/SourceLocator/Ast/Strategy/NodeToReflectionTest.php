@@ -135,6 +135,40 @@ class NodeToReflectionTest extends TestCase
         self::assertSame('foo', $reflection->getName());
     }
 
+    public function testReturnsReflectionForClosureNode(): void
+    {
+        $reflector = $this->createMock(Reflector::class);
+
+        $locatedSource = new LocatedSource('<?php function() {};', null);
+
+        $reflection = (new NodeToReflection())->__invoke(
+            $reflector,
+            $this->getFirstAstNodeInString($locatedSource->getSource())->expr,
+            $locatedSource,
+            null,
+        );
+
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getName());
+    }
+
+    public function testReturnsReflectionForArrowFunctionNode(): void
+    {
+        $reflector = $this->createMock(Reflector::class);
+
+        $locatedSource = new LocatedSource('<?php fn () => "";', null);
+
+        $reflection = (new NodeToReflection())->__invoke(
+            $reflector,
+            $this->getFirstAstNodeInString($locatedSource->getSource())->expr,
+            $locatedSource,
+            null,
+        );
+
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
+        self::assertSame(ReflectionFunction::CLOSURE_NAME, $reflection->getName());
+    }
+
     public function testReturnsReflectionForConstantNodeByConst(): void
     {
         $reflector = $this->createMock(Reflector::class);
