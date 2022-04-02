@@ -27,7 +27,6 @@ use function is_array;
 use function is_object;
 use function is_string;
 use function sprintf;
-use function strtolower;
 
 class ReflectionParameter
 {
@@ -308,11 +307,12 @@ class ReflectionParameter
     public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         $type = $this->node->type;
-        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType || $type === null);
 
         if ($type === null) {
             return null;
         }
+
+        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType);
 
         $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
 
@@ -360,7 +360,7 @@ class ReflectionParameter
 
         $isOneOfAllowedTypes = static function (ReflectionNamedType $namedType, string ...$types): bool {
             foreach ($types as $type) {
-                if (strtolower($namedType->getName()) === $type) {
+                if ($namedType->getName() === $type) {
                     return true;
                 }
             }

@@ -100,7 +100,7 @@ class ReflectionProperty
         int $positionInNode,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
-        bool $isPromoted,
+        bool $isPromoted = false,
         bool $declaredAtCompileTime = true,
     ): self {
         return new self(
@@ -422,11 +422,12 @@ class ReflectionProperty
     public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
         $type = $this->node->type;
-        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType || $type === null);
 
         if ($type === null) {
             return null;
         }
+
+        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType);
 
         return ReflectionType::createFromNode($this->reflector, $this, $type);
     }

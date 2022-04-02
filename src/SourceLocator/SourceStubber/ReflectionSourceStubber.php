@@ -140,13 +140,12 @@ final class ReflectionSourceStubber implements SourceStubber
 
         $returnType = $functionReflection->getReturnType();
         if ($returnType === null && method_exists($functionReflection, 'getTentativeReturnType')) {
-            /** @psalm-var CoreReflectionType $returnType */
+            /** @psalm-var CoreReflectionType|null $returnType */
             $returnType = $functionReflection->getTentativeReturnType();
         }
 
-        assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType instanceof CoreReflectionIntersectionType || $returnType === null);
-
         if ($returnType !== null) {
+            assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType instanceof CoreReflectionIntersectionType);
             $functionNode->setReturnType($this->formatType($returnType));
         }
 
@@ -351,9 +350,8 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $propertyType = $propertyReflection->getType();
 
-            assert($propertyType instanceof CoreReflectionNamedType || $propertyType instanceof CoreReflectionUnionType || $propertyType instanceof CoreReflectionIntersectionType || $propertyType === null);
-
             if ($propertyType !== null) {
+                assert($propertyType instanceof CoreReflectionNamedType || $propertyType instanceof CoreReflectionUnionType || $propertyType instanceof CoreReflectionIntersectionType);
                 $propertyNode->setType($this->formatType($propertyType));
             }
 
@@ -462,13 +460,12 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $returnType = $methodReflection->getReturnType();
             if ($returnType === null && method_exists($methodReflection, 'getTentativeReturnType')) {
-                /** @psalm-var CoreReflectionType $returnType */
+                /** @psalm-var CoreReflectionType|null $returnType */
                 $returnType = $methodReflection->getTentativeReturnType();
             }
 
-            assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType instanceof CoreReflectionIntersectionType || $returnType === null);
-
             if ($returnType !== null) {
+                assert($returnType instanceof CoreReflectionNamedType || $returnType instanceof CoreReflectionUnionType || $returnType instanceof CoreReflectionIntersectionType);
                 $methodNode->setReturnType($this->formatType($returnType));
             }
 
@@ -555,12 +552,11 @@ final class ReflectionSourceStubber implements SourceStubber
 
         $parameterType = $parameterReflection->getType();
 
-        assert($parameterType instanceof CoreReflectionNamedType || $parameterType instanceof CoreReflectionUnionType || $parameterType instanceof CoreReflectionIntersectionType || $parameterType === null);
-
         if ($parameterType === null) {
             return;
         }
 
+        assert($parameterType instanceof CoreReflectionNamedType || $parameterType instanceof CoreReflectionUnionType || $parameterType instanceof CoreReflectionIntersectionType);
         $parameterNode->setType($this->formatType($parameterType));
     }
 

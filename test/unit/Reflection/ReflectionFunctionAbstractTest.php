@@ -683,6 +683,56 @@ PHP;
         self::assertSame(10, $first->getEndLine());
     }
 
+    public function testGetReturnStatementAstForInterfaceMethod(): void
+    {
+        $php = <<<'PHP'
+<?php
+interface Boo {
+    public function method();
+}
+PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $class     = $reflector->reflectClass('Boo');
+        $method    = $class->getMethod('method');
+
+        $nodes = $method->getReturnStatementsAst();
+
+        self::assertEmpty($nodes);
+    }
+
+    public function testGetReturnStatementAstForClosure(): void
+    {
+        $closure = static function ($a) {
+            if ($a) {
+                return 0;
+            }
+
+            return $a + 3;
+        };
+
+        $reflector = new DefaultReflector(new ClosureSourceLocator($closure, $this->parser));
+        $function  = $reflector->reflectFunction(ReflectionFunction::CLOSURE_NAME);
+
+        $nodes = $function->getReturnStatementsAst();
+
+        self::assertCount(2, $nodes);
+        self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
+    }
+
+    public function testGetReturnStatementAstForArrowFunction(): void
+    {
+        $closure = static fn ($a) => $a + 3;
+
+        $reflector = new DefaultReflector(new ClosureSourceLocator($closure, $this->parser));
+        $function  = $reflector->reflectFunction(ReflectionFunction::CLOSURE_NAME);
+
+        $nodes = $function->getReturnStatementsAst();
+
+        self::assertCount(1, $nodes);
+        self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
+    }
+
     /**
      * @dataProvider deprecatedDocCommentsProvider
      */
