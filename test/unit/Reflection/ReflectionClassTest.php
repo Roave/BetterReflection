@@ -567,12 +567,12 @@ class ReflectionClassTest extends TestCase
 
         $property = $properties['name'];
 
+        self::assertSame(0, $property->getPositionInAst());
         self::assertSame('name', $property->getName());
         self::assertTrue($property->isPublic());
         self::assertTrue($property->isReadOnly());
         self::assertFalse($property->isPromoted());
         self::assertTrue($property->isDefault());
-        self::assertSame(0, $property->getPositionInAst());
     }
 
     public function dataGetPropertiesForBackedEnum(): array
@@ -619,12 +619,12 @@ class ReflectionClassTest extends TestCase
 
             $property = $properties[$propertyName];
 
+            self::assertSame(0, $property->getPositionInAst(), $fullPropertyName);
             self::assertSame($propertyName, $property->getName(), $fullPropertyName);
             self::assertTrue($property->isPublic(), $fullPropertyName);
             self::assertTrue($property->isReadOnly(), $fullPropertyName);
             self::assertFalse($property->isPromoted(), $fullPropertyName);
             self::assertTrue($property->isDefault(), $fullPropertyName);
-            self::assertSame(0, $property->getPositionInAst(), $fullPropertyName);
             self::assertSame($propertyType, $property->getType()->__toString(), $fullPropertyName);
         }
     }
@@ -741,11 +741,13 @@ PHP;
 
         self::assertSame(Qux::class, $fProperty->getDeclaringClass()->getName());
         self::assertFalse($fProperty->isPromoted());
+        self::assertSame(0, $fProperty->getPositionInAst());
 
         $gProperty = $classInfo->getProperty('g');
 
         self::assertSame(Qux::class, $gProperty->getDeclaringClass()->getName());
         self::assertTrue($gProperty->isPromoted());
+        self::assertSame(0, $gProperty->getPositionInAst());
     }
 
     public function testGetProperty(): void

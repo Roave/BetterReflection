@@ -29,5 +29,11 @@ abstract class Qux extends Baz implements Boo, Coo {
 }
 
 abstract class Next extends Qux {
+    private $stmtThatIsNotConstant;
+
     public const F = 'ff';
+
+    public function stmtThatIsNotConstant()
+    {
+    }
 }

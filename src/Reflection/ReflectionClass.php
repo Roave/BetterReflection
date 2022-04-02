@@ -743,7 +743,6 @@ class ReflectionClass implements Reflection
                         $propertyPositionInNode,
                         $this,
                         $this,
-                        false,
                     );
                     $properties[$property->getName()] = $property;
                 }
@@ -819,7 +818,6 @@ class ReflectionClass implements Reflection
                 0,
                 $this,
                 $this,
-                false,
             );
         };
 

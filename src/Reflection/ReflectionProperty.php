@@ -100,7 +100,7 @@ class ReflectionProperty
         int $positionInNode,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
-        bool $isPromoted,
+        bool $isPromoted = false,
         bool $declaredAtCompileTime = true,
     ): self {
         return new self(
