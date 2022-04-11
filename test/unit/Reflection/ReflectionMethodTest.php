@@ -21,6 +21,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -751,5 +752,51 @@ PHP;
             '%Atrait Foo%A{%A}%A',
             $methodReflection->getLocatedSource()->getSource(),
         );
+    }
+
+    public function testUnionTypeWithNullDefaultValue(): void
+    {
+        $php       = <<<'PHP'
+            <?php
+
+            class Foo
+            {
+                public function method(string|array $p = null): void
+                {
+                }
+            }
+        PHP;
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $class     = $reflector->reflectClass('Foo');
+        $method    = $class->getMethod('method');
+        $parameter = $method->getParameter('p');
+        self::assertTrue($parameter->allowsNull());
+        $parameterType = $parameter->getType();
+        self::assertInstanceOf(ReflectionUnionType::class, $parameterType);
+        self::assertTrue($parameterType->allowsNull());
+        self::assertSame('string|array|null', (string) $parameterType);
+    }
+
+    public function testNullableUnionTypeWithNullDefaultValue(): void
+    {
+        $php       = <<<'PHP'
+            <?php
+
+            class Foo
+            {
+                public function method(string|array|null $p = null): void
+                {
+                }
+            }
+        PHP;
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $class     = $reflector->reflectClass('Foo');
+        $method    = $class->getMethod('method');
+        $parameter = $method->getParameter('p');
+        self::assertTrue($parameter->allowsNull());
+        $parameterType = $parameter->getType();
+        self::assertInstanceOf(ReflectionUnionType::class, $parameterType);
+        self::assertTrue($parameterType->allowsNull());
+        self::assertSame('string|array|null', (string) $parameterType);
     }
 }

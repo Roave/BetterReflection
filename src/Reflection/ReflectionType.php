@@ -49,7 +49,28 @@ abstract class ReflectionType
             return new ReflectionIntersectionType($reflector, $owner, $type);
         }
 
-        return new ReflectionUnionType($reflector, $owner, $type);
+        if (! $allowsNull) {
+            return new ReflectionUnionType($reflector, $owner, $type);
+        }
+
+        $hasNull = false;
+        foreach ($type->types as $innerUnionType) {
+            if (! $innerUnionType instanceof Identifier || $innerUnionType->toLowerString() !== 'null') {
+                continue;
+            }
+
+            $hasNull = true;
+            break;
+        }
+
+        if ($hasNull) {
+            return new ReflectionUnionType($reflector, $owner, $type);
+        }
+
+        $types   = $type->types;
+        $types[] = new Identifier('null');
+
+        return new ReflectionUnionType($reflector, $owner, new UnionType($types));
     }
 
     /**
