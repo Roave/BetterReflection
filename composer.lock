@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d8e08fda621f9ddca5e055e0dadbe8f",
+    "content-hash": "7b558d92a245e8e1e564231f652066b4",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2021.3",
+            "version": "v2022.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "c790a8fa467ff5d3f11b0e7c1f3698abbe37b182"
+                "reference": "066fa5b3cd989b9c4fb1793d5ad20af5ab0e2b3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/c790a8fa467ff5d3f11b0e7c1f3698abbe37b182",
-                "reference": "c790a8fa467ff5d3f11b0e7c1f3698abbe37b182",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/066fa5b3cd989b9c4fb1793d5ad20af5ab0e2b3c",
+                "reference": "066fa5b3cd989b9c4fb1793d5ad20af5ab0e2b3c",
                 "shasum": ""
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "dev-master",
+                "friendsofphp/php-cs-fixer": "@stable",
                 "nikic/php-parser": "@stable",
                 "php": "^8.0",
                 "phpdocumentor/reflection-docblock": "@stable",
@@ -50,9 +50,9 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2021.3"
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2022.1"
             },
-            "time": "2021-10-19T20:06:47+00:00"
+            "time": "2022-03-08T07:40:50+00:00"
         },
         {
             "name": "nikic/php-parser",
