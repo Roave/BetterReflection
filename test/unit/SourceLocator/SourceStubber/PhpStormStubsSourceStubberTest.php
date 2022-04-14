@@ -197,21 +197,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($original->isProtected(), $stubbed->isProtected(), $methodName);
         self::assertSame($original->returnsReference(), $stubbed->returnsReference(), $methodName);
         self::assertSame($original->isStatic(), $stubbed->isStatic(), $methodName);
-
-        // Needs fix in JetBrains/phpstorm-stubs
-        if (! (PHP_VERSION_ID >= 80100 && in_array($methodName, ['Error#__clone', 'Exception#__clone'], true))) {
-            self::assertSame($original->isFinal(), $stubbed->isFinal(), $methodName);
-        }
+        self::assertSame($original->isFinal(), $stubbed->isFinal(), $methodName);
 
         // Needs fixes in JetBrains/phpstorm-stubs
         if (
-            in_array($methodName, [
-                'Closure#__invoke',
-                'Directory#read',
-                'Directory#rewind',
-                'Directory#close',
-                'WeakReference#create',
-            ], true)
+            in_array($methodName, ['Closure#__invoke'], true)
         ) {
             return;
         }
@@ -390,11 +380,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertFalse($constantReflection->inNamespace());
         self::assertTrue($constantReflection->isInternal());
         self::assertFalse($constantReflection->isUserDefined());
-
-        // Needs fixes in JetBrains/phpstorm-stubs
-        if ($constantName !== 'PHP_MANDIR') {
-            self::assertSame($extensionName, $constantReflection->getExtensionName());
-        }
+        self::assertSame($extensionName, $constantReflection->getExtensionName());
 
         // NAN cannot be compared
         if ($constantName === 'NAN') {
