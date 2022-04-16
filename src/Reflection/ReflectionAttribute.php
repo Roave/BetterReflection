@@ -10,6 +10,7 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 class ReflectionAttribute
 {
@@ -19,6 +20,22 @@ class ReflectionAttribute
         private ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner,
         private bool $isRepeated,
     ) {
+    }
+
+    public static function createFromNode(
+        Reflector $reflector,
+        Node\Attribute $node,
+        LocatedSource $locatedSource,
+        ?Node\Stmt\Namespace_ $namespaceNode = null
+    ): self
+    {
+        // $node->getAttribute('parent') is an AttributeGroup, we want the Node that owns the AttributeGroup
+        $owningNode = $node->getAttribute('parent')->getAttribute('parent');
+        $owningReflection = match ($owningNode) {
+            $owningNode instanceof Node\Stmt\Class_ => ReflectionClass::createFromNode($reflector, $owningNode, $locatedSource, $namespaceNode),
+            default => ReflectionClass::createFromInstance($owningNode)
+        };
+        return new self($reflector, $node, $owningReflection, true);
     }
 
     public function getName(): string

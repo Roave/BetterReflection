@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflector;
 
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -126,5 +127,19 @@ final class DefaultReflector implements Reflector
         );
 
         return $allConstants;
+    }
+
+    /**
+     * @return list<ReflectionAttribute>
+     */
+    public function reflectAllAttributes(): iterable
+    {
+        /** @var list<ReflectionAttribute> $allAttributes */
+        $allAttributes = $this->sourceLocator->locateIdentifiersByType(
+            $this,
+            new IdentifierType(IdentifierType::IDENTIFIER_ATTRIBUTE),
+        );
+
+        return $allAttributes;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -127,5 +128,15 @@ class DefaultReflectorTest extends TestCase
 
         self::assertContainsOnlyInstancesOf(ReflectionConstant::class, $constants);
         self::assertCount(5, $constants);
+    }
+
+    public function testReflectAllAttributes(): void
+    {
+        $attributes = (new DefaultReflector(
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator),
+        ))->reflectAllAttributes();
+
+        self::assertContainsOnlyInstancesOf(ReflectionAttribute::class, $attributes);
+        self::assertCount(24, $attributes);
     }
 }

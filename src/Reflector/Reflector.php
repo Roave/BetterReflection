@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflector;
 
+use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -52,4 +53,11 @@ interface Reflector
      * @return list<ReflectionConstant>
      */
     public function reflectAllConstants(): iterable;
+
+    /**
+     * Get all attributes available in the scope specified by the SourceLocator.
+     *
+     * @return List<ReflectionAttribute>
+     */
+    public function reflectAllAttributes(): iterable;
 }

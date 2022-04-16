@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
 use PhpParser\Node;
+use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
@@ -23,11 +24,11 @@ class NodeToReflection implements AstConversionStrategy
      */
     public function __invoke(
         Reflector $reflector,
-        Node\Stmt\Class_|Node\Stmt\Interface_|Node\Stmt\Trait_|Node\Stmt\Enum_|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction|Node\Stmt\Const_|Node\Expr\FuncCall $node,
+        Node\Stmt\Class_|Node\Stmt\Interface_|Node\Stmt\Trait_|Node\Stmt\Enum_|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Attribute $node,
         LocatedSource $locatedSource,
         ?Node\Stmt\Namespace_ $namespace,
         ?int $positionInNode = null,
-    ): ReflectionClass|ReflectionConstant|ReflectionFunction {
+    ): ReflectionClass|ReflectionConstant|ReflectionFunction|ReflectionAttribute {
         if ($node instanceof Node\Stmt\Enum_) {
             return ReflectionEnum::createFromNode(
                 $reflector,
@@ -61,6 +62,10 @@ class NodeToReflection implements AstConversionStrategy
 
         if ($node instanceof Node\Stmt\Const_) {
             return ReflectionConstant::createFromNode($reflector, $node, $locatedSource, $namespace, $positionInNode);
+        }
+
+        if ($node instanceof Node\Attribute) {
+            return ReflectionAttribute::createFromNode($reflector, $node, $locatedSource, $namespace);
         }
 
         return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
