@@ -28,7 +28,8 @@ class IdentifierType {
 
     private string $name;
 
-    public function __construct(string $type = self::IDENTIFIER_CLASS) {
+    public function __construct(string $type = self::IDENTIFIER_CLASS)
+    {
         if (!array_key_exists($type, self::VALID_TYPES)) {
             throw new InvalidArgumentException(sprintf(
                 '%s is not a valid identifier type',
@@ -39,19 +40,23 @@ class IdentifierType {
         $this->name = $type;
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function isClass(): bool {
+    public function isClass(): bool
+    {
         return $this->name === self::IDENTIFIER_CLASS;
     }
 
-    public function isFunction(): bool {
+    public function isFunction(): bool
+    {
         return $this->name === self::IDENTIFIER_FUNCTION;
     }
 
-    public function isConstant(): bool {
+    public function isConstant(): bool
+    {
         return $this->name === self::IDENTIFIER_CONSTANT;
     }
 
