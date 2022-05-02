@@ -34,7 +34,7 @@
     ],
     "require-dev": {
         "doctrine/coding-standard": "^9.0.0",
-        "phpstan/phpstan": "^1.6.3",
+        "phpstan/phpstan": "^1.6.4",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.23",
         "roave/infection-static-analysis-plugin": "^1.18.0"
