@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43a46de268318ca3571e138585ce375b",
+    "content-hash": "71375f1eaa80e27f8595a05f210d221b",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1945,16 +1945,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.6.5",
+            "version": "1.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "462f7651f3454f280d6a397be3290634ab937022"
+                "reference": "d41c39cb2e487663bce9bbd97c660e244b73abad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/462f7651f3454f280d6a397be3290634ab937022",
-                "reference": "462f7651f3454f280d6a397be3290634ab937022",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d41c39cb2e487663bce9bbd97c660e244b73abad",
+                "reference": "d41c39cb2e487663bce9bbd97c660e244b73abad",
                 "shasum": ""
             },
             "require": {
@@ -1980,7 +1980,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.6.5"
+                "source": "https://github.com/phpstan/phpstan/tree/1.6.7"
             },
             "funding": [
                 {
@@ -2000,7 +2000,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-04T10:49:26+00:00"
+            "time": "2022-05-04T22:55:41+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
