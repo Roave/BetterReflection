@@ -293,7 +293,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
             {
                 if ($node instanceof Node\Stmt\Const_) {
                     foreach ($node->consts as $constNode) {
-                        if ($constNode->namespacedName->toString() === $this->constantName) {
+                        if ($constNode->namespacedName?->toString() === $this->constantName) {
                             $this->node = $node;
 
                             return NodeTraverser::STOP_TRAVERSAL;

@@ -186,12 +186,16 @@ class ReflectionClass implements Reflection
      */
     public function getName(): string
     {
-        /** @psalm-var class-string|trait-string $name */
-        $name = ! $this->inNamespace()
-            ? $this->getShortName()
-            : $this->node->namespacedName->toString();
+        if (! $this->inNamespace()) {
+            /** @psalm-var class-string|trait-string */
+            return $this->getShortName();
+        }
 
-        return $name;
+        $namespacedName = $this->node->namespacedName;
+        assert($namespacedName instanceof Node\Name);
+
+        /** @psalm-var class-string|trait-string */
+        return $namespacedName->toString();
     }
 
     /**
