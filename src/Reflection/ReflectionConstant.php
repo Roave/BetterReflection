@@ -137,8 +137,13 @@ class ReflectionConstant implements Reflection
             return $this->getNameFromDefineFunctionCall($this->node);
         }
 
-        /** @psalm-suppress PossiblyNullArrayOffset */
-        return $this->node->consts[$this->positionInNode]->namespacedName->toString();
+        /**
+         * @psalm-suppress PossiblyNullArrayOffset
+         */
+        $namespacedName = $this->node->consts[$this->positionInNode]->namespacedName;
+        assert($namespacedName instanceof Node\Name);
+
+        return $namespacedName->toString();
     }
 
     /**

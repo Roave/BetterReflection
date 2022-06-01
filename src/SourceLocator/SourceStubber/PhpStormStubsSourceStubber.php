@@ -404,8 +404,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             $this->addDeprecatedDocComment($node);
 
             $nodeWithNamespaceName = $node instanceof Node\Stmt\Const_ ? $node->consts[0] : $node;
+            $namespacedName        = $nodeWithNamespaceName->namespacedName;
+            assert($namespacedName instanceof Node\Name);
 
-            $namespaceBuilder = $this->builderFactory->namespace($nodeWithNamespaceName->namespacedName->slice(0, -1));
+            $namespaceBuilder = $this->builderFactory->namespace($namespacedName->slice(0, -1));
 
             if ($namespaceNode !== null) {
                 foreach ($namespaceNode->stmts as $stmt) {

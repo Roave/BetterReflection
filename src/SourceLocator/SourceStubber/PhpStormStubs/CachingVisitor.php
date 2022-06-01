@@ -52,12 +52,14 @@ class CachingVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\Stmt\ClassLike) {
-            $nodeName                    = $node->namespacedName->toString();
-            $this->classNodes[$nodeName] = [$node, $this->currentNamespace];
+            $classNamespacedName = $node->namespacedName;
+            assert($classNamespacedName instanceof Node\Name);
+            $className                    = $classNamespacedName->toString();
+            $this->classNodes[$className] = [$node, $this->currentNamespace];
 
             foreach ($node->getConstants() as $constantsNode) {
                 foreach ($constantsNode->consts as $constNode) {
-                    $constClassName = sprintf('%s::%s', $nodeName, $constNode->name->toString());
+                    $constClassName = sprintf('%s::%s', $className, $constNode->name->toString());
                     $this->updateConstantValue($constNode, $constClassName);
                 }
             }
@@ -71,15 +73,19 @@ class CachingVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\Stmt\Function_) {
-            $nodeName                         = $node->namespacedName->toString();
-            $this->functionNodes[$nodeName][] = [$node, $this->currentNamespace];
+            $functionNamespacedName = $node->namespacedName;
+            assert($functionNamespacedName instanceof Node\Name);
+            $functionName                         = $functionNamespacedName->toString();
+            $this->functionNodes[$functionName][] = [$node, $this->currentNamespace];
 
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Node\Stmt\Const_) {
             foreach ($node->consts as $constNode) {
-                $constNodeName = $constNode->namespacedName->toString();
+                $constNamespacedName = $constNode->namespacedName;
+                assert($constNamespacedName instanceof Node\Name);
+                $constNodeName = $constNamespacedName->toString();
 
                 $this->updateConstantValue($constNode, $constNodeName);
 
