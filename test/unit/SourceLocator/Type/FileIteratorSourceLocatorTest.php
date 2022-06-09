@@ -43,6 +43,7 @@ class FileIteratorSourceLocatorTest extends TestCase
 
     public function testScanDirectoryClasses(): void
     {
+        /** @var list<ReflectionClass> $classes */
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new DefaultReflector($this->sourceLocator),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -79,6 +80,7 @@ class FileIteratorSourceLocatorTest extends TestCase
     {
         self::expectException(InvalidFileInfo::class);
 
+        /** @phpstan-ignore-next-line */
         new FileIteratorSourceLocator(new ArrayIterator([new stdClass()]), BetterReflectionSingleton::instance()->astLocator());
     }
 }

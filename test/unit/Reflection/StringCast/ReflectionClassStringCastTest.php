@@ -132,11 +132,9 @@ class ReflectionClassStringCastTest extends TestCase
         $stringCastClassObjectFilename = __DIR__ . '/../../Fixture/StringCastClassObject.php';
         require_once $stringCastClassObjectFilename;
 
-        $reflector       = new DefaultReflector(new SingleFileSourceLocator($stringCastClassObjectFilename, $this->astLocator));
-        $classReflection = $reflector->reflectClass(StringCastClassObject::class);
-
         $object = new StringCastClassObject();
 
+        /** @phpstan-ignore-next-line */
         $object->dynamicProperty = 'string';
 
         $objectReflection = ReflectionObject::createFromInstance($object);

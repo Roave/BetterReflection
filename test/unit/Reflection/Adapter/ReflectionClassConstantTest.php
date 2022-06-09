@@ -25,6 +25,9 @@ use function get_class_methods;
  */
 class ReflectionClassConstantTest extends TestCase
 {
+    /**
+     * @return array<string, array{0: string}>
+     */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionClassConstant::class);
@@ -43,6 +46,9 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame(ReflectionClassConstantAdapter::class, $reflectionClassConstantAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}>
+     */
     public function methodExpectationProvider(): array
     {
         return [
@@ -84,6 +90,9 @@ class ReflectionClassConstantTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function dataAdapterMethodsForEnumCase(): array
     {
         return [
@@ -170,14 +179,19 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testGetAttributesWithName(): void
     {
+        /** @phpstan-var class-string $someAttributeClassName */
+        $someAttributeClassName = 'SomeAttribute';
+        /** @phpstan-var class-string $anotherAttributeClassName */
+        $anotherAttributeClassName = 'AnotherAttribute';
+
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
-            ->willReturn('SomeAttribute');
+            ->willReturn($someAttributeClassName);
         $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
-            ->willReturn('AnotherAttribute');
+            ->willReturn($anotherAttributeClassName);
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
@@ -191,29 +205,36 @@ class ReflectionClassConstantTest extends TestCase
             ->willReturn($betterReflectionAttributes);
 
         $reflectionClassAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
-        $attributes             = $reflectionClassAdapter->getAttributes('SomeAttribute');
+        $attributes             = $reflectionClassAdapter->getAttributes($someAttributeClassName);
 
         self::assertCount(1, $attributes);
-        self::assertSame('SomeAttribute', $attributes[0]->getName());
+        self::assertSame($someAttributeClassName, $attributes[0]->getName());
     }
 
     public function testGetAttributesWithInstance(): void
     {
+        /** @phpstan-var class-string $className */
+        $className = 'ClassName';
+        /** @phpstan-var class-string $parentClassName */
+        $parentClassName = 'ParentClassName';
+        /** @phpstan-var class-string $interfaceName */
+        $interfaceName = 'InterfaceName';
+
         $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionAttributeClass1
             ->method('getName')
-            ->willReturn('ClassName');
+            ->willReturn($className);
         $betterReflectionAttributeClass1
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass1
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
 
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
@@ -228,16 +249,16 @@ class ReflectionClassConstantTest extends TestCase
         $betterReflectionAttributeClass2
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass2
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
@@ -252,16 +273,16 @@ class ReflectionClassConstantTest extends TestCase
         $betterReflectionAttributeClass3
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass3
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
@@ -286,9 +307,9 @@ class ReflectionClassConstantTest extends TestCase
 
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
 
-        self::assertCount(1, $reflectionClassConstantAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionClassConstantAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(1, $reflectionClassConstantAdapter->getAttributes($className, ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionClassConstantAdapter->getAttributes($parentClassName, ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionClassConstantAdapter->getAttributes($interfaceName, ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
 
     public function testGetAttributesThrowsExceptionForInvalidFlags(): void
@@ -300,6 +321,9 @@ class ReflectionClassConstantTest extends TestCase
         $reflectionClassConstantAdapter->getAttributes(null, 123);
     }
 
+    /**
+     * @return list<array{0: BetterReflectionClassConstant|BetterReflectionEnumCase, 1: bool}>
+     */
     public function dataIsEnumCase(): array
     {
         return [

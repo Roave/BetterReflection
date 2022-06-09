@@ -156,6 +156,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertFalse($function->isDeprecated());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function nonDeprecatedProvider(): array
     {
         return [
@@ -180,6 +183,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNull($function->getExtensionName());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function variadicProvider(): array
     {
         return [
@@ -206,7 +212,7 @@ class ReflectionFunctionAbstractTest extends TestCase
      *
      * @see https://github.com/nikic/PHP-Parser/blob/1.x/test/code/parser/stmt/function/generator.test
      *
-     * @return array
+     * @return list<array{0: string, 1: bool}>
      */
     public function generatorProvider(): array
     {
@@ -242,6 +248,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($expectingGenerator, $function->isGenerator());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function startEndLineProvider(): array
     {
         return [
@@ -263,6 +272,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($expectedEnd, $function->getEndLine());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function columnsProvider(): array
     {
         return [
@@ -273,9 +285,6 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /**
-     * @param int $expectedStart
-     * @param int $expectedEnd
-     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
@@ -287,6 +296,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($endColumn, $function->getEndColumn());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function returnsReferenceProvider(): array
     {
         return [
@@ -409,6 +421,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($locatedSource, $functionInfo->getLocatedSource());
     }
 
+    /**
+     * @return list<array{0: string, 1: string|class-string}>
+     */
     public function returnTypeFunctionProvider(): array
     {
         return [
@@ -461,6 +476,9 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertFalse($functionInfo->hasReturnType());
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function nullableReturnTypeFunctionProvider(): array
     {
         return [
@@ -748,6 +766,9 @@ PHP;
         self::assertTrue($function->isDeprecated());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function deprecatedDocCommentsProvider(): array
     {
         return [

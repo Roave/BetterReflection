@@ -75,6 +75,9 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataClassTypes(): array
     {
         return [

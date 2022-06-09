@@ -27,6 +27,9 @@ use function get_class_methods;
  */
 class ReflectionTypeTest extends TestCase
 {
+    /**
+     * @return array<string, array{0: string}>
+     */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionType::class);
@@ -55,6 +58,9 @@ class ReflectionTypeTest extends TestCase
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): array
     {
         return [

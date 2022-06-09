@@ -86,6 +86,7 @@ use UnitEnum;
 
 use function array_keys;
 use function array_map;
+use function array_values;
 use function array_walk;
 use function basename;
 use function class_exists;
@@ -232,6 +233,9 @@ class ReflectionClassTest extends TestCase
         self::assertCount(3, $methods);
     }
 
+    /**
+     * @return list<array{0: string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}>
+     */
     public function dataMethodsOfBackedEnum(): array
     {
         return [
@@ -257,7 +261,7 @@ class ReflectionClassTest extends TestCase
     }
 
     /**
-     * @param list<array{0: class-string, 1: string}> $parameters
+     * @param array<string, array{0: class-string, 1: string}> $parameters
      *
      * @dataProvider dataMethodsOfBackedEnum
      */
@@ -295,6 +299,9 @@ class ReflectionClassTest extends TestCase
         self::assertSame($returnType, $methodReturnType->__toString());
     }
 
+    /**
+     * @return list<array{0: int, 1: int}>
+     */
     public function getMethodsWithFilterDataProvider(): array
     {
         return [
@@ -575,6 +582,9 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($property->isDefault());
     }
 
+    /**
+     * @return list<array{0: string, 1: array<string, string>}>
+     */
     public function dataGetPropertiesForBackedEnum(): array
     {
         return [
@@ -654,6 +664,9 @@ PHP;
         self::assertSame($expectedPropertiesNames, array_keys($properties));
     }
 
+    /**
+     * @return list<array{0: int, 1: int}>
+     */
     public function getPropertiesWithFilterDataProvider(): array
     {
         return [
@@ -695,6 +708,9 @@ PHP;
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
+    /**
+     * @return list<array{0: string, 1: class-string, 2: class-string}>
+     */
     public function dataInheritedProperties(): array
     {
         return [
@@ -818,6 +834,9 @@ PHP;
         self::assertSame(['Roave\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Roave\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function startEndLineProvider(): array
     {
         return [
@@ -839,6 +858,9 @@ PHP;
         self::assertSame($expectedEnd, $classInfo->getEndLine());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function columnsProvider(): array
     {
         return [
@@ -849,9 +871,6 @@ PHP;
     }
 
     /**
-     * @param int $expectedStart
-     * @param int $expectedEnd
-     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
@@ -1139,6 +1158,9 @@ PHP;
         self::assertTrue($classInfo->isFinal());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: list<string>}>
+     */
     public function modifierProvider(): array
     {
         return [
@@ -1225,6 +1247,9 @@ PHP;
         self::assertSame('TraitFixtureTraitA', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: string, 3: string, 4: string}>
+     */
     public function declaringClassProvider(): array
     {
         return [
@@ -1685,6 +1710,7 @@ PHP;
 
         $this->expectException(TypeError::class);
 
+        /** @phpstan-ignore-next-line */
         $class->isInstance('foo');
     }
 
@@ -1903,8 +1929,8 @@ PHP;
         sort($cInterfaces);
         sort($dInterfaces);
 
-        self::assertSame(['B'], $cInterfaces);
-        self::assertSame(['A', 'C'], $dInterfaces);
+        self::assertSame(['B'], array_values($cInterfaces));
+        self::assertSame(['A', 'C'], array_values($dInterfaces));
     }
 
     public function testReflectedTraitHasNoInterfaces(): void
@@ -2478,6 +2504,9 @@ PHP;
         self::assertSame(['Iterator', 'Traversable', 'Stringable'], $class->getInterfaceNames());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function deprecatedDocCommentProvider(): array
     {
         return [

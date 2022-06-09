@@ -45,6 +45,9 @@ class ReflectionObjectTest extends TestCase
         return BetterReflectionSingleton::instance()->phpParser()->parse($code);
     }
 
+    /**
+     * @return list<array{0: object, 1: string, 2: int, 3: int}>
+     */
     public function anonymousClassInstancesProvider(): array
     {
         $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
@@ -112,8 +115,8 @@ class ReflectionObjectTest extends TestCase
     public function testReflectionWorksWithDynamicallyDeclaredMembers(): void
     {
         $foo      = new RuntimeProperties();
-        $foo->bar = 'huzzah';
-        $foo->baz = 'bazzah';
+        $foo->bar = 'huzzah'; // @phpstan-ignore-line
+        $foo->baz = 'bazzah'; // @phpstan-ignore-line
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
@@ -136,7 +139,7 @@ class ReflectionObjectTest extends TestCase
     public function testExceptionThrownWhenInvalidInstanceGiven(): void
     {
         $foo      = new RuntimeProperties();
-        $foo->bar = 'huzzah';
+        $foo->bar = 'huzzah'; // @phpstan-ignore-line
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
@@ -159,8 +162,8 @@ class ReflectionObjectTest extends TestCase
     public function testGetRuntimePropertiesWithFilter(): void
     {
         $foo      = new RuntimeProperties();
-        $foo->bar = 'huzzah';
-        $foo->baz = 'bazzah';
+        $foo->bar = 'huzzah'; // @phpstan-ignore-line
+        $foo->baz = 'bazzah'; // @phpstan-ignore-line
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
@@ -173,8 +176,8 @@ class ReflectionObjectTest extends TestCase
     public function testGetRuntimeImmediatePropertiesWithFilter(): void
     {
         $foo      = new RuntimeProperties();
-        $foo->bar = 'huzzah';
-        $foo->baz = 'bazzah';
+        $foo->bar = 'huzzah'; // @phpstan-ignore-line
+        $foo->baz = 'bazzah'; // @phpstan-ignore-line
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
@@ -187,7 +190,7 @@ class ReflectionObjectTest extends TestCase
     public function testRuntimePropertyCannotBePromoted(): void
     {
         $foo      = new RuntimeProperties();
-        $foo->bar = 'huzzah';
+        $foo->bar = 'huzzah'; // @phpstan-ignore-line
 
         $classInfo    = ReflectionObject::createFromInstance($foo);
         $propertyInfo = $classInfo->getProperty('bar');
@@ -200,7 +203,7 @@ class ReflectionObjectTest extends TestCase
     public function testGetDefaultPropertiesShouldIgnoreRuntimeProperty(): void
     {
         $object                     = new DefaultProperties();
-        $object->notDefaultProperty = null;
+        $object->notDefaultProperty = null; // @phpstan-ignore-line
 
         $classInfo = ReflectionObject::createFromInstance($object);
 
@@ -219,7 +222,7 @@ class ReflectionObjectTest extends TestCase
      * This data provider gets all the public methods from ReflectionClass, but
      * filters out a few methods we want to test manually
      *
-     * @return array
+     * @return array<string, array{0: string}>
      */
     public function reflectionClassMethodProvider(): array
     {

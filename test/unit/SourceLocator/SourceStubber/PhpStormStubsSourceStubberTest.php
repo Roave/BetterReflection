@@ -95,7 +95,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalClassesProvider(): array
     {
@@ -273,10 +273,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalFunctionsProvider(): array
     {
+        /** @var list<string> $functionNames */
         $functionNames = get_defined_functions()['internal'];
 
         return array_map(
@@ -348,7 +349,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         $provider = [];
 
-        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $constants */
+        /** @var array<string, array<string, int|string|float|bool|mixed[]|resource|null>> $constants */
         $constants = get_defined_constants(true);
 
         foreach ($constants as $extensionName => $extensionConstants) {
@@ -390,6 +391,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($constantValue, $constantReflection->getValue());
     }
 
+    /**
+     * @return list<array{0: class-string}>
+     */
     public function dataClassInNamespace(): array
     {
         return [
@@ -409,6 +413,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($className, $classReflection->getName());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataFunctionInNamespace(): array
     {
         return [
@@ -427,6 +434,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($functionName, $functionReflection->getName());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataConstantInNamespace(): array
     {
         return [
@@ -474,7 +484,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testNoStubForClassThatDoesNotExist(): void
     {
-        self::assertNull($this->sourceStubber->generateClassStub('SomeClass'));
+        /** @phpstan-var class-string $someClassName */
+        $someClassName = 'SomeClass';
+        self::assertNull($this->sourceStubber->generateClassStub($someClassName));
     }
 
     public function testStubForFunctionThatExists(): void
@@ -519,6 +531,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertInstanceOf(StubData::class, $stub);
     }
 
+    /**
+     * @return list<array{0: class-string, 1: class-string}>
+     */
     public function dataCaseInsensitiveClass(): array
     {
         return [
@@ -543,6 +558,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($expectedClassName, $classReflection->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function dataCaseInsensitiveFunction(): array
     {
         return [
@@ -567,6 +585,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($expectedFunctionName, $functionReflection->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function dataCaseInsensitiveConstant(): array
     {
         return [
@@ -595,6 +616,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSame($expectedConstantName, $reflector->getName());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataCaseSensitiveConstantSearchedByWrongCase(): array
     {
         return [
@@ -614,6 +638,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->reflector->reflectConstant($constantName);
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataCaseSensitiveConstantSearchedByRightCase(): array
     {
         return [
@@ -681,6 +708,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertStringContainsString("const CONST_CONSTANT = 'actualValue';", $constConstantStub->getStub());
     }
 
+    /**
+     * @return list<array{0: class-string|string, 1: int, 2: bool}>
+     */
     public function dataClassInPhpVersion(): array
     {
         return [
@@ -713,6 +743,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int, 3: bool}>
+     */
     public function dataClassConstantInPhpVersion(): array
     {
         return [
@@ -742,6 +775,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isSupported, array_key_exists($constantName, $constants));
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int, 3: bool, 4?: string|null, 5?: string}>
+     */
     public function dataMethodInPhpVersion(): array
     {
         return [
@@ -802,6 +838,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: string, 3: int, 4: bool, 5?: string|null, 6?: bool}>
+     */
     public function dataMethodParameterInPhpVersion(): array
     {
         return [
@@ -845,6 +884,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int, 3: bool, 4?: string}>
+     */
     public function dataPropertyInPhpVersion(): array
     {
         return [
@@ -882,6 +924,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: bool, 3?: string}>
+     */
     public function dataFunctionInPhpVersion(): array
     {
         return [
@@ -928,6 +973,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: string, 1: string, 2: int, 3: bool, 4?: string|null, 5?: bool}>
+     */
     public function dataFunctionParameterInPhpVersion(): array
     {
         return [
@@ -975,6 +1023,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: bool}>
+     */
     public function dataConstantInPhpVersion(): array
     {
         return [
@@ -1007,6 +1058,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: class-string, 1: int, 2: bool}>
+     */
     public function dataClassIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1030,13 +1084,16 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $classReflection->isDeprecated());
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int, 3: bool}>
+     */
     public function dataClassConstantIsDeprecatedInPhpVersion(): array
     {
         return [
-            ['PDO', 'PARAM_BOOL', 70000, false],
-            ['PDO', 'PARAM_BOOL', 80000, false],
-            ['PDO', 'PGSQL_ASSOC', 70000, true],
-            ['PDO', 'PGSQL_ASSOC', 80000, true],
+            [PDO::class, 'PARAM_BOOL', 70000, false],
+            [PDO::class, 'PARAM_BOOL', 80000, false],
+            [PDO::class, 'PGSQL_ASSOC', 70000, true],
+            [PDO::class, 'PGSQL_ASSOC', 80000, true],
         ];
     }
 
@@ -1054,6 +1111,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int, 3: bool}>
+     */
     public function dataMethodIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1083,6 +1143,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $methodReflection->isDeprecated());
     }
 
+    /**
+     * @return list<array{0: string, 1: string, 2: int, 3: bool}>
+     */
     public function dataPropertyIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1107,6 +1170,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $propertyReflection->isDeprecated());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: bool}>
+     */
     public function dataFunctionIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1149,6 +1215,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertTrue($classReflection->hasMethod('throw'));
     }
 
+    /**
+     * @return list<array{0: class-string, 1: list<class-string>, 2: int}>
+     */
     public function dataImmediateInterfaces(): array
     {
         return [
@@ -1233,6 +1302,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($interfaceNames, array_keys($class->getImmediateInterfaces()));
     }
 
+    /**
+     * @return list<array{0: class-string, 1: class-string, 2: int}>
+     */
     public function dataSubclass(): array
     {
         return [

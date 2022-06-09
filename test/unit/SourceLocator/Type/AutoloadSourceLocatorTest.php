@@ -11,6 +11,7 @@ use ReflectionClass;
 use ReflectionObject;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -53,15 +54,12 @@ class AutoloadSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
 
-    private Reflector $reflector;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $configuration    = BetterReflectionSingleton::instance();
         $this->astLocator = $configuration->astLocator();
-        $this->reflector  = $configuration->reflector();
     }
 
     /** @return Reflector&MockObject */
@@ -101,14 +99,14 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
 
-        self::assertInstanceOf(
-            LocatedSource::class,
-            (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(
-                    AutoloadableInterface::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                ))->getLocatedSource(),
-        );
+        $reflectionClass = (new AutoloadSourceLocator($this->astLocator))
+            ->locateIdentifier($this->getMockReflector(), new Identifier(
+                AutoloadableInterface::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ));
+
+        self::assertInstanceOf(BetterReflectionClass::class, $reflectionClass);
+        self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
 
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
     }
@@ -120,14 +118,14 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         self::assertTrue(interface_exists(AutoloadableInterface::class));
 
-        self::assertInstanceOf(
-            LocatedSource::class,
-            (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(
-                    AutoloadableInterface::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                ))->getLocatedSource(),
-        );
+        $reflectionClass = (new AutoloadSourceLocator($this->astLocator))
+            ->locateIdentifier($this->getMockReflector(), new Identifier(
+                AutoloadableInterface::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ));
+
+        self::assertInstanceOf(BetterReflectionClass::class, $reflectionClass);
+        self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
     /**
@@ -137,16 +135,14 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
 
-        self::assertInstanceOf(
-            LocatedSource::class,
-            (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(
-                    AutoloadableTrait::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                ))->getLocatedSource(),
-        );
+        $reflectionClass = (new AutoloadSourceLocator($this->astLocator))
+            ->locateIdentifier($this->getMockReflector(), new Identifier(
+                AutoloadableTrait::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ));
 
-        self::assertFalse(trait_exists(AutoloadableTrait::class, false));
+        self::assertInstanceOf(BetterReflectionClass::class, $reflectionClass);
+        self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
     /**
@@ -156,14 +152,14 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         self::assertTrue(trait_exists(AutoloadableTrait::class));
 
-        self::assertInstanceOf(
-            LocatedSource::class,
-            (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(
-                    AutoloadableTrait::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                ))->getLocatedSource(),
-        );
+        $reflectionClass = (new AutoloadSourceLocator($this->astLocator))
+            ->locateIdentifier($this->getMockReflector(), new Identifier(
+                AutoloadableTrait::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ));
+
+        self::assertInstanceOf(BetterReflectionClass::class, $reflectionClass);
+        self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
     /**
@@ -174,16 +170,14 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         self::assertFalse(enum_exists(AutoloadableEnum::class, false));
 
-        self::assertInstanceOf(
-            LocatedSource::class,
-            (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(
-                    AutoloadableEnum::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                ))->getLocatedSource(),
-        );
+        $reflectionClass = (new AutoloadSourceLocator($this->astLocator))
+            ->locateIdentifier($this->getMockReflector(), new Identifier(
+                AutoloadableEnum::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ));
 
-        self::assertFalse(enum_exists(AutoloadableEnum::class, false));
+        self::assertInstanceOf(BetterReflectionClass::class, $reflectionClass);
+        self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
     /**
@@ -194,14 +188,14 @@ class AutoloadSourceLocatorTest extends TestCase
     {
         self::assertTrue(enum_exists(AutoloadableEnum::class));
 
-        self::assertInstanceOf(
-            LocatedSource::class,
-            (new AutoloadSourceLocator($this->astLocator))
-                ->locateIdentifier($this->getMockReflector(), new Identifier(
-                    AutoloadableEnum::class,
-                    new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
-                ))->getLocatedSource(),
-        );
+        $reflectionClass = (new AutoloadSourceLocator($this->astLocator))
+            ->locateIdentifier($this->getMockReflector(), new Identifier(
+                AutoloadableEnum::class,
+                new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
+            ));
+
+        self::assertInstanceOf(BetterReflectionClass::class, $reflectionClass);
+        self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
     /**
@@ -403,6 +397,7 @@ class AutoloadSourceLocatorTest extends TestCase
             return true;
         };
 
+        /** @phpstan-ignore-next-line */
         spl_autoload_register($autoload);
 
         self::assertNotNull(
@@ -435,8 +430,10 @@ class AutoloadSourceLocatorTest extends TestCase
         $sourceLocator = new AutoloadSourceLocator($this->astLocator);
         $reflector     = new DefaultReflector($sourceLocator);
 
+        /** @phpstan-ignore-next-line */
         $reflection = $reflector->reflectClass(AutoloadableClassInPhar::class);
 
+        /** @phpstan-ignore-next-line */
         $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
     }
 

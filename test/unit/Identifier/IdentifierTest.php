@@ -78,6 +78,9 @@ class IdentifierTest extends TestCase
         self::assertSame(Identifier::WILDCARD, $identifier->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function validNamesProvider(): array
     {
         return [
@@ -107,6 +110,9 @@ class IdentifierTest extends TestCase
         self::assertSame($expectedName, $identifier->getName());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function invalidNamesProvider(): array
     {
         return [

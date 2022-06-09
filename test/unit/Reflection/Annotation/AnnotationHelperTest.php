@@ -12,6 +12,9 @@ use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
  */
 class AnnotationHelperTest extends TestCase
 {
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function deprecatedDocCommentProvider(): array
     {
         return [
@@ -47,6 +50,9 @@ class AnnotationHelperTest extends TestCase
         self::assertSame($isDeprecated, AnnotationHelper::isDeprecated($docComment));
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function tentativeReturnTypeDocCommentProvider(): array
     {
         return [

@@ -27,6 +27,9 @@ class ReflectionUnionTypeTest extends TestCase
         $this->owner     = $this->createMock(ReflectionParameter::class);
     }
 
+    /**
+     * @return list<array{0: Node\UnionType, 1: string, 2: bool}>
+     */
     public function dataProvider(): array
     {
         return [

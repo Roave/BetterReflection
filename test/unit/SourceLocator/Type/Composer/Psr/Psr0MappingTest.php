@@ -20,8 +20,8 @@ use function uniqid;
 class Psr0MappingTest extends TestCase
 {
     /**
-     * @param list<array<string, list<string>>> $mappings
-     * @param list<string>                      $expectedDirectories
+     * @param array<string, list<string>> $mappings
+     * @param list<string>                $expectedDirectories
      *
      * @dataProvider mappings
      */
@@ -31,7 +31,7 @@ class Psr0MappingTest extends TestCase
     }
 
     /**
-     * @param list<array<string, list<string>>> $mappings
+     * @param array<string, list<string>> $mappings
      *
      * @dataProvider mappings
      */
@@ -40,7 +40,7 @@ class Psr0MappingTest extends TestCase
         self::assertEquals(Psr0Mapping::fromArrayMappings($mappings), Psr0Mapping::fromArrayMappings($mappings));
     }
 
-    /** @return array<string, list<array<string, list<string>>>> */
+    /** @return array<string, array{0: array<string, list<string>>, 1: list<string>}> */
     public function mappings(): array
     {
         return [
@@ -71,8 +71,8 @@ class Psr0MappingTest extends TestCase
     }
 
     /**
-     * @param list<array<string, list<string>>> $mappings
-     * @param list<string>                      $expectedFiles
+     * @param array<string, list<string>> $mappings
+     * @param list<string>                $expectedFiles
      *
      * @dataProvider classLookupMappings
      */
@@ -84,7 +84,7 @@ class Psr0MappingTest extends TestCase
         );
     }
 
-    /** @return array<string, list<array<string, list<string>>>> */
+    /** @return array<string, array{0: array<string, list<string>>, 1: Identifier, 2: list<string>}> */
     public function classLookupMappings(): array
     {
         return [
@@ -135,7 +135,7 @@ class Psr0MappingTest extends TestCase
     }
 
     /**
-     * @param list<array<string, list<string>>> $invalidMappings
+     * @param array<string, list<string>> $invalidMappings
      *
      * @dataProvider invalidMappings
      */
@@ -146,7 +146,7 @@ class Psr0MappingTest extends TestCase
         Psr0Mapping::fromArrayMappings($invalidMappings);
     }
 
-    /** @return array<string, list<array<string, list<string>>>> */
+    /** @return array<string, list<array<string, list<string>|mixed>>> */
     public function invalidMappings(): array
     {
         return [

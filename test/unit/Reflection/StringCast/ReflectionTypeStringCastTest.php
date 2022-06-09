@@ -20,6 +20,9 @@ use function assert;
  */
 final class ReflectionTypeStringCastTest extends TestCase
 {
+    /**
+     * @return list<array{0: ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType, 1: string}>
+     */
     public function toStringProvider(): array
     {
         $reflector = new DefaultReflector(new StringSourceLocator(

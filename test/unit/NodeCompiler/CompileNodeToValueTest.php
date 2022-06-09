@@ -33,6 +33,7 @@ use Roave\BetterReflectionTest\Fixture\ClassWithNewInInitializers;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsClass;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsTrait;
 
+use function assert;
 use function define;
 use function realpath;
 use function sprintf;
@@ -51,8 +52,6 @@ class CompileNodeToValueTest extends TestCase
 
     private Locator $astLocator;
 
-    private Reflector $reflector;
-
     private SourceStubber $sourceStubber;
 
     protected function setUp(): void
@@ -62,13 +61,18 @@ class CompileNodeToValueTest extends TestCase
         $configuration       = BetterReflectionSingleton::instance();
         $this->parser        = $configuration->phpParser();
         $this->astLocator    = $configuration->astLocator();
-        $this->reflector     = $configuration->reflector();
         $this->sourceStubber = $configuration->sourceStubber();
     }
 
-    private function parseCode(string $phpCode): Node
+    /**
+     * @return Node\Stmt\Expression
+     */
+    private function parseCode(string $phpCode): Node\Stmt
     {
-        return $this->parser->parse('<?php ' . $phpCode . ';')[0];
+        $node = $this->parser->parse('<?php ' . $phpCode . ';')[0];
+        assert($node instanceof Node\Stmt\Expression);
+
+        return $node;
     }
 
     private function getDummyContext(): CompilerContext
@@ -94,6 +98,9 @@ class CompileNodeToValueTest extends TestCase
         );
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function nodeProvider(): array
     {
         return [
@@ -224,6 +231,9 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame(PHP_VERSION_ID, $compiledValue->value);
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataTrueFalseNullShouldNotHaveConstantName(): array
     {
         return [
@@ -640,6 +650,9 @@ PHP;
         self::assertSame('parentConstant', $classInfo->getProperty('parentConstant')->getDefaultValue());
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function magicConstantsWithoutNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -667,6 +680,9 @@ PHP;
         self::assertSame($expectedValue, $constant->getValue());
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function magicConstantsInNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -791,6 +807,9 @@ PHP
         self::assertSame($expectedValue, $constant->getValue());
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function magicConstantsInTraitProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -819,6 +838,9 @@ PHP
         self::assertSame($expectedValue, $property->getDefaultValue());
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function magicConstantsInClassProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -847,6 +869,9 @@ PHP
         self::assertSame($expectedValue, $property->getDefaultValue());
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function magicConstantsInMethodProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -876,6 +901,9 @@ PHP
         self::assertSame($expectedValue, $parameter->getDefaultValue());
     }
 
+    /**
+     * @return list<array{0: string, 1: mixed}>
+     */
     public function magicConstantsInFunctionProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -904,6 +932,9 @@ PHP
         self::assertSame($expectedValue, $parameter->getDefaultValue());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
     {
         return [

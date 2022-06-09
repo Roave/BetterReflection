@@ -201,8 +201,6 @@ class ReflectionConstantTest extends TestCase
 
     public function testGetFileName(): void
     {
-        $this->markTestSkipped();
-
         $reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Constants.php', $this->astLocator));
         $reflection = $reflector->reflectConstant('Roave\BetterReflectionTest\Fixture\BY_CONST');
 
@@ -259,6 +257,9 @@ class ReflectionConstantTest extends TestCase
         self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function startEndLineProvider(): array
     {
         return [
@@ -280,6 +281,9 @@ class ReflectionConstantTest extends TestCase
         self::assertSame($expectedEnd, $reflection->getEndLine());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function columnsProvider(): array
     {
         return [
@@ -289,9 +293,6 @@ class ReflectionConstantTest extends TestCase
     }
 
     /**
-     * @param int $expectedStart
-     * @param int $expectedEnd
-     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
@@ -326,9 +327,13 @@ class ReflectionConstantTest extends TestCase
         $ast = $reflection->getAst();
 
         self::assertInstanceOf(Node\Expr\FuncCall::class, $ast);
+        self::assertInstanceOf(Node\Scalar\String_::class, $ast->args[0]->value);
         self::assertSame('FOO', $ast->args[0]->value->value);
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function deprecatedDocCommentProvider(): array
     {
         return [

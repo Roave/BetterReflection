@@ -174,7 +174,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return list<array{0: string, 1: mixed}>
      */
     public function defaultParameterProvider(): array
     {
@@ -245,7 +245,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return list<array{0: string, 1: string}>
      */
     public function typeProvider(): array
     {
@@ -305,6 +305,9 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function allowsNullProvider(): array
     {
         return [
@@ -346,6 +349,9 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function isCallableProvider(): array
     {
         return [
@@ -376,6 +382,9 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($isCallable, $parameterReflection->isCallable());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function isArrayProvider(): array
     {
         return [
@@ -614,6 +623,9 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
+    /**
+     * @return list<array{0: string, 1: string|null}>
+     */
     public function getClassProvider(): array
     {
         return [
@@ -701,6 +713,9 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('object', $type->__toString());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function columnsProvider(): array
     {
         return [
@@ -712,9 +727,6 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
-     * @param int $expectedStart
-     * @param int $expectedEnd
-     *
      * @dataProvider columnsProvider
      */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void

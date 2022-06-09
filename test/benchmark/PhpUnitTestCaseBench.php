@@ -22,9 +22,6 @@ class PhpUnitTestCaseBench
     /** @var Reflector */
     private $reflector;
 
-    /** @var list<ReflectionProperty> */
-    private $properties;
-
     /** @var list<ReflectionMethod> */
     private $methods;
 
@@ -37,7 +34,6 @@ class PhpUnitTestCaseBench
         $this->reflector  = $reflection->reflector();
         $reflectionClass  = $this->reflector->reflectClass(TestCase::class);
         $this->methods    = $reflectionClass->getMethods();
-        $this->properties = $reflectionClass->getProperties();
         $this->parameters = array_merge([], ...array_map(static function (ReflectionMethod $method) : array {
             return $method->getParameters();
         }, $this->methods));

@@ -38,6 +38,9 @@ use function is_array;
  */
 class ReflectionClassTest extends TestCase
 {
+    /**
+     * @return array<string, array{0: string}>
+     */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionClass::class);
@@ -56,6 +59,9 @@ class ReflectionClassTest extends TestCase
         self::assertSame(ReflectionClassAdapter::class, $reflectionClassAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}>
+     */
     public function methodExpectationProvider(): array
     {
         $mockMethod = $this->createMock(BetterReflectionMethod::class);
@@ -789,6 +795,7 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
         $this->expectException(OutOfBoundsException::class);
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionClass::$foo does not exist.');
+        /** @phpstan-ignore-next-line */
         $reflectionClassAdapter->foo;
     }
 
@@ -820,14 +827,19 @@ class ReflectionClassTest extends TestCase
 
     public function testGetAttributesWithName(): void
     {
+        /** @phpstan-var class-string $someAttributeClassName */
+        $someAttributeClassName = 'SomeAttribute';
+        /** @phpstan-var class-string $anotherAttributeClassName */
+        $anotherAttributeClassName = 'AnotherAttribute';
+
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
-            ->willReturn('SomeAttribute');
+            ->willReturn($someAttributeClassName);
         $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
-            ->willReturn('AnotherAttribute');
+            ->willReturn($anotherAttributeClassName);
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
@@ -841,29 +853,36 @@ class ReflectionClassTest extends TestCase
             ->willReturn($betterReflectionAttributes);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
-        $attributes             = $reflectionClassAdapter->getAttributes('SomeAttribute');
+        $attributes             = $reflectionClassAdapter->getAttributes($someAttributeClassName);
 
         self::assertCount(1, $attributes);
-        self::assertSame('SomeAttribute', $attributes[0]->getName());
+        self::assertSame($someAttributeClassName, $attributes[0]->getName());
     }
 
     public function testGetAttributesWithInstance(): void
     {
+        /** @phpstan-var class-string $className */
+        $className = 'ClassName';
+        /** @phpstan-var class-string $parentClassName */
+        $parentClassName = 'ParentClassName';
+        /** @phpstan-var class-string $interfaceName */
+        $interfaceName = 'InterfaceName';
+
         $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionAttributeClass1
             ->method('getName')
-            ->willReturn('ClassName');
+            ->willReturn($className);
         $betterReflectionAttributeClass1
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass1
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
 
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
@@ -878,16 +897,16 @@ class ReflectionClassTest extends TestCase
         $betterReflectionAttributeClass2
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass2
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
@@ -902,16 +921,16 @@ class ReflectionClassTest extends TestCase
         $betterReflectionAttributeClass3
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass3
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
@@ -936,9 +955,9 @@ class ReflectionClassTest extends TestCase
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::assertCount(1, $reflectionClassAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionClassAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionClassAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(1, $reflectionClassAdapter->getAttributes($className, ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionClassAdapter->getAttributes($parentClassName, ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionClassAdapter->getAttributes($interfaceName, ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
 
     public function testGetAttributesThrowsExceptionForInvalidFlags(): void
@@ -1057,14 +1076,19 @@ class ReflectionClassTest extends TestCase
 
     public function testGetTraits(): void
     {
+        /** @phpstan-var class-string $traitOneClassName */
+        $traitOneClassName = 'Trait1';
+        /** @phpstan-var class-string $traitTwoClassName */
+        $traitTwoClassName = 'Trait2';
+
         $betterReflectionTrait1 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionTrait1
             ->method('getName')
-            ->willReturn('Trait1');
+            ->willReturn($traitOneClassName);
         $betterReflectionTrait2 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionTrait2
             ->method('getName')
-            ->willReturn('Trait2');
+            ->willReturn($traitTwoClassName);
 
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
@@ -1077,7 +1101,7 @@ class ReflectionClassTest extends TestCase
 
         self::assertContainsOnlyInstancesOf(ReflectionClassAdapter::class, $traits);
         self::assertCount(2, $traits);
-        self::assertArrayHasKey('Trait1', $traits);
-        self::assertArrayHasKey('Trait2', $traits);
+        self::assertArrayHasKey($traitOneClassName, $traits);
+        self::assertArrayHasKey($traitTwoClassName, $traits);
     }
 }

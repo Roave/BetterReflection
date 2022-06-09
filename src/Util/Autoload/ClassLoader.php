@@ -26,6 +26,7 @@ final class ClassLoader
 
     public function __construct(private LoaderMethodInterface $loaderMethod)
     {
+        /** @phpstan-ignore-next-line */
         spl_autoload_register($this, true, true);
     }
 

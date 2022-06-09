@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use A\Foo;
 use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
@@ -98,7 +97,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}>
      */
     public function visibilityProvider(): array
     {
@@ -272,7 +271,7 @@ class ReflectionMethodTest extends TestCase
         ';
 
         $returnType = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))
-            ->reflectClass(Foo::class)
+            ->reflectClass('A\\Foo')
             ->getMethod('someMethod')
             ->getReturnType();
 
@@ -281,6 +280,9 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('object', (string) $returnType);
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: list<string>}>
+     */
     public function modifierProvider(): array
     {
         return [
@@ -311,6 +313,9 @@ class ReflectionMethodTest extends TestCase
         );
     }
 
+    /**
+     * @return list<array{0: string, 1: string, 2: string|null}>
+     */
     public function prototypeProvider(): array
     {
         return [
@@ -345,6 +350,9 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($expectedPrototype, $b->getDeclaringClass()->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: string, 2: string|null}>
+     */
     public function overwrittenMethodProvider(): array
     {
         return [
