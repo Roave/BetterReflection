@@ -1,16 +1,29 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
 parameters:
+    phpVersion: 80100
+
     level: 6
     checkGenericClassInNonGenericObjectType: false
 
     paths:
         - src
+        - test/benchmark
+        - test/unit
+
+    excludePaths:
+        analyse:
+            - test/unit/Fixture/*
 
     ignoreErrors:
         -
             message: "#^Parameter \\#1 \\$callback of function spl_autoload_register expects \\(callable\\(string\\)\\: void\\)\\|null, \\$this\\(Roave\\\\BetterReflection\\\\Util\\\\Autoload\\\\ClassLoader\\) given\\.$#"
             count: 1
-            path: %currentWorkingDirectory%/src/Util/Autoload/ClassLoader.php
+            path: src/Util/Autoload/ClassLoader.php
         # Impossible to define type hint for anonymous class
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
-            path: %currentWorkingDirectory%/src/SourceLocator/Type/AutoloadSourceLocator.php
+            path: src/SourceLocator/Type/AutoloadSourceLocator.php
