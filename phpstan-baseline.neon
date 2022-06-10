@@ -296,11 +296,6 @@ parameters:
 			path: test/unit/Reflection/Adapter/ReflectionParameterTest.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with void will always evaluate to false\\.$#"
-			count: 2
-			path: test/unit/Reflection/Adapter/ReflectionPropertyTest.php
-
-		-
 			message: "#^Method Roave\\\\BetterReflectionTest\\\\Reflection\\\\Adapter\\\\ReflectionPropertyTest\\:\\:coreReflectionMethodNamesProvider\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: test/unit/Reflection/Adapter/ReflectionPropertyTest.php
@@ -313,11 +308,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$name of method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionProperty\\:\\:getAttributes\\(\\) expects class\\-string\\|null, string given\\.$#"
 			count: 4
-			path: test/unit/Reflection/Adapter/ReflectionPropertyTest.php
-
-		-
-			message: "#^Result of method Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\ReflectionProperty\\:\\:setValue\\(\\) \\(void\\) is used\\.$#"
-			count: 2
 			path: test/unit/Reflection/Adapter/ReflectionPropertyTest.php
 
 		-

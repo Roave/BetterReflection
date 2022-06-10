@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use ArgumentCountError;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -20,6 +21,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use stdClass;
+use TypeError;
 use ValueError;
 
 use function array_combine;
@@ -167,7 +169,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($reflectionPropertyAdapter->getValue());
     }
 
-    public function testSetValueReturnsNullWhenNoObject(): void
+    public function testSetValueThrowsErrorWhenNoObject(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -179,10 +181,11 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        self::assertNull($reflectionPropertyAdapter->setValue(null));
+        self::expectException(ArgumentCountError::class);
+        $reflectionPropertyAdapter->setValue(null);
     }
 
-    public function testSetValueReturnsNullWhenNotAnObject(): void
+    public function testSetValueThrowsErrorWhenNotAnObject(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
@@ -194,7 +197,8 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        self::assertNull($reflectionPropertyAdapter->setValue('string'));
+        self::expectException(TypeError::class);
+        $reflectionPropertyAdapter->setValue('string');
     }
 
     public function testGetValueThrowsExceptionWhenPropertyNotAccessible(): void
