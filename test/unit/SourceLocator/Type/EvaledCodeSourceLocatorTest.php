@@ -79,6 +79,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
             new Identifier($interfaceName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
 
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
         self::assertStringMatchesFormat('%Ainterface%A' . $interfaceName . '%A', $reflection->getLocatedSource()->getSource());
     }
@@ -96,6 +97,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
             new Identifier($traitName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
 
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
         self::assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
     }
@@ -116,6 +118,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
             new Identifier($enumName, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)),
         );
 
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertInstanceOf(EvaledLocatedSource::class, $reflection->getLocatedSource());
         self::assertStringMatchesFormat('%Aenum%A' . $enumName . '%A', $reflection->getLocatedSource()->getSource());
     }

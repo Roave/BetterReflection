@@ -26,7 +26,7 @@ use Roave\BetterReflectionTest\Fixture\EnumWithAttributes;
 class ReflectionAttributeTest extends TestCase
 {
     private Locator $astLocator;
-    private Reflector $eflector;
+    private Reflector $reflector;
 
     public function setUp(): void
     {

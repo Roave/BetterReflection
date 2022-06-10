@@ -27,6 +27,9 @@ class ReflectionIntersectionTypeTest extends TestCase
         $this->owner     = $this->createMock(ReflectionParameter::class);
     }
 
+    /**
+     * @return list<array{0: Node\IntersectionType, 1: string}>
+     */
     public function dataProvider(): array
     {
         return [

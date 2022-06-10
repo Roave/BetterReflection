@@ -40,6 +40,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
+    /**
+     * @return list<array{0: object, 1: string, 2: int, 3: int}>
+     */
     public function anonymousClassInstancesProvider(): array
     {
         $fileWithClasses                = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
@@ -173,6 +176,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
     }
 
+    /**
+     * @return list<array{0: string, 1: object}>
+     */
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
         $file    = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
@@ -201,6 +207,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         );
     }
 
+    /**
+     * @return list<array{0: object, 1: int, 2: int}>
+     */
     public function nestedAnonymousClassInstancesProvider(): array
     {
         $class = require __DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php';

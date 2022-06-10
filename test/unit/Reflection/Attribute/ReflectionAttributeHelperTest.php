@@ -73,21 +73,28 @@ class ReflectionAttributeHelperTest extends TestCase
 
     public function testFilterAttributesByInstance(): void
     {
+        /** @phpstan-var class-string $className */
+        $className = 'ClassName';
+        /** @phpstan-var class-string $parentClassName */
+        $parentClassName = 'ParentClassName';
+        /** @phpstan-var class-string $interfaceName */
+        $interfaceName = 'InterfaceName';
+
         $attributeClass1 = $this->createMock(ReflectionClass::class);
         $attributeClass1
             ->method('getName')
-            ->willReturn('ClassName');
+            ->willReturn($className);
         $attributeClass1
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $attributeClass1
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
 
         $attribute1 = $this->createMock(ReflectionAttribute::class);
@@ -102,16 +109,16 @@ class ReflectionAttributeHelperTest extends TestCase
         $attributeClass2
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
         $attributeClass2
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $attribute2 = $this->createMock(ReflectionAttribute::class);
@@ -126,16 +133,16 @@ class ReflectionAttributeHelperTest extends TestCase
         $attributeClass3
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $attributeClass3
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $attribute3 = $this->createMock(ReflectionAttribute::class);
@@ -149,8 +156,8 @@ class ReflectionAttributeHelperTest extends TestCase
             $attribute3,
         ];
 
-        self::assertCount(1, ReflectionAttributeHelper::filterAttributesByInstance($attributes, 'ClassName'));
-        self::assertCount(2, ReflectionAttributeHelper::filterAttributesByInstance($attributes, 'ParentClassName'));
-        self::assertCount(2, ReflectionAttributeHelper::filterAttributesByInstance($attributes, 'InterfaceName'));
+        self::assertCount(1, ReflectionAttributeHelper::filterAttributesByInstance($attributes, $className));
+        self::assertCount(2, ReflectionAttributeHelper::filterAttributesByInstance($attributes, $parentClassName));
+        self::assertCount(2, ReflectionAttributeHelper::filterAttributesByInstance($attributes, $interfaceName));
     }
 }

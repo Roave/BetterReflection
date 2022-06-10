@@ -149,7 +149,9 @@ class ReflectionSourceStubberTest extends TestCase
 
     public function testUnknownClass(): void
     {
-        self::assertNull($this->stubber->generateClassStub('SomeClass'));
+        /** @phpstan-var class-string $someClassName */
+        $someClassName = 'SomeClass';
+        self::assertNull($this->stubber->generateClassStub($someClassName));
     }
 
     public function testClassStubWithPHP8Syntax(): void
@@ -252,7 +254,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalClassesProvider(): array
     {
@@ -425,10 +427,11 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalFunctionsProvider(): array
     {
+        /** @var list<string> $functionNames */
         $functionNames = get_defined_functions()['internal'];
 
         return array_map(
@@ -494,6 +497,9 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertTrue($parameterReflection->isOptional());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: bool, 3: bool}>
+     */
     public function variadicParametersProvider(): array
     {
         return [
@@ -541,7 +547,7 @@ class ReflectionSourceStubberTest extends TestCase
     {
         $provider = [];
 
-        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $constants */
+        /** @var array<string, array<string, int|string|float|bool|mixed[]|resource|null>> $constants */
         $constants = get_defined_constants(true);
 
         foreach ($constants as $extensionName => $extensionConstants) {

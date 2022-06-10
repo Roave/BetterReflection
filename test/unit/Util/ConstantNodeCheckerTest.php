@@ -110,7 +110,7 @@ class ConstantNodeCheckerTest extends TestCase
     }
 
     /**
-     * @return Node\Expr[][]
+     * @return list<array{0: Node\Expr}>
      */
     public function validValuesProvider(): array
     {

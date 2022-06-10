@@ -10,7 +10,6 @@ use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\DefaultReflector;
-use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
@@ -26,8 +25,6 @@ use stdClass;
  */
 class ReflectionFunctionTest extends TestCase
 {
-    private Reflector $reflector;
-
     private Locator $astLocator;
 
     private SourceStubber $sourceStubber;
@@ -37,7 +34,6 @@ class ReflectionFunctionTest extends TestCase
         parent::setUp();
 
         $configuration       = BetterReflectionSingleton::instance();
-        $this->reflector     = $configuration->reflector();
         $this->astLocator    = $configuration->astLocator();
         $this->sourceStubber = $configuration->sourceStubber();
     }

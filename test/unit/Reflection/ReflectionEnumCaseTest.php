@@ -38,6 +38,9 @@ class ReflectionEnumCaseTest extends TestCase
         $this->reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator));
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string}>
+     */
     public function data(): array
     {
         return [
@@ -62,6 +65,9 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($caseName, $caseReflection->getName());
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int|string}>
+     */
     public function dataGetValue(): array
     {
         return [
@@ -113,6 +119,9 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($caseName, $ast->name->toString());
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string, 2: int, 3: int, 4: int, 5: int}>
+     */
     public function dataLinesAndColums(): array
     {
         return [
@@ -154,6 +163,9 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($enumReflection, $caseReflection->getDeclaringEnum());
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function dataGetDocComment(): array
     {
         return [
@@ -176,6 +188,9 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($docComment, $caseReflection->getDocComment());
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function dataIsDeprecated(): array
     {
         return [

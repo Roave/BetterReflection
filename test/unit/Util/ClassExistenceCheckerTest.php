@@ -44,6 +44,9 @@ class ClassExistenceCheckerTest extends TestCase
         spl_autoload_unregister($this->loader);
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function dataClassExists(): array
     {
         return [
@@ -62,6 +65,9 @@ class ClassExistenceCheckerTest extends TestCase
         self::assertSame($exists, ClassExistenceChecker::classExists($name));
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function dataExists(): array
     {
         return [
@@ -85,6 +91,9 @@ class ClassExistenceCheckerTest extends TestCase
         self::assertSame($exists, ClassExistenceChecker::exists($name));
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function dataInterfaceExists(): array
     {
         return [
@@ -103,6 +112,9 @@ class ClassExistenceCheckerTest extends TestCase
         self::assertSame($exists, ClassExistenceChecker::interfaceExists($name));
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function dataTraitExists(): array
     {
         return [

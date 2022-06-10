@@ -35,6 +35,9 @@ class ReflectionEnumTest extends TestCase
         $this->reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator));
     }
 
+    /**
+     * @return list<array{0: class-string}>
+     */
     public function dataCanReflect(): array
     {
         return [
@@ -54,6 +57,9 @@ class ReflectionEnumTest extends TestCase
         self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function dataHasAndGetCase(): array
     {
         return [
@@ -84,6 +90,9 @@ class ReflectionEnumTest extends TestCase
         }
     }
 
+    /**
+     * @return list<array{0: class-string, 1: int}>
+     */
     public function dataGetCases(): array
     {
         return [
@@ -105,9 +114,12 @@ class ReflectionEnumTest extends TestCase
         $cases = $enumReflection->getCases();
 
         self::assertCount($casesCount, $cases);
-        self::containsOnlyInstancesOf(ReflectionEnumCase::class, $cases);
+        self::assertContainsOnlyInstancesOf(ReflectionEnumCase::class, $cases);
     }
 
+    /**
+     * @return list<array{0: class-string, 1: bool}>
+     */
     public function dataIsBacked(): array
     {
         return [
@@ -128,6 +140,9 @@ class ReflectionEnumTest extends TestCase
         self::assertSame($isBacked, $enumReflection->isBacked());
     }
 
+    /**
+     * @return list<array{0: class-string, 1: string}>
+     */
     public function dataGetBackingType(): array
     {
         return [
@@ -139,7 +154,7 @@ class ReflectionEnumTest extends TestCase
     /**
      * @dataProvider dataGetBackingType
      */
-    public function testGetBackingType(string $enumName, ?string $expectedBackingType): void
+    public function testGetBackingType(string $enumName, string $expectedBackingType): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
 
@@ -147,12 +162,8 @@ class ReflectionEnumTest extends TestCase
 
         $backingType = $enumReflection->getBackingType();
 
-        if ($expectedBackingType === null) {
-            self::assertNull($backingType);
-        } else {
-            self::assertInstanceOf(ReflectionNamedType::class, $backingType);
-            self::assertSame($expectedBackingType, $backingType->__toString());
-        }
+        self::assertInstanceOf(ReflectionNamedType::class, $backingType);
+        self::assertSame($expectedBackingType, $backingType->__toString());
     }
 
     public function testGetBackingTypeExceptionForPureEnum(): void

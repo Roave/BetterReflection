@@ -41,6 +41,9 @@ class ClosureSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
+    /**
+     * @return list<array{0: Closure, 1: string, 2: string, 3: int, 4: int}>
+     */
     public function closuresProvider(): array
     {
         $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
@@ -85,6 +88,7 @@ class ClosureSourceLocatorTest extends TestCase
     {
         eval('$closure = function () {};');
 
+        /** @phpstan-ignore-next-line */
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
         $this->expectException(EvaledClosureCannotBeLocated::class);
@@ -161,6 +165,9 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertCount(0, $reflections);
     }
 
+    /**
+     * @return list<array{0: string, 1: Closure}>
+     */
     public function exceptionIfTwoClosuresOnSameLineProvider(): array
     {
         $file     = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));

@@ -158,6 +158,9 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('', $property->getDocComment());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: list<string>}>
+     */
     public function modifierProvider(): array
     {
         return [
@@ -236,6 +239,9 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('Property [ <default> public $publicProperty ]', (string) $classInfo->getProperty('publicProperty'));
     }
 
+    /**
+     * @return list<array{0: string, 1: bool, 2: mixed}>
+     */
     public function propertyDefaultValueProvider(): array
     {
         return [
@@ -282,6 +288,9 @@ class ReflectionPropertyTest extends TestCase
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function startEndLineProvider(): array
     {
         return [
@@ -292,6 +301,9 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function columnsProvider(): array
     {
         return [
@@ -314,6 +326,9 @@ class ReflectionPropertyTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
+    /**
+     * @return list<array{0: string, 1: int}>
+     */
     public function getAstProvider(): array
     {
         return [
@@ -597,7 +612,7 @@ PHP;
     }
 
     /**
-     * @return array
+     * @return list<array{0: string, 1: bool}>
      */
     public function hasTypeProvider(): array
     {
@@ -624,7 +639,7 @@ PHP;
     }
 
     /**
-     * @return array
+     * @return list<array{0: string, 1: string}>
      */
     public function getTypeProvider(): array
     {
@@ -652,6 +667,9 @@ PHP;
         self::assertSame($expectedType, (string) $type);
     }
 
+    /**
+     * @return list<array{0: string, 1: object|null, 2: bool}>
+     */
     public function isInitializedProvider(): array
     {
         $object                  = new InitializedProperties();
@@ -698,6 +716,9 @@ PHP;
         $classReflection->getProperty('toBeRemoved')->isInitialized($object);
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function deprecatedDocCommentProvider(): array
     {
         return [
@@ -748,6 +769,9 @@ PHP;
         self::assertCount(0, $attributes);
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataGetAttributes(): array
     {
         return [

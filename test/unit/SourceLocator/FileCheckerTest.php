@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\FileChecker;
+use Throwable;
 
 use function chmod;
 use function fileperms;

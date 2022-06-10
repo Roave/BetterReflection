@@ -85,7 +85,7 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalClassesProvider(): array
     {
@@ -135,10 +135,11 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalFunctionsProvider(): array
     {
+        /** @var list<string> $allSymbols */
         $allSymbols = get_defined_functions()['internal'];
 
         return array_map(
@@ -166,11 +167,11 @@ class PhpInternalSourceLocatorTest extends TestCase
     }
 
     /**
-     * @return list<list<string>>
+     * @return list<array{0: string}>
      */
     public function internalConstantsProvider(): array
     {
-        /** @var array<string, array<string, int|string|float|bool|array|resource|null>> $allSymbols */
+        /** @var array<string, array<string, int|string|float|bool|mixed[]|resource|null>> $allSymbols */
         $allSymbols = get_defined_constants(true);
 
         return array_map(

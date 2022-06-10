@@ -42,6 +42,9 @@ use function is_array;
  */
 class ReflectionEnumTest extends TestCase
 {
+    /**
+     * @return array<string, array{0: string}>
+     */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionEnum::class);
@@ -60,6 +63,9 @@ class ReflectionEnumTest extends TestCase
         self::assertSame(ReflectionEnumAdapter::class, $reflectionEnumAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
+    /**
+     * @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}>
+     */
     public function methodExpectationProvider(): array
     {
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
@@ -234,6 +240,7 @@ class ReflectionEnumTest extends TestCase
 
         $this->expectException(OutOfBoundsException::class);
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionEnum::$foo does not exist.');
+        /** @phpstan-ignore-next-line */
         $reflectionEnumAdapter->foo;
     }
 
@@ -412,14 +419,19 @@ class ReflectionEnumTest extends TestCase
 
     public function testGetAttributesWithName(): void
     {
+        /** @phpstan-var class-string $someAttributeClassName */
+        $someAttributeClassName = 'SomeAttribute';
+        /** @phpstan-var class-string $anotherAttributeClassName */
+        $anotherAttributeClassName = 'AnotherAttribute';
+
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
-            ->willReturn('SomeAttribute');
+            ->willReturn($someAttributeClassName);
         $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
-            ->willReturn('AnotherAttribute');
+            ->willReturn($anotherAttributeClassName);
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
@@ -433,29 +445,36 @@ class ReflectionEnumTest extends TestCase
             ->willReturn($betterReflectionAttributes);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $attributes            = $reflectionEnumAdapter->getAttributes('SomeAttribute');
+        $attributes            = $reflectionEnumAdapter->getAttributes($someAttributeClassName);
 
         self::assertCount(1, $attributes);
-        self::assertSame('SomeAttribute', $attributes[0]->getName());
+        self::assertSame($someAttributeClassName, $attributes[0]->getName());
     }
 
     public function testGetAttributesWithInstance(): void
     {
+        /** @phpstan-var class-string $className */
+        $className = 'ClassName';
+        /** @phpstan-var class-string $parentClassName */
+        $parentClassName = 'ParentClassName';
+        /** @phpstan-var class-string $interfaceName */
+        $interfaceName = 'InterfaceName';
+
         $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionAttributeClass1
             ->method('getName')
-            ->willReturn('ClassName');
+            ->willReturn($className);
         $betterReflectionAttributeClass1
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass1
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
 
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
@@ -470,16 +489,16 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionAttributeClass2
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass2
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
@@ -494,16 +513,16 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionAttributeClass3
             ->method('isSubclassOf')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', true],
-                ['InterfaceName', false],
+                [$className, false],
+                [$parentClassName, true],
+                [$interfaceName, false],
             ]);
         $betterReflectionAttributeClass3
             ->method('implementsInterface')
             ->willReturnMap([
-                ['ClassName', false],
-                ['ParentClassName', false],
-                ['InterfaceName', true],
+                [$className, false],
+                [$parentClassName, false],
+                [$interfaceName, true],
             ]);
 
         $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
@@ -528,9 +547,9 @@ class ReflectionEnumTest extends TestCase
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::assertCount(1, $reflectionEnumAdapter->getAttributes('ClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionEnumAdapter->getAttributes('ParentClassName', ReflectionAttributeAdapter::IS_INSTANCEOF));
-        self::assertCount(2, $reflectionEnumAdapter->getAttributes('InterfaceName', ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(1, $reflectionEnumAdapter->getAttributes($className, ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionEnumAdapter->getAttributes($parentClassName, ReflectionAttributeAdapter::IS_INSTANCEOF));
+        self::assertCount(2, $reflectionEnumAdapter->getAttributes($interfaceName, ReflectionAttributeAdapter::IS_INSTANCEOF));
     }
 
     public function testGetAttributesThrowsExceptionForInvalidFlags(): void
@@ -761,14 +780,19 @@ class ReflectionEnumTest extends TestCase
 
     public function testGetTraits(): void
     {
+        /** @phpstan-var class-string $traitOneClassName */
+        $traitOneClassName = 'Trait1';
+        /** @phpstan-var class-string $traitTwoClassName */
+        $traitTwoClassName = 'Trait2';
+
         $betterReflectionTrait1 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionTrait1
             ->method('getName')
-            ->willReturn('Trait1');
+            ->willReturn($traitOneClassName);
         $betterReflectionTrait2 = $this->createMock(BetterReflectionClass::class);
         $betterReflectionTrait2
             ->method('getName')
-            ->willReturn('Trait2');
+            ->willReturn($traitTwoClassName);
 
         $betterReflectioEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectioEnum
@@ -781,7 +805,7 @@ class ReflectionEnumTest extends TestCase
 
         self::assertContainsOnlyInstancesOf(ReflectionClassAdapter::class, $traits);
         self::assertCount(2, $traits);
-        self::assertArrayHasKey('Trait1', $traits);
-        self::assertArrayHasKey('Trait2', $traits);
+        self::assertArrayHasKey($traitOneClassName, $traits);
+        self::assertArrayHasKey($traitTwoClassName, $traits);
     }
 }

@@ -43,6 +43,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('is_file() should operate as usual');
                     }
 
+                    /** @phpstan-ignore-next-line */
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should not be populated when file existence is checked');
                     }
@@ -55,6 +56,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should have been populated by the failed file access');
                     }
 
+                    /** @phpstan-ignore-next-line */
                     return 'value produced by the function';
                 },
                 ['file'],
@@ -83,6 +85,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('is_file() should operate as usual - file does indeed not exist');
                     }
 
+                    /** @phpstan-ignore-next-line */
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should not be populated when file existence is checked');
                     }
@@ -95,6 +98,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should have been populated by the failed file access');
                     }
 
+                    /** @phpstan-ignore-next-line */
                     return 'the value produced by the function';
                 },
                 ['file'],
@@ -121,6 +125,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('is_file() should operate as usual - stream wrapper not active');
                     }
 
+                    /** @phpstan-ignore-next-line */
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should not be populated when file existence is checked');
                     }
@@ -129,6 +134,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('file_get_contents() should work: file access not on this protocol');
                     }
 
+                    /** @phpstan-ignore-next-line */
                     if (FileReadTrapStreamWrapper::$autoloadLocatedFile !== null) {
                         throw new UnexpectedValueException('FileReadTrapStreamWrapper::$autoloadLocatedFile should not have been populated: unrelated protocol');
                     }

@@ -27,6 +27,9 @@ class ReflectionAttributeStringCastTest extends TestCase
         $this->astLocator = $betterReflection->astLocator();
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function toStringProvider(): array
     {
         return [

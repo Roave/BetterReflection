@@ -22,6 +22,9 @@ use function get_class_methods;
  */
 class ReflectionNamedTypeTest extends TestCase
 {
+    /**
+     * @return array<string, array{0: string}>
+     */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionNamedType::class);
@@ -50,6 +53,9 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame('?foo', (new ReflectionNamedTypeAdapter($reflectionStub, true))->__toString());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataNoNullabilityMarkerForMixed(): array
     {
         return [
@@ -80,6 +86,9 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertTrue((new ReflectionNamedTypeAdapter($reflectionStub, true))->allowsNull());
     }
 
+    /**
+     * @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}>
+     */
     public function methodExpectationProvider(): array
     {
         return [
@@ -112,6 +121,9 @@ class ReflectionNamedTypeTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataNotBuildin(): array
     {
         return [

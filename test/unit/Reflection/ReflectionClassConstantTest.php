@@ -90,6 +90,9 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
+    /**
+     * @return list<array{0: string, 1: int}>
+     */
     public function getModifiersProvider(): array
     {
         return [
@@ -134,6 +137,9 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function startEndLineProvider(): array
     {
         return [
@@ -144,6 +150,9 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
+    /**
+     * @return list<array{0: string, 1: int, 2: int}>
+     */
     public function columnsProvider(): array
     {
         return [
@@ -166,6 +175,9 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
+    /**
+     * @return list<array{0: string, 1: int}>
+     */
     public function getAstProvider(): array
     {
         return [
@@ -199,6 +211,9 @@ PHP;
         self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
     }
 
+    /**
+     * @return list<array{0: string, 1: bool}>
+     */
     public function deprecatedDocCommentProvider(): array
     {
         return [

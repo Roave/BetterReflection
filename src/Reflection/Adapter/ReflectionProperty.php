@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use ArgumentCountError;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -15,6 +16,8 @@ use TypeError;
 use ValueError;
 
 use function array_map;
+use function gettype;
+use function sprintf;
 
 final class ReflectionProperty extends CoreReflectionProperty
 {
@@ -55,16 +58,18 @@ final class ReflectionProperty extends CoreReflectionProperty
     /**
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function setValue(mixed $object, mixed $value = null): void
+    public function setValue(mixed $objectOrValue, mixed $value = null): void
     {
         if (! $this->isAccessible()) {
             throw new CoreReflectionException('Property not accessible');
         }
 
         try {
-            $this->betterReflectionProperty->setValue($object, $value);
-        } catch (NoObjectProvided | NotAnObject) {
-            return;
+            $this->betterReflectionProperty->setValue($objectOrValue, $value);
+        } catch (NoObjectProvided) {
+            throw new ArgumentCountError('ReflectionProperty::setValue() expects exactly 2 arguments, 1 given');
+        } catch (NotAnObject) {
+            throw new TypeError(sprintf('ReflectionProperty::setValue(): Argument #1 ($objectOrValue) must be of type object, %s given', gettype($objectOrValue)));
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), previous: $e);
         }

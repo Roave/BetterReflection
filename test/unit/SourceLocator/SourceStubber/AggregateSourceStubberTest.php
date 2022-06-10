@@ -22,7 +22,10 @@ class AggregateSourceStubberTest extends TestCase
         $sourceStubber1->expects($this->once())->method('generateClassStub');
         $sourceStubber2->expects($this->once())->method('generateClassStub');
 
-        self::assertNull((new AggregateSourceStubber($sourceStubber1, $sourceStubber2))->generateClassStub('SomeClass'));
+        /** @phpstan-var class-string $someClassName */
+        $someClassName = 'SomeClass';
+
+        self::assertNull((new AggregateSourceStubber($sourceStubber1, $sourceStubber2))->generateClassStub($someClassName));
     }
 
     public function testTraverseAllGivenSourceStubbersAndSucceedToGenerateClassStub(): void
@@ -39,6 +42,9 @@ class AggregateSourceStubberTest extends TestCase
         $sourceStubber3->expects($this->once())->method('generateClassStub')->willReturn($stubData);
         $sourceStubber4->expects($this->never())->method('generateClassStub');
 
+        /** @phpstan-var class-string $someClassName */
+        $someClassName = 'SomeClass';
+
         self::assertSame(
             $stubData,
             (new AggregateSourceStubber(
@@ -46,7 +52,7 @@ class AggregateSourceStubberTest extends TestCase
                 $sourceStubber2,
                 $sourceStubber3,
                 $sourceStubber4,
-            ))->generateClassStub('SomeClass'),
+            ))->generateClassStub($someClassName),
         );
     }
 

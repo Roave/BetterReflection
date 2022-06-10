@@ -14,6 +14,9 @@ use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
  */
 class ReturnNodeVisitorTest extends TestCase
 {
+    /**
+     * @return array<string, array{0: list<Node>, 1: int}>
+     */
     public function outOfScopeNodeTypeProvider(): array
     {
         return [

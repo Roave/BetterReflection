@@ -52,6 +52,9 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertFalse($noNullType->allowsNull());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataMixedAllowsNull(): array
     {
         return [
@@ -260,6 +263,9 @@ class ReflectionNamedTypeTest extends TestCase
         $typeReflection->getClass();
     }
 
+    /**
+     * @return list<array{0: string, 1: string, 2: string}>
+     */
     public function dataGetClassWithSelfOrStatic(): array
     {
         return [
@@ -298,6 +304,9 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame($typeClassName, $class->getName());
     }
 
+    /**
+     * @return list<array{0: string}>
+     */
     public function dataGetClassWithParent(): array
     {
         return [

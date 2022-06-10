@@ -41,6 +41,7 @@ class DirectoriesSourceLocatorTest extends TestCase
 
     public function testScanDirectoryClasses(): void
     {
+        /** @var list<ReflectionClass> $classes */
         $classes = $this->sourceLocator->locateIdentifiersByType(
             new DefaultReflector($this->sourceLocator),
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
@@ -87,6 +88,9 @@ class DirectoriesSourceLocatorTest extends TestCase
         new DirectoriesSourceLocator($directories, BetterReflectionSingleton::instance()->astLocator());
     }
 
+    /**
+     * @return list<array{0: list<string>}>
+     */
     public function invalidDirectoriesProvider(): array
     {
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';

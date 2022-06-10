@@ -33,6 +33,9 @@ class ReflectionConstantStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public function toStringProvider(): array
     {
         return [
