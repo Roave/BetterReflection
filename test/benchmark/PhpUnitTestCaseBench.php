@@ -9,8 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
-use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\Reflector;
+
 use function array_map;
 use function array_merge;
 
@@ -19,8 +19,7 @@ use function array_merge;
  */
 class PhpUnitTestCaseBench
 {
-    /** @var Reflector */
-    private $reflector;
+    private Reflector $reflector;
 
     /** @var list<ReflectionMethod> */
     private $methods;
@@ -34,17 +33,15 @@ class PhpUnitTestCaseBench
         $this->reflector  = $reflection->reflector();
         $reflectionClass  = $this->reflector->reflectClass(TestCase::class);
         $this->methods    = $reflectionClass->getMethods();
-        $this->parameters = array_merge([], ...array_map(static function (ReflectionMethod $method) : array {
-            return $method->getParameters();
-        }, $this->methods));
+        $this->parameters = array_merge([], ...array_map(static fn (ReflectionMethod $method): array => $method->getParameters(), $this->methods));
     }
 
-    public function benchReflectClass() : void
+    public function benchReflectClass(): void
     {
         $this->reflector->reflectClass(TestCase::class);
     }
 
-    public function benchReflectMethodParameters() : void
+    public function benchReflectMethodParameters(): void
     {
         foreach ($this->parameters as $parameter) {
             $parameter->getType();
