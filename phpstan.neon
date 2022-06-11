@@ -17,6 +17,9 @@ parameters:
         analyse:
             - test/unit/Fixture/*
 
+    bootstrapFiles:
+        - phar://%currentWorkingDirectory%/test/unit/Fixture/autoload.phar/vendor/autoload.php
+
     ignoreErrors:
         # Impossible to define type hint for anonymous class
         -

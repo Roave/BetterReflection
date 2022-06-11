@@ -430,10 +430,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $sourceLocator = new AutoloadSourceLocator($this->astLocator);
         $reflector     = new DefaultReflector($sourceLocator);
 
-        /** @phpstan-ignore-next-line */
         $reflection = $reflector->reflectClass(AutoloadableClassInPhar::class);
-
-        /** @phpstan-ignore-next-line */
         $this->assertSame(AutoloadableClassInPhar::class, $reflection->getName());
     }
 
