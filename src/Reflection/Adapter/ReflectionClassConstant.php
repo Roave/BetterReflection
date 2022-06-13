@@ -20,6 +20,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
     public function __construct(private BetterReflectionClassConstant|BetterReflectionEnumCase $betterClassConstantOrEnumCase)
     {
         unset($this->name);
+        unset($this->class);
     }
 
     /**
@@ -157,6 +158,10 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
     {
         if ($name === 'name') {
             return $this->betterClassConstantOrEnumCase->getName();
+        }
+
+        if ($name === 'class') {
+            return $this->betterClassConstantOrEnumCase->getDeclaringClass()->getName();
         }
 
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));

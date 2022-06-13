@@ -354,6 +354,22 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame('FOO', $reflectionClassConstantAdapter->name);
     }
 
+    public function testPropertyClass(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('Foo');
+
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getDeclaringClass')
+            ->willReturn($betterReflectionClass);
+
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+        self::assertSame('Foo', $reflectionClassConstantAdapter->class);
+    }
+
     public function testUnknownProperty(): void
     {
         $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
