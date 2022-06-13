@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use OutOfBoundsException;
 use ReflectionEnumUnitCase as CoreReflectionEnumUnitCase;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
@@ -11,11 +12,13 @@ use UnitEnum;
 use ValueError;
 
 use function array_map;
+use function sprintf;
 
 final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
 {
     public function __construct(private BetterReflectionEnumCase $betterReflectionEnumCase)
     {
+        unset($this->name);
     }
 
     /**
@@ -102,5 +105,14 @@ final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
     public function getEnum(): ReflectionEnum
     {
         return new ReflectionEnum($this->betterReflectionEnumCase->getDeclaringEnum());
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionEnumCase->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 }
