@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -529,5 +530,26 @@ class ReflectionMethodTest extends TestCase
 
         self::expectException(ValueError::class);
         $reflectionMethodAdapter->getAttributes(null, 123);
+    }
+
+    public function testPropertyName(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getName')
+            ->willReturn('foo');
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+        self::assertSame('foo', $reflectionMethodAdapter->name);
+    }
+
+    public function testUnknownProperty(): void
+    {
+        $betterReflectionMethod  = $this->createMock(BetterReflectionMethod::class);
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionMethod::$foo does not exist.');
+        /** @phpstan-ignore-next-line */
+        $reflectionMethodAdapter->foo;
     }
 }

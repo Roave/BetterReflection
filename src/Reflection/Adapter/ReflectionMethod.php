@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use Closure;
+use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
@@ -21,11 +22,13 @@ use TypeError;
 use ValueError;
 
 use function array_map;
+use function sprintf;
 
 final class ReflectionMethod extends CoreReflectionMethod
 {
     public function __construct(private BetterReflectionMethod $betterReflectionMethod)
     {
+        unset($this->name);
     }
 
     public function __toString(): string
@@ -312,5 +315,14 @@ final class ReflectionMethod extends CoreReflectionMethod
     public function getClosureUsedVariables(): array
     {
         throw new Exception\NotImplemented('Not implemented');
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionMethod->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 }
