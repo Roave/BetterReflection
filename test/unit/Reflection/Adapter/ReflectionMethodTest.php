@@ -543,6 +543,22 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('foo', $reflectionMethodAdapter->name);
     }
 
+    public function testPropertyClass(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('Foo');
+
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getImplementingClass')
+            ->willReturn($betterReflectionClass);
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+        self::assertSame('Foo', $reflectionMethodAdapter->class);
+    }
+
     public function testUnknownProperty(): void
     {
         $betterReflectionMethod  = $this->createMock(BetterReflectionMethod::class);

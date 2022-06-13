@@ -29,6 +29,7 @@ final class ReflectionMethod extends CoreReflectionMethod
     public function __construct(private BetterReflectionMethod $betterReflectionMethod)
     {
         unset($this->name);
+        unset($this->class);
     }
 
     public function __toString(): string
@@ -321,6 +322,10 @@ final class ReflectionMethod extends CoreReflectionMethod
     {
         if ($name === 'name') {
             return $this->betterReflectionMethod->getName();
+        }
+
+        if ($name === 'class') {
+            return $this->betterReflectionMethod->getImplementingClass()->getName();
         }
 
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
