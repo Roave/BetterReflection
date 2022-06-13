@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
@@ -309,5 +310,26 @@ class ReflectionParameterTest extends TestCase
 
         self::expectException(ValueError::class);
         $reflectionParameterAdapter->getAttributes(null, 123);
+    }
+
+    public function testPropertyName(): void
+    {
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter
+            ->method('getName')
+            ->willReturn('foo');
+
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+        self::assertSame('foo', $reflectionParameterAdapter->name);
+    }
+
+    public function testUnknownProperty(): void
+    {
+        $betterReflectionParameter  = $this->createMock(BetterReflectionParameter::class);
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionParameter::$foo does not exist.');
+        /** @phpstan-ignore-next-line */
+        $reflectionParameterAdapter->foo;
     }
 }

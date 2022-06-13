@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionEnumUnitCase as CoreReflectionEnumUnitCase;
@@ -317,5 +318,42 @@ class ReflectionEnumUnitCaseTest extends TestCase
         $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
 
         self::assertInstanceOf(ReflectionEnumAdapter::class, $reflectionEnumUnitCaseAdapter->getEnum());
+    }
+
+    public function testPropertyName(): void
+    {
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getName')
+            ->willReturn('FOO');
+
+        $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
+        self::assertSame('FOO', $reflectionEnumUnitCaseAdapter->name);
+    }
+
+    public function testPropertyClass(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('Foo');
+
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getDeclaringClass')
+            ->willReturn($betterReflectionClass);
+
+        $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
+        self::assertSame('Foo', $reflectionEnumUnitCaseAdapter->class);
+    }
+
+    public function testUnknownProperty(): void
+    {
+        $betterReflectionEnumCase      = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionEnumUnitCase::$foo does not exist.');
+        /** @phpstan-ignore-next-line */
+        $reflectionEnumUnitCaseAdapter->foo;
     }
 }

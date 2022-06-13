@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use Closure;
+use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
@@ -20,11 +21,13 @@ use ValueError;
 
 use function array_map;
 use function func_get_args;
+use function sprintf;
 
 final class ReflectionFunction extends CoreReflectionFunction
 {
     public function __construct(private BetterReflectionFunction $betterReflectionFunction)
     {
+        unset($this->name);
     }
 
     public function __toString(): string
@@ -245,5 +248,14 @@ final class ReflectionFunction extends CoreReflectionFunction
         }
 
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionFunction->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 }

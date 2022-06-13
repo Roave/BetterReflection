@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
@@ -25,10 +26,14 @@ use function func_num_args;
 use function sprintf;
 use function strtolower;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class ReflectionObject extends CoreReflectionObject
 {
     public function __construct(private BetterReflectionObject $betterReflectionObject)
     {
+        unset($this->name);
     }
 
     public function __toString(): string
@@ -460,5 +465,14 @@ final class ReflectionObject extends CoreReflectionObject
     public function isEnum(): bool
     {
         return $this->betterReflectionObject->isEnum();
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionObject->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 }

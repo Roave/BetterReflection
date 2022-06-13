@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionParameter as CoreReflectionParameter;
@@ -13,6 +14,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionPar
 use ValueError;
 
 use function array_map;
+use function sprintf;
 
 /**
  * @psalm-suppress MissingImmutableAnnotation
@@ -21,6 +23,7 @@ final class ReflectionParameter extends CoreReflectionParameter
 {
     public function __construct(private BetterReflectionParameter $betterReflectionParameter)
     {
+        unset($this->name);
     }
 
     public function __toString(): string
@@ -161,5 +164,14 @@ final class ReflectionParameter extends CoreReflectionParameter
         }
 
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionParameter->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 }
