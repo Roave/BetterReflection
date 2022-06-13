@@ -207,70 +207,6 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->setValue('string');
     }
 
-    public function testGetValueThrowsExceptionWhenPropertyNotAccessible(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        $this->expectException(CoreReflectionException::class);
-        $reflectionPropertyAdapter->getValue(new stdClass());
-    }
-
-    public function testSetValueThrowsExceptionWhenPropertyNotAccessible(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        $this->expectException(CoreReflectionException::class);
-        $reflectionPropertyAdapter->setValue(new stdClass());
-    }
-
-    public function testSetAccessibleAndGetValue(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-        $betterReflectionProperty
-            ->method('getValue')
-            ->willReturn(123);
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        $reflectionPropertyAdapter->setAccessible(true);
-
-        self::assertTrue($reflectionPropertyAdapter->isAccessible());
-        self::assertSame(123, $reflectionPropertyAdapter->getValue(new stdClass()));
-    }
-
-    public function testSetAccessibleAndSetValue(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-        $betterReflectionProperty
-            ->expects($this->once())
-            ->method('setValue')
-            ->with(null, 123);
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        $reflectionPropertyAdapter->setAccessible(true);
-
-        self::assertTrue($reflectionPropertyAdapter->isAccessible());
-
-        $reflectionPropertyAdapter->setValue(null, 123);
-    }
-
     public function testGetValueThrowsExceptionWhenObjectNotInstanceOfClass(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
@@ -301,38 +237,6 @@ class ReflectionPropertyTest extends TestCase
 
         $this->expectException(CoreReflectionException::class);
         $reflectionPropertyAdapter->setValue(new stdClass());
-    }
-
-    public function testIsInitializedThrowsExceptionWhenNotAccessible(): void
-    {
-        self::expectException(CoreReflectionException::class);
-
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        $reflectionPropertyAdapter->isInitialized(new stdClass());
-    }
-
-    public function testIsInitializedWithSetAccessible(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-        $betterReflectionProperty
-            ->method('isInitialized')
-            ->willReturn(true);
-
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
-
-        $reflectionPropertyAdapter->setAccessible(true);
-
-        self::assertTrue($reflectionPropertyAdapter->isAccessible());
-        self::assertTrue($reflectionPropertyAdapter->isInitialized(new stdClass()));
     }
 
     public function testIsInitializedThrowsExceptionWhenObjectNotInstanceOfClass(): void

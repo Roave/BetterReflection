@@ -21,8 +21,6 @@ use function sprintf;
 
 final class ReflectionProperty extends CoreReflectionProperty
 {
-    private bool $accessible = false;
-
     public function __construct(private BetterReflectionProperty $betterReflectionProperty)
     {
     }
@@ -42,10 +40,6 @@ final class ReflectionProperty extends CoreReflectionProperty
      */
     public function getValue(?object $object = null): mixed
     {
-        if (! $this->isAccessible()) {
-            throw new CoreReflectionException('Property not accessible');
-        }
-
         try {
             return $this->betterReflectionProperty->getValue($object);
         } catch (NoObjectProvided | TypeError) {
@@ -60,10 +54,6 @@ final class ReflectionProperty extends CoreReflectionProperty
      */
     public function setValue(mixed $objectOrValue, mixed $value = null): void
     {
-        if (! $this->isAccessible()) {
-            throw new CoreReflectionException('Property not accessible');
-        }
-
         try {
             $this->betterReflectionProperty->setValue($objectOrValue, $value);
         } catch (NoObjectProvided) {
@@ -129,14 +119,21 @@ final class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->getDocComment() ?: false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @infection-ignore-all
+     */
     public function setAccessible(bool $accessible): void
     {
-        $this->accessible = true;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @infection-ignore-all
+     */
     public function isAccessible(): bool
     {
-        return $this->accessible || $this->isPublic();
+        return true;
     }
 
     public function hasDefaultValue(): bool
@@ -151,10 +148,6 @@ final class ReflectionProperty extends CoreReflectionProperty
 
     public function isInitialized(?object $object = null): bool
     {
-        if (! $this->isAccessible()) {
-            throw new CoreReflectionException('Property not accessible');
-        }
-
         try {
             return $this->betterReflectionProperty->isInitialized($object);
         } catch (Throwable $e) {

@@ -403,10 +403,6 @@ final class ReflectionClass extends CoreReflectionClass
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
-        if (! $property->isAccessible()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not accessible', $name));
-        }
-
         if (! $property->isStatic()) {
             throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
         }
@@ -423,10 +419,6 @@ final class ReflectionClass extends CoreReflectionClass
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
-
-        if (! $property->isAccessible()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not accessible', $name));
-        }
 
         if (! $property->isStatic()) {
             throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));

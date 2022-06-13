@@ -361,48 +361,6 @@ class ReflectionMethodTest extends TestCase
         $reflectionMethodAdapter->invokeArgs(new stdClass(), []);
     }
 
-    public function testInvokeThrowsExceptionWhenPropertyNotAccessible(): void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-
-        $this->expectException(CoreReflectionException::class);
-        $reflectionMethodAdapter->invoke();
-    }
-
-    public function testInvokeArgsThrowsExceptionWhenPropertyNotAccessible(): void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-
-        $this->expectException(CoreReflectionException::class);
-        $reflectionMethodAdapter->invokeArgs();
-    }
-
-    public function testSetAccessibleAndInvoke(): void
-    {
-        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
-        $betterReflectionMethod
-            ->method('isPublic')
-            ->willReturn(false);
-        $betterReflectionMethod
-            ->method('invoke')
-            ->willReturn(123);
-
-        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
-        $reflectionMethodAdapter->setAccessible(true);
-
-        self::assertSame(123, $reflectionMethodAdapter->invoke());
-    }
-
     public function testGetAttributes(): void
     {
         $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
