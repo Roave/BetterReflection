@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71e79312c48e09619664e62fbfed2d6b",
+    "content-hash": "921b012bb3a4c8fee172298fe6504b26",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -317,6 +317,79 @@
                 }
             ],
             "time": "2021-03-30T17:13:30+00:00"
+        },
+        {
+            "name": "composer/package-versions-deprecated",
+            "version": "1.11.99.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/package-versions-deprecated.git",
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/b4f54f74ef3453349c24a845d22392cd31e65f1d",
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0 || ^2.0",
+                "php": "^7 || ^8"
+            },
+            "replace": {
+                "ocramius/package-versions": "1.11.99"
+            },
+            "require-dev": {
+                "composer/composer": "^1.9.3 || ^2.0@dev",
+                "ext-zip": "^1.13",
+                "phpunit/phpunit": "^6.5 || ^7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "support": {
+                "issues": "https://github.com/composer/package-versions-deprecated/issues",
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.5"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-17T14:14:24+00:00"
         },
         {
             "name": "composer/pcre",
@@ -1053,16 +1126,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.26.10",
+            "version": "0.26.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "134853ce500c4669db7d6f9fe03ea5c8771a4540"
+                "reference": "11df4ea052367bb2e2168611b69a0f5f8953ef70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/134853ce500c4669db7d6f9fe03ea5c8771a4540",
-                "reference": "134853ce500c4669db7d6f9fe03ea5c8771a4540",
+                "url": "https://api.github.com/repos/infection/infection/zipball/11df4ea052367bb2e2168611b69a0f5f8953ef70",
+                "reference": "11df4ea052367bb2e2168611b69a0f5f8953ef70",
                 "shasum": ""
             },
             "require": {
@@ -1083,12 +1156,11 @@
                 "sebastian/diff": "^3.0.2 || ^4.0",
                 "seld/jsonlint": "^1.7",
                 "symfony/console": "^3.4.29 || ^4.1.19 || ^5.0 || ^6.0",
-                "symfony/filesystem": "^3.4.29 || ^4.1.19 || ^5.0 || ^6.0",
+                "symfony/filesystem": "^5.4 || ^6.0",
                 "symfony/finder": "^3.4.29 || ^4.1.19 || ^5.0 || ^6.0",
                 "symfony/process": "^3.4.29 || ^4.1.19 || ^5.0 || ^6.0",
                 "thecodingmachine/safe": "^2.1.2",
-                "webmozart/assert": "^1.3",
-                "webmozart/path-util": "^2.3"
+                "webmozart/assert": "^1.3"
             },
             "conflict": {
                 "dg/bypass-finals": "*",
@@ -1163,7 +1235,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.26.10"
+                "source": "https://github.com/infection/infection/tree/0.26.11"
             },
             "funding": [
                 {
@@ -1175,7 +1247,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2022-05-11T20:58:00+00:00"
+            "time": "2022-06-09T08:41:21+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -1356,68 +1428,6 @@
                 "source": "https://github.com/cweiske/jsonmapper/tree/v4.0.0"
             },
             "time": "2020-12-01T19:48:11+00:00"
-        },
-        {
-            "name": "ocramius/package-versions",
-            "version": "2.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "6707caff2e84a2368f29fdf2cb28a6b5a9e3ab53"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/6707caff2e84a2368f29fdf2cb28a6b5a9e3ab53",
-                "reference": "6707caff2e84a2368f29fdf2cb28a6b5a9e3ab53",
-                "shasum": ""
-            },
-            "require": {
-                "composer-runtime-api": "^2.2.0",
-                "php": "~8.0.0 || ~8.1.0"
-            },
-            "replace": {
-                "composer/package-versions-deprecated": "*"
-            },
-            "require-dev": {
-                "composer/composer": "^2.2.0",
-                "doctrine/coding-standard": "^9.0.0",
-                "ext-zip": "^1.15.0",
-                "phpunit/phpunit": "^9.5.9",
-                "roave/infection-static-analysis-plugin": "^1.10.0",
-                "vimeo/psalm": "^4.10.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PackageVersions\\": "src/PackageVersions"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                }
-            ],
-            "description": "Provides efficient querying for installed package versions (no runtime IO)",
-            "support": {
-                "issues": "https://github.com/Ocramius/PackageVersions/issues",
-                "source": "https://github.com/Ocramius/PackageVersions/tree/2.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/Ocramius",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ocramius/package-versions",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-03-05T18:04:57+00:00"
         },
         {
             "name": "ondram/ci-detector",
@@ -2570,20 +2580,20 @@
         },
         {
             "name": "roave/infection-static-analysis-plugin",
-            "version": "1.19.0",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "ad79ff4f7996438c23fbae99aea60aa7d06a7f56"
+                "reference": "813f0446571b7112f61430edc764692e757ec12c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/ad79ff4f7996438c23fbae99aea60aa7d06a7f56",
-                "reference": "ad79ff4f7996438c23fbae99aea60aa7d06a7f56",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/813f0446571b7112f61430edc764692e757ec12c",
+                "reference": "813f0446571b7112f61430edc764692e757ec12c",
                 "shasum": ""
             },
             "require": {
-                "infection/infection": "0.26.10",
+                "infection/infection": "0.26.11",
                 "ocramius/package-versions": "^1.9.0 || ^2.0.0",
                 "php": "~8.0.0|~8.1.0",
                 "sanmai/later": "^0.1.2",
@@ -2615,9 +2625,9 @@
             "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
             "support": {
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.19.0"
+                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.20.0"
             },
-            "time": "2022-05-20T10:55:18+00:00"
+            "time": "2022-06-13T08:32:57+00:00"
         },
         {
             "name": "sanmai/later",
