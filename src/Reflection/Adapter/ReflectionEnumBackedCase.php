@@ -19,6 +19,7 @@ final class ReflectionEnumBackedCase extends CoreReflectionEnumBackedCase
     public function __construct(private BetterReflectionEnumCase $betterReflectionEnumCase)
     {
         unset($this->name);
+        unset($this->class);
     }
 
     /**
@@ -116,6 +117,10 @@ final class ReflectionEnumBackedCase extends CoreReflectionEnumBackedCase
     {
         if ($name === 'name') {
             return $this->betterReflectionEnumCase->getName();
+        }
+
+        if ($name === 'class') {
+            return $this->betterReflectionEnumCase->getDeclaringClass()->getName();
         }
 
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));

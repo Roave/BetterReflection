@@ -343,6 +343,22 @@ class ReflectionEnumBackedCaseTest extends TestCase
         self::assertSame('FOO', $reflectionEnumBackedCaseAdapter->name);
     }
 
+    public function testPropertyClass(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('Foo');
+
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getDeclaringClass')
+            ->willReturn($betterReflectionClass);
+
+        $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
+        self::assertSame('Foo', $reflectionEnumBackedCaseAdapter->class);
+    }
+
     public function testUnknownProperty(): void
     {
         $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
