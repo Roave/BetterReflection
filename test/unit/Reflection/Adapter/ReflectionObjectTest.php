@@ -408,46 +408,6 @@ class ReflectionObjectTest extends TestCase
         $reflectionClassAdapter->setStaticPropertyValue('foo', 123);
     }
 
-    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyNotAccessible(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
-        $betterReflectionObject
-            ->method('getProperty')
-            ->with('foo')
-            ->willReturn($betterReflectionProperty);
-
-        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
-
-        $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" is not accessible');
-        $reflectionObjectAdapter->getStaticPropertyValue('foo');
-    }
-
-    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyNotAccessible(): void
-    {
-        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isPublic')
-            ->willReturn(false);
-
-        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
-        $betterReflectionObject
-            ->method('getProperty')
-            ->with('foo')
-            ->willReturn($betterReflectionProperty);
-
-        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
-
-        $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" is not accessible');
-        $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
-    }
-
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);

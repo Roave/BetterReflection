@@ -24,8 +24,6 @@ use function array_map;
 
 final class ReflectionMethod extends CoreReflectionMethod
 {
-    private bool $accessible = false;
-
     public function __construct(private BetterReflectionMethod $betterReflectionMethod)
     {
     }
@@ -235,10 +233,6 @@ final class ReflectionMethod extends CoreReflectionMethod
 
     public function invoke(?object $object = null, mixed ...$args): mixed
     {
-        if (! $this->isAccessible()) {
-            throw new CoreReflectionException('Method not accessible');
-        }
-
         try {
             return $this->betterReflectionMethod->invoke($object, ...$args);
         } catch (NoObjectProvided | TypeError) {
@@ -253,10 +247,6 @@ final class ReflectionMethod extends CoreReflectionMethod
      */
     public function invokeArgs(?object $object = null, array $args = []): mixed
     {
-        if (! $this->isAccessible()) {
-            throw new CoreReflectionException('Method not accessible');
-        }
-
         try {
             return $this->betterReflectionMethod->invokeArgs($object, $args);
         } catch (NoObjectProvided | TypeError) {
@@ -276,14 +266,12 @@ final class ReflectionMethod extends CoreReflectionMethod
         return new self($this->betterReflectionMethod->getPrototype());
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @infection-ignore-all
+     */
     public function setAccessible(bool $accessible): void
     {
-        $this->accessible = true;
-    }
-
-    private function isAccessible(): bool
-    {
-        return $this->accessible || $this->isPublic();
     }
 
     /**
