@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
@@ -340,5 +341,26 @@ class ReflectionClassConstantTest extends TestCase
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($classConstantOrEnum);
 
         self::assertSame($isEnumCase, $reflectionClassConstantAdapter->isEnumCase());
+    }
+
+    public function testPropertyName(): void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getName')
+            ->willReturn('FOO');
+
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+        self::assertSame('FOO', $reflectionClassConstantAdapter->name);
+    }
+
+    public function testUnknownProperty(): void
+    {
+        $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant::$foo does not exist.');
+        /** @phpstan-ignore-next-line */
+        $reflectionClassConstantAdapter->foo;
     }
 }
