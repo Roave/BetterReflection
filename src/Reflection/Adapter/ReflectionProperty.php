@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ArgumentCountError;
+use OutOfBoundsException;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -23,6 +24,7 @@ final class ReflectionProperty extends CoreReflectionProperty
 {
     public function __construct(private BetterReflectionProperty $betterReflectionProperty)
     {
+        unset($this->name);
     }
 
     public function __toString(): string
@@ -185,5 +187,14 @@ final class ReflectionProperty extends CoreReflectionProperty
     public function isReadOnly(): bool
     {
         return $this->betterReflectionProperty->isReadOnly();
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'name') {
+            return $this->betterReflectionProperty->getName();
+        }
+
+        throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 }
