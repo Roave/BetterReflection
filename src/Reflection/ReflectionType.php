@@ -13,12 +13,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 abstract class ReflectionType
 {
-    protected function __construct(
-        protected Reflector $reflector,
-        protected ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
-    ) {
-    }
-
     /** @internal */
     public static function createFromNode(
         Reflector $reflector,
