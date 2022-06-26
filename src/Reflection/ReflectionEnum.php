@@ -26,7 +26,7 @@ class ReflectionEnum extends ReflectionClass
     private array|null $cachedCases = null;
 
     /** @phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found */
-    protected function __construct(
+    private function __construct(
         private Reflector $reflector,
         private EnumNode $node,
         LocatedSource $locatedSource,
