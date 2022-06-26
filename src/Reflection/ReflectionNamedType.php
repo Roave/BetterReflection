@@ -38,6 +38,7 @@ class ReflectionNamedType extends ReflectionType
 
     private string $name;
 
+    /** @internal */
     public function __construct(
         private Reflector $reflector,
         private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
