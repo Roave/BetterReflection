@@ -177,7 +177,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNull($function->getExtensionName());
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function variadicProvider(): array
     {
         return [
@@ -187,7 +187,11 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider variadicProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider variadicProvider
+     */
     public function testIsVariadic(string $php, bool $expectingVariadic): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -202,7 +206,7 @@ class ReflectionFunctionAbstractTest extends TestCase
      *
      * @see https://github.com/nikic/PHP-Parser/blob/1.x/test/code/parser/stmt/function/generator.test
      *
-     * @return list<array{0: string, 1: bool}>
+     * @return list<array{0: non-empty-string, 1: bool}>
      */
     public function generatorProvider(): array
     {
@@ -227,7 +231,11 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider generatorProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider generatorProvider
+     */
     public function testIsGenerator(string $php, bool $expectingGenerator): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -236,7 +244,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($expectingGenerator, $function->isGenerator());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -246,7 +254,11 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider startEndLineProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider startEndLineProvider
+     */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -256,7 +268,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($expectedEnd, $function->getEndLine());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -266,7 +278,11 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider columnsProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider columnsProvider
+     */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -276,7 +292,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($endColumn, $function->getEndColumn());
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function returnsReferenceProvider(): array
     {
         return [
@@ -285,7 +301,11 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider returnsReferenceProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider returnsReferenceProvider
+     */
     public function testReturnsReference(string $php, bool $expectingReturnsReference): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
