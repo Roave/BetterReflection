@@ -75,12 +75,6 @@ abstract class ReflectionType
         return new ReflectionUnionType($reflector, $owner, new UnionType($types));
     }
 
-    /** @internal */
-    public function getOwner(): ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty
-    {
-        return $this->owner;
-    }
-
     /**
      * Does the type allow null?
      */
