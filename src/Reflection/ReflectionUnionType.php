@@ -18,6 +18,7 @@ class ReflectionUnionType extends ReflectionType
     /** @var list<ReflectionNamedType> */
     private array $types;
 
+    /** @internal */
     public function __construct(
         private Reflector $reflector,
         private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
