@@ -91,6 +91,7 @@ class ReflectionClass implements Reflection
 
     private ReflectionClass|null $cachedParentClass = null;
 
+    /** @internal */
     protected function __construct(
         private Reflector $reflector,
         private ClassNode|InterfaceNode|TraitNode|EnumNode $node,
