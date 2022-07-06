@@ -58,5 +58,11 @@
         "composer/composer": "Required to use the ComposerSourceLocator"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "infection/extension-installer": false
+        }
+    }
 }
