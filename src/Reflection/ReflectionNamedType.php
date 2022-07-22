@@ -33,6 +33,7 @@ class ReflectionNamedType extends ReflectionType
         'null'     => null,
         'never'    => null,
         'false'    => null,
+        'true'    => null,
     ];
 
     private string $name;
