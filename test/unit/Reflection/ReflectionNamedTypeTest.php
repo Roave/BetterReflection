@@ -90,6 +90,8 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['NEVER'];
         yield ['false'];
         yield ['FALSE'];
+        yield ['true'];
+        yield ['TRUE'];
     }
 
     /**
