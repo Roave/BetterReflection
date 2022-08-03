@@ -38,9 +38,6 @@ final class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->getName();
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
     public function getValue(?object $object = null): mixed
     {
         try {
