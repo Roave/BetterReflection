@@ -10,9 +10,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure */
 class ParseToAstFailureTest extends TestCase
 {
     public function testErrorInTheMiddleOfSource(): void

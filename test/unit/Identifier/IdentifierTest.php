@@ -11,9 +11,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 
-/**
- * @covers \Roave\BetterReflection\Identifier\Identifier
- */
+/** @covers \Roave\BetterReflection\Identifier\Identifier */
 class IdentifierTest extends TestCase
 {
     public function testGetName(): void
@@ -78,9 +76,7 @@ class IdentifierTest extends TestCase
         self::assertSame(Identifier::WILDCARD, $identifier->getName());
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function validNamesProvider(): array
     {
         return [
@@ -101,18 +97,14 @@ class IdentifierTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validNamesProvider
-     */
+    /** @dataProvider validNamesProvider */
     public function testValidName(string $name, string $expectedName): void
     {
         $identifier = new Identifier($name, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
         self::assertSame($expectedName, $identifier->getName());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function invalidNamesProvider(): array
     {
         return [
@@ -123,9 +115,7 @@ class IdentifierTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidNamesProvider
-     */
+    /** @dataProvider invalidNamesProvider */
     public function testThrowExceptionForInvalidName(string $invalidName): void
     {
         $this->expectException(InvalidIdentifierName::class);

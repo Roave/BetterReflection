@@ -22,14 +22,10 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType
- */
+/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType */
 class ReflectionTypeTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: string}>
-     */
+    /** @return array<string, array{0: string}> */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionType::class);
@@ -37,9 +33,7 @@ class ReflectionTypeTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /**
-     * @dataProvider coreReflectionMethodNamesProvider
-     */
+    /** @dataProvider coreReflectionMethodNamesProvider */
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
@@ -58,9 +52,7 @@ class ReflectionTypeTest extends TestCase
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): array
     {
         return [
@@ -69,9 +61,7 @@ class ReflectionTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType
-     */
+    /** @dataProvider dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType */
     public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(string $firstType, string $secondType): void
     {
         $unionType = $this->createMock(BetterReflectionUnionType::class);

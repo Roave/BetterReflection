@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory\Excepti
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory */
 class InvalidProjectDirectoryTest extends TestCase
 {
     public function testAtPath(): void

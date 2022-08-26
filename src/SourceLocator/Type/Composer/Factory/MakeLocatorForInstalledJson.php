@@ -30,9 +30,7 @@ use function json_decode;
 use function realpath;
 use function rtrim;
 
-/**
- * @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson
- */
+/** @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson */
 final class MakeLocatorForInstalledJson
 {
     public function __invoke(string $installationPath, Locator $astLocator): SourceLocator
@@ -49,9 +47,7 @@ final class MakeLocatorForInstalledJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
-        /**
-         * @psalm-var array{autoload: ComposerAutoload, config: array{vendor-dir?: string}}|null $composer
-         */
+        /** @psalm-var array{autoload: ComposerAutoload, config: array{vendor-dir?: string}}|null $composer */
         $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
         $vendorDir = rtrim($vendorDir, '/');
@@ -161,9 +157,7 @@ final class MakeLocatorForInstalledJson
         return $package['autoload']['files'] ?? [];
     }
 
-    /**
-     * @param array{name: string, autoload: ComposerAutoload} $package
-     */
+    /** @param array{name: string, autoload: ComposerAutoload} $package */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package, string $vendorDir): string
     {
         return $trimmedInstallationPath . '/' . $vendorDir . '/' . $package['name'] . '/';

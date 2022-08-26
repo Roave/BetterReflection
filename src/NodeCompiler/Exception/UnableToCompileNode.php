@@ -13,14 +13,12 @@ use Roave\BetterReflection\Util\FileHelper;
 use function assert;
 use function sprintf;
 
-/**
- * @internal
- */
+/** @internal */
 class UnableToCompileNode extends LogicException
 {
-    private ?string $constantName = null;
+    private string|null $constantName = null;
 
-    public function constantName(): ?string
+    public function constantName(): string|null
     {
         return $this->constantName;
     }

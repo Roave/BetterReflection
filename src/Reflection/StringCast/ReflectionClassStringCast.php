@@ -24,9 +24,7 @@ use function str_repeat;
 use function strtolower;
 use function trim;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionClassStringCast
 {
     public static function toString(ReflectionClass $classReflection): string
@@ -156,9 +154,7 @@ final class ReflectionClassStringCast
         return self::itemsToString($items);
     }
 
-    /**
-     * @param array<ReflectionProperty> $properties
-     */
+    /** @param array<ReflectionProperty> $properties */
     private static function propertiesToString(array $properties): string
     {
         if ($properties === []) {
@@ -168,9 +164,7 @@ final class ReflectionClassStringCast
         return self::itemsToString(array_map(static fn (ReflectionProperty $propertyReflection): string => ReflectionPropertyStringCast::toString($propertyReflection), $properties));
     }
 
-    /**
-     * @param array<ReflectionMethod> $methods
-     */
+    /** @param array<ReflectionMethod> $methods */
     private static function methodsToString(array $methods, int $emptyLinesAmongItems = 1): string
     {
         if ($methods === []) {
@@ -180,9 +174,7 @@ final class ReflectionClassStringCast
         return self::itemsToString(array_map(static fn (ReflectionMethod $method): string => ReflectionMethodStringCast::toString($method), $methods), $emptyLinesAmongItems);
     }
 
-    /**
-     * @param array<string> $items
-     */
+    /** @param array<string> $items */
     private static function itemsToString(array $items, int $emptyLinesAmongItems = 1): string
     {
         $string = implode(str_repeat("\n", $emptyLinesAmongItems), $items);
@@ -195,41 +187,31 @@ final class ReflectionClassStringCast
         return str_repeat(' ', 4);
     }
 
-    /**
-     * @return array<ReflectionProperty>
-     */
+    /** @return array<ReflectionProperty> */
     private static function getStaticProperties(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getProperties(), static fn (ReflectionProperty $propertyReflection): bool => $propertyReflection->isStatic());
     }
 
-    /**
-     * @return array<ReflectionMethod>
-     */
+    /** @return array<ReflectionMethod> */
     private static function getStaticMethods(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getMethods(), static fn (ReflectionMethod $methodReflection): bool => $methodReflection->isStatic());
     }
 
-    /**
-     * @return array<ReflectionProperty>
-     */
+    /** @return array<ReflectionProperty> */
     private static function getDefaultProperties(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getProperties(), static fn (ReflectionProperty $propertyReflection): bool => ! $propertyReflection->isStatic() && $propertyReflection->isDefault());
     }
 
-    /**
-     * @return array<ReflectionProperty>
-     */
+    /** @return array<ReflectionProperty> */
     private static function getDynamicProperties(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getProperties(), static fn (ReflectionProperty $propertyReflection): bool => ! $propertyReflection->isStatic() && ! $propertyReflection->isDefault());
     }
 
-    /**
-     * @return array<ReflectionMethod>
-     */
+    /** @return array<ReflectionMethod> */
     private static function getMethods(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getMethods(), static fn (ReflectionMethod $methodReflection): bool => ! $methodReflection->isStatic());

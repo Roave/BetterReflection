@@ -20,9 +20,7 @@ use Roave\BetterReflectionTest\Fixture\ClassWithAttributesWithArguments;
 use Roave\BetterReflectionTest\Fixture\ClassWithRepeatedAttributes;
 use Roave\BetterReflectionTest\Fixture\EnumWithAttributes;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionAttribute
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionAttribute */
 class ReflectionAttributeTest extends TestCase
 {
     private Locator $astLocator;

@@ -33,9 +33,7 @@ class ReflectionIntersectionType extends ReflectionType
         }, $type->types));
     }
 
-    /**
-     * @return list<ReflectionNamedType>
-     */
+    /** @return list<ReflectionNamedType> */
     public function getTypes(): array
     {
         return $this->types;

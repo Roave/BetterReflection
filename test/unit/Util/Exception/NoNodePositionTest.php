@@ -11,9 +11,7 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
 
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\Util\Exception\NoNodePosition
- */
+/** @covers \Roave\BetterReflection\Util\Exception\NoNodePosition */
 class NoNodePositionTest extends TestCase
 {
     public function testFromPosition(): void

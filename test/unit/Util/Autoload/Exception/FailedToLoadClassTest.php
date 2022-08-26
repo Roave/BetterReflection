@@ -10,9 +10,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass;
 use function sprintf;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\Exception\FailedToLoadClass */
 final class FailedToLoadClassTest extends TestCase
 {
     public function testFromReflectionClass(): void

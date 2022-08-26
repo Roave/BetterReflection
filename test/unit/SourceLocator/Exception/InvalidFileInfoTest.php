@@ -8,14 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use stdClass;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo */
 class InvalidFileInfoTest extends TestCase
 {
-    /**
-     * @dataProvider nonSplFileInfoProvider
-     */
+    /** @dataProvider nonSplFileInfoProvider */
     public function testFromNonSplFileInfo(string $expectedMessage, mixed $value): void
     {
         $exception = InvalidFileInfo::fromNonSplFileInfo($value);
@@ -24,9 +20,7 @@ class InvalidFileInfoTest extends TestCase
         self::assertSame($expectedMessage, $exception->getMessage());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function nonSplFileInfoProvider(): array
     {
         return [

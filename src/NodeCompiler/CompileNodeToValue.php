@@ -19,9 +19,7 @@ use function explode;
 use function in_array;
 use function sprintf;
 
-/**
- * @internal
- */
+/** @internal */
 class CompileNodeToValue
 {
     private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
@@ -167,7 +165,7 @@ class CompileNodeToValue
         }
     }
 
-    private function getConstantValue(Node\Expr\ConstFetch $node, ?string $constantName, CompilerContext $context): mixed
+    private function getConstantValue(Node\Expr\ConstFetch $node, string|null $constantName, CompilerContext $context): mixed
     {
         // It's not resolved when constant value is expression
         $constantName ??= $this->resolveConstantName($node, $context);
@@ -189,7 +187,7 @@ class CompileNodeToValue
         return sprintf('%s::%s', $this->resolveClassName($className, $context), $constantName);
     }
 
-    private function getClassConstantValue(Node\Expr\ClassConstFetch $node, ?string $classConstantName, CompilerContext $context): mixed
+    private function getClassConstantValue(Node\Expr\ClassConstFetch $node, string|null $classConstantName, CompilerContext $context): mixed
     {
         // It's not resolved when constant value is expression
         $classConstantName ??= $this->resolveClassConstantName($node, $context);

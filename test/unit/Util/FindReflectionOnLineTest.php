@@ -12,9 +12,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\Util\FindReflectionOnLine
- */
+/** @covers \Roave\BetterReflection\Util\FindReflectionOnLine */
 class FindReflectionOnLineTest extends TestCase
 {
     private FindReflectionOnLine $finder;

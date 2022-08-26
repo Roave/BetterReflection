@@ -21,9 +21,7 @@ use Roave\BetterReflectionTest\Fixture\IsDeprecated;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionEnumCase
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionEnumCase */
 class ReflectionEnumCaseTest extends TestCase
 {
     private Locator $astLocator;
@@ -38,9 +36,7 @@ class ReflectionEnumCaseTest extends TestCase
         $this->reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator));
     }
 
-    /**
-     * @return list<array{0: class-string, 1: string}>
-     */
+    /** @return list<array{0: class-string, 1: string}> */
     public function data(): array
     {
         return [
@@ -50,9 +46,7 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider data
-     */
+    /** @dataProvider data */
     public function testCanReflect(string $enumName, string $caseName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -65,9 +59,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($caseName, $caseReflection->getName());
     }
 
-    /**
-     * @return list<array{0: class-string, 1: string, 2: int|string}>
-     */
+    /** @return list<array{0: class-string, 1: string, 2: int|string}> */
     public function dataGetValue(): array
     {
         return [
@@ -76,9 +68,7 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetValue
-     */
+    /** @dataProvider dataGetValue */
     public function testGetValue(string $enumName, string $caseName, int|string $value): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -103,9 +93,7 @@ class ReflectionEnumCaseTest extends TestCase
         $caseReflection->getValue();
     }
 
-    /**
-     * @dataProvider data
-     */
+    /** @dataProvider data */
     public function testGetAst(string $enumName, string $caseName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -119,9 +107,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($caseName, $ast->name->toString());
     }
 
-    /**
-     * @return list<array{0: class-string, 1: string, 2: int, 3: int, 4: int, 5: int}>
-     */
+    /** @return list<array{0: class-string, 1: string, 2: int, 3: int, 4: int, 5: int}> */
     public function dataLinesAndColums(): array
     {
         return [
@@ -131,9 +117,7 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataLinesAndColums
-     */
+    /** @dataProvider dataLinesAndColums */
     public function testLinesAndColums(string $enumName, string $caseName, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -148,9 +132,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($endColumn, $caseReflection->getEndColumn());
     }
 
-    /**
-     * @dataProvider data
-     */
+    /** @dataProvider data */
     public function testGetDeclaringClassAndEnum(string $enumName, string $caseName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -163,9 +145,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($enumReflection, $caseReflection->getDeclaringEnum());
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function dataGetDocComment(): array
     {
         return [
@@ -174,9 +154,7 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetDocComment
-     */
+    /** @dataProvider dataGetDocComment */
     public function testGetDocComment(string $caseName, string $docComment): void
     {
         $enumReflection = $this->reflector->reflectClass(DocComment::class);
@@ -188,9 +166,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($docComment, $caseReflection->getDocComment());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function dataIsDeprecated(): array
     {
         return [
@@ -199,9 +175,7 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataIsDeprecated
-     */
+    /** @dataProvider dataIsDeprecated */
     public function testIsDeprecated(string $caseName, bool $isDeprecated): void
     {
         $enumReflection = $this->reflector->reflectClass(IsDeprecated::class);

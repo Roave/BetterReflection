@@ -29,7 +29,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): LocatedSource|null
     {
         $classReflection = $this->getInternalReflectionClass($identifier);
 
@@ -46,7 +46,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         return new EvaledLocatedSource($stubData->getStub(), $classReflection->getName());
     }
 
-    private function getInternalReflectionClass(Identifier $identifier): ?ReflectionClass
+    private function getInternalReflectionClass(Identifier $identifier): ReflectionClass|null
     {
         if (! $identifier->isClass()) {
             return null;

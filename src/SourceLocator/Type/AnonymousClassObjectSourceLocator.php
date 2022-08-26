@@ -31,16 +31,12 @@ use function assert;
 use function file_get_contents;
 use function strpos;
 
-/**
- * @internal
- */
+/** @internal */
 final class AnonymousClassObjectSourceLocator implements SourceLocator
 {
     private CoreReflectionClass $coreClassReflection;
 
-    /**
-     * @throws ReflectionException
-     */
+    /** @throws ReflectionException */
     public function __construct(object $anonymousClassObject, private Parser $parser)
     {
         $this->coreClassReflection = new CoreReflectionClass($anonymousClassObject);
@@ -51,7 +47,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
         return $this->getReflectionClass($reflector, $identifier->getType());
     }
@@ -66,7 +62,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         return array_filter([$this->getReflectionClass($reflector, $identifierType)]);
     }
 
-    private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType): ?ReflectionClass
+    private function getReflectionClass(Reflector $reflector, IdentifierType $identifierType): ReflectionClass|null
     {
         if (! $identifierType->isClass()) {
             return null;

@@ -27,14 +27,10 @@ use function array_map;
 use function get_class_methods;
 use function is_array;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter
- */
+/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter */
 class ReflectionParameterTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: string}>
-     */
+    /** @return array<string, array{0: string}> */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionParameter::class);
@@ -42,9 +38,7 @@ class ReflectionParameterTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /**
-     * @dataProvider coreReflectionMethodNamesProvider
-     */
+    /** @dataProvider coreReflectionMethodNamesProvider */
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionParameterAdapterReflection = new CoreReflectionClass(ReflectionParameterAdapter::class);
@@ -53,9 +47,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(ReflectionParameterAdapter::class, $reflectionParameterAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /**
-     * @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}>
-     */
+    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}> */
     public function methodExpectationProvider(): array
     {
         $mockFunction = $this->createMock(BetterReflectionFunction::class);
@@ -105,9 +97,9 @@ class ReflectionParameterTest extends TestCase
         string $methodName,
         array $args,
         mixed $returnValue,
-        ?string $expectedException,
+        string|null $expectedException,
         mixed $expectedReturnValue,
-        ?string $expectedReturnValueInstance,
+        string|null $expectedReturnValueInstance,
     ): void {
         $reflectionStub = $this->createMock(BetterReflectionParameter::class);
 

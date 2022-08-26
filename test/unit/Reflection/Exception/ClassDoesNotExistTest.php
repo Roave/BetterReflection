@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Reflection;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist
- */
+/** @covers \Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist */
 class ClassDoesNotExistTest extends TestCase
 {
     public function testForDifferentReflectionType(): void

@@ -30,14 +30,14 @@ use function substr_count;
 
 class ReflectionConstant implements Reflection
 {
-    private ?CompiledValue $compiledValue = null;
+    private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
         private Node\Stmt\Const_|Node\Expr\FuncCall $node,
         private LocatedSource $locatedSource,
-        private ?NamespaceNode $declaringNamespace = null,
-        private ?int $positionInNode = null,
+        private NamespaceNode|null $declaringNamespace = null,
+        private int|null $positionInNode = null,
     ) {
     }
 
@@ -62,8 +62,8 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $namespace = null,
-        ?int $positionInNode = null,
+        NamespaceNode|null $namespace = null,
+        int|null $positionInNode = null,
     ): self {
         if ($node instanceof Node\Stmt\Const_) {
             assert(is_int($positionInNode));
@@ -78,7 +78,7 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node\Stmt\Const_ $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $namespace,
+        NamespaceNode|null $namespace,
         int $positionInNode,
     ): self {
         return new self(
@@ -90,9 +90,7 @@ class ReflectionConstant implements Reflection
         );
     }
 
-    /**
-     * @throws InvalidConstantNode
-     */
+    /** @throws InvalidConstantNode */
     private static function createFromDefineFunctionCall(
         Reflector $reflector,
         Node\Expr\FuncCall $node,
@@ -137,9 +135,7 @@ class ReflectionConstant implements Reflection
             return $this->getNameFromDefineFunctionCall($this->node);
         }
 
-        /**
-         * @psalm-suppress PossiblyNullArrayOffset
-         */
+        /** @psalm-suppress PossiblyNullArrayOffset */
         $namespacedName = $this->node->consts[$this->positionInNode]->namespacedName;
         assert($namespacedName instanceof Node\Name);
 
@@ -176,11 +172,10 @@ class ReflectionConstant implements Reflection
             return substr_count($this->getNameFromDefineFunctionCall($this->node), '\\') !== 0;
         }
 
-        return $this->declaringNamespace !== null
-            && $this->declaringNamespace->name !== null;
+        return $this->declaringNamespace?->name !== null;
     }
 
-    public function getExtensionName(): ?string
+    public function getExtensionName(): string|null
     {
         return $this->locatedSource->getExtensionName();
     }
@@ -233,7 +228,7 @@ class ReflectionConstant implements Reflection
         return $this->compiledValue->value;
     }
 
-    public function getFileName(): ?string
+    public function getFileName(): string|null
     {
         return $this->locatedSource->getFileName();
     }
@@ -282,9 +277,7 @@ class ReflectionConstant implements Reflection
         return ReflectionConstantStringCast::toString($this);
     }
 
-    /**
-     * @return Node\Stmt\Const_|Node\Expr\FuncCall
-     */
+    /** @return Node\Stmt\Const_|Node\Expr\FuncCall */
     public function getAst(): Node
     {
         return $this->node;

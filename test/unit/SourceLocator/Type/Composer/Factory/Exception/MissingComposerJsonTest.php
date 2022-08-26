@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory\Excepti
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson */
 class MissingComposerJsonTest extends TestCase
 {
     public function testInProjectPath(): void

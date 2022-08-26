@@ -10,9 +10,7 @@ use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
 
-/**
- * @covers \Roave\BetterReflection\Util\CalculateReflectionColumn
- */
+/** @covers \Roave\BetterReflection\Util\CalculateReflectionColumn */
 class CalculateReflectionColumnTest extends TestCase
 {
     public function testGetStartColumn(): void

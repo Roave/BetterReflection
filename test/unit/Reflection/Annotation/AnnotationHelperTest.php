@@ -7,14 +7,10 @@ namespace Roave\BetterReflectionTest\Reflection\Annotation;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Annotation\AnnotationHelper
- */
+/** @covers \Roave\BetterReflection\Reflection\Annotation\AnnotationHelper */
 class AnnotationHelperTest extends TestCase
 {
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function deprecatedDocCommentProvider(): array
     {
         return [
@@ -42,17 +38,13 @@ class AnnotationHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider deprecatedDocCommentProvider
-     */
+    /** @dataProvider deprecatedDocCommentProvider */
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         self::assertSame($isDeprecated, AnnotationHelper::isDeprecated($docComment));
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function tentativeReturnTypeDocCommentProvider(): array
     {
         return [
@@ -74,9 +66,7 @@ class AnnotationHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider tentativeReturnTypeDocCommentProvider
-     */
+    /** @dataProvider tentativeReturnTypeDocCommentProvider */
     public function testhasTentativeReturnType(string $docComment, bool $isDeprecated): void
     {
         self::assertSame($isDeprecated, AnnotationHelper::hasTentativeReturnType($docComment));

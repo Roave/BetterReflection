@@ -39,9 +39,7 @@ use function sprintf;
 
 use const SORT_ASC as SORT_ASC_TEST;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionParameter
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionParameter */
 class ReflectionParameterTest extends TestCase
 {
     private Reflector $reflector;
@@ -173,9 +171,7 @@ class ReflectionParameterTest extends TestCase
         ReflectionParameter::createFromSpec([], 'index');
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function defaultParameterProvider(): array
     {
         return [
@@ -189,9 +185,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider defaultParameterProvider
-     */
+    /** @dataProvider defaultParameterProvider */
     public function testDefaultParametersTypes(string $defaultExpression, mixed $expectedValue): void
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
@@ -244,9 +238,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(1, $param2->getPosition());
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function typeProvider(): array
     {
         return [
@@ -305,9 +297,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function allowsNullProvider(): array
     {
         return [
@@ -321,9 +311,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider allowsNullProvider
-     */
+    /** @dataProvider allowsNullProvider */
     public function testAllowsNull(string $parameterName, bool $allowsNull): void
     {
         $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);
@@ -349,9 +337,7 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function isCallableProvider(): array
     {
         return [
@@ -370,9 +356,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider isCallableProvider
-     */
+    /** @dataProvider isCallableProvider */
     public function testIsCallable(string $parameterName, bool $isCallable): void
     {
         $classReflection     = $this->reflector->reflectClass(Methods::class);
@@ -382,9 +366,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($isCallable, $parameterReflection->isCallable());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function isArrayProvider(): array
     {
         return [
@@ -403,9 +385,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider isArrayProvider
-     */
+    /** @dataProvider isArrayProvider */
     public function testIsArray(string $parameterName, bool $isArray): void
     {
         $classReflection     = $this->reflector->reflectClass(Methods::class);
@@ -484,9 +464,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($secondParam->isVariadic());
     }
 
-    /**
-     * @group 109
-     */
+    /** @group 109 */
     public function testVariadicParametersAreAlsoImplicitlyOptional(): void
     {
         $classInfo = $this->reflector->reflectClass(Methods::class);
@@ -623,9 +601,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    /**
-     * @return list<array{0: string, 1: string|null}>
-     */
+    /** @return list<array{0: string, 1: string|null}> */
     public function getClassProvider(): array
     {
         return [
@@ -638,10 +614,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getClassProvider
-     */
-    public function testGetClass(string $parameterName, ?string $className): void
+    /** @dataProvider getClassProvider */
+    public function testGetClass(string $parameterName, string|null $className): void
     {
         $reflector = new DefaultReflector(new AggregateSourceLocator([
             new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
@@ -713,9 +687,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('object', $type->__toString());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -726,9 +698,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider columnsProvider
-     */
+    /** @dataProvider columnsProvider */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));

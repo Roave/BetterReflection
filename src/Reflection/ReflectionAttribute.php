@@ -31,9 +31,7 @@ class ReflectionAttribute
         return $this->reflector->reflectClass($this->getName());
     }
 
-    /**
-     * @return array<int|string, mixed>
-     */
+    /** @return array<int|string, mixed> */
     public function getArguments(): array
     {
         $arguments = [];

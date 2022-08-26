@@ -11,9 +11,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastParameters;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast
- */
+/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast */
 class ReflectionParameterStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -25,9 +23,7 @@ class ReflectionParameterStringCastTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function toStringProvider(): array
     {
         return [
@@ -80,9 +76,7 @@ class ReflectionParameterStringCastTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider toStringProvider
-     */
+    /** @dataProvider toStringProvider */
     public function testToString(string $methodName, string $parameterName, string $expectedString): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastParameters.php', $this->astLocator));

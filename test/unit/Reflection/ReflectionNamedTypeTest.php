@@ -19,9 +19,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionNamedType
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionNamedType */
 class ReflectionNamedTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -52,9 +50,7 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertFalse($noNullType->allowsNull());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function dataMixedAllowsNull(): array
     {
         return [
@@ -63,9 +59,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataMixedAllowsNull
-     */
+    /** @dataProvider dataMixedAllowsNull */
     public function testMixedAllowsNull(string $mixedType): void
     {
         $noNullType = $this->createType($mixedType);
@@ -94,9 +88,7 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['TRUE'];
     }
 
-    /**
-     * @dataProvider isBuildinProvider
-     */
+    /** @dataProvider isBuildinProvider */
     public function testIsBuiltin(string $type): void
     {
         $reflectionType = $this->createType($type);
@@ -111,9 +103,7 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['\foo'];
     }
 
-    /**
-     * @dataProvider isNotBuildinProvider
-     */
+    /** @dataProvider isNotBuildinProvider */
     public function testIsNotBuiltin(string $type): void
     {
         $reflectionType = $this->createType($type);
@@ -265,9 +255,7 @@ class ReflectionNamedTypeTest extends TestCase
         $typeReflection->getClass();
     }
 
-    /**
-     * @return list<array{0: string, 1: string, 2: string}>
-     */
+    /** @return list<array{0: string, 1: string, 2: string}> */
     public function dataGetClassWithSelfOrStatic(): array
     {
         return [
@@ -282,9 +270,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetClassWithSelfOrStatic
-     */
+    /** @dataProvider dataGetClassWithSelfOrStatic */
     public function testGetClassWithSelfOrStatic(string $classNameToReflect, string $type, string $typeClassName): void
     {
         $php = sprintf('<?php
@@ -306,9 +292,7 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame($typeClassName, $class->getName());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function dataGetClassWithParent(): array
     {
         return [
@@ -317,9 +301,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetClassWithParent
-     */
+    /** @dataProvider dataGetClassWithParent */
     public function testGetClassWithParent(string $parentType): void
     {
         $php = sprintf('<?php

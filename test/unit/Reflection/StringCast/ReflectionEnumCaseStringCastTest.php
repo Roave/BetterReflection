@@ -13,9 +13,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastBackedEnum;
 use Roave\BetterReflectionTest\Fixture\StringCastPureEnum;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionEnumCaseStringCast
- */
+/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionEnumCaseStringCast */
 class ReflectionEnumCaseStringCastTest extends TestCase
 {
     private Locator $astLocator;

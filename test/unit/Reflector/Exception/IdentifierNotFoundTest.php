@@ -9,9 +9,7 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 
-/**
- * @covers \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
- */
+/** @covers \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound */
 class IdentifierNotFoundTest extends TestCase
 {
     public function testFromNonObject(): void

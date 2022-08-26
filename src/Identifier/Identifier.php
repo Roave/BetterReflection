@@ -20,9 +20,7 @@ class Identifier
 
     private string $name;
 
-    /**
-     * @throws InvalidIdentifierName
-     */
+    /** @throws InvalidIdentifierName */
     public function __construct(string $name, private IdentifierType $type)
     {
         if (

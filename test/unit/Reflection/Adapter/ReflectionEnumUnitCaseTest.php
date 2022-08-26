@@ -22,14 +22,10 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnumUnitCase
- */
+/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnumUnitCase */
 class ReflectionEnumUnitCaseTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: string}>
-     */
+    /** @return array<string, array{0: string}> */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionEnumUnitCase::class);
@@ -37,9 +33,7 @@ class ReflectionEnumUnitCaseTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /**
-     * @dataProvider coreReflectionMethodNamesProvider
-     */
+    /** @dataProvider coreReflectionMethodNamesProvider */
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionEnumUnitCaseAdapterReflection = new CoreReflectionClass(ReflectionEnumUnitCaseAdapter::class);
@@ -48,9 +42,7 @@ class ReflectionEnumUnitCaseTest extends TestCase
         self::assertSame(ReflectionEnumUnitCaseAdapter::class, $reflectionEnumUnitCaseAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /**
-     * @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}>
-     */
+    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public function methodExpectationProvider(): array
     {
         return [
@@ -69,7 +61,7 @@ class ReflectionEnumUnitCaseTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionEnumCase::class);
 

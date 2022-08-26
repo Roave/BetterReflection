@@ -17,9 +17,7 @@ use function sha1;
 use function uniqid;
 use function unlink;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\FileCacheLoader */
 final class FileCacheLoaderTest extends TestCase
 {
     public function testFileCacheWriterCreatesFileWithPrintedCode(): void

@@ -11,9 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionIntersectionType
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionIntersectionType */
 class ReflectionIntersectionTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -27,9 +25,7 @@ class ReflectionIntersectionTypeTest extends TestCase
         $this->owner     = $this->createMock(ReflectionParameter::class);
     }
 
-    /**
-     * @return list<array{0: Node\IntersectionType, 1: string}>
-     */
+    /** @return list<array{0: Node\IntersectionType, 1: string}> */
     public function dataProvider(): array
     {
         return [
@@ -38,9 +34,7 @@ class ReflectionIntersectionTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    /** @dataProvider dataProvider */
     public function test(Node\IntersectionType $intersectionType, string $expectedString): void
     {
         $typeReflection = new ReflectionIntersectionType($this->reflector, $this->owner, $intersectionType);

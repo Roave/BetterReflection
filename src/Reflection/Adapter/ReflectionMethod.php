@@ -62,12 +62,12 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->isUserDefined();
     }
 
-    public function getClosureThis(): ?object
+    public function getClosureThis(): object|null
     {
         throw new NotImplemented('Not implemented');
     }
 
-    public function getClosureScopeClass(): ?CoreReflectionClass
+    public function getClosureScopeClass(): CoreReflectionClass|null
     {
         throw new NotImplemented('Not implemented');
     }
@@ -87,10 +87,8 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->getEndLine();
     }
 
-    /**
-     * @psalm-suppress ImplementedReturnTypeMismatch
-     */
-    public function getExtension(): ?CoreReflectionExtension
+    /** @psalm-suppress ImplementedReturnTypeMismatch */
+    public function getExtension(): CoreReflectionExtension|null
     {
         throw new NotImplemented('Not implemented');
     }
@@ -127,9 +125,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->getNumberOfRequiredParameters();
     }
 
-    /**
-     * @return list<ReflectionParameter>
-     */
+    /** @return list<ReflectionParameter> */
     public function getParameters(): array
     {
         return array_map(
@@ -143,7 +139,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->hasReturnType();
     }
 
-    public function getReturnType(): ?CoreReflectionType
+    public function getReturnType(): CoreReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionMethod->getReturnType());
     }
@@ -153,9 +149,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->getShortName();
     }
 
-    /**
-     * @return array<string, scalar>
-     */
+    /** @return array<string, scalar> */
     public function getStaticVariables(): array
     {
         throw new NotImplemented('Not implemented');
@@ -216,10 +210,8 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->isDestructor();
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
-    public function getClosure(?object $object = null): Closure
+    /** @psalm-suppress MethodSignatureMismatch */
+    public function getClosure(object|null $object = null): Closure
     {
         try {
             return $this->betterReflectionMethod->getClosure($object);
@@ -235,7 +227,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->getModifiers();
     }
 
-    public function invoke(?object $object = null, mixed ...$args): mixed
+    public function invoke(object|null $object = null, mixed ...$args): mixed
     {
         try {
             return $this->betterReflectionMethod->invoke($object, ...$args);
@@ -246,10 +238,8 @@ final class ReflectionMethod extends CoreReflectionMethod
         }
     }
 
-    /**
-     * @param list<mixed> $args
-     */
-    public function invokeArgs(?object $object = null, array $args = []): mixed
+    /** @param list<mixed> $args */
+    public function invokeArgs(object|null $object = null, array $args = []): mixed
     {
         try {
             return $this->betterReflectionMethod->invokeArgs($object, $args);
@@ -283,7 +273,7 @@ final class ReflectionMethod extends CoreReflectionMethod
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');
@@ -305,14 +295,12 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $this->betterReflectionMethod->hasTentativeReturnType();
     }
 
-    public function getTentativeReturnType(): ?CoreReflectionType
+    public function getTentativeReturnType(): CoreReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionMethod->getTentativeReturnType());
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function getClosureUsedVariables(): array
     {
         throw new Exception\NotImplemented('Not implemented');

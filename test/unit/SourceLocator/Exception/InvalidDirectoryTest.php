@@ -12,14 +12,10 @@ use function sprintf;
 use function sys_get_temp_dir;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory */
 class InvalidDirectoryTest extends TestCase
 {
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function nonStringValuesProvider(): array
     {
         return [

@@ -68,7 +68,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @return array<string, ReflectionProperty>
      */
-    private function getRuntimeProperties(?int $filter = null): array
+    private function getRuntimeProperties(int|null $filter = null): array
     {
         if (! $this->reflectionClass->isInstance($this->object)) {
             throw new InvalidArgumentException('Cannot reflect runtime properties of a separate class');
@@ -140,7 +140,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->inNamespace();
     }
 
-    public function getExtensionName(): ?string
+    public function getExtensionName(): string|null
     {
         return $this->reflectionClass->getExtensionName();
     }
@@ -148,7 +148,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getMethods(?int $filter = null): array
+    public function getMethods(int|null $filter = null): array
     {
         return $this->reflectionClass->getMethods($filter);
     }
@@ -156,7 +156,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateMethods(?int $filter = null): array
+    public function getImmediateMethods(int|null $filter = null): array
     {
         return $this->reflectionClass->getImmediateMethods($filter);
     }
@@ -197,7 +197,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->hasConstant($name);
     }
 
-    public function getReflectionConstant(string $name): ?ReflectionClassConstant
+    public function getReflectionConstant(string $name): ReflectionClassConstant|null
     {
         return $this->reflectionClass->getReflectionConstant($name);
     }
@@ -226,7 +226,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getProperties(?int $filter = null): array
+    public function getProperties(int|null $filter = null): array
     {
         return array_merge(
             $this->reflectionClass->getProperties($filter),
@@ -237,7 +237,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateProperties(?int $filter = null): array
+    public function getImmediateProperties(int|null $filter = null): array
     {
         return array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
@@ -245,7 +245,7 @@ class ReflectionObject extends ReflectionClass
         );
     }
 
-    public function getProperty(string $name): ?ReflectionProperty
+    public function getProperty(string $name): ReflectionProperty|null
     {
         $runtimeProperties = $this->getRuntimeProperties();
 
@@ -274,7 +274,7 @@ class ReflectionObject extends ReflectionClass
         );
     }
 
-    public function getFileName(): ?string
+    public function getFileName(): string|null
     {
         return $this->reflectionClass->getFileName();
     }
@@ -304,7 +304,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getEndColumn();
     }
 
-    public function getParentClass(): ?ReflectionClass
+    public function getParentClass(): ReflectionClass|null
     {
         return $this->reflectionClass->getParentClass();
     }
@@ -473,22 +473,18 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getAst();
     }
 
-    public function getDeclaringNamespaceAst(): ?Namespace_
+    public function getDeclaringNamespaceAst(): Namespace_|null
     {
         return $this->reflectionClass->getDeclaringNamespaceAst();
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
         return $this->reflectionClass->getAttributes();
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributesByName(string $name): array
     {
         return $this->reflectionClass->getAttributesByName($name);

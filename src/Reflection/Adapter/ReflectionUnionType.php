@@ -18,9 +18,7 @@ final class ReflectionUnionType extends CoreReflectionUnionType
     {
     }
 
-    /**
-     * @return array<ReflectionNamedType>
-     */
+    /** @return array<ReflectionNamedType> */
     public function getTypes(): array
     {
         return array_filter(

@@ -20,9 +20,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 use function reset;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection */
 class NodeToReflectionTest extends TestCase
 {
     private Parser $phpParser;

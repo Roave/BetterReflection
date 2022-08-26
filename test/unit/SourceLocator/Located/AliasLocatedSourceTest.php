@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Located\AliasLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Located\AliasLocatedSource
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Located\AliasLocatedSource */
 class AliasLocatedSourceTest extends TestCase
 {
     public function testInternalsLocatedSource(): void

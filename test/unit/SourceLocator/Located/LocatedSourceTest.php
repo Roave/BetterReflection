@@ -9,9 +9,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Located\LocatedSource */
 class LocatedSourceTest extends TestCase
 {
     public function testValuesHappyPath(): void

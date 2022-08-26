@@ -11,9 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionUnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionUnionType
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionUnionType */
 class ReflectionUnionTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -27,9 +25,7 @@ class ReflectionUnionTypeTest extends TestCase
         $this->owner     = $this->createMock(ReflectionParameter::class);
     }
 
-    /**
-     * @return list<array{0: Node\UnionType, 1: string, 2: bool}>
-     */
+    /** @return list<array{0: Node\UnionType, 1: string, 2: bool}> */
     public function dataProvider(): array
     {
         return [
@@ -38,9 +34,7 @@ class ReflectionUnionTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    /** @dataProvider dataProvider */
     public function test(Node\UnionType $unionType, string $expectedString, bool $expectedNullable): void
     {
         $typeReflection = new ReflectionUnionType($this->reflector, $this->owner, $unionType);

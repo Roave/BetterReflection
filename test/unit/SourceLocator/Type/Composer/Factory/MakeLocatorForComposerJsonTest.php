@@ -22,9 +22,7 @@ use function array_column;
 use function array_combine;
 use function realpath;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJson
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJson */
 class MakeLocatorForComposerJsonTest extends TestCase
 {
     /** @dataProvider expectedLocators */
@@ -37,9 +35,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
         );
     }
 
-    /**
-     * @return array<string, array{0: string, 1: SourceLocator}>
-     */
+    /** @return array<string, array{0: string, 1: SourceLocator}> */
     public function expectedLocators(): array
     {
         $astLocator = BetterReflectionSingleton::instance()->astLocator();

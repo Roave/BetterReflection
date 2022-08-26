@@ -16,13 +16,13 @@ use Roave\BetterReflection\Util\FileHelper;
  */
 class LocatedSource
 {
-    private ?string $filename;
+    private string|null $filename;
 
     /**
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    public function __construct(private string $source, private ?string $name, ?string $filename = null)
+    public function __construct(private string $source, private string|null $name, string|null $filename = null)
     {
         if ($filename !== null) {
             FileChecker::assertReadableFile($filename);
@@ -38,12 +38,12 @@ class LocatedSource
         return $this->source;
     }
 
-    public function getName(): ?string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getFileName(): ?string
+    public function getFileName(): string|null
     {
         return $this->filename;
     }
@@ -56,7 +56,7 @@ class LocatedSource
         return false;
     }
 
-    public function getExtensionName(): ?string
+    public function getExtensionName(): string|null
     {
         return null;
     }
@@ -69,7 +69,7 @@ class LocatedSource
         return false;
     }
 
-    public function getAliasName(): ?string
+    public function getAliasName(): string|null
     {
         return null;
     }

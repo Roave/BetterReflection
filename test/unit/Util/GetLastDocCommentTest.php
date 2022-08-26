@@ -10,9 +10,7 @@ use PhpParser\Node\Stmt\Function_;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\GetLastDocComment;
 
-/**
- * @covers \Roave\BetterReflection\Util\GetLastDocComment
- */
+/** @covers \Roave\BetterReflection\Util\GetLastDocComment */
 class GetLastDocCommentTest extends TestCase
 {
     public function testWithComment(): void

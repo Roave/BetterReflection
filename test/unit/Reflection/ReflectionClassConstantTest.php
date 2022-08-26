@@ -39,7 +39,7 @@ class ReflectionClassConstantTest extends TestCase
         );
     }
 
-    private function getExampleConstant(string $name): ?ReflectionClassConstant
+    private function getExampleConstant(string $name): ReflectionClassConstant|null
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
         $classInfo = $reflector->reflectClass(ExampleClass::class);
@@ -82,17 +82,13 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
-    /**
-     * @dataProvider getModifiersProvider
-     */
+    /** @dataProvider getModifiersProvider */
     public function testGetModifiers(string $const, int $expected): void
     {
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
-    /**
-     * @return list<array{0: string, 1: int}>
-     */
+    /** @return list<array{0: string, 1: int}> */
     public function getModifiersProvider(): array
     {
         return [
@@ -125,9 +121,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame($classInfo, $const->getDeclaringClass());
     }
 
-    /**
-     * @dataProvider startEndLineProvider
-     */
+    /** @dataProvider startEndLineProvider */
     public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
         $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -137,9 +131,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -150,9 +142,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -162,9 +152,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider columnsProvider
-     */
+    /** @dataProvider columnsProvider */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -175,9 +163,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    /**
-     * @return list<array{0: string, 1: int}>
-     */
+    /** @return list<array{0: string, 1: int}> */
     public function getAstProvider(): array
     {
         return [
@@ -186,9 +172,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getAstProvider
-     */
+    /** @dataProvider getAstProvider */
     public function testGetAst(string $constantName, int $positionInAst): void
     {
         $php = <<<'PHP'
@@ -211,9 +195,7 @@ PHP;
         self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function deprecatedDocCommentProvider(): array
     {
         return [
@@ -236,9 +218,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider deprecatedDocCommentProvider
-     */
+    /** @dataProvider deprecatedDocCommentProvider */
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php

@@ -23,9 +23,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function array_map;
 use function sort;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator */
 class PsrAutoloaderLocatorTest extends TestCase
 {
     /** @var PsrAutoloaderMapping&MockObject */

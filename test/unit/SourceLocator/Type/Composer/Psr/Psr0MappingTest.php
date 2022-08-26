@@ -14,9 +14,7 @@ use function sys_get_temp_dir;
 use function tempnam;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping */
 class Psr0MappingTest extends TestCase
 {
     /**

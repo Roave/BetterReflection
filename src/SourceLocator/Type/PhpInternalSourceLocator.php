@@ -26,14 +26,14 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): LocatedSource|null
     {
         return $this->getClassSource($identifier)
             ?? $this->getFunctionSource($identifier)
             ?? $this->getConstantSource($identifier);
     }
 
-    private function getClassSource(Identifier $identifier): ?InternalLocatedSource
+    private function getClassSource(Identifier $identifier): InternalLocatedSource|null
     {
         if (! $identifier->isClass()) {
             return null;
@@ -45,7 +45,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateClassStub($className));
     }
 
-    private function getFunctionSource(Identifier $identifier): ?InternalLocatedSource
+    private function getFunctionSource(Identifier $identifier): InternalLocatedSource|null
     {
         if (! $identifier->isFunction()) {
             return null;
@@ -54,7 +54,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateFunctionStub($identifier->getName()));
     }
 
-    private function getConstantSource(Identifier $identifier): ?InternalLocatedSource
+    private function getConstantSource(Identifier $identifier): InternalLocatedSource|null
     {
         if (! $identifier->isConstant()) {
             return null;
@@ -63,7 +63,7 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
         return $this->createLocatedSourceFromStubData($identifier, $this->stubber->generateConstantStub($identifier->getName()));
     }
 
-    private function createLocatedSourceFromStubData(Identifier $identifier, ?StubData $stubData): ?InternalLocatedSource
+    private function createLocatedSourceFromStubData(Identifier $identifier, StubData|null $stubData): InternalLocatedSource|null
     {
         if ($stubData === null) {
             return null;

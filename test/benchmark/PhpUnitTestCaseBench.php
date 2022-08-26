@@ -14,9 +14,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use function array_map;
 use function array_merge;
 
-/**
- * @Iterations(5)
- */
+/** @Iterations(5) */
 class PhpUnitTestCaseBench
 {
     private Reflector $reflector;

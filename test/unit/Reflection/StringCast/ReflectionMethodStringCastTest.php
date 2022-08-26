@@ -14,9 +14,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastMethods;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast
- */
+/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionMethodStringCast */
 class ReflectionMethodStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -33,9 +31,7 @@ class ReflectionMethodStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function toStringProvider(): array
     {
         return [
@@ -56,9 +52,7 @@ class ReflectionMethodStringCastTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider toStringProvider
-     */
+    /** @dataProvider toStringProvider */
     public function testToString(string $methodName, string $expectedString): void
     {
         $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastMethods.php', $this->astLocator));

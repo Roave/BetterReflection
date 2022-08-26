@@ -18,9 +18,7 @@ use Roave\BetterReflectionTest\Fixture\IntEnum;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionEnum
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionEnum */
 class ReflectionEnumTest extends TestCase
 {
     private Locator $astLocator;
@@ -35,9 +33,7 @@ class ReflectionEnumTest extends TestCase
         $this->reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator));
     }
 
-    /**
-     * @return list<array{0: class-string}>
-     */
+    /** @return list<array{0: class-string}> */
     public function dataCanReflect(): array
     {
         return [
@@ -47,9 +43,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataCanReflect
-     */
+    /** @dataProvider dataCanReflect */
     public function testCanReflect(string $enumName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -57,9 +51,7 @@ class ReflectionEnumTest extends TestCase
         self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function dataHasAndGetCase(): array
     {
         return [
@@ -70,9 +62,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataHasAndGetCase
-     */
+    /** @dataProvider dataHasAndGetCase */
     public function testHasAndGetCase(string $caseName, bool $exists): void
     {
         $enumReflection = $this->reflector->reflectClass(PureEnum::class);
@@ -90,9 +80,7 @@ class ReflectionEnumTest extends TestCase
         }
     }
 
-    /**
-     * @return list<array{0: class-string, 1: int}>
-     */
+    /** @return list<array{0: class-string, 1: int}> */
     public function dataGetCases(): array
     {
         return [
@@ -102,9 +90,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetCases
-     */
+    /** @dataProvider dataGetCases */
     public function testGetCases(string $enumName, int $casesCount): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -117,9 +103,7 @@ class ReflectionEnumTest extends TestCase
         self::assertContainsOnlyInstancesOf(ReflectionEnumCase::class, $cases);
     }
 
-    /**
-     * @return list<array{0: class-string, 1: bool}>
-     */
+    /** @return list<array{0: class-string, 1: bool}> */
     public function dataIsBacked(): array
     {
         return [
@@ -129,9 +113,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataIsBacked
-     */
+    /** @dataProvider dataIsBacked */
     public function testIsBacked(string $enumName, bool $isBacked): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -140,9 +122,7 @@ class ReflectionEnumTest extends TestCase
         self::assertSame($isBacked, $enumReflection->isBacked());
     }
 
-    /**
-     * @return list<array{0: class-string, 1: string}>
-     */
+    /** @return list<array{0: class-string, 1: string}> */
     public function dataGetBackingType(): array
     {
         return [
@@ -151,9 +131,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetBackingType
-     */
+    /** @dataProvider dataGetBackingType */
     public function testGetBackingType(string $enumName, string $expectedBackingType): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);

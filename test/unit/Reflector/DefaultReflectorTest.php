@@ -16,9 +16,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\Reflector\DefaultReflector
- */
+/** @covers \Roave\BetterReflection\Reflector\DefaultReflector */
 class DefaultReflectorTest extends TestCase
 {
     private Reflector $reflector;

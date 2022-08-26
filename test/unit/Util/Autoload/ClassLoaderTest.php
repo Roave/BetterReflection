@@ -23,12 +23,10 @@ use function count;
 use function spl_autoload_functions;
 use function spl_autoload_unregister;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoader
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\ClassLoader */
 final class ClassLoaderTest extends TestCase
 {
-    private ?ClassLoader $loader = null;
+    private ClassLoader|null $loader = null;
 
     protected function tearDown(): void
     {

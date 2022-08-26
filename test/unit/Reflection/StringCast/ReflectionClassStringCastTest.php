@@ -22,9 +22,7 @@ use Roave\BetterReflectionTest\Fixture\StringCastPureEnum;
 
 use function file_get_contents;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast
- */
+/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast */
 class ReflectionClassStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -52,9 +50,7 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testPureEnumToString(): void
     {
         $reflector       = new DefaultReflector(new AggregateSourceLocator([
@@ -69,9 +65,7 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testBackedEnumToString(): void
     {
         $reflector       = new DefaultReflector(new AggregateSourceLocator([

@@ -34,9 +34,7 @@ use function sprintf;
 
 use const ARRAY_FILTER_USE_KEY;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator */
 class PhpInternalSourceLocatorTest extends TestCase
 {
     private PhpInternalSourceLocator $phpInternalSourceLocator;
@@ -58,9 +56,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    /**
-     * @dataProvider internalClassesProvider
-     */
+    /** @dataProvider internalClassesProvider */
     public function testCanFetchInternalLocatedSourceForClasses(string $className): void
     {
         try {
@@ -84,9 +80,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         }
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function internalClassesProvider(): array
     {
         $allSymbols = array_merge(
@@ -108,9 +102,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider internalFunctionsProvider
-     */
+    /** @dataProvider internalFunctionsProvider */
     public function testCanFetchInternalLocatedSourceForFunctions(string $functionName): void
     {
         try {
@@ -134,9 +126,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         }
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function internalFunctionsProvider(): array
     {
         /** @var list<string> $allSymbols */
@@ -148,9 +138,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider internalConstantsProvider
-     */
+    /** @dataProvider internalConstantsProvider */
     public function testCanFetchInternalLocatedSourceForConstants(string $constantName): void
     {
         $reflection = $this->phpInternalSourceLocator->locateIdentifier(
@@ -166,9 +154,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         self::assertNotEmpty($source->getSource());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function internalConstantsProvider(): array
     {
         /** @var array<string, array<string, int|string|float|bool|mixed[]|resource|null>> $allSymbols */

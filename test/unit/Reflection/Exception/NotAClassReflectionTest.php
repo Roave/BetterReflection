@@ -12,9 +12,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Exception\NotAClassReflection
- */
+/** @covers \Roave\BetterReflection\Reflection\Exception\NotAClassReflection */
 class NotAClassReflectionTest extends TestCase
 {
     private Locator $astLocator;

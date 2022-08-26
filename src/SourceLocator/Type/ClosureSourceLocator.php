@@ -31,9 +31,7 @@ use function assert;
 use function file_get_contents;
 use function strpos;
 
-/**
- * @internal
- */
+/** @internal */
 final class ClosureSourceLocator implements SourceLocator
 {
     private CoreFunctionReflection $coreFunctionReflection;
@@ -48,7 +46,7 @@ final class ClosureSourceLocator implements SourceLocator
      *
      * @throws ParseToAstFailure
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
         return $this->getReflectionFunction($reflector, $identifier->getType());
     }
@@ -63,7 +61,7 @@ final class ClosureSourceLocator implements SourceLocator
         return array_filter([$this->getReflectionFunction($reflector, $identifierType)]);
     }
 
-    private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType): ?ReflectionFunction
+    private function getReflectionFunction(Reflector $reflector, IdentifierType $identifierType): ReflectionFunction|null
     {
         if (! $identifierType->isFunction()) {
             return null;
@@ -84,7 +82,7 @@ final class ClosureSourceLocator implements SourceLocator
             /** @var list<array{node: Node\Expr\Closure|Node\Expr\ArrowFunction, namespace: Namespace_|null}> */
             private array $closureNodes = [];
 
-            private ?Namespace_ $currentNamespace = null;
+            private Namespace_|null $currentNamespace = null;
 
             public function __construct(private string $fileName, private int $startLine)
             {

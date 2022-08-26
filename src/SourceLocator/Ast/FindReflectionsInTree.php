@@ -24,9 +24,7 @@ use Roave\BetterReflection\Util\ConstantNodeChecker;
 use function assert;
 use function count;
 
-/**
- * @internal
- */
+/** @internal */
 final class FindReflectionsInTree
 {
     public function __construct(private AstConversionStrategy $astConversionStrategy)
@@ -51,7 +49,7 @@ final class FindReflectionsInTree
             /** @var list<ReflectionClass|ReflectionFunction|ReflectionConstant> */
             private array $reflections = [];
 
-            private ?Namespace_ $currentNamespace = null;
+            private Namespace_|null $currentNamespace = null;
 
             public function __construct(
                 private Reflector $reflector,
@@ -150,9 +148,7 @@ final class FindReflectionsInTree
                 return null;
             }
 
-            /**
-             * @return list<ReflectionClass|ReflectionFunction|ReflectionConstant>
-             */
+            /** @return list<ReflectionClass|ReflectionFunction|ReflectionConstant> */
             public function getReflections(): array
             {
                 return $this->reflections;

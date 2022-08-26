@@ -9,9 +9,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber
- */
+/** @covers \Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber */
 class AggregateSourceStubberTest extends TestCase
 {
     public function testTraverseAllGivenSourceStubbersAndFailToGenerateClassStub(): void

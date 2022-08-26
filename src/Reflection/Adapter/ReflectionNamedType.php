@@ -9,9 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 
 use function strtolower;
 
-/**
- * @psalm-suppress MissingImmutableAnnotation
- */
+/** @psalm-suppress MissingImmutableAnnotation */
 final class ReflectionNamedType extends CoreReflectionNamedType
 {
     public function __construct(private BetterReflectionNamedType $betterReflectionType, private bool $allowsNull)
