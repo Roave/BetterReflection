@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Exception\Uncloneable
- */
+/** @covers \Roave\BetterReflection\Reflection\Exception\Uncloneable */
 class UncloneableTest extends TestCase
 {
     public function testFromNonObject(): void

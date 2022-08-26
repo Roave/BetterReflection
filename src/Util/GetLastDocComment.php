@@ -6,9 +6,7 @@ namespace Roave\BetterReflection\Util;
 
 use PhpParser\NodeAbstract;
 
-/**
- * @internal
- */
+/** @internal */
 final class GetLastDocComment
 {
     public static function forNode(NodeAbstract $node): string

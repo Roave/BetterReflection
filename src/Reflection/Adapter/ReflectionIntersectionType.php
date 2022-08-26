@@ -18,9 +18,7 @@ class ReflectionIntersectionType extends CoreReflectionIntersectionType
     {
     }
 
-    /**
-     * @return array<ReflectionNamedType>
-     */
+    /** @return array<ReflectionNamedType> */
     public function getTypes(): array
     {
         return array_filter(

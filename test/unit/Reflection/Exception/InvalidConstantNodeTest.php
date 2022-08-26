@@ -8,9 +8,7 @@ use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Exception\InvalidConstantNode
- */
+/** @covers \Roave\BetterReflection\Reflection\Exception\InvalidConstantNode */
 class InvalidConstantNodeTest extends TestCase
 {
     public function testCreate(): void

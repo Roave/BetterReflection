@@ -96,9 +96,7 @@ use function sort;
 use function sprintf;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionClass
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionClass */
 class ReflectionClassTest extends TestCase
 {
     private Locator $astLocator;
@@ -175,9 +173,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 
-    /**
-     * @coversNothing
-     */
+    /** @coversNothing */
     public function testReflectingAClassDoesNotLoadTheClass(): void
     {
         self::assertFalse(class_exists(ExampleClass::class, false));
@@ -233,9 +229,7 @@ class ReflectionClassTest extends TestCase
         self::assertCount(3, $methods);
     }
 
-    /**
-     * @return list<array{0: string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}>
-     */
+    /** @return list<array{0: string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
     public function dataMethodsOfBackedEnum(): array
     {
         return [
@@ -299,9 +293,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame($returnType, $methodReturnType->__toString());
     }
 
-    /**
-     * @return list<array{0: int, 1: int}>
-     */
+    /** @return list<array{0: int, 1: int}> */
     public function getMethodsWithFilterDataProvider(): array
     {
         return [
@@ -323,9 +315,7 @@ class ReflectionClassTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getMethodsWithFilterDataProvider
-     */
+    /** @dataProvider getMethodsWithFilterDataProvider */
     public function testGetMethodsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -582,9 +572,7 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($property->isDefault());
     }
 
-    /**
-     * @return list<array{0: string, 1: array<string, string>}>
-     */
+    /** @return list<array{0: string, 1: array<string, string>}> */
     public function dataGetPropertiesForBackedEnum(): array
     {
         return [
@@ -664,9 +652,7 @@ PHP;
         self::assertSame($expectedPropertiesNames, array_keys($properties));
     }
 
-    /**
-     * @return list<array{0: int, 1: int}>
-     */
+    /** @return list<array{0: int, 1: int}> */
     public function getPropertiesWithFilterDataProvider(): array
     {
         return [
@@ -684,9 +670,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider getPropertiesWithFilterDataProvider
-     */
+    /** @dataProvider getPropertiesWithFilterDataProvider */
     public function testGetPropertiesWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -708,9 +692,7 @@ PHP;
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
-    /**
-     * @return list<array{0: string, 1: class-string, 2: class-string}>
-     */
+    /** @return list<array{0: string, 1: class-string, 2: class-string}> */
     public function dataInheritedProperties(): array
     {
         return [
@@ -723,9 +705,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider dataInheritedProperties
-     */
+    /** @dataProvider dataInheritedProperties */
     public function testInheritedProperties(string $propertyName, string $expectedDeclaringClassName, string $expectedImplementingClassName): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
@@ -834,9 +814,7 @@ PHP;
         self::assertSame(['Roave\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Roave\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -846,9 +824,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider startEndLineProvider
-     */
+    /** @dataProvider startEndLineProvider */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -858,9 +834,7 @@ PHP;
         self::assertSame($expectedEnd, $classInfo->getEndLine());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -870,9 +844,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider columnsProvider
-     */
+    /** @dataProvider columnsProvider */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -1158,9 +1130,7 @@ PHP;
         self::assertTrue($classInfo->isFinal());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: list<string>}>
-     */
+    /** @return list<array{0: string, 1: int, 2: list<string>}> */
     public function modifierProvider(): array
     {
         return [
@@ -1247,9 +1217,7 @@ PHP;
         self::assertSame('TraitFixtureTraitA', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
     }
 
-    /**
-     * @return list<array{0: class-string, 1: string, 2: string, 3: string, 4: string}>
-     */
+    /** @return list<array{0: class-string, 1: string, 2: string, 3: string, 4: string}> */
     public function declaringClassProvider(): array
     {
         return [
@@ -1305,9 +1273,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider declaringClassProvider
-     */
+    /** @dataProvider declaringClassProvider */
     public function testGetDeclaringClassWithTraitAndParent(
         string $className,
         string $methodName,
@@ -2005,9 +1971,7 @@ PHP;
         $classInfo->getStaticPropertyValue('foo');
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testSetStaticPropertyValue(): void
     {
         $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
@@ -2504,9 +2468,7 @@ PHP;
         self::assertSame(['Iterator', 'Traversable', 'Stringable'], $class->getInterfaceNames());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function deprecatedDocCommentProvider(): array
     {
         return [
@@ -2529,9 +2491,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider deprecatedDocCommentProvider
-     */
+    /** @dataProvider deprecatedDocCommentProvider */
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php

@@ -14,9 +14,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\AbstractSourceLocator */
 class AbstractSourceLocatorTest extends TestCase
 {
     public function testLocateIdentifierCallsFindReflection(): void

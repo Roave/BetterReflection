@@ -14,9 +14,7 @@ use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\StringSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\StringSourceLocator */
 class StringSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

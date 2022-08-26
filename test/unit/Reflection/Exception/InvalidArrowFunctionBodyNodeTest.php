@@ -9,9 +9,7 @@ use PhpParser\Node\Stmt\Echo_;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode
- */
+/** @covers \Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode */
 class InvalidArrowFunctionBodyNodeTest extends TestCase
 {
     public function testCreate(): void

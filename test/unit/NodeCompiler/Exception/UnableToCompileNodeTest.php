@@ -24,9 +24,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode
- */
+/** @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode */
 final class UnableToCompileNodeTest extends TestCase
 {
     public function testDefaults(): void

@@ -18,14 +18,10 @@ use function array_filter;
 use function array_values;
 use function count;
 
-/**
- * @internal
- */
+/** @internal */
 class ReflectionAttributeHelper
 {
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public static function createAttributes(
         Reflector $reflector,
         ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $reflection,

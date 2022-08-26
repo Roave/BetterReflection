@@ -38,7 +38,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->getName();
     }
 
-    public function getValue(?object $object = null): mixed
+    public function getValue(object|null $object = null): mixed
     {
         try {
             return $this->betterReflectionProperty->getValue($object);
@@ -49,9 +49,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         }
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
+    /** @psalm-suppress MethodSignatureMismatch */
     public function setValue(mixed $objectOrValue, mixed $value = null): void
     {
         try {
@@ -70,9 +68,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->hasType();
     }
 
-    /**
-     * @psalm-mutation-free
-     */
+    /** @psalm-mutation-free */
     public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType|null
     {
         /** @psalm-suppress ImpureMethodCall */
@@ -146,7 +142,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         return $this->betterReflectionProperty->getDefaultValue();
     }
 
-    public function isInitialized(?object $object = null): bool
+    public function isInitialized(object|null $object = null): bool
     {
         try {
             return $this->betterReflectionProperty->isInitialized($object);
@@ -165,7 +161,7 @@ final class ReflectionProperty extends CoreReflectionProperty
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');

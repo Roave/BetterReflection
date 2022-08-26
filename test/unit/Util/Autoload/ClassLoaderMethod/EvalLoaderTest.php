@@ -13,9 +13,7 @@ use function ob_end_clean;
 use function ob_get_contents;
 use function ob_start;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\EvalLoader */
 final class EvalLoaderTest extends TestCase
 {
     public function testEvalExecutes(): void

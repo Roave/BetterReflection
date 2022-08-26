@@ -9,9 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 
 use function sprintf;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 final class ClassAlreadyRegistered extends LogicException
 {
     public static function fromReflectionClass(ReflectionClass $reflectionClass): self

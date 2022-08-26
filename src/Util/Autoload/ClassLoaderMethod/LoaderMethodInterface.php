@@ -6,9 +6,7 @@ namespace Roave\BetterReflection\Util\Autoload\ClassLoaderMethod;
 
 use Roave\BetterReflection\Reflection\ReflectionClass;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 interface LoaderMethodInterface
 {
     public function __invoke(ReflectionClass $classInfo): void;

@@ -45,9 +45,7 @@ use function in_array;
 use function method_exists;
 use function sort;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber
- */
+/** @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber */
 class ReflectionSourceStubberTest extends TestCase
 {
     private const EXTENSIONS = ['Core', 'standard', 'pcre', 'SPL'];
@@ -119,9 +117,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testPureEnumStub(): void
     {
         require_once __DIR__ . '/../../Fixture/EnumPureForSourceStubber.php';
@@ -133,9 +129,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testBackedEnumStub(): void
     {
         require_once __DIR__ . '/../../Fixture/EnumBackedForSourceStubber.php';
@@ -165,9 +159,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testClassStubWithPHP81Syntax(): void
     {
         require_once __DIR__ . '/../../Fixture/PHP81ClassForSourceStubber.php';
@@ -190,9 +182,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /**
-     * @requires PHP < 8.1
-     */
+    /** @requires PHP < 8.1 */
     public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP80(): void
     {
         require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
@@ -205,9 +195,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpectedOnPhp80.php', $stubData->getStub());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP81(): void
     {
         require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
@@ -253,9 +241,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function internalClassesProvider(): array
     {
         $allSymbols = array_merge(
@@ -426,9 +412,7 @@ class ReflectionSourceStubberTest extends TestCase
         }
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function internalFunctionsProvider(): array
     {
         /** @var list<string> $functionNames */
@@ -447,9 +431,7 @@ class ReflectionSourceStubberTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider internalFunctionsProvider
-     */
+    /** @dataProvider internalFunctionsProvider */
     public function testInternalFunctionsReturnType(string $functionName): void
     {
         $stubbedReflection  = $this->reflector->reflectFunction($functionName);
@@ -497,9 +479,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertTrue($parameterReflection->isOptional());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: bool, 3: bool}>
-     */
+    /** @return list<array{0: string, 1: int, 2: bool, 3: bool}> */
     public function variadicParametersProvider(): array
     {
         return [
@@ -508,9 +488,7 @@ class ReflectionSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider variadicParametersProvider
-     */
+    /** @dataProvider variadicParametersProvider */
     public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional): void
     {
         $functionReflection = $this->reflector->reflectFunction($functionName);
@@ -540,9 +518,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame('Core', $stubData->getExtensionName());
     }
 
-    /**
-     * @return list<list<mixed>>
-     */
+    /** @return list<list<mixed>> */
     public function internalConstantsProvider(): array
     {
         $provider = [];
@@ -564,9 +540,7 @@ class ReflectionSourceStubberTest extends TestCase
         return $provider;
     }
 
-    /**
-     * @dataProvider internalConstantsProvider
-     */
+    /** @dataProvider internalConstantsProvider */
     public function testInternalConstants(string $constantName, mixed $constantValue, string $extensionName): void
     {
         $constantReflection = $this->reflector->reflectConstant($constantName);

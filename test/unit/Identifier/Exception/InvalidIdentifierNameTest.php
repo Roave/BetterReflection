@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\Identifier\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 
-/**
- * @covers \Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName
- */
+/** @covers \Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName */
 class InvalidIdentifierNameTest extends TestCase
 {
     public function testFromInvalidName(): void

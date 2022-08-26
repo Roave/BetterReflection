@@ -21,9 +21,7 @@ use stdClass;
 use function array_map;
 use function sort;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator */
 class FileIteratorSourceLocatorTest extends TestCase
 {
     private FileIteratorSourceLocator $sourceLocator;

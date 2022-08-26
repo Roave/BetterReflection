@@ -60,12 +60,12 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->isUserDefined();
     }
 
-    public function getClosureThis(): ?object
+    public function getClosureThis(): object|null
     {
         throw new NotImplemented('Not implemented');
     }
 
-    public function getClosureScopeClass(): ?CoreReflectionClass
+    public function getClosureScopeClass(): CoreReflectionClass|null
     {
         throw new NotImplemented('Not implemented');
     }
@@ -85,10 +85,8 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->getEndLine();
     }
 
-    /**
-     * @psalm-suppress ImplementedReturnTypeMismatch
-     */
-    public function getExtension(): ?CoreReflectionExtension
+    /** @psalm-suppress ImplementedReturnTypeMismatch */
+    public function getExtension(): CoreReflectionExtension|null
     {
         throw new NotImplemented('Not implemented');
     }
@@ -125,9 +123,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->getNumberOfRequiredParameters();
     }
 
-    /**
-     * @return list<ReflectionParameter>
-     */
+    /** @return list<ReflectionParameter> */
     public function getParameters(): array
     {
         return array_map(
@@ -141,7 +137,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->hasReturnType();
     }
 
-    public function getReturnType(): ?CoreReflectionType
+    public function getReturnType(): CoreReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionFunction->getReturnType());
     }
@@ -151,9 +147,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->getShortName();
     }
 
-    /**
-     * @return array<string, scalar>
-     */
+    /** @return array<string, scalar> */
     public function getStaticVariables(): array
     {
         throw new NotImplemented('Not implemented');
@@ -188,9 +182,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         }
     }
 
-    /**
-     * @param list<mixed> $args
-     */
+    /** @param list<mixed> $args */
     public function invokeArgs(array $args): mixed
     {
         try {
@@ -205,9 +197,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->getClosure();
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function getClosureUsedVariables(): array
     {
         throw new Exception\NotImplemented('Not implemented');
@@ -218,7 +208,7 @@ final class ReflectionFunction extends CoreReflectionFunction
         return $this->betterReflectionFunction->hasTentativeReturnType();
     }
 
-    public function getTentativeReturnType(): ?CoreReflectionType
+    public function getTentativeReturnType(): CoreReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionFunction->getTentativeReturnType());
     }
@@ -233,7 +223,7 @@ final class ReflectionFunction extends CoreReflectionFunction
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');

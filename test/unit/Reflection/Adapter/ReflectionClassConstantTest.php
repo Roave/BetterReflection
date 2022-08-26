@@ -21,14 +21,10 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant
- */
+/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant */
 class ReflectionClassConstantTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: string}>
-     */
+    /** @return array<string, array{0: string}> */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionClassConstant::class);
@@ -36,9 +32,7 @@ class ReflectionClassConstantTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /**
-     * @dataProvider coreReflectionMethodNamesProvider
-     */
+    /** @dataProvider coreReflectionMethodNamesProvider */
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionClassConstantAdapterReflection = new CoreReflectionClass(ReflectionClassConstantAdapter::class);
@@ -47,9 +41,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame(ReflectionClassConstantAdapter::class, $reflectionClassConstantAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /**
-     * @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}>
-     */
+    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public function methodExpectationProvider(): array
     {
         return [
@@ -72,7 +64,7 @@ class ReflectionClassConstantTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
 
@@ -91,9 +83,7 @@ class ReflectionClassConstantTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function dataAdapterMethodsForEnumCase(): array
     {
         return [
@@ -105,9 +95,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataAdapterMethodsForEnumCase
-     */
+    /** @dataProvider dataAdapterMethodsForEnumCase */
     public function testAdapterMethodsForEnumCase(string $methodName, mixed $expectedValue): void
     {
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
@@ -115,9 +103,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testGetValueForEnumCase(): void
     {
         require_once __DIR__ . '/../../Fixture/Enums.php';
@@ -322,9 +308,7 @@ class ReflectionClassConstantTest extends TestCase
         $reflectionClassConstantAdapter->getAttributes(null, 123);
     }
 
-    /**
-     * @return list<array{0: BetterReflectionClassConstant|BetterReflectionEnumCase, 1: bool}>
-     */
+    /** @return list<array{0: BetterReflectionClassConstant|BetterReflectionEnumCase, 1: bool}> */
     public function dataIsEnumCase(): array
     {
         return [
@@ -333,9 +317,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataIsEnumCase
-     */
+    /** @dataProvider dataIsEnumCase */
     public function testIsEnumCase(BetterReflectionClassConstant|BetterReflectionEnumCase $classConstantOrEnum, bool $isEnumCase): void
     {
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($classConstantOrEnum);

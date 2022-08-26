@@ -47,9 +47,7 @@ final class ClassLoader
         $this->reflections[$reflectionClass->getName()] = $reflectionClass;
     }
 
-    /**
-     * @throws FailedToLoadClass
-     */
+    /** @throws FailedToLoadClass */
     public function __invoke(string $classToLoad): bool
     {
         if (! array_key_exists($classToLoad, $this->reflections)) {

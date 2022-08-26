@@ -14,9 +14,7 @@ use function strlen;
 use function substr;
 use function var_export;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionAttributeStringCast
 {
     public static function toString(ReflectionAttribute $attributeReflection): string
@@ -33,9 +31,7 @@ final class ReflectionAttributeStringCast
         );
     }
 
-    /**
-     * @param array<int|string, mixed> $arguments
-     */
+    /** @param array<int|string, mixed> $arguments */
     private static function argumentsToString(array $arguments): string
     {
         if ($arguments === []) {

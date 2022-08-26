@@ -49,9 +49,7 @@ use function usort;
 
 use const PHP_VERSION_ID;
 
-/**
- * @internal
- */
+/** @internal */
 final class PhpStormStubsSourceStubber implements SourceStubber
 {
     private const BUILDER_OPTIONS    = ['shortArraySyntax' => true];
@@ -144,7 +142,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     private NodeTraverser $nodeTraverser;
 
-    private ?string $stubsDirectory = null;
+    private string|null $stubsDirectory = null;
 
     private CachingVisitor $cachingVisitor;
 
@@ -205,10 +203,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         self::$mapsInitialized = true;
     }
 
-    /**
-     * @param class-string|trait-string $className
-     */
-    public function generateClassStub(string $className): ?StubData
+    /** @param class-string|trait-string $className */
+    public function generateClassStub(string $className): StubData|null
     {
         $classNodeData = $this->getClassNodeData($className);
 
@@ -242,10 +238,8 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($stub, $extension);
     }
 
-    /**
-     * @return array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}|null
-     */
-    private function getClassNodeData(string $className): ?array
+    /** @return array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}|null */
+    private function getClassNodeData(string $className): array|null
     {
         $lowercaseClassName = strtolower($className);
 
@@ -268,7 +262,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $this->classNodes[$lowercaseClassName];
     }
 
-    public function generateFunctionStub(string $functionName): ?StubData
+    public function generateFunctionStub(string $functionName): StubData|null
     {
         $lowercaseFunctionName = strtolower($functionName);
 
@@ -298,7 +292,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return new StubData($this->createStub($functionNodeData[0], $functionNodeData[1]), $extension);
     }
 
-    public function generateConstantStub(string $constantName): ?StubData
+    public function generateConstantStub(string $constantName): StubData|null
     {
         $lowercaseConstantName = strtolower($constantName);
 
@@ -398,7 +392,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         }
     }
 
-    private function createStub(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node, ?Node\Stmt\Namespace_ $namespaceNode): string
+    private function createStub(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node, Node\Stmt\Namespace_|null $namespaceNode): string
     {
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
@@ -689,9 +683,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $toVersion === null || $toVersion >= $this->phpVersion;
     }
 
-    /**
-     * @return array{0: int|null, 1: int|null}
-     */
+    /** @return array{0: int|null, 1: int|null} */
     private function getSupportedPhpVersions(
         Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
     ): array {
@@ -734,7 +726,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     private function getNodeAttribute(
         Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
         string $attributeName,
-    ): ?Node\Attribute {
+    ): Node\Attribute|null {
         if ($node instanceof Node\Expr\FuncCall || $node instanceof Node\Stmt\Const_) {
             return null;
         }

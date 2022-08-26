@@ -21,9 +21,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function sprintf;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator */
 class EvaledCodeSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
@@ -102,9 +100,7 @@ class EvaledCodeSourceLocatorTest extends TestCase
         self::assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testCanReflectEvaledEnum(): void
     {
         $enumName = uniqid('foo', false);

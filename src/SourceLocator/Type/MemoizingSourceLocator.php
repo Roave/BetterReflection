@@ -25,7 +25,7 @@ final class MemoizingSourceLocator implements SourceLocator
     {
     }
 
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
         $cacheKey = sprintf('%s_%s', $this->reflectorCacheKey($reflector), $this->identifierToCacheKey($identifier));
 
@@ -37,9 +37,7 @@ final class MemoizingSourceLocator implements SourceLocator
             = $this->wrappedSourceLocator->locateIdentifier($reflector, $identifier);
     }
 
-    /**
-     * @return list<Reflection>
-     */
+    /** @return list<Reflection> */
     public function locateIdentifiersByType(Reflector $reflector, IdentifierType $identifierType): array
     {
         $cacheKey = sprintf('%s_%s', $this->reflectorCacheKey($reflector), $this->identifierTypeToCacheKey($identifierType));

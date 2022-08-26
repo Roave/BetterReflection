@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Exception\NoObjectProvided
- */
+/** @covers \Roave\BetterReflection\Reflection\Exception\NoObjectProvided */
 class NoObjectProvidedTest extends TestCase
 {
     public function testFromClassName(): void

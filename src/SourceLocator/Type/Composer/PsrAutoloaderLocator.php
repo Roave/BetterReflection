@@ -25,7 +25,7 @@ final class PsrAutoloaderLocator implements SourceLocator
     {
     }
 
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
         foreach ($this->mapping->resolvePossibleFilePaths($identifier) as $file) {
             try {

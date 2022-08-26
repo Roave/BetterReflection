@@ -9,9 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionEnumCase;
 use function gettype;
 use function sprintf;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionEnumCaseStringCast
 {
     public static function toString(ReflectionEnumCase $enumCaseReflection): string

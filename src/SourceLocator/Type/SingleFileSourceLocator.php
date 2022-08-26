@@ -23,9 +23,7 @@ use function file_get_contents;
  */
 class SingleFileSourceLocator extends AbstractSourceLocator
 {
-    /**
-     * @throws InvalidFileLocation
-     */
+    /** @throws InvalidFileLocation */
     public function __construct(private string $fileName, Locator $astLocator)
     {
         FileChecker::assertReadableFile($fileName);
@@ -39,7 +37,7 @@ class SingleFileSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): LocatedSource|null
     {
         return new LocatedSource(
             file_get_contents($this->fileName),

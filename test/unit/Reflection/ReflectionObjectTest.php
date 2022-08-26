@@ -32,22 +32,16 @@ use function random_int;
 use function realpath;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionObject
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionObject */
 class ReflectionObjectTest extends TestCase
 {
-    /**
-     * @return Node[]
-     */
+    /** @return Node[] */
     private function parse(string $code): array
     {
         return BetterReflectionSingleton::instance()->phpParser()->parse($code);
     }
 
-    /**
-     * @return list<array{0: object, 1: string, 2: int, 3: int}>
-     */
+    /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
     public function anonymousClassInstancesProvider(): array
     {
         $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
@@ -60,9 +54,7 @@ class ReflectionObjectTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider anonymousClassInstancesProvider
-     */
+    /** @dataProvider anonymousClassInstancesProvider */
     public function testReflectionForAnonymousClass(object $anonymousClass, string $file, int $startLine, int $endLine): void
     {
         $classInfo = ReflectionObject::createFromInstance($anonymousClass);

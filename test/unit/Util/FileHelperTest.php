@@ -11,9 +11,7 @@ use function strtr;
 
 use const DIRECTORY_SEPARATOR;
 
-/**
- * @covers \Roave\BetterReflection\Util\FileHelper
- */
+/** @covers \Roave\BetterReflection\Util\FileHelper */
 class FileHelperTest extends TestCase
 {
     public function testNormalizeWindowsPath(): void

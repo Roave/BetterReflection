@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory\Excepti
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson */
 class FailedToParseJsonTest extends TestCase
 {
     public function testInFile(): void

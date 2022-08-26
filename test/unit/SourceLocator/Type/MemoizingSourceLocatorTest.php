@@ -24,9 +24,7 @@ use function range;
 use function spl_object_hash;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator */
 class MemoizingSourceLocatorTest extends TestCase
 {
     private Reflector|MockObject $reflector1;
@@ -134,7 +132,7 @@ class MemoizingSourceLocatorTest extends TestCase
                 IdentifierType $identifierType,
             ) use (
                 $symbols1,
-                $symbols2
+                $symbols2,
             ): array {
                 if ($reflector === $this->reflector1) {
                     return $symbols1[$identifierType->getName()];
@@ -188,8 +186,8 @@ class MemoizingSourceLocatorTest extends TestCase
                 Reflector $reflector,
                 Identifier $identifier,
             ) use (
-                &$fetchedSymbolsCount
-            ): ?Reflection {
+                &$fetchedSymbolsCount,
+            ): Reflection|null {
                 $identifierId = spl_object_hash($identifier);
                 $reflectorId  = spl_object_hash($reflector);
                 $hash         = $reflectorId . $identifierId;

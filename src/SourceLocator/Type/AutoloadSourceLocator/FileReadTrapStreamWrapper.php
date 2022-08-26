@@ -33,7 +33,7 @@ final class FileReadTrapStreamWrapper
     ];
 
     /** @var list<string>|null */
-    private static ?array $registeredStreamWrapperProtocols = null;
+    private static array|null $registeredStreamWrapperProtocols = null;
 
     /**
      * Read this property to determine the last file on which reads were attempted
@@ -41,7 +41,7 @@ final class FileReadTrapStreamWrapper
      * @psalm-readonly
      * @psalm-allow-private-mutation
      */
-    public static ?string $autoloadLocatedFile = null;
+    public static string|null $autoloadLocatedFile = null;
 
     /**
      * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride

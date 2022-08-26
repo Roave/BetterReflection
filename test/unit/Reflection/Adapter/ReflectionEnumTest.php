@@ -37,14 +37,10 @@ use function array_map;
 use function get_class_methods;
 use function is_array;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnum
- */
+/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnum */
 class ReflectionEnumTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: string}>
-     */
+    /** @return array<string, array{0: string}> */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionEnum::class);
@@ -52,9 +48,7 @@ class ReflectionEnumTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /**
-     * @dataProvider coreReflectionMethodNamesProvider
-     */
+    /** @dataProvider coreReflectionMethodNamesProvider */
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionEnumAdapterReflection = new CoreReflectionClass(ReflectionEnumAdapter::class);
@@ -63,9 +57,7 @@ class ReflectionEnumTest extends TestCase
         self::assertSame(ReflectionEnumAdapter::class, $reflectionEnumAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /**
-     * @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}>
-     */
+    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}> */
     public function methodExpectationProvider(): array
     {
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
@@ -148,9 +140,9 @@ class ReflectionEnumTest extends TestCase
         string $methodName,
         array $args,
         mixed $returnValue,
-        ?string $expectedException,
+        string|null $expectedException,
         mixed $expectedReturnValue,
-        ?string $expectedReturnValueInstance,
+        string|null $expectedReturnValueInstance,
     ): void {
         $reflectionStub = $this->createMock(BetterReflectionEnum::class);
 

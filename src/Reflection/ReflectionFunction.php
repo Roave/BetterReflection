@@ -33,24 +33,20 @@ class ReflectionFunction implements Reflection
         private Reflector $reflector,
         private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
-        private ?NamespaceNode $declaringNamespace = null,
+        private NamespaceNode|null $declaringNamespace = null,
     ) {
         assert($node instanceof Node\Stmt\Function_ || $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction);
 
         $this->functionNode = $node;
     }
 
-    /**
-     * @throws IdentifierNotFound
-     */
+    /** @throws IdentifierNotFound */
     public static function createFromName(string $functionName): self
     {
         return (new BetterReflection())->reflector()->reflectFunction($functionName);
     }
 
-    /**
-     * @throws IdentifierNotFound
-     */
+    /** @throws IdentifierNotFound */
     public static function createFromClosure(Closure $closure): self
     {
         $configuration = new BetterReflection();
@@ -66,14 +62,12 @@ class ReflectionFunction implements Reflection
         return ReflectionFunctionStringCast::toString($this);
     }
 
-    /**
-     * @internal
-     */
+    /** @internal */
     public static function createFromNode(
         Reflector $reflector,
         Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $namespaceNode = null,
+        NamespaceNode|null $namespaceNode = null,
     ): self {
         return new self($reflector, $node, $locatedSource, $namespaceNode);
     }
@@ -161,9 +155,7 @@ class ReflectionFunction implements Reflection
         return $functionName(...$args);
     }
 
-    /**
-     * @throws NotImplemented
-     */
+    /** @throws NotImplemented */
     private function assertIsNoClosure(): void
     {
         if ($this->isClosure()) {
@@ -171,9 +163,7 @@ class ReflectionFunction implements Reflection
         }
     }
 
-    /**
-     * @throws FunctionDoesNotExist
-     */
+    /** @throws FunctionDoesNotExist */
     private function assertFunctionExist(string $functionName): void
     {
         if (! function_exists($functionName)) {

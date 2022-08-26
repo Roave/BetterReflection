@@ -26,9 +26,7 @@ use function func_num_args;
 use function sprintf;
 use function strtolower;
 
-/**
- * @psalm-suppress PropertyNotSetInConstructor
- */
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionObject extends CoreReflectionObject
 {
     public function __construct(private BetterReflectionObject $betterReflectionObject)
@@ -117,7 +115,7 @@ final class ReflectionObject extends CoreReflectionObject
      *
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function getMethods(?int $filter = null): array
+    public function getMethods(int|null $filter = null): array
     {
         return array_map(
             static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
@@ -146,7 +144,7 @@ final class ReflectionObject extends CoreReflectionObject
      *
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function getProperties(?int $filter = null): array
+    public function getProperties(int|null $filter = null): array
     {
         return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionObject->getProperties()));
     }
@@ -156,10 +154,8 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->hasConstant($name);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getConstants(?int $filter = null): array
+    /** @return array<string, mixed> */
+    public function getConstants(int|null $filter = null): array
     {
         $reflectionConstants = $this->betterReflectionObject->getReflectionConstants();
 
@@ -192,10 +188,8 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionClassConstant($betterReflectionConstant);
     }
 
-    /**
-     * @return list<ReflectionClassConstant>
-     */
-    public function getReflectionConstants(?int $filter = null): array
+    /** @return list<ReflectionClassConstant> */
+    public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
             static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant),
@@ -203,9 +197,7 @@ final class ReflectionObject extends CoreReflectionObject
         ));
     }
 
-    /**
-     * @return array<class-string, CoreReflectionClass>
-     */
+    /** @return array<class-string, CoreReflectionClass> */
     public function getInterfaces(): array
     {
         return array_map(
@@ -214,9 +206,7 @@ final class ReflectionObject extends CoreReflectionObject
         );
     }
 
-    /**
-     * @return list<class-string>
-     */
+    /** @return list<class-string> */
     public function getInterfaceNames(): array
     {
         return $this->betterReflectionObject->getInterfaceNames();
@@ -227,9 +217,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isInterface();
     }
 
-    /**
-     * @return array<trait-string, ReflectionClass>
-     */
+    /** @return array<trait-string, ReflectionClass> */
     public function getTraits(): array
     {
         $traits = $this->betterReflectionObject->getTraits();
@@ -243,17 +231,13 @@ final class ReflectionObject extends CoreReflectionObject
         );
     }
 
-    /**
-     * @return list<trait-string>
-     */
+    /** @return list<trait-string> */
     public function getTraitNames(): array
     {
         return $this->betterReflectionObject->getTraitNames();
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getTraitAliases(): array
     {
         return $this->betterReflectionObject->getTraitAliases();
@@ -294,7 +278,7 @@ final class ReflectionObject extends CoreReflectionObject
         throw new Exception\NotImplemented('Not implemented');
     }
 
-    public function newInstanceArgs(?array $args = null): ReflectionObject
+    public function newInstanceArgs(array|null $args = null): ReflectionObject
     {
         throw new Exception\NotImplemented('Not implemented');
     }
@@ -310,9 +294,7 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionClass($parentClass);
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
+    /** @psalm-suppress MethodSignatureMismatch */
     public function isSubclassOf(CoreReflectionClass|string $class): bool
     {
         $realParentClassNames = $this->betterReflectionObject->getParentClassNames();
@@ -375,9 +357,7 @@ final class ReflectionObject extends CoreReflectionObject
         $property->setValue($value);
     }
 
-    /**
-     * @return array<string, scalar|array<scalar>|null>
-     */
+    /** @return array<string, scalar|array<scalar>|null> */
     public function getDefaultProperties(): array
     {
         return $this->betterReflectionObject->getDefaultProperties();
@@ -393,9 +373,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->isIterateable();
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
+    /** @psalm-suppress MethodSignatureMismatch */
     public function implementsInterface(CoreReflectionClass|string $interface): bool
     {
         $realInterfaceNames = $this->betterReflectionObject->getInterfaceNames();
@@ -410,7 +388,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->implementsInterface($realInterfaceName);
     }
 
-    public function getExtension(): ?CoreReflectionExtension
+    public function getExtension(): CoreReflectionExtension|null
     {
         throw new Exception\NotImplemented('Not implemented');
     }
@@ -445,7 +423,7 @@ final class ReflectionObject extends CoreReflectionObject
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');

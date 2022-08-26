@@ -21,7 +21,7 @@ interface SourceLocator
      * locate the identifier, it should simply return null. If an exception is
      * thrown, it will break the Generic Reflector.
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection;
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null;
 
     /**
      * Find all identifiers of a type

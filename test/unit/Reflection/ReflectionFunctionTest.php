@@ -20,9 +20,7 @@ use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use stdClass;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionFunction
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionFunction */
 class ReflectionFunctionTest extends TestCase
 {
     private Locator $astLocator;

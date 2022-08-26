@@ -21,14 +21,12 @@ use function sprintf;
 use function strtolower;
 use function strtoupper;
 
-/**
- * @internal
- */
+/** @internal */
 class CachingVisitor extends NodeVisitorAbstract
 {
     private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
 
-    private ?Node\Stmt\Namespace_ $currentNamespace = null;
+    private Node\Stmt\Namespace_|null $currentNamespace = null;
 
     /** @var array<string, array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}> */
     private array $classNodes = [];
@@ -43,7 +41,7 @@ class CachingVisitor extends NodeVisitorAbstract
     {
     }
 
-    public function enterNode(Node $node): ?int
+    public function enterNode(Node $node): int|null
     {
         if ($node instanceof Node\Stmt\Namespace_) {
             $this->currentNamespace = $node;
@@ -155,25 +153,19 @@ class CachingVisitor extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * @return array<string, array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}>
-     */
+    /** @return array<string, array{0: Node\Stmt\ClassLike, 1: Node\Stmt\Namespace_|null}> */
     public function getClassNodes(): array
     {
         return $this->classNodes;
     }
 
-    /**
-     * @return array<string, list<array{0: Node\Stmt\Function_, 1: Node\Stmt\Namespace_|null}>>
-     */
+    /** @return array<string, list<array{0: Node\Stmt\Function_, 1: Node\Stmt\Namespace_|null}>> */
     public function getFunctionNodes(): array
     {
         return $this->functionNodes;
     }
 
-    /**
-     * @return array<string, array{0: Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null}>
-     */
+    /** @return array<string, array{0: Node\Stmt\Const_|Node\Expr\FuncCall, 1: Node\Stmt\Namespace_|null}> */
     public function getConstantNodes(): array
     {
         return $this->constantNodes;

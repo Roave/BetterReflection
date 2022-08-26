@@ -8,14 +8,10 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\IdentifierType;
 
-/**
- * @covers \Roave\BetterReflection\Identifier\IdentifierType
- */
+/** @covers \Roave\BetterReflection\Identifier\IdentifierType */
 class IdentifierTypeTest extends TestCase
 {
-    /**
-     * @return list<list<string>>
-     */
+    /** @return list<list<string>> */
     public function possibleIdentifierTypesProvider(): array
     {
         return [
@@ -25,9 +21,7 @@ class IdentifierTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider possibleIdentifierTypesProvider
-     */
+    /** @dataProvider possibleIdentifierTypesProvider */
     public function testPossibleIdentifierTypes(string $full): void
     {
         $type = new IdentifierType($full);

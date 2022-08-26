@@ -43,9 +43,7 @@ use const PHP_EOL;
 use const PHP_INT_MAX;
 use const PHP_VERSION_ID;
 
-/**
- * @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue
- */
+/** @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue */
 class CompileNodeToValueTest extends TestCase
 {
     private Parser $parser;
@@ -64,9 +62,7 @@ class CompileNodeToValueTest extends TestCase
         $this->sourceStubber = $configuration->sourceStubber();
     }
 
-    /**
-     * @return Node\Stmt\Expression
-     */
+    /** @return Node\Stmt\Expression */
     private function parseCode(string $phpCode): Node\Stmt
     {
         $node = $this->parser->parse('<?php ' . $phpCode . ';')[0];
@@ -98,9 +94,7 @@ class CompileNodeToValueTest extends TestCase
         );
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function nodeProvider(): array
     {
         return [
@@ -201,9 +195,7 @@ class CompileNodeToValueTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider nodeProvider
-     */
+    /** @dataProvider nodeProvider */
     public function testVariousNodeCompilations(string $phpCode, mixed $expectedValue): void
     {
         $node = $this->parseCode($phpCode);
@@ -231,9 +223,7 @@ class CompileNodeToValueTest extends TestCase
         self::assertSame(PHP_VERSION_ID, $compiledValue->value);
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function dataTrueFalseNullShouldNotHaveConstantName(): array
     {
         return [
@@ -246,9 +236,7 @@ class CompileNodeToValueTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataTrueFalseNullShouldNotHaveConstantName
-     */
+    /** @dataProvider dataTrueFalseNullShouldNotHaveConstantName */
     public function testTrueFalseNullShouldNotHaveConstantName(string $value): void
     {
         $node = $this->parseCode($value);
@@ -650,9 +638,7 @@ PHP;
         self::assertSame('parentConstant', $classInfo->getProperty('parentConstant')->getDefaultValue());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsWithoutNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -669,9 +655,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider magicConstantsWithoutNamespaceProvider
-     */
+    /** @dataProvider magicConstantsWithoutNamespaceProvider */
     public function testMagicConstantsWithoutNamespace(string $constantName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -680,9 +664,7 @@ PHP;
         self::assertSame($expectedValue, $constant->getValue());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsInNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -724,12 +706,12 @@ PHP;
                             return $this->next->getSource();
                         }
 
-                        public function getName(): ?string
+                        public function getName(): string|null
                         {
                             return $this->next->getName();
                         }
 
-                        public function getFileName(): ?string
+                        public function getFileName(): string|null
                         {
                             return '/non/existing/path/to/sources.php';
                         }
@@ -739,7 +721,7 @@ PHP;
                             return false;
                         }
 
-                        public function getExtensionName(): ?string
+                        public function getExtensionName(): string|null
                         {
                             return null;
                         }
@@ -749,7 +731,7 @@ PHP;
                             return false;
                         }
 
-                        public function getAliasName(): ?string
+                        public function getAliasName(): string|null
                         {
                             return null;
                         }
@@ -796,9 +778,7 @@ PHP
         );
     }
 
-    /**
-     * @dataProvider magicConstantsInNamespaceProvider
-     */
+    /** @dataProvider magicConstantsInNamespaceProvider */
     public function testMagicConstantsInNamespace(string $constantName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -807,9 +787,7 @@ PHP
         self::assertSame($expectedValue, $constant->getValue());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsInTraitProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -826,9 +804,7 @@ PHP
         ];
     }
 
-    /**
-     * @dataProvider magicConstantsInTraitProvider
-     */
+    /** @dataProvider magicConstantsInTraitProvider */
     public function testMagicConstantsInTrait(string $propertyName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -838,9 +814,7 @@ PHP
         self::assertSame($expectedValue, $property->getDefaultValue());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsInClassProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -857,9 +831,7 @@ PHP
         ];
     }
 
-    /**
-     * @dataProvider magicConstantsInClassProvider
-     */
+    /** @dataProvider magicConstantsInClassProvider */
     public function testMagicConstantsInClass(string $propertyName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -869,9 +841,7 @@ PHP
         self::assertSame($expectedValue, $property->getDefaultValue());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsInMethodProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -888,9 +858,7 @@ PHP
         ];
     }
 
-    /**
-     * @dataProvider magicConstantsInMethodProvider
-     */
+    /** @dataProvider magicConstantsInMethodProvider */
     public function testMagicConstantsInMethod(string $parameterName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -901,9 +869,7 @@ PHP
         self::assertSame($expectedValue, $parameter->getDefaultValue());
     }
 
-    /**
-     * @return list<array{0: string, 1: mixed}>
-     */
+    /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsInFunctionProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -920,9 +886,7 @@ PHP
         ];
     }
 
-    /**
-     * @dataProvider magicConstantsInFunctionProvider
-     */
+    /** @dataProvider magicConstantsInFunctionProvider */
     public function testMagicConstantsInFunction(string $parameterName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -932,9 +896,7 @@ PHP
         self::assertSame($expectedValue, $parameter->getDefaultValue());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
     {
         return [
@@ -943,9 +905,7 @@ PHP
         ];
     }
 
-    /**
-     * @dataProvider fileAndDirectoryMagicConstantsWithoutFileNameProvider
-     */
+    /** @dataProvider fileAndDirectoryMagicConstantsWithoutFileNameProvider */
     public function testFileAndDirectoryMagicConstantsWithoutFileName(string $parameterName): void
     {
         $php = '<?php function functionWithMagicConstants($file = __FILE__, $dir = __DIR__) {}';

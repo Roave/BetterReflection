@@ -20,7 +20,7 @@ class ReflectionClassConstant
 {
     public const IS_FINAL = 32;
 
-    private ?CompiledValue $compiledValue = null;
+    private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
@@ -177,17 +177,13 @@ class ReflectionClassConstant
         return $this->positionInNode;
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
         return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributesByName(string $name): array
     {
         return ReflectionAttributeHelper::filterAttributesByName($this->getAttributes(), $name);

@@ -50,7 +50,7 @@ class DirectoriesSourceLocator implements SourceLocator
         ));
     }
 
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
         return $this->aggregateSourceLocator->locateIdentifier($reflector, $identifier);
     }

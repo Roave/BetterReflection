@@ -14,9 +14,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
 
-/**
- * @covers \Roave\BetterReflection\BetterReflection
- */
+/** @covers \Roave\BetterReflection\BetterReflection */
 final class BetterReflectionTest extends TestCase
 {
     public function testAccessorsReturnTypes(): void

@@ -6,16 +6,12 @@ namespace Roave\BetterReflection\Reflection\Annotation;
 
 use function preg_match;
 
-/**
- * @internal
- */
+/** @internal */
 final class AnnotationHelper
 {
     public const TENTATIVE_RETURN_TYPE_ANNOTATION = 'betterReflectionTentativeReturnType';
 
-    /**
-     * @psalm-pure
-     */
+    /** @psalm-pure */
     public static function isDeprecated(string $docComment): bool
     {
         if ($docComment === '') {
@@ -25,9 +21,7 @@ final class AnnotationHelper
         return preg_match('~\*\s*@deprecated(?=\s|\*)~', $docComment) === 1;
     }
 
-    /**
-     * @psalm-pure
-     */
+    /** @psalm-pure */
     public static function hasTentativeReturnType(string $docComment): bool
     {
         if ($docComment === '') {

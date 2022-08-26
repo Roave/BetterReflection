@@ -60,8 +60,7 @@ trait ReflectionFunctionAbstract
      */
     public function inNamespace(): bool
     {
-        return $this->declaringNamespace !== null
-            && $this->declaringNamespace->name !== null;
+        return $this->declaringNamespace?->name !== null;
     }
 
     /**
@@ -111,7 +110,7 @@ trait ReflectionFunctionAbstract
      * Get a single parameter by name. Returns null if parameter not found for
      * the function.
      */
-    public function getParameter(string $parameterName): ?ReflectionParameter
+    public function getParameter(string $parameterName): ReflectionParameter|null
     {
         foreach ($this->getParameters() as $parameter) {
             if ($parameter->getName() === $parameterName) {
@@ -132,7 +131,7 @@ trait ReflectionFunctionAbstract
         $this->node->setDocComment(new Doc($string));
     }
 
-    public function getFileName(): ?string
+    public function getFileName(): string|null
     {
         return $this->locatedSource->getFileName();
     }
@@ -169,7 +168,7 @@ trait ReflectionFunctionAbstract
         return ! $this->isInternal();
     }
 
-    public function getExtensionName(): ?string
+    public function getExtensionName(): string|null
     {
         return $this->locatedSource->getExtensionName();
     }
@@ -336,9 +335,7 @@ trait ReflectionFunctionAbstract
         return ReflectionType::createFromNode($this->reflector, $this, $returnType);
     }
 
-    /**
-     * @throws Uncloneable
-     */
+    /** @throws Uncloneable */
     public function __clone()
     {
         throw Uncloneable::fromClass(self::class);
@@ -364,7 +361,7 @@ trait ReflectionFunctionAbstract
      * function. If specific formatting is required, you should provide your
      * own implementation of a PrettyPrinter to unparse the AST.
      */
-    public function getBodyCode(?PrettyPrinterAbstract $printer = null): string
+    public function getBodyCode(PrettyPrinterAbstract|null $printer = null): string
     {
         if ($printer === null) {
             $printer = new StandardPrettyPrinter();
@@ -387,9 +384,7 @@ trait ReflectionFunctionAbstract
      */
     abstract public function getAst(): Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction;
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
         /**
@@ -399,9 +394,7 @@ trait ReflectionFunctionAbstract
         return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributesByName(string $name): array
     {
         return ReflectionAttributeHelper::filterAttributesByName($this->getAttributes(), $name);

@@ -20,14 +20,10 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree */
 class FindReflectionsInTreeTest extends TestCase
 {
-    /**
-     * @return Node[]
-     */
+    /** @return Node[] */
     private function getAstForSource(LocatedSource $source): array
     {
         return BetterReflectionSingleton::instance()->phpParser()->parse($source->getSource());
@@ -75,9 +71,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function dataClassTypes(): array
     {
         return [
@@ -88,9 +82,7 @@ class FindReflectionsInTreeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataClassTypes
-     */
+    /** @dataProvider dataClassTypes */
     public function testInvokeCallsReflectNodesForClassTypeWithoutNamespace(string $classType): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
@@ -115,9 +107,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataClassTypes
-     */
+    /** @dataProvider dataClassTypes */
     public function testInvokeCallsReflectNodesForNamespacedClassType(string $classType): void
     {
         $strategy = $this->createMock(NodeToReflection::class);

@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
 
-/**
- * @covers \Roave\BetterReflection\Util\ConstantNodeChecker
- */
+/** @covers \Roave\BetterReflection\Util\ConstantNodeChecker */
 class ConstantNodeCheckerTest extends TestCase
 {
     public function testWithoutName(): void
@@ -109,9 +107,7 @@ class ConstantNodeCheckerTest extends TestCase
         ConstantNodeChecker::assertValidDefineFunctionCall($node);
     }
 
-    /**
-     * @return list<array{0: Node\Expr}>
-     */
+    /** @return list<array{0: Node\Expr}> */
     public function validValuesProvider(): array
     {
         return [
@@ -130,9 +126,7 @@ class ConstantNodeCheckerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validValuesProvider
-     */
+    /** @dataProvider validValuesProvider */
     public function testValidValues(Node\Expr $valueNode): void
     {
         self::expectNotToPerformAssertions();

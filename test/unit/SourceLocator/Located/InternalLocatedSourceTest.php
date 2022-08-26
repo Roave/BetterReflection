@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Located;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource */
 class InternalLocatedSourceTest extends TestCase
 {
     public function testInternalsLocatedSource(): void

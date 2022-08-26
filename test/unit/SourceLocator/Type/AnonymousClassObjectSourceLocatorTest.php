@@ -23,9 +23,7 @@ use stdClass;
 use function realpath;
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator */
 class AnonymousClassObjectSourceLocatorTest extends TestCase
 {
     private Parser $parser;
@@ -40,9 +38,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    /**
-     * @return list<array{0: object, 1: string, 2: int, 3: int}>
-     */
+    /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
     public function anonymousClassInstancesProvider(): array
     {
         $fileWithClasses                = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
@@ -60,9 +56,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider anonymousClassInstancesProvider
-     */
+    /** @dataProvider anonymousClassInstancesProvider */
     public function testLocateIdentifier(object $class, string $file, int $startLine, int $endLine): void
     {
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
@@ -112,9 +106,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::assertNull($reflection);
     }
 
-    /**
-     * @dataProvider anonymousClassInstancesProvider
-     */
+    /** @dataProvider anonymousClassInstancesProvider */
     public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine): void
     {
         /** @var list<ReflectionClass> $reflections */
@@ -176,9 +168,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
     }
 
-    /**
-     * @return list<array{0: string, 1: object}>
-     */
+    /** @return list<array{0: string, 1: object}> */
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
         $file    = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
@@ -190,9 +180,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider
-     */
+    /** @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider */
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, object $class): void
     {
         $this->expectException(TwoAnonymousClassesOnSameLine::class);
@@ -207,9 +195,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         );
     }
 
-    /**
-     * @return list<array{0: object, 1: int, 2: int}>
-     */
+    /** @return list<array{0: object, 1: int, 2: int}> */
     public function nestedAnonymousClassInstancesProvider(): array
     {
         $class = require __DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php';

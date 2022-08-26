@@ -8,9 +8,7 @@ use LogicException;
 
 use function sprintf;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 final class FailedToLoadClass extends LogicException
 {
     public static function fromClassName(string $className): self

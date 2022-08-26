@@ -47,9 +47,7 @@ use function trait_exists;
 use function uniqid;
 use function unlink;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator */
 class AutoloadSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;
@@ -92,9 +90,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertSame('ClassForHinting', $classInfo->getShortName());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadableInterface(): void
     {
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
@@ -111,9 +107,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadedInterface(): void
     {
         self::assertTrue(interface_exists(AutoloadableInterface::class));
@@ -128,9 +122,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadableTrait(): void
     {
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
@@ -145,9 +137,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadedTrait(): void
     {
         self::assertTrue(trait_exists(AutoloadableTrait::class));
@@ -198,9 +188,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadedClassByAlias(): void
     {
         require __DIR__ . '/../../Fixture/AutoloadableByAlias.php';
@@ -413,9 +401,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertFalse(class_exists(AutoloadableClassWithTwoDirectories::class, false));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testWillLocateSourcesInPharPath(): void
     {
         require_once 'phar://' . __DIR__ . '/../../Fixture/autoload.phar/vendor/autoload.php';
@@ -436,7 +422,7 @@ class AutoloadSourceLocatorTest extends TestCase
 
     public function testBrokenAutoloader(): void
     {
-        $getErrorHandler = static function (): ?callable {
+        $getErrorHandler = static function (): callable|null {
             $errorHandler = set_error_handler(static fn (): bool => true);
             restore_error_handler();
 

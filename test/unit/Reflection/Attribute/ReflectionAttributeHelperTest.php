@@ -11,9 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper
- */
+/** @covers \Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper */
 class ReflectionAttributeHelperTest extends TestCase
 {
     public function testCreateAttributes(): void

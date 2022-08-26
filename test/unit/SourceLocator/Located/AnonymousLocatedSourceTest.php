@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource */
 class AnonymousLocatedSourceTest extends TestCase
 {
     public function testInternalsLocatedSource(): void
