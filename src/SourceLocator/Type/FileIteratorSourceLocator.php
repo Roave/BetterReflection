@@ -27,7 +27,7 @@ use const PATHINFO_EXTENSION;
  */
 class FileIteratorSourceLocator implements SourceLocator
 {
-    private ?AggregateSourceLocator $aggregateSourceLocator = null;
+    private AggregateSourceLocator|null $aggregateSourceLocator = null;
 
     /** @var Iterator<SplFileInfo> */
     private Iterator $fileSystemIterator;
@@ -48,14 +48,12 @@ class FileIteratorSourceLocator implements SourceLocator
         $this->fileSystemIterator = $fileInfoIterator;
     }
 
-    /**
-     * @throws InvalidFileLocation
-     */
+    /** @throws InvalidFileLocation */
     private function getAggregatedSourceLocator(): AggregateSourceLocator
     {
         return $this->aggregateSourceLocator
             ?? $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_filter(array_map(
-                function (SplFileInfo $item): ?SingleFileSourceLocator {
+                function (SplFileInfo $item): SingleFileSourceLocator|null {
                     if (! ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) === 'php')) {
                         return null;
                     }
@@ -71,7 +69,7 @@ class FileIteratorSourceLocator implements SourceLocator
      *
      * @throws InvalidFileLocation
      */
-    public function locateIdentifier(Reflector $reflector, Identifier $identifier): ?Reflection
+    public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
         return $this->getAggregatedSourceLocator()->locateIdentifier($reflector, $identifier);
     }

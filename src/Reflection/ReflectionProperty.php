@@ -37,7 +37,7 @@ use function str_contains;
 
 class ReflectionProperty
 {
-    private ?CompiledValue $compiledDefaultValue = null;
+    private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
         private Reflector $reflector,
@@ -184,7 +184,7 @@ class ReflectionProperty
         return $this->isPromoted;
     }
 
-    public function isInitialized(?object $object = null): bool
+    public function isInitialized(object|null $object = null): bool
     {
         if ($object === null && $this->isStatic()) {
             return ! $this->hasType() || $this->hasDefaultValue();
@@ -301,17 +301,13 @@ class ReflectionProperty
         return $this->positionInNode;
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
         return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributesByName(string $name): array
     {
         return ReflectionAttributeHelper::filterAttributesByName($this->getAttributes(), $name);
@@ -342,7 +338,7 @@ class ReflectionProperty
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function getValue(?object $object = null): mixed
+    public function getValue(object|null $object = null): mixed
     {
         $implementingClassName = $this->getImplementingClass()->getName();
 

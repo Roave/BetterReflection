@@ -11,9 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
-/**
- * @internal
- */
+/** @internal */
 interface AstConversionStrategy
 {
     /**
@@ -24,7 +22,7 @@ interface AstConversionStrategy
         Reflector $reflector,
         Node\Stmt\Class_|Node\Stmt\Interface_|Node\Stmt\Trait_|Node\Stmt\Enum_|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction|Node\Stmt\Const_|Node\Expr\FuncCall $node,
         LocatedSource $locatedSource,
-        ?Node\Stmt\Namespace_ $namespace,
-        ?int $positionInNode = null,
+        Node\Stmt\Namespace_|null $namespace,
+        int|null $positionInNode = null,
     ): ReflectionClass|ReflectionConstant|ReflectionFunction;
 }

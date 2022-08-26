@@ -19,9 +19,7 @@ use function array_map;
 use function sort;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator */
 class DirectoriesSourceLocatorTest extends TestCase
 {
     private DirectoriesSourceLocator $sourceLocator;
@@ -88,9 +86,7 @@ class DirectoriesSourceLocatorTest extends TestCase
         new DirectoriesSourceLocator($directories, BetterReflectionSingleton::instance()->astLocator());
     }
 
-    /**
-     * @return list<array{0: list<string>}>
-     */
+    /** @return list<array{0: list<string>}> */
     public function invalidDirectoriesProvider(): array
     {
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';

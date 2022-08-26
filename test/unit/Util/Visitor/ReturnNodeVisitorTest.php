@@ -9,14 +9,10 @@ use PhpParser\NodeTraverser;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
-/**
- * @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor
- */
+/** @covers \Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor */
 class ReturnNodeVisitorTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: list<Node>, 1: int}>
-     */
+    /** @return array<string, array{0: list<Node>, 1: int}> */
     public function outOfScopeNodeTypeProvider(): array
     {
         return [

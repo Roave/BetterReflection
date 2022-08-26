@@ -34,7 +34,7 @@ class ComposerSourceLocator extends AbstractSourceLocator
      * @throws InvalidArgumentException
      * @throws InvalidFileLocation
      */
-    protected function createLocatedSource(Identifier $identifier): ?LocatedSource
+    protected function createLocatedSource(Identifier $identifier): LocatedSource|null
     {
         if ($identifier->getType()->getName() !== IdentifierType::IDENTIFIER_CLASS) {
             return null;

@@ -9,9 +9,7 @@ use RuntimeException;
 
 use function sprintf;
 
-/**
- * @deprecated
- */
+/** @deprecated */
 final class SignatureCheckFailed extends RuntimeException
 {
     public static function fromReflectionClass(ReflectionClass $reflectionClass): self

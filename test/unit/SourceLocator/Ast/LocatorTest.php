@@ -18,9 +18,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Locator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Ast\Locator */
 class LocatorTest extends TestCase
 {
     private Locator $locator;

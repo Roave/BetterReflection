@@ -74,10 +74,8 @@ final class ReflectionSourceStubber implements SourceStubber
         $this->prettyPrinter  = new Standard(self::BUILDER_OPTIONS);
     }
 
-    /**
-     * @param class-string|trait-string $className
-     */
-    public function generateClassStub(string $className): ?StubData
+    /** @param class-string|trait-string $className */
+    public function generateClassStub(string $className): StubData|null
     {
         if (! ClassExistenceChecker::exists($className)) {
             return null;
@@ -126,7 +124,7 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->createStubData($stub, $extensionName);
     }
 
-    public function generateFunctionStub(string $functionName): ?StubData
+    public function generateFunctionStub(string $functionName): StubData|null
     {
         if (! function_exists($functionName)) {
             return null;
@@ -158,7 +156,7 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->createStubData($this->generateStubInNamespace($functionNode->getNode(), $functionReflection->getNamespaceName()), $extensionName);
     }
 
-    public function generateConstantStub(string $constantName): ?StubData
+    public function generateConstantStub(string $constantName): StubData|null
     {
         $constantData = $this->findConstantData($constantName);
 
@@ -177,10 +175,8 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->createStubData($this->generateStub($constantNode), $extensionName);
     }
 
-    /**
-     * @return array{0: scalar|list<scalar>|resource|null, 1: string|null}|null
-     */
-    private function findConstantData(string $constantName): ?array
+    /** @return array{0: scalar|list<scalar>|resource|null, 1: string|null}|null */
+    private function findConstantData(string $constantName): array|null
     {
         /** @var array<string, array<string, scalar|list<scalar>|resource|null>> $constants */
         $constants = get_defined_constants(true);
@@ -634,7 +630,7 @@ final class ReflectionSourceStubber implements SourceStubber
         );
     }
 
-    private function createStubData(string $stub, ?string $extensionName): StubData
+    private function createStubData(string $stub, string|null $extensionName): StubData
     {
         return new StubData($stub, $extensionName);
     }

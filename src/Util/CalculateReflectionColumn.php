@@ -11,9 +11,7 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
 use function strlen;
 use function strrpos;
 
-/**
- * @internal
- */
+/** @internal */
 final class CalculateReflectionColumn
 {
     /**
@@ -42,9 +40,7 @@ final class CalculateReflectionColumn
         return self::calculateColumn($source, $node->getEndFilePos());
     }
 
-    /**
-     * @throws InvalidNodePosition
-     */
+    /** @throws InvalidNodePosition */
     private static function calculateColumn(string $source, int $position): int
     {
         $sourceLength = strlen($source);

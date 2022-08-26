@@ -17,9 +17,7 @@ use Throwable;
 
 use function strtolower;
 
-/**
- * @internal
- */
+/** @internal */
 class Locator
 {
     private FindReflectionsInTree $findReflectionsInTree;
@@ -83,7 +81,7 @@ class Locator
      *
      * @throws IdentifierNotFound
      */
-    private function findInArray(array $reflections, Identifier $identifier, ?string $name): Reflection
+    private function findInArray(array $reflections, Identifier $identifier, string|null $name): Reflection
     {
         if ($name === null) {
             throw IdentifierNotFound::fromIdentifier($identifier);

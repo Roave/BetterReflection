@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
-/**
- * @internal
- */
+/** @internal */
 interface SourceStubber
 {
     /**
@@ -14,15 +12,15 @@ interface SourceStubber
      *
      * @param class-string|trait-string $className
      */
-    public function generateClassStub(string $className): ?StubData;
+    public function generateClassStub(string $className): StubData|null;
 
     /**
      * Generates stub for given function. Returns null when it cannot generate the stub.
      */
-    public function generateFunctionStub(string $functionName): ?StubData;
+    public function generateFunctionStub(string $functionName): StubData|null;
 
     /**
      * Generates stub for given constant. Returns null when it cannot generate the stub.
      */
-    public function generateConstantStub(string $constantName): ?StubData;
+    public function generateConstantStub(string $constantName): StubData|null;
 }

@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine */
 class TwoClosuresOnSameLineTest extends TestCase
 {
     public function testCreate(): void

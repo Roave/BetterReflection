@@ -13,9 +13,7 @@ use function count;
 use function is_string;
 use function sprintf;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionFunctionStringCast
 {
     public static function toString(ReflectionFunction $functionReflection): string

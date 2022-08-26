@@ -24,9 +24,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function realpath;
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator */
 class ClosureSourceLocatorTest extends TestCase
 {
     private Parser $parser;
@@ -41,9 +39,7 @@ class ClosureSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    /**
-     * @return list<array{0: Closure, 1: string, 2: string, 3: int, 4: int}>
-     */
+    /** @return list<array{0: Closure, 1: string, 2: string, 3: int, 4: int}> */
     public function closuresProvider(): array
     {
         $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
@@ -59,9 +55,7 @@ class ClosureSourceLocatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider closuresProvider
-     */
+    /** @dataProvider closuresProvider */
     public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
     {
         $locator = new ClosureSourceLocator($closure, $this->parser);
@@ -102,9 +96,7 @@ class ClosureSourceLocatorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider closuresProvider
-     */
+    /** @dataProvider closuresProvider */
     public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
     {
         /** @var list<ReflectionFunction> $reflections */
@@ -165,9 +157,7 @@ class ClosureSourceLocatorTest extends TestCase
         self::assertCount(0, $reflections);
     }
 
-    /**
-     * @return list<array{0: string, 1: Closure}>
-     */
+    /** @return list<array{0: string, 1: Closure}> */
     public function exceptionIfTwoClosuresOnSameLineProvider(): array
     {
         $file     = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
@@ -179,9 +169,7 @@ class ClosureSourceLocatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider exceptionIfTwoClosuresOnSameLineProvider
-     */
+    /** @dataProvider exceptionIfTwoClosuresOnSameLineProvider */
     public function testTwoClosuresSameLineFails(string $file, Closure $closure): void
     {
         $this->expectException(TwoClosuresOnSameLine::class);

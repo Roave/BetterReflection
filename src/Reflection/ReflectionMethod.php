@@ -35,29 +35,27 @@ class ReflectionMethod
         private Reflector $reflector,
         private MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
-        private ?NamespaceNode $declaringNamespace,
+        private NamespaceNode|null $declaringNamespace,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private ReflectionClass $currentClass,
-        private ?string $aliasName,
+        private string|null $aliasName,
     ) {
         assert($node instanceof MethodNode);
 
         $this->methodNode = $node;
     }
 
-    /**
-     * @internal
-     */
+    /** @internal */
     public static function createFromNode(
         Reflector $reflector,
         MethodNode $node,
         LocatedSource $locatedSource,
-        ?Namespace_ $namespace,
+        Namespace_|null $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         ReflectionClass $currentClass,
-        ?string $aliasName = null,
+        string|null $aliasName = null,
     ): self {
         return new self(
             $reflector,
@@ -108,7 +106,7 @@ class ReflectionMethod
         return $this->methodNode->name->name;
     }
 
-    public function getAliasName(): ?string
+    public function getAliasName(): string|null
     {
         return $this->aliasName;
     }
@@ -154,7 +152,7 @@ class ReflectionMethod
         ));
     }
 
-    private function findPrototype(): ?self
+    private function findPrototype(): self|null
     {
         if ($this->isAbstract()) {
             return $this;
@@ -308,7 +306,7 @@ class ReflectionMethod
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function getClosure(?object $object = null): Closure
+    public function getClosure(object|null $object = null): Closure
     {
         $declaringClassName = $this->getDeclaringClass()->getName();
 
@@ -328,7 +326,7 @@ class ReflectionMethod
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function invoke(?object $object = null, mixed ...$args): mixed
+    public function invoke(object|null $object = null, mixed ...$args): mixed
     {
         return $this->invokeArgs($object, $args);
     }
@@ -340,7 +338,7 @@ class ReflectionMethod
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    public function invokeArgs(?object $object = null, array $args = []): mixed
+    public function invokeArgs(object|null $object = null, array $args = []): mixed
     {
         $implementingClassName = $this->getImplementingClass()->getName();
 
@@ -353,9 +351,7 @@ class ReflectionMethod
         return $this->callObjectMethod($this->assertObject($object), $args);
     }
 
-    /**
-     * @param array<mixed> $args
-     */
+    /** @param array<mixed> $args */
     private function callStaticMethod(array $args): mixed
     {
         $implementingClassName = $this->getImplementingClass()->getName();
@@ -368,9 +364,7 @@ class ReflectionMethod
         return $closure->__invoke($implementingClassName, $this->getName(), $args);
     }
 
-    /**
-     * @param array<mixed> $args
-     */
+    /** @param array<mixed> $args */
     private function callObjectMethod(object $object, array $args): mixed
     {
         /** @psalm-suppress MixedMethodCall */
@@ -381,9 +375,7 @@ class ReflectionMethod
         return $closure->__invoke($object, $this->getName(), $args);
     }
 
-    /**
-     * @throws ClassDoesNotExist
-     */
+    /** @throws ClassDoesNotExist */
     private function assertClassExist(string $className): void
     {
         if (! ClassExistenceChecker::classExists($className) && ! ClassExistenceChecker::traitExists($className)) {
@@ -395,7 +387,7 @@ class ReflectionMethod
      * @throws NoObjectProvided
      * @throws ObjectNotInstanceOfClass
      */
-    private function assertObject(?object $object): object
+    private function assertObject(object|null $object): object
     {
         if ($object === null) {
             throw NoObjectProvided::create();

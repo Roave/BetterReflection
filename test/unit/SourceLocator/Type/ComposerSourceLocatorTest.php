@@ -15,9 +15,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator */
 class ComposerSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

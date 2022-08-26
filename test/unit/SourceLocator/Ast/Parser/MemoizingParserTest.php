@@ -18,9 +18,7 @@ use function range;
 use function spl_object_hash;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser */
 class MemoizingParserTest extends TestCase
 {
     public function testParse(): void

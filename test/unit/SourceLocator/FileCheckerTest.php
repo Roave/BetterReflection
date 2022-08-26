@@ -16,9 +16,7 @@ use function strpos;
 
 use const PHP_OS;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\FileChecker
- */
+/** @covers \Roave\BetterReflection\SourceLocator\FileChecker */
 class FileCheckerTest extends TestCase
 {
     public function testCheckFileThrowsExceptionIfEmptyFileGiven(): void

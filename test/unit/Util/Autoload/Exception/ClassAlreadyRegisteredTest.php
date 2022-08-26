@@ -11,9 +11,7 @@ use Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered;
 use function sprintf;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\Exception\ClassAlreadyRegistered */
 final class ClassAlreadyRegisteredTest extends TestCase
 {
     public function testFromReflectionClass(): void

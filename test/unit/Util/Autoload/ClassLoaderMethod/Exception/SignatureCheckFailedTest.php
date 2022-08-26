@@ -11,9 +11,7 @@ use Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCh
 use function sprintf;
 use function uniqid;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\ClassLoaderMethod\Exception\SignatureCheckFailed */
 final class SignatureCheckFailedTest extends TestCase
 {
     public function testFromReflectionClass(): void

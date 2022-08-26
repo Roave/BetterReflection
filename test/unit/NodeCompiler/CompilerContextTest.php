@@ -12,9 +12,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\NodeCompiler\CompilerContext
- */
+/** @covers \Roave\BetterReflection\NodeCompiler\CompilerContext */
 class CompilerContextTest extends TestCase
 {
     private Locator $astLocator;

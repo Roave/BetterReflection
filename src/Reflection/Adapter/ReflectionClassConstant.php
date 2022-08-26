@@ -123,7 +123,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');

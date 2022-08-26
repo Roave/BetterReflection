@@ -10,16 +10,12 @@ use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use function count;
 use function in_array;
 
-/**
- * @internal
- */
+/** @internal */
 final class ConstantNodeChecker
 {
     private const DEFINE_ARGUMENTS_COUNTS = [2, 3];
 
-    /**
-     * @throws InvalidConstantNode
-     */
+    /** @throws InvalidConstantNode */
     public static function assertValidDefineFunctionCall(Node\Expr\FuncCall $node): void
     {
         if (! ($node->name instanceof Node\Name)) {

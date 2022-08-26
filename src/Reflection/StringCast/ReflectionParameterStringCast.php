@@ -13,9 +13,7 @@ use function strlen;
 use function substr;
 use function var_export;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionParameterStringCast
 {
     public static function toString(ReflectionParameter $parameterReflection): string

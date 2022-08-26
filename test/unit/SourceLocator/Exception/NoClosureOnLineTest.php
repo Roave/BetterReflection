@@ -7,9 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine */
 class NoClosureOnLineTest extends TestCase
 {
     public function testCreate(): void

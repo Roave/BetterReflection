@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Located;
 
-/**
- * @internal
- */
+/** @internal */
 class InternalLocatedSource extends LocatedSource
 {
     public function __construct(string $source, string $name, private string $extensionName)
@@ -19,7 +17,7 @@ class InternalLocatedSource extends LocatedSource
         return true;
     }
 
-    public function getExtensionName(): ?string
+    public function getExtensionName(): string|null
     {
         return $this->extensionName;
     }

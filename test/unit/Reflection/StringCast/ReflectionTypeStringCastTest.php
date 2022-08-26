@@ -15,14 +15,10 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function assert;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionTypeStringCast
- */
+/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionTypeStringCast */
 final class ReflectionTypeStringCastTest extends TestCase
 {
-    /**
-     * @return list<array{0: ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType, 1: string}>
-     */
+    /** @return list<array{0: ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType, 1: string}> */
     public function toStringProvider(): array
     {
         $reflector = new DefaultReflector(new StringSourceLocator(
@@ -64,9 +60,7 @@ PHP
         ];
     }
 
-    /**
-     * @dataProvider toStringProvider
-     */
+    /** @dataProvider toStringProvider */
     public function testToString(
         ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type,
         string $expectedString,

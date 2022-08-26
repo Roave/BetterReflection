@@ -19,9 +19,7 @@ abstract class ReflectionType
     ) {
     }
 
-    /**
-     * @internal
-     */
+    /** @internal */
     public static function createFromNode(
         Reflector $reflector,
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
@@ -73,9 +71,7 @@ abstract class ReflectionType
         return new ReflectionUnionType($reflector, $owner, new UnionType($types));
     }
 
-    /**
-     * @internal
-     */
+    /** @internal */
     public function getOwner(): ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty
     {
         return $this->owner;

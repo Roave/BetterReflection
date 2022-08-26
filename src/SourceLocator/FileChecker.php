@@ -12,9 +12,7 @@ use function sprintf;
 
 class FileChecker
 {
-    /**
-     * @throws InvalidFileLocation
-     */
+    /** @throws InvalidFileLocation */
     public static function assertReadableFile(string $filename): void
     {
         if (empty($filename)) {

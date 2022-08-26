@@ -43,9 +43,7 @@ use TraitWithProperty;
 
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionProperty
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionProperty */
 class ReflectionPropertyTest extends TestCase
 {
     private Reflector $reflector;
@@ -158,9 +156,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('', $property->getDocComment());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: list<string>}>
-     */
+    /** @return list<array{0: string, 1: int, 2: list<string>}> */
     public function modifierProvider(): array
     {
         return [
@@ -239,9 +235,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('Property [ <default> public $publicProperty ]', (string) $classInfo->getProperty('publicProperty'));
     }
 
-    /**
-     * @return list<array{0: string, 1: bool, 2: mixed}>
-     */
+    /** @return list<array{0: string, 1: bool, 2: mixed}> */
     public function propertyDefaultValueProvider(): array
     {
         return [
@@ -255,9 +249,7 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider propertyDefaultValueProvider
-     */
+    /** @dataProvider propertyDefaultValueProvider */
     public function testPropertyDefaultValue(string $propertyName, bool $hasDefaultValue, mixed $defaultValue): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator)))->reflectClass(DefaultProperties::class);
@@ -276,9 +268,7 @@ class ReflectionPropertyTest extends TestCase
         clone $publicProp;
     }
 
-    /**
-     * @dataProvider startEndLineProvider
-     */
+    /** @dataProvider startEndLineProvider */
     public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
         $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -288,9 +278,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -301,9 +289,7 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -313,9 +299,7 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider columnsProvider
-     */
+    /** @dataProvider columnsProvider */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -326,9 +310,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    /**
-     * @return list<array{0: string, 1: int}>
-     */
+    /** @return list<array{0: string, 1: int}> */
     public function getAstProvider(): array
     {
         return [
@@ -339,9 +321,7 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getAstProvider
-     */
+    /** @dataProvider getAstProvider */
     public function testGetAst(string $propertyName, int $positionInAst): void
     {
         $php = <<<'PHP'
@@ -398,9 +378,7 @@ PHP;
         self::assertSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testSetAndGetValueOfStaticProperty(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
@@ -448,9 +426,7 @@ PHP;
         self::assertSame('value', $propertyReflection->getValue());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    /** @runInSeparateProcess */
     public function testSetValueOfStaticPropertyWithValueAsSecondParameter(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
@@ -611,9 +587,7 @@ PHP;
         self::assertTrue($nullableStringPropertyReflection->allowsNull());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function hasTypeProvider(): array
     {
         return [
@@ -625,9 +599,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider hasTypeProvider
-     */
+    /** @dataProvider hasTypeProvider */
     public function testHasType(
         string $propertyName,
         bool $expectedHasType,
@@ -638,9 +610,7 @@ PHP;
         self::assertSame($expectedHasType, $propertyReflection->hasType());
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function getTypeProvider(): array
     {
         return [
@@ -652,9 +622,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider getTypeProvider
-     */
+    /** @dataProvider getTypeProvider */
     public function testGetType(
         string $propertyName,
         string $expectedType,
@@ -667,9 +635,7 @@ PHP;
         self::assertSame($expectedType, (string) $type);
     }
 
-    /**
-     * @return list<array{0: string, 1: object|null, 2: bool}>
-     */
+    /** @return list<array{0: string, 1: object|null, 2: bool}> */
     public function isInitializedProvider(): array
     {
         $object                  = new InitializedProperties();
@@ -686,10 +652,8 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider isInitializedProvider
-     */
-    public function testIsInitialized(string $propertyName, ?object $object, bool $isInitialized): void
+    /** @dataProvider isInitializedProvider */
+    public function testIsInitialized(string $propertyName, object|null $object, bool $isInitialized): void
     {
         $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
 
@@ -716,9 +680,7 @@ PHP;
         $classReflection->getProperty('toBeRemoved')->isInitialized($object);
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function deprecatedDocCommentProvider(): array
     {
         return [
@@ -741,9 +703,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider deprecatedDocCommentProvider
-     */
+    /** @dataProvider deprecatedDocCommentProvider */
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php
@@ -769,9 +729,7 @@ PHP;
         self::assertCount(0, $attributes);
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function dataGetAttributes(): array
     {
         return [
@@ -780,9 +738,7 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider dataGetAttributes
-     */
+    /** @dataProvider dataGetAttributes */
     public function testGetAttributesWithAttributes(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
@@ -793,9 +749,7 @@ PHP;
         self::assertCount(2, $attributes);
     }
 
-    /**
-     * @dataProvider dataGetAttributes
-     */
+    /** @dataProvider dataGetAttributes */
     public function testGetAttributesByName(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
@@ -806,9 +760,7 @@ PHP;
         self::assertCount(1, $attributes);
     }
 
-    /**
-     * @dataProvider dataGetAttributes
-     */
+    /** @dataProvider dataGetAttributes */
     public function testGetAttributesByInstance(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));

@@ -10,9 +10,7 @@ use function gettype;
 use function is_array;
 use function sprintf;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionClassConstantStringCast
 {
     public static function toString(ReflectionClassConstant $constantReflection): string

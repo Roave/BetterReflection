@@ -8,9 +8,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 
 use function sprintf;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionPropertyStringCast
 {
     public static function toString(ReflectionProperty $propertyReflection): string

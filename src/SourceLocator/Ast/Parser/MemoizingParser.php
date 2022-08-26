@@ -15,9 +15,7 @@ use function sprintf;
 use function strlen;
 use function unserialize;
 
-/**
- * @internal
- */
+/** @internal */
 final class MemoizingParser implements Parser
 {
     /** @var array<string, string> indexed by source hash */
@@ -27,10 +25,7 @@ final class MemoizingParser implements Parser
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function parse(string $code, ?ErrorHandler $errorHandler = null): ?array
+    public function parse(string $code, ErrorHandler|null $errorHandler = null): array|null
     {
         // note: this code is mathematically buggy by default, as we are using a hash to identify
         //       cache entries. The string length is added to further reduce likeliness (although

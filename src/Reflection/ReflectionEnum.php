@@ -23,16 +23,14 @@ use function assert;
 class ReflectionEnum extends ReflectionClass
 {
     /** @var array<string, ReflectionEnumCase>|null */
-    private ?array $cachedCases = null;
+    private array|null $cachedCases = null;
 
-    /**
-     * @phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
-     */
+    /** @phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found */
     protected function __construct(
         private Reflector $reflector,
         private EnumNode $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $declaringNamespace = null,
+        NamespaceNode|null $declaringNamespace = null,
     ) {
         parent::__construct($reflector, $node, $locatedSource, $declaringNamespace);
     }
@@ -48,7 +46,7 @@ class ReflectionEnum extends ReflectionClass
         Reflector $reflector,
         ClassNode|InterfaceNode|TraitNode|EnumNode $node,
         LocatedSource $locatedSource,
-        ?NamespaceNode $namespace = null,
+        NamespaceNode|null $namespace = null,
     ): self {
         return new self($reflector, $node, $locatedSource, $namespace);
     }
@@ -60,16 +58,14 @@ class ReflectionEnum extends ReflectionClass
         return array_key_exists($name, $cases);
     }
 
-    public function getCase(string $name): ?ReflectionEnumCase
+    public function getCase(string $name): ReflectionEnumCase|null
     {
         $cases = $this->getCases();
 
         return $cases[$name] ?? null;
     }
 
-    /**
-     * @return array<string, ReflectionEnumCase>
-     */
+    /** @return array<string, ReflectionEnumCase> */
     public function getCases(): array
     {
         if ($this->cachedCases === null) {

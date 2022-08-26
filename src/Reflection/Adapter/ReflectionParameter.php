@@ -16,9 +16,7 @@ use ValueError;
 use function array_map;
 use function sprintf;
 
-/**
- * @psalm-suppress MissingImmutableAnnotation
- */
+/** @psalm-suppress MissingImmutableAnnotation */
 final class ReflectionParameter extends CoreReflectionParameter
 {
     public function __construct(private BetterReflectionParameter $betterReflectionParameter)
@@ -57,7 +55,7 @@ final class ReflectionParameter extends CoreReflectionParameter
         return new ReflectionFunction($function);
     }
 
-    public function getDeclaringClass(): ?CoreReflectionClass
+    public function getDeclaringClass(): CoreReflectionClass|null
     {
         $declaringClass = $this->betterReflectionParameter->getDeclaringClass();
 
@@ -68,7 +66,7 @@ final class ReflectionParameter extends CoreReflectionParameter
         return new ReflectionClass($declaringClass);
     }
 
-    public function getClass(): ?CoreReflectionClass
+    public function getClass(): CoreReflectionClass|null
     {
         $class = $this->betterReflectionParameter->getClass();
 
@@ -149,7 +147,7 @@ final class ReflectionParameter extends CoreReflectionParameter
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');

@@ -14,9 +14,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator
- */
+/** @covers \Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator */
 class SingleFileSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

@@ -28,9 +28,7 @@ use function func_num_args;
 use function sprintf;
 use function strtolower;
 
-/**
- * @psalm-suppress PropertyNotSetInConstructor
- */
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionClass extends CoreReflectionClass
 {
     public function __construct(private BetterReflectionClass|BetterReflectionEnum $betterReflectionClass)
@@ -104,7 +102,7 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->getDocComment() ?: false;
     }
 
-    public function getConstructor(): ?CoreReflectionMethod
+    public function getConstructor(): CoreReflectionMethod|null
     {
         try {
             return new ReflectionMethod($this->betterReflectionClass->getConstructor());
@@ -128,7 +126,7 @@ final class ReflectionClass extends CoreReflectionClass
      *
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function getMethods(?int $filter = null): array
+    public function getMethods(int|null $filter = null): array
     {
         return array_map(static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method), $this->betterReflectionClass->getMethods($filter));
     }
@@ -154,7 +152,7 @@ final class ReflectionClass extends CoreReflectionClass
      *
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function getProperties(?int $filter = null): array
+    public function getProperties(int|null $filter = null): array
     {
         return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionClass->getProperties($filter)));
     }
@@ -168,10 +166,8 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->hasConstant($name);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getConstants(?int $filter = null): array
+    /** @return array<string, mixed> */
+    public function getConstants(int|null $filter = null): array
     {
         return array_map(
             fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed => $this->getConstantValue($betterConstantOrEnumCase),
@@ -217,10 +213,8 @@ final class ReflectionClass extends CoreReflectionClass
         return new ReflectionClassConstant($betterReflectionConstant);
     }
 
-    /**
-     * @return list<ReflectionClassConstant>
-     */
-    public function getReflectionConstants(?int $filter = null): array
+    /** @return list<ReflectionClassConstant> */
+    public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
             static fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnum): ReflectionClassConstant => new ReflectionClassConstant($betterConstantOrEnum),
@@ -228,10 +222,8 @@ final class ReflectionClass extends CoreReflectionClass
         ));
     }
 
-    /**
-     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
-     */
-    private function filterBetterReflectionClassConstants(?int $filter): array
+    /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
+    private function filterBetterReflectionClassConstants(int|null $filter): array
     {
         $reflectionConstants = $this->betterReflectionClass->getReflectionConstants();
 
@@ -255,9 +247,7 @@ final class ReflectionClass extends CoreReflectionClass
         return $reflectionConstants;
     }
 
-    /**
-     * @return array<class-string, CoreReflectionClass>
-     */
+    /** @return array<class-string, CoreReflectionClass> */
     public function getInterfaces(): array
     {
         return array_map(
@@ -266,9 +256,7 @@ final class ReflectionClass extends CoreReflectionClass
         );
     }
 
-    /**
-     * @return list<class-string>
-     */
+    /** @return list<class-string> */
     public function getInterfaceNames(): array
     {
         return $this->betterReflectionClass->getInterfaceNames();
@@ -279,9 +267,7 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->isInterface();
     }
 
-    /**
-     * @return array<trait-string, CoreReflectionClass>
-     */
+    /** @return array<trait-string, CoreReflectionClass> */
     public function getTraits(): array
     {
         $traits = $this->betterReflectionClass->getTraits();
@@ -295,17 +281,13 @@ final class ReflectionClass extends CoreReflectionClass
         );
     }
 
-    /**
-     * @return list<trait-string>
-     */
+    /** @return list<trait-string> */
     public function getTraitNames(): array
     {
         return $this->betterReflectionClass->getTraitNames();
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getTraitAliases(): array
     {
         return $this->betterReflectionClass->getTraitAliases();
@@ -346,7 +328,7 @@ final class ReflectionClass extends CoreReflectionClass
         throw new Exception\NotImplemented('Not implemented');
     }
 
-    public function newInstanceArgs(?array $args = null): object
+    public function newInstanceArgs(array|null $args = null): object
     {
         throw new Exception\NotImplemented('Not implemented');
     }
@@ -362,9 +344,7 @@ final class ReflectionClass extends CoreReflectionClass
         return new self($parentClass);
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
+    /** @psalm-suppress MethodSignatureMismatch */
     public function isSubclassOf(CoreReflectionClass|string $class): bool
     {
         $realParentClassNames = $this->betterReflectionClass->getParentClassNames();
@@ -427,9 +407,7 @@ final class ReflectionClass extends CoreReflectionClass
         $property->setValue($value);
     }
 
-    /**
-     * @return array<string, scalar|array<scalar>|null>
-     */
+    /** @return array<string, scalar|array<scalar>|null> */
     public function getDefaultProperties(): array
     {
         return $this->betterReflectionClass->getDefaultProperties();
@@ -445,9 +423,7 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->isIterateable();
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
+    /** @psalm-suppress MethodSignatureMismatch */
     public function implementsInterface(CoreReflectionClass|string $interface): bool
     {
         $realInterfaceNames = $this->betterReflectionClass->getInterfaceNames();
@@ -462,7 +438,7 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->implementsInterface($realInterfaceName);
     }
 
-    public function getExtension(): ?CoreReflectionExtension
+    public function getExtension(): CoreReflectionExtension|null
     {
         throw new Exception\NotImplemented('Not implemented');
     }
@@ -492,7 +468,7 @@ final class ReflectionClass extends CoreReflectionClass
      *
      * @return list<ReflectionAttribute>
      */
-    public function getAttributes(?string $name = null, int $flags = 0): array
+    public function getAttributes(string|null $name = null, int $flags = 0): array
     {
         if ($flags !== 0 && $flags !== ReflectionAttribute::IS_INSTANCEOF) {
             throw new ValueError('Argument #2 ($flags) must be a valid attribute filter flag');

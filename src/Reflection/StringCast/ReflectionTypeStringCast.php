@@ -12,9 +12,7 @@ use function array_filter;
 use function array_values;
 use function count;
 
-/**
- * @internal
- */
+/** @internal */
 final class ReflectionTypeStringCast
 {
     public static function toString(

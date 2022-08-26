@@ -15,14 +15,10 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute
- */
+/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute */
 class ReflectionAttributeTest extends TestCase
 {
-    /**
-     * @return array<string, array{0: string}>
-     */
+    /** @return array<string, array{0: string}> */
     public function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionAttribute::class);
@@ -30,9 +26,7 @@ class ReflectionAttributeTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /**
-     * @dataProvider coreReflectionMethodNamesProvider
-     */
+    /** @dataProvider coreReflectionMethodNamesProvider */
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionAttributeAdapter::class);
@@ -41,9 +35,7 @@ class ReflectionAttributeTest extends TestCase
         self::assertSame(ReflectionAttributeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /**
-     * @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}>
-     */
+    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public function methodExpectationProvider(): array
     {
         return [
@@ -61,7 +53,7 @@ class ReflectionAttributeTest extends TestCase
      *
      * @dataProvider methodExpectationProvider
      */
-    public function testAdapterMethods(string $methodName, ?string $expectedException, mixed $returnValue, array $args): void
+    public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionAttribute::class);
 

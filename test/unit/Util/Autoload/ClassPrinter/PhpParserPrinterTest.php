@@ -9,9 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter;
 use Roave\BetterReflectionTest\Fixture\TestClassForPhpParserPrinterTest;
 
-/**
- * @covers \Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter
- */
+/** @covers \Roave\BetterReflection\Util\Autoload\ClassPrinter\PhpParserPrinter */
 final class PhpParserPrinterTest extends TestCase
 {
     public function testPrinting(): void

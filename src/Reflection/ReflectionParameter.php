@@ -32,7 +32,7 @@ class ReflectionParameter
 {
     private bool $isOptional;
 
-    private ?CompiledValue $compiledDefaultValue = null;
+    private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
         private Reflector $reflector,
@@ -169,9 +169,7 @@ class ReflectionParameter
         );
     }
 
-    /**
-     * @throws LogicException
-     */
+    /** @throws LogicException */
     private function getCompiledDefaultValue(): CompiledValue
     {
         if (! $this->isDefaultValueAvailable()) {
@@ -213,7 +211,7 @@ class ReflectionParameter
      *
      * This will return null if the declaring function is not a method.
      */
-    public function getDeclaringClass(): ?ReflectionClass
+    public function getDeclaringClass(): ReflectionClass|null
     {
         if ($this->function instanceof ReflectionMethod) {
             return $this->function->getDeclaringClass();
@@ -222,7 +220,7 @@ class ReflectionParameter
         return null;
     }
 
-    public function getImplementingClass(): ?ReflectionClass
+    public function getImplementingClass(): ReflectionClass|null
     {
         if ($this->function instanceof ReflectionMethod) {
             return $this->function->getImplementingClass();
@@ -409,17 +407,13 @@ class ReflectionParameter
         return $this->node->flags !== 0;
     }
 
-    /**
-     * @throws LogicException
-     */
+    /** @throws LogicException */
     public function isDefaultValueConstant(): bool
     {
         return $this->getCompiledDefaultValue()->constantName !== null;
     }
 
-    /**
-     * @throws LogicException
-     */
+    /** @throws LogicException */
     public function getDefaultValueConstantName(): string
     {
         $compiledDefaultValue = $this->getCompiledDefaultValue();
@@ -434,7 +428,7 @@ class ReflectionParameter
     /**
      * Gets a ReflectionClass for the type hint (returns null if not a class)
      */
-    public function getClass(): ?ReflectionClass
+    public function getClass(): ReflectionClass|null
     {
         $type = $this->getType();
 
@@ -460,7 +454,7 @@ class ReflectionParameter
         return $this->getClassFromNamedType($type);
     }
 
-    private function getClassFromNamedType(ReflectionNamedType $namedType): ?ReflectionClass
+    private function getClassFromNamedType(ReflectionNamedType $namedType): ReflectionClass|null
     {
         try {
             return $namedType->getClass();
@@ -519,17 +513,13 @@ class ReflectionParameter
         return $this->node;
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
         return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributesByName(string $name): array
     {
         return ReflectionAttributeHelper::filterAttributesByName($this->getAttributes(), $name);

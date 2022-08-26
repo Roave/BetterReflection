@@ -22,7 +22,7 @@ use function is_string;
 
 class ReflectionEnumCase
 {
-    private ?CompiledValue $compiledValue = null;
+    private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
@@ -31,9 +31,7 @@ class ReflectionEnumCase
     ) {
     }
 
-    /**
-     * @internal
-     */
+    /** @internal */
     public static function createFromNode(
         Reflector $reflector,
         EnumCase $node,
@@ -55,9 +53,7 @@ class ReflectionEnumCase
         return $value;
     }
 
-    /**
-     * @throws LogicException
-     */
+    /** @throws LogicException */
     private function getCompiledValue(): CompiledValue
     {
         if ($this->node->expr === null) {
@@ -119,17 +115,13 @@ class ReflectionEnumCase
         return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
         return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
     }
 
-    /**
-     * @return list<ReflectionAttribute>
-     */
+    /** @return list<ReflectionAttribute> */
     public function getAttributesByName(string $name): array
     {
         return ReflectionAttributeHelper::filterAttributesByName($this->getAttributes(), $name);

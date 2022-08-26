@@ -14,9 +14,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast
- */
+/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast */
 class ReflectionConstantStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -33,9 +31,7 @@ class ReflectionConstantStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function toStringProvider(): array
     {
         return [
@@ -47,9 +43,7 @@ class ReflectionConstantStringCastTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider toStringProvider
-     */
+    /** @dataProvider toStringProvider */
     public function testToString(string $constantName, string $expectedString): void
     {
         $sourceLocator = new AggregateSourceLocator([

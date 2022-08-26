@@ -14,9 +14,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/**
- * @internal
- */
+/** @internal */
 class CompilerContext
 {
     public function __construct(
@@ -30,7 +28,7 @@ class CompilerContext
         return $this->reflector;
     }
 
-    public function getFileName(): ?string
+    public function getFileName(): string|null
     {
         if ($this->contextReflection instanceof ReflectionConstant) {
             return $this->contextReflection->getFileName();
@@ -48,7 +46,7 @@ class CompilerContext
         return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName() ?? '';
     }
 
-    public function getClass(): ?ReflectionClass
+    public function getClass(): ReflectionClass|null
     {
         if ($this->contextReflection instanceof ReflectionClass) {
             return $this->contextReflection;

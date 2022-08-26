@@ -34,9 +34,7 @@ use function next;
 use function reset;
 use function sprintf;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract
- */
+/** @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract */
 class ReflectionFunctionAbstractTest extends TestCase
 {
     private Parser $parser;
@@ -141,9 +139,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($function->isClosure());
     }
 
-    /**
-     * @dataProvider nonDeprecatedProvider
-     */
+    /** @dataProvider nonDeprecatedProvider */
     public function testIsDeprecated(string $comment): void
     {
         $php = sprintf('<?php
@@ -156,9 +152,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertFalse($function->isDeprecated());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function nonDeprecatedProvider(): array
     {
         return [
@@ -183,9 +177,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNull($function->getExtensionName());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function variadicProvider(): array
     {
         return [
@@ -195,9 +187,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider variadicProvider
-     */
+    /** @dataProvider variadicProvider */
     public function testIsVariadic(string $php, bool $expectingVariadic): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -237,9 +227,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider generatorProvider
-     */
+    /** @dataProvider generatorProvider */
     public function testIsGenerator(string $php, bool $expectingGenerator): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -248,9 +236,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($expectingGenerator, $function->isGenerator());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -260,9 +246,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider startEndLineProvider
-     */
+    /** @dataProvider startEndLineProvider */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -272,9 +256,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($expectedEnd, $function->getEndLine());
     }
 
-    /**
-     * @return list<array{0: string, 1: int, 2: int}>
-     */
+    /** @return list<array{0: string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -284,9 +266,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider columnsProvider
-     */
+    /** @dataProvider columnsProvider */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -296,9 +276,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($endColumn, $function->getEndColumn());
     }
 
-    /**
-     * @return list<array{0: string, 1: bool}>
-     */
+    /** @return list<array{0: string, 1: bool}> */
     public function returnsReferenceProvider(): array
     {
         return [
@@ -307,9 +285,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider returnsReferenceProvider
-     */
+    /** @dataProvider returnsReferenceProvider */
     public function testReturnsReference(string $php, bool $expectingReturnsReference): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -421,9 +397,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($locatedSource, $functionInfo->getLocatedSource());
     }
 
-    /**
-     * @return list<array{0: string, 1: string|class-string}>
-     */
+    /** @return list<array{0: string, 1: string|class-string}> */
     public function returnTypeFunctionProvider(): array
     {
         return [
@@ -435,9 +409,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider returnTypeFunctionProvider
-     */
+    /** @dataProvider returnTypeFunctionProvider */
     public function testGetReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
         $functionInfo = (new DefaultReflector(
@@ -476,9 +448,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertFalse($functionInfo->hasReturnType());
     }
 
-    /**
-     * @return list<array{0: string, 1: string}>
-     */
+    /** @return list<array{0: string, 1: string}> */
     public function nullableReturnTypeFunctionProvider(): array
     {
         return [
@@ -488,9 +458,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider nullableReturnTypeFunctionProvider
-     */
+    /** @dataProvider nullableReturnTypeFunctionProvider */
     public function testGetNullableReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
         $functionInfo = (new DefaultReflector(
@@ -503,9 +471,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($reflectionType->allowsNull());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testHasTentativeReturnType(): void
     {
         $classInfo  = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, new ReflectionSourceStubber())))->reflectClass(CoreReflectionClass::class);
@@ -525,9 +491,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($functionInfo->hasReturnType());
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
+    /** @requires PHP >= 8.1 */
     public function testGetTentativeReturnType(): void
     {
         $classInfo  = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, new ReflectionSourceStubber())))->reflectClass(CoreReflectionClass::class);
@@ -751,9 +715,7 @@ PHP;
         self::assertContainsOnlyInstancesOf(Return_::class, $nodes);
     }
 
-    /**
-     * @dataProvider deprecatedDocCommentsProvider
-     */
+    /** @dataProvider deprecatedDocCommentsProvider */
     public function testFunctionsCanBeDeprecated(string $comment): void
     {
         $php = sprintf('<?php
@@ -766,9 +728,7 @@ PHP;
         self::assertTrue($function->isDeprecated());
     }
 
-    /**
-     * @return list<array{0: string}>
-     */
+    /** @return list<array{0: string}> */
     public function deprecatedDocCommentsProvider(): array
     {
         return [
