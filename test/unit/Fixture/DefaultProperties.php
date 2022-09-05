@@ -2,11 +2,14 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
+use AllowDynamicProperties;
+
 trait DefaultPropertiesTrait
 {
     public $fromTrait = 'anything';
 }
 
+#[AllowDynamicProperties]
 class DefaultProperties
 {
     use DefaultPropertiesTrait;
