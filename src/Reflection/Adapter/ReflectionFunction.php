@@ -248,4 +248,9 @@ final class ReflectionFunction extends CoreReflectionFunction
 
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
+
+    public function isAnonymous(): bool
+    {
+        return $this->betterReflectionFunction->isClosure();
+    }
 }

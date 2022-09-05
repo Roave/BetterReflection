@@ -430,4 +430,16 @@ class ReflectionFunctionTest extends TestCase
         /** @phpstan-ignore-next-line */
         $reflectionFunctionAdapter->foo;
     }
+
+    public function testIsAnonymous(): void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('isClosure')
+            ->willReturn(true);
+
+        $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertTrue($reflectionFunctionAdapter->isAnonymous());
+    }
 }
