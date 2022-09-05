@@ -169,6 +169,15 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $this->assertSameInterfaces($original, $stubbed);
 
         foreach ($original->getMethods() as $method) {
+            if (
+                PHP_VERSION_ID >= 80200
+                && $original->getName() === 'SplFixedArray'
+                && in_array($method->getName(), ['__serialize', '__unserialize'], true)
+            ) {
+                // https://github.com/JetBrains/phpstorm-stubs/pull/1439
+                continue;
+            }
+
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
