@@ -358,6 +358,33 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
 
             foreach ($extensionConstants as $constantName => $constantValue) {
+                // https://github.com/JetBrains/phpstorm-stubs/pull/1440
+                if (
+                    in_array($constantName, [
+                        'DECIMAL_POINT',
+                        'THOUSANDS_SEP',
+                        'GROUPING',
+                        'ERA_YEAR',
+                        'INT_CURR_SYMBOL',
+                        'CURRENCY_SYMBOL',
+                        'MON_DECIMAL_POINT',
+                        'MON_THOUSANDS_SEP',
+                        'MON_GROUPING',
+                        'POSITIVE_SIGN',
+                        'NEGATIVE_SIGN',
+                        'INT_FRAC_DIGITS',
+                        'FRAC_DIGITS',
+                        'P_CS_PRECEDES',
+                        'P_SEP_BY_SPACE',
+                        'N_CS_PRECEDES',
+                        'N_SEP_BY_SPACE',
+                        'P_SIGN_POSN',
+                        'N_SIGN_POSN',
+                    ], true)
+                ) {
+                    continue;
+                }
+
                 $provider[] = [$constantName, $constantValue, $extensionName];
             }
         }
