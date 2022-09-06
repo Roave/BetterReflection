@@ -73,6 +73,11 @@ final class ReflectionMethod extends CoreReflectionMethod
         throw new NotImplemented('Not implemented');
     }
 
+    public function getClosureCalledClass(): CoreReflectionClass|null
+    {
+        throw new NotImplemented('Not implemented');
+    }
+
     public function getDocComment(): string|false
     {
         return $this->betterReflectionMethod->getDocComment() ?: false;
