@@ -68,6 +68,10 @@ namespace Roave\BetterReflectionTest\Fixture {
     {
     }
 
+    readonly class ReadOnlyClass
+    {
+    }
+
     trait ExampleTrait
     {
     }

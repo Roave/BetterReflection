@@ -97,6 +97,7 @@ class ReflectionObjectTest extends TestCase
             ['isTrait', [], true, null, true, null],
             ['isAbstract', [], true, null, true, null],
             ['isFinal', [], true, null, true, null],
+            ['isReadOnly', [], true, null, true, null],
             ['getModifiers', [], 123, null, 123, null],
             ['isInstance', [new stdClass()], true, null, true, null],
             ['newInstance', [], null, NotImplemented::class, null, null],

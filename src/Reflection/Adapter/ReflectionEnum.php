@@ -295,6 +295,11 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->betterReflectionEnum->isFinal();
     }
 
+    public function isReadOnly(): bool
+    {
+        return $this->betterReflectionEnum->isReadOnly();
+    }
+
     public function getModifiers(): int
     {
         return $this->betterReflectionEnum->getModifiers();
