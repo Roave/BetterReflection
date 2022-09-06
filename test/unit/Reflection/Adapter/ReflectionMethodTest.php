@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClass
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
+use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
@@ -559,5 +560,29 @@ class ReflectionMethodTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionMethod::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionMethodAdapter->foo;
+    }
+
+    public function testHasPrototypeReturnsTrueWhenPrototypeExists(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getPrototype')
+            ->willReturn($this->createMock(BetterReflectionMethod::class));
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertTrue($reflectionMethodAdapter->hasPrototype());
+    }
+
+    public function testHasPrototypeReturnsFalseWhenNoPrototype(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getPrototype')
+            ->willThrowException(new MethodPrototypeNotFound());
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertFalse($reflectionMethodAdapter->hasPrototype());
     }
 }
