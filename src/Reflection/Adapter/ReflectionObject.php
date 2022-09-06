@@ -258,6 +258,11 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isFinal();
     }
 
+    public function isReadOnly(): bool
+    {
+        return $this->betterReflectionObject->isReadOnly();
+    }
+
     public function getModifiers(): int
     {
         return $this->betterReflectionObject->getModifiers();

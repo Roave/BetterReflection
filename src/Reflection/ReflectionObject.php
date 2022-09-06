@@ -352,6 +352,11 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->isFinal();
     }
 
+    public function isReadOnly(): bool
+    {
+        return $this->reflectionClass->isReadOnly();
+    }
+
     public function getModifiers(): int
     {
         return $this->reflectionClass->getModifiers();
