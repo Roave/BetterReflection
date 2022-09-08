@@ -69,6 +69,26 @@ class UnableToCompileNode extends LogicException
         return $exception;
     }
 
+    public static function becauseOfInvalidEnumCasePropertyFetch(
+        CompilerContext $fetchContext,
+        ReflectionClass $targetClass,
+        Node\Expr\PropertyFetch $propertyFetch,
+    ): self {
+        assert($propertyFetch->var instanceof Node\Expr\ClassConstFetch);
+        assert($propertyFetch->var->name instanceof Node\Identifier);
+        assert($propertyFetch->name instanceof Node\Identifier);
+
+        return new self(sprintf(
+            'Could not get %s::%s->%s while trying to evaluate constant expression in %s in file %s (line %d)',
+            $targetClass->getName(),
+            $propertyFetch->var->name->name,
+            $propertyFetch->name->toString(),
+            self::compilerContextToContextDescription($fetchContext),
+            self::getFileName($fetchContext),
+            $propertyFetch->getLine(),
+        ));
+    }
+
     public static function becauseOfMissingFileName(
         CompilerContext $context,
         Node\Scalar\MagicConst\Dir|Node\Scalar\MagicConst\File $node,

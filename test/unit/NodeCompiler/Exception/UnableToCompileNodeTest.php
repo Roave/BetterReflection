@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\NodeCompiler\Exception;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
@@ -95,6 +96,35 @@ final class UnableToCompileNodeTest extends TestCase
                 new ClassConstFetch(
                     new Name\FullyQualified('A'),
                     new Identifier('SOME_CONSTANT'),
+                ),
+            )->getMessage(),
+        );
+    }
+
+    /** @dataProvider supportedContextTypes */
+    public function testBecauseOfOfInvalidEnumCasePropertyFetch(CompilerContext $context, string $contextName): void
+    {
+        $targetClass = $this->createMock(ReflectionClass::class);
+
+        $targetClass
+            ->expects(self::any())
+            ->method('getName')
+            ->willReturn('An\\Example');
+
+        self::assertSame(
+            sprintf(
+                'Could not get An\Example::SOME_CONSTANT->value while trying to evaluate constant expression in %s in file "" (line -1)',
+                $contextName,
+            ),
+            UnableToCompileNode::becauseOfInvalidEnumCasePropertyFetch(
+                $context,
+                $targetClass,
+                new PropertyFetch(
+                    new ClassConstFetch(
+                        new Name\FullyQualified('A'),
+                        new Identifier('SOME_CONSTANT'),
+                    ),
+                    'value',
                 ),
             )->getMessage(),
         );
