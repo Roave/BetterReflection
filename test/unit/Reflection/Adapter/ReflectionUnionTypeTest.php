@@ -6,8 +6,11 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionType as CoreReflectionType;
 use ReflectionUnionType as CoreReflectionUnionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionUnionType as ReflectionUnionTypeAdapter;
+use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 
 use function array_combine;
@@ -66,5 +69,31 @@ class ReflectionUnionTypeTest extends TestCase
 
         $adapter = new ReflectionUnionTypeAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
+    }
+
+    public function testGetTypes(): void
+    {
+        $betterReflectionType1 = $this->createMock(BetterReflectionNamedType::class);
+        $betterReflectionType2 = $this->createMock(BetterReflectionNamedType::class);
+        $betterReflectionType3 = $this->createMock(BetterReflectionNamedType::class);
+        $betterReflectionType4 = $this->createMock(BetterReflectionIntersectionType::class);
+        $betterReflectionType4
+            ->method('getTypes')
+            ->willReturn([
+                $betterReflectionType1,
+                $betterReflectionType2,
+            ]);
+
+        $betterReflectionUnionType = $this->createMock(BetterReflectionUnionType::class);
+        $betterReflectionUnionType
+            ->method('getTypes')
+            ->willReturn([
+                $betterReflectionType3,
+                $betterReflectionType4,
+            ]);
+
+        $reflectionUnionTypeAdapter = new ReflectionUnionTypeAdapter($betterReflectionUnionType);
+
+        self::assertContainsOnlyInstancesOf(CoreReflectionType::class, $reflectionUnionTypeAdapter->getTypes());
     }
 }

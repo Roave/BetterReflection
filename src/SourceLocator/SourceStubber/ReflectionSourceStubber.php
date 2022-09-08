@@ -43,6 +43,7 @@ use Roave\BetterReflection\Util\ClassExistenceChecker;
 
 use function array_diff;
 use function array_key_exists;
+use function array_map;
 use function assert;
 use function explode;
 use function function_exists;
@@ -573,28 +574,23 @@ final class ReflectionSourceStubber implements SourceStubber
         $parameterNode->setDefault($parameterReflection->getDefaultValue());
     }
 
-    private function formatType(CoreReflectionNamedType|CoreReflectionUnionType|CoreReflectionIntersectionType $type): Name|FullyQualified|Node\NullableType|Node\UnionType|Node\IntersectionType
+    private function formatType(CoreReflectionType $type): Name|NullableType|UnionType|IntersectionType
     {
         if ($type instanceof CoreReflectionIntersectionType) {
-            $types = [];
-
-            foreach ($type->getTypes() as $innerType) {
-                assert($innerType instanceof CoreReflectionNamedType);
-                $types[] = $this->formatNamedType($innerType);
-            }
+            /** @var list<Name> $types */
+            $types = $this->formatTypes($type->getTypes());
 
             return new IntersectionType($types);
         }
 
         if ($type instanceof CoreReflectionUnionType) {
-            $types = [];
-
-            foreach ($type->getTypes() as $innerType) {
-                $types[] = $this->formatNamedType($innerType);
-            }
+            /** @var list<Name|IntersectionType> $types */
+            $types = $this->formatTypes($type->getTypes());
 
             return new UnionType($types);
         }
+
+        assert($type instanceof CoreReflectionNamedType);
 
         $name     = $type->getName();
         $nameNode = $this->formatNamedType($type);
@@ -606,7 +602,22 @@ final class ReflectionSourceStubber implements SourceStubber
         return new NullableType($nameNode);
     }
 
-    private function formatNamedType(CoreReflectionNamedType $type): Name|FullyQualified
+    /**
+     * @param list<CoreReflectionType> $types
+     *
+     * @return list<Name|UnionType|IntersectionType>
+     */
+    private function formatTypes(array $types): array
+    {
+        return array_map(function (CoreReflectionType $type): Name|UnionType|IntersectionType {
+            $formatedType = $this->formatType($type);
+            assert($formatedType instanceof Name || $formatedType instanceof UnionType || $formatedType instanceof IntersectionType);
+
+            return $formatedType;
+        }, $types);
+    }
+
+    private function formatNamedType(CoreReflectionNamedType $type): Name
     {
         $name = $type->getName();
 

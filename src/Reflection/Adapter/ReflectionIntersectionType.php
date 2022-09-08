@@ -7,10 +7,9 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionIntersectionType as CoreReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
-use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 
-use function array_filter;
 use function array_map;
+use function assert;
 
 class ReflectionIntersectionType extends CoreReflectionIntersectionType
 {
@@ -18,13 +17,15 @@ class ReflectionIntersectionType extends CoreReflectionIntersectionType
     {
     }
 
-    /** @return array<ReflectionNamedType> */
+    /** @return non-empty-list<ReflectionNamedType> */
     public function getTypes(): array
     {
-        return array_filter(
-            array_map(static fn (BetterReflectionNamedType|BetterReflectionUnionType|BetterReflectionIntersectionType $type): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null => ReflectionType::fromTypeOrNull($type), $this->betterReflectionType->getTypes()),
-            static fn (ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type): bool => $type instanceof ReflectionNamedType,
-        );
+        return array_map(static function (BetterReflectionNamedType $type): ReflectionNamedType {
+            $adapterType = ReflectionType::fromType($type);
+            assert($adapterType instanceof ReflectionNamedType);
+
+            return $adapterType;
+        }, $this->betterReflectionType->getTypes());
     }
 
     public function __toString(): string

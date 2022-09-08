@@ -15,24 +15,27 @@ use function implode;
 
 class ReflectionIntersectionType extends ReflectionType
 {
-    /** @var list<ReflectionNamedType> */
+    /** @var non-empty-list<ReflectionNamedType> */
     private array $types;
 
     /** @internal */
     public function __construct(
-        private Reflector $reflector,
-        private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        Reflector $reflector,
+        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         IntersectionType $type,
     ) {
-        $this->types = array_values(array_map(function (Node\Identifier|Node\Name $type): ReflectionNamedType {
-            $type = ReflectionType::createFromNode($this->reflector, $this->owner, $type);
+        /** @var non-empty-list<ReflectionNamedType> $types */
+        $types = array_values(array_map(static function (Node\Identifier|Node\Name $type) use ($reflector, $owner): ReflectionNamedType {
+            $type = ReflectionType::createFromNode($reflector, $owner, $type);
             assert($type instanceof ReflectionNamedType);
 
             return $type;
         }, $type->types));
+
+        $this->types = $types;
     }
 
-    /** @return list<ReflectionNamedType> */
+    /** @return non-empty-list<ReflectionNamedType> */
     public function getTypes(): array
     {
         return $this->types;
