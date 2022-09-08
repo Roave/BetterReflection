@@ -70,6 +70,8 @@ class ReflectionTypeTest extends TestCase
             ],
             [new Node\Name('null'), false, ReflectionNamedType::class, 'null', true],
             [new Node\Name('null'), true, ReflectionNamedType::class, 'null', true],
+            [new Node\Name('mixed'), false, ReflectionNamedType::class, 'mixed', true],
+            [new Node\Name('mixed'), true, ReflectionNamedType::class, 'mixed', true],
         ];
     }
 

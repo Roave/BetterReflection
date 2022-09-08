@@ -34,6 +34,7 @@ abstract class ReflectionType
         if ($type instanceof Identifier || $type instanceof Name) {
             if (
                 $type->toLowerString() === 'null'
+                || $type->toLowerString() === 'mixed'
                 || ! $allowsNull
             ) {
                 return new ReflectionNamedType($reflector, $owner, $type);
