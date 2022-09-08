@@ -51,15 +51,17 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataMixedAllowsNull(): array
+    public function dataAllowsNull(): array
     {
         return [
             ['mixed'],
             ['MIXED'],
+            ['null'],
+            ['NuLl'],
         ];
     }
 
-    /** @dataProvider dataMixedAllowsNull */
+    /** @dataProvider dataAllowsNull */
     public function testMixedAllowsNull(string $mixedType): void
     {
         $noNullType = $this->createType($mixedType);
@@ -86,6 +88,8 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['FALSE'];
         yield ['true'];
         yield ['TRUE'];
+        yield ['null'];
+        yield ['NULL'];
     }
 
     /** @dataProvider isBuildinProvider */

@@ -32,15 +32,18 @@ abstract class ReflectionType
         }
 
         if ($type instanceof Identifier || $type instanceof Name) {
-            if ($allowsNull) {
-                return new ReflectionUnionType(
-                    $reflector,
-                    $owner,
-                    new UnionType([$type, new Identifier('null')]),
-                );
+            if (
+                $type->toLowerString() === 'null'
+                || ! $allowsNull
+            ) {
+                return new ReflectionNamedType($reflector, $owner, $type);
             }
 
-            return new ReflectionNamedType($reflector, $owner, $type);
+            return new ReflectionUnionType(
+                $reflector,
+                $owner,
+                new UnionType([$type, new Identifier('null')]),
+            );
         }
 
         if ($type instanceof IntersectionType) {
