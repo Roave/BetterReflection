@@ -23,8 +23,17 @@ final class ReflectionNamedType extends CoreReflectionNamedType
 
     public function __toString(): string
     {
-        return ($this->allowsNull && strtolower($this->betterReflectionType->getName()) !== 'mixed' ? '?' : '')
-            . $this->betterReflectionType->__toString();
+        $type = strtolower($this->betterReflectionType->getName());
+
+        if (
+            ! $this->allowsNull
+            || $type === 'mixed'
+            || $type === 'null'
+        ) {
+            return $this->betterReflectionType->__toString();
+        }
+
+        return '?' . $this->betterReflectionType->__toString();
     }
 
     public function allowsNull(): bool

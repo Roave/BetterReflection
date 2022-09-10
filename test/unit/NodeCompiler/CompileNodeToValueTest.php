@@ -638,6 +638,106 @@ PHP;
         self::assertSame('parentConstant', $classInfo->getProperty('parentConstant')->getDefaultValue());
     }
 
+    /** @return list<array{0: string, 1: string|int}> */
+    public function enumCasePropertyProvider(): array
+    {
+        return [
+            ['name', 'ONE'],
+            ['value', 1],
+        ];
+    }
+
+    /** @dataProvider enumCasePropertyProvider */
+    public function testEnumPropertyValue(string $propertyName, string|int $expectedPropertyValue): void
+    {
+        $phpCode = sprintf(
+            <<<'PHP'
+            <?php
+
+            enum Foo: int {
+                case ONE = 1;
+            }
+            class Bat {
+                const ONE_VALUE = Foo::ONE->%s;
+            }
+            PHP,
+            $propertyName,
+        );
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($phpCode, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classInfo = $reflector->reflectClass('Bat');
+        self::assertSame($expectedPropertyValue, $classInfo->getConstant('ONE_VALUE'));
+    }
+
+    public function testEnumPropertyValueThrowsExceptionWhenNoEnum(): void
+    {
+        $phpCode = <<<'PHP'
+        <?php
+
+        class Foo {
+            const ONE = 1;
+        }
+        class Bat {
+            const ONE_VALUE = Foo::ONE->value;
+        }
+        PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+        $classInfo = $reflector->reflectClass('Bat');
+
+        self::expectException(UnableToCompileNode::class);
+        $classInfo->getConstant('ONE_VALUE');
+    }
+
+    public function testEnumPropertyValueThrowsExceptionWhenCaseDoesNotExist(): void
+    {
+        $phpCode = <<<'PHP'
+        <?php
+
+        enum Foo: int {
+            case ONE = 1;
+        }
+        class Bat {
+            const TWO_VALUE = Foo::TWO->value;
+        }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($phpCode, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classInfo = $reflector->reflectClass('Bat');
+
+        self::expectException(UnableToCompileNode::class);
+        $classInfo->getConstant('TWO_VALUE');
+    }
+
+    public function testEnumPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
+    {
+        $phpCode = <<<'PHP'
+        <?php
+
+        enum Foo: int {
+            case ONE = 1;
+        }
+        class Bat {
+            const ONE_VALUE = Foo::ONE->missing;
+        }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($phpCode, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classInfo = $reflector->reflectClass('Bat');
+
+        self::expectException(UnableToCompileNode::class);
+        $classInfo->getConstant('ONE_VALUE');
+    }
+
     /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsWithoutNamespaceProvider(): array
     {

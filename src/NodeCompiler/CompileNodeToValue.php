@@ -8,6 +8,7 @@ use PhpParser\ConstExprEvaluator;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
 
@@ -121,6 +122,13 @@ class CompileNodeToValue
                 return constant($node->args[0]->value->value);
             }
 
+            if (
+                $node instanceof Node\Expr\PropertyFetch
+                && $node->var instanceof Node\Expr\ClassConstFetch
+            ) {
+                return $this->getEnumPropertyValue($node, $context);
+            }
+
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
         });
 
@@ -128,6 +136,35 @@ class CompileNodeToValue
         $value = $constExprEvaluator->evaluateDirectly($node);
 
         return new CompiledValue($value, $constantName);
+    }
+
+    private function getEnumPropertyValue(Node\Expr\PropertyFetch $node, CompilerContext $context): mixed
+    {
+        assert($node->var instanceof Node\Expr\ClassConstFetch);
+        assert($node->var->class instanceof Node\Name);
+
+        $className = $this->resolveClassName($node->var->class->toString(), $context);
+        $class     = $context->getReflector()->reflectClass($className);
+
+        if (! $class instanceof ReflectionEnum) {
+            throw Exception\UnableToCompileNode::becauseOfInvalidEnumCasePropertyFetch($context, $class, $node);
+        }
+
+        assert($node->var->name instanceof Node\Identifier);
+
+        $case = $class->getCase($node->var->name->name);
+
+        if ($case === null) {
+            throw Exception\UnableToCompileNode::becauseOfInvalidEnumCasePropertyFetch($context, $class, $node);
+        }
+
+        assert($node->name instanceof Node\Identifier);
+
+        return match ($node->name->toString()) {
+            'value' => $case->getValue(),
+            'name' => $case->getName(),
+            default => throw Exception\UnableToCompileNode::becauseOfInvalidEnumCasePropertyFetch($context, $class, $node),
+        };
     }
 
     private function resolveConstantName(Node\Expr\ConstFetch $constNode, CompilerContext $context): string

@@ -308,6 +308,11 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->isFinal();
     }
 
+    public function isReadOnly(): bool
+    {
+        return $this->betterReflectionClass->isReadOnly();
+    }
+
     public function getModifiers(): int
     {
         return $this->betterReflectionClass->getModifiers();

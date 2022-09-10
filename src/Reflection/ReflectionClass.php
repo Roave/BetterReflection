@@ -62,6 +62,14 @@ use function strtolower;
 
 class ReflectionClass implements Reflection
 {
+    /**
+     * We cannot use CoreReflectionClass::IS_READONLY because it does not exist in PHP < 8.2.
+     * Constant is public, so we can use it in tests.
+     *
+     * @internal
+     */
+    public const IS_READONLY = 65536;
+
     public const ANONYMOUS_CLASS_NAME_PREFIX        = 'class@anonymous';
     public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
     private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
@@ -1055,6 +1063,11 @@ class ReflectionClass implements Reflection
         return $this->node instanceof ClassNode && $this->node->isFinal();
     }
 
+    public function isReadOnly(): bool
+    {
+        return $this->node instanceof ClassNode && $this->node->isReadonly();
+    }
+
     /**
      * Get the core-reflection-compatible modifier values.
      */
@@ -1062,6 +1075,7 @@ class ReflectionClass implements Reflection
     {
         $val  = $this->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $val += $this->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
+        $val += $this->isReadOnly() ? self::IS_READONLY : 0;
 
         return $val;
     }

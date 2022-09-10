@@ -16,7 +16,6 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\TestCase;
 use Qux;
-use Reflection as CoreReflection;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
@@ -74,6 +73,7 @@ use Roave\BetterReflectionTest\Fixture\InterfaceForEnum;
 use Roave\BetterReflectionTest\Fixture\InvalidInheritances;
 use Roave\BetterReflectionTest\Fixture\MethodsOrder;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
+use Roave\BetterReflectionTest\Fixture\ReadOnlyClass;
 use Roave\BetterReflectionTest\Fixture\StaticProperties;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
@@ -1130,22 +1130,33 @@ PHP;
         self::assertTrue($classInfo->isFinal());
     }
 
-    /** @return list<array{0: string, 1: int, 2: list<string>}> */
+    public function testIsReadOnly(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ExampleClass.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflectClass(ReadOnlyClass::class);
+        self::assertTrue($classInfo->isReadOnly());
+
+        $classInfo = $reflector->reflectClass(ExampleClass::class);
+        self::assertFalse($classInfo->isReadOnly());
+    }
+
+    /** @return list<array{0: string, 1: int}> */
     public function modifierProvider(): array
     {
         return [
-            ['ExampleClass', 0, []],
-            ['AbstractClass', CoreReflectionClass::IS_EXPLICIT_ABSTRACT, ['abstract']],
-            ['FinalClass', CoreReflectionClass::IS_FINAL, ['final']],
+            ['ExampleClass', 0],
+            ['AbstractClass', CoreReflectionClass::IS_EXPLICIT_ABSTRACT],
+            ['FinalClass', CoreReflectionClass::IS_FINAL],
+            ['ReadOnlyClass', ReflectionClass::IS_READONLY],
         ];
     }
 
-    /**
-     * @param list<string> $expectedModifierNames
-     *
-     * @dataProvider modifierProvider
-     */
-    public function testGetModifiers(string $className, int $expectedModifier, array $expectedModifierNames): void
+    /** @dataProvider modifierProvider */
+    public function testGetModifiers(string $className, int $expectedModifier): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
@@ -1155,10 +1166,6 @@ PHP;
         $classInfo = $reflector->reflectClass('\Roave\BetterReflectionTest\Fixture\\' . $className);
 
         self::assertSame($expectedModifier, $classInfo->getModifiers());
-        self::assertSame(
-            $expectedModifierNames,
-            CoreReflection::getModifierNames($classInfo->getModifiers()),
-        );
     }
 
     public function testIsTrait(): void
