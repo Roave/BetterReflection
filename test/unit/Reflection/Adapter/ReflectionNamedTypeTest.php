@@ -53,6 +53,8 @@ class ReflectionNamedTypeTest extends TestCase
         return [
             ['mixed'],
             ['MiXeD'],
+            ['null'],
+            ['nULl'],
         ];
     }
 

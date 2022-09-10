@@ -599,7 +599,7 @@ final class ReflectionSourceStubber implements SourceStubber
         $name     = $type->getName();
         $nameNode = $this->formatNamedType($type);
 
-        if (! $type->allowsNull() || $name === 'mixed') {
+        if (! $type->allowsNull() || $name === 'mixed' || $name === 'null') {
             return $nameNode;
         }
 
