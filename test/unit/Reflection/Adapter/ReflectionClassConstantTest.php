@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
@@ -52,7 +53,6 @@ class ReflectionClassConstantTest extends TestCase
             ['isPrivate', null, true, []],
             ['isProtected', null, true, []],
             ['getModifiers', null, 123, []],
-            ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
             ['getDocComment', null, '', []],
             ['getAttributes', null, [], []],
             ['isFinal', null, true, []],
@@ -345,7 +345,7 @@ class ReflectionClassConstantTest extends TestCase
 
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
-            ->method('getDeclaringClass')
+            ->method('getImplementingClass')
             ->willReturn($betterReflectionClass);
 
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
@@ -360,5 +360,23 @@ class ReflectionClassConstantTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionClassConstantAdapter->foo;
+    }
+
+    public function testGetDeclaringClass(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('DeclaringClass');
+
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getImplementingClass')
+            ->willReturn($betterReflectionClass);
+
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
+
+        self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionClassConstantAdapter->getDeclaringClass());
+        self::assertSame('DeclaringClass', $reflectionClassConstantAdapter->getDeclaringClass()->getName());
     }
 }
