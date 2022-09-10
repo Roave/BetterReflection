@@ -2,6 +2,9 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]
 class RuntimeProperties
 {
     public $publicProperty;

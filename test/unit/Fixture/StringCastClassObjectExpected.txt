@@ -1,5 +1,5 @@
 Object of class [ <user> class Roave\BetterReflectionTest\Fixture\StringCastClassObject ] {
-  @@ %s/Fixture/StringCastClassObject.php 5-8
+  @@ %s/Fixture/StringCastClassObject.php 7-11
 
   - Constants [0] {
   }

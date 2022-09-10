@@ -70,6 +70,11 @@ final class ReflectionFunction extends CoreReflectionFunction
         throw new NotImplemented('Not implemented');
     }
 
+    public function getClosureCalledClass(): CoreReflectionClass|null
+    {
+        throw new NotImplemented('Not implemented');
+    }
+
     public function getDocComment(): string|false
     {
         return $this->betterReflectionFunction->getDocComment() ?: false;
@@ -247,5 +252,10 @@ final class ReflectionFunction extends CoreReflectionFunction
         }
 
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
+    }
+
+    public function isAnonymous(): bool
+    {
+        return $this->betterReflectionFunction->isClosure();
     }
 }

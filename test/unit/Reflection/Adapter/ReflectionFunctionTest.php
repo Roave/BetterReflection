@@ -72,6 +72,7 @@ class ReflectionFunctionTest extends TestCase
             ['isUserDefined', [], true, null, true, null],
             ['getClosureThis', [], null, NotImplemented::class, null, null],
             ['getClosureScopeClass', [], null, NotImplemented::class, null, null],
+            ['getClosureCalledClass', [], null, NotImplemented::class, null, null],
             ['getDocComment', [], '', null, false, null],
             ['getStartLine', [], 123, null, 123, null],
             ['getEndLine', [], 123, null, 123, null],
@@ -429,5 +430,17 @@ class ReflectionFunctionTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionFunction::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionFunctionAdapter->foo;
+    }
+
+    public function testIsAnonymous(): void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('isClosure')
+            ->willReturn(true);
+
+        $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertTrue($reflectionFunctionAdapter->isAnonymous());
     }
 }

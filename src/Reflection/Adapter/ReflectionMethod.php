@@ -12,6 +12,7 @@ use ReflectionExtension as CoreReflectionExtension;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -68,6 +69,11 @@ final class ReflectionMethod extends CoreReflectionMethod
     }
 
     public function getClosureScopeClass(): CoreReflectionClass|null
+    {
+        throw new NotImplemented('Not implemented');
+    }
+
+    public function getClosureCalledClass(): CoreReflectionClass|null
     {
         throw new NotImplemented('Not implemented');
     }
@@ -258,6 +264,17 @@ final class ReflectionMethod extends CoreReflectionMethod
     public function getPrototype(): ReflectionMethod
     {
         return new self($this->betterReflectionMethod->getPrototype());
+    }
+
+    public function hasPrototype(): bool
+    {
+        try {
+            $this->betterReflectionMethod->getPrototype();
+
+            return true;
+        } catch (MethodPrototypeNotFound) {
+            return false;
+        }
     }
 
     /**
