@@ -97,7 +97,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getDeclaringClass(): ReflectionClass
     {
-        return new ReflectionClass($this->betterClassConstantOrEnumCase->getDeclaringClass());
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return new ReflectionClass($this->betterClassConstantOrEnumCase->getDeclaringClass());
+        }
+
+        return new ReflectionClass($this->betterClassConstantOrEnumCase->getImplementingClass());
     }
 
     /**
@@ -161,7 +165,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         }
 
         if ($name === 'class') {
-            return $this->betterClassConstantOrEnumCase->getDeclaringClass()->getName();
+            return $this->getDeclaringClass()->getName();
         }
 
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));

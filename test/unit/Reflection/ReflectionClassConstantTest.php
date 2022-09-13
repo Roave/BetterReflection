@@ -16,7 +16,12 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
+use Roave\BetterReflectionTest\Fixture\ClassWithConstants;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
+use Roave\BetterReflectionTest\Fixture\InterfaceWithConstants;
+use Roave\BetterReflectionTest\Fixture\OtherClassWithConstants;
+use Roave\BetterReflectionTest\Fixture\ParentClassWithConstants;
+use Roave\BetterReflectionTest\Fixture\TraitWithConstants;
 
 use function sprintf;
 
@@ -193,6 +198,30 @@ PHP;
         self::assertInstanceOf(ClassConst::class, $ast);
         self::assertSame($positionInAst, $constantReflection->getPositionInAst());
         self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
+    }
+
+    /** @return list<array{0: string, 1: string, 2: string, 3: string}> */
+    public function declaringAndImplementingClassesProvider(): array
+    {
+        return [
+            ['CLASS_WINS', ClassWithConstants::class, ClassWithConstants::class, ClassWithConstants::class],
+            ['PARENT_WINS', ClassWithConstants::class, ParentClassWithConstants::class, ParentClassWithConstants::class],
+            ['TRAIT_WINS', ClassWithConstants::class, TraitWithConstants::class, ClassWithConstants::class],
+            ['CLASS_WINS', OtherClassWithConstants::class, OtherClassWithConstants::class, OtherClassWithConstants::class],
+            ['INTERFACE_WINS', OtherClassWithConstants::class, InterfaceWithConstants::class, InterfaceWithConstants::class],
+            ['TRAIT_WINS', OtherClassWithConstants::class, TraitWithConstants::class, OtherClassWithConstants::class],
+        ];
+    }
+
+    /** @dataProvider declaringAndImplementingClassesProvider */
+    public function testGetDeclaringAndImplementingClass(string $constantName, string $currentClassName, string $declaringClassName, string $implementingClassName): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesWithConstants.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass($currentClassName);
+        $constantReflection = $classReflection->getReflectionConstant($constantName);
+
+        self::assertSame($declaringClassName, $constantReflection->getDeclaringClass()->getName());
+        self::assertSame($implementingClassName, $constantReflection->getImplementingClass()->getName());
     }
 
     /** @return list<array{0: string, 1: bool}> */
