@@ -18,15 +18,14 @@ class ReflectionIntersectionType extends ReflectionType
     /** @var list<ReflectionNamedType> */
     private array $types;
 
+    /** @internal */
     public function __construct(
-        Reflector $reflector,
-        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        private Reflector $reflector,
+        private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         IntersectionType $type,
     ) {
-        parent::__construct($reflector, $owner);
-
-        $this->types = array_values(array_map(static function (Node\Identifier|Node\Name $type) use ($reflector, $owner): ReflectionNamedType {
-            $type = ReflectionType::createFromNode($reflector, $owner, $type);
+        $this->types = array_values(array_map(function (Node\Identifier|Node\Name $type): ReflectionNamedType {
+            $type = ReflectionType::createFromNode($this->reflector, $this->owner, $type);
             assert($type instanceof ReflectionNamedType);
 
             return $type;

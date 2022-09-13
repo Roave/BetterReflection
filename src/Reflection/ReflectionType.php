@@ -13,12 +13,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 abstract class ReflectionType
 {
-    protected function __construct(
-        protected Reflector $reflector,
-        protected ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
-    ) {
-    }
-
     /** @internal */
     public static function createFromNode(
         Reflector $reflector,
@@ -73,12 +67,6 @@ abstract class ReflectionType
         $types[] = new Identifier('null');
 
         return new ReflectionUnionType($reflector, $owner, new UnionType($types));
-    }
-
-    /** @internal */
-    public function getOwner(): ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty
-    {
-        return $this->owner;
     }
 
     /**

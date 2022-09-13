@@ -38,13 +38,12 @@ class ReflectionNamedType extends ReflectionType
 
     private string $name;
 
+    /** @internal */
     public function __construct(
-        Reflector $reflector,
-        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        private Reflector $reflector,
+        private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         Identifier|Name $type,
     ) {
-        parent::__construct($reflector, $owner);
-
         $this->name = $type->toString();
     }
 

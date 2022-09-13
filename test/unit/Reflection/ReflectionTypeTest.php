@@ -88,6 +88,5 @@ class ReflectionTypeTest extends TestCase
         self::assertInstanceOf($expectedReflectionClass, $reflectionType);
         self::assertSame($expectedTypeAsString, $reflectionType->__toString());
         self::assertSame($expectedAllowsNull, $reflectionType->allowsNull());
-        self::assertSame($this->owner, $reflectionType->getOwner());
     }
 }
