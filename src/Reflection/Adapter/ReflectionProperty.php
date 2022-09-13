@@ -123,15 +123,6 @@ final class ReflectionProperty extends CoreReflectionProperty
     {
     }
 
-    /**
-     * @codeCoverageIgnore
-     * @infection-ignore-all
-     */
-    public function isAccessible(): bool
-    {
-        return true;
-    }
-
     public function hasDefaultValue(): bool
     {
         return $this->betterReflectionProperty->hasDefaultValue();
