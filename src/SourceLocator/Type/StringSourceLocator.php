@@ -7,7 +7,6 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 use InvalidArgumentException;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
@@ -20,19 +19,10 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  */
 class StringSourceLocator extends AbstractSourceLocator
 {
-    /** @throws EmptyPhpSourceCode */
+    /** @param non-empty-string $source */
     public function __construct(private string $source, Locator $astLocator)
     {
         parent::__construct($astLocator);
-
-        if (empty($source)) {
-            // Whilst an empty string is still "valid" PHP code, there is no
-            // point in us even trying to parse it because we won't find what
-            // we are looking for, therefore this throws an exception
-            throw new EmptyPhpSourceCode(
-                'Source code string was empty',
-            );
-        }
     }
 
     /**

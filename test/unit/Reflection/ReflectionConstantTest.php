@@ -255,7 +255,7 @@ class ReflectionConstantTest extends TestCase
         self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -265,7 +265,11 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider startEndLineProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider startEndLineProvider
+     */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -275,7 +279,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame($expectedEnd, $reflection->getEndLine());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -284,7 +288,11 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider columnsProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider columnsProvider
+     */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
