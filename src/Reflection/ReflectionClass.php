@@ -646,7 +646,7 @@ class ReflectionClass implements Reflection
 
                     foreach (array_keys($constNode->consts) as $constantPositionInNode) {
                         assert(is_int($constantPositionInNode));
-                        $constants[] = ReflectionClassConstant::createFromNode($this->reflector, $constNode, $constantPositionInNode, $this);
+                        $constants[] = ReflectionClassConstant::createFromNode($this->reflector, $constNode, $constantPositionInNode, $this, $this);
                     }
 
                     return $constants;
@@ -687,6 +687,18 @@ class ReflectionClass implements Reflection
                     ));
                 },
                 array_filter([$this->getParentClass()]),
+            ),
+            ...array_map(
+                function (ReflectionClass $trait) {
+                    return array_map(fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => ReflectionClassConstant::createFromNode(
+                        $this->reflector,
+                        $classConstant->getAst(),
+                        $classConstant->getPositionInAst(),
+                        $classConstant->getDeclaringClass(),
+                        $this,
+                    ), $trait->getReflectionConstants());
+                },
+                $this->getTraits(),
             ),
             ...array_map(
                 static fn (ReflectionClass $interface): array => array_values($interface->getReflectionConstants()),

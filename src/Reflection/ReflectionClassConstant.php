@@ -25,8 +25,9 @@ class ReflectionClassConstant
     private function __construct(
         private Reflector $reflector,
         private ClassConst $node,
-        private ReflectionClass $owner,
         private int $positionInNode,
+        private ReflectionClass $declaringClass,
+        private ReflectionClass $implementingClass,
     ) {
     }
 
@@ -39,13 +40,15 @@ class ReflectionClassConstant
         Reflector $reflector,
         ClassConst $node,
         int $positionInNode,
-        ReflectionClass $owner,
+        ReflectionClass $declaringClass,
+        ReflectionClass $implementingClass,
     ): self {
         return new self(
             $reflector,
             $node,
-            $owner,
             $positionInNode,
+            $declaringClass,
+            $implementingClass,
         );
     }
 
@@ -133,12 +136,12 @@ class ReflectionClassConstant
 
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->owner->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->owner->getLocatedSource()->getSource(), $this->node);
+        return CalculateReflectionColumn::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
     }
 
     /**
@@ -146,7 +149,15 @@ class ReflectionClassConstant
      */
     public function getDeclaringClass(): ReflectionClass
     {
-        return $this->owner;
+        return $this->declaringClass;
+    }
+
+    /**
+     * Get the class that implemented the method based on trait use.
+     */
+    public function getImplementingClass(): ReflectionClass
+    {
+        return $this->implementingClass;
     }
 
     /**
