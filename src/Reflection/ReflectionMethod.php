@@ -8,8 +8,6 @@ use Closure;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -35,7 +33,7 @@ class ReflectionMethod
         private Reflector $reflector,
         private MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
-        private NamespaceNode|null $declaringNamespace,
+        private string|null $namespace,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private ReflectionClass $currentClass,
@@ -51,7 +49,7 @@ class ReflectionMethod
         Reflector $reflector,
         MethodNode $node,
         LocatedSource $locatedSource,
-        Namespace_|null $namespace,
+        string|null $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         ReflectionClass $currentClass,

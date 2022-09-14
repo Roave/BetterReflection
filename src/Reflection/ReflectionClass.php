@@ -12,8 +12,6 @@ use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
-use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
@@ -51,7 +49,6 @@ use function array_slice;
 use function array_values;
 use function assert;
 use function end;
-use function implode;
 use function in_array;
 use function is_int;
 use function is_string;
@@ -96,7 +93,7 @@ class ReflectionClass implements Reflection
         private Reflector $reflector,
         private ClassNode|InterfaceNode|TraitNode|EnumNode $node,
         private LocatedSource $locatedSource,
-        private NamespaceNode|null $declaringNamespace = null,
+        private string|null $namespace = null,
     ) {
     }
 
@@ -136,13 +133,13 @@ class ReflectionClass implements Reflection
      * @internal
      *
      * @param ClassNode|InterfaceNode|TraitNode|EnumNode $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param NamespaceNode|null                         $namespace optional - if omitted, we assume it is global namespaced class
+     * @param string|null                                $namespace optional - if omitted, we assume it is global namespaced class
      */
     public static function createFromNode(
         Reflector $reflector,
         ClassNode|InterfaceNode|TraitNode|EnumNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespace = null,
+        string|null $namespace = null,
     ): self {
         return new self($reflector, $node, $locatedSource, $namespace);
     }
@@ -213,23 +210,16 @@ class ReflectionClass implements Reflection
      */
     public function getNamespaceName(): string
     {
-        if (! $this->inNamespace()) {
-            return '';
-        }
-
-        return implode('\\', $this->declaringNamespace->name->parts);
+        return $this->namespace ?? '';
     }
 
     /**
      * Decide if this class is part of a namespace. Returns false if the class
      * is in the global namespace or does not have a specified namespace.
-     *
-     * @psalm-assert-if-true NamespaceNode $this->declaringNamespace
-     * @psalm-assert-if-true Node\Name $this->declaringNamespace->name
      */
     public function inNamespace(): bool
     {
-        return $this->declaringNamespace?->name !== null;
+        return $this->namespace !== null;
     }
 
     public function getExtensionName(): string|null
@@ -259,7 +249,7 @@ class ReflectionClass implements Reflection
             $this->reflector,
             $methodAst,
             $method->getLocatedSource(),
-            $method->getDeclaringClass()->getDeclaringNamespaceAst(),
+            $method->getDeclaringClass()->getNamespaceName(),
             $method->getDeclaringClass(),
             $this,
             $this,
@@ -294,7 +284,7 @@ class ReflectionClass implements Reflection
                             $this->reflector,
                             $method->getAst(),
                             $method->getLocatedSource(),
-                            $method->getDeclaringClass()->getDeclaringNamespaceAst(),
+                            $method->getDeclaringClass()->getNamespaceName(),
                             $method->getDeclaringClass(),
                             $method->getImplementingClass(),
                             $this,
@@ -456,7 +446,7 @@ class ReflectionClass implements Reflection
                 $this->reflector,
                 $methodNode,
                 $this->locatedSource,
-                $this->declaringNamespace,
+                $this->getNamespaceName(),
                 $this,
                 $this,
                 $this,
@@ -502,7 +492,7 @@ class ReflectionClass implements Reflection
                 ],
             ),
             $internalLocatedSource,
-            $this->declaringNamespace,
+            $this->getNamespaceName(),
             $this,
             $this,
             $this,
@@ -1650,11 +1640,6 @@ class ReflectionClass implements Reflection
     public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
     {
         return $this->node;
-    }
-
-    public function getDeclaringNamespaceAst(): Namespace_|null
-    {
-        return $this->declaringNamespace;
     }
 
     /** @return list<ReflectionAttribute> */
