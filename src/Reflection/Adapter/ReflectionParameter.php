@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use LogicException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
+use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 use ValueError;
 
 use function array_map;
+use function count;
 use function sprintf;
+use function strtolower;
 
 /** @psalm-suppress MissingImmutableAnnotation */
 final class ReflectionParameter extends CoreReflectionParameter
@@ -68,23 +75,97 @@ final class ReflectionParameter extends CoreReflectionParameter
 
     public function getClass(): CoreReflectionClass|null
     {
-        $class = $this->betterReflectionParameter->getClass();
+        $type = $this->betterReflectionParameter->getType();
 
-        if ($class === null) {
+        if ($type === null) {
             return null;
         }
 
-        return new ReflectionClass($class);
+        if ($type instanceof BetterReflectionIntersectionType) {
+            return null;
+        }
+
+        if ($type instanceof BetterReflectionNamedType) {
+            $classType = $type;
+        } else {
+            $unionTypes = $type->getTypes();
+
+            if (count($unionTypes) !== 2) {
+                return null;
+            }
+
+            if (! $type->allowsNull()) {
+                return null;
+            }
+
+            foreach ($unionTypes as $unionInnerType) {
+                if (! $unionInnerType instanceof BetterReflectionNamedType) {
+                    return null;
+                }
+
+                if ($unionInnerType->allowsNull()) {
+                    continue;
+                }
+
+                $classType = $unionInnerType;
+                break;
+            }
+        }
+
+        try {
+            /** @phpstan-ignore-next-line */
+            return new ReflectionClass($classType->getClass());
+        } catch (LogicException) {
+            return null;
+        }
     }
 
     public function isArray(): bool
     {
-        return $this->betterReflectionParameter->isArray();
+        return $this->isType($this->betterReflectionParameter->getType(), 'array');
     }
 
     public function isCallable(): bool
     {
-        return $this->betterReflectionParameter->isCallable();
+        return $this->isType($this->betterReflectionParameter->getType(), 'callable');
+    }
+
+    /**
+     * For isArray() and isCallable().
+     */
+    private function isType(BetterReflectionNamedType|BetterReflectionUnionType|BetterReflectionIntersectionType|null $typeReflection, string $type): bool
+    {
+        if ($typeReflection === null) {
+            return false;
+        }
+
+        if ($typeReflection instanceof BetterReflectionIntersectionType) {
+            return false;
+        }
+
+        $isOneOfAllowedTypes = static function (BetterReflectionType $namedType, string ...$types): bool {
+            foreach ($types as $type) {
+                if ($namedType instanceof BetterReflectionNamedType && strtolower($namedType->getName()) === $type) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        if ($typeReflection instanceof BetterReflectionUnionType) {
+            $unionTypes = $typeReflection->getTypes();
+
+            foreach ($unionTypes as $unionType) {
+                if (! $isOneOfAllowedTypes($unionType, $type, 'null')) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return $isOneOfAllowedTypes($typeReflection, $type);
     }
 
     public function allowsNull(): bool
