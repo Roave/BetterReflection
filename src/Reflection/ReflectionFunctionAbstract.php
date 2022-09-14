@@ -391,7 +391,7 @@ trait ReflectionFunctionAbstract
          * @psalm-var ReflectionMethod|ReflectionFunction $this
          * @phpstan-ignore-next-line
          */
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
+        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
     }
 
     /** @return list<ReflectionAttribute> */
