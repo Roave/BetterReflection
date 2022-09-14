@@ -245,12 +245,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             return;
         }
 
-        // @ because isArray() is deprecated
-        self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
-
-        // @ because isCallable() is deprecated
-        self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
-
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         // Bugs in PHP
         if (
@@ -314,9 +308,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 // It's not possible to specify in stubs that parameter can be passed by value and passed by reference as well
                 self::assertSame($originalReflectionParameter->canBePassedByValue(), $stubbedReflectionParameter->canBePassedByValue(), $parameterName);
             }
-
-            // @ because isCallable() is deprecated
-            self::assertSame(@$originalReflectionParameter->isCallable(), $stubbedReflectionParameter->isCallable(), $parameterName);
 
             self::assertSame($originalReflectionParameter->isVariadic(), $stubbedReflectionParameter->isVariadic(), $parameterName);
         }

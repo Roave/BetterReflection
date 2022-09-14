@@ -14,11 +14,14 @@ use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflec
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
 use ValueError;
 
 use function array_map;
 use function count;
 use function sprintf;
+use function strtolower;
 
 /** @psalm-suppress MissingImmutableAnnotation */
 final class ReflectionParameter extends CoreReflectionParameter
@@ -119,12 +122,50 @@ final class ReflectionParameter extends CoreReflectionParameter
 
     public function isArray(): bool
     {
-        return $this->betterReflectionParameter->isArray();
+        return $this->isType($this->betterReflectionParameter->getType(), 'array');
     }
 
     public function isCallable(): bool
     {
-        return $this->betterReflectionParameter->isCallable();
+        return $this->isType($this->betterReflectionParameter->getType(), 'callable');
+    }
+
+    /**
+     * For isArray() and isCallable().
+     */
+    private function isType(BetterReflectionNamedType|BetterReflectionUnionType|BetterReflectionIntersectionType|null $typeReflection, string $type): bool
+    {
+        if ($typeReflection === null) {
+            return false;
+        }
+
+        if ($typeReflection instanceof BetterReflectionIntersectionType) {
+            return false;
+        }
+
+        $isOneOfAllowedTypes = static function (BetterReflectionType $namedType, string ...$types): bool {
+            foreach ($types as $type) {
+                if ($namedType instanceof BetterReflectionNamedType && strtolower($namedType->getName()) === $type) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        if ($typeReflection instanceof BetterReflectionUnionType) {
+            $unionTypes = $typeReflection->getTypes();
+
+            foreach ($unionTypes as $unionType) {
+                if (! $isOneOfAllowedTypes($unionType, $type, 'null')) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return $isOneOfAllowedTypes($typeReflection, $type);
     }
 
     public function allowsNull(): bool

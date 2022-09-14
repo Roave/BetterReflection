@@ -328,60 +328,6 @@ class ReflectionParameter
     }
 
     /**
-     * Is this parameter an array?
-     */
-    public function isArray(): bool
-    {
-        return $this->isType($this->getType(), 'array');
-    }
-
-    /**
-     * Is this parameter a callable?
-     */
-    public function isCallable(): bool
-    {
-        return $this->isType($this->getType(), 'callable');
-    }
-
-    /**
-     * For isArray() and isCallable().
-     */
-    private function isType(ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $typeReflection, string $type): bool
-    {
-        if ($typeReflection === null) {
-            return false;
-        }
-
-        if ($typeReflection instanceof ReflectionIntersectionType) {
-            return false;
-        }
-
-        $isOneOfAllowedTypes = static function (ReflectionType $namedType, string ...$types): bool {
-            foreach ($types as $type) {
-                if ($namedType instanceof ReflectionNamedType && $namedType->getName() === $type) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        if ($typeReflection instanceof ReflectionUnionType) {
-            $unionTypes = $typeReflection->getTypes();
-
-            foreach ($unionTypes as $unionType) {
-                if (! $isOneOfAllowedTypes($unionType, $type, 'null')) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return $isOneOfAllowedTypes($typeReflection, $type);
-    }
-
-    /**
      * Is this parameter a variadic (denoted by ...$param).
      */
     public function isVariadic(): bool
