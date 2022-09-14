@@ -20,6 +20,8 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
+use Roave\BetterReflection\Util\Exception\NoNodePosition;
+use RuntimeException;
 
 use function assert;
 use function count;
@@ -30,17 +32,56 @@ use function sprintf;
 
 class ReflectionParameter
 {
-    private bool $isOptional;
+    private string $name;
+
+    private Node\Expr|null $default;
+
+    private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type;
+
+    private bool $isVariadic;
+
+    private bool $byRef;
+
+    private bool $isPromoted;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    private int|null $startColumn;
+
+    private int|null $endColumn;
 
     private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private ParamNode $node,
+        ParamNode $node,
         private ReflectionMethod|ReflectionFunction $function,
         private int $parameterIndex,
+        private bool $isOptional,
     ) {
-        $this->isOptional = $this->detectIsOptional();
+        assert($node->var instanceof Node\Expr\Variable);
+        assert(is_string($node->var->name));
+
+        $this->name       = $node->var->name;
+        $this->default    = $node->default;
+        $this->type       = $this->createType($node);
+        $this->isVariadic = $node->variadic;
+        $this->byRef      = $node->byRef;
+        $this->isPromoted = $node->flags !== 0;
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        try {
+            $this->startColumn = CalculateReflectionColumn::getStartColumn($function->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->startColumn = null;
+        }
+
+        try {
+            $this->endColumn = CalculateReflectionColumn::getEndColumn($function->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->endColumn = null;
+        }
     }
 
     /**
@@ -160,12 +201,14 @@ class ReflectionParameter
         ParamNode $node,
         ReflectionMethod|ReflectionFunction $function,
         int $parameterIndex,
+        bool $isOptional,
     ): self {
         return new self(
             $reflector,
             $node,
             $function,
             $parameterIndex,
+            $isOptional,
         );
     }
 
@@ -178,7 +221,7 @@ class ReflectionParameter
 
         if ($this->compiledDefaultValue === null) {
             $this->compiledDefaultValue = (new CompileNodeToValue())->__invoke(
-                $this->node->default,
+                $this->default,
                 new CompilerContext($this->reflector, $this),
             );
         }
@@ -191,10 +234,7 @@ class ReflectionParameter
      */
     public function getName(): string
     {
-        assert($this->node->var instanceof Node\Expr\Variable);
-        assert(is_string($this->node->var->name));
-
-        return $this->node->var->name;
+        return $this->name;
     }
 
     /**
@@ -251,11 +291,11 @@ class ReflectionParameter
      * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
      *
      * @example someMethod($foo = 'foo', $bar)
-     * @psalm-assert-if-true Node\Expr $this->node->default
+     * @psalm-assert-if-true Node\Expr $this->default
      */
     public function isDefaultValueAvailable(): bool
     {
-        return $this->node->default !== null;
+        return $this->default !== null;
     }
 
     /**
@@ -304,7 +344,12 @@ class ReflectionParameter
      */
     public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
-        $type = $this->node->type;
+        return $this->type;
+    }
+
+    private function createType(ParamNode $node): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    {
+        $type = $node->type;
 
         if ($type === null) {
             return null;
@@ -312,7 +357,7 @@ class ReflectionParameter
 
         assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType);
 
-        $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
+        $allowsNull = $this->default instanceof Node\Expr\ConstFetch && $this->default->name->toLowerString() === 'null';
 
         return ReflectionType::createFromNode($this->reflector, $this, $type, $allowsNull);
     }
@@ -324,7 +369,7 @@ class ReflectionParameter
      */
     public function hasType(): bool
     {
-        return $this->node->type !== null;
+        return $this->type !== null;
     }
 
     /**
@@ -332,7 +377,7 @@ class ReflectionParameter
      */
     public function isVariadic(): bool
     {
-        return $this->node->variadic;
+        return $this->isVariadic;
     }
 
     /**
@@ -340,7 +385,7 @@ class ReflectionParameter
      */
     public function isPassedByReference(): bool
     {
-        return $this->node->byRef;
+        return $this->byRef;
     }
 
     public function canBePassedByValue(): bool
@@ -350,7 +395,7 @@ class ReflectionParameter
 
     public function isPromoted(): bool
     {
-        return $this->node->flags !== 0;
+        return $this->isPromoted;
     }
 
     /** @throws LogicException */
@@ -371,31 +416,6 @@ class ReflectionParameter
         return $compiledDefaultValue->constantName;
     }
 
-    private function detectIsOptional(): bool
-    {
-        if ($this->node->variadic) {
-            return true;
-        }
-
-        if ($this->node->default === null) {
-            return false;
-        }
-
-        foreach ($this->function->getAst()->getParams() as $otherParameterIndex => $otherParameterNode) {
-            if ($otherParameterIndex <= $this->parameterIndex) {
-                continue;
-            }
-
-            // When we find next parameter that does not have a default or is not variadic,
-            // it means current parameter cannot be optional EVEN if it has a default value
-            if ($otherParameterNode->default === null && ! $otherParameterNode->variadic) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -406,25 +426,30 @@ class ReflectionParameter
         throw Uncloneable::fromClass(self::class);
     }
 
+    /** @throws RuntimeException */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
+        if ($this->startColumn === null) {
+            throw new RuntimeException('Start column missing');
+        }
+
+        return $this->startColumn;
     }
 
+    /** @throws RuntimeException */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
-    }
+        if ($this->endColumn === null) {
+            throw new RuntimeException('End column missing');
+        }
 
-    public function getAst(): ParamNode
-    {
-        return $this->node;
+        return $this->endColumn;
     }
 
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */

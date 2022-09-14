@@ -8,6 +8,7 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
+use PhpParser\Node\Param as ParamNode;
 use PhpParser\Node\Stmt\Throw_ as NodeThrow;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
@@ -100,10 +101,37 @@ trait ReflectionFunctionAbstract
                 $paramNode,
                 $this,
                 $paramIndex,
+                $this->isParameterOptional($nodeParams, $paramNode, $paramIndex),
             );
         }
 
         return $parameters;
+    }
+
+    /** @param list<Node\Param> $parameterNodes */
+    private function isParameterOptional(array $parameterNodes, ParamNode $parameterNode, int $parameterIndex): bool
+    {
+        if ($parameterNode->variadic) {
+            return true;
+        }
+
+        if ($parameterNode->default === null) {
+            return false;
+        }
+
+        foreach ($parameterNodes as $otherParameterIndex => $otherParameterNode) {
+            if ($otherParameterIndex <= $parameterIndex) {
+                continue;
+            }
+
+            // When we find next parameter that does not have a default or is not variadic,
+            // it means current parameter cannot be optional EVEN if it has a default value
+            if ($otherParameterNode->default === null && ! $otherParameterNode->variadic) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -7,13 +7,15 @@ namespace Roave\BetterReflectionTest\Reflection;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
-use PhpParser\Node\Param;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -26,7 +28,9 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PhpParameterTypeDeclarations;
+use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
+use RuntimeException;
 use SplDoublyLinkedList;
 use stdClass;
 
@@ -571,18 +575,70 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($endColumn, $parameter->getEndColumn());
     }
 
-    public function testGetAst(): void
+    public function testGetStartColumnThrowsExceptionWhenMissing(): void
     {
-        $php = '<?php function foo($boo) {}';
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
 
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-        $parameter = $function->getParameter('boo');
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
 
-        $ast = $parameter->getAst();
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartColumn();
+    }
 
-        self::assertInstanceOf(Param::class, $ast);
-        self::assertSame('boo', $ast->var->name);
+    public function testGetEndColumnThrowsExceptionWhenMissing(): void
+    {
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndColumn();
+    }
+
+    public function testGetStartColumnThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartColumn();
+    }
+
+    public function testGetEndColumnThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndColumn();
     }
 
     public function testGetAttributesWithoutAttributes(): void
