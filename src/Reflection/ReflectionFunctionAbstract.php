@@ -51,7 +51,7 @@ trait ReflectionFunctionAbstract
      */
     public function getNamespaceName(): string
     {
-        return $this->declaringNamespace?->name?->toString() ?? '';
+        return $this->namespace ?? '';
     }
 
     /**
@@ -60,7 +60,7 @@ trait ReflectionFunctionAbstract
      */
     public function inNamespace(): bool
     {
-        return $this->declaringNamespace?->name !== null;
+        return $this->namespace !== null;
     }
 
     /**

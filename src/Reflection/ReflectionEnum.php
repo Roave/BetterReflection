@@ -9,7 +9,6 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
@@ -30,9 +29,9 @@ class ReflectionEnum extends ReflectionClass
         private Reflector $reflector,
         private EnumNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $declaringNamespace = null,
+        string|null $namespace = null,
     ) {
-        parent::__construct($reflector, $node, $locatedSource, $declaringNamespace);
+        parent::__construct($reflector, $node, $locatedSource, $namespace);
     }
 
     /**
@@ -46,7 +45,7 @@ class ReflectionEnum extends ReflectionClass
         Reflector $reflector,
         ClassNode|InterfaceNode|TraitNode|EnumNode $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespace = null,
+        string|null $namespace = null,
     ): self {
         return new self($reflector, $node, $locatedSource, $namespace);
     }

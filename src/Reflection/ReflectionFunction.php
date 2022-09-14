@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection;
 
 use Closure;
 use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
@@ -33,7 +32,7 @@ class ReflectionFunction implements Reflection
         private Reflector $reflector,
         private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
-        private NamespaceNode|null $declaringNamespace = null,
+        private string|null $namespace = null,
     ) {
         assert($node instanceof Node\Stmt\Function_ || $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction);
 
@@ -67,9 +66,9 @@ class ReflectionFunction implements Reflection
         Reflector $reflector,
         Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespaceNode = null,
+        string|null $namespace = null,
     ): self {
-        return new self($reflector, $node, $locatedSource, $namespaceNode);
+        return new self($reflector, $node, $locatedSource, $namespace);
     }
 
     public function getAst(): Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction

@@ -9,7 +9,6 @@ use PhpParser\Builder\Property as PropertyNodeBuilder;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
-use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use ReflectionException;
@@ -476,11 +475,6 @@ class ReflectionObject extends ReflectionClass
     public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
     {
         return $this->reflectionClass->getAst();
-    }
-
-    public function getDeclaringNamespaceAst(): Namespace_|null
-    {
-        return $this->reflectionClass->getDeclaringNamespaceAst();
     }
 
     /** @return list<ReflectionAttribute> */

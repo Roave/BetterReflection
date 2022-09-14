@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -36,7 +35,7 @@ class ReflectionConstant implements Reflection
         private Reflector $reflector,
         private Node\Stmt\Const_|Node\Expr\FuncCall $node,
         private LocatedSource $locatedSource,
-        private NamespaceNode|null $declaringNamespace = null,
+        private string|null $namespace = null,
         private int|null $positionInNode = null,
     ) {
     }
@@ -62,7 +61,7 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespace = null,
+        string|null $namespace = null,
         int|null $positionInNode = null,
     ): self {
         if ($node instanceof Node\Stmt\Const_) {
@@ -78,7 +77,7 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node\Stmt\Const_ $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespace,
+        string|null $namespace,
         int $positionInNode,
     ): self {
         return new self(
@@ -148,23 +147,16 @@ class ReflectionConstant implements Reflection
      */
     public function getNamespaceName(): string
     {
-        if (! $this->inNamespace()) {
-            return '';
+        if ($this->node instanceof Node\Expr\FuncCall) {
+            return implode('\\', array_slice(explode('\\', $this->getNameFromDefineFunctionCall($this->node)), 0, -1));
         }
 
-        $namespaceParts = $this->node instanceof Node\Expr\FuncCall
-            ? array_slice(explode('\\', $this->getNameFromDefineFunctionCall($this->node)), 0, -1)
-            : $this->declaringNamespace->name->parts;
-
-        return implode('\\', $namespaceParts);
+        return $this->namespace ?? '';
     }
 
     /**
      * Decide if this constant is part of a namespace. Returns false if the constant
      * is in the global namespace or does not have a specified namespace.
-     *
-     * @psalm-assert-if-true NamespaceNode $this->declaringNamespace
-     * @psalm-assert-if-true Node\Name $this->declaringNamespace->name
      */
     public function inNamespace(): bool
     {
@@ -172,7 +164,7 @@ class ReflectionConstant implements Reflection
             return substr_count($this->getNameFromDefineFunctionCall($this->node), '\\') !== 0;
         }
 
-        return $this->declaringNamespace?->name !== null;
+        return $this->namespace !== null;
     }
 
     public function getExtensionName(): string|null

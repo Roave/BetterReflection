@@ -286,7 +286,7 @@ class ReflectionObjectTest extends TestCase
         $mockReflectionClassNodeReflection->setAccessible(true);
         $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $node);
 
-        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('declaringNamespace');
+        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('namespace');
         $mockReflectionClassNodeReflection->setAccessible(true);
         $mockReflectionClassNodeReflection->setValue($mockReflectionClass, null);
 
