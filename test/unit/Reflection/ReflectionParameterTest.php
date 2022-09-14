@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Foo;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node\Param;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
-use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -46,17 +41,14 @@ class ReflectionParameterTest extends TestCase
 
     private Locator $astLocator;
 
-    private SourceStubber $sourceStubber;
-
     public function setUp(): void
     {
         parent::setUp();
 
         $betterReflection = BetterReflectionSingleton::instance();
 
-        $this->astLocator    = $betterReflection->astLocator();
-        $this->sourceStubber = $betterReflection->sourceStubber();
-        $this->reflector     = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $this->astLocator = $betterReflection->astLocator();
+        $this->reflector  = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromClassNameAndMethod(): void
@@ -601,34 +593,6 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    /** @return list<array{0: string, 1: string|null}> */
-    public function getClassProvider(): array
-    {
-        return [
-            ['untyped', null],
-            ['array', null],
-            ['object', 'stdClass'],
-            ['unionWithClass', 'stdClass'],
-            ['unionWithoutClass', null],
-            ['intersection', null],
-        ];
-    }
-
-    /** @dataProvider getClassProvider */
-    public function testGetClass(string $parameterName, string|null $className): void
-    {
-        $reflector = new DefaultReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
-            new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator),
-        ]));
-
-        $classReflection     = $reflector->reflectClass(Methods::class);
-        $methodReflection    = $classReflection->getMethod('methodGetClassParameters');
-        $parameterReflection = $methodReflection->getParameter($parameterName);
-
-        self::assertSame($className, $parameterReflection->getClass()?->getName());
-    }
-
     public function testCannotClone(): void
     {
         $classInfo  = $this->reflector->reflectClass(Methods::class);
@@ -637,54 +601,6 @@ class ReflectionParameterTest extends TestCase
 
         $this->expectException(Uncloneable::class);
         clone $paramInfo;
-    }
-
-    public function testGetClassFromSelfTypeHintedProperty(): void
-    {
-        $content = '<?php class Foo { public function myMethod(self $param) {} }';
-
-        $reflector  = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
-        $classInfo  = $reflector->reflectClass('Foo');
-        $methodInfo = $classInfo->getMethod('myMethod');
-
-        $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        self::assertSame('Foo', $hintedClassReflection->getName());
-    }
-
-    public function testGetClassFromParentTypeHintedProperty(): void
-    {
-        $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
-
-        $reflector  = new DefaultReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
-            new StringSourceLocator($content, $this->astLocator),
-        ]));
-        $classInfo  = $reflector->reflectClass('Foo');
-        $methodInfo = $classInfo->getMethod('myMethod');
-
-        $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        self::assertSame('stdClass', $hintedClassReflection->getName());
-    }
-
-    public function testGetClassFromObjectTypeHintedProperty(): void
-    {
-        $content = '<?php class Foo { public function myMethod(object $param) {} }';
-
-        $parameter = (new DefaultReflector(new StringSourceLocator($content, $this->astLocator)))
-            ->reflectClass(Foo::class)
-            ->getMethod('myMethod')
-            ->getParameter('param');
-
-        self::assertInstanceOf(ReflectionParameter::class, $parameter);
-
-        self::assertNull($parameter->getClass());
-
-        $type = $parameter->getType();
-
-        self::assertTrue($type->isBuiltin());
-        self::assertSame('object', $type->__toString());
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */

@@ -97,17 +97,6 @@ abstract class Methods
     {
     }
 
-    public function methodGetClassParameters(
-        $untyped,
-        array $array,
-        \stdClass $object,
-        string|\stdClass $unionWithClass,
-        string|bool $unionWithoutClass,
-        \stdClass&\Iterator $intersection,
-    )
-    {
-    }
-
     public function methodWithVariadic($nonVariadicParameter, ...$variadicParameter)
     {
     }

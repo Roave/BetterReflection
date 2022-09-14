@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use LogicException;
 use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
+use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use ValueError;
 
 use function array_map;
+use function count;
 use function sprintf;
 
 /** @psalm-suppress MissingImmutableAnnotation */
@@ -68,13 +72,49 @@ final class ReflectionParameter extends CoreReflectionParameter
 
     public function getClass(): CoreReflectionClass|null
     {
-        $class = $this->betterReflectionParameter->getClass();
+        $type = $this->betterReflectionParameter->getType();
 
-        if ($class === null) {
+        if ($type === null) {
             return null;
         }
 
-        return new ReflectionClass($class);
+        if ($type instanceof BetterReflectionIntersectionType) {
+            return null;
+        }
+
+        if ($type instanceof BetterReflectionNamedType) {
+            $classType = $type;
+        } else {
+            $unionTypes = $type->getTypes();
+
+            if (count($unionTypes) !== 2) {
+                return null;
+            }
+
+            if (! $type->allowsNull()) {
+                return null;
+            }
+
+            foreach ($unionTypes as $unionInnerType) {
+                if (! $unionInnerType instanceof BetterReflectionNamedType) {
+                    return null;
+                }
+
+                if ($unionInnerType->allowsNull()) {
+                    continue;
+                }
+
+                $classType = $unionInnerType;
+                break;
+            }
+        }
+
+        try {
+            /** @phpstan-ignore-next-line */
+            return new ReflectionClass($classType->getClass());
+        } catch (LogicException) {
+            return null;
+        }
     }
 
     public function isArray(): bool

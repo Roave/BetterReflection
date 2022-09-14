@@ -264,17 +264,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
-
-        // @ because getClass() is deprecated
-        $class = @$original->getClass();
-        if ($class) {
-            $stubbedClass = $stubbed->getClass();
-
-            self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-            self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-        } else {
-            self::assertNull($stubbed->getClass(), $parameterName);
-        }
     }
 
     /** @return list<array{0: string}> */
@@ -330,16 +319,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             self::assertSame(@$originalReflectionParameter->isCallable(), $stubbedReflectionParameter->isCallable(), $parameterName);
 
             self::assertSame($originalReflectionParameter->isVariadic(), $stubbedReflectionParameter->isVariadic(), $parameterName);
-
-            // @ because getClass() is deprecated
-            $class = @$originalReflectionParameter->getClass();
-            if ($class) {
-                $stubbedClass = $stubbedReflectionParameter->getClass();
-                self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-                self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-            } else {
-                self::assertNull($class, $parameterName);
-            }
         }
     }
 

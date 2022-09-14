@@ -425,48 +425,6 @@ class ReflectionParameter
         return $compiledDefaultValue->constantName;
     }
 
-    /**
-     * Gets a ReflectionClass for the type hint (returns null if not a class)
-     */
-    public function getClass(): ReflectionClass|null
-    {
-        $type = $this->getType();
-
-        if ($type === null) {
-            return null;
-        }
-
-        if ($type instanceof ReflectionIntersectionType) {
-            return null;
-        }
-
-        if ($type instanceof ReflectionUnionType) {
-            foreach ($type->getTypes() as $innerType) {
-                if (! $innerType instanceof ReflectionNamedType) {
-                    continue;
-                }
-
-                $innerTypeClass = $this->getClassFromNamedType($innerType);
-                if ($innerTypeClass !== null) {
-                    return $innerTypeClass;
-                }
-            }
-
-            return null;
-        }
-
-        return $this->getClassFromNamedType($type);
-    }
-
-    private function getClassFromNamedType(ReflectionNamedType $namedType): ReflectionClass|null
-    {
-        try {
-            return $namedType->getClass();
-        } catch (LogicException) {
-            return null;
-        }
-    }
-
     private function detectIsOptional(): bool
     {
         if ($this->node->variadic) {

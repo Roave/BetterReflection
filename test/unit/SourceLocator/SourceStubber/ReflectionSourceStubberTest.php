@@ -399,17 +399,6 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
-
-        // @ because getClass() is deprecated
-        $class = @$original->getClass();
-        if ($class) {
-            $stubbedClass = $stubbed->getClass();
-
-            self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-            self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-        } else {
-            self::assertNull($stubbed->getClass(), $parameterName);
-        }
     }
 
     /** @return list<array{0: string}> */
