@@ -6,7 +6,7 @@ if (class_exists(ReflectionIntersectionType::class, false)) {
 
 class ReflectionIntersectionType extends ReflectionType
 {
-    /** @return ReflectionType[] */
+    /** @return non-empty-list<ReflectionType> */
     public function getTypes()
     {
         return [];

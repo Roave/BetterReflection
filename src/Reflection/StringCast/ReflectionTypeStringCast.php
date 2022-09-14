@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionUnionType;
 
 use function array_filter;
@@ -27,10 +28,14 @@ final class ReflectionTypeStringCast
             // this weird behavior in here.
             $nonNullTypes = array_values(array_filter(
                 $type->getTypes(),
-                static fn (ReflectionNamedType $type): bool => $type->getName() !== 'null',
+                static fn (ReflectionType $type): bool => ! ($type instanceof ReflectionNamedType && $type->getName() === 'null'),
             ));
 
-            if ($type->allowsNull() && count($nonNullTypes) === 1) {
+            if (
+                $type->allowsNull()
+                && count($nonNullTypes) === 1
+                && $nonNullTypes[0] instanceof ReflectionNamedType
+            ) {
                 return '?' . $nonNullTypes[0]->__toString();
             }
         }

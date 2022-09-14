@@ -356,9 +356,9 @@ class ReflectionParameter
             return false;
         }
 
-        $isOneOfAllowedTypes = static function (ReflectionNamedType $namedType, string ...$types): bool {
+        $isOneOfAllowedTypes = static function (ReflectionType $namedType, string ...$types): bool {
             foreach ($types as $type) {
-                if ($namedType->getName() === $type) {
+                if ($namedType instanceof ReflectionNamedType && $namedType->getName() === $type) {
                     return true;
                 }
             }
@@ -442,6 +442,10 @@ class ReflectionParameter
 
         if ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $innerType) {
+                if (! $innerType instanceof ReflectionNamedType) {
+                    continue;
+                }
+
                 $innerTypeClass = $this->getClassFromNamedType($innerType);
                 if ($innerTypeClass !== null) {
                     return $innerTypeClass;

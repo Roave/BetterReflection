@@ -35,6 +35,9 @@ function e(): int {}
 function f(): null|int {}
 function g(): string|null|int {}
 function h(): null {}
+function i(): (A&B)|null {}
+function j(): (A&B)|(A&C) {}
+function k(): null|(A&B)|(A&C) {}
 PHP
             ,
             BetterReflectionSingleton::instance()
@@ -59,6 +62,9 @@ PHP
             [$returnTypeForFunction('f'), '?int'],
             [$returnTypeForFunction('g'), 'string|null|int'],
             [$returnTypeForFunction('h'), 'null'],
+            [$returnTypeForFunction('i'), '(A&B)|null'],
+            [$returnTypeForFunction('j'), '(A&B)|(A&C)'],
+            [$returnTypeForFunction('k'), 'null|(A&B)|(A&C)'],
         ];
     }
 
