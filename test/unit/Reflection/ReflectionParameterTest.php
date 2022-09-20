@@ -549,30 +549,68 @@ class ReflectionParameterTest extends TestCase
         clone $paramInfo;
     }
 
-    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    /** @return list<array{0: non-empty-string, 1: int, 2: int, 3: int, 4: int}> */
+    public function linesAndColumnsProvider(): array
     {
         return [
-            ["<?php\n\nfunction foo(\n\$test\n) {}", 1, 5],
-            ["<?php\n\n    function foo(\n    &\$test) {    \n    }\n", 5, 10],
-            ['<?php function foo(...$test) { }', 20, 27],
-            ['<?php function foo(array $test = null) { }', 20, 37],
+            ["<?php\n\nfunction foo(\n\$test\n) {}", 4, 4, 1, 5],
+            ["<?php\n\n    function foo(\n    &\$test) {    \n    }\n", 4, 4, 5, 10],
+            ['<?php function foo(...$test) { }', 1, 1, 20, 27],
+            ["<?php function foo(array \$test\n=\nnull) { }", 1, 3, 20, 4],
         ];
     }
 
     /**
      * @param non-empty-string $php
      *
-     * @dataProvider columnsProvider
+     * @dataProvider linesAndColumnsProvider
      */
-    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
+    public function testGetLinesAndColumns(string $php, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $function  = $reflector->reflectFunction('foo');
         $parameter = $function->getParameter('test');
 
+        self::assertSame($startLine, $parameter->getStartLine());
+        self::assertSame($endLine, $parameter->getEndLine());
         self::assertSame($startColumn, $parameter->getStartColumn());
         self::assertSame($endColumn, $parameter->getEndColumn());
+    }
+
+    public function testGetStartLineThrowsExceptionWhenMissing(): void
+    {
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartLine();
+    }
+
+    public function testGetEndLineThrowsExceptionWhenMissing(): void
+    {
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndLine();
     }
 
     public function testGetStartColumnThrowsExceptionWhenMissing(): void
@@ -609,6 +647,36 @@ class ReflectionParameterTest extends TestCase
 
         self::expectException(RuntimeException::class);
         $parameterReflection->getEndColumn();
+    }
+
+    public function testGetStartLineThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartLine();
+    }
+
+    public function testGetEndLineThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndLine();
     }
 
     public function testGetStartColumnThrowsExceptionForMagicallyAddedEnumMethod(): void

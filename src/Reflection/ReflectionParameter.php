@@ -49,6 +49,12 @@ class ReflectionParameter
     private array $attributes;
 
     /** @var positive-int|null */
+    private int|null $startLine;
+
+    /** @var positive-int|null */
+    private int|null $endLine;
+
+    /** @var positive-int|null */
     private int|null $startColumn;
 
     /** @var positive-int|null */
@@ -76,6 +82,14 @@ class ReflectionParameter
         $this->byRef      = $node->byRef;
         $this->isPromoted = $node->flags !== 0;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        /** @psalm-var positive-int|null $startLine */
+        $startLine = $node->hasAttribute('startLine') ? $node->getAttribute('startLine') : null;
+        /** @psalm-var positive-int|null $endLine */
+        $endLine = $node->hasAttribute('endLine') ? $node->getAttribute('endLine') : null;
+
+        $this->startLine = $startLine;
+        $this->endLine   = $endLine;
 
         try {
             $this->startColumn = CalculateReflectionColumn::getStartColumn($function->getLocatedSource()->getSource(), $node);
@@ -432,6 +446,34 @@ class ReflectionParameter
     public function __clone()
     {
         throw Uncloneable::fromClass(self::class);
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
+    public function getStartLine(): int
+    {
+        if ($this->startLine === null) {
+            throw new RuntimeException('Start line missing');
+        }
+
+        return $this->startLine;
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
+    public function getEndLine(): int
+    {
+        if ($this->endLine === null) {
+            throw new RuntimeException('End line missing');
+        }
+
+        return $this->endLine;
     }
 
     /**
