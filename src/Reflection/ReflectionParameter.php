@@ -32,6 +32,7 @@ use function sprintf;
 
 class ReflectionParameter
 {
+    /** @var non-empty-string */
     private string $name;
 
     private Node\Expr|null $default;
@@ -47,8 +48,10 @@ class ReflectionParameter
     /** @var list<ReflectionAttribute> */
     private array $attributes;
 
+    /** @var positive-int|null */
     private int|null $startColumn;
 
+    /** @var positive-int|null */
     private int|null $endColumn;
 
     private CompiledValue|null $compiledDefaultValue = null;
@@ -63,7 +66,10 @@ class ReflectionParameter
         assert($node->var instanceof Node\Expr\Variable);
         assert(is_string($node->var->name));
 
-        $this->name       = $node->var->name;
+        /** @var non-empty-string $name */
+        $name = $node->var->name;
+
+        $this->name       = $name;
         $this->default    = $node->default;
         $this->type       = $this->createType($node);
         $this->isVariadic = $node->variadic;
@@ -231,6 +237,8 @@ class ReflectionParameter
 
     /**
      * Get the name of the parameter.
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
@@ -426,7 +434,11 @@ class ReflectionParameter
         throw Uncloneable::fromClass(self::class);
     }
 
-    /** @throws RuntimeException */
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getStartColumn(): int
     {
         if ($this->startColumn === null) {
@@ -436,7 +448,11 @@ class ReflectionParameter
         return $this->startColumn;
     }
 
-    /** @throws RuntimeException */
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getEndColumn(): int
     {
         if ($this->endColumn === null) {
