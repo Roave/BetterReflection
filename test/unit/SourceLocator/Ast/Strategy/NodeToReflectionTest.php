@@ -8,7 +8,6 @@ use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -17,6 +16,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
+use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function reset;
 
@@ -31,7 +31,7 @@ class NodeToReflectionTest extends TestCase
     {
         parent::setUp();
 
-        $this->phpParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
+        $this->phpParser = BetterReflectionSingleton::instance()->phpParser();
 
         $this->nodeTraverser = new NodeTraverser();
         $this->nodeTraverser->addVisitor(new NameResolver());
