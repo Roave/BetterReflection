@@ -11,19 +11,35 @@ use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
+use function array_map;
+
 class ReflectionAttribute
 {
+    /** @var non-empty-string */
+    private string $name;
+
+    /** @var array<int|string, Node\Expr> */
+    private array $arguments = [];
+
     public function __construct(
         private Reflector $reflector,
-        private Node\Attribute $node,
+        Node\Attribute $node,
         private ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner,
         private bool $isRepeated,
     ) {
+        /** @var non-empty-string $name */
+        $name       = $node->name->toString();
+        $this->name = $name;
+
+        foreach ($node->args as $argNo => $arg) {
+            $this->arguments[$arg->name?->toString() ?? $argNo] = $arg->value;
+        }
     }
 
+    /** @return non-empty-string */
     public function getName(): string
     {
-        return $this->node->name->toString();
+        return $this->name;
     }
 
     public function getClass(): ReflectionClass
@@ -34,17 +50,10 @@ class ReflectionAttribute
     /** @return array<int|string, mixed> */
     public function getArguments(): array
     {
-        $arguments = [];
-
         $compiler = new CompileNodeToValue();
         $context  = new CompilerContext($this->reflector, $this->owner);
 
-        foreach ($this->node->args as $argNo => $arg) {
-            /** @psalm-suppress MixedAssignment */
-            $arguments[$arg->name?->toString() ?? $argNo] = $compiler->__invoke($arg->value, $context)->value;
-        }
-
-        return $arguments;
+        return array_map(static fn (Node\Expr $value): mixed => $compiler->__invoke($value, $context)->value, $this->arguments);
     }
 
     public function getTarget(): int
