@@ -15,6 +15,8 @@ use function strrpos;
 final class CalculateReflectionColumn
 {
     /**
+     * @return positive-int
+     *
      * @throws InvalidNodePosition
      * @throws NoNodePosition
      */
@@ -28,6 +30,8 @@ final class CalculateReflectionColumn
     }
 
     /**
+     * @return positive-int
+     *
      * @throws InvalidNodePosition
      * @throws NoNodePosition
      */
@@ -40,7 +44,11 @@ final class CalculateReflectionColumn
         return self::calculateColumn($source, $node->getEndFilePos());
     }
 
-    /** @throws InvalidNodePosition */
+    /**
+     * @return positive-int
+     *
+     * @throws InvalidNodePosition
+     */
     private static function calculateColumn(string $source, int $position): int
     {
         $sourceLength = strlen($source);
@@ -50,10 +58,8 @@ final class CalculateReflectionColumn
         }
 
         $lineStartPosition = strrpos($source, "\n", $position - $sourceLength);
-        if ($lineStartPosition === false) {
-            return $position + 1;
-        }
 
-        return $position - $lineStartPosition;
+        /** @psalm-var positive-int */
+        return $lineStartPosition === false ? $position + 1 : $position - $lineStartPosition;
     }
 }
