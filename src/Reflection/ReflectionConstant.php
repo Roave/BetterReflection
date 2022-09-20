@@ -25,19 +25,62 @@ use function count;
 use function explode;
 use function implode;
 use function is_int;
-use function substr_count;
 
 class ReflectionConstant implements Reflection
 {
+    /** @var non-empty-string */
+    private string $name;
+
+    /** @var non-empty-string */
+    private string $shortName;
+
+    private Node\Expr $value;
+
+    private string $docComment;
+
+    /** @var positive-int */
+    private int $startLine;
+
+    /** @var positive-int */
+    private int $endLine;
+
+    /** @var positive-int */
+    private int $startColumn;
+
+    /** @var positive-int */
+    private int $endColumn;
+
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private Node\Stmt\Const_|Node\Expr\FuncCall $node,
+        Node\Stmt\Const_|Node\Expr\FuncCall $node,
         private LocatedSource $locatedSource,
         private string|null $namespace = null,
-        private int|null $positionInNode = null,
+        int|null $positionInNode = null,
     ) {
+        $this->setNamesFromNode($node, $positionInNode);
+
+        if ($node instanceof Node\Expr\FuncCall) {
+            $argumentValueNode = $node->args[1];
+            assert($argumentValueNode instanceof Node\Arg);
+            $this->value = $argumentValueNode->value;
+        } else {
+            /** @psalm-suppress PossiblyNullArrayOffset */
+            $this->value = $node->consts[$positionInNode]->value;
+        }
+
+        $this->docComment = GetLastDocComment::forNode($node);
+
+        /** @var positive-int $startLine */
+        $startLine = $node->getStartLine();
+        /** @var positive-int $endLine */
+        $endLine = $node->getEndLine();
+
+        $this->startLine   = $startLine;
+        $this->endLine     = $endLine;
+        $this->startColumn = CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $node);
+        $this->endColumn   = CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $node);
     }
 
     /**
@@ -107,38 +150,23 @@ class ReflectionConstant implements Reflection
     /**
      * Get the "short" name of the constant (e.g. for A\B\FOO, this will return
      * "FOO").
+     *
+     * @return non-empty-string
      */
     public function getShortName(): string
     {
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            $nameParts = explode('\\', $this->getNameFromDefineFunctionCall($this->node));
-
-            return $nameParts[count($nameParts) - 1];
-        }
-
-        /** @psalm-suppress PossiblyNullArrayOffset */
-        return $this->node->consts[$this->positionInNode]->name->name;
+        return $this->shortName;
     }
 
     /**
      * Get the "full" name of the constant (e.g. for A\B\FOO, this will return
      * "A\B\FOO").
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
-        if (! $this->inNamespace()) {
-            return $this->getShortName();
-        }
-
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            return $this->getNameFromDefineFunctionCall($this->node);
-        }
-
-        /** @psalm-suppress PossiblyNullArrayOffset */
-        $namespacedName = $this->node->consts[$this->positionInNode]->namespacedName;
-        assert($namespacedName instanceof Node\Name);
-
-        return $namespacedName->toString();
+        return $this->name;
     }
 
     /**
@@ -147,10 +175,6 @@ class ReflectionConstant implements Reflection
      */
     public function getNamespaceName(): string
     {
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            return implode('\\', array_slice(explode('\\', $this->getNameFromDefineFunctionCall($this->node)), 0, -1));
-        }
-
         return $this->namespace ?? '';
     }
 
@@ -160,10 +184,6 @@ class ReflectionConstant implements Reflection
      */
     public function inNamespace(): bool
     {
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            return substr_count($this->getNameFromDefineFunctionCall($this->node), '\\') !== 0;
-        }
-
         return $this->namespace !== null;
     }
 
@@ -199,23 +219,12 @@ class ReflectionConstant implements Reflection
      */
     public function getValue(): mixed
     {
-        if ($this->compiledValue !== null) {
-            return $this->compiledValue->value;
+        if ($this->compiledValue === null) {
+            $this->compiledValue = (new CompileNodeToValue())->__invoke(
+                $this->value,
+                new CompilerContext($this->reflector, $this),
+            );
         }
-
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            $argumentValueNode = $this->node->args[1];
-            assert($argumentValueNode instanceof Node\Arg);
-            $valueNode = $argumentValueNode->value;
-        } else {
-            /** @psalm-suppress PossiblyNullArrayOffset */
-            $valueNode = $this->node->consts[$this->positionInNode]->value;
-        }
-
-        $this->compiledValue = (new CompileNodeToValue())->__invoke(
-            $valueNode,
-            new CompilerContext($this->reflector, $this),
-        );
 
         return $this->compiledValue->value;
     }
@@ -232,28 +241,34 @@ class ReflectionConstant implements Reflection
 
     /**
      * Get the line number that this constant starts on.
+     *
+     * @return positive-int
      */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        return $this->startLine;
     }
 
     /**
      * Get the line number that this constant ends on.
+     *
+     * @return positive-int
      */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        return $this->endLine;
     }
 
+    /** @return positive-int */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
+        return $this->startColumn;
     }
 
+    /** @return positive-int */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
+        return $this->endColumn;
     }
 
     /**
@@ -261,7 +276,7 @@ class ReflectionConstant implements Reflection
      */
     public function getDocComment(): string
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function __toString(): string
@@ -269,12 +284,33 @@ class ReflectionConstant implements Reflection
         return ReflectionConstantStringCast::toString($this);
     }
 
-    /** @return Node\Stmt\Const_|Node\Expr\FuncCall */
-    public function getAst(): Node
+    private function setNamesFromNode(Node\Stmt\Const_|Node\Expr\FuncCall $node, int|null $positionInNode): void
     {
-        return $this->node;
+        if ($node instanceof Node\Expr\FuncCall) {
+            $name = $this->getNameFromDefineFunctionCall($node);
+
+            $nameParts       = explode('\\', $name);
+            $this->namespace = implode('\\', array_slice($nameParts, 0, -1)) ?: null;
+
+            /** @var non-empty-string $shortName */
+            $shortName = $nameParts[count($nameParts) - 1];
+        } else {
+            /** @psalm-suppress PossiblyNullArrayOffset */
+            $constNode      = $node->consts[$positionInNode];
+            $namespacedName = $constNode->namespacedName;
+            assert($namespacedName instanceof Node\Name);
+
+            /** @var non-empty-string $name */
+            $name = $namespacedName->toString();
+            /** @var non-empty-string $shortName */
+            $shortName = $constNode->name->name;
+        }
+
+        $this->name      = $name;
+        $this->shortName = $shortName;
     }
 
+    /** @return non-empty-string */
     private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node): string
     {
         $argumentNameNode = $node->args[0];
@@ -282,6 +318,7 @@ class ReflectionConstant implements Reflection
         $nameNode = $argumentNameNode->value;
         assert($nameNode instanceof Node\Scalar\String_);
 
+        /** @psalm-var non-empty-string */
         return $nameNode->value;
     }
 }

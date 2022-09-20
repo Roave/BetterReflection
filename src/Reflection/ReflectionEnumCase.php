@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use LogicException;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\EnumCase;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -22,13 +23,52 @@ use function is_string;
 
 class ReflectionEnumCase
 {
+    /** @var non-empty-string */
+    private string $name;
+
+    private Node\Expr|null $value;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    private string $docComment;
+
+    /** @var positive-int */
+    private int $startLine;
+
+    /** @var positive-int */
+    private int $endLine;
+
+    /** @var positive-int */
+    private int $startColumn;
+
+    /** @var positive-int */
+    private int $endColumn;
+
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private EnumCase $node,
+        EnumCase $node,
         private ReflectionEnum $enum,
     ) {
+        /** @var non-empty-string $name */
+        $name       = $node->name->toString();
+        $this->name = $name;
+
+        $this->value      = $node->expr;
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+        $this->docComment = GetLastDocComment::forNode($node);
+
+        /** @var positive-int $startLine */
+        $startLine = $node->getStartLine();
+        /** @var positive-int $endLine */
+        $endLine = $node->getEndLine();
+
+        $this->startLine   = $startLine;
+        $this->endLine     = $endLine;
+        $this->startColumn = CalculateReflectionColumn::getStartColumn($this->enum->getLocatedSource()->getSource(), $node);
+        $this->endColumn   = CalculateReflectionColumn::getEndColumn($this->enum->getLocatedSource()->getSource(), $node);
     }
 
     /** @internal */
@@ -40,9 +80,10 @@ class ReflectionEnumCase
         return new self($reflector, $node, $enum);
     }
 
+    /** @return non-empty-string */
     public function getName(): string
     {
-        return $this->node->name->toString();
+        return $this->name;
     }
 
     public function getValue(): string|int
@@ -56,13 +97,13 @@ class ReflectionEnumCase
     /** @throws LogicException */
     private function getCompiledValue(): CompiledValue
     {
-        if ($this->node->expr === null) {
+        if ($this->value === null) {
             throw new LogicException('This enum case does not have a value');
         }
 
         if ($this->compiledValue === null) {
             $this->compiledValue = (new CompileNodeToValue())->__invoke(
-                $this->node->expr,
+                $this->value,
                 new CompilerContext($this->reflector, $this),
             );
         }
@@ -70,29 +111,28 @@ class ReflectionEnumCase
         return $this->compiledValue;
     }
 
-    public function getAst(): EnumCase
-    {
-        return $this->node;
-    }
-
+    /** @return positive-int */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        return $this->startLine;
     }
 
+    /** @return positive-int */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        return $this->endLine;
     }
 
+    /** @return positive-int */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->enum->getLocatedSource()->getSource(), $this->node);
+        return $this->startColumn;
     }
 
+    /** @return positive-int */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->enum->getLocatedSource()->getSource(), $this->node);
+        return $this->endColumn;
     }
 
     public function getDeclaringEnum(): ReflectionEnum
@@ -107,18 +147,18 @@ class ReflectionEnumCase
 
     public function getDocComment(): string
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function isDeprecated(): bool
     {
-        return AnnotationHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->docComment);
     }
 
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */

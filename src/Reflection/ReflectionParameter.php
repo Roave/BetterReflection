@@ -32,6 +32,7 @@ use function sprintf;
 
 class ReflectionParameter
 {
+    /** @var non-empty-string */
     private string $name;
 
     private Node\Expr|null $default;
@@ -47,8 +48,16 @@ class ReflectionParameter
     /** @var list<ReflectionAttribute> */
     private array $attributes;
 
+    /** @var positive-int|null */
+    private int|null $startLine;
+
+    /** @var positive-int|null */
+    private int|null $endLine;
+
+    /** @var positive-int|null */
     private int|null $startColumn;
 
+    /** @var positive-int|null */
     private int|null $endColumn;
 
     private CompiledValue|null $compiledDefaultValue = null;
@@ -63,13 +72,24 @@ class ReflectionParameter
         assert($node->var instanceof Node\Expr\Variable);
         assert(is_string($node->var->name));
 
-        $this->name       = $node->var->name;
+        /** @var non-empty-string $name */
+        $name = $node->var->name;
+
+        $this->name       = $name;
         $this->default    = $node->default;
         $this->type       = $this->createType($node);
         $this->isVariadic = $node->variadic;
         $this->byRef      = $node->byRef;
         $this->isPromoted = $node->flags !== 0;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        /** @psalm-var positive-int|null $startLine */
+        $startLine = $node->hasAttribute('startLine') ? $node->getAttribute('startLine') : null;
+        /** @psalm-var positive-int|null $endLine */
+        $endLine = $node->hasAttribute('endLine') ? $node->getAttribute('endLine') : null;
+
+        $this->startLine = $startLine;
+        $this->endLine   = $endLine;
 
         try {
             $this->startColumn = CalculateReflectionColumn::getStartColumn($function->getLocatedSource()->getSource(), $node);
@@ -231,6 +251,8 @@ class ReflectionParameter
 
     /**
      * Get the name of the parameter.
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
@@ -426,7 +448,39 @@ class ReflectionParameter
         throw Uncloneable::fromClass(self::class);
     }
 
-    /** @throws RuntimeException */
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
+    public function getStartLine(): int
+    {
+        if ($this->startLine === null) {
+            throw new RuntimeException('Start line missing');
+        }
+
+        return $this->startLine;
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
+    public function getEndLine(): int
+    {
+        if ($this->endLine === null) {
+            throw new RuntimeException('End line missing');
+        }
+
+        return $this->endLine;
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getStartColumn(): int
     {
         if ($this->startColumn === null) {
@@ -436,7 +490,11 @@ class ReflectionParameter
         return $this->startColumn;
     }
 
-    /** @throws RuntimeException */
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getEndColumn(): int
     {
         if ($this->endColumn === null) {
