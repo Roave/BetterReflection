@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Attribute;
 
+use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
@@ -21,20 +22,25 @@ use function count;
 /** @internal */
 class ReflectionAttributeHelper
 {
-    /** @return list<ReflectionAttribute> */
+    /**
+     * @param Node\AttributeGroup[] $attrGroups
+     *
+     * @return list<ReflectionAttribute>
+     */
     public static function createAttributes(
         Reflector $reflector,
         ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $reflection,
+        array $attrGroups,
     ) {
         $repeated = [];
-        foreach ($reflection->getAst()->attrGroups as $attributesGroupNode) {
+        foreach ($attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
                 $repeated[$attributeNode->name->toLowerString()][] = $attributeNode;
             }
         }
 
         $attributes = [];
-        foreach ($reflection->getAst()->attrGroups as $attributesGroupNode) {
+        foreach ($attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
                 $attributes[] = new ReflectionAttribute(
                     $reflector,

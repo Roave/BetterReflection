@@ -191,7 +191,7 @@ class ReflectionClassConstant
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
+        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
     }
 
     /** @return list<ReflectionAttribute> */
