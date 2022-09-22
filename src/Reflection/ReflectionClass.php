@@ -681,13 +681,10 @@ class ReflectionClass implements Reflection
             ),
             ...array_map(
                 function (ReflectionClass $trait) {
-                    return array_map(fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => ReflectionClassConstant::createFromNode(
-                        $this->reflector,
-                        $classConstant->getAst(),
-                        $classConstant->getPositionInAst(),
-                        $classConstant->getDeclaringClass(),
-                        $this,
-                    ), $trait->getReflectionConstants());
+                    return array_map(
+                        fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => ReflectionClassConstant::withImplementingClass($classConstant, $this),
+                        $trait->getReflectionConstants(),
+                    );
                 },
                 $this->getTraits(),
             ),

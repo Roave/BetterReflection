@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use PhpParser\Node\Stmt\ClassConst;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
@@ -174,38 +173,6 @@ class ReflectionClassConstantTest extends TestCase
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
-    }
-
-    /** @return list<array{0: string, 1: int}> */
-    public function getAstProvider(): array
-    {
-        return [
-            ['TEST', 0],
-            ['TEST2', 1],
-        ];
-    }
-
-    /** @dataProvider getAstProvider */
-    public function testGetAst(string $constantName, int $positionInAst): void
-    {
-        $php = <<<'PHP'
-<?php
-class Foo
-{
-    const TEST = 'test',
-        TEST2 = 'test2';
-}
-PHP;
-
-        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $classReflection    = $reflector->reflectClass('Foo');
-        $constantReflection = $classReflection->getReflectionConstant($constantName);
-
-        $ast = $constantReflection->getAst();
-
-        self::assertInstanceOf(ClassConst::class, $ast);
-        self::assertSame($positionInAst, $constantReflection->getPositionInAst());
-        self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
     }
 
     /** @return list<array{0: string, 1: string, 2: string, 3: string}> */
