@@ -886,14 +886,10 @@ class ReflectionClass implements Reflection
                     ),
                     ...array_map(
                         function (ReflectionClass $trait) use ($filter) {
-                            return array_map(fn (ReflectionProperty $property): ReflectionProperty => ReflectionProperty::createFromNode(
-                                $this->reflector,
-                                $property->getAst(),
-                                $property->getPositionInAst(),
-                                $property->getDeclaringClass(),
-                                $this,
-                                $property->isPromoted(),
-                            ), $trait->getProperties($filter));
+                            return array_map(
+                                fn (ReflectionProperty $property): ReflectionProperty => ReflectionProperty::withImplementingClass($property, $this),
+                                $trait->getProperties($filter),
+                            );
                         },
                         $this->getTraits(),
                     ),

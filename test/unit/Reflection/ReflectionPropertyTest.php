@@ -12,17 +12,16 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PHPUnit\Framework\TestCase;
-use Reflection;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -37,7 +36,9 @@ use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
+use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\Fixture\TraitStaticPropertyGetSet;
+use RuntimeException;
 use stdClass;
 use TraitWithProperty;
 
@@ -60,10 +61,10 @@ class ReflectionPropertyTest extends TestCase
 
     public function testCreateFromName(): void
     {
-        $property = ReflectionProperty::createFromName(ReflectionProperty::class, 'node');
+        $property = ReflectionProperty::createFromName(ReflectionProperty::class, 'name');
 
         self::assertInstanceOf(ReflectionProperty::class, $property);
-        self::assertSame('node', $property->getName());
+        self::assertSame('name', $property->getName());
     }
 
     public function testCreateFromNameThrowsExceptionWhenPropertyDoesNotExist(): void
@@ -156,32 +157,25 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('', $property->getDocComment());
     }
 
-    /** @return list<array{0: string, 1: int, 2: list<string>}> */
+    /** @return list<array{0: string, 1: int}> */
     public function modifierProvider(): array
     {
         return [
-            ['publicProperty', CoreReflectionProperty::IS_PUBLIC, ['public']],
-            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED, ['protected']],
-            ['privateProperty', CoreReflectionProperty::IS_PRIVATE, ['private']],
-            ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC, ['public', 'static']],
+            ['publicProperty', CoreReflectionProperty::IS_PUBLIC],
+            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED],
+            ['privateProperty', CoreReflectionProperty::IS_PRIVATE],
+            ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC],
+            ['readOnlyProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_READONLY],
         ];
     }
 
-    /**
-     * @param list<string> $expectedModifierNames
-     *
-     * @dataProvider modifierProvider
-     */
-    public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames): void
+    /** @dataProvider modifierProvider */
+    public function testGetModifiers(string $propertyName, int $expectedModifier): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
         $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($expectedModifier, $property->getModifiers());
-        self::assertSame(
-            $expectedModifierNames,
-            Reflection::getModifierNames($property->getModifiers()),
-        );
     }
 
     public function testIsPromoted(): void
@@ -259,15 +253,6 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($defaultValue, $property->getDefaultValue());
     }
 
-    public function testCannotClone(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(ExampleClass::class);
-        $publicProp = $classInfo->getProperty('publicProperty');
-
-        $this->expectException(Uncloneable::class);
-        clone $publicProp;
-    }
-
     /**
      * @param non-empty-string $php
      *
@@ -318,39 +303,60 @@ class ReflectionPropertyTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    /** @return list<array{0: string, 1: int}> */
-    public function getAstProvider(): array
+    public function testGetStartLineThrowsExceptionForMagicallyAddedEnumProperty(): void
     {
-        return [
-            ['a', 0],
-            ['b', 1],
-            ['c', 0],
-            ['d', 1],
-        ];
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection    = $reflector->reflectClass(StringEnum::class);
+        $propertyReflection = $classReflection->getProperty('name');
+
+        self::expectException(RuntimeException::class);
+        $propertyReflection->getStartLine();
     }
 
-    /** @dataProvider getAstProvider */
-    public function testGetAst(string $propertyName, int $positionInAst): void
+    public function testGetEndLineThrowsExceptionForMagicallyAddedEnumProperty(): void
     {
-        $php = <<<'PHP'
-<?php
-class Foo
-{
-    private $a = 0,
-            $b = 1;
-    protected $c = 3,
-              $d = 4;
-}
-PHP;
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
 
-        $classReflection    = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
-        $propertyReflection = $classReflection->getProperty($propertyName);
+        $classReflection    = $reflector->reflectClass(StringEnum::class);
+        $propertyReflection = $classReflection->getProperty('name');
 
-        $ast = $propertyReflection->getAst();
+        self::expectException(RuntimeException::class);
+        $propertyReflection->getEndLine();
+    }
 
-        self::assertInstanceOf(Property::class, $ast);
-        self::assertSame($positionInAst, $propertyReflection->getPositionInAst());
-        self::assertSame($propertyName, $ast->props[$positionInAst]->name->name);
+    public function testGetStartColumnThrowsExceptionForMagicallyAddedEnumProperty(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection    = $reflector->reflectClass(StringEnum::class);
+        $propertyReflection = $classReflection->getProperty('name');
+
+        self::expectException(RuntimeException::class);
+        $propertyReflection->getStartColumn();
+    }
+
+    public function testGetEndColumnThrowsExceptionForMagicallyAddedEnumProperty(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection    = $reflector->reflectClass(StringEnum::class);
+        $propertyReflection = $classReflection->getProperty('name');
+
+        self::expectException(RuntimeException::class);
+        $propertyReflection->getEndColumn();
     }
 
     public function testGetDeclaringAndImplementingClassWithPropertyFromTrait(): void

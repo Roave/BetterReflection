@@ -560,7 +560,6 @@ class ReflectionClassTest extends TestCase
 
         $property = $properties['name'];
 
-        self::assertSame(0, $property->getPositionInAst());
         self::assertSame('name', $property->getName());
         self::assertTrue($property->isPublic());
         self::assertTrue($property->isReadOnly());
@@ -613,7 +612,6 @@ class ReflectionClassTest extends TestCase
 
             $property = $properties[$propertyName];
 
-            self::assertSame(0, $property->getPositionInAst(), $fullPropertyName);
             self::assertSame($propertyName, $property->getName(), $fullPropertyName);
             self::assertTrue($property->isPublic(), $fullPropertyName);
             self::assertTrue($property->isReadOnly(), $fullPropertyName);
@@ -733,13 +731,11 @@ PHP;
 
         self::assertSame(Qux::class, $fProperty->getDeclaringClass()->getName());
         self::assertFalse($fProperty->isPromoted());
-        self::assertSame(0, $fProperty->getPositionInAst());
 
         $gProperty = $classInfo->getProperty('g');
 
         self::assertSame(Qux::class, $gProperty->getDeclaringClass()->getName());
         self::assertTrue($gProperty->isPromoted());
-        self::assertSame(0, $gProperty->getPositionInAst());
     }
 
     public function testGetProperty(): void

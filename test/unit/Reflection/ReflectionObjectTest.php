@@ -124,7 +124,6 @@ class ReflectionObjectTest extends TestCase
         self::assertFalse($propInfo->isDefault());
         self::assertTrue($propInfo->isPublic());
         self::assertSame('huzzah', $propInfo->getDefaultValue());
-        self::assertSame(0, $propInfo->getPositionInAst());
         self::assertFalse($propInfo->isPromoted());
     }
 
@@ -189,7 +188,6 @@ class ReflectionObjectTest extends TestCase
 
         self::assertInstanceOf(ReflectionProperty::class, $propertyInfo);
         self::assertFalse($propertyInfo->isPromoted());
-        self::assertSame(0, $propertyInfo->getPositionInAst());
     }
 
     public function testGetDefaultPropertiesShouldIgnoreRuntimeProperty(): void

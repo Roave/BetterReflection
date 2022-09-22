@@ -8,7 +8,6 @@ use Closure;
 use Error;
 use OutOfBoundsException;
 use PhpParser\Node;
-use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\Property as PropertyNode;
 use ReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
@@ -21,13 +20,14 @@ use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionPropertyStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
+use Roave\BetterReflection\Util\Exception\NoNodePosition;
 use Roave\BetterReflection\Util\GetLastDocComment;
+use RuntimeException;
 
 use function assert;
 use function func_num_args;
@@ -37,17 +37,88 @@ use function str_contains;
 
 class ReflectionProperty
 {
+    /**
+     * We cannot use CoreReflectionProperty::IS_READONLY because it does not exist in PHP < 8.1.
+     * Constant is public, so we can use it in tests.
+     *
+     * @internal
+     */
+    public const IS_READONLY = 128;
+
+    /** @var non-empty-string */
+    private string $name;
+
+    private int $modifiers = 0;
+
+    private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type;
+
+    private Node\Expr|null $default;
+
+    private string $docComment;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    /** @var positive-int|null */
+    private int|null $startLine;
+
+    /** @var positive-int|null */
+    private int|null $endLine;
+
+    /** @var positive-int|null */
+    private int|null $startColumn;
+
+    /** @var positive-int|null */
+    private int|null $endColumn;
+
     private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private PropertyNode $node,
-        private int $positionInNode,
+        PropertyNode $node,
+        int $positionInNode,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private bool $isPromoted,
         private bool $declaredAtCompileTime,
     ) {
+        $name = $node->props[$positionInNode]->name->name;
+        assert($name !== '');
+
+        $this->name       = $name;
+        $this->type       = $this->createType($node);
+        $this->default    = $node->props[$positionInNode]->default;
+        $this->docComment = GetLastDocComment::forNode($node);
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        $this->computeModifiers($node);
+
+        $startLine = null;
+        if ($node->hasAttribute('startLine')) {
+            $startLine = $node->getStartLine();
+            assert($startLine > 0);
+        }
+
+        $endLine = null;
+        if ($node->hasAttribute('endLine')) {
+            $endLine = $node->getEndLine();
+            assert($endLine > 0);
+        }
+
+        $this->startLine = $startLine;
+        $this->endLine   = $endLine;
+
+        try {
+            $this->startColumn = CalculateReflectionColumn::getStartColumn($declaringClass->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->startColumn = null;
+        }
+
+        try {
+            $this->endColumn = CalculateReflectionColumn::getEndColumn($declaringClass->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->endColumn = null;
+        }
     }
 
     /**
@@ -82,6 +153,15 @@ class ReflectionProperty
         }
 
         return $property;
+    }
+
+    /** @internal */
+    public static function withImplementingClass(self $property, ReflectionClass $implementingClass): self
+    {
+        $clone                    = clone $property;
+        $clone->implementingClass = $implementingClass;
+
+        return $clone;
     }
 
     public function __toString(): string
@@ -131,20 +211,17 @@ class ReflectionProperty
      */
     public function getModifiers(): int
     {
-        $val  = $this->isStatic() ? CoreReflectionProperty::IS_STATIC : 0;
-        $val += $this->isPublic() ? CoreReflectionProperty::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? CoreReflectionProperty::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? CoreReflectionProperty::IS_PRIVATE : 0;
-
-        return $val;
+        return $this->modifiers;
     }
 
     /**
      * Get the name of the property.
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
-        return $this->node->props[$this->positionInNode]->name->name;
+        return $this->name;
     }
 
     /**
@@ -152,7 +229,7 @@ class ReflectionProperty
      */
     public function isPrivate(): bool
     {
-        return $this->node->isPrivate();
+        return ($this->modifiers & CoreReflectionProperty::IS_PRIVATE) === CoreReflectionProperty::IS_PRIVATE;
     }
 
     /**
@@ -160,7 +237,7 @@ class ReflectionProperty
      */
     public function isProtected(): bool
     {
-        return $this->node->isProtected();
+        return ($this->modifiers & CoreReflectionProperty::IS_PROTECTED) === CoreReflectionProperty::IS_PROTECTED;
     }
 
     /**
@@ -168,7 +245,7 @@ class ReflectionProperty
      */
     public function isPublic(): bool
     {
-        return $this->node->isPublic();
+        return ($this->modifiers & CoreReflectionProperty::IS_PUBLIC) === CoreReflectionProperty::IS_PUBLIC;
     }
 
     /**
@@ -176,7 +253,7 @@ class ReflectionProperty
      */
     public function isStatic(): bool
     {
-        return $this->node->isStatic();
+        return ($this->modifiers & CoreReflectionProperty::IS_STATIC) === CoreReflectionProperty::IS_STATIC;
     }
 
     public function isPromoted(): bool
@@ -207,7 +284,7 @@ class ReflectionProperty
 
     public function isReadOnly(): bool
     {
-        return $this->node->isReadonly();
+        return ($this->modifiers & self::IS_READONLY) === self::IS_READONLY;
     }
 
     public function getDeclaringClass(): ReflectionClass
@@ -222,12 +299,12 @@ class ReflectionProperty
 
     public function getDocComment(): string
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function hasDefaultValue(): bool
     {
-        return ! $this->hasType() || $this->node->props[$this->positionInNode]->default !== null;
+        return ! $this->hasType() || $this->default !== null;
     }
 
     /**
@@ -238,15 +315,13 @@ class ReflectionProperty
      */
     public function getDefaultValue(): string|int|float|bool|array|null
     {
-        $defaultValueNode = $this->node->props[$this->positionInNode]->default;
-
-        if ($defaultValueNode === null) {
+        if ($this->default === null) {
             return null;
         }
 
         if ($this->compiledDefaultValue === null) {
             $this->compiledDefaultValue = (new CompileNodeToValue())->__invoke(
-                $defaultValueNode,
+                $this->default,
                 new CompilerContext(
                     $this->reflector,
                     $this,
@@ -267,44 +342,68 @@ class ReflectionProperty
 
     /**
      * Get the line number that this property starts on.
+     *
+     * @return positive-int
+     *
+     * @throws RuntimeException
      */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        if ($this->startLine === null) {
+            throw new RuntimeException('Start line missing');
+        }
+
+        return $this->startLine;
     }
 
     /**
      * Get the line number that this property ends on.
+     *
+     * @return positive-int
+     *
+     * @throws RuntimeException
      */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        if ($this->endLine === null) {
+            throw new RuntimeException('End line missing');
+        }
+
+        return $this->endLine;
     }
 
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        if ($this->startColumn === null) {
+            throw new RuntimeException('Start column missing');
+        }
+
+        return $this->startColumn;
     }
 
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
-    }
+        if ($this->endColumn === null) {
+            throw new RuntimeException('End column missing');
+        }
 
-    public function getAst(): PropertyNode
-    {
-        return $this->node;
-    }
-
-    public function getPositionInAst(): int
-    {
-        return $this->positionInNode;
+        return $this->endColumn;
     }
 
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */
@@ -321,16 +420,6 @@ class ReflectionProperty
     public function getAttributesByInstance(string $className): array
     {
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws Uncloneable
-     */
-    public function __clone()
-    {
-        throw Uncloneable::fromClass(self::class);
     }
 
     /**
@@ -402,22 +491,12 @@ class ReflectionProperty
      */
     public function allowsNull(): bool
     {
-        if (! $this->hasType()) {
-            return true;
-        }
-
-        return $this->node->type instanceof NullableType;
+        return $this->type === null || $this->type->allowsNull();
     }
 
-    /**
-     * Get the ReflectionType instance representing the type declaration for
-     * this property
-     *
-     * (note: this has nothing to do with DocBlocks).
-     */
-    public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    private function createType(PropertyNode $node): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
-        $type = $this->node->type;
+        $type = $node->type;
 
         if ($type === null) {
             return null;
@@ -429,13 +508,24 @@ class ReflectionProperty
     }
 
     /**
+     * Get the ReflectionType instance representing the type declaration for
+     * this property
+     *
+     * (note: this has nothing to do with DocBlocks).
+     */
+    public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    {
+        return $this->type;
+    }
+
+    /**
      * Does this property have a type declaration?
      *
      * (note: this has nothing to do with DocBlocks).
      */
     public function hasType(): bool
     {
-        return $this->node->type !== null;
+        return $this->type !== null;
     }
 
     /**
@@ -474,5 +564,24 @@ class ReflectionProperty
         }
 
         return $object;
+    }
+
+    private function computeModifiers(PropertyNode $node): void
+    {
+        if ($node->isStatic()) {
+            $this->modifiers += CoreReflectionProperty::IS_STATIC;
+        }
+
+        if ($node->isReadonly()) {
+            $this->modifiers += self::IS_READONLY;
+        }
+
+        if ($node->isPrivate()) {
+            $this->modifiers += CoreReflectionProperty::IS_PRIVATE;
+        } elseif ($node->isProtected()) {
+            $this->modifiers += CoreReflectionProperty::IS_PROTECTED;
+        } else {
+            $this->modifiers += CoreReflectionProperty::IS_PUBLIC;
+        }
     }
 }
