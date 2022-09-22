@@ -219,7 +219,7 @@ class ReflectionConstantTest extends TestCase
     {
         $constNode                 = new Node\Const_('FOO', BuilderHelpers::normalizeValue(1));
         $constNode->namespacedName = new Node\Name\FullyQualified('FOO');
-        $node                      = new Node\Stmt\Const_([$constNode], ['startFilePos' => 6, 'endFilePos' => 18]);
+        $node                      = new Node\Stmt\Const_([$constNode], ['startLine' => 1, 'endLine' => 1, 'startFilePos' => 6, 'endFilePos' => 18]);
         $locatedSource             = new LocatedSource('<?php const FOO = 1', 'FOO');
         $reflector                 = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
         $reflection                = ReflectionConstant::createFromNode($reflector, $node, $locatedSource, null, 0);

@@ -29,6 +29,12 @@
             <property name="allowNested" value="false"/>
         </properties>
     </rule>
+    <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion">
+        <properties>
+            <property name="enableIntegerRanges" value="true"/>
+            <property name="enableAdvancedStringTypes" value="true"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingParameterTypeHint">
         <exclude-pattern>src/Reflection/Adapter/*</exclude-pattern>
     </rule>
