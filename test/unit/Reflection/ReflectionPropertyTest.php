@@ -12,7 +12,6 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PHPUnit\Framework\TestCase;
-use Reflection;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -156,32 +155,25 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('', $property->getDocComment());
     }
 
-    /** @return list<array{0: string, 1: int, 2: list<string>}> */
+    /** @return list<array{0: string, 1: int}> */
     public function modifierProvider(): array
     {
         return [
-            ['publicProperty', CoreReflectionProperty::IS_PUBLIC, ['public']],
-            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED, ['protected']],
-            ['privateProperty', CoreReflectionProperty::IS_PRIVATE, ['private']],
-            ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC, ['public', 'static']],
+            ['publicProperty', CoreReflectionProperty::IS_PUBLIC],
+            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED],
+            ['privateProperty', CoreReflectionProperty::IS_PRIVATE],
+            ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC],
+            ['readOnlyProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_READONLY],
         ];
     }
 
-    /**
-     * @param list<string> $expectedModifierNames
-     *
-     * @dataProvider modifierProvider
-     */
-    public function testGetModifiers(string $propertyName, int $expectedModifier, array $expectedModifierNames): void
+    /** @dataProvider modifierProvider */
+    public function testGetModifiers(string $propertyName, int $expectedModifier): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
         $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($expectedModifier, $property->getModifiers());
-        self::assertSame(
-            $expectedModifierNames,
-            Reflection::getModifierNames($property->getModifiers()),
-        );
     }
 
     public function testIsPromoted(): void

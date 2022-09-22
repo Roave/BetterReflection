@@ -37,6 +37,14 @@ use function str_contains;
 
 class ReflectionProperty
 {
+    /**
+     * We cannot use CoreReflectionProperty::IS_READONLY because it does not exist in PHP < 8.1.
+     * Constant is public, so we can use it in tests.
+     *
+     * @internal
+     */
+    public const IS_READONLY = 128;
+
     private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
@@ -135,6 +143,7 @@ class ReflectionProperty
         $val += $this->isPublic() ? CoreReflectionProperty::IS_PUBLIC : 0;
         $val += $this->isProtected() ? CoreReflectionProperty::IS_PROTECTED : 0;
         $val += $this->isPrivate() ? CoreReflectionProperty::IS_PRIVATE : 0;
+        $val += $this->isReadOnly() ? self::IS_READONLY : 0;
 
         return $val;
     }
