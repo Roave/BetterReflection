@@ -91,14 +91,20 @@ class ReflectionPropertyTest extends TestCase
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
 
-        $privateProp = $classInfo->getProperty('privateProperty');
-        self::assertTrue($privateProp->isPrivate());
+        $onlyPrivateProp = $classInfo->getProperty('privateProperty');
+        self::assertTrue($onlyPrivateProp->isPrivate());
+        self::assertFalse($onlyPrivateProp->isStatic());
+        self::assertFalse($onlyPrivateProp->isReadOnly());
 
-        $protectedProp = $classInfo->getProperty('protectedProperty');
-        self::assertTrue($protectedProp->isProtected());
+        $onlyProtectedProp = $classInfo->getProperty('protectedProperty');
+        self::assertTrue($onlyProtectedProp->isProtected());
+        self::assertFalse($onlyProtectedProp->isStatic());
+        self::assertFalse($onlyProtectedProp->isReadOnly());
 
-        $publicProp = $classInfo->getProperty('publicProperty');
-        self::assertTrue($publicProp->isPublic());
+        $onlyPublicProp = $classInfo->getProperty('publicProperty');
+        self::assertTrue($onlyPublicProp->isPublic());
+        self::assertFalse($onlyPublicProp->isStatic());
+        self::assertFalse($onlyPublicProp->isReadOnly());
     }
 
     public function testIsStatic(): void
@@ -108,8 +114,9 @@ class ReflectionPropertyTest extends TestCase
         $publicProp = $classInfo->getProperty('publicProperty');
         self::assertFalse($publicProp->isStatic());
 
-        $staticProp = $classInfo->getProperty('publicStaticProperty');
-        self::assertTrue($staticProp->isStatic());
+        $publiStaticProp = $classInfo->getProperty('publicStaticProperty');
+        self::assertTrue($publiStaticProp->isPublic());
+        self::assertTrue($publiStaticProp->isStatic());
     }
 
     public function testIsReadOnly(): void
@@ -120,6 +127,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertFalse($notReadOnlyProperty->isReadOnly());
 
         $readOnlyProperty = $classInfo->getProperty('readOnlyProperty');
+        self::assertTrue($readOnlyProperty->isPublic());
         self::assertTrue($readOnlyProperty->isReadOnly());
     }
 
@@ -190,8 +198,8 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('int|null', $promotedProperty->getType()->__toString());
         self::assertFalse($promotedProperty->hasDefaultValue());
         self::assertNull($promotedProperty->getDefaultValue());
-        self::assertSame(46, $promotedProperty->getStartLine());
-        self::assertSame(46, $promotedProperty->getEndLine());
+        self::assertSame(47, $promotedProperty->getStartLine());
+        self::assertSame(47, $promotedProperty->getEndLine());
         self::assertSame(60, $promotedProperty->getStartColumn());
         self::assertSame(95, $promotedProperty->getEndColumn());
         self::assertSame('/** Some doccomment */', $promotedProperty->getDocComment());

@@ -569,7 +569,7 @@ class ReflectionProperty
     private function computeModifiers(PropertyNode $node): void
     {
         if ($node->isStatic()) {
-            $this->modifiers += CoreReflectionProperty::IS_STATIC;
+            $this->modifiers = CoreReflectionProperty::IS_STATIC;
         }
 
         if ($node->isReadonly()) {

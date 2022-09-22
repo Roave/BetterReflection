@@ -262,7 +262,7 @@ class ReflectionClassConstant
     private function computeModifiers(ClassConst $node): void
     {
         if ($node->isFinal()) {
-            $this->modifiers += self::IS_FINAL;
+            $this->modifiers = self::IS_FINAL;
         }
 
         if ($node->isPrivate()) {
