@@ -57,27 +57,38 @@ class ReflectionClassConstantTest extends TestCase
         self::assertTrue($const->isPublic());
     }
 
-    public function testPublicVisibility(): void
+    public function testOnlyPublicVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_3');
         self::assertTrue($const->isPublic());
+        self::assertFalse($const->isFinal());
     }
 
-    public function testProtectedVisibility(): void
+    public function testOnlyProtectedVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_4');
         self::assertTrue($const->isProtected());
+        self::assertFalse($const->isFinal());
     }
 
     public function testPrivateVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_5');
         self::assertTrue($const->isPrivate());
+        self::assertFalse($const->isFinal());
     }
 
-    public function testFinal(): void
+    public function testPublicFinal(): void
     {
         $const = $this->getExampleConstant('MY_CONST_6');
+        self::assertTrue($const->isPublic());
+        self::assertTrue($const->isFinal());
+    }
+
+    public function testProtectedFinal(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_7');
+        self::assertTrue($const->isProtected());
         self::assertTrue($const->isFinal());
     }
 
@@ -102,6 +113,7 @@ class ReflectionClassConstantTest extends TestCase
             ['MY_CONST_4', CoreReflectionClassConstant::IS_PROTECTED],
             ['MY_CONST_5', CoreReflectionClassConstant::IS_PRIVATE],
             ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstant::IS_FINAL],
+            ['MY_CONST_7', CoreReflectionClassConstant::IS_PROTECTED | ReflectionClassConstant::IS_FINAL],
         ];
     }
 
