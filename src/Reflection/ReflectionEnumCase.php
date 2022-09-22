@@ -52,18 +52,18 @@ class ReflectionEnumCase
         EnumCase $node,
         private ReflectionEnum $enum,
     ) {
-        /** @var non-empty-string $name */
-        $name       = $node->name->toString();
+        $name = $node->name->toString();
+        assert($name !== '');
         $this->name = $name;
 
         $this->value      = $node->expr;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
         $this->docComment = GetLastDocComment::forNode($node);
 
-        /** @var positive-int $startLine */
         $startLine = $node->getStartLine();
-        /** @var positive-int $endLine */
+        assert($startLine > 0);
         $endLine = $node->getEndLine();
+        assert($endLine > 0);
 
         $this->startLine   = $startLine;
         $this->endLine     = $endLine;

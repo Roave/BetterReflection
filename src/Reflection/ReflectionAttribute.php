@@ -12,6 +12,7 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
+use function assert;
 
 class ReflectionAttribute
 {
@@ -27,8 +28,8 @@ class ReflectionAttribute
         private ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner,
         private bool $isRepeated,
     ) {
-        /** @var non-empty-string $name */
-        $name       = $node->name->toString();
+        $name = $node->name->toString();
+        assert($name !== '');
         $this->name = $name;
 
         foreach ($node->args as $argNo => $arg) {

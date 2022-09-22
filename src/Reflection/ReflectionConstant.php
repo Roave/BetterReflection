@@ -72,10 +72,10 @@ class ReflectionConstant implements Reflection
 
         $this->docComment = GetLastDocComment::forNode($node);
 
-        /** @var positive-int $startLine */
         $startLine = $node->getStartLine();
-        /** @var positive-int $endLine */
+        assert($startLine > 0);
         $endLine = $node->getEndLine();
+        assert($endLine > 0);
 
         $this->startLine   = $startLine;
         $this->endLine     = $endLine;
@@ -292,18 +292,18 @@ class ReflectionConstant implements Reflection
             $nameParts       = explode('\\', $name);
             $this->namespace = implode('\\', array_slice($nameParts, 0, -1)) ?: null;
 
-            /** @var non-empty-string $shortName */
             $shortName = $nameParts[count($nameParts) - 1];
+            assert($shortName !== '');
         } else {
             /** @psalm-suppress PossiblyNullArrayOffset */
             $constNode      = $node->consts[$positionInNode];
             $namespacedName = $constNode->namespacedName;
             assert($namespacedName instanceof Node\Name);
 
-            /** @var non-empty-string $name */
             $name = $namespacedName->toString();
-            /** @var non-empty-string $shortName */
+            assert($name !== '');
             $shortName = $constNode->name->name;
+            assert($shortName !== '');
         }
 
         $this->name      = $name;

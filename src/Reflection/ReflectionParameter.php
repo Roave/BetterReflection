@@ -72,8 +72,8 @@ class ReflectionParameter
         assert($node->var instanceof Node\Expr\Variable);
         assert(is_string($node->var->name));
 
-        /** @var non-empty-string $name */
         $name = $node->var->name;
+        assert($name !== '');
 
         $this->name       = $name;
         $this->default    = $node->default;
@@ -83,10 +83,19 @@ class ReflectionParameter
         $this->isPromoted = $node->flags !== 0;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
 
-        /** @psalm-var positive-int|null $startLine */
-        $startLine = $node->hasAttribute('startLine') ? $node->getAttribute('startLine') : null;
-        /** @psalm-var positive-int|null $endLine */
-        $endLine = $node->hasAttribute('endLine') ? $node->getAttribute('endLine') : null;
+        if ($node->hasAttribute('startLine')) {
+            $startLine = $node->getStartLine();
+            assert($startLine > 0);
+        } else {
+            $startLine = null;
+        }
+
+        if ($node->hasAttribute('endLine')) {
+            $endLine = $node->getEndLine();
+            assert($endLine > 0);
+        } else {
+            $endLine = null;
+        }
 
         $this->startLine = $startLine;
         $this->endLine   = $endLine;
