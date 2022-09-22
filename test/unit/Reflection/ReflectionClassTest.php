@@ -152,7 +152,7 @@ class ReflectionClassTest extends TestCase
 
         self::assertFalse($classInfo->inNamespace());
         self::assertSame('ClassWithNoNamespace', $classInfo->getName());
-        self::assertSame('', $classInfo->getNamespaceName());
+        self::assertNull($classInfo->getNamespaceName());
         self::assertSame('ClassWithNoNamespace', $classInfo->getShortName());
     }
 
@@ -165,7 +165,7 @@ class ReflectionClassTest extends TestCase
 
         self::assertFalse($classInfo->inNamespace());
         self::assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getName());
-        self::assertSame('', $classInfo->getNamespaceName());
+        self::assertNull($classInfo->getNamespaceName());
         self::assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 

@@ -72,7 +72,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertSame('foo', $functionInfo->getName());
         self::assertFalse($functionInfo->inNamespace());
-        self::assertSame('', $functionInfo->getNamespaceName());
+        self::assertNull($functionInfo->getNamespaceName());
         self::assertSame('foo', $functionInfo->getShortName());
     }
 
@@ -85,7 +85,7 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         self::assertSame('foo', $functionInfo->getName());
         self::assertFalse($functionInfo->inNamespace());
-        self::assertSame('', $functionInfo->getNamespaceName());
+        self::assertNull($functionInfo->getNamespaceName());
         self::assertSame('foo', $functionInfo->getShortName());
     }
 

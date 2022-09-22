@@ -79,7 +79,7 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Namespace_) {
-                return $context->getNamespace();
+                return $context->getNamespace() ?? '';
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Method) {
@@ -170,7 +170,7 @@ class CompileNodeToValue
     private function resolveConstantName(Node\Expr\ConstFetch $constNode, CompilerContext $context): string
     {
         $constantName = $constNode->name->toString();
-        $namespace    = $context->getNamespace();
+        $namespace    = $context->getNamespace() ?? '';
 
         if ($constNode->name->isUnqualified()) {
             $namespacedConstantName = sprintf('%s\\%s', $namespace, $constantName);

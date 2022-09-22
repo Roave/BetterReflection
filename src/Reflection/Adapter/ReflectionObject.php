@@ -410,7 +410,7 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionObject->getNamespaceName();
+        return $this->betterReflectionObject->getNamespaceName() ?? '';
     }
 
     public function getShortName(): string

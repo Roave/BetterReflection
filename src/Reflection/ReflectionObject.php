@@ -129,7 +129,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getName();
     }
 
-    public function getNamespaceName(): string
+    public function getNamespaceName(): string|null
     {
         return $this->reflectionClass->getNamespaceName();
     }

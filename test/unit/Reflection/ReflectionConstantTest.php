@@ -49,7 +49,7 @@ class ReflectionConstantTest extends TestCase
 
         self::assertFalse($reflection->inNamespace());
         self::assertSame('FOO', $reflection->getName());
-        self::assertSame('', $reflection->getNamespaceName());
+        self::assertNull($reflection->getNamespaceName());
         self::assertSame('FOO', $reflection->getShortName());
     }
 
@@ -62,7 +62,7 @@ class ReflectionConstantTest extends TestCase
 
         self::assertFalse($reflection->inNamespace());
         self::assertSame('FOO', $reflection->getName());
-        self::assertSame('', $reflection->getNamespaceName());
+        self::assertNull($reflection->getNamespaceName());
         self::assertSame('FOO', $reflection->getShortName());
     }
 
@@ -101,7 +101,7 @@ class ReflectionConstantTest extends TestCase
 
         self::assertFalse($reflection->inNamespace());
         self::assertSame('FOO', $reflection->getName());
-        self::assertSame('', $reflection->getNamespaceName());
+        self::assertNull($reflection->getNamespaceName());
         self::assertSame('FOO', $reflection->getShortName());
     }
 
