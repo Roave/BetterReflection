@@ -343,4 +343,15 @@ class ReflectionNamedTypeTest extends TestCase
         self::expectException(LogicException::class);
         $typeReflection->getClass();
     }
+
+    public function testWithOwner(): void
+    {
+        $typeReflection = $this->createType('string');
+
+        $owner = $this->createMock(ReflectionParameter::class);
+
+        $cloneTypeReflection = $typeReflection->withOwner($owner);
+
+        self::assertNotSame($typeReflection, $cloneTypeReflection);
+    }
 }

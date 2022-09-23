@@ -43,4 +43,23 @@ class ReflectionIntersectionTypeTest extends TestCase
         self::assertSame($expectedString, $typeReflection->__toString());
         self::assertFalse($typeReflection->allowsNull());
     }
+
+    public function testWithOwner(): void
+    {
+        $typeReflection = new ReflectionIntersectionType($this->reflector, $this->owner, new Node\IntersectionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]));
+        $types          = $typeReflection->getTypes();
+
+        self::assertCount(2, $types);
+
+        $owner = $this->createMock(ReflectionParameter::class);
+
+        $cloneTypeReflection = $typeReflection->withOwner($owner);
+
+        self::assertNotSame($typeReflection, $cloneTypeReflection);
+
+        $cloneTypes = $cloneTypeReflection->getTypes();
+
+        self::assertCount(2, $cloneTypes);
+        self::assertNotSame($types[0], $cloneTypes[0]);
+    }
 }

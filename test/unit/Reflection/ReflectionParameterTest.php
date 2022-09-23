@@ -9,8 +9,8 @@ use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -542,16 +542,6 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($paramInfo->getDeclaringClass());
     }
 
-    public function testCannotClone(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(Methods::class);
-        $methodInfo = $classInfo->getMethod('methodWithParameters');
-        $paramInfo  = $methodInfo->getParameter('parameter1');
-
-        $this->expectException(Uncloneable::class);
-        clone $paramInfo;
-    }
-
     /** @return list<array{0: non-empty-string, 1: int, 2: int, 3: int, 4: int}> */
     public function linesAndColumnsProvider(): array
     {
@@ -753,5 +743,29 @@ class ReflectionParameterTest extends TestCase
         $attributes          = $parameterReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testWithFunction(): void
+    {
+        $reflector           = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection     = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection    = $classReflection->getMethod('methodWithAttributes');
+        $parameterReflection = $methodReflection->getParameter('parameterWithAttributes');
+        $attributes          = $parameterReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+
+        $functionReflection = $this->createMock(ReflectionMethod::class);
+
+        $cloneParameterReflection = $parameterReflection->withFunction($functionReflection);
+
+        self::assertNotSame($parameterReflection, $cloneParameterReflection);
+        self::assertNotSame($parameterReflection->getDeclaringFunction(), $cloneParameterReflection->getDeclaringFunction());
+        self::assertNotSame($parameterReflection->getType(), $cloneParameterReflection->getType());
+
+        $cloneAttributes = $cloneParameterReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
     }
 }

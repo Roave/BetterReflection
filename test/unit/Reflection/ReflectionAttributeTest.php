@@ -200,4 +200,16 @@ class ReflectionAttributeTest extends TestCase
 
         self::assertSame("Attribute [ Roave\BetterReflectionTest\Fixture\Attr ]\n", (string) $attributeReflection);
     }
+
+    public function testWithOwner(): void
+    {
+        $classReflection     = $this->reflector->reflectClass(ClassWithAttributes::class);
+        $attributeReflection = $classReflection->getAttributes()[0];
+
+        $owner = $this->createMock(ReflectionClass::class);
+
+        $cloneAttributeReflection = $attributeReflection->withOwner($owner);
+
+        self::assertNotSame($attributeReflection, $cloneAttributeReflection);
+    }
 }

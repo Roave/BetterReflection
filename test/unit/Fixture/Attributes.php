@@ -34,8 +34,8 @@ class ClassWithAttributes
     public function methodWithAttributes(
         #[Attr]
         #[AnotherAttr]
-        $parameterWithAttributes
-    )
+        array $parameterWithAttributes
+    ): array
     {
 
     }

@@ -38,6 +38,15 @@ class ReflectionAttribute
         }
     }
 
+    /** @interal */
+    public function withOwner(ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner): self
+    {
+        $clone        = clone $this;
+        $clone->owner = $owner;
+
+        return $clone;
+    }
+
     /** @return non-empty-string */
     public function getName(): string
     {

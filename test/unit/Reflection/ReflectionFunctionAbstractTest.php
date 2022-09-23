@@ -8,7 +8,6 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -16,12 +15,15 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
+use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\Attr;
+use Roave\BetterReflectionTest\Fixture\StringEnum;
+use RuntimeException;
 use stdClass;
 
 use function sprintf;
@@ -284,6 +286,62 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame($endColumn, $function->getEndColumn());
     }
 
+    public function testGetStartLineThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection  = $reflector->reflectClass(StringEnum::class);
+        $methodReflection = $classReflection->getMethod('tryFrom');
+
+        self::expectException(RuntimeException::class);
+        $methodReflection->getStartLine();
+    }
+
+    public function testGetEndLineThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection  = $reflector->reflectClass(StringEnum::class);
+        $methodReflection = $classReflection->getMethod('tryFrom');
+
+        self::expectException(RuntimeException::class);
+        $methodReflection->getEndLine();
+    }
+
+    public function testGetStartColumnThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection  = $reflector->reflectClass(StringEnum::class);
+        $methodReflection = $classReflection->getMethod('tryFrom');
+
+        self::expectException(RuntimeException::class);
+        $methodReflection->getStartColumn();
+    }
+
+    public function testGetEndColumnThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection  = $reflector->reflectClass(StringEnum::class);
+        $methodReflection = $classReflection->getMethod('tryFrom');
+
+        self::expectException(RuntimeException::class);
+        $methodReflection->getEndColumn();
+    }
+
     /** @return list<array{0: non-empty-string, 1: bool}> */
     public function returnsReferenceProvider(): array
     {
@@ -513,31 +571,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNotNull($functionInfo->getReturnType());
     }
 
-    public function testCannotClone(): void
-    {
-        $php = '<?php function foo() {}';
-
-        $functionInfo = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectFunction('foo');
-
-        $this->expectException(Uncloneable::class);
-        clone $functionInfo;
-    }
-
-    public function testGetAst(): void
-    {
-        $php = '<?php
-            function foo() {}
-        ';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $ast = $function->getAst();
-
-        self::assertInstanceOf(Function_::class, $ast);
-        self::assertSame('foo', $ast->name->name);
-    }
-
     /** @dataProvider deprecatedDocCommentsProvider */
     public function testFunctionsCanBeDeprecated(string $comment): void
     {
@@ -618,5 +651,24 @@ class ReflectionFunctionAbstractTest extends TestCase
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $function  = $reflector->reflectFunction('foo');
         self::assertNotTrue($function->couldThrow());
+    }
+
+    public function testCouldThrowForAbstractMethod(): void
+    {
+        $php = <<<'PHP'
+        <?php
+
+        abstract class Foo
+        {
+            abstract public function foo();
+        }
+
+        PHP;
+
+        $reflector        = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection  = $reflector->reflectClass('Foo');
+        $methodReflection = $classReflection->getMethod('foo');
+
+        self::assertFalse($methodReflection->couldThrow());
     }
 }
