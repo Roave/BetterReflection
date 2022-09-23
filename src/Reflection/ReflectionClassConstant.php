@@ -99,9 +99,9 @@ class ReflectionClassConstant
     }
 
     /** @internal */
-    public static function withImplementingClass(self $classConstant, ReflectionClass $implementingClass): self
+    public function withImplementingClass(ReflectionClass $implementingClass): self
     {
-        $clone                    = clone $classConstant;
+        $clone                    = clone $this;
         $clone->implementingClass = $implementingClass;
 
         return $clone;

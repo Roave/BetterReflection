@@ -155,9 +155,9 @@ class ReflectionProperty
     }
 
     /** @internal */
-    public static function withImplementingClass(self $property, ReflectionClass $implementingClass): self
+    public function withImplementingClass(ReflectionClass $implementingClass): self
     {
-        $clone                    = clone $property;
+        $clone                    = clone $this;
         $clone->implementingClass = $implementingClass;
 
         return $clone;

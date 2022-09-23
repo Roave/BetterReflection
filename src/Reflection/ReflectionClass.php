@@ -668,7 +668,7 @@ class ReflectionClass implements Reflection
             ...array_map(
                 function (ReflectionClass $trait) {
                     return array_map(
-                        fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => ReflectionClassConstant::withImplementingClass($classConstant, $this),
+                        fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
                         $trait->getReflectionConstants(),
                     );
                 },
@@ -870,7 +870,7 @@ class ReflectionClass implements Reflection
                     ...array_map(
                         function (ReflectionClass $trait) use ($filter) {
                             return array_map(
-                                fn (ReflectionProperty $property): ReflectionProperty => ReflectionProperty::withImplementingClass($property, $this),
+                                fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
                                 $trait->getProperties($filter),
                             );
                         },
