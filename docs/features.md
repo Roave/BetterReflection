@@ -17,10 +17,6 @@ See [Loading a class from a string](https://github.com/Roave/BetterReflection/tr
 
 Not used and not planned to be used in the future.
 
-## AST extraction from Reflections
-
-See [AST extraction documentation](https://github.com/Roave/BetterReflection/tree/master/docs/ast-extraction.md)
-
 ## PHP 7 Parameter Type Declarations and Return Type Declarations
 
 These act in the same way as the core reflection API, except they return a

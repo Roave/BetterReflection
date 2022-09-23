@@ -629,14 +629,6 @@ PHP;
         self::assertSame(107, $methodReflection->invoke($object, 3, 4));
     }
 
-    public function testInterfaceMethodBodyAst(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(InterfaceWithMethod::class);
-        $methodInfo = $classInfo->getMethod('someMethod');
-
-        self::assertSame([], $methodInfo->getBodyAst());
-    }
-
     public function testGetAttributesWithoutAttributes(): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));

@@ -7,7 +7,6 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Scalar\LNumber;
-use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Parser;
@@ -529,69 +528,6 @@ class ReflectionFunctionAbstractTest extends TestCase
 
         $this->expectException(Uncloneable::class);
         clone $functionInfo;
-    }
-
-    public function testGetBodyAst(): void
-    {
-        $php = '<?php
-            function foo() {
-                echo "Hello world";
-            }
-        ';
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        $ast = $function->getBodyAst();
-
-        self::assertIsArray($ast);
-        self::assertCount(1, $ast);
-        self::assertInstanceOf(Echo_::class, $ast[0]);
-    }
-
-    public function testGetBodyCode(): void
-    {
-        $php = "<?php
-            function foo() {
-                echo 'Hello world';
-            }
-        ";
-
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-
-        self::assertSame(
-            "echo 'Hello world';",
-            $function->getBodyCode(),
-        );
-    }
-
-    public function testGetBodyCodeWithClosure(): void
-    {
-        $function = (new DefaultReflector(new ClosureSourceLocator(
-            static function (): void {
-                echo 'Hello world';
-            },
-            $this->parser,
-        )))->reflectFunction(ReflectionFunction::CLOSURE_NAME);
-
-        self::assertSame(
-            "echo 'Hello world';",
-            $function->getBodyCode(),
-        );
-    }
-
-    public function testGetBodyCodeWithArrowFunction(): void
-    {
-        $function = (new DefaultReflector(new ClosureSourceLocator(
-            static fn (): string => 'Hello world',
-            $this->parser,
-        )))->reflectFunction(ReflectionFunction::CLOSURE_NAME);
-
-        self::assertSame(
-            "'Hello world'",
-            $function->getBodyCode(),
-        );
     }
 
     public function testGetAst(): void

@@ -10,8 +10,6 @@ use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
 use PhpParser\Node\Stmt\Throw_ as NodeThrow;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
-use PhpParser\PrettyPrinterAbstract;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\Uncloneable;
@@ -210,7 +208,7 @@ trait ReflectionFunctionAbstract
         $visitor   = new FindingVisitor(static fn (Node $node): bool => $node instanceof NodeThrow);
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);
-        $traverser->traverse($this->getBodyAst());
+        $traverser->traverse($this->node->getStmts() ?? []);
 
         return $visitor->getFoundNodes() !== [];
     }
@@ -354,44 +352,6 @@ trait ReflectionFunctionAbstract
     public function __clone()
     {
         throw Uncloneable::fromClass(self::class);
-    }
-
-    /**
-     * Retrieves the body of this function as AST nodes
-     *
-     * @return Node[]
-     */
-    public function getBodyAst(): array
-    {
-        return $this->node->getStmts() ?? [];
-    }
-
-    /**
-     * Retrieves the body of this function as code.
-     *
-     * If a PrettyPrinter is provided as a parameter, it will be used, otherwise
-     * a default will be used.
-     *
-     * Note that the formatting of the code may not be the same as the original
-     * function. If specific formatting is required, you should provide your
-     * own implementation of a PrettyPrinter to unparse the AST.
-     */
-    public function getBodyCode(PrettyPrinterAbstract|null $printer = null): string
-    {
-        if ($printer === null) {
-            $printer = new StandardPrettyPrinter();
-        }
-
-        if ($this->node instanceof Node\Expr\ArrowFunction) {
-            /** @var non-empty-list<Node\Stmt\Return_> $ast */
-            $ast  = $this->getBodyAst();
-            $expr = $ast[0]->expr;
-            assert($expr instanceof Node\Expr);
-
-            return $printer->prettyPrintExpr($expr);
-        }
-
-        return $printer->prettyPrint($this->getBodyAst());
     }
 
     /**

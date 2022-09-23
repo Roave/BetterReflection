@@ -55,7 +55,6 @@ $classInfo = (new BetterReflection())
 * [Using types](docs/types.md)
 * [The features](docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
-* [AST extraction](docs/ast-extraction.md)
 
 ## Upgrading
 
