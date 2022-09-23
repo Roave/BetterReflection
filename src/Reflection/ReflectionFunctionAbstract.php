@@ -38,20 +38,22 @@ trait ReflectionFunctionAbstract
      */
     public function getName(): string
     {
-        if (! $this->inNamespace()) {
+        $namespace = $this->getNamespaceName();
+
+        if ($namespace === null) {
             return $this->getShortName();
         }
 
-        return $this->getNamespaceName() . '\\' . $this->getShortName();
+        return $namespace . '\\' . $this->getShortName();
     }
 
     /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
      * return "A\B").
      */
-    public function getNamespaceName(): string
+    public function getNamespaceName(): string|null
     {
-        return $this->namespace ?? '';
+        return $this->namespace;
     }
 
     /**

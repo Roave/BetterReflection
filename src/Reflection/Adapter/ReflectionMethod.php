@@ -118,7 +118,7 @@ final class ReflectionMethod extends CoreReflectionMethod
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionMethod->getNamespaceName();
+        return $this->betterReflectionMethod->getNamespaceName() ?? '';
     }
 
     public function getNumberOfParameters(): int

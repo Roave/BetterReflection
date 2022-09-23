@@ -193,9 +193,9 @@ class ReflectionMethod
         return false;
     }
 
-    public function getNamespaceName(): string
+    public function getNamespaceName(): string|null
     {
-        return '';
+        return null;
     }
 
     public function isClosure(): bool

@@ -460,7 +460,7 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionClass->getNamespaceName();
+        return $this->betterReflectionClass->getNamespaceName() ?? '';
     }
 
     public function getShortName(): string

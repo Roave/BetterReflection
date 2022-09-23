@@ -239,7 +239,7 @@ class ReflectionMethodTest extends TestCase
 
         self::assertFalse($methodInfo->inNamespace());
         self::assertSame('someMethod', $methodInfo->getName());
-        self::assertSame('', $methodInfo->getNamespaceName());
+        self::assertNull($methodInfo->getNamespaceName());
         self::assertSame('someMethod', $methodInfo->getShortName());
     }
 
@@ -251,7 +251,7 @@ class ReflectionMethodTest extends TestCase
 
         self::assertFalse($methodInfo->inNamespace());
         self::assertSame('b_renamed', $methodInfo->getName());
-        self::assertSame('', $methodInfo->getNamespaceName());
+        self::assertNull($methodInfo->getNamespaceName());
         self::assertSame('b_renamed', $methodInfo->getShortName());
     }
 

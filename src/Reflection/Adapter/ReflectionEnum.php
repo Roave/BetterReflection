@@ -413,7 +413,7 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionEnum->getNamespaceName();
+        return $this->betterReflectionEnum->getNamespaceName() ?? '';
     }
 
     public function getShortName(): string

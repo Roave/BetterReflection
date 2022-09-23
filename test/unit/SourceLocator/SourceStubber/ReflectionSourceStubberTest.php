@@ -534,7 +534,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($constantName, $constantReflection->getName());
         self::assertSame($constantName, $constantReflection->getShortName());
 
-        self::assertNotNull($constantReflection->getNamespaceName());
+        self::assertNull($constantReflection->getNamespaceName());
         self::assertFalse($constantReflection->inNamespace());
         self::assertTrue($constantReflection->isInternal());
         self::assertFalse($constantReflection->isUserDefined());

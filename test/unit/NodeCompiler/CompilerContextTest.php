@@ -244,6 +244,6 @@ PHP;
 
         $context = new CompilerContext($reflector, $constant);
 
-        self::assertSame('', $context->getNamespace());
+        self::assertNull($context->getNamespace());
     }
 }
