@@ -130,17 +130,17 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($enumReflection, $caseReflection->getDeclaringEnum());
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: string, 1: string|null}> */
     public function dataGetDocComment(): array
     {
         return [
             ['WITH_DOCCOMMENT', '/** With doccomment */'],
-            ['NO_DOCCOMMENT', ''],
+            ['NO_DOCCOMMENT', null],
         ];
     }
 
     /** @dataProvider dataGetDocComment */
-    public function testGetDocComment(string $caseName, string $docComment): void
+    public function testGetDocComment(string $caseName, string|null $docComment): void
     {
         $enumReflection = $this->reflector->reflectClass(DocComment::class);
 

@@ -886,14 +886,14 @@ PHP;
         self::assertStringContainsString('Class description', $reflector->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment(): void
+    public function testGetDocCommentReturnsNullWithNoComment(): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/ExampleClass.php',
             $this->astLocator,
         )))->reflectClass(AnotherClass::class);
 
-        self::assertSame('', $classInfo->getDocComment());
+        self::assertNull($classInfo->getDocComment());
     }
 
     public function testHasProperty(): void

@@ -66,7 +66,7 @@ class ReflectionPropertyTest extends TestCase
             ['isStatic', [], true, null, true, null],
             ['isDefault', [], true, null, true, null],
             ['getModifiers', [], 123, null, 123, null],
-            ['getDocComment', [], '', null, false, null],
+            ['getDocComment', [], null, null, false, null],
             ['hasType', [], true, null, true, null],
             ['getType', [], $mockType, null, null, ReflectionNamedTypeAdapter::class],
             ['hasDefaultValue', [], true, null, true, null],
@@ -128,7 +128,7 @@ class ReflectionPropertyTest extends TestCase
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
         $betterReflectionProperty
             ->method('getDocComment')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 

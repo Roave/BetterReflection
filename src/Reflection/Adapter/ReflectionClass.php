@@ -99,7 +99,7 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionClass->getDocComment() ?: false;
+        return $this->betterReflectionClass->getDocComment() ?? false;
     }
 
     public function getConstructor(): CoreReflectionMethod|null

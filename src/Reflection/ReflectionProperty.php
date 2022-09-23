@@ -54,7 +54,7 @@ class ReflectionProperty
 
     private Node\Expr|null $default;
 
-    private string $docComment;
+    private string|null $docComment;
 
     /** @var list<ReflectionAttribute> */
     private array $attributes;
@@ -296,7 +296,7 @@ class ReflectionProperty
         return $this->implementingClass;
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return $this->docComment;
     }

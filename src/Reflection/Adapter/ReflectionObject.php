@@ -83,7 +83,7 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionObject->getDocComment() ?: false;
+        return $this->betterReflectionObject->getDocComment() ?? false;
     }
 
     public function getConstructor(): ReflectionMethod

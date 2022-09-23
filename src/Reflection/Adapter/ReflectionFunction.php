@@ -77,7 +77,7 @@ final class ReflectionFunction extends CoreReflectionFunction
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionFunction->getDocComment() ?: false;
+        return $this->betterReflectionFunction->getDocComment() ?? false;
     }
 
     public function getStartLine(): int|false

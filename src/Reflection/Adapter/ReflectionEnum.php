@@ -99,7 +99,7 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionEnum->getDocComment() ?: false;
+        return $this->betterReflectionEnum->getDocComment() ?? false;
     }
 
     public function getConstructor(): CoreReflectionMethod|null

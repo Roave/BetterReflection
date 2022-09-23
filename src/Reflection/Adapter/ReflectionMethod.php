@@ -80,7 +80,7 @@ final class ReflectionMethod extends CoreReflectionMethod
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionMethod->getDocComment() ?: false;
+        return $this->betterReflectionMethod->getDocComment() ?? false;
     }
 
     public function getStartLine(): int|false

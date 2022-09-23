@@ -31,7 +31,7 @@ class ReflectionEnumCase
     /** @var list<ReflectionAttribute> */
     private array $attributes;
 
-    private string $docComment;
+    private string|null $docComment;
 
     /** @var positive-int */
     private int $startLine;
@@ -145,7 +145,7 @@ class ReflectionEnumCase
         return $this->enum;
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return $this->docComment;
     }

@@ -36,7 +36,7 @@ class ReflectionConstant implements Reflection
 
     private Node\Expr $value;
 
-    private string $docComment;
+    private string|null $docComment;
 
     /** @var positive-int */
     private int $startLine;
@@ -274,7 +274,7 @@ class ReflectionConstant implements Reflection
     /**
      * Returns the doc comment for this constant
      */
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return $this->docComment;
     }
