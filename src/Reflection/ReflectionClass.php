@@ -8,7 +8,6 @@ use BackedEnum;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\ClassConst as ConstNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
@@ -26,7 +25,6 @@ use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -71,11 +69,55 @@ class ReflectionClass implements Reflection
     public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
     private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
 
-    /** @var array<string, ReflectionClassConstant>|null indexed by name, when present */
-    private array|null $cachedReflectionConstants = null;
+    /** @var class-string|trait-string|null */
+    private string|null $name;
 
-    /** @var array<string, ReflectionProperty>|null */
-    private array|null $cachedImmediateProperties = null;
+    private string|null $shortName;
+
+    private bool $isInterface;
+    private bool $isTrait;
+    private bool $isEnum;
+    private bool $isBackedEnum;
+
+    private int $modifiers;
+
+    private string|null $docComment;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    /** @var positive-int */
+    private int $startLine;
+
+    /** @var positive-int */
+    private int $endLine;
+
+    /** @var positive-int */
+    private int $startColumn;
+
+    /** @var positive-int */
+    private int $endColumn;
+
+    /** @var class-string|null */
+    private string|null $parentClassName;
+
+    /** @var list<class-string> */
+    private array $implementsClassNames;
+
+    /** @var list<trait-string> */
+    private array $traitClassNames;
+
+    /** @var array<string, ReflectionClassConstant> */
+    private array $immediateConstants;
+
+    /** @var array<string, ReflectionProperty> */
+    private array $immediateProperties;
+
+    /** @var array<string, ReflectionMethod> */
+    private array $immediateMethods;
+
+    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
+    private array $traitsData;
 
     /** @var array<string, ReflectionProperty>|null */
     private array|null $cachedProperties = null;
@@ -83,18 +125,74 @@ class ReflectionClass implements Reflection
     /** @var array<lowercase-string, ReflectionMethod>|null */
     private array|null $cachedMethods = null;
 
-    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>}|null */
-    private array|null $cachedTraitsData = null;
-
     private ReflectionClass|null $cachedParentClass = null;
 
     /** @internal */
     protected function __construct(
         private Reflector $reflector,
-        private ClassNode|InterfaceNode|TraitNode|EnumNode $node,
+        ClassNode|InterfaceNode|TraitNode|EnumNode $node,
         private LocatedSource $locatedSource,
         private string|null $namespace = null,
     ) {
+        $this->name      = null;
+        $this->shortName = null;
+        if ($node->name instanceof Node\Identifier) {
+            $namespacedName = $node->namespacedName;
+            assert($namespacedName instanceof Node\Name);
+            /** @psalm-var class-string|trait-string */
+            $name = $namespacedName->toString();
+
+            $this->name      = $name;
+            $this->shortName = $node->name->name;
+        }
+
+        $this->isInterface  = $node instanceof InterfaceNode;
+        $this->isTrait      = $node instanceof TraitNode;
+        $this->isEnum       = $node instanceof EnumNode;
+        $this->isBackedEnum = $node instanceof EnumNode && $node->scalarType !== null;
+
+        $this->modifiers  = $this->computeModifiers($node);
+        $this->docComment = GetLastDocComment::forNode($node);
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        $startLine = $node->getStartLine();
+        assert($startLine > 0);
+        $endLine = $node->getEndLine();
+        assert($endLine > 0);
+
+        $this->startLine   = $startLine;
+        $this->endLine     = $endLine;
+        $this->startColumn = CalculateReflectionColumn::getStartColumn($locatedSource->getSource(), $node);
+        $this->endColumn   = CalculateReflectionColumn::getEndColumn($locatedSource->getSource(), $node);
+
+        /** @var class-string|null $parentClassName */
+        $parentClassName       = $node instanceof ClassNode ? $node->extends?->toString() : null;
+        $this->parentClassName = $parentClassName;
+
+        // @infection-ignore-all UnwrapArrayMap: It works without array_map() as well but this is less magical
+        /** @var list<class-string> $implementsClassNames */
+        $implementsClassNames       = array_map(
+            static fn (Node\Name $name): string => $name->toString(),
+            $node instanceof TraitNode ? [] : ($node instanceof InterfaceNode ? $node->extends : $node->implements),
+        );
+        $this->implementsClassNames = $implementsClassNames;
+
+        /** @var list<trait-string> $traitClassNames */
+        $traitClassNames = array_merge(
+            [],
+            ...array_map(
+                // @infection-ignore-all UnwrapArrayMap: It works without array_map() as well but this is less magical
+                static fn (TraitUse $traitUse): array => array_map(static fn (Node\Name $traitName): string => $traitName->toString(), $traitUse->traits),
+                $node->getTraitUses(),
+            ),
+        );
+        $this->traitClassNames = $traitClassNames;
+
+        $this->immediateConstants  = $this->createImmediateConstants($node, $reflector);
+        $this->immediateProperties = $this->createImmediateProperties($node, $reflector);
+        $this->immediateMethods    = $this->createImmediateMethods($node, $reflector);
+
+        $this->traitsData = $this->computeTraitsData($node);
     }
 
     public function __toString(): string
@@ -150,10 +248,8 @@ class ReflectionClass implements Reflection
      */
     public function getShortName(): string
     {
-        if (! $this->isAnonymous()) {
-            assert($this->node->name instanceof Node\Identifier);
-
-            return $this->node->name->name;
+        if ($this->shortName !== null) {
+            return $this->shortName;
         }
 
         $fileName = $this->getFileName();
@@ -197,11 +293,9 @@ class ReflectionClass implements Reflection
             return $this->getShortName();
         }
 
-        $namespacedName = $this->node->namespacedName;
-        assert($namespacedName instanceof Node\Name);
+        assert($this->name !== null);
 
-        /** @psalm-var class-string|trait-string */
-        return $namespacedName->toString();
+        return $this->name;
     }
 
     /**
@@ -230,18 +324,12 @@ class ReflectionClass implements Reflection
     /** @return list<ReflectionMethod> */
     private function createMethodsFromTrait(ReflectionMethod $method): array
     {
-        $this->parseTraitUsages();
-
-        $traitAliases     = $this->getTraitAliases();
-        $traitPrecedences = $this->getTraitPrecedences();
-        $traitModifiers   = $this->getTraitModifiers();
-
         $methodModifiers = $method->getModifiers();
         $methodHash      = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
 
-        if (array_key_exists($methodHash, $traitModifiers)) {
+        if (array_key_exists($methodHash, $this->traitsData['modifiers'])) {
             // PhpParser modifiers are compatible with PHP reflection modifiers
-            $methodModifiers = ($methodModifiers & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $traitModifiers[$methodHash];
+            $methodModifiers = ($methodModifiers & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $this->traitsData['modifiers'][$methodHash];
         }
 
         $createMethod = function (string|null $aliasMethodName) use ($method, $methodModifiers): ReflectionMethod {
@@ -252,7 +340,7 @@ class ReflectionClass implements Reflection
         };
 
         $methods = [];
-        foreach ($traitAliases as $aliasMethodName => $traitAliasDefinition) {
+        foreach ($this->traitsData['aliases'] as $aliasMethodName => $traitAliasDefinition) {
             if ($methodHash !== $traitAliasDefinition) {
                 continue;
             }
@@ -260,7 +348,7 @@ class ReflectionClass implements Reflection
             $methods[] = $createMethod($aliasMethodName);
         }
 
-        if (! array_key_exists($methodHash, $traitPrecedences)) {
+        if (! array_key_exists($methodHash, $this->traitsData['precedences'])) {
             $methods[] = $createMethod($method->getAliasName());
         }
 
@@ -426,46 +514,47 @@ class ReflectionClass implements Reflection
      */
     public function getImmediateMethods(int|null $filter = null): array
     {
-        /** @var list<ReflectionMethod> $methods */
-        $methods = array_map(
-            fn (ClassMethod $methodNode): ReflectionMethod => ReflectionMethod::createFromNode(
-                $this->reflector,
+        if ($filter === null) {
+            return $this->immediateMethods;
+        }
+
+        return array_filter(
+            $this->immediateMethods,
+            static fn (ReflectionMethod $method): bool => (bool) ($filter & $method->getModifiers()),
+        );
+    }
+
+    /** @return array<string, ReflectionMethod> */
+    private function createImmediateMethods(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
+    {
+        $methods = [];
+
+        foreach ($node->getMethods() as $methodNode) {
+            $methods[$methodNode->name->toString()] = ReflectionMethod::createFromNode(
+                $reflector,
                 $methodNode,
                 $this->locatedSource,
                 $this->getNamespaceName(),
                 $this,
                 $this,
                 $this,
-            ),
-            $this->node->getMethods(),
-        );
-
-        $methods = $this->addEnumMethods($methods);
-
-        $methodsByName = [];
-
-        foreach ($methods as $method) {
-            if ($filter !== null && ! ($filter & $method->getModifiers())) {
-                continue;
-            }
-
-            $methodsByName[$method->getName()] = $method;
+            );
         }
 
-        return $methodsByName;
+        if ($node instanceof EnumNode) {
+            $methods = $this->addEnumMethods($node, $methods);
+        }
+
+        return $methods;
     }
 
     /**
-     * @param list<ReflectionMethod> $methods
+     * @param array<string, ReflectionMethod> $methods
      *
-     * @return list<ReflectionMethod>
+     * @return array<string, ReflectionMethod>
      */
-    private function addEnumMethods(array $methods): array
+    private function addEnumMethods(EnumNode $node, array $methods): array
     {
-        if (! $this->node instanceof EnumNode) {
-            return $methods;
-        }
-
         $internalLocatedSource = new InternalLocatedSource('', $this->getName(), 'Core');
         $createMethod          = fn (string $name, array $params, Node\Identifier|Node\NullableType $returnType): ReflectionMethod => ReflectionMethod::createFromNode(
             $this->reflector,
@@ -484,9 +573,9 @@ class ReflectionClass implements Reflection
             $this,
         );
 
-        $methods[] = $createMethod('cases', [], new Node\Identifier('array'));
+        $methods['cases'] = $createMethod('cases', [], new Node\Identifier('array'));
 
-        if ($this->node->scalarType === null) {
+        if ($node->scalarType === null) {
             return $methods;
         }
 
@@ -496,13 +585,13 @@ class ReflectionClass implements Reflection
             new Node\UnionType([new Node\Identifier('string'), new Node\Identifier('int')]),
         );
 
-        $methods[] = $createMethod(
+        $methods['from'] = $createMethod(
             'from',
             [$valueParameter],
             new Node\Identifier('static'),
         );
 
-        $methods[] = $createMethod(
+        $methods['tryFrom'] = $createMethod(
             'tryFrom',
             [$valueParameter],
             new Node\NullableType(new Node\Identifier('static')),
@@ -611,37 +700,24 @@ class ReflectionClass implements Reflection
      */
     public function getImmediateReflectionConstants(): array
     {
-        if ($this->cachedReflectionConstants !== null) {
-            return $this->cachedReflectionConstants;
+        return $this->immediateConstants;
+    }
+
+    /** @return array<string, ReflectionClassConstant> */
+    private function createImmediateConstants(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
+    {
+        $constants = [];
+
+        foreach ($node->getConstants() as $constantsNode) {
+            foreach (array_keys($constantsNode->consts) as $constantPositionInNode) {
+                assert(is_int($constantPositionInNode));
+                $constant = ReflectionClassConstant::createFromNode($reflector, $constantsNode, $constantPositionInNode, $this, $this);
+
+                $constants[$constant->getName()] = $constant;
+            }
         }
 
-        $constants = array_merge(
-            [],
-            ...array_map(
-                function (ConstNode $constNode): array {
-                    $constants = [];
-
-                    foreach (array_keys($constNode->consts) as $constantPositionInNode) {
-                        assert(is_int($constantPositionInNode));
-                        $constants[] = ReflectionClassConstant::createFromNode($this->reflector, $constNode, $constantPositionInNode, $this, $this);
-                    }
-
-                    return $constants;
-                },
-                array_filter(
-                    $this->node->stmts,
-                    static fn (Node\Stmt $stmt): bool => $stmt instanceof ConstNode,
-                ),
-            ),
-        );
-
-        return $this->cachedReflectionConstants = array_combine(
-            array_map(
-                static fn (ReflectionClassConstant $constant): string => $constant->getName(),
-                $constants,
-            ),
-            $constants,
-        );
+        return $constants;
     }
 
     /**
@@ -721,69 +797,74 @@ class ReflectionClass implements Reflection
      */
     public function getImmediateProperties(int|null $filter = null): array
     {
-        if ($this->cachedImmediateProperties === null) {
-            $properties = [];
-            foreach ($this->node->getProperties() as $propertiesNode) {
-                foreach (array_keys($propertiesNode->props) as $propertyPositionInNode) {
-                    assert(is_int($propertyPositionInNode));
-                    $property                         = ReflectionProperty::createFromNode(
-                        $this->reflector,
-                        $propertiesNode,
-                        $propertyPositionInNode,
-                        $this,
-                        $this,
-                    );
-                    $properties[$property->getName()] = $property;
-                }
-            }
-
-            foreach ($this->node->getMethods() as $methodNode) {
-                if ($methodNode->name->toLowerString() !== '__construct') {
-                    continue;
-                }
-
-                foreach ($methodNode->params as $parameterNode) {
-                    if ($parameterNode->flags === 0) {
-                        // No flags, no promotion
-                        continue;
-                    }
-
-                    $parameterNameNode = $parameterNode->var;
-                    assert($parameterNameNode instanceof Node\Expr\Variable);
-                    assert(is_string($parameterNameNode->name));
-
-                    $propertyNode                     = new Node\Stmt\Property(
-                        $parameterNode->flags,
-                        [new Node\Stmt\PropertyProperty($parameterNameNode->name)],
-                        $parameterNode->getAttributes(),
-                        $parameterNode->type,
-                        $parameterNode->attrGroups,
-                    );
-                    $property                         = ReflectionProperty::createFromNode(
-                        $this->reflector,
-                        $propertyNode,
-                        0,
-                        $this,
-                        $this,
-                        true,
-                    );
-                    $properties[$property->getName()] = $property;
-                }
-            }
-
-            $properties = $this->addEnumProperties($properties);
-
-            $this->cachedImmediateProperties = $properties;
-        }
-
         if ($filter === null) {
-            return $this->cachedImmediateProperties;
+            return $this->immediateProperties;
         }
 
         return array_filter(
-            $this->cachedImmediateProperties,
+            $this->immediateProperties,
             static fn (ReflectionProperty $property): bool => (bool) ($filter & $property->getModifiers()),
         );
+    }
+
+    /** @return array<string, ReflectionProperty> */
+    private function createImmediateProperties(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
+    {
+        $properties = [];
+
+        foreach ($node->getProperties() as $propertiesNode) {
+            foreach (array_keys($propertiesNode->props) as $propertyPositionInNode) {
+                assert(is_int($propertyPositionInNode));
+                $property                         = ReflectionProperty::createFromNode(
+                    $reflector,
+                    $propertiesNode,
+                    $propertyPositionInNode,
+                    $this,
+                    $this,
+                );
+                $properties[$property->getName()] = $property;
+            }
+        }
+
+        foreach ($node->getMethods() as $methodNode) {
+            if ($methodNode->name->toLowerString() !== '__construct') {
+                continue;
+            }
+
+            foreach ($methodNode->params as $parameterNode) {
+                if ($parameterNode->flags === 0) {
+                    // No flags, no promotion
+                    continue;
+                }
+
+                $parameterNameNode = $parameterNode->var;
+                assert($parameterNameNode instanceof Node\Expr\Variable);
+                assert(is_string($parameterNameNode->name));
+
+                $propertyNode                     = new Node\Stmt\Property(
+                    $parameterNode->flags,
+                    [new Node\Stmt\PropertyProperty($parameterNameNode->name)],
+                    $parameterNode->getAttributes(),
+                    $parameterNode->type,
+                    $parameterNode->attrGroups,
+                );
+                $property                         = ReflectionProperty::createFromNode(
+                    $reflector,
+                    $propertyNode,
+                    0,
+                    $this,
+                    $this,
+                    true,
+                );
+                $properties[$property->getName()] = $property;
+            }
+        }
+
+        if ($node instanceof EnumNode || $node instanceof InterfaceNode) {
+            $properties = $this->addEnumProperties($properties, $node, $reflector);
+        }
+
+        return $properties;
     }
 
     /**
@@ -791,9 +872,9 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, ReflectionProperty>
      */
-    private function addEnumProperties(array $properties): array
+    private function addEnumProperties(array $properties, EnumNode|InterfaceNode $node, Reflector $reflector): array
     {
-        $createProperty = function (string $name, string|Node\Identifier|Node\UnionType $type): ReflectionProperty {
+        $createProperty = function (string $name, string|Node\Identifier|Node\UnionType $type) use ($reflector): ReflectionProperty {
             $propertyNode = new Node\Stmt\Property(
                 ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_READONLY,
                 [new Node\Stmt\PropertyProperty($name)],
@@ -802,7 +883,7 @@ class ReflectionClass implements Reflection
             );
 
             return ReflectionProperty::createFromNode(
-                $this->reflector,
+                $reflector,
                 $propertyNode,
                 0,
                 $this,
@@ -810,28 +891,24 @@ class ReflectionClass implements Reflection
             );
         };
 
-        if (! $this->node instanceof EnumNode) {
-            if ($this->node instanceof Node\Stmt\Interface_) {
-                $interfaceName = $this->getName();
-                if ($interfaceName === 'UnitEnum') {
-                    $properties['name'] = $createProperty('name', 'string');
-                }
-
-                if ($interfaceName === 'BackedEnum') {
-                    $properties['value'] = $createProperty('value', new Node\UnionType([
-                        new Node\Identifier('int'),
-                        new Node\Identifier('string'),
-                    ]));
-                }
+        if ($node instanceof InterfaceNode) {
+            $interfaceName = $this->getName();
+            if ($interfaceName === 'UnitEnum') {
+                $properties['name'] = $createProperty('name', 'string');
             }
 
-            return $properties;
-        }
+            if ($interfaceName === 'BackedEnum') {
+                $properties['value'] = $createProperty('value', new Node\UnionType([
+                    new Node\Identifier('int'),
+                    new Node\Identifier('string'),
+                ]));
+            }
+        } else {
+            $properties['name'] = $createProperty('name', 'string');
 
-        $properties['name'] = $createProperty('name', 'string');
-
-        if ($this->node->scalarType !== null) {
-            $properties['value'] = $createProperty('value', $this->node->scalarType);
+            if ($node->scalarType !== null) {
+                $properties['value'] = $createProperty('value', $node->scalarType);
+            }
         }
 
         return $properties;
@@ -936,28 +1013,34 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the line number that this class starts on.
+     *
+     * @return positive-int
      */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        return $this->startLine;
     }
 
     /**
      * Get the line number that this class ends on.
+     *
+     * @return positive-int
      */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        return $this->endLine;
     }
 
+    /** @return positive-int */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
+        return $this->startColumn;
     }
 
+    /** @return positive-int */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
+        return $this->endColumn;
     }
 
     /**
@@ -968,12 +1051,12 @@ class ReflectionClass implements Reflection
      */
     public function getParentClass(): ReflectionClass|null
     {
-        if (! ($this->node instanceof ClassNode) || $this->node->extends === null) {
+        if ($this->parentClassName === null) {
             return null;
         }
 
         if ($this->cachedParentClass === null) {
-            $this->cachedParentClass = $this->reflector->reflectClass($this->node->extends->toString());
+            $this->cachedParentClass = $this->reflector->reflectClass($this->parentClassName);
         }
 
         if ($this->cachedParentClass->isInterface() || $this->cachedParentClass->isTrait()) {
@@ -995,12 +1078,12 @@ class ReflectionClass implements Reflection
 
     public function getDocComment(): string|null
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function isAnonymous(): bool
     {
-        return $this->node->name === null;
+        return $this->name === null;
     }
 
     /**
@@ -1022,7 +1105,7 @@ class ReflectionClass implements Reflection
 
     public function isDeprecated(): bool
     {
-        return AnnotationHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->docComment);
     }
 
     /**
@@ -1030,7 +1113,7 @@ class ReflectionClass implements Reflection
      */
     public function isAbstract(): bool
     {
-        return $this->node instanceof ClassNode && $this->node->isAbstract();
+        return ($this->modifiers & CoreReflectionClass::IS_EXPLICIT_ABSTRACT) === CoreReflectionClass::IS_EXPLICIT_ABSTRACT;
     }
 
     /**
@@ -1038,16 +1121,16 @@ class ReflectionClass implements Reflection
      */
     public function isFinal(): bool
     {
-        if ($this->node instanceof EnumNode) {
+        if ($this->isEnum) {
             return true;
         }
 
-        return $this->node instanceof ClassNode && $this->node->isFinal();
+        return ($this->modifiers & CoreReflectionClass::IS_FINAL) === CoreReflectionClass::IS_FINAL;
     }
 
     public function isReadOnly(): bool
     {
-        return $this->node instanceof ClassNode && $this->node->isReadonly();
+        return ($this->modifiers & self::IS_READONLY) === self::IS_READONLY;
     }
 
     /**
@@ -1055,11 +1138,20 @@ class ReflectionClass implements Reflection
      */
     public function getModifiers(): int
     {
-        $val  = $this->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
-        $val += $this->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
-        $val += $this->isReadOnly() ? self::IS_READONLY : 0;
+        return $this->modifiers;
+    }
 
-        return $val;
+    private function computeModifiers(ClassNode|InterfaceNode|TraitNode|EnumNode $node): int
+    {
+        if (! $node instanceof ClassNode) {
+            return 0;
+        }
+
+        $modifiers  = $node->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
+        $modifiers += $node->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
+        $modifiers += $node->isReadonly() ? self::IS_READONLY : 0;
+
+        return $modifiers;
     }
 
     /**
@@ -1067,7 +1159,7 @@ class ReflectionClass implements Reflection
      */
     public function isTrait(): bool
     {
-        return $this->node instanceof TraitNode;
+        return $this->isTrait;
     }
 
     /**
@@ -1075,7 +1167,7 @@ class ReflectionClass implements Reflection
      */
     public function isInterface(): bool
     {
-        return $this->node instanceof InterfaceNode;
+        return $this->isInterface;
     }
 
     /**
@@ -1086,16 +1178,10 @@ class ReflectionClass implements Reflection
      */
     public function getTraits(): array
     {
-        return array_values(array_map(
-            fn (Node\Name $importedTrait): ReflectionClass => $this->reflectClassForNamedNode($importedTrait),
-            array_merge(
-                [],
-                ...array_map(
-                    static fn (TraitUse $traitUse): array => $traitUse->traits,
-                    array_filter($this->node->stmts, static fn (Node $node): bool => $node instanceof TraitUse),
-                ),
-            ),
-        ));
+        return array_map(
+            fn (string $traitClassName): ReflectionClass => $this->reflector->reflectClass($traitClassName),
+            $this->traitClassNames,
+        );
     }
 
     /**
@@ -1112,10 +1198,10 @@ class ReflectionClass implements Reflection
             return $interfaces;
         }
 
-        foreach ($this->node->getMethods() as $methodNode) {
-            if ($methodNode->name->toLowerString() === '__tostring') {
+        foreach (array_keys($this->immediateMethods) as $immediateMethodName) {
+            if (strtolower($immediateMethodName) === '__tostring') {
                 try {
-                    $stringableInterfaceReflection = $this->reflectClassForNamedNode(new Node\Name($stringableClassName));
+                    $stringableInterfaceReflection = $this->reflector->reflectClass($stringableClassName);
 
                     if ($stringableInterfaceReflection->isInternal()) {
                         $interfaces[$stringableClassName] = $stringableInterfaceReflection;
@@ -1139,23 +1225,15 @@ class ReflectionClass implements Reflection
      */
     private function addEnumInterfaces(array $interfaces): array
     {
-        assert($this->node instanceof EnumNode);
+        assert($this->isEnum === true);
 
-        $interfaces[UnitEnum::class] = $this->reflectClassForNamedNode(new Node\Name(UnitEnum::class));
+        $interfaces[UnitEnum::class] = $this->reflector->reflectClass(UnitEnum::class);
 
-        if ($this->node->scalarType !== null) {
-            $interfaces[BackedEnum::class] = $this->reflectClassForNamedNode(new Node\Name(BackedEnum::class));
+        if ($this->isBackedEnum) {
+            $interfaces[BackedEnum::class] = $this->reflector->reflectClass(BackedEnum::class);
         }
 
         return $interfaces;
-    }
-
-    /**
-     * Given an AST Node\Name, create a new ReflectionClass for the element.
-     */
-    private function reflectClassForNamedNode(Node\Name $node): self
-    {
-        return $this->reflector->reflectClass($node->toString());
     }
 
     /**
@@ -1199,11 +1277,7 @@ class ReflectionClass implements Reflection
      */
     public function getTraitAliases(): array
     {
-        $this->parseTraitUsages();
-
-        assert($this->cachedTraitsData !== null);
-
-        return $this->cachedTraitsData['aliases'];
+        return $this->traitsData['aliases'];
     }
 
     /**
@@ -1227,9 +1301,7 @@ class ReflectionClass implements Reflection
      */
     private function getTraitPrecedences(): array
     {
-        assert($this->cachedTraitsData !== null);
-
-        return $this->cachedTraitsData['precedences'];
+        return $this->traitsData['precedences'];
     }
 
     /**
@@ -1253,26 +1325,19 @@ class ReflectionClass implements Reflection
      */
     private function getTraitModifiers(): array
     {
-        assert($this->cachedTraitsData !== null);
-
-        return $this->cachedTraitsData['modifiers'];
+        return $this->traitsData['modifiers'];
     }
 
-    private function parseTraitUsages(): void
+    /** @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
+    private function computeTraitsData(ClassNode|InterfaceNode|TraitNode|EnumNode $node): array
     {
-        if ($this->cachedTraitsData !== null) {
-            return;
-        }
-
-        $traitUsages = array_filter($this->node->stmts, static fn (Node $node): bool => $node instanceof TraitUse);
-
-        $this->cachedTraitsData = [
+        $traitsData = [
             'aliases'     => [],
             'modifiers'   => [],
             'precedences' => [],
         ];
 
-        foreach ($traitUsages as $traitUsage) {
+        foreach ($node->getTraitUses() as $traitUsage) {
             $traitNames  = $traitUsage->traits;
             $adaptations = $traitUsage->adaptations;
 
@@ -1286,14 +1351,14 @@ class ReflectionClass implements Reflection
 
                 if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias) {
                     if ($adaptation->newModifier) {
-                        $this->cachedTraitsData['modifiers'][$methodHash] = $adaptation->newModifier;
+                        $traitsData['modifiers'][$methodHash] = $adaptation->newModifier;
                     }
 
                     if ($adaptation->newName) {
                         $adaptationName = $adaptation->newName->name;
                         assert($adaptationName !== '');
 
-                        $this->cachedTraitsData['aliases'][$adaptationName] = $methodHash;
+                        $traitsData['aliases'][$adaptationName] = $methodHash;
                         continue;
                     }
                 }
@@ -1305,10 +1370,12 @@ class ReflectionClass implements Reflection
                 foreach ($adaptation->insteadof as $insteadof) {
                     $adaptationNameHash = $this->methodHash($insteadof->toString(), $adaptation->method->toString());
 
-                    $this->cachedTraitsData['precedences'][$adaptationNameHash] = $methodHash;
+                    $traitsData['precedences'][$adaptationNameHash] = $methodHash;
                 }
             }
         }
+
+        return $traitsData;
     }
 
     /**
@@ -1352,25 +1419,19 @@ class ReflectionClass implements Reflection
      */
     public function getImmediateInterfaces(): array
     {
-        if ($this->node instanceof TraitNode) {
+        if ($this->isTrait) {
             return [];
         }
 
-        $nodes = $this->node instanceof InterfaceNode ? $this->node->extends : $this->node->implements;
-
-        /** @var array<class-string, self> $interfaces */
         $interfaces = array_combine(
+            $this->implementsClassNames,
             array_map(
-                static fn (Node\Name $interfaceName): string => $interfaceName->toString(),
-                $nodes,
-            ),
-            array_map(
-                fn (Node\Name $interfaceName): ReflectionClass => $this->reflectClassForNamedNode($interfaceName),
-                $nodes,
+                fn (string $interfaceClassName): ReflectionClass => $this->reflector->reflectClass($interfaceClassName),
+                $this->implementsClassNames,
             ),
         );
 
-        if ($this->node instanceof EnumNode) {
+        if ($this->isEnum) {
             $interfaces = $this->addEnumInterfaces($interfaces);
         }
 
@@ -1491,17 +1552,17 @@ class ReflectionClass implements Reflection
 
     public function isEnum(): bool
     {
-        return $this->node instanceof Node\Stmt\Enum_;
+        return $this->isEnum;
     }
 
     /** @return array<class-string, ReflectionClass> */
     private function getCurrentClassImplementedInterfacesIndexedByName(): array
     {
-        if ($this->node instanceof TraitNode) {
+        if ($this->isTrait) {
             return [];
         }
 
-        if ($this->node instanceof InterfaceNode) {
+        if ($this->isInterface) {
             // assumption: first key is the current interface
             return array_slice($this->getInterfacesHierarchy(), 1);
         }
@@ -1509,14 +1570,14 @@ class ReflectionClass implements Reflection
         $interfaces = array_merge(
             [],
             ...array_map(
-                fn (Node\Name $interfaceName): array => $this
-                    ->reflectClassForNamedNode($interfaceName)
+                fn (string $interfaceClassName): array => $this->reflector
+                    ->reflectClass($interfaceClassName)
                     ->getInterfacesHierarchy(),
-                $this->node->implements,
+                $this->implementsClassNames,
             ),
         );
 
-        if ($this->node instanceof EnumNode) {
+        if ($this->isEnum) {
             $interfaces = $this->addEnumInterfaces($interfaces);
         }
 
@@ -1542,7 +1603,7 @@ class ReflectionClass implements Reflection
      */
     private function getInterfacesHierarchy(): array
     {
-        if (! $this->node instanceof InterfaceNode) {
+        if (! $this->isInterface) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
@@ -1550,20 +1611,14 @@ class ReflectionClass implements Reflection
         $interfaces = array_merge(
             [$this->getName() => $this],
             ...array_map(
-                fn (Node\Name $interfaceName): array => $this
-                        ->reflectClassForNamedNode($interfaceName)
-                        ->getInterfacesHierarchy(),
-                $this->node->extends,
+                fn (string $interfaceClassName): array => $this->reflector
+                    ->reflectClass($interfaceClassName)
+                    ->getInterfacesHierarchy(),
+                $this->implementsClassNames,
             ),
         );
 
         return $this->addStringableInterface($interfaces);
-    }
-
-    /** @throws Uncloneable */
-    public function __clone()
-    {
-        throw Uncloneable::fromClass(static::class);
     }
 
     /**
@@ -1623,18 +1678,10 @@ class ReflectionClass implements Reflection
         return $staticProperties;
     }
 
-    /**
-     * Retrieve the AST node for this class
-     */
-    public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
-    {
-        return $this->node;
-    }
-
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */
