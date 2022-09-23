@@ -11,7 +11,6 @@ use PhpParser\Node\UnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
-use function array_values;
 use function assert;
 use function implode;
 use function sprintf;
@@ -28,12 +27,12 @@ class ReflectionUnionType extends ReflectionType
         UnionType $type,
     ) {
         /** @var non-empty-list<ReflectionNamedType|ReflectionIntersectionType> $types */
-        $types = array_values(array_map(static function (Identifier|Name|IntersectionType $type) use ($reflector, $owner): ReflectionNamedType|ReflectionIntersectionType {
+        $types = array_map(static function (Identifier|Name|IntersectionType $type) use ($reflector, $owner): ReflectionNamedType|ReflectionIntersectionType {
             $type = ReflectionType::createFromNode($reflector, $owner, $type);
             assert($type instanceof ReflectionNamedType || $type instanceof ReflectionIntersectionType);
 
             return $type;
-        }, $type->types));
+        }, $type->types);
 
         $this->types = $types;
     }
