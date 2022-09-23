@@ -147,7 +147,8 @@ class ReflectionClassConstant
      */
     public function isPrivate(): bool
     {
-        return ($this->modifiers & CoreReflectionClassConstant::IS_PRIVATE) === CoreReflectionClassConstant::IS_PRIVATE;
+        // Private constant cannot be final
+        return $this->modifiers === CoreReflectionClassConstant::IS_PRIVATE;
     }
 
     /**
@@ -266,7 +267,8 @@ class ReflectionClassConstant
         }
 
         if ($node->isPrivate()) {
-            $this->modifiers += CoreReflectionClassConstant::IS_PRIVATE;
+            // No += because private constant cannot be final
+            $this->modifiers = CoreReflectionClassConstant::IS_PRIVATE;
         } elseif ($node->isProtected()) {
             $this->modifiers += CoreReflectionClassConstant::IS_PROTECTED;
         } else {
