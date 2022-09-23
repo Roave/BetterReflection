@@ -34,6 +34,7 @@ class CompilerContext
             return $this->contextReflection->getFileName();
         }
 
+        // @infection-ignore-all Coalesce: There's no difference
         return $this->getClass()?->getFileName() ?? $this->getFunction()?->getFileName();
     }
 
@@ -43,6 +44,7 @@ class CompilerContext
             return $this->contextReflection->getNamespaceName();
         }
 
+        // @infection-ignore-all Coalesce: There's no difference
         return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName() ?? '';
     }
 
