@@ -27,7 +27,7 @@ class ClassWithAttributes
 
     #[Attr]
     #[AnotherAttr]
-    private $propertyWithAttributes = [];
+    private array $propertyWithAttributes = [];
 
     #[Attr]
     #[AnotherAttr]

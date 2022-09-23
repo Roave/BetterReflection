@@ -29,6 +29,7 @@ use Roave\BetterReflection\Util\Exception\NoNodePosition;
 use Roave\BetterReflection\Util\GetLastDocComment;
 use RuntimeException;
 
+use function array_map;
 use function assert;
 use function func_num_args;
 use function is_object;
@@ -159,6 +160,14 @@ class ReflectionProperty
     {
         $clone                    = clone $this;
         $clone->implementingClass = $implementingClass;
+
+        if ($clone->type !== null) {
+            $clone->type = $clone->type->withOwner($clone);
+        }
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        $this->compiledDefaultValue = null;
 
         return $clone;
     }

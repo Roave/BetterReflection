@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -806,5 +807,29 @@ PHP;
         $attributes         = $propertyReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testWithImplementingClass(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
+        $propertyReflection = $classReflection->getProperty('propertyWithAttributes');
+        $attributes         = $propertyReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+
+        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+
+        $clonePropertyReflection = $propertyReflection->withImplementingClass($implementingClassReflection);
+
+        self::assertNotSame($propertyReflection, $clonePropertyReflection);
+        self::assertSame($propertyReflection->getDeclaringClass(), $clonePropertyReflection->getDeclaringClass());
+        self::assertNotSame($propertyReflection->getImplementingClass(), $clonePropertyReflection->getImplementingClass());
+        self::assertNotSame($propertyReflection->getType(), $clonePropertyReflection->getType());
+
+        $cloneAttributes = $clonePropertyReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
     }
 }
