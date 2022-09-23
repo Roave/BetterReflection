@@ -48,7 +48,7 @@ class ReflectionProperty
     /** @var non-empty-string */
     private string $name;
 
-    private int $modifiers = 0;
+    private int $modifiers;
 
     private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type;
 
@@ -86,12 +86,11 @@ class ReflectionProperty
         assert($name !== '');
 
         $this->name       = $name;
+        $this->modifiers  = $this->computeModifiers($node);
         $this->type       = $this->createType($node);
         $this->default    = $node->props[$positionInNode]->default;
         $this->docComment = GetLastDocComment::forNode($node);
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
-
-        $this->computeModifiers($node);
 
         $startLine = null;
         if ($node->hasAttribute('startLine')) {
@@ -566,20 +565,24 @@ class ReflectionProperty
         return $object;
     }
 
-    private function computeModifiers(PropertyNode $node): void
+    private function computeModifiers(PropertyNode $node): int
     {
         if ($node->isStatic()) {
-            $this->modifiers = CoreReflectionProperty::IS_STATIC;
+            $modifiers = CoreReflectionProperty::IS_STATIC;
         } elseif ($node->isReadonly()) {
-            $this->modifiers = self::IS_READONLY;
+            $modifiers = self::IS_READONLY;
+        } else {
+            $modifiers = 0;
         }
 
         if ($node->isPrivate()) {
-            $this->modifiers += CoreReflectionProperty::IS_PRIVATE;
+            $modifiers += CoreReflectionProperty::IS_PRIVATE;
         } elseif ($node->isProtected()) {
-            $this->modifiers += CoreReflectionProperty::IS_PROTECTED;
+            $modifiers += CoreReflectionProperty::IS_PROTECTED;
         } else {
-            $this->modifiers += CoreReflectionProperty::IS_PUBLIC;
+            $modifiers += CoreReflectionProperty::IS_PUBLIC;
         }
+
+        return $modifiers;
     }
 }
