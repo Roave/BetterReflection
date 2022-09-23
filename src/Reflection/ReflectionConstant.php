@@ -214,6 +214,11 @@ class ReflectionConstant implements Reflection
         return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
+    public function getValueExpression(): Node\Expr
+    {
+        return $this->value;
+    }
+
     /**
      * Returns constant value
      */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use Attribute;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
@@ -19,6 +20,8 @@ use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributesWithArguments;
 use Roave\BetterReflectionTest\Fixture\ClassWithRepeatedAttributes;
 use Roave\BetterReflectionTest\Fixture\EnumWithAttributes;
+
+use function count;
 
 /** @covers \Roave\BetterReflection\Reflection\ReflectionAttribute */
 class ReflectionAttributeTest extends TestCase
@@ -88,6 +91,7 @@ class ReflectionAttributeTest extends TestCase
         $attributes      = $classReflection->getAttributesByName(Attr::class);
 
         self::assertCount(1, $attributes);
+        self::assertCount(0, $attributes[0]->getArgumentsExpressions());
         self::assertCount(0, $attributes[0]->getArguments());
     }
 
@@ -112,6 +116,8 @@ class ReflectionAttributeTest extends TestCase
             ],
         ];
 
+        self::assertCount(count($expectedArguments), $attributes[0]->getArgumentsExpressions());
+        self::assertContainsOnlyInstancesOf(Node\Expr::class, $attributes[0]->getArgumentsExpressions());
         self::assertSame($expectedArguments, $attributes[0]->getArguments());
     }
 

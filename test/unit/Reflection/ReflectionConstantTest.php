@@ -134,6 +134,8 @@ class ReflectionConstantTest extends TestCase
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $reflection = $reflector->reflectConstant('FOO');
 
+        self::assertInstanceOf(Node\Expr::class, $reflection->getValueExpression());
+
         self::assertSame(1, $reflection->getValue());
         // Because of code coverage - should use optimization
         self::assertSame(1, $reflection->getValue());
@@ -149,6 +151,7 @@ class ReflectionConstantTest extends TestCase
         ]));
         $reflection = $reflector->reflectConstant('FOO');
 
+        self::assertInstanceOf(Node\Expr::class, $reflection->getValueExpression());
         self::assertSame(E_ALL, $reflection->getValue());
     }
 

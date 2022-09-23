@@ -8,6 +8,7 @@ use ClassWithPropertiesAndTraitProperties;
 use Error;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use OutOfBoundsException;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
@@ -245,28 +246,34 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('Property [ <default> public $publicProperty ]', (string) $classInfo->getProperty('publicProperty'));
     }
 
-    /** @return list<array{0: string, 1: bool, 2: mixed}> */
+    /** @return list<array{0: string, 1: bool, 2: mixed, 3: class-string|null}> */
     public function propertyDefaultValueProvider(): array
     {
         return [
-            ['hasDefault', true, 'const'],
-            ['hasNullAsDefault', true, null],
-            ['noDefault', true, null],
-            ['hasDefaultWithType', true, 123],
-            ['hasNullAsDefaultWithType', true, null],
-            ['noDefaultWithType', false, null],
-            ['fromTrait', true, 'anything'],
+            ['hasDefault', true, 'const', Node\Expr::class],
+            ['hasNullAsDefault', true, null, Node\Expr::class],
+            ['noDefault', true, null, null],
+            ['hasDefaultWithType', true, 123, Node\Expr::class],
+            ['hasNullAsDefaultWithType', true, null, Node\Expr::class],
+            ['noDefaultWithType', false, null, null],
+            ['fromTrait', true, 'anything', Node\Expr::class],
         ];
     }
 
     /** @dataProvider propertyDefaultValueProvider */
-    public function testPropertyDefaultValue(string $propertyName, bool $hasDefaultValue, mixed $defaultValue): void
+    public function testPropertyDefaultValue(string $propertyName, bool $hasDefaultValue, mixed $defaultValue, string|null $defaultValueExpression): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator)))->reflectClass(DefaultProperties::class);
         $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($hasDefaultValue, $property->hasDefaultValue());
         self::assertSame($defaultValue, $property->getDefaultValue());
+
+        if ($defaultValueExpression !== null) {
+            self::assertInstanceOf($defaultValueExpression, $property->getDefaultValueExpression());
+        } else {
+            self::assertNull($property->getDefaultValueExpression());
+        }
     }
 
     /**

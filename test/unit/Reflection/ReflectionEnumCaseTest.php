@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use LogicException;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase;
@@ -77,7 +78,20 @@ class ReflectionEnumCaseTest extends TestCase
         $caseReflection = $enumReflection->getCase($caseName);
 
         self::assertInstanceOf(ReflectionEnumCase::class, $caseReflection);
+        self::assertInstanceOf(Node\Expr::class, $caseReflection->getValueExpression());
         self::assertSame($value, $caseReflection->getValue());
+    }
+
+    public function testGetValueExpressionThrowsExceptionForPureEnum(): void
+    {
+        $enumReflection = $this->reflector->reflectClass(PureEnum::class);
+
+        self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
+
+        $caseReflection = $enumReflection->getCase('ONE');
+
+        self::expectException(LogicException::class);
+        $caseReflection->getValueExpression();
     }
 
     public function testGetValueThrowsExceptionForPureEnum(): void

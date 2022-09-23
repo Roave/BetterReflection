@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
@@ -115,6 +116,14 @@ class ReflectionClassConstantTest extends TestCase
             ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstant::IS_FINAL],
             ['MY_CONST_7', CoreReflectionClassConstant::IS_PROTECTED | ReflectionClassConstant::IS_FINAL],
         ];
+    }
+
+    public function getValue(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
+
+        self::assertInstanceOf(Node\Expr::class, $const->getValueExpression());
+        self::assertSame(123, $const->getValue());
     }
 
     public function testGetDocComment(): void

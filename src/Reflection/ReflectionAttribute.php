@@ -48,6 +48,12 @@ class ReflectionAttribute
         return $this->reflector->reflectClass($this->getName());
     }
 
+    /** @return array<int|string, Node\Expr> */
+    public function getArgumentsExpressions(): array
+    {
+        return $this->arguments;
+    }
+
     /** @return array<int|string, mixed> */
     public function getArguments(): array
     {
