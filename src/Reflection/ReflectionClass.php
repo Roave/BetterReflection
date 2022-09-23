@@ -26,7 +26,6 @@ use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -1558,12 +1557,6 @@ class ReflectionClass implements Reflection
         );
 
         return $this->addStringableInterface($interfaces);
-    }
-
-    /** @throws Uncloneable */
-    public function __clone()
-    {
-        throw Uncloneable::fromClass(static::class);
     }
 
     /**

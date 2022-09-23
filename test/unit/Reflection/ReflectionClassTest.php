@@ -21,7 +21,6 @@ use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -1936,15 +1935,6 @@ PHP;
             file_get_contents(__DIR__ . '/../Fixture/ExampleClassExport.txt'),
             $reflection->__toString(),
         );
-    }
-
-    public function testCannotClone(): void
-    {
-        $reflector = new DefaultReflector($this->getComposerLocator());
-        $classInfo = $reflector->reflectClass(ExampleClass::class);
-
-        $this->expectException(Uncloneable::class);
-        clone $classInfo;
     }
 
     public function testGetStaticProperties(): void

@@ -12,7 +12,6 @@ use ReflectionNamedType;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
@@ -329,13 +328,5 @@ class ReflectionObjectTest extends TestCase
         // ensure that the method of the same name gets called on the
         // $mockReflectionClass mock (as we expect $methodName to be called)
         $reflectionObject->{$methodName}(...$fakeParams);
-    }
-
-    public function testCannotClone(): void
-    {
-        $classInfo = ReflectionObject::createFromInstance(new stdClass());
-
-        $this->expectException(Uncloneable::class);
-        clone $classInfo;
     }
 }
