@@ -255,6 +255,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         // Note: looking at files in reverse order, since newer files are more likely to have
         //       defined a constant that is being looked up. Earlier files are possibly related
         //       to libraries/frameworks that we rely upon.
+        // @infection-ignore-all UnwrapArrayReverse: Ignore because the result is some with or without array_reverse()
         foreach (array_reverse(get_included_files()) as $includedFileName) {
             try {
                 FileChecker::assertReadableFile($includedFileName);

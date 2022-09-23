@@ -16,6 +16,7 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Located\AliasLocatedSource;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -75,6 +76,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertFalse(class_exists(ExampleClass::class, false));
 
         self::assertSame('ExampleClass', $classInfo->getShortName());
+        self::assertNotInstanceOf(AliasLocatedSource::class, $classInfo->getLocatedSource());
     }
 
     public function testClassLoadsWorksWithExistingClass(): void
@@ -88,6 +90,21 @@ class AutoloadSourceLocatorTest extends TestCase
         $classInfo = $reflector->reflectClass(ClassForHinting::class);
 
         self::assertSame('ClassForHinting', $classInfo->getShortName());
+        self::assertNotInstanceOf(AliasLocatedSource::class, $classInfo->getLocatedSource());
+    }
+
+    public function testClassLoadsWithLowercasedName(): void
+    {
+        $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
+
+        // Ensure class is loaded first
+        new ClassForHinting();
+        self::assertTrue(class_exists(ClassForHinting::class, false));
+
+        $classInfo = $reflector->reflectClass('roave\betterreflectiontest\fixture\classforhinting');
+
+        self::assertSame('ClassForHinting', $classInfo->getShortName());
+        self::assertNotInstanceOf(AliasLocatedSource::class, $classInfo->getLocatedSource());
     }
 
     /** @runInSeparateProcess */
@@ -200,8 +217,9 @@ class AutoloadSourceLocatorTest extends TestCase
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         ));
 
-        self::assertNotNull($reflection);
+        self::assertInstanceOf(BetterReflectionClass::class, $reflection);
         self::assertSame(AutoloadableByAlias::class, $reflection->getName());
+        self::assertInstanceOf(AliasLocatedSource::class, $reflection->getLocatedSource());
     }
 
     public function testFunctionLoads(): void
