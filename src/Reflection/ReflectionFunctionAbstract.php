@@ -16,7 +16,6 @@ use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
 
 use function array_filter;
 use function assert;
@@ -383,31 +382,5 @@ trait ReflectionFunctionAbstract
     public function getAttributesByInstance(string $className): array
     {
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
-    }
-
-    /**
-     * Fetch an array of all return statements found within this function.
-     *
-     * Note that return statements within smaller scopes contained (e.g. anonymous classes, closures) are not returned
-     * here as they are not within the immediate scope.
-     *
-     * @return Node\Stmt\Return_[]
-     */
-    public function getReturnStatementsAst(): array
-    {
-        $visitor = new ReturnNodeVisitor();
-
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor($visitor);
-
-        $stmts = $this->node->getStmts();
-
-        if ($stmts === null) {
-            return [];
-        }
-
-        $traverser->traverse($stmts);
-
-        return $visitor->getReturnNodes();
     }
 }
