@@ -47,6 +47,7 @@ class ReflectionIntersectionType extends ReflectionType
 
     public function __toString(): string
     {
+        // @infection-ignore-all UnwrapArrayMap: It works without array_map() as well but this is less magical
         return implode('&', array_map(static fn (ReflectionNamedType $type): string => $type->__toString(), $this->types));
     }
 }
