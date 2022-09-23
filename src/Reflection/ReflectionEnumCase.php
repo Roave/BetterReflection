@@ -86,6 +86,20 @@ class ReflectionEnumCase
         return $this->name;
     }
 
+    /**
+     * Check ReflectionEnum::isBacked() being true first to avoid throwing exception.
+     *
+     * @throws LogicException
+     */
+    public function getValueExpression(): Node\Expr
+    {
+        if ($this->value === null) {
+            throw new LogicException('This enum case does not have a value');
+        }
+
+        return $this->value;
+    }
+
     public function getValue(): string|int
     {
         $value = $this->getCompiledValue()->value;
@@ -94,7 +108,11 @@ class ReflectionEnumCase
         return $value;
     }
 
-    /** @throws LogicException */
+    /**
+     * Check ReflectionEnum::isBacked() being true first to avoid throwing exception.
+     *
+     * @throws LogicException
+     */
     private function getCompiledValue(): CompiledValue
     {
         if ($this->value === null) {
