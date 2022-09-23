@@ -259,33 +259,36 @@ class ReflectionObjectTest extends TestCase
             ->setMethods([$methodName])
             ->getMock();
 
-        $method = $mockReflectionClass
+        $mockReflectionClass
             ->expects($this->atLeastOnce())
             ->method($methodName);
 
-        $php  = '<?php class stdClass {}';
-        $node = $this->parse($php)[0];
-
-        // Cannot be generated because the declared return type is a union, we have to provide a return value
-        if ($methodName === 'getAst') {
-            $method->willReturn($node);
-        }
+        $php = '<?php class stdClass {}';
 
         // Force inject node and locatedSource properties on our ReflectionClass
         // mock so that methods will not fail when they are accessed
         $mockReflectionClassReflection = new CoreReflectionClass(ReflectionClass::class);
 
-        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('locatedSource');
-        $mockReflectionClassNodeReflection->setAccessible(true);
-        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, new EvaledLocatedSource($php, 'stdClass'));
+        $properties = [
+            'name' => 'stdClass',
+            'shortName' => 'stdClass',
+            'namespace' => null,
+            'isInterface' => false,
+            'isTrait' => false,
+            'isEnum' => false,
+            'locatedSource' => new EvaledLocatedSource($php, 'stdClass'),
+            'parentClassName' => null,
+            'implementsClassNames' => [],
+            'traitClassNames' => [],
+            'immediateProperties' => [],
+            'immediateMethods' => [],
+        ];
 
-        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('node');
-        $mockReflectionClassNodeReflection->setAccessible(true);
-        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $node);
-
-        $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty('namespace');
-        $mockReflectionClassNodeReflection->setAccessible(true);
-        $mockReflectionClassNodeReflection->setValue($mockReflectionClass, null);
+        foreach ($properties as $propertyName => $propertyValue) {
+            $mockReflectionClassNodeReflection = $mockReflectionClassReflection->getProperty($propertyName);
+            $mockReflectionClassNodeReflection->setAccessible(true);
+            $mockReflectionClassNodeReflection->setValue($mockReflectionClass, $propertyValue);
+        }
 
         // Create the ReflectionObject from a dummy class
         $reflectionObject = ReflectionObject::createFromInstance(new stdClass());

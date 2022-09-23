@@ -111,8 +111,8 @@ class ReflectionEnumCaseTest extends TestCase
     {
         return [
             [PureEnum::class, 'ONE', 7, 7, 5, 13],
-            [IntEnum::class, 'TWO', 15, 15, 5, 17],
-            [StringEnum::class, 'THREE', 26, 27, 5, 18],
+            [IntEnum::class, 'TWO', 19, 19, 5, 17],
+            [StringEnum::class, 'THREE', 34, 35, 5, 18],
         ];
     }
 

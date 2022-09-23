@@ -12,6 +12,7 @@ use Iterator;
 use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\TestCase;
 use Qux;
@@ -196,7 +197,7 @@ class ReflectionClassTest extends TestCase
         $classInfo = $reflector->reflectClass(PureEnum::class);
         $methods   = $classInfo->getImmediateMethods();
 
-        self::assertCount(1, $methods);
+        self::assertCount(2, $methods);
         self::assertArrayHasKey('cases', $methods);
 
         $method = $methods['cases'];
@@ -221,7 +222,7 @@ class ReflectionClassTest extends TestCase
         $classInfo = $reflector->reflectClass(StringEnum::class);
         $methods   = $classInfo->getImmediateMethods();
 
-        self::assertCount(3, $methods);
+        self::assertCount(4, $methods);
     }
 
     /** @return list<array{0: string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
@@ -774,7 +775,9 @@ PHP;
 
     public function testGetLocatedSource(): void
     {
-        $node          = new Class_('SomeClass');
+        $node                 = new Class_('SomeClass', [], ['startLine' => 1, 'endLine' => 1, 'startFilePos' => 0, 'endFilePos' => 9]);
+        $node->namespacedName = new Node\Name('SomeClass');
+
         $locatedSource = new LocatedSource('<?php class SomeClass {}', 'SomeClass');
         $reflector     = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
         $reflection    = ReflectionClass::createFromNode($reflector, $node, $locatedSource);
@@ -1113,6 +1116,12 @@ PHP;
 
         $classInfo = $reflector->reflectClass(ExampleClass::class);
         self::assertFalse($classInfo->isAbstract());
+
+        $classInfo = $reflector->reflectClass(ExampleTrait::class);
+        self::assertFalse($classInfo->isAbstract());
+
+        $classInfo = $reflector->reflectClass(ExampleInterface::class);
+        self::assertFalse($classInfo->isAbstract());
     }
 
     public function testIsFinal(): void
@@ -1162,6 +1171,7 @@ PHP;
             ['AbstractClass', CoreReflectionClass::IS_EXPLICIT_ABSTRACT],
             ['FinalClass', CoreReflectionClass::IS_FINAL],
             ['ReadOnlyClass', ReflectionClass::IS_READONLY],
+            ['ExampleTrait', 0],
         ];
     }
 
@@ -2007,20 +2017,6 @@ PHP;
         $classInfo->setStaticPropertyValue('foo', null);
     }
 
-    public function testGetAst(): void
-    {
-        $php = '<?php
-            class Foo {}
-        ';
-
-        $reflection = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))->reflectClass('Foo');
-
-        $ast = $reflection->getAst();
-
-        self::assertInstanceOf(Class_::class, $ast);
-        self::assertSame('Foo', $ast->name->name);
-    }
-
     public function testGetConstantsReturnsAllConstantsRegardlessOfVisibility(): void
     {
         $php = '<?php
@@ -2346,6 +2342,15 @@ PHP;
                 }
             }
 
+            class ClassHasStringableAutomaticallyWithLowercasedMethodName
+            {
+                public function unrelatedMethodBeforeToString();
+
+                public function __tostring(): string
+                {
+                }
+            }
+
             interface InterfaceHasStringable extends \Stringable
             {
             }
@@ -2368,6 +2373,10 @@ PHP;
         self::assertArrayHasKey(Stringable::class, $classImplementingStringable->getImmediateInterfaces());
 
         $classNotImplementingStringable = $reflector->reflectClass('ClassHasStringableAutomatically');
+        self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceNames());
+        self::assertArrayHasKey(Stringable::class, $classNotImplementingStringable->getImmediateInterfaces());
+
+        $classNotImplementingStringable = $reflector->reflectClass('ClassHasStringableAutomaticallyWithLowercasedMethodName');
         self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceNames());
         self::assertArrayHasKey(Stringable::class, $classNotImplementingStringable->getImmediateInterfaces());
 

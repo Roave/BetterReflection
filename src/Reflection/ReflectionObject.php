@@ -6,11 +6,7 @@ namespace Roave\BetterReflection\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
-use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\Enum_ as EnumNode;
-use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Property as PropertyNode;
-use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use ReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
@@ -470,11 +466,6 @@ class ReflectionObject extends ReflectionClass
     public function getStaticPropertyValue(string $propertyName): mixed
     {
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
-    }
-
-    public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
-    {
-        return $this->reflectionClass->getAst();
     }
 
     /** @return list<ReflectionAttribute> */
