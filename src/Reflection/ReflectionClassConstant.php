@@ -118,6 +118,11 @@ class ReflectionClassConstant
         return $this->name;
     }
 
+    public function getValueExpression(): Node\Expr
+    {
+        return $this->value;
+    }
+
     /**
      * Returns constant value
      */
