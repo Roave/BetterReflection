@@ -567,6 +567,9 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($property->isReadOnly());
         self::assertFalse($property->isPromoted());
         self::assertTrue($property->isDefault());
+
+        // No value property for pure enum
+        self::assertArrayNotHasKey('value', $properties);
     }
 
     /** @return list<array{0: string, 1: array<string, string>}> */
@@ -589,6 +592,10 @@ class ReflectionClassTest extends TestCase
                 BackedEnum::class,
                 ['name' => 'string', 'value' => 'int|string'],
             ],
+            [
+                InterfaceForEnum::class,
+                [/* No enum properties */],
+            ],
         ];
     }
 
@@ -606,6 +613,8 @@ class ReflectionClassTest extends TestCase
 
         $classInfo  = $reflector->reflectClass($className);
         $properties = $classInfo->getProperties();
+
+        self::assertCount(count($propertiesData), $properties);
 
         foreach ($propertiesData as $propertyName => $propertyType) {
             $fullPropertyName = sprintf('%s::$%s', $className, $propertyName);

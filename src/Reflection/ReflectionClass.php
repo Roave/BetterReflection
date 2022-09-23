@@ -1138,6 +1138,7 @@ class ReflectionClass implements Reflection
                     // Stringable interface does not exist on target PHP version
                 }
 
+                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
                 break;
             }
         }
