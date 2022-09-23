@@ -545,7 +545,7 @@ class ReflectionClassTest extends TestCase
         $properties = $classInfo->getProperties();
 
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
-        self::assertCount(6, $properties);
+        self::assertCount(8, $properties);
     }
 
     public function testGetPropertiesForPureEnum(): void
@@ -567,6 +567,9 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($property->isReadOnly());
         self::assertFalse($property->isPromoted());
         self::assertTrue($property->isDefault());
+
+        // No value property for pure enum
+        self::assertArrayNotHasKey('value', $properties);
     }
 
     /** @return list<array{0: string, 1: array<string, string>}> */
@@ -589,6 +592,10 @@ class ReflectionClassTest extends TestCase
                 BackedEnum::class,
                 ['name' => 'string', 'value' => 'int|string'],
             ],
+            [
+                InterfaceForEnum::class,
+                [/* No enum properties */],
+            ],
         ];
     }
 
@@ -606,6 +613,8 @@ class ReflectionClassTest extends TestCase
 
         $classInfo  = $reflector->reflectClass($className);
         $properties = $classInfo->getProperties();
+
+        self::assertCount(count($propertiesData), $properties);
 
         foreach ($propertiesData as $propertyName => $propertyType) {
             $fullPropertyName = sprintf('%s::$%s', $className, $propertyName);
@@ -652,16 +661,16 @@ PHP;
     public function getPropertiesWithFilterDataProvider(): array
     {
         return [
-            [CoreReflectionProperty::IS_STATIC, 1],
+            [CoreReflectionProperty::IS_STATIC, 3],
             [CoreReflectionProperty::IS_PUBLIC, 3],
-            [CoreReflectionProperty::IS_PROTECTED, 1],
-            [CoreReflectionProperty::IS_PRIVATE, 2],
+            [CoreReflectionProperty::IS_PROTECTED, 2],
+            [CoreReflectionProperty::IS_PRIVATE, 3],
             [
                 CoreReflectionProperty::IS_STATIC |
                 CoreReflectionProperty::IS_PUBLIC |
                 CoreReflectionProperty::IS_PROTECTED |
                 CoreReflectionProperty::IS_PRIVATE,
-                6,
+                8,
             ],
         ];
     }

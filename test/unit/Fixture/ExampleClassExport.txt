@@ -1,5 +1,5 @@
 Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
-  @@ %s/test/unit/Fixture/ExampleClass.php 10-54
+  @@ %s/test/unit/Fixture/ExampleClass.php 10-58
 
   - Constants [7] {
     Constant [ public integer MY_CONST_1 ] { 123 }
@@ -11,8 +11,10 @@ Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
     Constant [ final protected integer MY_CONST_7 ] { 789 }
   }
 
-  - Static properties [1] {
+  - Static properties [3] {
     Property [ public static $publicStaticProperty ]
+    Property [ protected static $protectedStaticProperty ]
+    Property [ private static $privateStaticProperty ]
   }
 
   - Static methods [0] {
@@ -28,7 +30,7 @@ Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
 
   - Methods [2] {
     Method [ <user, ctor> public method __construct ] {
-      @@ %s/test/unit/Fixture/ExampleClass.php 47 - 49
+      @@ %s/test/unit/Fixture/ExampleClass.php 51 - 53
 
       - Parameters [2] {
         Parameter #0 [ <optional> ?int $promotedProperty = 123 ]
@@ -37,7 +39,7 @@ Class [ <user> class Roave\BetterReflectionTest\Fixture\ExampleClass ] {
     }
 
     Method [ <user> public method someMethod ] {
-      @@ %s/test/unit/Fixture/ExampleClass.php 51 - 53
+      @@ %s/test/unit/Fixture/ExampleClass.php 55 - 57
     }
   }
 }

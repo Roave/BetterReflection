@@ -9,7 +9,6 @@ use PhpParser\Node\IntersectionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
-use function array_values;
 use function assert;
 use function implode;
 
@@ -25,12 +24,12 @@ class ReflectionIntersectionType extends ReflectionType
         IntersectionType $type,
     ) {
         /** @var non-empty-list<ReflectionNamedType> $types */
-        $types = array_values(array_map(static function (Node\Identifier|Node\Name $type) use ($reflector, $owner): ReflectionNamedType {
+        $types = array_map(static function (Node\Identifier|Node\Name $type) use ($reflector, $owner): ReflectionNamedType {
             $type = ReflectionType::createFromNode($reflector, $owner, $type);
             assert($type instanceof ReflectionNamedType);
 
             return $type;
-        }, $type->types));
+        }, $type->types);
 
         $this->types = $types;
     }
@@ -48,6 +47,7 @@ class ReflectionIntersectionType extends ReflectionType
 
     public function __toString(): string
     {
+        // @infection-ignore-all UnwrapArrayMap: It works without array_map() as well but this is less magical
         return implode('&', array_map(static fn (ReflectionNamedType $type): string => $type->__toString(), $this->types));
     }
 }

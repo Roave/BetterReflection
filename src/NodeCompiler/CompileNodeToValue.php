@@ -205,6 +205,7 @@ class CompileNodeToValue
     private function getConstantValue(Node\Expr\ConstFetch $node, string|null $constantName, CompilerContext $context): mixed
     {
         // It's not resolved when constant value is expression
+        // @infection-ignore-all Assignment, AssignCoalesce: There's no difference, ??= is just optimization
         $constantName ??= $this->resolveConstantName($node, $context);
 
         if (defined($constantName)) {
@@ -227,6 +228,7 @@ class CompileNodeToValue
     private function getClassConstantValue(Node\Expr\ClassConstFetch $node, string|null $classConstantName, CompilerContext $context): mixed
     {
         // It's not resolved when constant value is expression
+        // @infection-ignore-all Assignment, AssignCoalesce: There's no difference, ??= is just optimization
         $classConstantName ??= $this->resolveClassConstantName($node, $context);
 
         [$className, $constantName] = explode('::', $classConstantName);

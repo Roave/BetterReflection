@@ -129,16 +129,17 @@ class ReflectionMethod
             $currentClass = $currentClass->getParentClass();
 
             if ($currentClass === null || ! $currentClass->hasMethod($this->getName())) {
+                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
                 break;
             }
 
             $prototype = $currentClass->getMethod($this->getName())->findPrototype();
 
-            if ($prototype !== null) {
-                if ($this->isConstructor() && ! $prototype->isAbstract()) {
-                    break;
-                }
+            if ($prototype === null) {
+                break;
+            }
 
+            if (! $this->isConstructor() || $prototype->isAbstract()) {
                 return $prototype;
             }
         }

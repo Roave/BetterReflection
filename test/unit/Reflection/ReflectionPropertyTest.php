@@ -117,6 +117,14 @@ class ReflectionPropertyTest extends TestCase
         $publiStaticProp = $classInfo->getProperty('publicStaticProperty');
         self::assertTrue($publiStaticProp->isPublic());
         self::assertTrue($publiStaticProp->isStatic());
+
+        $protectedStaticProp = $classInfo->getProperty('protectedStaticProperty');
+        self::assertTrue($protectedStaticProp->isProtected());
+        self::assertTrue($protectedStaticProp->isStatic());
+
+        $privateStaticProp = $classInfo->getProperty('privateStaticProperty');
+        self::assertTrue($privateStaticProp->isPrivate());
+        self::assertTrue($privateStaticProp->isStatic());
     }
 
     public function testIsReadOnly(): void
@@ -198,8 +206,8 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('int|null', $promotedProperty->getType()->__toString());
         self::assertFalse($promotedProperty->hasDefaultValue());
         self::assertNull($promotedProperty->getDefaultValue());
-        self::assertSame(47, $promotedProperty->getStartLine());
-        self::assertSame(47, $promotedProperty->getEndLine());
+        self::assertSame(51, $promotedProperty->getStartLine());
+        self::assertSame(51, $promotedProperty->getEndLine());
         self::assertSame(60, $promotedProperty->getStartColumn());
         self::assertSame(95, $promotedProperty->getEndColumn());
         self::assertSame('/** Some doccomment */', $promotedProperty->getDocComment());

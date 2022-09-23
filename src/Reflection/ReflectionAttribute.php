@@ -66,6 +66,7 @@ class ReflectionAttribute
             $this->owner instanceof ReflectionProperty => Attribute::TARGET_PROPERTY,
             $this->owner instanceof ReflectionClassConstant => Attribute::TARGET_CLASS_CONSTANT,
             $this->owner instanceof ReflectionEnumCase => Attribute::TARGET_CLASS_CONSTANT,
+            // @infection-ignore-all InstanceOf_: There's no other option
             $this->owner instanceof ReflectionParameter => Attribute::TARGET_PARAMETER,
         };
     }

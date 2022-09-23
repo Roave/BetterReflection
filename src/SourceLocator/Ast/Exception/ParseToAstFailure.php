@@ -26,7 +26,7 @@ class ParseToAstFailure extends RuntimeException
         $fileName = $locatedSource->getFileName();
 
         if ($fileName !== null) {
-            $additionalInformation .= sprintf(' in file %s', $fileName);
+            $additionalInformation = sprintf(' in file %s', $fileName);
         }
 
         if ($previous instanceof Error) {

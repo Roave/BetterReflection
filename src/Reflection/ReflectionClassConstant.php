@@ -26,7 +26,7 @@ class ReflectionClassConstant
     /** @var non-empty-string */
     private string $name;
 
-    private int $modifiers = 0;
+    private int $modifiers;
 
     private Node\Expr $value;
 
@@ -59,13 +59,12 @@ class ReflectionClassConstant
         $name = $node->consts[$positionInNode]->name->name;
         assert($name !== '');
 
-        $this->name  = $name;
-        $this->value = $node->consts[$positionInNode]->value;
+        $this->name      = $name;
+        $this->modifiers = $this->computeModifiers($node);
+        $this->value     = $node->consts[$positionInNode]->value;
 
         $this->docComment = GetLastDocComment::forNode($node);
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
-
-        $this->computeModifiers($node);
 
         $startLine = $node->getStartLine();
         assert($startLine > 0);
@@ -147,7 +146,8 @@ class ReflectionClassConstant
      */
     public function isPrivate(): bool
     {
-        return ($this->modifiers & CoreReflectionClassConstant::IS_PRIVATE) === CoreReflectionClassConstant::IS_PRIVATE;
+        // Private constant cannot be final
+        return $this->modifiers === CoreReflectionClassConstant::IS_PRIVATE;
     }
 
     /**
@@ -259,18 +259,19 @@ class ReflectionClassConstant
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
     }
 
-    private function computeModifiers(ClassConst $node): void
+    private function computeModifiers(ClassConst $node): int
     {
-        if ($node->isFinal()) {
-            $this->modifiers = self::IS_FINAL;
-        }
+        $modifiers = $node->isFinal() ? self::IS_FINAL : 0;
 
         if ($node->isPrivate()) {
-            $this->modifiers += CoreReflectionClassConstant::IS_PRIVATE;
+            // No += because private constant cannot be final
+            $modifiers = CoreReflectionClassConstant::IS_PRIVATE;
         } elseif ($node->isProtected()) {
-            $this->modifiers += CoreReflectionClassConstant::IS_PROTECTED;
+            $modifiers += CoreReflectionClassConstant::IS_PROTECTED;
         } else {
-            $this->modifiers += CoreReflectionClassConstant::IS_PUBLIC;
+            $modifiers += CoreReflectionClassConstant::IS_PUBLIC;
         }
+
+        return $modifiers;
     }
 }
