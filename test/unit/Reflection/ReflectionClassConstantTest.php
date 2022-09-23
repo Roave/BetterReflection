@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -297,5 +298,28 @@ class ReflectionClassConstantTest extends TestCase
         $attributes         = $constantReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testWithImplementingClass(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
+        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $attributes         = $constantReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+
+        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+
+        $cloneConstantReflection = $constantReflection->withImplementingClass($implementingClassReflection);
+
+        self::assertNotSame($constantReflection, $cloneConstantReflection);
+        self::assertSame($constantReflection->getDeclaringClass(), $cloneConstantReflection->getDeclaringClass());
+        self::assertNotSame($constantReflection->getImplementingClass(), $cloneConstantReflection->getImplementingClass());
+
+        $cloneAttributes = $cloneConstantReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
     }
 }
