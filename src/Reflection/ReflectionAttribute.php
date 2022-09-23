@@ -22,6 +22,7 @@ class ReflectionAttribute
     /** @var array<int|string, Node\Expr> */
     private array $arguments = [];
 
+    /** @internal */
     public function __construct(
         private Reflector $reflector,
         Node\Attribute $node,
