@@ -306,6 +306,11 @@ class ReflectionProperty
         return ! $this->hasType() || $this->default !== null;
     }
 
+    public function getDefaultValueExpression(): Node\Expr|null
+    {
+        return $this->default;
+    }
+
     /**
      * Get the default value of the property (as defined before constructor is
      * called, when the property is defined)
