@@ -30,7 +30,7 @@ class ReflectionClassConstant
 
     private Node\Expr $value;
 
-    private string $docComment;
+    private string|null $docComment;
 
     /** @var list<ReflectionAttribute> */
     private array $attributes;
@@ -222,7 +222,7 @@ class ReflectionClassConstant
     /**
      * Returns the doc comment for this constant
      */
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return $this->docComment;
     }

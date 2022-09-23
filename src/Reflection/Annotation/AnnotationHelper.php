@@ -12,9 +12,9 @@ final class AnnotationHelper
     public const TENTATIVE_RETURN_TYPE_ANNOTATION = 'betterReflectionTentativeReturnType';
 
     /** @psalm-pure */
-    public static function isDeprecated(string $docComment): bool
+    public static function isDeprecated(string|null $docComment): bool
     {
-        if ($docComment === '') {
+        if ($docComment === null) {
             return false;
         }
 
@@ -22,9 +22,9 @@ final class AnnotationHelper
     }
 
     /** @psalm-pure */
-    public static function hasTentativeReturnType(string $docComment): bool
+    public static function hasTentativeReturnType(string|null $docComment): bool
     {
-        if ($docComment === '') {
+        if ($docComment === null) {
             return false;
         }
 

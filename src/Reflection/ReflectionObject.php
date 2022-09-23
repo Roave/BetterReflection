@@ -316,7 +316,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getParentClassNames();
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return $this->reflectionClass->getDocComment();
     }

@@ -165,12 +165,12 @@ class ReflectionPropertyTest extends TestCase
         self::assertStringContainsString('Property description', $property->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment(): void
+    public function testGetDocCommentReturnsNullWithNoComment(): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
         $property  = $classInfo->getProperty('publicStaticProperty');
 
-        self::assertSame('', $property->getDocComment());
+        self::assertNull($property->getDocComment());
     }
 
     /** @return list<array{0: string, 1: int}> */

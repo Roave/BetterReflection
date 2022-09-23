@@ -76,7 +76,7 @@ class ReflectionObjectTest extends TestCase
             ['getFileName', [], 'filename', null, 'filename', null],
             ['getStartLine', [], 123, null, 123, null],
             ['getEndLine', [], 123, null, 123, null],
-            ['getDocComment', [], '', null, false, null],
+            ['getDocComment', [], null, null, false, null],
             ['getConstructor', [], $mockMethod, null, null, null],
             ['hasMethod', ['foo'], true, null, true, null],
             ['getMethod', ['foo'], $mockMethod, null, null, ReflectionMethodAdapter::class],
@@ -196,7 +196,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
             ->method('getDocComment')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 

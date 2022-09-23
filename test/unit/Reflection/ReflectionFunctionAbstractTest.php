@@ -345,14 +345,14 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertSame('/**  * doc comment */', $function->getDocComment());
     }
 
-    public function testGetDocReturnsEmptyStringWithNoComment(): void
+    public function testGetDocReturnsNullWithNoComment(): void
     {
         $php = '<?php function foo() {}';
 
         $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $functionInfo = $reflector->reflectFunction('foo');
 
-        self::assertSame('', $functionInfo->getDocComment());
+        self::assertNull($functionInfo->getDocComment());
     }
 
     public function testGetNumberOfParameters(): void

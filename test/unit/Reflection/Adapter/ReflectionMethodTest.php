@@ -77,7 +77,7 @@ class ReflectionMethodTest extends TestCase
             ['getClosureThis', [], null, NotImplemented::class, null, null],
             ['getClosureScopeClass', [], null, NotImplemented::class, null, null],
             ['getClosureCalledClass', [], null, NotImplemented::class, null, null],
-            ['getDocComment', [], '', null, false, null],
+            ['getDocComment', [], null, null, false, null],
             ['getStartLine', [], 123, null, 123, null],
             ['getEndLine', [], 123, null, 123, null],
             ['getExtension', [], null, NotImplemented::class, null, null],
@@ -198,7 +198,7 @@ class ReflectionMethodTest extends TestCase
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
             ->method('getDocComment')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 

@@ -51,7 +51,7 @@ class ReflectionEnumUnitCaseTest extends TestCase
             ['getName', null, '', []],
             ['getValue', NotImplemented::class, null, []],
             ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
-            ['getDocComment', null, '', []],
+            ['getDocComment', null, null, []],
             ['getAttributes', null, [], []],
         ];
     }

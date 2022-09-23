@@ -84,7 +84,7 @@ class ReflectionEnumTest extends TestCase
             ['getFileName', [], 'filename', null, 'filename', null],
             ['getStartLine', [], 123, null, 123, null],
             ['getEndLine', [], 123, null, 123, null],
-            ['getDocComment', [], '', null, false, null],
+            ['getDocComment', [], null, null, false, null],
             ['getConstructor', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
             ['hasMethod', ['foo'], true, null, true, null],
             ['getMethod', ['foo'], $mockMethod, null, null, ReflectionMethodAdapter::class],

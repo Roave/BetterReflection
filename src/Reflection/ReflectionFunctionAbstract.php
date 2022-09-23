@@ -142,7 +142,7 @@ trait ReflectionFunctionAbstract
         return null;
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return GetLastDocComment::forNode($this->node);
     }

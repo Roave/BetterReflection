@@ -109,7 +109,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      */
     public function getDocComment(): string|false
     {
-        return $this->betterClassConstantOrEnumCase->getDocComment() ?: false;
+        return $this->betterClassConstantOrEnumCase->getDocComment() ?? false;
     }
 
     /**

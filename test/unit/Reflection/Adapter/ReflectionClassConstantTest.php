@@ -53,7 +53,7 @@ class ReflectionClassConstantTest extends TestCase
             ['isPrivate', null, true, []],
             ['isProtected', null, true, []],
             ['getModifiers', null, 123, []],
-            ['getDocComment', null, '', []],
+            ['getDocComment', null, null, []],
             ['getAttributes', null, [], []],
             ['isFinal', null, true, []],
         ];
@@ -131,7 +131,7 @@ class ReflectionClassConstantTest extends TestCase
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
             ->method('getDocComment')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
 

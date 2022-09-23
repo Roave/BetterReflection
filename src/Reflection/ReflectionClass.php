@@ -1007,7 +1007,7 @@ class ReflectionClass implements Reflection
         return array_map(static fn (self $parentClass): string => $parentClass->getName(), array_slice(array_reverse($this->getInheritanceClassHierarchy()), 1));
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return GetLastDocComment::forNode($this->node);
     }

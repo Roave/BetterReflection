@@ -123,10 +123,10 @@ class ReflectionClassConstantTest extends TestCase
         self::assertStringContainsString('This comment for constant should be used.', $const->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment(): void
+    public function testGetDocCommentReturnsNullWithNoComment(): void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
-        self::assertSame('', $const->getDocComment());
+        self::assertNull($const->getDocComment());
     }
 
     public function testGetDeclaringClass(): void
