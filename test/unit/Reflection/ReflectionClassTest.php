@@ -545,7 +545,7 @@ class ReflectionClassTest extends TestCase
         $properties = $classInfo->getProperties();
 
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
-        self::assertCount(6, $properties);
+        self::assertCount(8, $properties);
     }
 
     public function testGetPropertiesForPureEnum(): void
@@ -652,16 +652,16 @@ PHP;
     public function getPropertiesWithFilterDataProvider(): array
     {
         return [
-            [CoreReflectionProperty::IS_STATIC, 1],
+            [CoreReflectionProperty::IS_STATIC, 3],
             [CoreReflectionProperty::IS_PUBLIC, 3],
-            [CoreReflectionProperty::IS_PROTECTED, 1],
-            [CoreReflectionProperty::IS_PRIVATE, 2],
+            [CoreReflectionProperty::IS_PROTECTED, 2],
+            [CoreReflectionProperty::IS_PRIVATE, 3],
             [
                 CoreReflectionProperty::IS_STATIC |
                 CoreReflectionProperty::IS_PUBLIC |
                 CoreReflectionProperty::IS_PROTECTED |
                 CoreReflectionProperty::IS_PRIVATE,
-                6,
+                8,
             ],
         ];
     }

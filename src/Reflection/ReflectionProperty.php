@@ -570,10 +570,8 @@ class ReflectionProperty
     {
         if ($node->isStatic()) {
             $this->modifiers = CoreReflectionProperty::IS_STATIC;
-        }
-
-        if ($node->isReadonly()) {
-            $this->modifiers += self::IS_READONLY;
+        } elseif ($node->isReadonly()) {
+            $this->modifiers = self::IS_READONLY;
         }
 
         if ($node->isPrivate()) {
