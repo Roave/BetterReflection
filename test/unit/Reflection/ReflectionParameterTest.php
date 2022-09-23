@@ -186,13 +186,13 @@ class ReflectionParameterTest extends TestCase
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
 
-        $reflector   = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
-        $classInfo   = $reflector->reflectClass('Foo');
-        $methodInfo  = $classInfo->getMethod('myMethod');
-        $paramInfo   = $methodInfo->getParameter('var');
-        $actualValue = $paramInfo->getDefaultValue();
+        $reflector  = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+        $paramInfo  = $methodInfo->getParameter('var');
 
-        self::assertSame($expectedValue, $actualValue);
+        self::assertInstanceOf(Node\Expr::class, $paramInfo->getDefaultValueExpression());
+        self::assertSame($expectedValue, $paramInfo->getDefaultValue());
     }
 
     public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException(): void
@@ -203,6 +203,9 @@ class ReflectionParameterTest extends TestCase
         $classInfo  = $reflector->reflectClass('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo  = $methodInfo->getParameter('var');
+
+        self::assertFalse($paramInfo->isDefaultValueAvailable());
+        self::assertNull($paramInfo->getDefaultValueExpression());
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This parameter does not have a default value available');

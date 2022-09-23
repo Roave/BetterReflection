@@ -329,6 +329,11 @@ class ReflectionParameter
         return $this->default !== null;
     }
 
+    public function getDefaultValueExpression(): Node\Expr|null
+    {
+        return $this->default;
+    }
+
     /**
      * Get the default value of the parameter.
      *
