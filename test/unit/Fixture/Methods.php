@@ -34,6 +34,14 @@ abstract class Methods
     {
     }
 
+    protected static function staticProtectedMethod()
+    {
+    }
+
+    private static function staticPrivateMethod()
+    {
+    }
+
     function noVisibility()
     {
     }

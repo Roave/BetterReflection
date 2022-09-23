@@ -107,7 +107,9 @@ final class ReflectionObject extends CoreReflectionObject
 
         $methodNames = array_combine(array_map(static fn (string $methodName): string => strtolower($methodName), $realMethodNames), $realMethodNames);
 
-        return $methodNames[strtolower($name)] ?? $name;
+        $lowercasedName = strtolower($name);
+
+        return $methodNames[$lowercasedName] ?? $name;
     }
 
     /**

@@ -83,7 +83,7 @@ class ReflectionClass implements Reflection
     /** @var array<lowercase-string, ReflectionMethod>|null */
     private array|null $cachedMethods = null;
 
-    /** @var array{aliases: array<string, string>, modifiers: array<string, int>, precedences: array<string, string>}|null */
+    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>}|null */
     private array|null $cachedTraitsData = null;
 
     private ReflectionClass|null $cachedParentClass = null;
@@ -236,25 +236,20 @@ class ReflectionClass implements Reflection
         $traitPrecedences = $this->getTraitPrecedences();
         $traitModifiers   = $this->getTraitModifiers();
 
-        $methodAst = $method->getAst();
-
-        $methodHash = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
+        $methodModifiers = $method->getModifiers();
+        $methodHash      = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
 
         if (array_key_exists($methodHash, $traitModifiers)) {
-            $methodAst        = clone $methodAst;
-            $methodAst->flags = ($methodAst->flags & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $traitModifiers[$methodHash];
+            // PhpParser modifiers are compatible with PHP reflection modifiers
+            $methodModifiers = ($methodModifiers & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $traitModifiers[$methodHash];
         }
 
-        $createMethod = fn (string|null $aliasMethodName): ReflectionMethod => ReflectionMethod::createFromNode(
-            $this->reflector,
-            $methodAst,
-            $method->getLocatedSource(),
-            $method->getDeclaringClass()->getNamespaceName(),
-            $method->getDeclaringClass(),
-            $this,
-            $this,
-            $aliasMethodName,
-        );
+        $createMethod = function (string|null $aliasMethodName) use ($method, $methodModifiers): ReflectionMethod {
+            assert($aliasMethodName === null || $aliasMethodName !== '');
+
+            /** @psalm-suppress ArgumentTypeCoercion */
+            return $method->withImplementingClass($this, $aliasMethodName, $methodModifiers);
+        };
 
         $methods = [];
         foreach ($traitAliases as $aliasMethodName => $traitAliasDefinition) {
@@ -280,16 +275,7 @@ class ReflectionClass implements Reflection
             ...array_map(
                 function (ReflectionClass $ancestor): array {
                     return array_map(
-                        fn (ReflectionMethod $method): ReflectionMethod => ReflectionMethod::createFromNode(
-                            $this->reflector,
-                            $method->getAst(),
-                            $method->getLocatedSource(),
-                            $method->getDeclaringClass()->getNamespaceName(),
-                            $method->getDeclaringClass(),
-                            $method->getImplementingClass(),
-                            $this,
-                            $method->getAliasName(),
-                        ),
+                        fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
                         $ancestor->getMethods(),
                     );
                 },
@@ -682,7 +668,7 @@ class ReflectionClass implements Reflection
             ...array_map(
                 function (ReflectionClass $trait) {
                     return array_map(
-                        fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => ReflectionClassConstant::withImplementingClass($classConstant, $this),
+                        fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
                         $trait->getReflectionConstants(),
                     );
                 },
@@ -884,7 +870,7 @@ class ReflectionClass implements Reflection
                     ...array_map(
                         function (ReflectionClass $trait) use ($filter) {
                             return array_map(
-                                fn (ReflectionProperty $property): ReflectionProperty => ReflectionProperty::withImplementingClass($property, $this),
+                                fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
                                 $trait->getProperties($filter),
                             );
                         },
@@ -1198,7 +1184,7 @@ class ReflectionClass implements Reflection
      *
      *   'aliasedMethodName' => 'ActualClass::actualMethod'
      *
-     * @return array<string, string>
+     * @return array<non-empty-string, non-empty-string>
      *
      * @example
      * // When reflecting a class such as:
@@ -1304,7 +1290,10 @@ class ReflectionClass implements Reflection
                     }
 
                     if ($adaptation->newName) {
-                        $this->cachedTraitsData['aliases'][$adaptation->newName->name] = $methodHash;
+                        $adaptationName = $adaptation->newName->name;
+                        assert($adaptationName !== '');
+
+                        $this->cachedTraitsData['aliases'][$adaptationName] = $methodHash;
                         continue;
                     }
                 }
@@ -1315,22 +1304,28 @@ class ReflectionClass implements Reflection
 
                 foreach ($adaptation->insteadof as $insteadof) {
                     $adaptationNameHash = $this->methodHash($insteadof->toString(), $adaptation->method->toString());
-                    $originalNameHash   = $methodHash;
 
-                    $this->cachedTraitsData['precedences'][$adaptationNameHash] = $originalNameHash;
+                    $this->cachedTraitsData['precedences'][$adaptationNameHash] = $methodHash;
                 }
             }
         }
     }
 
-    /** @psalm-pure */
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     private function methodHash(string $className, string $methodName): string
     {
-        return sprintf(
+        $hash = sprintf(
             '%s::%s',
             $className,
             strtolower($methodName),
         );
+        assert($hash !== '');
+
+        return $hash;
     }
 
     /**

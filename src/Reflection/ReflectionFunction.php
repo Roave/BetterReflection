@@ -26,17 +26,30 @@ class ReflectionFunction implements Reflection
 
     public const CLOSURE_NAME = '{closure}';
 
-    private Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $functionNode;
+    private bool $isStatic;
 
     private function __construct(
         private Reflector $reflector,
-        private Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
+        Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
         private string|null $namespace = null,
     ) {
         assert($node instanceof Node\Stmt\Function_ || $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction);
 
-        $this->functionNode = $node;
+        $name = $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction
+            ? self::CLOSURE_NAME
+            : $node->name->name;
+        assert($name !== '');
+
+        $this->name = $name;
+
+        $this->fillFromNode($node);
+
+        $isClosure = $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction;
+
+        $this->isStatic    = $isClosure && $node->static;
+        $this->isClosure   = $isClosure;
+        $this->isGenerator = $this->nodeIsOrContainsYield($node);
     }
 
     /** @throws IdentifierNotFound */
@@ -71,22 +84,15 @@ class ReflectionFunction implements Reflection
         return new self($reflector, $node, $locatedSource, $namespace);
     }
 
-    public function getAst(): Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction
-    {
-        return $this->functionNode;
-    }
-
     /**
      * Get the "short" name of the function (e.g. for A\B\foo, this will return
      * "foo").
+     *
+     * @return non-empty-string
      */
     public function getShortName(): string
     {
-        if ($this->functionNode instanceof Node\Expr\Closure || $this->functionNode instanceof Node\Expr\ArrowFunction) {
-            return self::CLOSURE_NAME;
-        }
-
-        return $this->functionNode->name->name;
+        return $this->name;
     }
 
     /**
@@ -108,9 +114,7 @@ class ReflectionFunction implements Reflection
 
     public function isStatic(): bool
     {
-        $node = $this->getAst();
-
-        return ($node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction) && $node->static;
+        return $this->isStatic;
     }
 
     /**

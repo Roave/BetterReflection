@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
+use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use PhpParser\Node\Stmt\Throw_ as NodeThrow;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
-use PhpParser\PrettyPrinterAbstract;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
+use Roave\BetterReflection\Util\Exception\NoNodePosition;
 use Roave\BetterReflection\Util\GetLastDocComment;
-use Roave\BetterReflection\Util\Visitor\ReturnNodeVisitor;
+use RuntimeException;
 
 use function array_filter;
 use function assert;
@@ -28,13 +26,105 @@ use function is_array;
 
 trait ReflectionFunctionAbstract
 {
+    /** @var non-empty-string */
+    private string $name;
+
+    /** @var list<ReflectionParameter> */
+    private array $parameters;
+
+    private bool $returnsReference;
+
+    private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $returnType;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    private string|null $docComment;
+
+    /** @var positive-int|null */
+    private int|null $startLine;
+
+    /** @var positive-int|null */
+    private int|null $endLine;
+
+    /** @var positive-int|null */
+    private int|null $startColumn;
+
+    /** @var positive-int|null */
+    private int|null $endColumn;
+
+    private bool $couldThrow = false;
+
+    private bool $isClosure   = false;
+    private bool $isGenerator = false;
+
     abstract public function __toString(): string;
 
+    /** @return non-empty-string */
     abstract public function getShortName(): string;
+
+    private function fillFromNode(MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node): void
+    {
+        $this->parameters       = $this->createParameters($node);
+        $this->returnsReference = $node->returnsByRef();
+        $this->returnType       = $this->createReturnType($node);
+        $this->attributes       = ReflectionAttributeHelper::createAttributes($this->reflector, $this, $node->attrGroups);
+        $this->docComment       = GetLastDocComment::forNode($node);
+        $this->couldThrow       = $this->computeCouldThrow($node);
+
+        $startLine = null;
+        if ($node->hasAttribute('startLine')) {
+            $startLine = $node->getStartLine();
+            assert($startLine > 0);
+        }
+
+        $endLine = null;
+        if ($node->hasAttribute('endLine')) {
+            $endLine = $node->getEndLine();
+            assert($endLine > 0);
+        }
+
+        $this->startLine = $startLine;
+        $this->endLine   = $endLine;
+
+        try {
+            $this->startColumn = CalculateReflectionColumn::getStartColumn($this->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->startColumn = null;
+        }
+
+        try {
+            $this->endColumn = CalculateReflectionColumn::getEndColumn($this->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->endColumn = null;
+        }
+    }
+
+    /** @return list<ReflectionParameter> */
+    private function createParameters(Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node): array
+    {
+        $parameters = [];
+
+        /** @var list<Node\Param> $nodeParams */
+        $nodeParams = $node->params;
+        foreach ($nodeParams as $paramIndex => $paramNode) {
+            $parameters[] = ReflectionParameter::createFromNode(
+                $this->reflector,
+                $paramNode,
+                $this,
+                $paramIndex,
+                $this->isParameterOptional($nodeParams, $paramIndex),
+            );
+        }
+
+        return $parameters;
+    }
 
     /**
      * Get the "full" name of the function (e.g. for A\B\foo, this will return
      * "A\B\foo").
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
@@ -70,7 +160,7 @@ trait ReflectionFunctionAbstract
      */
     public function getNumberOfParameters(): int
     {
-        return count($this->getParameters());
+        return count($this->parameters);
     }
 
     /**
@@ -79,7 +169,7 @@ trait ReflectionFunctionAbstract
     public function getNumberOfRequiredParameters(): int
     {
         return count(array_filter(
-            $this->getParameters(),
+            $this->parameters,
             static fn (ReflectionParameter $p): bool => ! $p->isOptional(),
         ));
     }
@@ -92,21 +182,7 @@ trait ReflectionFunctionAbstract
      */
     public function getParameters(): array
     {
-        $parameters = [];
-
-        /** @var list<Node\Param> $nodeParams */
-        $nodeParams = $this->node->params;
-        foreach ($nodeParams as $paramIndex => $paramNode) {
-            $parameters[] = ReflectionParameter::createFromNode(
-                $this->reflector,
-                $paramNode,
-                $this,
-                $paramIndex,
-                $this->isParameterOptional($nodeParams, $paramIndex),
-            );
-        }
-
-        return $parameters;
+        return $this->parameters;
     }
 
     /** @param list<Node\Param> $parameterNodes */
@@ -144,12 +220,7 @@ trait ReflectionFunctionAbstract
 
     public function getDocComment(): string|null
     {
-        return GetLastDocComment::forNode($this->node);
-    }
-
-    public function setDocCommentFromString(string $string): void
-    {
-        $this->node->setDocComment(new Doc($string));
+        return $this->docComment;
     }
 
     public function getFileName(): string|null
@@ -167,12 +238,12 @@ trait ReflectionFunctionAbstract
      */
     public function isClosure(): bool
     {
-        return $this->node instanceof Node\Expr\Closure || $this->node instanceof Node\Expr\ArrowFunction;
+        return $this->isClosure;
     }
 
     public function isDeprecated(): bool
     {
-        return AnnotationHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->docComment);
     }
 
     public function isInternal(): bool
@@ -199,9 +270,7 @@ trait ReflectionFunctionAbstract
      */
     public function isVariadic(): bool
     {
-        $parameters = $this->getParameters();
-
-        foreach ($parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             if ($parameter->isVariadic()) {
                 return true;
             }
@@ -213,10 +282,21 @@ trait ReflectionFunctionAbstract
     /** Checks if the function/method contains `throw` expressions. */
     public function couldThrow(): bool
     {
+        return $this->couldThrow;
+    }
+
+    private function computeCouldThrow(MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node): bool
+    {
+        $statements = $node->getStmts();
+
+        if ($statements === null) {
+            return false;
+        }
+
         $visitor   = new FindingVisitor(static fn (Node $node): bool => $node instanceof NodeThrow);
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);
-        $traverser->traverse($this->getBodyAst());
+        $traverser->traverse($statements);
 
         return $visitor->getFoundNodes() !== [];
     }
@@ -264,33 +344,67 @@ trait ReflectionFunctionAbstract
      */
     public function isGenerator(): bool
     {
-        return $this->nodeIsOrContainsYield($this->node);
+        return $this->isGenerator;
     }
 
     /**
      * Get the line number that this function starts on.
+     *
+     * @return positive-int
+     *
+     * @throws RuntimeException
      */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        if ($this->startLine === null) {
+            throw new RuntimeException('Start line missing');
+        }
+
+        return $this->startLine;
     }
 
     /**
      * Get the line number that this function ends on.
+     *
+     * @return positive-int
+     *
+     * @throws RuntimeException
      */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        if ($this->endLine === null) {
+            throw new RuntimeException('End line missing');
+        }
+
+        return $this->endLine;
     }
 
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
+        if ($this->startColumn === null) {
+            throw new RuntimeException('Start column missing');
+        }
+
+        return $this->startColumn;
     }
 
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
+        if ($this->endColumn === null) {
+            throw new RuntimeException('End column missing');
+        }
+
+        return $this->endColumn;
     }
 
     /**
@@ -298,7 +412,7 @@ trait ReflectionFunctionAbstract
      */
     public function returnsReference(): bool
     {
-        return $this->node->byRef;
+        return $this->returnsReference;
     }
 
     /**
@@ -310,7 +424,7 @@ trait ReflectionFunctionAbstract
             return null;
         }
 
-        return $this->createReturnType();
+        return $this->returnType;
     }
 
     /**
@@ -322,7 +436,7 @@ trait ReflectionFunctionAbstract
             return false;
         }
 
-        return $this->node->getReturnType() !== null;
+        return $this->returnType !== null;
     }
 
     public function hasTentativeReturnType(): bool
@@ -331,7 +445,7 @@ trait ReflectionFunctionAbstract
             return false;
         }
 
-        return AnnotationHelper::hasTentativeReturnType($this->getDocComment());
+        return AnnotationHelper::hasTentativeReturnType($this->docComment);
     }
 
     public function getTentativeReturnType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
@@ -340,12 +454,12 @@ trait ReflectionFunctionAbstract
             return null;
         }
 
-        return $this->createReturnType();
+        return $this->returnType;
     }
 
-    private function createReturnType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    private function createReturnType(MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
-        $returnType = $this->node->getReturnType();
+        $returnType = $node->getReturnType();
 
         if ($returnType === null) {
             return null;
@@ -356,63 +470,10 @@ trait ReflectionFunctionAbstract
         return ReflectionType::createFromNode($this->reflector, $this, $returnType);
     }
 
-    /** @throws Uncloneable */
-    public function __clone()
-    {
-        throw Uncloneable::fromClass(self::class);
-    }
-
-    /**
-     * Retrieves the body of this function as AST nodes
-     *
-     * @return Node[]
-     */
-    public function getBodyAst(): array
-    {
-        return $this->node->getStmts() ?? [];
-    }
-
-    /**
-     * Retrieves the body of this function as code.
-     *
-     * If a PrettyPrinter is provided as a parameter, it will be used, otherwise
-     * a default will be used.
-     *
-     * Note that the formatting of the code may not be the same as the original
-     * function. If specific formatting is required, you should provide your
-     * own implementation of a PrettyPrinter to unparse the AST.
-     */
-    public function getBodyCode(PrettyPrinterAbstract|null $printer = null): string
-    {
-        if ($printer === null) {
-            $printer = new StandardPrettyPrinter();
-        }
-
-        if ($this->node instanceof Node\Expr\ArrowFunction) {
-            /** @var non-empty-list<Node\Stmt\Return_> $ast */
-            $ast  = $this->getBodyAst();
-            $expr = $ast[0]->expr;
-            assert($expr instanceof Node\Expr);
-
-            return $printer->prettyPrintExpr($expr);
-        }
-
-        return $printer->prettyPrint($this->getBodyAst());
-    }
-
-    /**
-     * Fetch the AST for this method or function.
-     */
-    abstract public function getAst(): Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction;
-
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        /**
-         * @psalm-var ReflectionMethod|ReflectionFunction $this
-         * @phpstan-ignore-next-line
-         */
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this, $this->node->attrGroups);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */
@@ -429,31 +490,5 @@ trait ReflectionFunctionAbstract
     public function getAttributesByInstance(string $className): array
     {
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
-    }
-
-    /**
-     * Fetch an array of all return statements found within this function.
-     *
-     * Note that return statements within smaller scopes contained (e.g. anonymous classes, closures) are not returned
-     * here as they are not within the immediate scope.
-     *
-     * @return Node\Stmt\Return_[]
-     */
-    public function getReturnStatementsAst(): array
-    {
-        $visitor = new ReturnNodeVisitor();
-
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor($visitor);
-
-        $stmts = $this->node->getStmts();
-
-        if ($stmts === null) {
-            return [];
-        }
-
-        $traverser->traverse($stmts);
-
-        return $visitor->getReturnNodes();
     }
 }

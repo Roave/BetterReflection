@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
 
+use function array_map;
 use function assert;
 use function sprintf;
 use function strtolower;
@@ -27,11 +28,12 @@ class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
 
-    private MethodNode $methodNode;
+    private int $modifiers;
 
+    /** @param non-empty-string|null $aliasName */
     private function __construct(
         private Reflector $reflector,
-        private MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
+        MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
         private string|null $namespace,
         private ReflectionClass $declaringClass,
@@ -41,10 +43,20 @@ class ReflectionMethod
     ) {
         assert($node instanceof MethodNode);
 
-        $this->methodNode = $node;
+        $name = $node->name->name;
+        assert($name !== '');
+
+        $this->name      = $name;
+        $this->modifiers = $this->computeModifiers($node);
+
+        $this->fillFromNode($node);
     }
 
-    /** @internal */
+    /**
+     * @internal
+     *
+     * @param non-empty-string|null $aliasName
+     */
     public static function createFromNode(
         Reflector $reflector,
         MethodNode $node,
@@ -90,20 +102,57 @@ class ReflectionMethod
         return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
     }
 
-    public function getAst(): MethodNode
+    /**
+     * @internal
+     *
+     * @param non-empty-string|null $aliasName
+     */
+    public function withImplementingClass(ReflectionClass $implementingClass, string|null $aliasName, int $modifiers): self
     {
-        return $this->methodNode;
+        $clone                    = $this->clone();
+        $clone->aliasName         = $aliasName;
+        $clone->modifiers         = $modifiers;
+        $clone->implementingClass = $implementingClass;
+        $clone->currentClass      = $implementingClass;
+
+        return $clone;
     }
 
+    /** @internal */
+    public function withCurrentClass(ReflectionClass $currentClass): self
+    {
+        $clone               = $this->clone();
+        $clone->currentClass = $currentClass;
+
+        return $clone;
+    }
+
+    private function clone(): self
+    {
+        $clone = clone $this;
+
+        if ($clone->returnType !== null) {
+            $clone->returnType = $clone->returnType->withOwner($clone);
+        }
+
+        $clone->parameters = array_map(static fn (ReflectionParameter $parameter): ReflectionParameter => $parameter->withFunction($clone), $this->parameters);
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        return $clone;
+    }
+
+    /** @return non-empty-string */
     public function getShortName(): string
     {
         if ($this->aliasName !== null) {
             return $this->aliasName;
         }
 
-        return $this->methodNode->name->name;
+        return $this->name;
     }
 
+    /** @return non-empty-string|null */
     public function getAliasName(): string|null
     {
         return $this->aliasName;
@@ -173,14 +222,19 @@ class ReflectionMethod
      */
     public function getModifiers(): int
     {
-        $val  = $this->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
-        $val += $this->isPublic() ? CoreReflectionMethod::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? CoreReflectionMethod::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
-        $val += $this->isAbstract() ? CoreReflectionMethod::IS_ABSTRACT : 0;
-        $val += $this->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
+        return $this->modifiers;
+    }
 
-        return $val;
+    private function computeModifiers(MethodNode $node): int
+    {
+        $modifiers  = $node->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
+        $modifiers += $node->isPublic() ? CoreReflectionMethod::IS_PUBLIC : 0;
+        $modifiers += $node->isProtected() ? CoreReflectionMethod::IS_PROTECTED : 0;
+        $modifiers += $node->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
+        $modifiers += $node->isAbstract() ? CoreReflectionMethod::IS_ABSTRACT : 0;
+        $modifiers += $node->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
+
+        return $modifiers;
     }
 
     public function __toString(): string
@@ -208,7 +262,8 @@ class ReflectionMethod
      */
     public function isAbstract(): bool
     {
-        return $this->methodNode->isAbstract() || $this->declaringClass->isInterface();
+        return ($this->modifiers & CoreReflectionMethod::IS_ABSTRACT) === CoreReflectionMethod::IS_ABSTRACT
+            || $this->declaringClass->isInterface();
     }
 
     /**
@@ -216,7 +271,7 @@ class ReflectionMethod
      */
     public function isFinal(): bool
     {
-        return $this->methodNode->isFinal();
+        return ($this->modifiers & CoreReflectionMethod::IS_FINAL) === CoreReflectionMethod::IS_FINAL;
     }
 
     /**
@@ -224,7 +279,7 @@ class ReflectionMethod
      */
     public function isPrivate(): bool
     {
-        return $this->methodNode->isPrivate();
+        return ($this->modifiers & CoreReflectionMethod::IS_PRIVATE) === CoreReflectionMethod::IS_PRIVATE;
     }
 
     /**
@@ -232,7 +287,7 @@ class ReflectionMethod
      */
     public function isProtected(): bool
     {
-        return $this->methodNode->isProtected();
+        return ($this->modifiers & CoreReflectionMethod::IS_PROTECTED) === CoreReflectionMethod::IS_PROTECTED;
     }
 
     /**
@@ -240,7 +295,7 @@ class ReflectionMethod
      */
     public function isPublic(): bool
     {
-        return $this->methodNode->isPublic();
+        return ($this->modifiers & CoreReflectionMethod::IS_PUBLIC) === CoreReflectionMethod::IS_PUBLIC;
     }
 
     /**
@@ -248,7 +303,7 @@ class ReflectionMethod
      */
     public function isStatic(): bool
     {
-        return $this->methodNode->isStatic();
+        return ($this->modifiers & CoreReflectionMethod::IS_STATIC) === CoreReflectionMethod::IS_STATIC;
     }
 
     /**

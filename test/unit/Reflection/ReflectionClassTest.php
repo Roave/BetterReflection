@@ -293,12 +293,12 @@ class ReflectionClassTest extends TestCase
     public function getMethodsWithFilterDataProvider(): array
     {
         return [
-            [CoreReflectionMethod::IS_STATIC, 1],
+            [CoreReflectionMethod::IS_STATIC, 3],
             [CoreReflectionMethod::IS_ABSTRACT, 1],
             [CoreReflectionMethod::IS_FINAL, 1],
             [CoreReflectionMethod::IS_PUBLIC, 16],
-            [CoreReflectionMethod::IS_PROTECTED, 1],
-            [CoreReflectionMethod::IS_PRIVATE, 1],
+            [CoreReflectionMethod::IS_PROTECTED, 2],
+            [CoreReflectionMethod::IS_PRIVATE, 2],
             [
                 CoreReflectionMethod::IS_STATIC |
                 CoreReflectionMethod::IS_ABSTRACT |
@@ -306,7 +306,7 @@ class ReflectionClassTest extends TestCase
                 CoreReflectionMethod::IS_PUBLIC |
                 CoreReflectionMethod::IS_PROTECTED |
                 CoreReflectionMethod::IS_PRIVATE,
-                18,
+                20,
             ],
         ];
     }
@@ -2286,8 +2286,6 @@ PHP;
         self::assertFalse($protectedMethodFromTrait->isPublic());
         self::assertTrue($protectedMethodFromTrait->isProtected());
 
-        self::assertNotSame($protectedMethodFromClass->getAst(), $protectedMethodFromTrait->getAst());
-
         $privateMethodFromClass = $classReflection->getMethod('privateMethod');
         self::assertTrue($privateMethodFromClass->isProtected());
         self::assertFalse($privateMethodFromClass->isPrivate());
@@ -2295,8 +2293,6 @@ PHP;
         $privateMethodFromTrait = $traitReflection->getMethod('privateMethod');
         self::assertFalse($privateMethodFromTrait->isProtected());
         self::assertTrue($privateMethodFromTrait->isPrivate());
-
-        self::assertNotSame($privateMethodFromClass->getAst(), $privateMethodFromTrait->getAst());
 
         $privateMethodRenamed = $classReflection->getMethod('privateMethodRenamed');
         self::assertTrue($privateMethodRenamed->isProtected());

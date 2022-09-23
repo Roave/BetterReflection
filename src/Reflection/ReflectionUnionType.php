@@ -37,6 +37,18 @@ class ReflectionUnionType extends ReflectionType
         $this->types = $types;
     }
 
+    /** @internal */
+    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner): static
+    {
+        $clone = clone $this;
+
+        foreach ($clone->types as $typeNo => $innerType) {
+            $clone->types[$typeNo] = $innerType->withOwner($owner);
+        }
+
+        return $clone;
+    }
+
     /** @return non-empty-list<ReflectionNamedType|ReflectionIntersectionType> */
     public function getTypes(): array
     {

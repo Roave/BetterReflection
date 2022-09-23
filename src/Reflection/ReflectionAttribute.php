@@ -22,6 +22,7 @@ class ReflectionAttribute
     /** @var array<int|string, Node\Expr> */
     private array $arguments = [];
 
+    /** @internal */
     public function __construct(
         private Reflector $reflector,
         Node\Attribute $node,
@@ -35,6 +36,15 @@ class ReflectionAttribute
         foreach ($node->args as $argNo => $arg) {
             $this->arguments[$arg->name?->toString() ?? $argNo] = $arg->value;
         }
+    }
+
+    /** @interal */
+    public function withOwner(ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner): self
+    {
+        $clone        = clone $this;
+        $clone->owner = $owner;
+
+        return $clone;
     }
 
     /** @return non-empty-string */

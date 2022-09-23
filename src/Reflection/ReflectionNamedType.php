@@ -47,6 +47,15 @@ class ReflectionNamedType extends ReflectionType
         $this->name = $type->toString();
     }
 
+    /** @internal */
+    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner): static
+    {
+        $clone        = clone $this;
+        $clone->owner = $owner;
+
+        return $clone;
+    }
+
     public function getName(): string
     {
         return $this->name;

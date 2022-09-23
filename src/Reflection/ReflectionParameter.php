@@ -16,13 +16,13 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
 use RuntimeException;
 
+use function array_map;
 use function assert;
 use function count;
 use function is_array;
@@ -241,6 +241,23 @@ class ReflectionParameter
         );
     }
 
+    /** @internal */
+    public function withFunction(ReflectionMethod|ReflectionFunction $function): self
+    {
+        $clone           = clone $this;
+        $clone->function = $function;
+
+        if ($clone->type !== null) {
+            $clone->type = $clone->type->withOwner($clone);
+        }
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        $this->compiledDefaultValue = null;
+
+        return $clone;
+    }
+
     /** @throws LogicException */
     private function getCompiledDefaultValue(): CompiledValue
     {
@@ -450,16 +467,6 @@ class ReflectionParameter
         }
 
         return $compiledDefaultValue->constantName;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws Uncloneable
-     */
-    public function __clone()
-    {
-        throw Uncloneable::fromClass(self::class);
     }
 
     /**

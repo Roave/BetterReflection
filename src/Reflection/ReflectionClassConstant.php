@@ -17,6 +17,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 
+use function array_map;
 use function assert;
 
 class ReflectionClassConstant
@@ -99,10 +100,14 @@ class ReflectionClassConstant
     }
 
     /** @internal */
-    public static function withImplementingClass(self $classConstant, ReflectionClass $implementingClass): self
+    public function withImplementingClass(ReflectionClass $implementingClass): self
     {
-        $clone                    = clone $classConstant;
+        $clone                    = clone $this;
         $clone->implementingClass = $implementingClass;
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        $this->compiledValue = null;
 
         return $clone;
     }
