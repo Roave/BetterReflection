@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
@@ -145,11 +144,6 @@ trait ReflectionFunctionAbstract
     public function getDocComment(): string|null
     {
         return GetLastDocComment::forNode($this->node);
-    }
-
-    public function setDocCommentFromString(string $string): void
-    {
-        $this->node->setDocComment(new Doc($string));
     }
 
     public function getFileName(): string|null
