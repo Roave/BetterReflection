@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionEnum as CoreReflectionEnum;
 use ReflectionException as CoreReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
@@ -810,5 +811,48 @@ class ReflectionEnumTest extends TestCase
         self::assertCount(2, $traits);
         self::assertArrayHasKey($traitOneClassName, $traits);
         self::assertArrayHasKey($traitTwoClassName, $traits);
+    }
+
+    public function testGetMethodsWithFilter(): void
+    {
+        $betterReflectionEnum            = $this->createMock(BetterReflectionEnum::class);
+        $publicBetterReflectionMethod    = $this->createMock(BetterReflectionMethod::class);
+        $privateBetterReflectionMethod   = $this->createMock(BetterReflectionMethod::class);
+        $protectedBetterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+
+        $publicBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('public');
+
+        $privateBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('private');
+
+        $protectedBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('protected');
+
+        $betterReflectionEnum
+            ->method('getMethods')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionMethod->getName() => $publicBetterReflectionMethod,
+                        $privateBetterReflectionMethod->getName() => $privateBetterReflectionMethod,
+                        $protectedBetterReflectionMethod->getName() => $protectedBetterReflectionMethod,
+                    ],
+                ],
+                [CoreReflectionMethod::IS_PUBLIC, [$publicBetterReflectionMethod->getName() => $publicBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PRIVATE, [$privateBetterReflectionMethod->getName() => $privateBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PROTECTED, [$protectedBetterReflectionMethod->getName() => $protectedBetterReflectionMethod]],
+            ]);
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertCount(3, $reflectionEnumAdapter->getMethods());
+        self::assertCount(1, $reflectionEnumAdapter->getMethods(CoreReflectionMethod::IS_PUBLIC));
+        self::assertCount(1, $reflectionEnumAdapter->getMethods(CoreReflectionMethod::IS_PRIVATE));
+        self::assertCount(1, $reflectionEnumAdapter->getMethods(CoreReflectionMethod::IS_PROTECTED));
     }
 }

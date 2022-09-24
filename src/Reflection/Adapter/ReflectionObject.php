@@ -135,6 +135,8 @@ final class ReflectionObject extends CoreReflectionObject
     }
 
     /**
+     * @param int-mask-of<ReflectionMethod::IS_*>|null $filter
+     *
      * @return list<ReflectionMethod>
      *
      * @psalm-suppress MethodSignatureMismatch
@@ -143,7 +145,7 @@ final class ReflectionObject extends CoreReflectionObject
     {
         return array_map(
             static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
-            $this->betterReflectionObject->getMethods($filter),
+            $this->betterReflectionObject->getMethods($filter ?? 0),
         );
     }
 

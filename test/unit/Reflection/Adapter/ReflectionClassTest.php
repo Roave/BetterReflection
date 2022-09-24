@@ -229,7 +229,7 @@ class ReflectionClassTest extends TestCase
         $betterReflectionClass
             ->method('getMethods')
             ->willReturnMap([
-                [null, [$publicBetterReflectionMethod, $privateBetterReflectionMethod]],
+                [0, [$publicBetterReflectionMethod, $privateBetterReflectionMethod]],
                 [CoreReflectionMethod::IS_PUBLIC, [$publicBetterReflectionMethod]],
                 [CoreReflectionMethod::IS_PRIVATE, [$privateBetterReflectionMethod]],
             ]);

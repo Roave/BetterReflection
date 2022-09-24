@@ -290,7 +290,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame($returnType, $methodReturnType->__toString());
     }
 
-    /** @return list<array{0: int, 1: int}> */
+    /** @return list<array{0: int-mask-of<CoreReflectionMethod::IS_*>, 1: int}> */
     public function getMethodsWithFilterDataProvider(): array
     {
         return [
@@ -312,7 +312,11 @@ class ReflectionClassTest extends TestCase
         ];
     }
 
-    /** @dataProvider getMethodsWithFilterDataProvider */
+    /**
+     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
+     *
+     * @dataProvider getMethodsWithFilterDataProvider
+     */
     public function testGetMethodsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());

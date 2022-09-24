@@ -14,6 +14,7 @@ use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
@@ -487,11 +488,13 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_FINAL
      * the only the final public methods will be returned
      *
+     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
+     *
      * @return list<ReflectionMethod>
      */
-    public function getMethods(int|null $filter = null): array
+    public function getMethods(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return array_values($this->getMethodsIndexedByName());
         }
 
@@ -509,11 +512,13 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getMethods for the usage of $filter
      *
+     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionMethod>
      */
-    public function getImmediateMethods(int|null $filter = null): array
+    public function getImmediateMethods(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->immediateMethods;
         }
 

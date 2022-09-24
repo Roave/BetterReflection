@@ -8,6 +8,7 @@ use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -875,5 +876,48 @@ class ReflectionObjectTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionObject::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionObjectAdapter->foo;
+    }
+
+    public function testGetMethodsWithFilter(): void
+    {
+        $betterReflectionObject          = $this->createMock(BetterReflectionObject::class);
+        $publicBetterReflectionMethod    = $this->createMock(BetterReflectionMethod::class);
+        $privateBetterReflectionMethod   = $this->createMock(BetterReflectionMethod::class);
+        $protectedBetterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+
+        $publicBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('public');
+
+        $privateBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('private');
+
+        $protectedBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('protected');
+
+        $betterReflectionObject
+            ->method('getMethods')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionMethod->getName() => $publicBetterReflectionMethod,
+                        $privateBetterReflectionMethod->getName() => $privateBetterReflectionMethod,
+                        $protectedBetterReflectionMethod->getName() => $protectedBetterReflectionMethod,
+                    ],
+                ],
+                [CoreReflectionMethod::IS_PUBLIC, [$publicBetterReflectionMethod->getName() => $publicBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PRIVATE, [$privateBetterReflectionMethod->getName() => $privateBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PROTECTED, [$protectedBetterReflectionMethod->getName() => $protectedBetterReflectionMethod]],
+            ]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(3, $reflectionObjectAdapter->getMethods());
+        self::assertCount(1, $reflectionObjectAdapter->getMethods(CoreReflectionMethod::IS_PUBLIC));
+        self::assertCount(1, $reflectionObjectAdapter->getMethods(CoreReflectionMethod::IS_PRIVATE));
+        self::assertCount(1, $reflectionObjectAdapter->getMethods(CoreReflectionMethod::IS_PROTECTED));
     }
 }
