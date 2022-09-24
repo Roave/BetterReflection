@@ -86,9 +86,15 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->getDocComment() ?? false;
     }
 
-    public function getConstructor(): ReflectionMethod
+    public function getConstructor(): ReflectionMethod|null
     {
-        return new ReflectionMethod($this->betterReflectionObject->getConstructor());
+        $constructor = $this->betterReflectionObject->getConstructor();
+
+        if ($constructor === null) {
+            return null;
+        }
+
+        return new ReflectionMethod($constructor);
     }
 
     public function hasMethod(string $name): bool
@@ -98,7 +104,13 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getMethod(string $name): ReflectionMethod
     {
-        return new ReflectionMethod($this->betterReflectionObject->getMethod($this->getMethodRealName($name)));
+        $method = $this->betterReflectionObject->getMethod($this->getMethodRealName($name));
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $name));
+        }
+
+        return new ReflectionMethod($method);
     }
 
     private function getMethodRealName(string $name): string

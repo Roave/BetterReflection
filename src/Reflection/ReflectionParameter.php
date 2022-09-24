@@ -125,7 +125,7 @@ class ReflectionParameter
     ): self {
         $parameter = ReflectionClass::createFromName($className)
             ->getMethod($methodName)
-            ->getParameter($parameterName);
+            ?->getParameter($parameterName);
 
         if ($parameter === null) {
             throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
@@ -146,7 +146,7 @@ class ReflectionParameter
     ): self {
         $parameter = ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
-            ->getParameter($parameterName);
+            ?->getParameter($parameterName);
 
         if ($parameter === null) {
             throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));

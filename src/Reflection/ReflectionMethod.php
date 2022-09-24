@@ -87,7 +87,13 @@ class ReflectionMethod
      */
     public static function createFromName(string $className, string $methodName): self
     {
-        return ReflectionClass::createFromName($className)->getMethod($methodName);
+        $method = ReflectionClass::createFromName($className)->getMethod($methodName);
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
+        }
+
+        return $method;
     }
 
     /**
@@ -99,7 +105,13 @@ class ReflectionMethod
      */
     public static function createFromInstance(object $instance, string $methodName): self
     {
-        return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
+        $method = ReflectionClass::createFromInstance($instance)->getMethod($methodName);
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
+        }
+
+        return $method;
     }
 
     /**
@@ -170,8 +182,10 @@ class ReflectionMethod
 
         while ($currentClass) {
             foreach ($currentClass->getImmediateInterfaces() as $interface) {
-                if ($interface->hasMethod($this->getName())) {
-                    return $interface->getMethod($this->getName());
+                $interfaceMethod = $interface->getMethod($this->getName());
+
+                if ($interfaceMethod !== null) {
+                    return $interfaceMethod;
                 }
             }
 
@@ -182,9 +196,10 @@ class ReflectionMethod
                 break;
             }
 
-            $prototype = $currentClass->getMethod($this->getName())->findPrototype();
+            $prototype = $currentClass->getMethod($this->getName())?->findPrototype();
 
             if ($prototype === null) {
+                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
                 break;
             }
 
