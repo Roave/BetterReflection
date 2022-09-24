@@ -225,7 +225,7 @@ class ReflectionClassTest extends TestCase
         self::assertCount(4, $methods);
     }
 
-    /** @return list<array{0: non-empty-string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
+    /** @return list<array{0: non-empty-string, 1: array<non-empty-string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
     public function dataMethodsOfBackedEnum(): array
     {
         return [
@@ -251,8 +251,8 @@ class ReflectionClassTest extends TestCase
     }
 
     /**
-     * @param non-empty-string                                 $methodName
-     * @param array<string, array{0: class-string, 1: string}> $parameters
+     * @param non-empty-string                                           $methodName
+     * @param array<non-empty-string, array{0: class-string, 1: string}> $parameters
      *
      * @dataProvider dataMethodsOfBackedEnum
      */

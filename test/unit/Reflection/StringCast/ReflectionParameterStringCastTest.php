@@ -23,7 +23,7 @@ class ReflectionParameterStringCastTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    /** @return list<array{0: non-empty-string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: non-empty-string}> */
     public function toStringProvider(): array
     {
         return [
@@ -78,6 +78,7 @@ class ReflectionParameterStringCastTest extends TestCase
 
     /**
      * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
      *
      * @dataProvider toStringProvider
      */

@@ -206,6 +206,8 @@ trait ReflectionFunctionAbstract
     /**
      * Get a single parameter by name. Returns null if parameter not found for
      * the function.
+     *
+     * @param non-empty-string $parameterName
      */
     public function getParameter(string $parameterName): ReflectionParameter|null
     {

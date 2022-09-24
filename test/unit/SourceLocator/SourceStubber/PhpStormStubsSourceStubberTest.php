@@ -794,7 +794,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: class-string, 1: non-empty-string, 2: string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: non-empty-string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
     public function dataMethodParameterInPhpVersion(): array
     {
         return [
@@ -809,6 +809,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     /**
      * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
      *
      * @dataProvider dataMethodParameterInPhpVersion
      */
@@ -925,7 +926,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: string, 1: string, 2: int, 3: bool, 4?: string|null, 5?: bool}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: int, 3: bool, 4?: string|null, 5?: bool}> */
     public function dataFunctionParameterInPhpVersion(): array
     {
         return [
@@ -944,7 +945,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFunctionParameterInPhpVersion */
+    /**
+     * @param non-empty-string $parameterName
+     *
+     * @dataProvider dataFunctionParameterInPhpVersion
+     */
     public function testFunctionParameterInPhpVersion(
         string $functionName,
         string $parameterName,

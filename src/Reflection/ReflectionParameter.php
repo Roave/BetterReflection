@@ -117,6 +117,7 @@ class ReflectionParameter
      * Create a reflection of a parameter using a class name
      *
      * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
      *
      * @throws OutOfBoundsException
      */
@@ -140,6 +141,7 @@ class ReflectionParameter
      * Create a reflection of a parameter using an instance
      *
      * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
      *
      * @throws OutOfBoundsException
      */
@@ -161,6 +163,8 @@ class ReflectionParameter
 
     /**
      * Create a reflection of a parameter using a closure
+     *
+     * @param non-empty-string $parameterName
      *
      * @throws OutOfBoundsException
      */
@@ -185,6 +189,7 @@ class ReflectionParameter
      *  - [function () {}]
      *
      * @param object[]|string[]|string|Closure $spec
+     * @param non-empty-string                 $parameterName
      *
      * @throws Exception
      * @throws InvalidArgumentException
