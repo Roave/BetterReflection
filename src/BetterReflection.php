@@ -10,7 +10,6 @@ use PhpParser\ParserFactory;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator as AstLocator;
-use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 use Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber;
@@ -59,11 +58,9 @@ final class BetterReflection
     public function phpParser(): Parser
     {
         return $this->phpParser
-            ?? $this->phpParser = new MemoizingParser(
-                (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
-                    'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
-                ])),
-            );
+            ?? $this->phpParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
+                'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
+            ]));
     }
 
     public function astLocator(): AstLocator
