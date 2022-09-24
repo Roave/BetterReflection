@@ -182,35 +182,14 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getConstants();
     }
 
-    public function getConstant(string $name): string|int|float|bool|array|null
-    {
-        return $this->reflectionClass->getConstant($name);
-    }
-
     public function hasConstant(string $name): bool
     {
         return $this->reflectionClass->hasConstant($name);
     }
 
-    public function getReflectionConstant(string $name): ReflectionClassConstant|null
+    public function getConstant(string $name): ReflectionClassConstant|null
     {
-        return $this->reflectionClass->getReflectionConstant($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getImmediateReflectionConstants(): array
-    {
-        return $this->reflectionClass->getImmediateReflectionConstants();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReflectionConstants(): array
-    {
-        return $this->reflectionClass->getReflectionConstants();
+        return $this->reflectionClass->getConstant($name);
     }
 
     public function getConstructor(): ReflectionMethod

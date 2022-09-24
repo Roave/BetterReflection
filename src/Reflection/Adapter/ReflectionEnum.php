@@ -192,7 +192,8 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getReflectionConstant($name);
+        // @infection-ignore-all Coalesce: There's no difference
+        $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getConstant($name);
         if ($betterReflectionConstantOrEnumCase === null) {
             return false;
         }
@@ -212,11 +213,11 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
-        $reflectionConstants = $this->betterReflectionEnum->getReflectionConstants();
+        $reflectionConstants = $this->betterReflectionEnum->getConstants();
 
         if ($filter !== null) {
             $reflectionConstants = array_filter(
-                $this->betterReflectionEnum->getReflectionConstants(),
+                $this->betterReflectionEnum->getConstants(),
                 static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
             );
         }

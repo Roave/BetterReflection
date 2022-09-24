@@ -205,7 +205,7 @@ final class ReflectionClass extends CoreReflectionClass
             }
         }
 
-        $betterReflectionConstant = $this->betterReflectionClass->getReflectionConstant($name);
+        $betterReflectionConstant = $this->betterReflectionClass->getConstant($name);
         if ($betterReflectionConstant === null) {
             return false;
         }
@@ -225,11 +225,11 @@ final class ReflectionClass extends CoreReflectionClass
     /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
-        $reflectionConstants = $this->betterReflectionClass->getReflectionConstants();
+        $reflectionConstants = $this->betterReflectionClass->getConstants();
 
         if ($filter !== null) {
             $reflectionConstants = array_filter(
-                $this->betterReflectionClass->getReflectionConstants(),
+                $this->betterReflectionClass->getConstants(),
                 static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
             );
         }

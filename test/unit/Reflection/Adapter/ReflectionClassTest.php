@@ -86,9 +86,6 @@ class ReflectionClassTest extends TestCase
             ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
             ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
             ['hasConstant', ['foo'], true, null, true, null],
-            ['getConstant', ['foo'], 'a', null, 'a', null],
-            ['getReflectionConstant', ['foo'], $mockConstant, null, null, ReflectionClassConstantAdapter::class],
-            ['getReflectionConstants', [], [$mockConstant], null, null, ReflectionClassConstantAdapter::class],
             ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
             ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
             ['isInterface', [], true, null, true, null],
@@ -296,7 +293,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionClass
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -367,7 +364,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionClass
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -718,11 +715,24 @@ class ReflectionClassTest extends TestCase
         self::assertNull($reflectionClassAdapter->getConstructor());
     }
 
+    public function testGetReflectionConstant(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($this->createMock(BetterReflectionClassConstant::class));
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionClassAdapter->getReflectionConstant('FOO'));
+    }
+
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('FOO')
             ->willReturn(null);
 
@@ -1012,7 +1022,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn(['enum_case' => $betterReflectionEnumCase]);
 
         $betterReflectionEnum
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 'public' => $publicBetterReflectionClassConstant,
                 'private' => $privateBetterReflectionClassConstant,

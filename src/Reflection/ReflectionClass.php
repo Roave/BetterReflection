@@ -633,45 +633,13 @@ class ReflectionClass implements Reflection
 
     /**
      * Get an associative array of only the constants for this specific class (i.e. do not search
-     * up parent classes etc.), with keys as constant names and values as constant values.
+     * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return array<string, mixed>
+     * @return array<string, ReflectionClassConstant> indexed by name
      */
     public function getImmediateConstants(): array
     {
-        return array_map(static fn (ReflectionClassConstant $classConstant): mixed => $classConstant->getValue(), $this->getImmediateReflectionConstants());
-    }
-
-    /**
-     * Get an associative array of the defined constants in this class,
-     * with keys as constant names and values as constant values.
-     *
-     * @return array<string, mixed>
-     */
-    public function getConstants(): array
-    {
-        return array_map(static fn (ReflectionClassConstant $classConstant): mixed => $classConstant->getValue(), $this->getReflectionConstants());
-    }
-
-    /**
-     * Get the value of the specified class constant.
-     *
-     * Returns null if not specified.
-     *
-     * @return scalar|array<scalar>|null
-     */
-    public function getConstant(string $name): string|int|float|bool|array|null
-    {
-        $reflectionConstant = $this->getReflectionConstant($name);
-
-        if ($reflectionConstant === null) {
-            return null;
-        }
-
-        /** @psalm-var scalar|array<scalar>|null $constantValue */
-        $constantValue = $reflectionConstant->getValue();
-
-        return $constantValue;
+        return $this->immediateConstants;
     }
 
     /**
@@ -679,7 +647,7 @@ class ReflectionClass implements Reflection
      */
     public function hasConstant(string $name): bool
     {
-        return $this->getReflectionConstant($name) !== null;
+        return $this->getConstant($name) !== null;
     }
 
     /**
@@ -687,20 +655,9 @@ class ReflectionClass implements Reflection
      *
      * Returns null if not specified.
      */
-    public function getReflectionConstant(string $name): ReflectionClassConstant|null
+    public function getConstant(string $name): ReflectionClassConstant|null
     {
-        return $this->getReflectionConstants()[$name] ?? null;
-    }
-
-    /**
-     * Get an associative array of only the constants for this specific class (i.e. do not search
-     * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
-     *
-     * @return array<string, ReflectionClassConstant> indexed by name
-     */
-    public function getImmediateReflectionConstants(): array
-    {
-        return $this->immediateConstants;
+        return $this->getConstants()[$name] ?? null;
     }
 
     /** @return array<string, ReflectionClassConstant> */
@@ -726,16 +683,16 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, ReflectionClassConstant> indexed by name
      */
-    public function getReflectionConstants(): array
+    public function getConstants(): array
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
         $allReflectionConstants = array_merge(
-            array_values($this->getImmediateReflectionConstants()),
+            array_values($this->getImmediateConstants()),
             ...array_map(
                 static function (ReflectionClass $ancestor): array {
                     return array_values(array_filter(
-                        $ancestor->getReflectionConstants(),
+                        $ancestor->getConstants(),
                         static fn (ReflectionClassConstant $classConstant): bool => ! $classConstant->isPrivate(),
                     ));
                 },
@@ -745,13 +702,13 @@ class ReflectionClass implements Reflection
                 function (ReflectionClass $trait) {
                     return array_map(
                         fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                        $trait->getReflectionConstants(),
+                        $trait->getConstants(),
                     );
                 },
                 $this->getTraits(),
             ),
             ...array_map(
-                static fn (ReflectionClass $interface): array => array_values($interface->getReflectionConstants()),
+                static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
                 array_values($this->getInterfaces()),
             ),
         );
