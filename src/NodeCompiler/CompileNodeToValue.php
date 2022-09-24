@@ -152,7 +152,10 @@ class CompileNodeToValue
 
         assert($node->var->name instanceof Node\Identifier);
 
-        $case = $class->getCase($node->var->name->name);
+        $caseName = $node->var->name->name;
+        assert($caseName !== '');
+
+        $case = $class->getCase($caseName);
 
         if ($case === null) {
             throw Exception\UnableToCompileNode::becauseOfInvalidEnumCasePropertyFetch($context, $class, $node);

@@ -51,7 +51,7 @@ class ReflectionEnumTest extends TestCase
         self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function dataHasAndGetCase(): array
     {
         return [
@@ -62,7 +62,11 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataHasAndGetCase */
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider dataHasAndGetCase
+     */
     public function testHasAndGetCase(string $caseName, bool $exists): void
     {
         $enumReflection = $this->reflector->reflectClass(PureEnum::class);

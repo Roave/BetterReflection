@@ -23,7 +23,7 @@ class ReflectionEnum extends ReflectionClass
 {
     private ReflectionNamedType|null $backingType;
 
-    /** @var array<string, ReflectionEnumCase> */
+    /** @var array<non-empty-string, ReflectionEnumCase> */
     private array $cases;
 
     /** @phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found */
@@ -55,29 +55,36 @@ class ReflectionEnum extends ReflectionClass
         return new self($reflector, $node, $locatedSource, $namespace);
     }
 
+    /** @param non-empty-string $name */
     public function hasCase(string $name): bool
     {
         return array_key_exists($name, $this->cases);
     }
 
+    /** @param non-empty-string $name */
     public function getCase(string $name): ReflectionEnumCase|null
     {
         return $this->cases[$name] ?? null;
     }
 
-    /** @return array<string, ReflectionEnumCase> */
+    /** @return array<non-empty-string, ReflectionEnumCase> */
     public function getCases(): array
     {
         return $this->cases;
     }
 
-    /** @return array<string, ReflectionEnumCase> */
+    /** @return array<non-empty-string, ReflectionEnumCase> */
     private function createCases(EnumNode $node): array
     {
         $enumCasesNodes = array_filter($node->stmts, static fn (Node\Stmt $stmt): bool => $stmt instanceof Node\Stmt\EnumCase);
 
         return array_combine(
-            array_map(static fn (Node\Stmt\EnumCase $enumCaseNode): string => $enumCaseNode->name->toString(), $enumCasesNodes),
+            array_map(static function (Node\Stmt\EnumCase $enumCaseNode): string {
+                $enumCaseName = $enumCaseNode->name->toString();
+                assert($enumCaseName !== '');
+
+                return $enumCaseName;
+            }, $enumCasesNodes),
             array_map(fn (Node\Stmt\EnumCase $enumCaseNode): ReflectionEnumCase => ReflectionEnumCase::createFromNode($this->reflector, $enumCaseNode, $this), $enumCasesNodes),
         );
     }
