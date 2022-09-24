@@ -194,7 +194,11 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->hasConstant($name);
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, mixed>
+     */
     public function getConstants(int|null $filter = null): array
     {
         return array_map(
@@ -245,7 +249,11 @@ final class ReflectionClass extends CoreReflectionClass
         return new ReflectionClassConstant($betterReflectionConstant);
     }
 
-    /** @return list<ReflectionClassConstant> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return list<ReflectionClassConstant>
+     */
     public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
@@ -254,10 +262,14 @@ final class ReflectionClass extends CoreReflectionClass
         ));
     }
 
-    /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
+     */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
-        $reflectionConstants = $this->betterReflectionClass->getConstants($filter);
+        $reflectionConstants = $this->betterReflectionClass->getConstants($filter ?? 0);
 
         if (
             $this->betterReflectionClass instanceof BetterReflectionEnum

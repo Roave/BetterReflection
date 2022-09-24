@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
@@ -61,8 +62,6 @@ class ReflectionClassTest extends TestCase
         $mockProperty = $this->createMock(BetterReflectionProperty::class);
 
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
-
-        $mockConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
 
@@ -282,23 +281,26 @@ class ReflectionClassTest extends TestCase
 
         $betterReflectionClass
             ->method('getConstants')
-            ->willReturnOnConsecutiveCalls(
+            ->willReturnMap([
                 [
-                    $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
-                    $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
-                    $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    0,
+                    [
+                        $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                        $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                        $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    ],
                 ],
-                [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant],
-                [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant],
-                [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant],
-            );
+                [CoreReflectionClassConstant::IS_PUBLIC, [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PRIVATE, [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PROTECTED, [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant]],
+            ]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $allConstants       = $reflectionClassAdapter->getReflectionConstants();
-        $publicConstants    = $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PUBLIC);
-        $privateConstants   = $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PRIVATE);
-        $protectedConstants = $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PROTECTED);
+        $publicConstants    = $reflectionClassAdapter->getReflectionConstants(CoreReflectionClassConstant::IS_PUBLIC);
+        $privateConstants   = $reflectionClassAdapter->getReflectionConstants(CoreReflectionClassConstant::IS_PRIVATE);
+        $protectedConstants = $reflectionClassAdapter->getReflectionConstants(CoreReflectionClassConstant::IS_PROTECTED);
 
         self::assertCount(3, $allConstants);
         self::assertContainsOnlyInstancesOf(ReflectionClassConstantAdapter::class, $allConstants);
@@ -346,23 +348,26 @@ class ReflectionClassTest extends TestCase
 
         $betterReflectionClass
             ->method('getConstants')
-            ->willReturnOnConsecutiveCalls(
+            ->willReturnMap([
                 [
-                    $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
-                    $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
-                    $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    0,
+                    [
+                        $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                        $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                        $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    ],
                 ],
-                [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant],
-                [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant],
-                [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant],
-            );
+                [CoreReflectionClassConstant::IS_PUBLIC, [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PRIVATE, [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PROTECTED, [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant]],
+            ]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $allConstants       = $reflectionClassAdapter->getConstants();
-        $publicConstants    = $reflectionClassAdapter->getConstants(CoreReflectionProperty::IS_PUBLIC);
-        $privateConstants   = $reflectionClassAdapter->getConstants(CoreReflectionProperty::IS_PRIVATE);
-        $protectedConstants = $reflectionClassAdapter->getConstants(CoreReflectionProperty::IS_PROTECTED);
+        $publicConstants    = $reflectionClassAdapter->getConstants(CoreReflectionClassConstant::IS_PUBLIC);
+        $privateConstants   = $reflectionClassAdapter->getConstants(CoreReflectionClassConstant::IS_PRIVATE);
+        $protectedConstants = $reflectionClassAdapter->getConstants(CoreReflectionClassConstant::IS_PROTECTED);
 
         self::assertCount(3, $allConstants);
 

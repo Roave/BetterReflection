@@ -19,7 +19,6 @@ use Roave\BetterReflection\Util\FileHelper;
 use ValueError;
 
 use function array_combine;
-use function array_filter;
 use function array_map;
 use function array_values;
 use function assert;
@@ -191,21 +190,16 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->hasConstant($name);
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, mixed>
+     */
     public function getConstants(int|null $filter = null): array
     {
-        $reflectionConstants = $this->betterReflectionObject->getConstants();
-
-        if ($filter !== null) {
-            $reflectionConstants = array_filter(
-                $reflectionConstants,
-                static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
-            );
-        }
-
         return array_map(
             static fn (BetterReflectionClassConstant $betterConstant): mixed => $betterConstant->getValue(),
-            $reflectionConstants,
+            $this->betterReflectionObject->getConstants($filter ?? 0),
         );
     }
 
@@ -229,12 +223,16 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionClassConstant($betterReflectionConstant);
     }
 
-    /** @return list<ReflectionClassConstant> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return list<ReflectionClassConstant>
+     */
     public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
             static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant),
-            $this->betterReflectionObject->getConstants(),
+            $this->betterReflectionObject->getConstants($filter ?? 0),
         ));
     }
 

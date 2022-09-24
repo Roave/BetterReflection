@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -119,8 +120,8 @@ class ReflectionClassConstantTest extends TestCase
             ['MY_CONST_3', CoreReflectionClassConstant::IS_PUBLIC],
             ['MY_CONST_4', CoreReflectionClassConstant::IS_PROTECTED],
             ['MY_CONST_5', CoreReflectionClassConstant::IS_PRIVATE],
-            ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstant::IS_FINAL],
-            ['MY_CONST_7', CoreReflectionClassConstant::IS_PROTECTED | ReflectionClassConstant::IS_FINAL],
+            ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstantAdapter::IS_FINAL],
+            ['MY_CONST_7', CoreReflectionClassConstant::IS_PROTECTED | ReflectionClassConstantAdapter::IS_FINAL],
         ];
     }
 

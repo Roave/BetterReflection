@@ -16,6 +16,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
@@ -634,11 +635,13 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
-    public function getImmediateConstants(int|null $filter = null): array
+    public function getImmediateConstants(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->immediateConstants;
         }
 
@@ -691,9 +694,11 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
-    public function getConstants(int|null $filter = null): array
+    public function getConstants(int $filter = 0): array
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
@@ -735,7 +740,7 @@ class ReflectionClass implements Reflection
             $reflectionConstants[$constantName] = $constant;
         }
 
-        if ($filter === null) {
+        if ($filter === 0) {
             return $reflectionConstants;
         }
 

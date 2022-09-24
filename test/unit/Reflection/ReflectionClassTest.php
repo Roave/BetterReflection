@@ -19,6 +19,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
@@ -2089,16 +2090,16 @@ PHP;
         self::assertSame('ff', $reflectionConstants['F']->getValue());
     }
 
-    /** @return list<array{0: int, 1: int}> */
+    /** @return list<array{0: int-mask-of<ReflectionClassConstantAdapter::IS_*>, 1: int}> */
     public function getConstantsWithFilterDataProvider(): array
     {
         return [
-            [ReflectionClassConstant::IS_FINAL, 2],
+            [ReflectionClassConstantAdapter::IS_FINAL, 2],
             [CoreReflectionClassConstant::IS_PUBLIC, 4],
             [CoreReflectionClassConstant::IS_PROTECTED, 2],
             [CoreReflectionClassConstant::IS_PRIVATE, 1],
             [
-                ReflectionClassConstant::IS_FINAL |
+                ReflectionClassConstantAdapter::IS_FINAL |
                 CoreReflectionClassConstant::IS_PUBLIC |
                 CoreReflectionClassConstant::IS_PROTECTED |
                 CoreReflectionClassConstant::IS_PRIVATE,
@@ -2107,7 +2108,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider getConstantsWithFilterDataProvider */
+    /**
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
+     * @dataProvider getConstantsWithFilterDataProvider
+     */
     public function testGetConstantsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());

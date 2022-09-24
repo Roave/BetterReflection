@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionEnum as CoreReflectionEnum;
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
@@ -66,8 +67,6 @@ class ReflectionEnumTest extends TestCase
         $mockMethod = $this->createMock(BetterReflectionMethod::class);
 
         $mockProperty = $this->createMock(BetterReflectionProperty::class);
-
-        $mockConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $mockEnumCase = $this->createMock(BetterReflectionEnumCase::class);
 
@@ -269,10 +268,6 @@ class ReflectionEnumTest extends TestCase
         $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $publicBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PUBLIC);
-
-        $publicBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PUBLIC_CONSTANT');
 
@@ -281,20 +276,12 @@ class ReflectionEnumTest extends TestCase
             ->willReturn('public constant');
 
         $privateBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PRIVATE);
-
-        $privateBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PRIVATE_CONSTANT');
 
         $privateBetterReflectionClassConstant
             ->method('getValue')
             ->willReturn('private constant');
-
-        $protectedBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PROTECTED);
 
         $protectedBetterReflectionClassConstant
             ->method('getName')
@@ -306,18 +293,26 @@ class ReflectionEnumTest extends TestCase
 
         $betterReflectionEnum
             ->method('getConstants')
-            ->willReturn([
-                $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
-                $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
-                $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                        $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                        $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    ],
+                ],
+                [CoreReflectionClassConstant::IS_PUBLIC, [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PRIVATE, [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PROTECTED, [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant]],
             ]);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $allConstants       = $reflectionEnumAdapter->getConstants();
-        $publicConstants    = $reflectionEnumAdapter->getConstants(CoreReflectionProperty::IS_PUBLIC);
-        $privateConstants   = $reflectionEnumAdapter->getConstants(CoreReflectionProperty::IS_PRIVATE);
-        $protectedConstants = $reflectionEnumAdapter->getConstants(CoreReflectionProperty::IS_PROTECTED);
+        $publicConstants    = $reflectionEnumAdapter->getConstants(CoreReflectionClassConstant::IS_PUBLIC);
+        $privateConstants   = $reflectionEnumAdapter->getConstants(CoreReflectionClassConstant::IS_PRIVATE);
+        $protectedConstants = $reflectionEnumAdapter->getConstants(CoreReflectionClassConstant::IS_PROTECTED);
 
         self::assertCount(3, $allConstants);
 
@@ -751,16 +746,16 @@ class ReflectionEnumTest extends TestCase
         $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $publicBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PUBLIC);
+            ->method('getName')
+            ->willReturn('PUBLIC_CONSTANT');
 
         $privateBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PRIVATE);
+            ->method('getName')
+            ->willReturn('PRIVATE_CONSTANT');
 
         $protectedBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PROTECTED);
+            ->method('getName')
+            ->willReturn('PROTECTED_CONSTANT');
 
         $betterReflectionEnum
             ->method('getCases')
@@ -768,18 +763,26 @@ class ReflectionEnumTest extends TestCase
 
         $betterReflectionEnum
             ->method('getConstants')
-            ->willReturn([
-                'public' => $publicBetterReflectionClassConstant,
-                'private' => $privateBetterReflectionClassConstant,
-                'protected' => $protectedBetterReflectionClassConstant,
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                        $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                        $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    ],
+                ],
+                [CoreReflectionClassConstant::IS_PUBLIC, [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PRIVATE, [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PROTECTED, [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant]],
             ]);
 
         $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         self::assertCount(4, $reflectionClassAdapter->getReflectionConstants());
-        self::assertCount(2, $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PUBLIC));
-        self::assertCount(1, $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PRIVATE));
-        self::assertCount(1, $reflectionClassAdapter->getReflectionConstants(CoreReflectionProperty::IS_PROTECTED));
+        self::assertCount(2, $reflectionClassAdapter->getReflectionConstants(CoreReflectionClassConstant::IS_PUBLIC));
+        self::assertCount(1, $reflectionClassAdapter->getReflectionConstants(CoreReflectionClassConstant::IS_PRIVATE));
+        self::assertCount(1, $reflectionClassAdapter->getReflectionConstants(CoreReflectionClassConstant::IS_PROTECTED));
     }
 
     public function testGetTraits(): void
