@@ -31,6 +31,8 @@ use function strtolower;
 /** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionClass extends CoreReflectionClass
 {
+    public const IS_READONLY = 65536;
+
     public function __construct(private BetterReflectionClass|BetterReflectionEnum $betterReflectionClass)
     {
         unset($this->name);

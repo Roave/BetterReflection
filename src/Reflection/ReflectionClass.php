@@ -16,6 +16,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
@@ -1112,7 +1113,7 @@ class ReflectionClass implements Reflection
 
     public function isReadOnly(): bool
     {
-        return ($this->modifiers & self::IS_READONLY) === self::IS_READONLY;
+        return ($this->modifiers & ReflectionClassAdapter::IS_READONLY) === ReflectionClassAdapter::IS_READONLY;
     }
 
     /**
@@ -1131,7 +1132,7 @@ class ReflectionClass implements Reflection
 
         $modifiers  = $node->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $modifiers += $node->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
-        $modifiers += $node->isReadonly() ? self::IS_READONLY : 0;
+        $modifiers += $node->isReadonly() ? ReflectionClassAdapter::IS_READONLY : 0;
 
         return $modifiers;
     }
