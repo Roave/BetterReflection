@@ -507,7 +507,7 @@ class ReflectionClassTest extends TestCase
         $betterReflectionClass
             ->method('getProperties')
             ->willReturnMap([
-                [null, [$publicBetterReflectionProperty, $privateBetterReflectionProperty]],
+                [0, [$publicBetterReflectionProperty, $privateBetterReflectionProperty]],
                 [CoreReflectionProperty::IS_PUBLIC, [$publicBetterReflectionProperty]],
                 [CoreReflectionProperty::IS_PRIVATE, [$privateBetterReflectionProperty]],
             ]);

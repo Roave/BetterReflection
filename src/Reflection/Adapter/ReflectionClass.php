@@ -169,13 +169,18 @@ final class ReflectionClass extends CoreReflectionClass
     }
 
     /**
+     * @param int-mask-of<ReflectionProperty::IS_*>|null $filter
+     *
      * @return list<ReflectionProperty>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getProperties(int|null $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionClass->getProperties($filter)));
+        return array_values(array_map(
+            static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
+            $this->betterReflectionClass->getProperties($filter ?? 0),
+        ));
     }
 
     public function hasConstant(string $name): bool

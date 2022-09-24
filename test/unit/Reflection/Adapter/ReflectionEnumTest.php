@@ -855,4 +855,47 @@ class ReflectionEnumTest extends TestCase
         self::assertCount(1, $reflectionEnumAdapter->getMethods(CoreReflectionMethod::IS_PRIVATE));
         self::assertCount(1, $reflectionEnumAdapter->getMethods(CoreReflectionMethod::IS_PROTECTED));
     }
+
+    public function testGetPropertiesWithFilter(): void
+    {
+        $betterReflectionEnum              = $this->createMock(BetterReflectionEnum::class);
+        $publicBetterReflectionProperty    = $this->createMock(BetterReflectionProperty::class);
+        $privateBetterReflectionProperty   = $this->createMock(BetterReflectionProperty::class);
+        $protectedBetterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+
+        $publicBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('public');
+
+        $privateBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('private');
+
+        $protectedBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('protected');
+
+        $betterReflectionEnum
+            ->method('getProperties')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionProperty->getName() => $publicBetterReflectionProperty,
+                        $privateBetterReflectionProperty->getName() => $privateBetterReflectionProperty,
+                        $protectedBetterReflectionProperty->getName() => $protectedBetterReflectionProperty,
+                    ],
+                ],
+                [CoreReflectionProperty::IS_PUBLIC, [$publicBetterReflectionProperty->getName() => $publicBetterReflectionProperty]],
+                [CoreReflectionProperty::IS_PRIVATE, [$privateBetterReflectionProperty->getName() => $privateBetterReflectionProperty]],
+                [CoreReflectionProperty::IS_PROTECTED, [$protectedBetterReflectionProperty->getName() => $protectedBetterReflectionProperty]],
+            ]);
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertCount(3, $reflectionEnumAdapter->getProperties());
+        self::assertCount(1, $reflectionEnumAdapter->getProperties(CoreReflectionProperty::IS_PUBLIC));
+        self::assertCount(1, $reflectionEnumAdapter->getProperties(CoreReflectionProperty::IS_PRIVATE));
+        self::assertCount(1, $reflectionEnumAdapter->getProperties(CoreReflectionProperty::IS_PROTECTED));
+    }
 }

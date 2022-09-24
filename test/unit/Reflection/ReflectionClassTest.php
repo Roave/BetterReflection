@@ -633,7 +633,7 @@ PHP;
         self::assertSame($expectedPropertiesNames, array_keys($properties));
     }
 
-    /** @return list<array{0: int, 1: int}> */
+    /** @return list<array{0: int-mask-of<CoreReflectionProperty::IS_*>, 1: int}> */
     public function getPropertiesWithFilterDataProvider(): array
     {
         return [
@@ -651,7 +651,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider getPropertiesWithFilterDataProvider */
+    /**
+     * @param int-mask-of<CoreReflectionProperty::IS_*> $filter
+
+     * @dataProvider getPropertiesWithFilterDataProvider
+     */
     public function testGetPropertiesWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());

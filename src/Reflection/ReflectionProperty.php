@@ -14,6 +14,7 @@ use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -38,14 +39,6 @@ use function str_contains;
 
 class ReflectionProperty
 {
-    /**
-     * We cannot use CoreReflectionProperty::IS_READONLY because it does not exist in PHP < 8.1.
-     * Constant is public, so we can use it in tests.
-     *
-     * @internal
-     */
-    public const IS_READONLY = 128;
-
     /** @var non-empty-string */
     private string $name;
 
@@ -296,7 +289,7 @@ class ReflectionProperty
 
     public function isReadOnly(): bool
     {
-        return ($this->modifiers & self::IS_READONLY) === self::IS_READONLY;
+        return ($this->modifiers & ReflectionPropertyAdapter::IS_READONLY) === ReflectionPropertyAdapter::IS_READONLY;
     }
 
     public function getDeclaringClass(): ReflectionClass
@@ -588,7 +581,7 @@ class ReflectionProperty
         if ($node->isStatic()) {
             $modifiers = CoreReflectionProperty::IS_STATIC;
         } elseif ($node->isReadonly()) {
-            $modifiers = self::IS_READONLY;
+            $modifiers = ReflectionPropertyAdapter::IS_READONLY;
         } else {
             $modifiers = 0;
         }

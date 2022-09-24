@@ -16,6 +16,7 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -760,11 +761,13 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getProperties() for the usage of filter
      *
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionProperty>
      */
-    public function getImmediateProperties(int|null $filter = null): array
+    public function getImmediateProperties(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->immediateProperties;
         }
 
@@ -894,9 +897,11 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionProperty::IS_STATIC | \ReflectionProperty::IS_PUBLIC
      * only the static public properties will be returned
      *
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
      * @return array<string, ReflectionProperty>
      */
-    public function getProperties(int|null $filter = null): array
+    public function getProperties(int $filter = 0): array
     {
         if ($this->cachedProperties === null) {
             // merging together properties from parent class, traits, current class (in this precise order)
@@ -926,7 +931,7 @@ class ReflectionClass implements Reflection
             );
         }
 
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->cachedProperties;
         }
 

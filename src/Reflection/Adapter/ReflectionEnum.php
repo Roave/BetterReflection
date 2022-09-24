@@ -170,13 +170,18 @@ final class ReflectionEnum extends CoreReflectionEnum
     }
 
     /**
+     * @param int-mask-of<ReflectionProperty::IS_*>|null $filter
+     *
      * @return list<ReflectionProperty>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getProperties(int|null $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionEnum->getProperties($filter)));
+        return array_values(array_map(
+            static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
+            $this->betterReflectionEnum->getProperties($filter ?? 0),
+        ));
     }
 
     public function hasConstant(string $name): bool

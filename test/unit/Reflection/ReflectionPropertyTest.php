@@ -14,6 +14,7 @@ use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
@@ -183,7 +184,7 @@ class ReflectionPropertyTest extends TestCase
             ['protectedProperty', CoreReflectionProperty::IS_PROTECTED],
             ['privateProperty', CoreReflectionProperty::IS_PRIVATE],
             ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC],
-            ['readOnlyProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_READONLY],
+            ['readOnlyProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_READONLY],
         ];
     }
 

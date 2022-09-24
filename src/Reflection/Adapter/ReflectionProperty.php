@@ -22,6 +22,8 @@ use function sprintf;
 
 final class ReflectionProperty extends CoreReflectionProperty
 {
+    public const IS_READONLY = 128;
+
     public function __construct(private BetterReflectionProperty $betterReflectionProperty)
     {
         unset($this->name);

@@ -11,6 +11,7 @@ use ReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -62,15 +63,17 @@ class ReflectionObject extends ReflectionClass
      *
      * @see ReflectionClass::getProperties() for the usage of $filter
      *
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionProperty>
      */
-    private function getRuntimeProperties(int|null $filter = null): array
+    private function getRuntimeProperties(int $filter = 0): array
     {
         if (! $this->reflectionClass->isInstance($this->object)) {
             throw new InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
-        if ($filter !== null && ! ($filter & CoreReflectionProperty::IS_PUBLIC)) {
+        if ($filter !== 0 && ! ($filter & CoreReflectionProperty::IS_PUBLIC)) {
             return [];
         }
 
@@ -206,7 +209,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getProperties(int|null $filter = null): array
+    public function getProperties(int $filter = 0): array
     {
         return array_merge(
             $this->reflectionClass->getProperties($filter),
@@ -217,7 +220,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateProperties(int|null $filter = null): array
+    public function getImmediateProperties(int $filter = 0): array
     {
         return array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
