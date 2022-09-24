@@ -887,7 +887,7 @@ PHP
         self::assertSame($expectedValue, $constant->getValue());
     }
 
-    /** @return list<array{0: string, 1: mixed}> */
+    /** @return list<array{0: non-empty-string, 1: mixed}> */
     public function magicConstantsInTraitProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -904,7 +904,11 @@ PHP
         ];
     }
 
-    /** @dataProvider magicConstantsInTraitProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider magicConstantsInTraitProvider
+     */
     public function testMagicConstantsInTrait(string $propertyName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -914,7 +918,7 @@ PHP
         self::assertSame($expectedValue, $property->getDefaultValue());
     }
 
-    /** @return list<array{0: string, 1: mixed}> */
+    /** @return list<array{0: non-empty-string, 1: mixed}> */
     public function magicConstantsInClassProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
@@ -931,7 +935,11 @@ PHP
         ];
     }
 
-    /** @dataProvider magicConstantsInClassProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider magicConstantsInClassProvider
+     */
     public function testMagicConstantsInClass(string $propertyName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));

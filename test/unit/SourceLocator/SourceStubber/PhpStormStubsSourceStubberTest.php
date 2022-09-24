@@ -840,7 +840,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool, 4?: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool, 4?: string}> */
     public function dataPropertyInPhpVersion(): array
     {
         return [
@@ -856,7 +856,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataPropertyInPhpVersion */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataPropertyInPhpVersion
+     */
     public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported, string|null $type = null): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1075,7 +1079,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $methodReflection->isDeprecated());
     }
 
-    /** @return list<array{0: string, 1: string, 2: int, 3: bool}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: int, 3: bool}> */
     public function dataPropertyIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1086,7 +1090,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataPropertyIsDeprecatedInPhpVersion */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataPropertyIsDeprecatedInPhpVersion
+     */
     public function testPropertyIsDeprecatedInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);

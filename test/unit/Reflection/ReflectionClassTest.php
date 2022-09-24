@@ -669,7 +669,7 @@ PHP;
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
-    /** @return list<array{0: string, 1: class-string, 2: class-string}> */
+    /** @return list<array{0: non-empty-string, 1: class-string, 2: class-string}> */
     public function dataInheritedProperties(): array
     {
         return [
@@ -682,7 +682,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider dataInheritedProperties */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataInheritedProperties
+     */
     public function testInheritedProperties(string $propertyName, string $expectedDeclaringClassName, string $expectedImplementingClassName): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(

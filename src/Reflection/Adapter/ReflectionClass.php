@@ -145,11 +145,15 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasProperty(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionClass->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
@@ -387,6 +391,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
@@ -408,6 +414,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {

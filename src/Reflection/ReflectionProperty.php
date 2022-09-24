@@ -124,6 +124,8 @@ class ReflectionProperty
     /**
      * Create a reflection of a class's property by its name
      *
+     * @param non-empty-string $propertyName
+     *
      * @throws OutOfBoundsException
      */
     public static function createFromName(string $className, string $propertyName): self
@@ -139,6 +141,8 @@ class ReflectionProperty
 
     /**
      * Create a reflection of an instance's property by its name
+     *
+     * @param non-empty-string $propertyName
      *
      * @throws ReflectionException
      * @throws IdentifierNotFound

@@ -109,7 +109,7 @@ class ReflectionClass implements Reflection
     /** @var array<string, ReflectionClassConstant> */
     private array $immediateConstants;
 
-    /** @var array<string, ReflectionProperty> */
+    /** @var array<non-empty-string, ReflectionProperty> */
     private array $immediateProperties;
 
     /** @var array<non-empty-string, ReflectionMethod> */
@@ -751,7 +751,7 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getProperties() for the usage of filter
      *
-     * @return array<string, ReflectionProperty>
+     * @return array<non-empty-string, ReflectionProperty>
      */
     public function getImmediateProperties(int|null $filter = null): array
     {
@@ -765,7 +765,7 @@ class ReflectionClass implements Reflection
         );
     }
 
-    /** @return array<string, ReflectionProperty> */
+    /** @return array<non-empty-string, ReflectionProperty> */
     private function createImmediateProperties(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
     {
         $properties = [];
@@ -773,6 +773,7 @@ class ReflectionClass implements Reflection
         foreach ($node->getProperties() as $propertiesNode) {
             foreach (array_keys($propertiesNode->props) as $propertyPositionInNode) {
                 assert(is_int($propertyPositionInNode));
+
                 $property                         = ReflectionProperty::createFromNode(
                     $reflector,
                     $propertiesNode,
@@ -826,9 +827,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param array<string, ReflectionProperty> $properties
+     * @param array<non-empty-string, ReflectionProperty> $properties
      *
-     * @return array<string, ReflectionProperty>
+     * @return array<non-empty-string, ReflectionProperty>
      */
     private function addEnumProperties(array $properties, EnumNode|InterfaceNode $node, Reflector $reflector): array
     {
@@ -930,6 +931,8 @@ class ReflectionClass implements Reflection
      * Get the property called $name.
      *
      * Returns null if property does not exist.
+     *
+     * @param non-empty-string $name
      */
     public function getProperty(string $name): ReflectionProperty|null
     {
@@ -944,6 +947,8 @@ class ReflectionClass implements Reflection
 
     /**
      * Does this class have the specified property?
+     *
+     * @param non-empty-string $name
      */
     public function hasProperty(string $name): bool
     {
@@ -1588,6 +1593,8 @@ class ReflectionClass implements Reflection
      * PropertyDoesNotExist exception if it does not exist or is not static.
      * (note, differs very slightly from internal reflection behaviour)
      *
+     * @param non-empty-string $propertyName
+     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -1607,6 +1614,8 @@ class ReflectionClass implements Reflection
     /**
      * Set the value of a static property
      *
+     * @param non-empty-string $propertyName
+     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -1623,7 +1632,7 @@ class ReflectionClass implements Reflection
         $property->setValue($value);
     }
 
-    /** @return array<string, mixed> */
+    /** @return array<non-empty-string, mixed> */
     public function getStaticProperties(): array
     {
         $staticProperties = [];

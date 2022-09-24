@@ -146,11 +146,15 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasProperty(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionEnum->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionEnum->getProperty($name);
 
         if ($betterReflectionProperty === null) {

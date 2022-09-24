@@ -21,6 +21,7 @@ use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use function array_filter;
 use function array_map;
 use function array_merge;
+use function assert;
 use function preg_match;
 
 class ReflectionObject extends ReflectionClass
@@ -61,7 +62,7 @@ class ReflectionObject extends ReflectionClass
      *
      * @see ReflectionClass::getProperties() for the usage of $filter
      *
-     * @return array<string, ReflectionProperty>
+     * @return array<non-empty-string, ReflectionProperty>
      */
     private function getRuntimeProperties(int|null $filter = null): array
     {
@@ -82,11 +83,14 @@ class ReflectionObject extends ReflectionClass
         $runtimeProperties    = [];
 
         foreach ($reflectionProperties as $property) {
-            if ($this->reflectionClass->hasProperty($property->getName())) {
+            $propertyName = $property->getName();
+            assert($propertyName !== '');
+
+            if ($this->reflectionClass->hasProperty($propertyName)) {
                 continue;
             }
 
-            $runtimeProperties[$property->getName()] = ReflectionProperty::createFromNode(
+            $runtimeProperties[$propertyName] = ReflectionProperty::createFromNode(
                 $this->reflector,
                 $this->createPropertyNodeFromRuntimePropertyReflection($property, $this->object),
                 0,
