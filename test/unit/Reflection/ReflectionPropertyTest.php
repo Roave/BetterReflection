@@ -175,7 +175,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($property->getDocComment());
     }
 
-    /** @return list<array{0: string, 1: int}> */
+    /** @return list<array{0: non-empty-string, 1: int}> */
     public function modifierProvider(): array
     {
         return [
@@ -187,7 +187,11 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    /** @dataProvider modifierProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider modifierProvider
+     */
     public function testGetModifiers(string $propertyName, int $expectedModifier): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
@@ -247,7 +251,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('Property [ <default> public $publicProperty ]', (string) $classInfo->getProperty('publicProperty'));
     }
 
-    /** @return list<array{0: string, 1: bool, 2: mixed, 3: class-string|null}> */
+    /** @return list<array{0: non-empty-string, 1: bool, 2: mixed, 3: class-string|null}> */
     public function propertyDefaultValueProvider(): array
     {
         return [
@@ -261,7 +265,11 @@ class ReflectionPropertyTest extends TestCase
         ];
     }
 
-    /** @dataProvider propertyDefaultValueProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider propertyDefaultValueProvider
+     */
     public function testPropertyDefaultValue(string $propertyName, bool $hasDefaultValue, mixed $defaultValue, string|null $defaultValueExpression): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/DefaultProperties.php', $this->astLocator)))->reflectClass(DefaultProperties::class);
@@ -625,7 +633,7 @@ PHP;
         self::assertTrue($nullableStringPropertyReflection->allowsNull());
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function hasTypeProvider(): array
     {
         return [
@@ -637,7 +645,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider hasTypeProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider hasTypeProvider
+     */
     public function testHasType(
         string $propertyName,
         bool $expectedHasType,
@@ -648,7 +660,7 @@ PHP;
         self::assertSame($expectedHasType, $propertyReflection->hasType());
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string}> */
     public function getTypeProvider(): array
     {
         return [
@@ -660,7 +672,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider getTypeProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider getTypeProvider
+     */
     public function testGetType(
         string $propertyName,
         string $expectedType,
@@ -673,7 +689,7 @@ PHP;
         self::assertSame($expectedType, (string) $type);
     }
 
-    /** @return list<array{0: string, 1: object|null, 2: bool}> */
+    /** @return list<array{0: non-empty-string, 1: object|null, 2: bool}> */
     public function isInitializedProvider(): array
     {
         $object                  = new InitializedProperties();
@@ -690,7 +706,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider isInitializedProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider isInitializedProvider
+     */
     public function testIsInitialized(string $propertyName, object|null $object, bool $isInitialized): void
     {
         $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
@@ -767,7 +787,7 @@ PHP;
         self::assertCount(0, $attributes);
     }
 
-    /** @return list<array{0: string}> */
+    /** @return list<array{0: non-empty-string}> */
     public function dataGetAttributes(): array
     {
         return [
@@ -776,7 +796,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider dataGetAttributes */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataGetAttributes
+     */
     public function testGetAttributesWithAttributes(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
@@ -787,7 +811,11 @@ PHP;
         self::assertCount(2, $attributes);
     }
 
-    /** @dataProvider dataGetAttributes */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataGetAttributes
+     */
     public function testGetAttributesByName(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
@@ -798,7 +826,11 @@ PHP;
         self::assertCount(1, $attributes);
     }
 
-    /** @dataProvider dataGetAttributes */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataGetAttributes
+     */
     public function testGetAttributesByInstance(string $propertyName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));

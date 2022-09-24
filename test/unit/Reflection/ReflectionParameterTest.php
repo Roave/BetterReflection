@@ -237,7 +237,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(1, $param2->getPosition());
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string}> */
     public function typeProvider(): array
     {
         return [
@@ -250,8 +250,9 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
+     * @param non-empty-string $parameterToTest
+     *
      * @dataProvider typeProvider
-     * @parem string $expectedType
      */
     public function testGetType(
         string $parameterToTest,
@@ -296,7 +297,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function allowsNullProvider(): array
     {
         return [
@@ -310,7 +311,11 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /** @dataProvider allowsNullProvider */
+    /**
+     * @param non-empty-string $parameterName
+     *
+     * @dataProvider allowsNullProvider
+     */
     public function testAllowsNull(string $parameterName, bool $allowsNull): void
     {
         $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);

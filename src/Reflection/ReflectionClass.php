@@ -106,13 +106,13 @@ class ReflectionClass implements Reflection
     /** @var list<trait-string> */
     private array $traitClassNames;
 
-    /** @var array<string, ReflectionClassConstant> */
+    /** @var array<non-empty-string, ReflectionClassConstant> */
     private array $immediateConstants;
 
-    /** @var array<string, ReflectionProperty> */
+    /** @var array<non-empty-string, ReflectionProperty> */
     private array $immediateProperties;
 
-    /** @var array<string, ReflectionMethod> */
+    /** @var array<non-empty-string, ReflectionMethod> */
     private array $immediateMethods;
 
     /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
@@ -509,7 +509,7 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getMethods for the usage of $filter
      *
-     * @return array<string, ReflectionMethod>
+     * @return array<non-empty-string, ReflectionMethod>
      */
     public function getImmediateMethods(int|null $filter = null): array
     {
@@ -523,13 +523,13 @@ class ReflectionClass implements Reflection
         );
     }
 
-    /** @return array<string, ReflectionMethod> */
+    /** @return array<non-empty-string, ReflectionMethod> */
     private function createImmediateMethods(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
     {
         $methods = [];
 
         foreach ($node->getMethods() as $methodNode) {
-            $methods[$methodNode->name->toString()] = ReflectionMethod::createFromNode(
+            $method = ReflectionMethod::createFromNode(
                 $reflector,
                 $methodNode,
                 $this->locatedSource,
@@ -538,6 +538,8 @@ class ReflectionClass implements Reflection
                 $this,
                 $this,
             );
+
+            $methods[$method->getName()] = $method;
         }
 
         if ($node instanceof EnumNode) {
@@ -548,9 +550,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param array<string, ReflectionMethod> $methods
+     * @param array<non-empty-string, ReflectionMethod> $methods
      *
-     * @return array<string, ReflectionMethod>
+     * @return array<non-empty-string, ReflectionMethod>
      */
     private function addEnumMethods(EnumNode $node, array $methods): array
     {
@@ -601,6 +603,8 @@ class ReflectionClass implements Reflection
 
     /**
      * Get a single method with the name $methodName.
+     *
+     * @param non-empty-string $methodName
      */
     public function getMethod(string $methodName): ReflectionMethod|null
     {
@@ -611,7 +615,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Does the class have the specified method method?
+     * Does the class have the specified method?
+     *
+     * @param non-empty-string $methodName
      */
     public function hasMethod(string $methodName): bool
     {
@@ -622,7 +628,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return array<string, ReflectionClassConstant> indexed by name
+     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
     public function getImmediateConstants(int|null $filter = null): array
     {
@@ -638,6 +644,8 @@ class ReflectionClass implements Reflection
 
     /**
      * Does this class have the specified constant?
+     *
+     * @param non-empty-string $name
      */
     public function hasConstant(string $name): bool
     {
@@ -648,13 +656,15 @@ class ReflectionClass implements Reflection
      * Get the reflection object of the specified class constant.
      *
      * Returns null if not specified.
+     *
+     * @param non-empty-string $name
      */
     public function getConstant(string $name): ReflectionClassConstant|null
     {
         return $this->getConstants()[$name] ?? null;
     }
 
-    /** @return array<string, ReflectionClassConstant> */
+    /** @return array<non-empty-string, ReflectionClassConstant> */
     private function createImmediateConstants(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
     {
         $constants = [];
@@ -675,7 +685,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return array<string, ReflectionClassConstant> indexed by name
+     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
     public function getConstants(int|null $filter = null): array
     {
@@ -745,7 +755,7 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getProperties() for the usage of filter
      *
-     * @return array<string, ReflectionProperty>
+     * @return array<non-empty-string, ReflectionProperty>
      */
     public function getImmediateProperties(int|null $filter = null): array
     {
@@ -759,7 +769,7 @@ class ReflectionClass implements Reflection
         );
     }
 
-    /** @return array<string, ReflectionProperty> */
+    /** @return array<non-empty-string, ReflectionProperty> */
     private function createImmediateProperties(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
     {
         $properties = [];
@@ -767,6 +777,7 @@ class ReflectionClass implements Reflection
         foreach ($node->getProperties() as $propertiesNode) {
             foreach (array_keys($propertiesNode->props) as $propertyPositionInNode) {
                 assert(is_int($propertyPositionInNode));
+
                 $property                         = ReflectionProperty::createFromNode(
                     $reflector,
                     $propertiesNode,
@@ -820,9 +831,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param array<string, ReflectionProperty> $properties
+     * @param array<non-empty-string, ReflectionProperty> $properties
      *
-     * @return array<string, ReflectionProperty>
+     * @return array<non-empty-string, ReflectionProperty>
      */
     private function addEnumProperties(array $properties, EnumNode|InterfaceNode $node, Reflector $reflector): array
     {
@@ -924,6 +935,8 @@ class ReflectionClass implements Reflection
      * Get the property called $name.
      *
      * Returns null if property does not exist.
+     *
+     * @param non-empty-string $name
      */
     public function getProperty(string $name): ReflectionProperty|null
     {
@@ -938,6 +951,8 @@ class ReflectionClass implements Reflection
 
     /**
      * Does this class have the specified property?
+     *
+     * @param non-empty-string $name
      */
     public function hasProperty(string $name): bool
     {
@@ -1582,6 +1597,8 @@ class ReflectionClass implements Reflection
      * PropertyDoesNotExist exception if it does not exist or is not static.
      * (note, differs very slightly from internal reflection behaviour)
      *
+     * @param non-empty-string $propertyName
+     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -1601,6 +1618,8 @@ class ReflectionClass implements Reflection
     /**
      * Set the value of a static property
      *
+     * @param non-empty-string $propertyName
+     *
      * @throws ClassDoesNotExist
      * @throws NoObjectProvided
      * @throws NotAnObject
@@ -1617,7 +1636,7 @@ class ReflectionClass implements Reflection
         $property->setValue($value);
     }
 
-    /** @return array<string, mixed> */
+    /** @return array<non-empty-string, mixed> */
     public function getStaticProperties(): array
     {
         $staticProperties = [];

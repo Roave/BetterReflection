@@ -31,7 +31,7 @@ class ReflectionMethodStringCastTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string}> */
     public function toStringProvider(): array
     {
         return [
@@ -52,7 +52,11 @@ class ReflectionMethodStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider toStringProvider
+     */
     public function testToString(string $methodName, string $expectedString): void
     {
         $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastMethods.php', $this->astLocator));

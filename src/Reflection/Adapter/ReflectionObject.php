@@ -22,6 +22,7 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
+use function assert;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
@@ -99,11 +100,15 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasMethod($this->getMethodRealName($name));
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
+        assert($name !== '');
+
         $method = $this->betterReflectionObject->getMethod($this->getMethodRealName($name));
 
         if ($method === null) {
@@ -113,6 +118,11 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionMethod($method);
     }
 
+    /**
+     * @param non-empty-string $name
+     *
+     * @return non-empty-string
+     */
     private function getMethodRealName(string $name): string
     {
         $realMethodNames = array_map(static fn (BetterReflectionMethod $method): string => $method->getName(), $this->betterReflectionObject->getMethods());
@@ -139,11 +149,15 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasProperty(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
+        assert($name !== '');
+
         $property = $this->betterReflectionObject->getProperty($name);
 
         if ($property === null) {
@@ -165,6 +179,8 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasConstant(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasConstant($name);
     }
 
@@ -188,11 +204,15 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getConstant(string $name): mixed
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->getConstant($name);
     }
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
+        assert($name !== '');
+
         $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
 
         if ($betterReflectionConstant === null) {
@@ -340,6 +360,8 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
 
         if ($betterReflectionProperty === null) {
@@ -361,6 +383,8 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
 
         if ($betterReflectionProperty === null) {

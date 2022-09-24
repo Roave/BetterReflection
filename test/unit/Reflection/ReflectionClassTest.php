@@ -225,7 +225,7 @@ class ReflectionClassTest extends TestCase
         self::assertCount(4, $methods);
     }
 
-    /** @return list<array{0: string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
+    /** @return list<array{0: non-empty-string, 1: array<non-empty-string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
     public function dataMethodsOfBackedEnum(): array
     {
         return [
@@ -251,7 +251,8 @@ class ReflectionClassTest extends TestCase
     }
 
     /**
-     * @param array<string, array{0: class-string, 1: string}> $parameters
+     * @param non-empty-string                                           $methodName
+     * @param array<non-empty-string, array{0: class-string, 1: string}> $parameters
      *
      * @dataProvider dataMethodsOfBackedEnum
      */
@@ -668,7 +669,7 @@ PHP;
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
-    /** @return list<array{0: string, 1: class-string, 2: class-string}> */
+    /** @return list<array{0: non-empty-string, 1: class-string, 2: class-string}> */
     public function dataInheritedProperties(): array
     {
         return [
@@ -681,7 +682,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider dataInheritedProperties */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataInheritedProperties
+     */
     public function testInheritedProperties(string $propertyName, string $expectedDeclaringClassName, string $expectedImplementingClassName): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
@@ -1215,7 +1220,7 @@ PHP;
         self::assertSame('TraitFixtureTraitA', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: string, 3: string, 4: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: string, 3: string, 4: string}> */
     public function declaringClassProvider(): array
     {
         return [
@@ -1271,7 +1276,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider declaringClassProvider */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider declaringClassProvider
+     */
     public function testGetDeclaringClassWithTraitAndParent(
         string $className,
         string $methodName,

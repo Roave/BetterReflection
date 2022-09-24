@@ -82,6 +82,8 @@ class ReflectionMethod
     /**
      * Create a reflection of a method by it's name using a named class
      *
+     * @param non-empty-string $methodName
+     *
      * @throws IdentifierNotFound
      * @throws OutOfBoundsException
      */
@@ -98,6 +100,8 @@ class ReflectionMethod
 
     /**
      * Create a reflection of a method by it's name using an instance
+     *
+     * @param non-empty-string $methodName
      *
      * @throws ReflectionException
      * @throws IdentifierNotFound

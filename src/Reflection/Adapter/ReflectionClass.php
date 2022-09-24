@@ -22,6 +22,7 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
+use function assert;
 use function constant;
 use function func_num_args;
 use function sprintf;
@@ -114,11 +115,15 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionClass->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
+        assert($name !== '');
+
         $method = $this->betterReflectionClass->getMethod($name);
 
         if ($method === null) {
@@ -140,11 +145,15 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasProperty(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionClass->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
@@ -166,6 +175,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasConstant(string $name): bool
     {
+        assert($name !== '');
+
         if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
             return true;
         }
@@ -184,6 +195,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getConstant(string $name): mixed
     {
+        assert($name !== '');
+
         if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
             $enumCase = $this->betterReflectionClass->getCase($name);
             if ($enumCase !== null) {
@@ -205,6 +218,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
+        assert($name !== '');
+
         if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
             $enumCase = $this->betterReflectionClass->getCase($name);
             if ($enumCase !== null) {
@@ -376,6 +391,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
@@ -397,6 +414,8 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
