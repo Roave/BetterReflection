@@ -104,11 +104,13 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getConstructor(): CoreReflectionMethod|null
     {
-        try {
-            return new ReflectionMethod($this->betterReflectionEnum->getConstructor());
-        } catch (OutOfBoundsException) {
+        $constructor = $this->betterReflectionEnum->getConstructor();
+
+        if ($constructor === null) {
             return null;
         }
+
+        return new ReflectionMethod($constructor);
     }
 
     public function hasMethod(string $name): bool
@@ -118,7 +120,13 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getMethod(string $name): ReflectionMethod
     {
-        return new ReflectionMethod($this->betterReflectionEnum->getMethod($name));
+        $method = $this->betterReflectionEnum->getMethod($name);
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $name));
+        }
+
+        return new ReflectionMethod($method);
     }
 
     /**

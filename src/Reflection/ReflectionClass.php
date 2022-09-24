@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use BackedEnum;
-use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -602,19 +601,13 @@ class ReflectionClass implements Reflection
 
     /**
      * Get a single method with the name $methodName.
-     *
-     * @throws OutOfBoundsException
      */
-    public function getMethod(string $methodName): ReflectionMethod
+    public function getMethod(string $methodName): ReflectionMethod|null
     {
         $lowercaseMethodName = strtolower($methodName);
         $methods             = $this->getMethodsIndexedByName();
 
-        if (! isset($methods[$lowercaseMethodName])) {
-            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
-        }
-
-        return $methods[$lowercaseMethodName];
+        return $methods[$lowercaseMethodName] ?? null;
     }
 
     /**
@@ -622,13 +615,7 @@ class ReflectionClass implements Reflection
      */
     public function hasMethod(string $methodName): bool
     {
-        try {
-            $this->getMethod($methodName);
-
-            return true;
-        } catch (OutOfBoundsException) {
-            return false;
-        }
+        return $this->getMethod($methodName) !== null;
     }
 
     /**
@@ -744,18 +731,12 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the constructor method for this class.
-     *
-     * @throws OutOfBoundsException
      */
-    public function getConstructor(): ReflectionMethod
+    public function getConstructor(): ReflectionMethod|null
     {
         $constructors = array_values(array_filter($this->getMethods(), static fn (ReflectionMethod $method): bool => $method->isConstructor()));
 
-        if (! isset($constructors[0])) {
-            throw new OutOfBoundsException('Could not find method: __construct');
-        }
-
-        return $constructors[0];
+        return $constructors[0] ?? null;
     }
 
     /**
@@ -1486,11 +1467,13 @@ class ReflectionClass implements Reflection
             return false;
         }
 
-        try {
-            return $this->getConstructor()->isPublic();
-        } catch (OutOfBoundsException) {
+        $constructor = $this->getConstructor();
+
+        if ($constructor === null) {
             return true;
         }
+
+        return $constructor->isPublic();
     }
 
     /**
@@ -1504,11 +1487,13 @@ class ReflectionClass implements Reflection
             return false;
         }
 
-        if (! $this->hasMethod('__clone')) {
+        $cloneMethod = $this->getMethod('__clone');
+
+        if ($cloneMethod === null) {
             return true;
         }
 
-        return $this->getMethod('__clone')->isPublic();
+        return $cloneMethod->isPublic();
     }
 
     /**

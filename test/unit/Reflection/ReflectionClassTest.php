@@ -9,7 +9,6 @@ use Bar;
 use Baz;
 use E;
 use Iterator;
-use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
 use PhpParser\Node;
@@ -488,14 +487,12 @@ class ReflectionClassTest extends TestCase
 
     public function testGetConstructorWhenPhp4StyleInNamespace(): void
     {
-        $this->expectException(OutOfBoundsException::class);
-
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
             __DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php',
             $this->astLocator,
         )))->reflectClass(Fixture\Php4StyleConstructInNamespace::class);
 
-        $classInfo->getConstructor();
+        self::assertNull($classInfo->getConstructor());
     }
 
     public function testGetConstructorWhenPhp4StyleCaseInsensitive(): void

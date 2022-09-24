@@ -103,11 +103,13 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getConstructor(): CoreReflectionMethod|null
     {
-        try {
-            return new ReflectionMethod($this->betterReflectionClass->getConstructor());
-        } catch (OutOfBoundsException) {
+        $constructor = $this->betterReflectionClass->getConstructor();
+
+        if ($constructor === null) {
             return null;
         }
+
+        return new ReflectionMethod($constructor);
     }
 
     public function hasMethod(string $name): bool
@@ -117,7 +119,13 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getMethod(string $name): ReflectionMethod
     {
-        return new ReflectionMethod($this->betterReflectionClass->getMethod($name));
+        $method = $this->betterReflectionClass->getMethod($name);
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $name));
+        }
+
+        return new ReflectionMethod($method);
     }
 
     /**

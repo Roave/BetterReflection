@@ -694,7 +694,7 @@ class ReflectionClassTest extends TestCase
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
             ->method('getConstructor')
-            ->willThrowException(new OutOfBoundsException());
+            ->willReturn(null);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 

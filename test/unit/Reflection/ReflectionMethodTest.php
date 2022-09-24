@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
+use OutOfBoundsException;
 use Php4StyleCaseInsensitiveConstruct;
 use Php4StyleConstruct;
 use PHPUnit\Framework\TestCase;
@@ -79,12 +80,26 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('add', $method->getName());
     }
 
+    public function testCreateFromNameThrowsExceptionWhenMethodNotFound(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        self::expectExceptionMessage('Could not find method: notFound');
+        ReflectionMethod::createFromName(SplDoublyLinkedList::class, 'notFound');
+    }
+
     public function testCreateFromInstance(): void
     {
         $method = ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'add');
 
         self::assertInstanceOf(ReflectionMethod::class, $method);
         self::assertSame('add', $method->getName());
+    }
+
+    public function testCreateFromInstanceThrowsExceptionWhenMethodNotFound(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        self::expectExceptionMessage('Could not find method: notFound');
+        ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'notFound');
     }
 
     public function testIsClosure(): void

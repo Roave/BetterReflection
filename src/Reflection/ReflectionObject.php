@@ -156,7 +156,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getImmediateMethods($filter);
     }
 
-    public function getMethod(string $methodName): ReflectionMethod
+    public function getMethod(string $methodName): ReflectionMethod|null
     {
         return $this->reflectionClass->getMethod($methodName);
     }
@@ -192,7 +192,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getConstant($name);
     }
 
-    public function getConstructor(): ReflectionMethod
+    public function getConstructor(): ReflectionMethod|null
     {
         return $this->reflectionClass->getConstructor();
     }

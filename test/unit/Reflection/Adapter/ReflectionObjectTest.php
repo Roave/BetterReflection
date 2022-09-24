@@ -77,7 +77,7 @@ class ReflectionObjectTest extends TestCase
             ['getStartLine', [], 123, null, 123, null],
             ['getEndLine', [], 123, null, 123, null],
             ['getDocComment', [], null, null, false, null],
-            ['getConstructor', [], $mockMethod, null, null, null],
+            ['getConstructor', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
             ['hasMethod', ['foo'], true, null, true, null],
             ['getMethod', ['foo'], $mockMethod, null, null, ReflectionMethodAdapter::class],
             ['getMethods', [], [$mockMethod], null, null, ReflectionMethodAdapter::class],

@@ -239,7 +239,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
             ->method('getConstructor')
-            ->willThrowException(new OutOfBoundsException());
+            ->willReturn(null);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
