@@ -20,6 +20,7 @@ use Roave\BetterReflection\Util\GetLastDocComment;
 use RuntimeException;
 
 use function array_filter;
+use function array_values;
 use function assert;
 use function count;
 use function is_array;
@@ -29,7 +30,7 @@ trait ReflectionFunctionAbstract
     /** @var non-empty-string */
     private string $name;
 
-    /** @var list<ReflectionParameter> */
+    /** @var array<non-empty-string, ReflectionParameter> */
     private array $parameters;
 
     private bool $returnsReference;
@@ -100,7 +101,7 @@ trait ReflectionFunctionAbstract
         }
     }
 
-    /** @return list<ReflectionParameter> */
+    /** @return array<non-empty-string, ReflectionParameter> */
     private function createParameters(Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node): array
     {
         $parameters = [];
@@ -108,13 +109,15 @@ trait ReflectionFunctionAbstract
         /** @var list<Node\Param> $nodeParams */
         $nodeParams = $node->params;
         foreach ($nodeParams as $paramIndex => $paramNode) {
-            $parameters[] = ReflectionParameter::createFromNode(
+            $parameter = ReflectionParameter::createFromNode(
                 $this->reflector,
                 $paramNode,
                 $this,
                 $paramIndex,
                 $this->isParameterOptional($nodeParams, $paramIndex),
             );
+
+            $parameters[$parameter->getName()] = $parameter;
         }
 
         return $parameters;
@@ -182,7 +185,7 @@ trait ReflectionFunctionAbstract
      */
     public function getParameters(): array
     {
-        return $this->parameters;
+        return array_values($this->parameters);
     }
 
     /** @param list<Node\Param> $parameterNodes */
@@ -211,13 +214,7 @@ trait ReflectionFunctionAbstract
      */
     public function getParameter(string $parameterName): ReflectionParameter|null
     {
-        foreach ($this->getParameters() as $parameter) {
-            if ($parameter->getName() === $parameterName) {
-                return $parameter;
-            }
-        }
-
-        return null;
+        return $this->parameters[$parameterName] ?? null;
     }
 
     public function getDocComment(): string|null

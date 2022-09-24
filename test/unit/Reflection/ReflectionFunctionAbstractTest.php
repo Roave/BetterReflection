@@ -426,6 +426,21 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNull($functionInfo->getParameter('d'));
     }
 
+    public function testGetParameters(): void
+    {
+        $php = '<?php function foo($c, $b, $a) {}';
+
+        $reflector    = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $functionInfo = $reflector->reflectFunction('foo');
+        $parameters   = $functionInfo->getParameters();
+
+        $expectedParameters = ['c', 'b', 'a'];
+
+        foreach ($parameters as $parameterNo => $parameter) {
+            self::assertSame($expectedParameters[$parameterNo], $parameter->getName());
+        }
+    }
+
     public function testGetFileName(): void
     {
         $functionInfo = (new DefaultReflector(
