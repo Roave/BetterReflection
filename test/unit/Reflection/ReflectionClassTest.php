@@ -17,6 +17,7 @@ use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -2072,6 +2073,34 @@ PHP;
         self::assertArrayHasKey('F', $reflectionConstants);
         self::assertInstanceOf(ReflectionClassConstant::class, $reflectionConstants['F']);
         self::assertSame('ff', $reflectionConstants['F']->getValue());
+    }
+
+    /** @return list<array{0: int, 1: int}> */
+    public function getConstantsWithFilterDataProvider(): array
+    {
+        return [
+            [ReflectionClassConstant::IS_FINAL, 2],
+            [CoreReflectionClassConstant::IS_PUBLIC, 4],
+            [CoreReflectionClassConstant::IS_PROTECTED, 2],
+            [CoreReflectionClassConstant::IS_PRIVATE, 1],
+            [
+                ReflectionClassConstant::IS_FINAL |
+                CoreReflectionClassConstant::IS_PUBLIC |
+                CoreReflectionClassConstant::IS_PROTECTED |
+                CoreReflectionClassConstant::IS_PRIVATE,
+                7,
+            ],
+        ];
+    }
+
+    /** @dataProvider getConstantsWithFilterDataProvider */
+    public function testGetConstantsWithFilter(int $filter, int $count): void
+    {
+        $reflector = new DefaultReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflectClass(ExampleClass::class);
+
+        self::assertCount($count, $classInfo->getConstants($filter));
+        self::assertCount($count, $classInfo->getImmediateConstants($filter));
     }
 
     public function testGetConstantsDeclaredWithOneKeyword(): void

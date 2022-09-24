@@ -637,9 +637,16 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, ReflectionClassConstant> indexed by name
      */
-    public function getImmediateConstants(): array
+    public function getImmediateConstants(int|null $filter = null): array
     {
-        return $this->immediateConstants;
+        if ($filter === null) {
+            return $this->immediateConstants;
+        }
+
+        return array_filter(
+            $this->immediateConstants,
+            static fn (ReflectionClassConstant $constant): bool => (bool) ($filter & $constant->getModifiers()),
+        );
     }
 
     /**
@@ -683,7 +690,7 @@ class ReflectionClass implements Reflection
      *
      * @return array<string, ReflectionClassConstant> indexed by name
      */
-    public function getConstants(): array
+    public function getConstants(int|null $filter = null): array
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
@@ -725,7 +732,14 @@ class ReflectionClass implements Reflection
             $reflectionConstants[$constantName] = $constant;
         }
 
-        return $reflectionConstants;
+        if ($filter === null) {
+            return $reflectionConstants;
+        }
+
+        return array_filter(
+            $reflectionConstants,
+            static fn (ReflectionClassConstant $constant): bool => (bool) ($filter & $constant->getModifiers()),
+        );
     }
 
     /**

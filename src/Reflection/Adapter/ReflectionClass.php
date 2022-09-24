@@ -20,7 +20,6 @@ use Roave\BetterReflection\Util\FileHelper;
 use ValueError;
 
 use function array_combine;
-use function array_filter;
 use function array_map;
 use function array_values;
 use function constant;
@@ -225,14 +224,7 @@ final class ReflectionClass extends CoreReflectionClass
     /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
-        $reflectionConstants = $this->betterReflectionClass->getConstants();
-
-        if ($filter !== null) {
-            $reflectionConstants = array_filter(
-                $this->betterReflectionClass->getConstants(),
-                static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
-            );
-        }
+        $reflectionConstants = $this->betterReflectionClass->getConstants($filter);
 
         if (
             $this->betterReflectionClass instanceof BetterReflectionEnum

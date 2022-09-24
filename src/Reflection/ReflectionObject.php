@@ -169,17 +169,17 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateConstants(): array
+    public function getImmediateConstants(int|null $filter = null): array
     {
-        return $this->reflectionClass->getImmediateConstants();
+        return $this->reflectionClass->getImmediateConstants($filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConstants(): array
+    public function getConstants(int|null $filter = null): array
     {
-        return $this->reflectionClass->getConstants();
+        return $this->reflectionClass->getConstants($filter);
     }
 
     public function hasConstant(string $name): bool
