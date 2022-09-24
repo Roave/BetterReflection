@@ -93,9 +93,6 @@ class ReflectionEnumTest extends TestCase
             ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
             ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
             ['hasConstant', ['foo'], true, null, true, null],
-            ['getConstant', ['foo'], 'a', null, 'a', null],
-            ['getReflectionConstant', ['foo'], $mockConstant, null, null, ReflectionClassConstantAdapter::class],
-            ['getReflectionConstants', [], [$mockConstant], null, null, ReflectionClassConstantAdapter::class],
             ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
             ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
             ['isInterface', [], true, null, true, null],
@@ -307,7 +304,7 @@ class ReflectionEnumTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionEnum
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -333,11 +330,24 @@ class ReflectionEnumTest extends TestCase
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
     }
 
+    public function testGetReflectionConstant(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($this->createMock(BetterReflectionClassConstant::class));
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionEnumAdapter->getReflectionConstant('FOO'));
+    }
+
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('FOO')
             ->willReturn(null);
 
@@ -756,7 +766,7 @@ class ReflectionEnumTest extends TestCase
             ->willReturn(['enum_case' => $betterReflectionEnumCase]);
 
         $betterReflectionEnum
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 'public' => $publicBetterReflectionClassConstant,
                 'private' => $privateBetterReflectionClassConstant,

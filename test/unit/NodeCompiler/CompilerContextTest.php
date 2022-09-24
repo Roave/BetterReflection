@@ -92,7 +92,7 @@ PHP;
 
         $reflector     = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $class         = $reflector->reflectClass('Foo\Boo');
-        $classConstant = $class->getReflectionConstant('BAZ');
+        $classConstant = $class->getConstant('BAZ');
 
         $context = new CompilerContext($reflector, $classConstant);
 

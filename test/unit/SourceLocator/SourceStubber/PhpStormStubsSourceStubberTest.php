@@ -24,6 +24,7 @@ use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter as CoreReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -181,7 +182,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
-        self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        self::assertEquals(
+            $original->getConstants(),
+            array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $stubbed->getConstants()),
+        );
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
@@ -1026,7 +1030,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
 
         $classReflection    = $reflector->reflectClass($className);
-        $constantReflection = $classReflection->getReflectionConstant($constantName);
+        $constantReflection = $classReflection->getConstant($constantName);
 
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }

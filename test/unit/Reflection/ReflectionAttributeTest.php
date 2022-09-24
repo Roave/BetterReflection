@@ -133,7 +133,7 @@ class ReflectionAttributeTest extends TestCase
     public function testGetTargetWithClassConstant(): void
     {
         $classReflection    = $this->reflector->reflectClass(ClassWithAttributes::class);
-        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $constantReflection = $classReflection->getConstant('CONSTANT_WITH_ATTRIBUTES');
         $attributes         = $constantReflection->getAttributes();
 
         self::assertNotEmpty($attributes);

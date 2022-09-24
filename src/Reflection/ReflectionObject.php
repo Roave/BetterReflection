@@ -169,22 +169,17 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateConstants(): array
+    public function getImmediateConstants(int|null $filter = null): array
     {
-        return $this->reflectionClass->getImmediateConstants();
+        return $this->reflectionClass->getImmediateConstants($filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConstants(): array
+    public function getConstants(int|null $filter = null): array
     {
-        return $this->reflectionClass->getConstants();
-    }
-
-    public function getConstant(string $name): string|int|float|bool|array|null
-    {
-        return $this->reflectionClass->getConstant($name);
+        return $this->reflectionClass->getConstants($filter);
     }
 
     public function hasConstant(string $name): bool
@@ -192,25 +187,9 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->hasConstant($name);
     }
 
-    public function getReflectionConstant(string $name): ReflectionClassConstant|null
+    public function getConstant(string $name): ReflectionClassConstant|null
     {
-        return $this->reflectionClass->getReflectionConstant($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getImmediateReflectionConstants(): array
-    {
-        return $this->reflectionClass->getImmediateReflectionConstants();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReflectionConstants(): array
-    {
-        return $this->reflectionClass->getReflectionConstants();
+        return $this->reflectionClass->getConstant($name);
     }
 
     public function getConstructor(): ReflectionMethod

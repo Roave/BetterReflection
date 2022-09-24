@@ -418,11 +418,11 @@ PHP;
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bar\Foo');
 
-        self::assertSame(1, $classInfo->getReflectionConstant('SECOND')->getValue());
-        self::assertSame(60, $classInfo->getReflectionConstant('MINUTE')->getValue());
-        self::assertSame(3600, $classInfo->getReflectionConstant('HOUR')->getValue());
-        self::assertSame(86400, $classInfo->getReflectionConstant('DAY')->getValue());
-        self::assertSame(604800, $classInfo->getReflectionConstant('WEEK')->getValue());
+        self::assertSame(1, $classInfo->getConstant('SECOND')->getValue());
+        self::assertSame(60, $classInfo->getConstant('MINUTE')->getValue());
+        self::assertSame(3600, $classInfo->getConstant('HOUR')->getValue());
+        self::assertSame(86400, $classInfo->getConstant('DAY')->getValue());
+        self::assertSame(604800, $classInfo->getConstant('WEEK')->getValue());
     }
 
     public function testClassConstantResolutionExternalForMethod(): void
@@ -475,7 +475,7 @@ PHP;
 
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bat');
-        self::assertSame('Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('Foo', $classInfo->getConstant('QUX')?->getValue());
     }
 
     public function testClassConstantClassNameNamespaceResolution(): void
@@ -492,7 +492,7 @@ PHP;
 
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bar\Bat');
-        self::assertSame('Bar\Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('Bar\Foo', $classInfo->getConstant('QUX')?->getValue());
     }
 
     public function testClassConstantClassNameOutOfScopeResolution(): void
@@ -509,7 +509,7 @@ PHP;
 
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bar\Bat');
-        self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX')?->getValue());
     }
 
     public function testClassConstantClassNameAliasedResolution(): void
@@ -526,7 +526,7 @@ PHP;
 
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bar\Bat');
-        self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX'));
+        self::assertSame('My\Awesome\Foo', $classInfo->getConstant('QUX')?->getValue());
     }
 
     public function testClassConstantResolutionFromParent(): void
@@ -669,7 +669,7 @@ PHP;
             new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
         ]));
         $classInfo = $reflector->reflectClass('Bat');
-        self::assertSame($expectedPropertyValue, $classInfo->getConstant('ONE_VALUE'));
+        self::assertSame($expectedPropertyValue, $classInfo->getConstant('ONE_VALUE')?->getValue());
     }
 
     public function testEnumPropertyValueThrowsExceptionWhenNoEnum(): void
@@ -689,7 +689,7 @@ PHP;
         $classInfo = $reflector->reflectClass('Bat');
 
         self::expectException(UnableToCompileNode::class);
-        $classInfo->getConstant('ONE_VALUE');
+        $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
     public function testEnumPropertyValueThrowsExceptionWhenCaseDoesNotExist(): void
@@ -712,7 +712,7 @@ PHP;
         $classInfo = $reflector->reflectClass('Bat');
 
         self::expectException(UnableToCompileNode::class);
-        $classInfo->getConstant('TWO_VALUE');
+        $classInfo->getConstant('TWO_VALUE')->getValue();
     }
 
     public function testEnumPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
@@ -735,7 +735,7 @@ PHP;
         $classInfo = $reflector->reflectClass('Bat');
 
         self::expectException(UnableToCompileNode::class);
-        $classInfo->getConstant('ONE_VALUE');
+        $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
     /** @return list<array{0: string, 1: mixed}> */

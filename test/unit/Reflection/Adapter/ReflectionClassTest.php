@@ -86,9 +86,6 @@ class ReflectionClassTest extends TestCase
             ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
             ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
             ['hasConstant', ['foo'], true, null, true, null],
-            ['getConstant', ['foo'], 'a', null, 'a', null],
-            ['getReflectionConstant', ['foo'], $mockConstant, null, null, ReflectionClassConstantAdapter::class],
-            ['getReflectionConstants', [], [$mockConstant], null, null, ReflectionClassConstantAdapter::class],
             ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
             ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
             ['isInterface', [], true, null, true, null],
@@ -260,20 +257,12 @@ class ReflectionClassTest extends TestCase
         $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $publicBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PUBLIC);
-
-        $publicBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PUBLIC_CONSTANT');
 
         $publicBetterReflectionClassConstant
             ->method('getValue')
             ->willReturn('public constant');
-
-        $privateBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PRIVATE);
 
         $privateBetterReflectionClassConstant
             ->method('getName')
@@ -284,10 +273,6 @@ class ReflectionClassTest extends TestCase
             ->willReturn('private constant');
 
         $protectedBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PROTECTED);
-
-        $protectedBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PROTECTED_CONSTANT');
 
@@ -296,12 +281,17 @@ class ReflectionClassTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionClass
-            ->method('getReflectionConstants')
-            ->willReturn([
-                $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
-                $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
-                $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
-            ]);
+            ->method('getConstants')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                    $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                    $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                ],
+                [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant],
+                [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant],
+                [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant],
+            );
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
@@ -331,20 +321,12 @@ class ReflectionClassTest extends TestCase
         $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $publicBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PUBLIC);
-
-        $publicBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PUBLIC_CONSTANT');
 
         $publicBetterReflectionClassConstant
             ->method('getValue')
             ->willReturn('public constant');
-
-        $privateBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PRIVATE);
 
         $privateBetterReflectionClassConstant
             ->method('getName')
@@ -355,10 +337,6 @@ class ReflectionClassTest extends TestCase
             ->willReturn('private constant');
 
         $protectedBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PROTECTED);
-
-        $protectedBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PROTECTED_CONSTANT');
 
@@ -367,12 +345,17 @@ class ReflectionClassTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionClass
-            ->method('getReflectionConstants')
-            ->willReturn([
-                $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
-                $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
-                $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
-            ]);
+            ->method('getConstants')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                    $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                    $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                ],
+                [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant],
+                [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant],
+                [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant],
+            );
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
@@ -718,11 +701,24 @@ class ReflectionClassTest extends TestCase
         self::assertNull($reflectionClassAdapter->getConstructor());
     }
 
+    public function testGetReflectionConstant(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($this->createMock(BetterReflectionClassConstant::class));
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionClassAdapter->getReflectionConstant('FOO'));
+    }
+
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('FOO')
             ->willReturn(null);
 
@@ -996,28 +992,33 @@ class ReflectionClassTest extends TestCase
         $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $publicBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PUBLIC);
+            ->method('getName')
+            ->willReturn('PUBLIC_CONSTANT');
 
         $privateBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PRIVATE);
+            ->method('getName')
+            ->willReturn('PRIVATE_CONSTANT');
 
         $protectedBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PROTECTED);
+            ->method('getName')
+            ->willReturn('PROTECTED_CONSTANT');
 
         $betterReflectionEnum
             ->method('getCases')
             ->willReturn(['enum_case' => $betterReflectionEnumCase]);
 
         $betterReflectionEnum
-            ->method('getReflectionConstants')
-            ->willReturn([
-                'public' => $publicBetterReflectionClassConstant,
-                'private' => $privateBetterReflectionClassConstant,
-                'protected' => $protectedBetterReflectionClassConstant,
-            ]);
+            ->method('getConstants')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                    $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                    $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                ],
+                [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant],
+                [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant],
+                [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant],
+            );
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionEnum);
 

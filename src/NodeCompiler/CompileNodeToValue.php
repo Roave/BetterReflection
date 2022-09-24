@@ -240,7 +240,7 @@ class CompileNodeToValue
         $classContext    = $context->getClass();
         $classReflection = $classContext !== null && $classContext->getName() === $className ? $classContext : $context->getReflector()->reflectClass($className);
 
-        $reflectionConstant = $classReflection->getReflectionConstant($constantName);
+        $reflectionConstant = $classReflection->getConstant($constantName);
 
         if (! $reflectionConstant instanceof ReflectionClassConstant) {
             throw Exception\UnableToCompileNode::becauseOfNotFoundClassConstantReference($context, $classReflection, $node);

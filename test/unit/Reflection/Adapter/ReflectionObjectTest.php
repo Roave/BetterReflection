@@ -85,9 +85,6 @@ class ReflectionObjectTest extends TestCase
             ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
             ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
             ['hasConstant', ['foo'], true, null, true, null],
-            ['getConstant', ['foo'], 'a', null, 'a', null],
-            ['getReflectionConstant', ['foo'], $mockConstant, null, null, ReflectionClassConstantAdapter::class],
-            ['getReflectionConstants', [], [$mockConstant], null, null, ReflectionClassConstantAdapter::class],
             ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
             ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
             ['isInterface', [], true, null, true, null],
@@ -556,7 +553,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionObject
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([
                 $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
                 $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
@@ -582,13 +579,28 @@ class ReflectionObjectTest extends TestCase
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
     }
 
+    public function testGetReflectionConstant(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+
+        $betterReflectionObject
+            ->expects($this->once())
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($this->createMock(BetterReflectionClassConstant::class));
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstant('FOO'));
+    }
+
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('NON_EXISTENT_CONSTANT')
             ->willReturn(null);
 
@@ -604,7 +616,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('SOME_CONSTANT')
             ->willReturn($betterReflectionClassConstant);
 
@@ -613,14 +625,14 @@ class ReflectionObjectTest extends TestCase
         self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstant('SOME_CONSTANT'));
     }
 
-    public function testGetReflectionConstantsReturnsClassConstantAdapter(): void
+    public function testGetConstantsReturnsClassConstantAdapter(): void
     {
         $betterReflectionObject        = $this->createMock(BetterReflectionObject::class);
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([$betterReflectionClassConstant]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);

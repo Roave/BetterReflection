@@ -13,6 +13,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -323,7 +324,10 @@ class ReflectionSourceStubberTest extends TestCase
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
-        self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        self::assertEquals(
+            $original->getConstants(),
+            array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $stubbed->getConstants()),
+        );
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
