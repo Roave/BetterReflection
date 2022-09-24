@@ -110,7 +110,7 @@ class ReflectionMethodTest extends TestCase
         self::assertFalse($method->isClosure());
     }
 
-    /** @return array<string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}> */
+    /** @return array<non-empty-string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}> */
     public function visibilityProvider(): array
     {
         return [
@@ -126,7 +126,11 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /** @dataProvider visibilityProvider */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider visibilityProvider
+     */
     public function testVisibilityOfMethods(
         string $methodName,
         bool $shouldBePublic,
@@ -292,7 +296,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('object', (string) $returnType);
     }
 
-    /** @return list<array{0: string, 1: int, 2: list<string>}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: list<string>}> */
     public function modifierProvider(): array
     {
         return [
@@ -307,7 +311,8 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param list<string> $expectedModifierNames
+     * @param non-empty-string $methodName
+     * @param list<string>     $expectedModifierNames
      *
      * @dataProvider modifierProvider
      */
@@ -323,7 +328,7 @@ class ReflectionMethodTest extends TestCase
         );
     }
 
-    /** @return list<array{0: string, 1: string, 2: string|null}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: string|null}> */
     public function prototypeProvider(): array
     {
         return [
@@ -341,7 +346,11 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /** @dataProvider prototypeProvider */
+    /**
+     * @param non-empty-string $method
+     *
+     * @dataProvider prototypeProvider
+     */
     public function testGetPrototype(string $class, string $method, string|null $expectedPrototype): void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';

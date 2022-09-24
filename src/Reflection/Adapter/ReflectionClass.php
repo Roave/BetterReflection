@@ -22,6 +22,7 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
+use function assert;
 use function constant;
 use function func_num_args;
 use function sprintf;
@@ -114,11 +115,15 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionClass->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
+        assert($name !== '');
+
         $method = $this->betterReflectionClass->getMethod($name);
 
         if ($method === null) {

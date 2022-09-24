@@ -731,7 +731,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isSupported, array_key_exists($constantName, $constants));
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool, 4?: string|null, 5?: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool, 4?: string|null, 5?: string}> */
     public function dataMethodInPhpVersion(): array
     {
         return [
@@ -757,7 +757,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMethodInPhpVersion */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider dataMethodInPhpVersion
+     */
     public function testMethodInPhpVersion(
         string $className,
         string $methodName,
@@ -790,7 +794,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
     public function dataMethodParameterInPhpVersion(): array
     {
         return [
@@ -803,7 +807,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMethodParameterInPhpVersion */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider dataMethodParameterInPhpVersion
+     */
     public function testMethodParameterInPhpVersion(
         string $className,
         string $methodName,
@@ -1035,7 +1043,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool}> */
     public function dataMethodIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1046,7 +1054,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMethodIsDeprecatedInPhpVersion */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider dataMethodIsDeprecatedInPhpVersion
+     */
     public function testMethodIsDeprecatedInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);

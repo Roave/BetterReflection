@@ -112,7 +112,7 @@ class ReflectionClass implements Reflection
     /** @var array<string, ReflectionProperty> */
     private array $immediateProperties;
 
-    /** @var array<string, ReflectionMethod> */
+    /** @var array<non-empty-string, ReflectionMethod> */
     private array $immediateMethods;
 
     /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
@@ -509,7 +509,7 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getMethods for the usage of $filter
      *
-     * @return array<string, ReflectionMethod>
+     * @return array<non-empty-string, ReflectionMethod>
      */
     public function getImmediateMethods(int|null $filter = null): array
     {
@@ -523,13 +523,13 @@ class ReflectionClass implements Reflection
         );
     }
 
-    /** @return array<string, ReflectionMethod> */
+    /** @return array<non-empty-string, ReflectionMethod> */
     private function createImmediateMethods(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
     {
         $methods = [];
 
         foreach ($node->getMethods() as $methodNode) {
-            $methods[$methodNode->name->toString()] = ReflectionMethod::createFromNode(
+            $method = ReflectionMethod::createFromNode(
                 $reflector,
                 $methodNode,
                 $this->locatedSource,
@@ -538,6 +538,8 @@ class ReflectionClass implements Reflection
                 $this,
                 $this,
             );
+
+            $methods[$method->getName()] = $method;
         }
 
         if ($node instanceof EnumNode) {
@@ -548,9 +550,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param array<string, ReflectionMethod> $methods
+     * @param array<non-empty-string, ReflectionMethod> $methods
      *
-     * @return array<string, ReflectionMethod>
+     * @return array<non-empty-string, ReflectionMethod>
      */
     private function addEnumMethods(EnumNode $node, array $methods): array
     {
@@ -601,6 +603,8 @@ class ReflectionClass implements Reflection
 
     /**
      * Get a single method with the name $methodName.
+     *
+     * @param non-empty-string $methodName
      */
     public function getMethod(string $methodName): ReflectionMethod|null
     {
@@ -611,7 +615,9 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Does the class have the specified method method?
+     * Does the class have the specified method?
+     *
+     * @param non-empty-string $methodName
      */
     public function hasMethod(string $methodName): bool
     {

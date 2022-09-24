@@ -225,7 +225,7 @@ class ReflectionClassTest extends TestCase
         self::assertCount(4, $methods);
     }
 
-    /** @return list<array{0: string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
+    /** @return list<array{0: non-empty-string, 1: array<string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
     public function dataMethodsOfBackedEnum(): array
     {
         return [
@@ -251,6 +251,7 @@ class ReflectionClassTest extends TestCase
     }
 
     /**
+     * @param non-empty-string                                 $methodName
      * @param array<string, array{0: class-string, 1: string}> $parameters
      *
      * @dataProvider dataMethodsOfBackedEnum
@@ -1215,7 +1216,7 @@ PHP;
         self::assertSame('TraitFixtureTraitA', $classInfo->getMethod('foo')->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: string, 3: string, 4: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: string, 3: string, 4: string}> */
     public function declaringClassProvider(): array
     {
         return [
@@ -1271,7 +1272,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider declaringClassProvider */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider declaringClassProvider
+     */
     public function testGetDeclaringClassWithTraitAndParent(
         string $className,
         string $methodName,

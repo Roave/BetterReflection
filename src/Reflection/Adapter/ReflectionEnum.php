@@ -24,6 +24,7 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
+use function assert;
 use function constant;
 use function sprintf;
 use function strtolower;
@@ -115,11 +116,15 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionEnum->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
+        assert($name !== '');
+
         $method = $this->betterReflectionEnum->getMethod($name);
 
         if ($method === null) {

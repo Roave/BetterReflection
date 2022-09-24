@@ -22,6 +22,7 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_values;
+use function assert;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
@@ -99,11 +100,15 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasMethod($this->getMethodRealName($name));
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
+        assert($name !== '');
+
         $method = $this->betterReflectionObject->getMethod($this->getMethodRealName($name));
 
         if ($method === null) {
@@ -113,6 +118,11 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionMethod($method);
     }
 
+    /**
+     * @param non-empty-string $name
+     *
+     * @return non-empty-string
+     */
     private function getMethodRealName(string $name): string
     {
         $realMethodNames = array_map(static fn (BetterReflectionMethod $method): string => $method->getName(), $this->betterReflectionObject->getMethods());

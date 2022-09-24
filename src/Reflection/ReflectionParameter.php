@@ -116,6 +116,8 @@ class ReflectionParameter
     /**
      * Create a reflection of a parameter using a class name
      *
+     * @param non-empty-string $methodName
+     *
      * @throws OutOfBoundsException
      */
     public static function createFromClassNameAndMethod(
@@ -136,6 +138,8 @@ class ReflectionParameter
 
     /**
      * Create a reflection of a parameter using an instance
+     *
+     * @param non-empty-string $methodName
      *
      * @throws OutOfBoundsException
      */
@@ -189,6 +193,8 @@ class ReflectionParameter
     {
         try {
             if (is_array($spec) && count($spec) === 2 && is_string($spec[1])) {
+                assert($spec[1] !== '');
+
                 if (is_object($spec[0])) {
                     return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
                 }

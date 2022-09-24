@@ -156,11 +156,13 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getImmediateMethods($filter);
     }
 
+    /** @param non-empty-string $methodName */
     public function getMethod(string $methodName): ReflectionMethod|null
     {
         return $this->reflectionClass->getMethod($methodName);
     }
 
+    /** @param non-empty-string $methodName */
     public function hasMethod(string $methodName): bool
     {
         return $this->reflectionClass->hasMethod($methodName);
