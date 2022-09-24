@@ -1024,7 +1024,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $classReflection->isDeprecated());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool}> */
     public function dataClassConstantIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1035,7 +1035,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassConstantIsDeprecatedInPhpVersion */
+    /**
+     * @param non-empty-string $constantName
+     *
+     * @dataProvider dataClassConstantIsDeprecatedInPhpVersion
+     */
     public function testClassConstantIsDeprecatedInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);

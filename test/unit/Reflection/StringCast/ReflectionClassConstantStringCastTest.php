@@ -23,7 +23,7 @@ class ReflectionClassConstantStringCastTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string}> */
     public function toStringProvider(): array
     {
         return [
@@ -35,7 +35,11 @@ class ReflectionClassConstantStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    /**
+     * @param non-empty-string $constantName
+     *
+     * @dataProvider toStringProvider
+     */
     public function testToString(string $constantName, string $expectedString): void
     {
         $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastClassConstants.php', $this->astLocator));

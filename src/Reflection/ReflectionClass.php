@@ -106,7 +106,7 @@ class ReflectionClass implements Reflection
     /** @var list<trait-string> */
     private array $traitClassNames;
 
-    /** @var array<string, ReflectionClassConstant> */
+    /** @var array<non-empty-string, ReflectionClassConstant> */
     private array $immediateConstants;
 
     /** @var array<non-empty-string, ReflectionProperty> */
@@ -628,7 +628,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return array<string, ReflectionClassConstant> indexed by name
+     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
     public function getImmediateConstants(int|null $filter = null): array
     {
@@ -644,6 +644,8 @@ class ReflectionClass implements Reflection
 
     /**
      * Does this class have the specified constant?
+     *
+     * @param non-empty-string $name
      */
     public function hasConstant(string $name): bool
     {
@@ -654,13 +656,15 @@ class ReflectionClass implements Reflection
      * Get the reflection object of the specified class constant.
      *
      * Returns null if not specified.
+     *
+     * @param non-empty-string $name
      */
     public function getConstant(string $name): ReflectionClassConstant|null
     {
         return $this->getConstants()[$name] ?? null;
     }
 
-    /** @return array<string, ReflectionClassConstant> */
+    /** @return array<non-empty-string, ReflectionClassConstant> */
     private function createImmediateConstants(ClassNode|InterfaceNode|TraitNode|EnumNode $node, Reflector $reflector): array
     {
         $constants = [];
@@ -681,7 +685,7 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
-     * @return array<string, ReflectionClassConstant> indexed by name
+     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
     public function getConstants(int|null $filter = null): array
     {

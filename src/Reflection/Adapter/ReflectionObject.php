@@ -179,6 +179,8 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasConstant(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasConstant($name);
     }
 
@@ -202,11 +204,15 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getConstant(string $name): mixed
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->getConstant($name);
     }
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
+        assert($name !== '');
+
         $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
 
         if ($betterReflectionConstant === null) {

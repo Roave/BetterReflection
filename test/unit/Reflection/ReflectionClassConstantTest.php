@@ -45,6 +45,7 @@ class ReflectionClassConstantTest extends TestCase
         );
     }
 
+    /** @param non-empty-string $name */
     private function getExampleConstant(string $name): ReflectionClassConstant|null
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -99,13 +100,17 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
-    /** @dataProvider getModifiersProvider */
+    /**
+     * @param non-empty-string $const
+     *
+     * @dataProvider getModifiersProvider
+     */
     public function testGetModifiers(string $const, int $expected): void
     {
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
-    /** @return list<array{0: string, 1: int}> */
+    /** @return list<array{0: non-empty-string, 1: int}> */
     public function getModifiersProvider(): array
     {
         return [
@@ -197,7 +202,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    /** @return list<array{0: string, 1: string, 2: string, 3: string}> */
+    /** @return list<array{0: non-empty-string, 1: string, 2: string, 3: string}> */
     public function declaringAndImplementingClassesProvider(): array
     {
         return [
@@ -210,7 +215,11 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider declaringAndImplementingClassesProvider */
+    /**
+     * @param non-empty-string $constantName
+     *
+     * @dataProvider declaringAndImplementingClassesProvider
+     */
     public function testGetDeclaringAndImplementingClass(string $constantName, string $currentClassName, string $declaringClassName, string $implementingClassName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesWithConstants.php', $this->astLocator));

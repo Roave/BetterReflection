@@ -235,6 +235,7 @@ class CompileNodeToValue
         $classConstantName ??= $this->resolveClassConstantName($node, $context);
 
         [$className, $constantName] = explode('::', $classConstantName);
+        assert($constantName !== '');
 
         if ($constantName === 'class') {
             return $className;
