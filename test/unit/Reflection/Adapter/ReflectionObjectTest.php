@@ -516,9 +516,9 @@ class ReflectionObjectTest extends TestCase
             ->method('getExtensionName')
             ->willReturn('');
 
-        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertSame('', $betterReflectionObject->getExtensionName());
+        self::assertSame('', $reflectionObjectAdapter->getExtensionName());
     }
 
     public function testGetConstantsWithFilter(): void
