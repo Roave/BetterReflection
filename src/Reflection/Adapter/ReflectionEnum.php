@@ -127,7 +127,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         $method = $this->betterReflectionEnum->getMethod($name);
 
         if ($method === null) {
-            throw new OutOfBoundsException(sprintf('Could not find method: %s', $name));
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionEnum->getName(), $name));
         }
 
         return new ReflectionMethod($method);

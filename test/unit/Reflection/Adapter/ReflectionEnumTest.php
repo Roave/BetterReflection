@@ -820,13 +820,14 @@ class ReflectionEnumTest extends TestCase
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
-            ->method('getMethod')
-            ->willReturn(null);
+            ->method('getName')
+            ->willReturn('SomeClass');
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(OutOfBoundsException::class);
-        $reflectionEnumAdapter->getMethod('foo');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::doesNotExist() does not exist');
+        $reflectionEnumAdapter->getMethod('doesNotExist');
     }
 
     public function testGetMethodsWithFilter(): void
