@@ -61,14 +61,6 @@ use function strtolower;
 
 class ReflectionClass implements Reflection
 {
-    /**
-     * We cannot use CoreReflectionClass::IS_READONLY because it does not exist in PHP < 8.2.
-     * Constant is public, so we can use it in tests.
-     *
-     * @internal
-     */
-    public const IS_READONLY = 65536;
-
     public const ANONYMOUS_CLASS_NAME_PREFIX        = 'class@anonymous';
     public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
     private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
