@@ -220,7 +220,12 @@ final class ReflectionClass extends CoreReflectionClass
             }
         }
 
-        return $this->betterReflectionClass->getConstant($name);
+        $betterReflectionConstant = $this->betterReflectionClass->getConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return $betterReflectionConstant->getValue();
     }
 
     private function getConstantValue(BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed
