@@ -125,7 +125,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    public function getValue(): void
+    public function testGetValue(): void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
 
