@@ -129,7 +129,7 @@ final class ReflectionClass extends CoreReflectionClass
         $method = $this->betterReflectionClass->getMethod($name);
 
         if ($method === null) {
-            throw new OutOfBoundsException(sprintf('Could not find method: %s', $name));
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionClass->getName(), $name));
         }
 
         return new ReflectionMethod($method);

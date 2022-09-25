@@ -216,13 +216,14 @@ class ReflectionClassTest extends TestCase
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
-            ->method('getMethod')
-            ->willReturn(null);
+            ->method('getName')
+            ->willReturn('SomeClass');
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::expectException(OutOfBoundsException::class);
-        $reflectionClassAdapter->getMethod('foo');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::doesNotExist() does not exist');
+        $reflectionClassAdapter->getMethod('doesNotExist');
     }
 
     public function testGetMethodsFilter(): void
