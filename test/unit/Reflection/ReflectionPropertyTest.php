@@ -90,6 +90,35 @@ class ReflectionPropertyTest extends TestCase
         ReflectionProperty::createFromInstance(new ClassForHinting(), 'notExist');
     }
 
+    public function testCreateFromNodeWithNotPromotedProperty(): void
+    {
+        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
+        $property  = ReflectionProperty::createFromNode(
+            $this->reflector,
+            new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
+            0,
+            $classInfo,
+            $classInfo,
+        );
+
+        self::assertFalse($property->isPromoted());
+    }
+
+    public function testCreateFromNodeWithPromotedProperty(): void
+    {
+        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
+        $property  = ReflectionProperty::createFromNode(
+            $this->reflector,
+            new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
+            0,
+            $classInfo,
+            $classInfo,
+            true,
+        );
+
+        self::assertTrue($property->isPromoted());
+    }
+
     public function testVisibilityMethods(): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
