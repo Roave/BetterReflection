@@ -250,6 +250,9 @@ class ReflectionEnumTest extends TestCase
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionEnum
             ->method('getProperty')
             ->with('foo')
             ->willReturn(null);
@@ -257,6 +260,7 @@ class ReflectionEnumTest extends TestCase
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionEnumAdapter->getProperty('foo');
     }
 
@@ -362,19 +366,27 @@ class ReflectionEnumTest extends TestCase
 
     public function testGetStaticPropertyThrowsException(): void
     {
-        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionEnumAdapter->getStaticPropertyValue('foo');
     }
 
     public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
     {
-        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Class Boo does not have a property named foo');
         $reflectionEnumAdapter->setStaticPropertyValue('foo', null);
     }
 

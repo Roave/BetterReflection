@@ -162,7 +162,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         $betterReflectionProperty = $this->betterReflectionEnum->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
         }
 
         return new ReflectionProperty($betterReflectionProperty);
@@ -395,12 +395,12 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
-        throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+        throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
     }
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
-        throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+        throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionEnum->getName(), $name));
     }
 
     /** @return array<string, scalar|array<scalar>|null> */
