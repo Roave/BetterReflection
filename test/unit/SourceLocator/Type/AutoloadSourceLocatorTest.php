@@ -295,10 +295,14 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         require_once __DIR__ . '/../../Fixture/Constants.php';
+        require_once __DIR__ . '/../../Fixture/ConstantsToIgnore.php';
         $reflection = $reflector->reflectConstant('BY_DEFINE');
 
         self::assertSame('BY_DEFINE', $reflection->getName());
         self::assertSame('BY_DEFINE', $reflection->getShortName());
+
+        $this->expectException(IdentifierNotFound::class);
+        $reflector->reflectConstant('BY_DEFINE_NO_FOUND');
     }
 
     public function testConstantLoadsByDefineWithNamespace(): void
@@ -306,6 +310,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $reflector = new DefaultReflector(new AutoloadSourceLocator($this->astLocator));
 
         require_once __DIR__ . '/../../Fixture/Constants.php';
+        require_once __DIR__ . '/../../Fixture/ConstantsToIgnore.php';
         $reflection = $reflector->reflectConstant('Roave\BetterReflectionTest\Fixture\BY_DEFINE');
 
         self::assertSame('Roave\BetterReflectionTest\Fixture\BY_DEFINE', $reflection->getName());
