@@ -18,6 +18,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
@@ -60,14 +61,6 @@ use function strtolower;
 
 class ReflectionClass implements Reflection
 {
-    /**
-     * We cannot use CoreReflectionClass::IS_READONLY because it does not exist in PHP < 8.2.
-     * Constant is public, so we can use it in tests.
-     *
-     * @internal
-     */
-    public const IS_READONLY = 65536;
-
     public const ANONYMOUS_CLASS_NAME_PREFIX        = 'class@anonymous';
     public const ANONYMOUS_CLASS_NAME_PREFIX_REGEXP = '~^(?:class|[\w\\\\]+)@anonymous~';
     private const ANONYMOUS_CLASS_NAME_SUFFIX       = '@anonymous';
@@ -82,6 +75,7 @@ class ReflectionClass implements Reflection
     private bool $isEnum;
     private bool $isBackedEnum;
 
+    /** @var int-mask-of<ReflectionClassAdapter::IS_*> */
     private int $modifiers;
 
     private string|null $docComment;
@@ -119,7 +113,7 @@ class ReflectionClass implements Reflection
     /** @var array<non-empty-string, ReflectionMethod> */
     private array $immediateMethods;
 
-    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
+    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>} */
     private array $traitsData;
 
     /** @var array<string, ReflectionProperty>|null */
@@ -338,7 +332,10 @@ class ReflectionClass implements Reflection
         $createMethod = function (string|null $aliasMethodName) use ($method, $methodModifiers): ReflectionMethod {
             assert($aliasMethodName === null || $aliasMethodName !== '');
 
-            /** @psalm-suppress ArgumentTypeCoercion */
+            /**
+             * @psalm-suppress ArgumentTypeCoercion
+             * @phpstan-ignore-next-line
+             */
             return $method->withImplementingClass($this, $aliasMethodName, $methodModifiers);
         };
 
@@ -1118,12 +1115,15 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the core-reflection-compatible modifier values.
+     *
+     * @return int-mask-of<ReflectionClassAdapter::IS_*>
      */
     public function getModifiers(): int
     {
         return $this->modifiers;
     }
 
+    /** @return int-mask-of<ReflectionClassAdapter::IS_*> */
     private function computeModifiers(ClassNode|InterfaceNode|TraitNode|EnumNode $node): int
     {
         if (! $node instanceof ClassNode) {
@@ -1264,54 +1264,52 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Return a list of the precedences used when importing traits for this class.
-     * The returned array is in key/value pair in this format:.
+     * Returns data when importing traits for this class:
      *
-     *   'Class::method' => 'Class::method'
+     * 'aliases': List of the aliases used when importing traits. In format:
      *
-     * @return array<string, string>
+     *   'aliasedMethodName' => 'ActualClass::actualMethod'
      *
-     * @example
-     * // When reflecting a class such as:
-     * class Foo
-     * {
-     *     use MyTrait, MyTrait2 {
-     *         MyTrait2::foo insteadof MyTrait1;
-     *     }
-     * }
-     * // This method would return
-     * //   ['MyTrait1::foo' => 'MyTrait2::foo']
-     */
-    private function getTraitPrecedences(): array
-    {
-        return $this->traitsData['precedences'];
-    }
-
-    /**
-     * Return a list of the used modifiers when importing traits for this class.
-     * The returned array is in key/value pair in this format:.
+     *   Example:
+     *   // When reflecting a code such as:
+     *
+     *   use MyTrait {
+     *       myTraitMethod as myAliasedMethod;
+     *   }
+     *
+     *   // This method would return
+     *   //   ['myAliasedMethod' => 'MyTrait::myTraitMethod']
+     *
+     * 'modifiers': Used modifiers when importing traits. In format:
      *
      *   'methodName' => 'modifier'
      *
-     * @return array<string, int>
+     *   Example:
+     *   // When reflecting a code such as:
      *
-     * @example
-     * // When reflecting a class such as:
-     * class Foo
-     * {
-     *     use MyTrait {
-     *         myTraitMethod as public;
-     *     }
-     * }
-     * // This method would return
-     * //   ['myTraitMethod' => 1]
+     *   use MyTrait {
+     *       myTraitMethod as public;
+     *   }
+     *
+     *   // This method would return
+     *   //   ['myTraitMethod' => 1]
+     *
+     * 'precedences': Precedences used when importing traits. In format:
+     *
+     *   'Class::method' => 'Class::method'
+     *
+     *   Example:
+     *   // When reflecting a code such as:
+     *
+     *   use MyTrait, MyTrait2 {
+     *       MyTrait2::foo insteadof MyTrait1;
+     *   }
+     *
+     *   // This method would return
+     *   //   ['MyTrait1::foo' => 'MyTrait2::foo']
+     *
+     * @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>}
      */
-    private function getTraitModifiers(): array
-    {
-        return $this->traitsData['modifiers'];
-    }
-
-    /** @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
     private function computeTraitsData(ClassNode|InterfaceNode|TraitNode|EnumNode $node): array
     {
         $traitsData = [

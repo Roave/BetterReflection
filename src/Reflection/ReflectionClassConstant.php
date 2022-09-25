@@ -26,6 +26,7 @@ class ReflectionClassConstant
     /** @var non-empty-string */
     private string $name;
 
+    /** @var int-mask-of<ReflectionClassConstantAdapter::IS_*> */
     private int $modifiers;
 
     private Node\Expr $value;
@@ -174,6 +175,8 @@ class ReflectionClassConstant
 
     /**
      * Returns a bitfield of the access modifiers for this constant
+     *
+     * @return int-mask-of<ReflectionClassConstantAdapter::IS_*>
      */
     public function getModifiers(): int
     {
@@ -268,18 +271,13 @@ class ReflectionClassConstant
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
     }
 
+    /** @return int-mask-of<ReflectionClassConstantAdapter::IS_*> */
     private function computeModifiers(ClassConst $node): int
     {
-        $modifiers = $node->isFinal() ? ReflectionClassConstantAdapter::IS_FINAL : 0;
-
-        if ($node->isPrivate()) {
-            // No += because private constant cannot be final
-            $modifiers = CoreReflectionClassConstant::IS_PRIVATE;
-        } elseif ($node->isProtected()) {
-            $modifiers += CoreReflectionClassConstant::IS_PROTECTED;
-        } else {
-            $modifiers += CoreReflectionClassConstant::IS_PUBLIC;
-        }
+        $modifiers  = $node->isFinal() ? ReflectionClassConstantAdapter::IS_FINAL : 0;
+        $modifiers += $node->isPrivate() ? ReflectionClassConstantAdapter::IS_PRIVATE : 0;
+        $modifiers += $node->isProtected() ? ReflectionClassConstantAdapter::IS_PROTECTED : 0;
+        $modifiers += $node->isPublic() ? ReflectionClassConstantAdapter::IS_PUBLIC : 0;
 
         return $modifiers;
     }

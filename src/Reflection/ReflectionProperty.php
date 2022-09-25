@@ -42,6 +42,7 @@ class ReflectionProperty
     /** @var non-empty-string */
     private string $name;
 
+    /** @var int-mask-of<ReflectionPropertyAdapter::IS_*> */
     private int $modifiers;
 
     private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type;
@@ -213,6 +214,8 @@ class ReflectionProperty
 
     /**
      * Get the core-reflection-compatible modifier values.
+     *
+     * @return int-mask-of<ReflectionPropertyAdapter::IS_*>
      */
     public function getModifiers(): int
     {
@@ -576,23 +579,14 @@ class ReflectionProperty
         return $object;
     }
 
+    /** @return int-mask-of<ReflectionPropertyAdapter::IS_*> */
     private function computeModifiers(PropertyNode $node): int
     {
-        if ($node->isStatic()) {
-            $modifiers = CoreReflectionProperty::IS_STATIC;
-        } elseif ($node->isReadonly()) {
-            $modifiers = ReflectionPropertyAdapter::IS_READONLY;
-        } else {
-            $modifiers = 0;
-        }
-
-        if ($node->isPrivate()) {
-            $modifiers += CoreReflectionProperty::IS_PRIVATE;
-        } elseif ($node->isProtected()) {
-            $modifiers += CoreReflectionProperty::IS_PROTECTED;
-        } else {
-            $modifiers += CoreReflectionProperty::IS_PUBLIC;
-        }
+        $modifiers  = $node->isReadonly() ? ReflectionPropertyAdapter::IS_READONLY : 0;
+        $modifiers += $node->isStatic() ? CoreReflectionProperty::IS_STATIC : 0;
+        $modifiers += $node->isPrivate() ? CoreReflectionProperty::IS_PRIVATE : 0;
+        $modifiers += $node->isProtected() ? CoreReflectionProperty::IS_PROTECTED : 0;
+        $modifiers += $node->isPublic() ? CoreReflectionProperty::IS_PUBLIC : 0;
 
         return $modifiers;
     }
