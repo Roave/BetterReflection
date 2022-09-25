@@ -10,6 +10,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
@@ -28,6 +29,7 @@ class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
 
+    /** @var int-mask-of<ReflectionMethodAdapter::IS_*> */
     private int $modifiers;
 
     /** @param non-empty-string|null $aliasName */
@@ -121,7 +123,8 @@ class ReflectionMethod
     /**
      * @internal
      *
-     * @param non-empty-string|null $aliasName
+     * @param non-empty-string|null                      $aliasName
+     * @param int-mask-of<ReflectionMethodAdapter::IS_*> $modifiers
      */
     public function withImplementingClass(ReflectionClass $implementingClass, string|null $aliasName, int $modifiers): self
     {
@@ -238,12 +241,15 @@ class ReflectionMethod
 
     /**
      * Get the core-reflection-compatible modifier values.
+     *
+     * @return int-mask-of<ReflectionMethodAdapter::IS_*>
      */
     public function getModifiers(): int
     {
         return $this->modifiers;
     }
 
+    /** @return int-mask-of<ReflectionMethodAdapter::IS_*> */
     private function computeModifiers(MethodNode $node): int
     {
         $modifiers  = $node->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
