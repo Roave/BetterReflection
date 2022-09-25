@@ -162,7 +162,7 @@ final class ReflectionObject extends CoreReflectionObject
         $property = $this->betterReflectionObject->getProperty($name);
 
         if ($property === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
         }
 
         return new ReflectionProperty($property);
@@ -374,13 +374,13 @@ final class ReflectionObject extends CoreReflectionObject
                 return $default;
             }
 
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
         }
 
         return $property->getValue();
@@ -393,13 +393,13 @@ final class ReflectionObject extends CoreReflectionObject
         $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionObject->getName(), $name));
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionObject->getName(), $name));
         }
 
         $property->setValue($value);
