@@ -75,6 +75,7 @@ class ReflectionClass implements Reflection
     private bool $isEnum;
     private bool $isBackedEnum;
 
+    /** @var int-mask-of<ReflectionClassAdapter::IS_*> */
     private int $modifiers;
 
     private string|null $docComment;
@@ -1112,12 +1113,15 @@ class ReflectionClass implements Reflection
 
     /**
      * Get the core-reflection-compatible modifier values.
+     *
+     * @return int-mask-of<ReflectionClassAdapter::IS_*>
      */
     public function getModifiers(): int
     {
         return $this->modifiers;
     }
 
+    /** @return int-mask-of<ReflectionClassAdapter::IS_*> */
     private function computeModifiers(ClassNode|InterfaceNode|TraitNode|EnumNode $node): int
     {
         if (! $node instanceof ClassNode) {
