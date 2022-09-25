@@ -164,7 +164,7 @@ final class ReflectionClass extends CoreReflectionClass
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionClass->getName(), $name));
         }
 
         return new ReflectionProperty($betterReflectionProperty);
@@ -429,13 +429,13 @@ final class ReflectionClass extends CoreReflectionClass
                 return $default;
             }
 
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionClass->getName(), $name));
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionClass->getName(), $name));
         }
 
         return $property->getValue();
@@ -448,13 +448,13 @@ final class ReflectionClass extends CoreReflectionClass
         $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionClass->getName(), $name));
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionClass->getName(), $name));
         }
 
         $property->setValue($value);
