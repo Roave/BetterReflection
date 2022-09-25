@@ -212,7 +212,12 @@ final class ReflectionEnum extends CoreReflectionEnum
             return $this->getConstantValue($enumCase);
         }
 
-        return $this->betterReflectionEnum->getConstant($name);
+        $betterReflectionConstant = $this->betterReflectionEnum->getConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return $betterReflectionConstant->getValue();
     }
 
     private function getConstantValue(BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed

@@ -697,6 +697,37 @@ class ReflectionEnumTest extends TestCase
         self::assertTrue($reflectionClassAdapter->hasConstant('ENUM_CASE'));
     }
 
+    public function testGetConstant(): void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getValue')
+            ->willReturn(123);
+
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($betterReflectionClassConstant);
+
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertSame(123, $reflectionClassAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn(null);
+
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionClassAdapter->getConstant('FOO'));
+    }
+
     /**
      * @runInSeparateProcess
      * @requires PHP >= 8.1
