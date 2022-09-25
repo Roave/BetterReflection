@@ -113,7 +113,7 @@ class ReflectionClass implements Reflection
     /** @var array<non-empty-string, ReflectionMethod> */
     private array $immediateMethods;
 
-    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
+    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>} */
     private array $traitsData;
 
     /** @var array<string, ReflectionProperty>|null */
@@ -326,14 +326,16 @@ class ReflectionClass implements Reflection
 
         if (array_key_exists($methodHash, $this->traitsData['modifiers'])) {
             // PhpParser modifiers are compatible with PHP reflection modifiers
-            /** @var int-mask-of<ReflectionMethodAdapter::IS_*> $methodModifiers */
             $methodModifiers = ($methodModifiers & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $this->traitsData['modifiers'][$methodHash];
         }
 
         $createMethod = function (string|null $aliasMethodName) use ($method, $methodModifiers): ReflectionMethod {
             assert($aliasMethodName === null || $aliasMethodName !== '');
 
-            /** @psalm-suppress ArgumentTypeCoercion */
+            /**
+             * @psalm-suppress ArgumentTypeCoercion
+             * @phpstan-ignore-next-line
+             */
             return $method->withImplementingClass($this, $aliasMethodName, $methodModifiers);
         };
 
@@ -1306,7 +1308,7 @@ class ReflectionClass implements Reflection
      *   // This method would return
      *   //   ['MyTrait1::foo' => 'MyTrait2::foo']
      *
-     * @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>}
+     * @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>}
      */
     private function computeTraitsData(ClassNode|InterfaceNode|TraitNode|EnumNode $node): array
     {
