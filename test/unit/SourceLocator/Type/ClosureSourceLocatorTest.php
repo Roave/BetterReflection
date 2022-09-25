@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -201,5 +202,24 @@ class ClosureSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertSame('Roave\BetterReflectionTest\Fixture\ClassUsedAsClosureParameter', $reflection->getParameter('parameter')->getType()?->__toString());
+    }
+
+    public function testExceptionIfSourceFileIsNotReadable(): void
+    {
+        $sourceLocator = new ClosureSourceLocator(static function (): void {
+        }, $this->parser);
+
+        $sourceLocatorReflectionCoreFunctionReflectionPropertyValue = $this->createMock(CoreReflectionFunction::class);
+        $sourceLocatorReflectionCoreFunctionReflectionPropertyValue
+            ->method('getFileName')
+            ->willReturn('sdklfjdfslsdfhlkjsdglkjsdflgkj');
+
+        $sourceLocatorReflection                               = new CoreReflectionClass($sourceLocator);
+        $sourceLocatorReflectionCoreFunctionReflectionProperty = $sourceLocatorReflection->getProperty('coreFunctionReflection');
+        $sourceLocatorReflectionCoreFunctionReflectionProperty->setAccessible(true);
+        $sourceLocatorReflectionCoreFunctionReflectionProperty->setValue($sourceLocator, $sourceLocatorReflectionCoreFunctionReflectionPropertyValue);
+
+        $this->expectException(InvalidFileLocation::class);
+        $sourceLocator->locateIdentifier($this->reflector, new Identifier('whatever', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
     }
 }
