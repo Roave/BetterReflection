@@ -207,7 +207,12 @@ final class ReflectionObject extends CoreReflectionObject
     {
         assert($name !== '');
 
-        return $this->betterReflectionObject->getConstant($name);
+        $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return $betterReflectionConstant->getValue();
     }
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false

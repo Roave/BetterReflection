@@ -603,6 +603,37 @@ class ReflectionObjectTest extends TestCase
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
     }
 
+    public function testGetConstant(): void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getValue')
+            ->willReturn(123);
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($betterReflectionClassConstant);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertSame(123, $reflectionObjectAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getConstant('FOO'));
+    }
+
     public function testGetReflectionConstant(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
