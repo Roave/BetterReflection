@@ -71,19 +71,19 @@ class ReflectionProperty
     private function __construct(
         private Reflector $reflector,
         PropertyNode $node,
-        int $positionInNode,
+        Node\Stmt\PropertyProperty $propertyNode,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private bool $isPromoted,
         private bool $declaredAtCompileTime,
     ) {
-        $name = $node->props[$positionInNode]->name->name;
+        $name = $propertyNode->name->name;
         assert($name !== '');
 
         $this->name       = $name;
         $this->modifiers  = $this->computeModifiers($node);
         $this->type       = $this->createType($node);
-        $this->default    = $node->props[$positionInNode]->default;
+        $this->default    = $propertyNode->default;
         $this->docComment = GetLastDocComment::forNode($node);
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
 
@@ -183,7 +183,7 @@ class ReflectionProperty
     public static function createFromNode(
         Reflector $reflector,
         PropertyNode $node,
-        int $positionInNode,
+        Node\Stmt\PropertyProperty $propertyProperty,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         bool $isPromoted = false,
@@ -192,7 +192,7 @@ class ReflectionProperty
         return new self(
             $reflector,
             $node,
-            $positionInNode,
+            $propertyProperty,
             $declaringClass,
             $implementingClass,
             $isPromoted,

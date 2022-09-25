@@ -93,14 +93,15 @@ class ReflectionObject extends ReflectionClass
                 continue;
             }
 
+            $propertyNode = $this->createPropertyNodeFromRuntimePropertyReflection($property, $this->object);
+
             $runtimeProperties[$propertyName] = ReflectionProperty::createFromNode(
                 $this->reflector,
-                $this->createPropertyNodeFromRuntimePropertyReflection($property, $this->object),
-                0,
+                $propertyNode,
+                $propertyNode->props[0],
                 $this,
                 $this,
-                false,
-                false,
+                declaredAtCompileTime: false,
             );
         }
 
