@@ -1262,54 +1262,52 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * Return a list of the precedences used when importing traits for this class.
-     * The returned array is in key/value pair in this format:.
+     * Returns data when importing traits for this class:
      *
-     *   'Class::method' => 'Class::method'
+     * 'aliases': List of the aliases used when importing traits. In format:
      *
-     * @return array<string, string>
+     *   'aliasedMethodName' => 'ActualClass::actualMethod'
      *
-     * @example
-     * // When reflecting a class such as:
-     * class Foo
-     * {
-     *     use MyTrait, MyTrait2 {
-     *         MyTrait2::foo insteadof MyTrait1;
-     *     }
-     * }
-     * // This method would return
-     * //   ['MyTrait1::foo' => 'MyTrait2::foo']
-     */
-    private function getTraitPrecedences(): array
-    {
-        return $this->traitsData['precedences'];
-    }
-
-    /**
-     * Return a list of the used modifiers when importing traits for this class.
-     * The returned array is in key/value pair in this format:.
+     *   Example:
+     *   // When reflecting a code such as:
+     *
+     *   use MyTrait {
+     *       myTraitMethod as myAliasedMethod;
+     *   }
+     *
+     *   // This method would return
+     *   //   ['myAliasedMethod' => 'MyTrait::myTraitMethod']
+     *
+     * 'modifiers': Used modifiers when importing traits. In format:
      *
      *   'methodName' => 'modifier'
      *
-     * @return array<string, int>
+     *   Example:
+     *   // When reflecting a code such as:
      *
-     * @example
-     * // When reflecting a class such as:
-     * class Foo
-     * {
-     *     use MyTrait {
-     *         myTraitMethod as public;
-     *     }
-     * }
-     * // This method would return
-     * //   ['myTraitMethod' => 1]
+     *   use MyTrait {
+     *       myTraitMethod as public;
+     *   }
+     *
+     *   // This method would return
+     *   //   ['myTraitMethod' => 1]
+     *
+     * 'precedences': Precedences used when importing traits. In format:
+     *
+     *   'Class::method' => 'Class::method'
+     *
+     *   Example:
+     *   // When reflecting a code such as:
+     *
+     *   use MyTrait, MyTrait2 {
+     *       MyTrait2::foo insteadof MyTrait1;
+     *   }
+     *
+     *   // This method would return
+     *   //   ['MyTrait1::foo' => 'MyTrait2::foo']
+     *
+     * @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>}
      */
-    private function getTraitModifiers(): array
-    {
-        return $this->traitsData['modifiers'];
-    }
-
-    /** @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int>, precedences: array<non-empty-string, non-empty-string>} */
     private function computeTraitsData(ClassNode|InterfaceNode|TraitNode|EnumNode $node): array
     {
         $traitsData = [
