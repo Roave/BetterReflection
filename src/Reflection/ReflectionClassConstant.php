@@ -10,6 +10,7 @@ use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
@@ -22,8 +23,6 @@ use function assert;
 
 class ReflectionClassConstant
 {
-    public const IS_FINAL = 32;
-
     /** @var non-empty-string */
     private string $name;
 
@@ -170,7 +169,7 @@ class ReflectionClassConstant
 
     public function isFinal(): bool
     {
-        return ($this->modifiers & self::IS_FINAL) === self::IS_FINAL;
+        return ($this->modifiers & ReflectionClassConstantAdapter::IS_FINAL) === ReflectionClassConstantAdapter::IS_FINAL;
     }
 
     /**
@@ -271,7 +270,7 @@ class ReflectionClassConstant
 
     private function computeModifiers(ClassConst $node): int
     {
-        $modifiers = $node->isFinal() ? self::IS_FINAL : 0;
+        $modifiers = $node->isFinal() ? ReflectionClassConstantAdapter::IS_FINAL : 0;
 
         if ($node->isPrivate()) {
             // No += because private constant cannot be final

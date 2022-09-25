@@ -31,6 +31,8 @@ use function strtolower;
 /** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionClass extends CoreReflectionClass
 {
+    public const IS_READONLY = 65536;
+
     public function __construct(private BetterReflectionClass|BetterReflectionEnum $betterReflectionClass)
     {
         unset($this->name);
@@ -134,13 +136,18 @@ final class ReflectionClass extends CoreReflectionClass
     }
 
     /**
+     * @param int-mask-of<ReflectionMethod::IS_*>|null $filter
+     *
      * @return list<ReflectionMethod>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getMethods(int|null $filter = null): array
     {
-        return array_map(static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method), $this->betterReflectionClass->getMethods($filter));
+        return array_map(
+            static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
+            $this->betterReflectionClass->getMethods($filter ?? 0),
+        );
     }
 
     public function hasProperty(string $name): bool
@@ -164,13 +171,18 @@ final class ReflectionClass extends CoreReflectionClass
     }
 
     /**
+     * @param int-mask-of<ReflectionProperty::IS_*>|null $filter
+     *
      * @return list<ReflectionProperty>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getProperties(int|null $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionClass->getProperties($filter)));
+        return array_values(array_map(
+            static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
+            $this->betterReflectionClass->getProperties($filter ?? 0),
+        ));
     }
 
     public function hasConstant(string $name): bool
@@ -184,7 +196,11 @@ final class ReflectionClass extends CoreReflectionClass
         return $this->betterReflectionClass->hasConstant($name);
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, mixed>
+     */
     public function getConstants(int|null $filter = null): array
     {
         return array_map(
@@ -235,7 +251,11 @@ final class ReflectionClass extends CoreReflectionClass
         return new ReflectionClassConstant($betterReflectionConstant);
     }
 
-    /** @return list<ReflectionClassConstant> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return list<ReflectionClassConstant>
+     */
     public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
@@ -244,10 +264,14 @@ final class ReflectionClass extends CoreReflectionClass
         ));
     }
 
-    /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
+     */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
-        $reflectionConstants = $this->betterReflectionClass->getConstants($filter);
+        $reflectionConstants = $this->betterReflectionClass->getConstants($filter ?? 0);
 
         if (
             $this->betterReflectionClass instanceof BetterReflectionEnum

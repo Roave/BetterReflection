@@ -14,7 +14,11 @@ use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -487,11 +491,13 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_FINAL
      * the only the final public methods will be returned
      *
+     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
+     *
      * @return list<ReflectionMethod>
      */
-    public function getMethods(int|null $filter = null): array
+    public function getMethods(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return array_values($this->getMethodsIndexedByName());
         }
 
@@ -509,11 +515,13 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getMethods for the usage of $filter
      *
+     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionMethod>
      */
-    public function getImmediateMethods(int|null $filter = null): array
+    public function getImmediateMethods(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->immediateMethods;
         }
 
@@ -628,11 +636,13 @@ class ReflectionClass implements Reflection
      * Get an associative array of only the constants for this specific class (i.e. do not search
      * up parent classes etc.), with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
-    public function getImmediateConstants(int|null $filter = null): array
+    public function getImmediateConstants(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->immediateConstants;
         }
 
@@ -685,9 +695,11 @@ class ReflectionClass implements Reflection
      * Get an associative array of the defined constants in this class,
      * with keys as constant names and values as {@see ReflectionClassConstant} objects.
      *
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
-    public function getConstants(int|null $filter = null): array
+    public function getConstants(int $filter = 0): array
     {
         // Note: constants are not merged via their name as array index, since internal PHP constant
         //       sorting does not follow `\array_merge()` semantics
@@ -729,7 +741,7 @@ class ReflectionClass implements Reflection
             $reflectionConstants[$constantName] = $constant;
         }
 
-        if ($filter === null) {
+        if ($filter === 0) {
             return $reflectionConstants;
         }
 
@@ -755,11 +767,13 @@ class ReflectionClass implements Reflection
      *
      * @see ReflectionClass::getProperties() for the usage of filter
      *
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
      * @return array<non-empty-string, ReflectionProperty>
      */
-    public function getImmediateProperties(int|null $filter = null): array
+    public function getImmediateProperties(int $filter = 0): array
     {
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->immediateProperties;
         }
 
@@ -889,9 +903,11 @@ class ReflectionClass implements Reflection
      * For example if $filter = \ReflectionProperty::IS_STATIC | \ReflectionProperty::IS_PUBLIC
      * only the static public properties will be returned
      *
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
      * @return array<string, ReflectionProperty>
      */
-    public function getProperties(int|null $filter = null): array
+    public function getProperties(int $filter = 0): array
     {
         if ($this->cachedProperties === null) {
             // merging together properties from parent class, traits, current class (in this precise order)
@@ -921,7 +937,7 @@ class ReflectionClass implements Reflection
             );
         }
 
-        if ($filter === null) {
+        if ($filter === 0) {
             return $this->cachedProperties;
         }
 
@@ -1097,7 +1113,7 @@ class ReflectionClass implements Reflection
 
     public function isReadOnly(): bool
     {
-        return ($this->modifiers & self::IS_READONLY) === self::IS_READONLY;
+        return ($this->modifiers & ReflectionClassAdapter::IS_READONLY) === ReflectionClassAdapter::IS_READONLY;
     }
 
     /**
@@ -1116,7 +1132,7 @@ class ReflectionClass implements Reflection
 
         $modifiers  = $node->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $modifiers += $node->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
-        $modifiers += $node->isReadonly() ? self::IS_READONLY : 0;
+        $modifiers += $node->isReadonly() ? ReflectionClassAdapter::IS_READONLY : 0;
 
         return $modifiers;
     }

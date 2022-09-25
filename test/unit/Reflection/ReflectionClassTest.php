@@ -19,6 +19,8 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
@@ -290,7 +292,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame($returnType, $methodReturnType->__toString());
     }
 
-    /** @return list<array{0: int, 1: int}> */
+    /** @return list<array{0: int-mask-of<CoreReflectionMethod::IS_*>, 1: int}> */
     public function getMethodsWithFilterDataProvider(): array
     {
         return [
@@ -312,7 +314,11 @@ class ReflectionClassTest extends TestCase
         ];
     }
 
-    /** @dataProvider getMethodsWithFilterDataProvider */
+    /**
+     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
+     *
+     * @dataProvider getMethodsWithFilterDataProvider
+     */
     public function testGetMethodsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -629,7 +635,7 @@ PHP;
         self::assertSame($expectedPropertiesNames, array_keys($properties));
     }
 
-    /** @return list<array{0: int, 1: int}> */
+    /** @return list<array{0: int-mask-of<CoreReflectionProperty::IS_*>, 1: int}> */
     public function getPropertiesWithFilterDataProvider(): array
     {
         return [
@@ -647,7 +653,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider getPropertiesWithFilterDataProvider */
+    /**
+     * @param int-mask-of<CoreReflectionProperty::IS_*> $filter
+
+     * @dataProvider getPropertiesWithFilterDataProvider
+     */
     public function testGetPropertiesWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -1146,7 +1156,7 @@ PHP;
             ['ExampleClass', 0],
             ['AbstractClass', CoreReflectionClass::IS_EXPLICIT_ABSTRACT],
             ['FinalClass', CoreReflectionClass::IS_FINAL],
-            ['ReadOnlyClass', ReflectionClass::IS_READONLY],
+            ['ReadOnlyClass', ReflectionClassAdapter::IS_READONLY],
             ['ExampleTrait', 0],
         ];
     }
@@ -2081,16 +2091,16 @@ PHP;
         self::assertSame('ff', $reflectionConstants['F']->getValue());
     }
 
-    /** @return list<array{0: int, 1: int}> */
+    /** @return list<array{0: int-mask-of<ReflectionClassConstantAdapter::IS_*>, 1: int}> */
     public function getConstantsWithFilterDataProvider(): array
     {
         return [
-            [ReflectionClassConstant::IS_FINAL, 2],
+            [ReflectionClassConstantAdapter::IS_FINAL, 2],
             [CoreReflectionClassConstant::IS_PUBLIC, 4],
             [CoreReflectionClassConstant::IS_PROTECTED, 2],
             [CoreReflectionClassConstant::IS_PRIVATE, 1],
             [
-                ReflectionClassConstant::IS_FINAL |
+                ReflectionClassConstantAdapter::IS_FINAL |
                 CoreReflectionClassConstant::IS_PUBLIC |
                 CoreReflectionClassConstant::IS_PROTECTED |
                 CoreReflectionClassConstant::IS_PRIVATE,
@@ -2099,7 +2109,11 @@ PHP;
         ];
     }
 
-    /** @dataProvider getConstantsWithFilterDataProvider */
+    /**
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
+     * @dataProvider getConstantsWithFilterDataProvider
+     */
     public function testGetConstantsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
