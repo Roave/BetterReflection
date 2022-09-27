@@ -1600,23 +1600,32 @@ class ReflectionClass implements Reflection
     /**
      * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
      *
+     * @param list<class-string> $interfaceClassNames
+     *
      * @return array<class-string, ReflectionClass> parent interfaces of this interface
      *
      * @throws NotAnInterfaceReflection
      */
-    private function getInterfacesHierarchy(): array
+    private function getInterfacesHierarchy(array &$interfaceClassNames = []): array
     {
         if (! $this->isInterface) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
+        $interfaceClassName = $this->getName();
+        if (in_array($interfaceClassName, $interfaceClassNames, true)) {
+            throw CircularReference::fromClassName($interfaceClassName);
+        }
+
+        $interfaceClassNames[] = $interfaceClassName;
+
         /** @var array<class-string, self> $interfaces */
         $interfaces = array_merge(
-            [$this->getName() => $this],
+            [$interfaceClassName => $this],
             ...array_map(
                 fn (string $interfaceClassName): array => $this->reflector
                     ->reflectClass($interfaceClassName)
-                    ->getInterfacesHierarchy(),
+                    ->getInterfacesHierarchy($interfaceClassNames),
                 $this->implementsClassNames,
             ),
         );
