@@ -21,6 +21,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
+use Roave\BetterReflection\Reflection\Exception\CircularReference;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
@@ -803,6 +804,32 @@ PHP;
         )))->reflectClass(Fixture\ClassWithTwoParents::class);
 
         self::assertSame(['Roave\\BetterReflectionTest\\Fixture\\ClassWithParent', 'Roave\\BetterReflectionTest\\Fixture\\ExampleClass'], $childReflection->getParentClassNames());
+    }
+
+    /** @return list<array{0: string}> */
+    public function circularReferencesProvider(): array
+    {
+        return [
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidParents\\ClassExtendsSelf'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidParents\\Class1'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidParents\\Class2'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidParents\\Class3'],
+        ];
+    }
+
+    /** @dataProvider circularReferencesProvider */
+    public function testGetParentClassNamesFailsWithCircularReferences(string $className): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/InvalidParents.php',
+            $this->astLocator,
+        ));
+
+        $class = $reflector->reflectClass($className);
+
+        $this->expectException(CircularReference::class);
+
+        $class->getParentClassNames();
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */

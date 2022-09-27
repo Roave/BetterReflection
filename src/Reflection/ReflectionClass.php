@@ -22,6 +22,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMeth
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
+use Roave\BetterReflection\Reflection\Exception\CircularReference;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
@@ -122,7 +123,8 @@ class ReflectionClass implements Reflection
     /** @var array<lowercase-string, ReflectionMethod>|null */
     private array|null $cachedMethods = null;
 
-    private ReflectionClass|null $cachedParentClass = null;
+    /** @var list<ReflectionClass>|null */
+    private array|null $cachedParentClasses = null;
 
     /** @internal */
     protected function __construct(
@@ -1031,19 +1033,17 @@ class ReflectionClass implements Reflection
      */
     public function getParentClass(): ReflectionClass|null
     {
-        if ($this->parentClassName === null) {
+        $parentClass = $this->getParentClasses()[0] ?? null;
+
+        if ($parentClass === null) {
             return null;
         }
 
-        if ($this->cachedParentClass === null) {
-            $this->cachedParentClass = $this->reflector->reflectClass($this->parentClassName);
+        if ($parentClass->isInterface() || $parentClass->isTrait()) {
+            throw NotAClassReflection::fromReflectionClass($parentClass);
         }
 
-        if ($this->cachedParentClass->isInterface() || $this->cachedParentClass->isTrait()) {
-            throw NotAClassReflection::fromReflectionClass($this->cachedParentClass);
-        }
-
-        return $this->cachedParentClass;
+        return $parentClass;
     }
 
     /**
@@ -1053,7 +1053,35 @@ class ReflectionClass implements Reflection
      */
     public function getParentClassNames(): array
     {
-        return array_map(static fn (self $parentClass): string => $parentClass->getName(), array_slice(array_reverse($this->getInheritanceClassHierarchy()), 1));
+        return array_map(static fn (self $parentClass): string => $parentClass->getName(), $this->getParentClasses());
+    }
+
+    /** @return list<ReflectionClass> */
+    private function getParentClasses(): array
+    {
+        if ($this->cachedParentClasses === null) {
+            $parentClasses = [];
+
+            $parentClassName = $this->parentClassName;
+            while ($parentClassName !== null) {
+                $parentClass = $this->reflector->reflectClass($parentClassName);
+
+                if (
+                    $this->name === $parentClassName
+                    || array_key_exists($parentClassName, $parentClasses)
+                ) {
+                    throw CircularReference::fromClassName($parentClassName);
+                }
+
+                $parentClasses[$parentClassName] = $parentClass;
+
+                $parentClassName = $parentClass->parentClassName;
+            }
+
+            $this->cachedParentClasses = array_values($parentClasses);
+        }
+
+        return $this->cachedParentClasses;
     }
 
     public function getDocComment(): string|null
@@ -1386,10 +1414,15 @@ class ReflectionClass implements Reflection
      */
     public function getInterfaces(): array
     {
-        return array_merge(...array_map(
-            static fn (self $reflectionClass): array => $reflectionClass->getCurrentClassImplementedInterfacesIndexedByName(),
-            $this->getInheritanceClassHierarchy(),
-        ));
+        $interfaces = array_merge(
+            [$this->getCurrentClassImplementedInterfacesIndexedByName()],
+            array_map(
+                static fn (self $parentClass): array => $parentClass->getCurrentClassImplementedInterfacesIndexedByName(),
+                $this->getParentClasses(),
+            ),
+        );
+
+        return array_merge(...array_reverse($interfaces));
     }
 
     /**
@@ -1457,10 +1490,7 @@ class ReflectionClass implements Reflection
     {
         return in_array(
             ltrim($className, '\\'),
-            array_map(
-                static fn (self $reflectionClass): string => $reflectionClass->getName(),
-                array_slice(array_reverse($this->getInheritanceClassHierarchy()), 1),
-            ),
+            $this->getParentClassNames(),
             true,
         );
     }
@@ -1567,16 +1597,6 @@ class ReflectionClass implements Reflection
         }
 
         return $this->addStringableInterface($interfaces);
-    }
-
-    /** @return list<ReflectionClass> ordered from inheritance root to leaf (this class) */
-    private function getInheritanceClassHierarchy(): array
-    {
-        $parentClass = $this->getParentClass();
-
-        return $parentClass
-            ? array_merge($parentClass->getInheritanceClassHierarchy(), [$this])
-            : [$this];
     }
 
     /**
