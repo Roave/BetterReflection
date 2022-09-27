@@ -1731,6 +1731,32 @@ PHP;
         }
     }
 
+    /** @return list<array{0: string}> */
+    public function interfaceExtendsCircularReferencesProvider(): array
+    {
+        return [
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidInterfaceParents\\InterfaceExtendsSelf'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidInterfaceParents\\Interface1'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidInterfaceParents\\Interface2'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidInterfaceParents\\Interface3'],
+        ];
+    }
+
+    /** @dataProvider interfaceExtendsCircularReferencesProvider */
+    public function testGetInterfacesFailsWithCircularReferences(string $className): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/InvalidInterfaceParents.php',
+            $this->astLocator,
+        ));
+
+        $class = $reflector->reflectClass($className);
+
+        $this->expectException(CircularReference::class);
+
+        $class->getInterfaces();
+    }
+
     public function testIsInstance(): void
     {
         // note: ClassForHinting is safe to type-check against, as it will actually be loaded at runtime
