@@ -250,6 +250,9 @@ class ReflectionEnumTest extends TestCase
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionEnum
             ->method('getProperty')
             ->with('foo')
             ->willReturn(null);
@@ -257,6 +260,7 @@ class ReflectionEnumTest extends TestCase
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionEnumAdapter->getProperty('foo');
     }
 
@@ -362,19 +366,27 @@ class ReflectionEnumTest extends TestCase
 
     public function testGetStaticPropertyThrowsException(): void
     {
-        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionEnumAdapter->getStaticPropertyValue('foo');
     }
 
     public function testSetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
     {
-        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Class Boo does not have a property named foo');
         $reflectionEnumAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -685,6 +697,37 @@ class ReflectionEnumTest extends TestCase
         self::assertTrue($reflectionClassAdapter->hasConstant('ENUM_CASE'));
     }
 
+    public function testGetConstant(): void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getValue')
+            ->willReturn(123);
+
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($betterReflectionClassConstant);
+
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertSame(123, $reflectionClassAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn(null);
+
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionClassAdapter->getConstant('FOO'));
+    }
+
     /**
      * @runInSeparateProcess
      * @requires PHP >= 8.1
@@ -820,13 +863,14 @@ class ReflectionEnumTest extends TestCase
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
-            ->method('getMethod')
-            ->willReturn(null);
+            ->method('getName')
+            ->willReturn('SomeClass');
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(OutOfBoundsException::class);
-        $reflectionEnumAdapter->getMethod('foo');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::doesNotExist() does not exist');
+        $reflectionEnumAdapter->getMethod('doesNotExist');
     }
 
     public function testGetMethodsWithFilter(): void

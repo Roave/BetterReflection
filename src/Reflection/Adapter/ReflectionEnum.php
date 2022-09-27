@@ -127,7 +127,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         $method = $this->betterReflectionEnum->getMethod($name);
 
         if ($method === null) {
-            throw new OutOfBoundsException(sprintf('Could not find method: %s', $name));
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionEnum->getName(), $name));
         }
 
         return new ReflectionMethod($method);
@@ -162,7 +162,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         $betterReflectionProperty = $this->betterReflectionEnum->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
         }
 
         return new ReflectionProperty($betterReflectionProperty);
@@ -212,7 +212,12 @@ final class ReflectionEnum extends CoreReflectionEnum
             return $this->getConstantValue($enumCase);
         }
 
-        return $this->betterReflectionEnum->getConstant($name);
+        $betterReflectionConstant = $this->betterReflectionEnum->getConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return $betterReflectionConstant->getValue();
     }
 
     private function getConstantValue(BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed
@@ -395,12 +400,12 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
-        throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+        throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
     }
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
-        throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+        throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionEnum->getName(), $name));
     }
 
     /** @return array<string, scalar|array<scalar>|null> */

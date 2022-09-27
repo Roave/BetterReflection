@@ -340,6 +340,9 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->with('foo')
             ->willReturn(null);
@@ -347,6 +350,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getProperty('foo');
     }
 
@@ -403,13 +407,16 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" does not exist');
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -429,13 +436,16 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" does not exist');
+        $this->expectExceptionMessage('Class Boo does not have a property named foo');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -451,6 +461,9 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->with('foo')
             ->willReturn($betterReflectionProperty);
@@ -458,7 +471,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" is not static');
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -474,6 +487,9 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->with('foo')
             ->willReturn($betterReflectionProperty);
@@ -481,7 +497,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" is not static');
+        $this->expectExceptionMessage('Class Boo does not have a property named foo');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -585,6 +601,37 @@ class ReflectionObjectTest extends TestCase
 
         self::assertCount(1, $protectedConstants);
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
+    }
+
+    public function testGetConstant(): void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getValue')
+            ->willReturn(123);
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($betterReflectionClassConstant);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertSame(123, $reflectionObjectAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getConstant('FOO'));
     }
 
     public function testGetReflectionConstant(): void
@@ -932,13 +979,14 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
-            ->method('getMethod')
-            ->willReturn(null);
+            ->method('getName')
+            ->willReturn('SomeClass');
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::expectException(OutOfBoundsException::class);
-        $reflectionObjectAdapter->getMethod('foo');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::doesNotExist() does not exist');
+        $reflectionObjectAdapter->getMethod('doesNotExist');
     }
 
     public function testGetMethodsWithFilter(): void
