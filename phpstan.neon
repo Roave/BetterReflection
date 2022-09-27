@@ -16,6 +16,8 @@ parameters:
     excludePaths:
         analyse:
             - test/unit/Fixture/*
+        analyseAndScan:
+            - test/unit/Fixture/InvalidParents.php
 
     bootstrapFiles:
         - phar://%currentWorkingDirectory%/test/unit/Fixture/autoload.phar/vendor/autoload.php
