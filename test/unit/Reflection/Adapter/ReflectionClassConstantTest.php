@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as Reflect
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant as BetterReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionEnum as BetterReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnumCase;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
 use ValueError;
@@ -362,7 +363,7 @@ class ReflectionClassConstantTest extends TestCase
         $reflectionClassConstantAdapter->foo;
     }
 
-    public function testGetDeclaringClass(): void
+    public function testGetDeclaringClassForClass(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
@@ -378,5 +379,23 @@ class ReflectionClassConstantTest extends TestCase
 
         self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionClassConstantAdapter->getDeclaringClass());
         self::assertSame('DeclaringClass', $reflectionClassConstantAdapter->getDeclaringClass()->getName());
+    }
+
+    public function testGetDeclaringClassForEnum(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('DeclaringEnum');
+
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getDeclaringClass')
+            ->willReturn($betterReflectionEnum);
+
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionEnumCase);
+
+        self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionClassConstantAdapter->getDeclaringClass());
+        self::assertSame('DeclaringEnum', $reflectionClassConstantAdapter->getDeclaringClass()->getName());
     }
 }

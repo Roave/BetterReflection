@@ -111,11 +111,16 @@ class CachingVisitor extends NodeVisitorAbstract
                 $node->args[1]->value = $this->builderFactory->funcCall('constant', [$constantName]);
             }
 
+            // @codeCoverageIgnoreStart
+            // @infection-ignore-all
+            // No invalid definition in PhpStorm stubs
             try {
                 ConstantNodeChecker::assertValidDefineFunctionCall($node);
             } catch (InvalidConstantNode) {
                 return null;
             }
+
+            // @codeCoverageIgnoreEnd
 
             if (in_array($constantName, self::TRUE_FALSE_NULL, true)) {
                 $constantName    = strtoupper($constantName);

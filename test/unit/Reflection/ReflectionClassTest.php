@@ -524,7 +524,7 @@ class ReflectionClassTest extends TestCase
         $properties = $classInfo->getProperties();
 
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
-        self::assertCount(8, $properties);
+        self::assertCount(9, $properties);
     }
 
     public function testGetPropertiesForPureEnum(): void
@@ -643,13 +643,13 @@ PHP;
             [CoreReflectionProperty::IS_STATIC, 3],
             [CoreReflectionProperty::IS_PUBLIC, 3],
             [CoreReflectionProperty::IS_PROTECTED, 2],
-            [CoreReflectionProperty::IS_PRIVATE, 3],
+            [CoreReflectionProperty::IS_PRIVATE, 4],
             [
                 CoreReflectionProperty::IS_STATIC |
                 CoreReflectionProperty::IS_PUBLIC |
                 CoreReflectionProperty::IS_PROTECTED |
                 CoreReflectionProperty::IS_PRIVATE,
-                8,
+                9,
             ],
         ];
     }
@@ -748,6 +748,31 @@ PHP;
         self::assertInstanceOf(ReflectionProperty::class, $property);
         self::assertSame('publicProperty', $property->getName());
         self::assertStringEndsWith('test/unit/Fixture', $property->getDefaultValue());
+    }
+
+    /** @return array<array{0: non-empty-string, 1: bool}> */
+    public function promotedPropertisProvider(): array
+    {
+        return [
+            ['promotedProperty', true],
+            ['promotedProperty2', true],
+            ['publicProperty', false],
+        ];
+    }
+
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider promotedPropertisProvider
+     */
+    public function testPromotedProperties(string $propertyName, bool $isPromoted): void
+    {
+        $reflector = new DefaultReflector($this->getComposerLocator());
+        $classInfo = $reflector->reflectClass(ExampleClass::class);
+
+        $promotedProperty = $classInfo->getProperty($propertyName);
+
+        self::assertSame($isPromoted, $promotedProperty->isPromoted());
     }
 
     public function testGetFileName(): void

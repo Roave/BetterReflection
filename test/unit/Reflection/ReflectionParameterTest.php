@@ -33,6 +33,7 @@ use Roave\BetterReflectionTest\FixtureOther\OtherClass;
 use RuntimeException;
 use SplDoublyLinkedList;
 use stdClass;
+use Throwable;
 
 use function sprintf;
 
@@ -148,8 +149,13 @@ class ReflectionParameterTest extends TestCase
     {
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
 
-        self::expectException(InvalidArgumentException::class);
-        ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'notExists');
+        try {
+            ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'notExists');
+            self::fail('Parameter should not exits');
+        } catch (Throwable $e) {
+            self::assertInstanceOf(InvalidArgumentException::class, $e);
+            self::assertInstanceOf(OutOfBoundsException::class, $e->getPrevious());
+        }
     }
 
     public function testCreateFromSpecWithClosure(): void
@@ -536,7 +542,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($classInfo, $paramInfo->getDeclaringClass());
     }
 
-    public function testGetDeclaringClassForFunctionReturnsNull(): void
+    public function testGetDeclaringAndImplementingClassForFunctionReturnsNull(): void
     {
         $content = '<?php function myMethod($var = 123) {}';
 
@@ -545,6 +551,7 @@ class ReflectionParameterTest extends TestCase
         $paramInfo    = $functionInfo->getParameter('var');
 
         self::assertNull($paramInfo->getDeclaringClass());
+        self::assertNull($paramInfo->getImplementingClass());
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int, 3: int, 4: int}> */

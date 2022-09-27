@@ -497,6 +497,18 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($reflectionObjectAdapter->isIterable());
     }
 
+    public function testGetConstructorReturnsNullWhenNoConstructorExists(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstructor')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertNull($reflectionObjectAdapter->getConstructor());
+    }
+
     public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
@@ -504,9 +516,9 @@ class ReflectionObjectTest extends TestCase
             ->method('getExtensionName')
             ->willReturn('');
 
-        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertSame('', $betterReflectionObject->getExtensionName());
+        self::assertSame('', $reflectionObjectAdapter->getExtensionName());
     }
 
     public function testGetConstantsWithFilter(): void
@@ -914,6 +926,19 @@ class ReflectionObjectTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionObject::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionObjectAdapter->foo;
+    }
+
+    public function testGetMethodThrowsExceptionWhenMethodDoesNotExist(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getMethod')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::expectException(OutOfBoundsException::class);
+        $reflectionObjectAdapter->getMethod('foo');
     }
 
     public function testGetMethodsWithFilter(): void

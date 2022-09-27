@@ -49,18 +49,15 @@ abstract class ReflectionType
             return new ReflectionUnionType($reflector, $owner, $type);
         }
 
-        $hasNull = false;
         foreach ($type->types as $innerUnionType) {
-            if (! $innerUnionType instanceof Identifier || $innerUnionType->toLowerString() !== 'null') {
-                continue;
+            /** @psalm-suppress RedundantConditionGivenDocblockType https://github.com/nikic/PHP-Parser/pull/889 */
+            if (
+                /** @phpstan-ignore-next-line https://github.com/nikic/PHP-Parser/pull/889 */
+                ($innerUnionType instanceof Identifier || $innerUnionType instanceof Name)
+                && $innerUnionType->toLowerString() === 'null'
+            ) {
+                return new ReflectionUnionType($reflector, $owner, $type);
             }
-
-            $hasNull = true;
-            break;
-        }
-
-        if ($hasNull) {
-            return new ReflectionUnionType($reflector, $owner, $type);
         }
 
         $types   = $type->types;

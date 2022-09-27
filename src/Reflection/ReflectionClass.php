@@ -788,13 +788,11 @@ class ReflectionClass implements Reflection
         $properties = [];
 
         foreach ($node->getProperties() as $propertiesNode) {
-            foreach (array_keys($propertiesNode->props) as $propertyPositionInNode) {
-                assert(is_int($propertyPositionInNode));
-
+            foreach ($propertiesNode->props as $propertyPropertyNode) {
                 $property                         = ReflectionProperty::createFromNode(
                     $reflector,
                     $propertiesNode,
-                    $propertyPositionInNode,
+                    $propertyPropertyNode,
                     $this,
                     $this,
                 );
@@ -827,7 +825,7 @@ class ReflectionClass implements Reflection
                 $property                         = ReflectionProperty::createFromNode(
                     $reflector,
                     $propertyNode,
-                    0,
+                    $propertyNode->props[0],
                     $this,
                     $this,
                     true,
@@ -861,7 +859,7 @@ class ReflectionClass implements Reflection
             return ReflectionProperty::createFromNode(
                 $reflector,
                 $propertyNode,
-                0,
+                $propertyNode->props[0],
                 $this,
                 $this,
             );

@@ -90,6 +90,37 @@ class ReflectionPropertyTest extends TestCase
         ReflectionProperty::createFromInstance(new ClassForHinting(), 'notExist');
     }
 
+    public function testCreateFromNodeWithNotPromotedProperty(): void
+    {
+        $classInfo            = $this->reflector->reflectClass(ExampleClass::class);
+        $propertyPropertyNode = new PropertyProperty('foo');
+        $property             = ReflectionProperty::createFromNode(
+            $this->reflector,
+            new Property(Class_::MODIFIER_PUBLIC, [$propertyPropertyNode]),
+            $propertyPropertyNode,
+            $classInfo,
+            $classInfo,
+        );
+
+        self::assertFalse($property->isPromoted());
+    }
+
+    public function testCreateFromNodeWithPromotedProperty(): void
+    {
+        $classInfo            = $this->reflector->reflectClass(ExampleClass::class);
+        $propertyPropertyNode = new PropertyProperty('foo');
+        $property             = ReflectionProperty::createFromNode(
+            $this->reflector,
+            new Property(Class_::MODIFIER_PUBLIC, [$propertyPropertyNode]),
+            $propertyPropertyNode,
+            $classInfo,
+            $classInfo,
+            true,
+        );
+
+        self::assertTrue($property->isPromoted());
+    }
+
     public function testVisibilityMethods(): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
@@ -230,20 +261,19 @@ class ReflectionPropertyTest extends TestCase
 
     public function testIsDefaultWithRuntimeDeclaredProperty(): void
     {
-        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
-
-        self::assertFalse(
-            ReflectionProperty::createFromNode(
-                $this->reflector,
-                new Property(Class_::MODIFIER_PUBLIC, [new PropertyProperty('foo')]),
-                0,
-                $classInfo,
-                $classInfo,
-                false,
-                false,
-            )
-            ->isDefault(),
+        $classInfo            = $this->reflector->reflectClass(ExampleClass::class);
+        $propertyPropertyNode = new PropertyProperty('foo');
+        $propertyNode         = ReflectionProperty::createFromNode(
+            $this->reflector,
+            new Property(Class_::MODIFIER_PUBLIC, [$propertyPropertyNode]),
+            $propertyPropertyNode,
+            $classInfo,
+            $classInfo,
+            false,
+            false,
         );
+
+        self::assertFalse($propertyNode->isDefault());
     }
 
     public function testToString(): void

@@ -337,6 +337,10 @@ class ReflectionParameterTest extends TestCase
         $betterReflectionClass2
             ->method('getName')
             ->willReturn('Boo');
+        $betterReflectionClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass3
+            ->method('getName')
+            ->willReturn('Doo');
 
         $betterReflectionFunction  = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
@@ -363,6 +367,14 @@ class ReflectionParameterTest extends TestCase
         $classType2
             ->method('allowsNull')
             ->willReturn(false);
+        $classType3 = $this->createMock(BetterReflectionNamedType::class);
+        $classType3
+            ->method('getClass')
+            ->willReturn($betterReflectionClass3);
+        $classType3
+            ->method('allowsNull')
+            ->willReturn(true);
+        $intersectionType = $this->createMock(BetterReflectionIntersectionType::class);
 
         $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
         $unionTypeWithMoreThanTwoTypes
@@ -382,14 +394,32 @@ class ReflectionParameterTest extends TestCase
             ->method('getTypes')
             ->willReturn([$classType1, $nullType]);
 
+        $unionWithIntersection = $this->createMock(BetterReflectionUnionType::class);
+        $unionWithIntersection
+            ->method('allowsNull')
+            ->willReturn(true);
+        $unionWithIntersection
+            ->method('getTypes')
+            ->willReturn([$intersectionType, $classType1]);
+
+        $unionWithIntersection2 = $this->createMock(BetterReflectionUnionType::class);
+        $unionWithIntersection2
+            ->method('allowsNull')
+            ->willReturn(true);
+        $unionWithIntersection2
+            ->method('getTypes')
+            ->willReturn([$classType3, $intersectionType]);
+
         return [
             [null, null],
-            [$this->createMock(BetterReflectionIntersectionType::class), null],
+            [$intersectionType, null],
             [$nullType, null],
             [$classType1, 'Foo'],
             [$unionTypeWithMoreThanTwoTypes, null],
             [$unionTypeWithTwoNonNullableTypes, null],
             [$unionTypeNullable, 'Foo'],
+            [$unionWithIntersection, null],
+            [$unionWithIntersection2, null],
         ];
     }
 

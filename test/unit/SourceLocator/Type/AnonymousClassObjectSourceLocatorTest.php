@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledAnonymousClassCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Exception\NoAnonymousClassOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoAnonymousClassesOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
@@ -239,5 +240,28 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(ReflectionClass::class, $reflection);
         self::assertSame('Roave\BetterReflectionTest\Fixture\AnonymousClassParent', $reflection->getParentClass()->getName());
+    }
+
+    public function testExceptionIfSourceFileIsNotReadable(): void
+    {
+        $class = $this->createMock(stdClass::class);
+
+        $sourceLocator = new AnonymousClassObjectSourceLocator($class, $this->parser);
+
+        $sourceLocatorReflectionCoreClassReflectionPropertyValue = $this->createMock(CoreReflectionClass::class);
+        $sourceLocatorReflectionCoreClassReflectionPropertyValue
+            ->method('isAnonymous')
+            ->willReturn(true);
+        $sourceLocatorReflectionCoreClassReflectionPropertyValue
+            ->method('getFileName')
+            ->willReturn('sdklfjdfslsdfhlkjsdglkjsdflgkj');
+
+        $sourceLocatorReflection                            = new CoreReflectionClass($sourceLocator);
+        $sourceLocatorReflectionCoreClassReflectionProperty = $sourceLocatorReflection->getProperty('coreClassReflection');
+        $sourceLocatorReflectionCoreClassReflectionProperty->setAccessible(true);
+        $sourceLocatorReflectionCoreClassReflectionProperty->setValue($sourceLocator, $sourceLocatorReflectionCoreClassReflectionPropertyValue);
+
+        $this->expectException(InvalidFileLocation::class);
+        $sourceLocator->locateIdentifier($this->reflector, new Identifier(stdClass::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)));
     }
 }
