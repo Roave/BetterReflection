@@ -129,10 +129,8 @@ class ReflectionClass implements Reflection
     /** @var array<lowercase-string, ReflectionMethod>|null */
     private array|null $cachedMethods = null;
 
-    private ReflectionClass|null $cachedParentClass = null;
-
-    /** @var list<class-string>|null */
-    private array|null $cachedParentClassNames = null;
+    /** @var list<ReflectionClass>|null */
+    private array|null $cachedParentClasses = null;
 
     /** @internal */
     protected function __construct(
@@ -1038,19 +1036,17 @@ class ReflectionClass implements Reflection
      */
     public function getParentClass(): ReflectionClass|null
     {
-        if ($this->parentClassName === null) {
+        $parentClass = $this->getParentClasses()[0] ?? null;
+
+        if ($parentClass === null) {
             return null;
         }
 
-        if ($this->cachedParentClass === null) {
-            $this->cachedParentClass = $this->reflector->reflectClass($this->parentClassName);
+        if ($parentClass->isInterface() || $parentClass->isTrait()) {
+            throw NotAClassReflection::fromReflectionClass($parentClass);
         }
 
-        if ($this->cachedParentClass->isInterface() || $this->cachedParentClass->isTrait()) {
-            throw NotAClassReflection::fromReflectionClass($this->cachedParentClass);
-        }
-
-        return $this->cachedParentClass;
+        return $parentClass;
     }
 
     /**
@@ -1060,28 +1056,35 @@ class ReflectionClass implements Reflection
      */
     public function getParentClassNames(): array
     {
-        if ($this->cachedParentClassNames === null) {
-            $parentClassNames = [];
+        return array_map(static fn (self $parentClass): string => $parentClass->getName(), $this->getParentClasses());
+    }
 
-            $parentClass = $this->getParentClass();
-            while ($parentClass !== null) {
-                $parentClassName = $parentClass->getName();
+    /** @return list<ReflectionClass> */
+    private function getParentClasses(): array
+    {
+        if ($this->cachedParentClasses === null) {
+            $parentClasses = [];
+
+            $parentClassName = $this->parentClassName;
+            while ($parentClassName !== null) {
+                $parentClass = $this->reflector->reflectClass($parentClassName);
 
                 if (
                     $this->name === $parentClassName
-                    || in_array($parentClassName, $parentClassNames, true)
+                    || array_key_exists($parentClassName, $parentClasses)
                 ) {
                     throw CircularReference::fromClassName($parentClassName);
                 }
 
-                $parentClassNames[] = $parentClassName;
-                $parentClass        = $parentClass->getParentClass();
+                $parentClasses[$parentClassName] = $parentClass;
+
+                $parentClassName = $parentClass->parentClassName;
             }
 
-            $this->cachedParentClassNames = $parentClassNames;
+            $this->cachedParentClasses = array_values($parentClasses);
         }
 
-        return $this->cachedParentClassNames;
+        return $this->cachedParentClasses;
     }
 
     public function getDocComment(): string|null
@@ -1415,11 +1418,10 @@ class ReflectionClass implements Reflection
     {
         $interfaces = array_merge(
             [$this->getCurrentClassImplementedInterfacesIndexedByName()],
-            array_map(function (string $className): array {
-                $parentClass = $this->reflector->reflectClass($className);
-
-                return $parentClass->getCurrentClassImplementedInterfacesIndexedByName();
-            }, $this->getParentClassNames()),
+            array_map(
+                static fn (self $parentClass): array => $parentClass->getCurrentClassImplementedInterfacesIndexedByName(),
+                $this->getParentClasses(),
+            ),
         );
 
         return array_merge(...array_reverse($interfaces));
