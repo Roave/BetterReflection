@@ -1578,7 +1578,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * This method allows us to retrieve all interfaces parent of the this interface. Do not use on class nodes!
+     * This method allows us to retrieve all interfaces parent of this interface. Do not use on class nodes!
      *
      * @param list<class-string> $interfaceClassNames
      *
