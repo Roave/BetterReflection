@@ -902,7 +902,7 @@ class ReflectionClass implements Reflection
                     [],
                     $this->getParentClass()?->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED) ?? [],
                     ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getProperties(),
                         array_values($this->getInterfaces()),
                     ),
                     ...array_map(
