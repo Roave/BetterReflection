@@ -899,24 +899,20 @@ class ReflectionClass implements Reflection
     public function getProperties(int $filter = 0): array
     {
         if ($this->cachedProperties === null) {
-            // merging together properties from parent class, traits, current class (in this precise order)
+            // merging together properties from parent class, interfaces, traits, current class (in this precise order)
             $this->cachedProperties = array_merge(
                 array_merge(
                     [],
+                    $this->getParentClass()?->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED) ?? [],
                     ...array_map(
-                        static function (ReflectionClass $ancestor) use ($filter): array {
-                            return array_filter(
-                                $ancestor->getProperties($filter),
-                                static fn (ReflectionProperty $property): bool => ! $property->isPrivate(),
-                            );
-                        },
-                        array_merge(array_filter([$this->getParentClass()]), array_values($this->getInterfaces())),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED),
+                        array_values($this->getInterfaces()),
                     ),
                     ...array_map(
-                        function (ReflectionClass $trait) use ($filter) {
+                        function (ReflectionClass $trait) {
                             return array_map(
                                 fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
-                                $trait->getProperties($filter),
+                                $trait->getProperties(),
                             );
                         },
                         $this->getTraits(),
