@@ -704,17 +704,9 @@ class ReflectionClass implements Reflection
         //       sorting does not follow `\array_merge()` semantics
         $allReflectionConstants = array_merge(
             array_values($this->getImmediateConstants()),
+            array_values($this->getParentClass()?->getConstants(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED) ?? []),
             ...array_map(
-                static function (ReflectionClass $ancestor): array {
-                    return array_values(array_filter(
-                        $ancestor->getConstants(),
-                        static fn (ReflectionClassConstant $classConstant): bool => ! $classConstant->isPrivate(),
-                    ));
-                },
-                array_filter([$this->getParentClass()]),
-            ),
-            ...array_map(
-                function (ReflectionClass $trait) {
+                function (ReflectionClass $trait): array {
                     return array_map(
                         fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
                         $trait->getConstants(),
