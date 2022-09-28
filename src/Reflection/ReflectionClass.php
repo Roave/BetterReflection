@@ -360,17 +360,9 @@ class ReflectionClass implements Reflection
     /** @return list<ReflectionMethod> */
     private function getParentMethods(): array
     {
-        return array_merge(
-            [],
-            ...array_map(
-                function (ReflectionClass $ancestor): array {
-                    return array_map(
-                        fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
-                        $ancestor->getMethods(),
-                    );
-                },
-                array_filter([$this->getParentClass()]),
-            ),
+        return array_map(
+            fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
+            $this->getParentClass()?->getMethods() ?? [],
         );
     }
 
