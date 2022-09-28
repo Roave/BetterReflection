@@ -88,7 +88,7 @@ class ReflectionNamedType extends ReflectionType
         $lowercaseName = strtolower($this->name);
 
         if ($lowercaseName === 'self') {
-            $class = $this->owner->getDeclaringClass();
+            $class = $this->owner->getImplementingClass();
             assert($class instanceof ReflectionClass);
 
             return $class;

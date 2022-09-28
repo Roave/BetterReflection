@@ -295,6 +295,35 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame($typeClassName, $class->getName());
     }
 
+    public function testGetClassWithSelfDefinedInTrait(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            trait TraitClass {
+                public function method(): self
+                {}
+            }
+
+            class ClassUsingTrait {
+                use TraitClass;
+            }
+
+            PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+
+        /** @var class-string $className */
+        $className = 'ClassUsingTrait';
+
+        $classReflection  = $reflector->reflectClass($className);
+        $methodReflection = $classReflection->getMethod('method');
+
+        $typeReflection = $methodReflection->getReturnType();
+        $class          = $typeReflection->getClass();
+
+        self::assertSame($className, $class->getName());
+    }
+
     /** @return list<array{0: string}> */
     public function dataGetClassWithParent(): array
     {
