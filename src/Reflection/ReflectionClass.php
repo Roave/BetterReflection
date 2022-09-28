@@ -117,6 +117,9 @@ class ReflectionClass implements Reflection
     /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>} */
     private array $traitsData;
 
+    /** @var array<non-empty-string, ReflectionClassConstant>|null */
+    private array|null $cachedConstants = null;
+
     /** @var array<non-empty-string, ReflectionProperty>|null */
     private array|null $cachedProperties = null;
 
@@ -692,44 +695,46 @@ class ReflectionClass implements Reflection
      */
     public function getConstants(int $filter = 0): array
     {
-        // Note: constants are not merged via their name as array index, since internal PHP constant
-        //       sorting does not follow `\array_merge()` semantics
-        $allReflectionConstants = array_merge(
-            array_values($this->getImmediateConstants()),
-            array_values($this->getParentClass()?->getConstants(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED) ?? []),
-            ...array_map(
-                function (ReflectionClass $trait): array {
-                    return array_map(
-                        fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                        $trait->getConstants(),
-                    );
-                },
-                $this->getTraits(),
-            ),
-            ...array_map(
-                static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
-                array_values($this->getInterfaces()),
-            ),
-        );
+        if ($this->cachedConstants === null) {
+            // Note: constants are not merged via their name as array index, since internal PHP constant
+            //       sorting does not follow `\array_merge()` semantics
+            $constants = array_merge(
+                array_values($this->getImmediateConstants()),
+                array_values($this->getParentClass()?->getConstants(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED) ?? []),
+                ...array_map(
+                    function (ReflectionClass $trait): array {
+                        return array_map(
+                            fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
+                            $trait->getConstants(),
+                        );
+                    },
+                    $this->getTraits(),
+                ),
+                ...array_map(
+                    static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
+                    array_values($this->getInterfaces()),
+                ),
+            );
 
-        $reflectionConstants = [];
+            $this->cachedConstants = [];
 
-        foreach ($allReflectionConstants as $constant) {
-            $constantName = $constant->getName();
+            foreach ($constants as $constant) {
+                $constantName = $constant->getName();
 
-            if (isset($reflectionConstants[$constantName])) {
-                continue;
+                if (isset($this->cachedConstants[$constantName])) {
+                    continue;
+                }
+
+                $this->cachedConstants[$constantName] = $constant;
             }
-
-            $reflectionConstants[$constantName] = $constant;
         }
 
         if ($filter === 0) {
-            return $reflectionConstants;
+            return $this->cachedConstants;
         }
 
         return array_filter(
-            $reflectionConstants,
+            $this->cachedConstants,
             static fn (ReflectionClassConstant $constant): bool => (bool) ($filter & $constant->getModifiers()),
         );
     }
