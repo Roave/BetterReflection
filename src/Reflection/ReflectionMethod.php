@@ -32,6 +32,8 @@ class ReflectionMethod
     /** @var int-mask-of<ReflectionMethodAdapter::IS_*> */
     private int $modifiers;
 
+    private bool $isConstructor;
+
     /** @param non-empty-string|null $aliasName */
     private function __construct(
         private Reflector $reflector,
@@ -48,8 +50,9 @@ class ReflectionMethod
         $name = $node->name->name;
         assert($name !== '');
 
-        $this->name      = $name;
-        $this->modifiers = $this->computeModifiers($node);
+        $this->name          = $name;
+        $this->modifiers     = $this->computeModifiers($node);
+        $this->isConstructor = $this->computeIsConstructor($name, $declaringClass);
 
         $this->fillFromNode($node);
     }
@@ -336,16 +339,24 @@ class ReflectionMethod
      */
     public function isConstructor(): bool
     {
-        if (strtolower($this->getName()) === '__construct') {
+        return $this->isConstructor;
+    }
+
+    private function computeIsConstructor(string $name, ReflectionClass $declaringClass): bool
+    {
+        if (strtolower($name) === '__construct') {
             return true;
         }
 
-        $declaringClass = $this->getDeclaringClass();
         if ($declaringClass->inNamespace()) {
             return false;
         }
 
-        return strtolower($this->getName()) === strtolower($declaringClass->getShortName());
+        if ($declaringClass->isAnonymous()) {
+            return false;
+        }
+
+        return strtolower($name) === strtolower($declaringClass->getShortName());
     }
 
     /**

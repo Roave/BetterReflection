@@ -208,6 +208,21 @@ class ReflectionMethodTest extends TestCase
         self::assertTrue($method->isConstructor());
     }
 
+    public function testIsConstructorWhenPhp4StyleInAnonymousClass(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php', $this->astLocator));
+
+        $allClassesInfo = $reflector->reflectAllClasses();
+        self::assertCount(2, $allClassesInfo);
+
+        $classInfo = $allClassesInfo[1];
+
+        self::assertTrue($classInfo->isAnonymous());
+
+        self::assertTrue($classInfo->getMethod('Php4StyleConstruct')->isConstructor());
+        self::assertFalse($classInfo->getMethod('notConstructor')->isConstructor());
+    }
+
     public function testGetParameters(): void
     {
         $classInfo = $this->reflector->reflectClass(Methods::class);
