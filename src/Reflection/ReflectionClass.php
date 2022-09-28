@@ -117,7 +117,7 @@ class ReflectionClass implements Reflection
     /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>} */
     private array $traitsData;
 
-    /** @var array<string, ReflectionProperty>|null */
+    /** @var array<non-empty-string, ReflectionProperty>|null */
     private array|null $cachedProperties = null;
 
     /** @var array<lowercase-string, ReflectionMethod>|null */
@@ -886,7 +886,7 @@ class ReflectionClass implements Reflection
      *
      * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
      *
-     * @return array<string, ReflectionProperty>
+     * @return array<non-empty-string, ReflectionProperty>
      */
     public function getProperties(int $filter = 0): array
     {
