@@ -8,8 +8,6 @@ use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
 use OutOfBoundsException;
-use Php4StyleCaseInsensitiveConstruct;
-use Php4StyleConstruct;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionClass as CoreReflectionClass;
@@ -41,7 +39,6 @@ use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InterfaceWithMethod;
 use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethodToUse;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
@@ -179,33 +176,6 @@ class ReflectionMethodTest extends TestCase
 
         $method = $classInfo->getMethod('__DESTRUCT');
         self::assertTrue($method->isDestructor());
-    }
-
-    public function testIsConstructorWhenPhp4Style(): void
-    {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php', $this->astLocator));
-        $classInfo = $reflector->reflectClass(Php4StyleConstruct::class);
-
-        $method = $classInfo->getMethod('Php4StyleConstruct');
-        self::assertTrue($method->isConstructor());
-    }
-
-    public function testsIsConstructorWhenPhp4StyleInNamespace(): void
-    {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php', $this->astLocator));
-        $classInfo = $reflector->reflectClass(Php4StyleConstructInNamespace::class);
-
-        $method = $classInfo->getMethod('Php4StyleConstructInNamespace');
-        self::assertFalse($method->isConstructor());
-    }
-
-    public function testIsConstructorWhenPhp4StyleCaseInsensitive(): void
-    {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php', $this->astLocator));
-        $classInfo = $reflector->reflectClass(Php4StyleCaseInsensitiveConstruct::class);
-
-        $method = $classInfo->getMethod('PHP4STYLECASEINSENSITIVECONSTRUCT');
-        self::assertTrue($method->isConstructor());
     }
 
     public function testGetParameters(): void
