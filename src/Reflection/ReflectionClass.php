@@ -28,6 +28,7 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnInterfaceReflection;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\NotATraitReflection;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
@@ -384,7 +385,7 @@ class ReflectionClass implements Reflection
                         ),
                     );
                 },
-                $this->getTraits(),
+                $this->getFlattenedUsedTraits(),
             ),
         );
     }
@@ -708,7 +709,7 @@ class ReflectionClass implements Reflection
                             $trait->getConstants(),
                         );
                     },
-                    $this->getTraits(),
+                    $this->getFlattenedUsedTraits(),
                 ),
                 ...array_map(
                     static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
@@ -912,7 +913,7 @@ class ReflectionClass implements Reflection
                                 $trait->getProperties(),
                             );
                         },
-                        $this->getTraits(),
+                        $this->getFlattenedUsedTraits(),
                     ),
                 ),
                 $this->getImmediateProperties(),
@@ -1616,6 +1617,53 @@ class ReflectionClass implements Reflection
         );
 
         return $this->addStringableInterface($interfaces);
+    }
+
+    /** @return list<ReflectionClass> */
+    private function getFlattenedUsedTraits(): array
+    {
+        if ($this->isTrait) {
+            // assumption: first key is the current trait
+            return array_slice($this->getFlattenedTraits(), 1);
+        }
+
+        return array_merge(
+            [],
+            ...array_map(
+                static fn (ReflectionClass $trait): array => $trait->getFlattenedTraits(),
+                $this->getTraits(),
+            ),
+        );
+    }
+
+    /**
+     * This method allows us to retrieve all traits used by and including this trait. Do not use on class nodes!
+     *
+     * @param list<trait-string> $traitClassNames
+     *
+     * @return list<ReflectionClass>
+     */
+    private function getFlattenedTraits(array &$traitClassNames = []): array
+    {
+        if (! $this->isTrait) {
+            throw NotATraitReflection::fromReflectionClass($this);
+        }
+
+        /** @psalm-var trait-string $traitClassName */
+        $traitClassName = $this->getName();
+        if (in_array($traitClassName, $traitClassNames, true)) {
+            throw CircularReference::fromClassName($traitClassName);
+        }
+
+        $traitClassNames[] = $traitClassName;
+
+        return array_merge(
+            [$this],
+            ...array_map(
+                static fn (ReflectionClass $traitClass): array => $traitClass->getFlattenedTraits($traitClassNames),
+                $this->getTraits(),
+            ),
+        );
     }
 
     /**
