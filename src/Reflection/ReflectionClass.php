@@ -396,7 +396,7 @@ class ReflectionClass implements Reflection
             [],
             ...array_map(
                 static fn (ReflectionClass $ancestor): array => $ancestor->getMethods(),
-                array_values($this->getInterfaces()),
+                array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
             ),
         );
     }
@@ -712,7 +712,7 @@ class ReflectionClass implements Reflection
                 ),
                 ...array_map(
                     static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
-                    array_values($this->getInterfaces()),
+                    array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                 ),
             );
 
@@ -903,7 +903,7 @@ class ReflectionClass implements Reflection
                     $this->getParentClass()?->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED) ?? [],
                     ...array_map(
                         static fn (ReflectionClass $ancestor): array => $ancestor->getProperties(),
-                        array_values($this->getInterfaces()),
+                        array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                     ),
                     ...array_map(
                         function (ReflectionClass $trait) {
